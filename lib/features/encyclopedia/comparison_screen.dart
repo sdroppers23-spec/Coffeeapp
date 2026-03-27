@@ -1,0 +1,223 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../../core/database/app_database.dart';
+import '../../core/database/database_provider.dart';
+import '../../core/l10n/app_localizations.dart';
+
+final allOriginsProvider = FutureProvider<List<EncyclopediaEntry>>((ref) {
+  return ref.watch(databaseProvider).getAllOrigins();
+});
+
+class ComparisonScreen extends ConsumerStatefulWidget {
+  const ComparisonScreen({super.key});
+
+  @override
+  ConsumerState<ComparisonScreen> createState() => _ComparisonScreenState();
+}
+
+class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
+  EncyclopediaEntry? _coffeeA;
+  EncyclopediaEntry? _coffeeB;
+
+  @override
+  Widget build(BuildContext context) {
+    final asyncOrigins = ref.watch(allOriginsProvider);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(ref.t('compare_coffees'), style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+      ),
+      body: asyncOrigins.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, _) => Center(child: Text('Error: \$e')),
+        data: (origins) {
+          if (origins.isEmpty) {
+            return const Center(child: Text('No coffees available to compare.'));
+          }
+
+          // Default selections
+          _coffeeA ??= origins.isNotEmpty ? origins.first : null;
+          _coffeeB ??= origins.length > 1 ? origins[1] : origins.first;
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // ── Selectors ──────────────────────────────────────────────────
+                Row(
+                  children: [
+                    Expanded(
+                      child: _CoffeeSelector(
+                        value: _coffeeA,
+                        items: origins,
+                        onChanged: (val) => setState(() => _coffeeA = val),
+                        color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.2),
+                        borderColor: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _CoffeeSelector(
+                        value: _coffeeB,
+                        items: origins,
+                        onChanged: (val) => setState(() => _coffeeB = val),
+                        color: Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.2),
+                        borderColor: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                
+                // ── Comparison Table ───────────────────────────────────────────
+                if (_coffeeA != null && _coffeeB != null)
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.05),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.white.withOpacity(0.1)),
+                    ),
+                    child: Column(
+                      children: [
+                        _CompareRow(ref.t('score_sca'), '${_coffeeA!.cupsScore}', '${_coffeeB!.cupsScore}', highlightWinner: true),
+                        _CompareRow(ref.t('origin'), '${_coffeeA!.countryEmoji} ${_coffeeA!.country}', '${_coffeeB!.countryEmoji} ${_coffeeB!.country}'),
+                        _CompareRow(ref.t('region'), _coffeeA!.region, _coffeeB!.region),
+                        _CompareRow(ref.t('altitude'), '${_coffeeA!.altitudeMin}-${_coffeeA!.altitudeMax}m', '${_coffeeB!.altitudeMin}-${_coffeeB!.altitudeMax}m'),
+                        _CompareRow(ref.t('varieties'), _coffeeA!.varieties, _coffeeB!.varieties, isTextHeavy: true),
+                        _CompareRow(ref.t('process'), _coffeeA!.processMethod, _coffeeB!.processMethod),
+                        _CompareRow(ref.t('harvest'), _coffeeA!.harvestSeason, _coffeeB!.harvestSeason),
+                        _CompareRow(ref.t('flavor_notes'), _getFlavors(_coffeeA!), _getFlavors(_coffeeB!), isTextHeavy: true),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  String _getFlavors(EncyclopediaEntry entry) {
+    try {
+      final list = (jsonDecode(entry.flavorNotes) as List).cast<String>();
+      return list.join(', ');
+    } catch (_) {
+      return '';
+    }
+  }
+}
+
+class _CoffeeSelector extends StatelessWidget {
+  final EncyclopediaEntry? value;
+  final List<EncyclopediaEntry> items;
+  final ValueChanged<EncyclopediaEntry?> onChanged;
+  final Color color;
+  final Color borderColor;
+
+  const _CoffeeSelector({
+    required this.value,
+    required this.items,
+    required this.onChanged,
+    required this.color,
+    required this.borderColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: borderColor),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<EncyclopediaEntry>(
+          isExpanded: true,
+          dropdownColor: const Color(0xFF1E1E1E),
+          icon: Icon(Icons.keyboard_arrow_down, color: borderColor),
+          value: value,
+          items: items.map((e) {
+            return DropdownMenuItem(
+              value: e,
+              child: Text(
+                '${e.countryMarker} ${e.country}',
+                style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            );
+          }).toList(),
+          onChanged: onChanged,
+        ),
+      ),
+    );
+  }
+}
+
+extension on EncyclopediaEntry {
+  String get countryMarker => countryEmoji.isNotEmpty ? countryEmoji : '☕';
+}
+
+class _CompareRow extends StatelessWidget {
+  final String title;
+  final String valA;
+  final String valB;
+  final bool isTextHeavy;
+  final bool highlightWinner;
+
+  const _CompareRow(this.title, this.valA, this.valB, {this.isTextHeavy = false, this.highlightWinner = false});
+
+  @override
+  Widget build(BuildContext context) {
+    Color colorA = Colors.white;
+    Color colorB = Colors.white;
+
+    if (highlightWinner) {
+      final aNum = double.tryParse(valA) ?? 0;
+      final bNum = double.tryParse(valB) ?? 0;
+      if (aNum > bNum) {
+        colorA = Colors.greenAccent;
+      } else if (bNum > aNum) {
+        colorB = Colors.greenAccent;
+      }
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.05))),
+      ),
+      child: Column(
+        children: [
+          Text(title, style: const TextStyle(color: Colors.white54, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+          const SizedBox(height: 12),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  valA,
+                  style: TextStyle(color: colorA, fontSize: isTextHeavy ? 13 : 15, fontWeight: isTextHeavy ? FontWeight.normal : FontWeight.w600),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Container(width: 1, height: 30, color: Colors.white12, margin: const EdgeInsets.symmetric(horizontal: 16)),
+              Expanded(
+                child: Text(
+                  valB,
+                  style: TextStyle(color: colorB, fontSize: isTextHeavy ? 13 : 15, fontWeight: isTextHeavy ? FontWeight.normal : FontWeight.w600),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}

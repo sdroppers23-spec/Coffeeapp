@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../core/l10n/app_localizations.dart';
 import '../../core/providers/settings_provider.dart';
+import '../../shared/widgets/glass_container.dart';
+import '../../shared/widgets/pressable_scale.dart';
 
 class DiscoverTabItem {
   final String id;
-  final String defaultLabel;
-  DiscoverTabItem(this.id, this.defaultLabel);
+  final String label;
+  DiscoverTabItem(this.id, this.label);
 }
 
 class DiscoverScreen extends ConsumerStatefulWidget {
@@ -19,15 +20,16 @@ class DiscoverScreen extends ConsumerStatefulWidget {
 }
 
 class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
-  late List<DiscoverTabItem> _topPills;
-  bool _showAll = true; // Toggle for "Усі" vs "Обране"
+  late List<DiscoverTabItem> _tabs;
+  String _selectedTabId = 'roasters';
+  final ScrollController _reorderController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _topPills = [
+    _tabs = [
       DiscoverTabItem('farmers', 'Фермери'),
-      DiscoverTabItem('roasters', 'Обсмажчики'),
+      DiscoverTabItem('roasters', 'Мої обсмажчики'),
       DiscoverTabItem('history', 'Історія Спешелті'),
     ];
   }
@@ -37,241 +39,133 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
     ref.read(settingsProvider.notifier).triggerHaptic();
 
     setState(() {
-      final item = _topPills.removeAt(oldIndex);
-      _topPills.insert(newIndex, item);
+      final item = _tabs.removeAt(oldIndex);
+      _tabs.insert(newIndex, item);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.black, // Pure black background
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            // Top App Bar Area
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Відкриття',
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,
-                        color: const Color(0xFFC8A96E),
-                      ),
+        child: Column(
+          children: [
+            // Header: Title, Badge, Avatar
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              child: Row(
+                children: [
+                  const Spacer(),
+                  // Centered Title
+                  Text(
+                    'Відкриття',
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
+                      color: const Color(0xFFC8A96E),
                     ),
-                    Row(
+                  ),
+                  const SizedBox(width: 8),
+                  // Badge
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.greenAccent.withValues(alpha: 0.4),
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.greenAccent.withValues(alpha: 0.05),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        // Connected Badge
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.greenAccent.withValues(alpha: 0.3)),
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.greenAccent.withValues(alpha: 0.05),
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.cloud_done_outlined, color: Colors.greenAccent, size: 14),
-                              const SizedBox(width: 4),
-                              Text(
-                                "Cloud Connected",
-                                style: GoogleFonts.poppins(
-                                  color: Colors.greenAccent,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
+                        const Icon(
+                          Icons.cloud_done_outlined,
+                          color: Colors.greenAccent,
+                          size: 14,
                         ),
-                        const SizedBox(width: 12),
-                        // Avatar
-                        GestureDetector(
-                          onTap: () => _showProfileMenu(context),
-                          child: Container(
-                            width: 36,
-                            height: 36,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: AssetImage('assets/images/placeholder_avatar.jpg'), // fallback if missing
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            child: const Icon(Icons.person, color: Colors.transparent),
+                        const SizedBox(width: 4),
+                        Text(
+                          "Cloud Connected",
+                          style: GoogleFonts.poppins(
+                            color: Colors.greenAccent,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-            ),
-
-            // Reorderable Capsule Tabs (Top pills)
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 48,
-                child: Theme(
-                  data: Theme.of(context).copyWith(
-                    canvasColor: Colors.transparent,
                   ),
-                  child: ReorderableListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    buildDefaultDragHandles: false,
-                    proxyDecorator: (child, index, animation) {
-                      return Material(color: Colors.transparent, child: child);
-                    },
-                    itemCount: _topPills.length,
-                    onReorderStart: (_) => ref.read(settingsProvider.notifier).triggerVibrate(),
-                    onReorder: _onReorder,
-                    itemBuilder: (context, index) {
-                      final pill = _topPills[index];
-                      // Note: they all look dark like simple tags
-                      return ReorderableDelayedDragStartListener(
-                        key: ValueKey(pill.id),
-                        index: index,
-                        child: Container(
-                          margin: const EdgeInsets.only(right: 12),
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF1E1815), // Very dark warm gray
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          child: Center(
-                            child: Text(
-                              pill.defaultLabel,
-                              style: GoogleFonts.poppins(
-                                color: Colors.white70,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ),
-
-            // Search Bar
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
-                child: Container(
-                  height: 52,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1E1815),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.search, color: Color(0xFFC8A96E), size: 22),
-                      const SizedBox(width: 12),
-                      Text(
-                        'Пошук сортів та регіонів...',
-                        style: GoogleFonts.poppins(
-                          color: Colors.white38,
-                          fontSize: 14,
+                  const Spacer(),
+                  // Avatar
+                  GestureDetector(
+                    onTap: () => _showProfileMenu(context),
+                    child: Container(
+                      width: 38,
+                      height: 38,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white10, width: 1),
+                        image: const DecorationImage(
+                          image: AssetImage('assets/images/placeholder_avatar.jpg'),
+                          fit: BoxFit.cover,
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
 
-            // All / Favorites Toggle Switch
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                child: _SegmentedToggle(
-                  isAllSelected: _showAll,
-                  onChanged: (val) {
-                    ref.read(settingsProvider.notifier).triggerSelectionVibrate();
-                    setState(() => _showAll = val);
+            // Reorderable Capsule Tabs
+            SizedBox(
+              height: 54,
+              child: Theme(
+                data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
+                child: ReorderableListView.builder(
+                  scrollController: _reorderController,
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  buildDefaultDragHandles: false,
+                  proxyDecorator: (child, index, animation) {
+                    return Material(color: Colors.transparent, child: child);
+                  },
+                  itemCount: _tabs.length,
+                  onReorderStart: (_) =>
+                      ref.read(settingsProvider.notifier).triggerVibrate(),
+                  onReorder: _onReorder,
+                  itemBuilder: (context, index) {
+                    final tab = _tabs[index];
+                    final isSelected = _selectedTabId == tab.id;
+
+                    return ReorderableDelayedDragStartListener(
+                      key: ValueKey(tab.id),
+                      index: index,
+                      child: _CapsuleTab(
+                        label: tab.label,
+                        isSelected: isSelected,
+                        onTap: () {
+                          ref.read(settingsProvider.notifier).triggerHaptic();
+                          setState(() {
+                            _selectedTabId = tab.id;
+                          });
+                        },
+                      ),
+                    );
                   },
                 ),
               ),
             ),
 
-            // Filters Row
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        _FilterButton(icon: Icons.filter_list_rounded, label: 'Фільтри'),
-                        const SizedBox(width: 12),
-                        _FilterButton(icon: Icons.compare_arrows_rounded, label: 'Порівняння'),
-                      ],
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1E1815),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Icon(Icons.grid_view_rounded, color: Color(0xFFC8A96E), size: 18),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            const SizedBox(height: 12),
 
-            // Coffee List
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20).copyWith(bottom: 120), // Bottom padding for nav bar
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  const _CoffeeCard(
-                    title: 'Руанда - Washed',
-                    subtitle: 'Руанда • Washed',
-                    bitterness: 3,
-                    acidity: 4,
-                    sweetness: 3,
-                  ),
-                  const _CoffeeCard(
-                    title: 'Руанда - Natural',
-                    subtitle: 'Руанда • Natural',
-                    bitterness: 3,
-                    acidity: 3,
-                    sweetness: 4,
-                  ),
-                  const _CoffeeCard(
-                    title: 'Гватемала - Washed',
-                    subtitle: 'Гватемала • Washed',
-                    bitterness: 3,
-                    acidity: 4,
-                    sweetness: 3,
-                  ),
-                  const _CoffeeCard(
-                    title: 'Ель-Сальвадор - Natural',
-                    subtitle: 'Ель-Сальвадор • Natural',
-                    bitterness: 4,
-                    acidity: 3,
-                    sweetness: 4,
-                  ),
-                  const _CoffeeCard(
-                    title: 'Ефіопія - Washed',
-                    subtitle: 'Ефіопія • Washed',
-                    bitterness: 2,
-                    acidity: 5,
-                    sweetness: 4,
-                  ),
-                ]),
+            // Content Area
+            Expanded(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: _buildTabContent(_selectedTabId),
               ),
             ),
           ],
@@ -279,239 +173,199 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
       ),
     );
   }
-}
 
-class _SegmentedToggle extends StatelessWidget {
-  final bool isAllSelected;
-  final ValueChanged<bool> onChanged;
-
-  const _SegmentedToggle({required this.isAllSelected, required this.onChanged});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 48,
-      decoration: BoxDecoration(
-        color: const Color(0xFF1E1815),
-        borderRadius: BorderRadius.circular(24),
-      ),
-      padding: const EdgeInsets.all(4),
-      child: Row(
-        children: [
-          Expanded(
-            child: GestureDetector(
-              onTap: () => onChanged(true),
-              behavior: HitTestBehavior.opaque,
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                decoration: BoxDecoration(
-                  color: isAllSelected ? const Color(0xFFC8A96E) : Colors.transparent,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Center(
-                  child: Text(
-                    'Усі',
-                    style: GoogleFonts.poppins(
-                      color: isAllSelected ? Colors.black : Colors.white54,
-                      fontWeight: isAllSelected ? FontWeight.w600 : FontWeight.normal,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-              ),
+  Widget _buildTabContent(String tabId) {
+    switch (tabId) {
+      case 'roasters':
+        return ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          children: const [
+            _RoasteryCard(
+              title: '3 Champs Roastery',
+              description: 'Українське обсмажування кави',
+              location: 'Київ, Україна',
             ),
+          ],
+        );
+      default:
+        return Center(
+          child: Text(
+            'Контент розділу $tabId',
+            style: GoogleFonts.poppins(color: Colors.white24),
           ),
-          Expanded(
-            child: GestureDetector(
-              onTap: () => onChanged(false),
-              behavior: HitTestBehavior.opaque,
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                decoration: BoxDecoration(
-                  color: !isAllSelected ? const Color(0xFF2C221D) : Colors.transparent,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.favorite_rounded,
-                        size: 14,
-                        color: !isAllSelected ? Colors.white70 : Colors.white30,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        'Обране',
-                        style: GoogleFonts.poppins(
-                          color: !isAllSelected ? Colors.white70 : Colors.white54,
-                          fontWeight: !isAllSelected ? FontWeight.w600 : FontWeight.normal,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+        );
+    }
   }
 }
 
-class _FilterButton extends StatelessWidget {
-  final IconData icon;
+class _CapsuleTab extends StatefulWidget {
   final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
 
-  const _FilterButton({required this.icon, required this.label});
+  const _CapsuleTab({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  State<_CapsuleTab> createState() => _CapsuleTabState();
+}
+
+class _CapsuleTabState extends State<_CapsuleTab> {
+  bool _isPressed = false;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1E1815),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: Colors.white70, size: 16),
-          const SizedBox(width: 8),
-          Text(
-            label,
-            style: GoogleFonts.poppins(color: Colors.white70, fontSize: 13),
+    return GestureDetector(
+      onTapDown: (_) => setState(() => _isPressed = true),
+      onTapUp: (_) => setState(() => _isPressed = false),
+      onTapCancel: () => setState(() => _isPressed = false),
+      onTap: widget.onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        margin: const EdgeInsets.only(right: 10, top: 4, bottom: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        decoration: BoxDecoration(
+          color: widget.isSelected
+              ? const Color(0xFFC8A96E)
+              : Colors.white.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(28),
+          border: Border.all(
+            color: _isPressed
+                ? Colors.white.withValues(alpha: 0.8) // Yellowish-white flash
+                : (widget.isSelected ? Colors.transparent : Colors.white10),
+            width: 1.5,
           ),
-        ],
+          boxShadow: widget.isSelected
+              ? [
+                  BoxShadow(
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  )
+                ]
+              : [],
+        ),
+        child: Text(
+          widget.label,
+          style: GoogleFonts.poppins(
+            color: widget.isSelected ? Colors.black : Colors.white70,
+            fontSize: 14,
+            fontWeight: widget.isSelected ? FontWeight.w600 : FontWeight.w400,
+          ),
+        ),
       ),
     );
   }
 }
 
-class _CoffeeCard extends StatelessWidget {
+class _RoasteryCard extends StatelessWidget {
   final String title;
-  final String subtitle;
-  final int bitterness;
-  final int acidity;
-  final int sweetness;
+  final String description;
+  final String location;
 
-  const _CoffeeCard({
+  const _RoasteryCard({
     required this.title,
-    required this.subtitle,
-    required this.bitterness,
-    required this.acidity,
-    required this.sweetness,
+    required this.description,
+    required this.location,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F0A07), // Very dark card background
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1), width: 0.5),
-        borderRadius: BorderRadius.circular(20),
+        color: const Color(0xFF0F0A07),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Left Globe Icon inside a circle
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.05),
-              shape: BoxShape.circle,
-            ),
-            child: const Center(
-              child: Icon(Icons.public, color: Colors.white30, size: 24),
+          // Top Image Area
+          AspectRatio(
+            aspectRatio: 16 / 9,
+            child: Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                color: Color(0xFF1A1513),
+              ),
+              child: Center(
+                child: Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF232D3F),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.coffee_maker_rounded, color: Colors.white70, size: 24),
+                ),
+              ),
             ),
           ),
-          const SizedBox(width: 16),
           
-          // Main Info
-          Expanded(
+          // Info Area
+          Padding(
+            padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  subtitle,
-                  style: GoogleFonts.poppins(
-                    color: Colors.white54,
-                    fontSize: 12,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                
-                // Ratings bars Row
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _RatingDashes('ГІРКОТА', bitterness),
-                    _RatingDashes('КИСЛОТНІСТЬ', acidity),
-                    _RatingDashes('СОЛОДКІСТЬ', sweetness),
+                    Text(
+                      title,
+                      style: GoogleFonts.poppins(
+                        color: const Color(0xFFC8A96E),
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.white38),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  description,
+                  style: GoogleFonts.poppins(
+                    color: Colors.white54,
+                    fontSize: 14,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.location_on_rounded, color: Colors.white24, size: 16),
+                        const SizedBox(width: 4),
+                        Text(
+                          location,
+                          style: GoogleFonts.poppins(
+                            color: Colors.white24,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      'Дивіться лоти >',
+                      style: GoogleFonts.poppins(
+                        color: const Color(0xFFC8A96E),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ],
                 ),
               ],
             ),
           ),
-          
-          const SizedBox(width: 8),
-          const Icon(Icons.chevron_right_rounded, color: Colors.white24, size: 20),
         ],
       ),
-    );
-  }
-}
-
-class _RatingDashes extends StatelessWidget {
-  final String label;
-  final int value;
-  final int total = 4;
-
-  const _RatingDashes(this.label, this.value);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: GoogleFonts.poppins(
-            color: Colors.white38,
-            fontSize: 8,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.5,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: List.generate(total, (index) {
-            final active = index < value;
-            return Container(
-              margin: const EdgeInsets.only(right: 3),
-              height: 2.5,
-              width: 12,
-              decoration: BoxDecoration(
-                color: active ? const Color(0xFFC8A96E) : Colors.white.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            );
-          }),
-        ),
-      ],
     );
   }
 }
@@ -519,130 +373,83 @@ class _RatingDashes extends StatelessWidget {
 void _showProfileMenu(BuildContext context) {
   showModalBottomSheet(
     context: context,
-    backgroundColor: const Color(0xFF1E1815), // Custom dark brown
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-    ),
+    backgroundColor: Colors.transparent,
+    isScrollControlled: true,
     builder: (context) {
-      return SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+      return GlassContainer(
+        borderRadius: 24,
+        padding: const EdgeInsets.all(20),
+        blur: 30,
+        opacity: 0.15,
+        child: SafeArea(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Handle
-              Center(
-                child: Container(
-                  width: 36,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.white24,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.white10,
+                  borderRadius: BorderRadius.circular(2),
                 ),
               ),
               const SizedBox(height: 24),
-              
-              // Avatar & Info
               Row(
                 children: [
-                  Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: const DecorationImage(
-                        image: AssetImage('assets/images/placeholder_avatar.jpg'),
-                        fit: BoxFit.cover,
-                      ),
-                      border: Border.all(color: Colors.white12, width: 1),
-                    ),
+                  const CircleAvatar(
+                    radius: 30,
+                    backgroundImage: AssetImage('assets/images/placeholder_avatar.jpg'),
                   ),
                   const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Jack Sparrow',
-                          style: GoogleFonts.poppins(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Jack Sparrow',
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
-                        Text(
-                          's.dropper.s23@gmail.com',
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            color: Colors.white54,
-                          ),
+                      ),
+                      Text(
+                        's.dropper.s23@gmail.com',
+                        style: GoogleFonts.poppins(
+                          color: Colors.white38,
+                          fontSize: 12,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),
               const SizedBox(height: 24),
-              const Divider(color: Colors.white12, height: 1),
-              
-              // Language
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.language, color: Color(0xFFC8A96E)), // Gold icon
-                title: Text(
-                  'Мова',
-                  style: GoogleFonts.poppins(color: Colors.white70, fontSize: 14),
-                ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '🇺🇦 UA',
-                      style: GoogleFonts.poppins(
-                        color: const Color(0xFFC8A96E),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    const Icon(Icons.expand_more_rounded, color: Color(0xFFC8A96E), size: 20),
-                  ],
-                ),
-                onTap: () {}, // Language toggle logic
-              ),
-              const Divider(color: Colors.white12, height: 1),
-              
-              // Edit Profile
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.person_pin_rounded, color: Color(0xFFC8A96E)), // Custom user gear icon equivalent
-                title: Text(
-                  'РЕДАГУВАТИ ПРОФІЛЬ',
-                  style: GoogleFonts.poppins(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.lerp(FontWeight.w500, FontWeight.w600, 0.5)),
-                ),
-                trailing: const Icon(Icons.chevron_right_rounded, color: Colors.white24, size: 20),
-                onTap: () {},
-              ),
-              const Divider(color: Colors.white12, height: 1),
-              
-              // Log Out
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.logout_rounded, color: Color(0xFFE57373)), // Red icon
-                title: Text(
-                  'Вийти',
-                  style: GoogleFonts.poppins(color: const Color(0xFFE57373), fontSize: 14),
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              const SizedBox(height: 24),
+              _buildMenuItem(Icons.language, 'Мова', trailing: '🇺🇦 UA'),
+              _buildMenuItem(Icons.person_outline, 'Редагувати профіль'),
+              _buildMenuItem(Icons.logout, 'Вийти', color: Colors.redAccent),
+              const SizedBox(height: 12),
             ],
           ),
         ),
       );
     },
+  );
+}
+
+Widget _buildMenuItem(IconData icon, String title, {String? trailing, Color? color}) {
+  return ListTile(
+    contentPadding: EdgeInsets.zero,
+    leading: Icon(icon, color: color ?? const Color(0xFFC8A96E)),
+    title: Text(
+      title,
+      style: GoogleFonts.poppins(color: color ?? Colors.white70, fontSize: 14),
+    ),
+    trailing: trailing != null
+        ? Text(
+            trailing,
+            style: GoogleFonts.poppins(color: const Color(0xFFC8A96E), fontWeight: FontWeight.bold),
+          )
+        : const Icon(Icons.chevron_right, color: Colors.white10),
+    onTap: () {},
   );
 }

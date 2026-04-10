@@ -5,7 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../shared/widgets/glass_container.dart';
 import '../../core/l10n/app_localizations.dart';
+import '../../core/providers/settings_provider.dart';
 import 'terroir_globe.dart';
+import 'sca_flavor_wheel.dart';
 
 class FlavorValuesNotifier extends Notifier<Map<String, double>> {
   @override
@@ -30,91 +32,265 @@ final flavorValuesProvider =
       return FlavorValuesNotifier();
     });
 
-class FlavorMapScreen extends ConsumerWidget {
+class FlavorMapScreen extends ConsumerStatefulWidget {
   const FlavorMapScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<FlavorMapScreen> createState() => _FlavorMapScreenState();
+}
+
+class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
+  int _selectedTab = 1; // Default to Sphere to match screenshot
+
+  void _setTab(int index) {
+    ref.read(settingsProvider.notifier).triggerSelectionVibrate();
+    setState(() => _selectedTab = index);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor:
           Colors.transparent, // Let premium background show through
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            floating: true,
-            title: Text(
-              ref.t('specialty'),
-              style: GoogleFonts.poppins(
-                fontWeight: FontWeight.bold,
-                fontSize: 28,
-                color: const Color(0xFFC8A96E),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Top Bar
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 16.0,
               ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  const SizedBox(height: 16),
-                  GlassContainer(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
+                  // Centered Title
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Мапа смаків',
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                        color: const Color(0xFFC8A96E), // Gold text
+                      ),
+                    ),
+                  ),
+                  // Right aligned badges
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          'Sensory Profile',
-                          style: GoogleFonts.poppins(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                        // Connected Badge
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.transparent, // Very slight outline
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: Colors.greenAccent.withValues(alpha: 0.3),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.cloud_done,
+                                size: 14,
+                                color: Colors.greenAccent,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                'Connected',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.greenAccent,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: 16),
-                        SizedBox(
-                          height: 350,
-                          child: const InteractiveSpiderChart(),
+                        const SizedBox(width: 8),
+                        // Avatar
+                        Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white24, width: 1),
+                            image: const DecorationImage(
+                              image: AssetImage(
+                                'assets/images/placeholder_avatar.jpg',
+                              ),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.person,
+                            color: Colors.transparent,
+                          ), // Fallback shape
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 24),
-
-                  // Add Globe Title
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      'Global Terroir',
-                      style: GoogleFonts.poppins(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFFC8A96E),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-
-                  // The New Terroir Globe Container
-                  GlassContainer(
-                    padding: EdgeInsets.zero,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(24),
-                      child: SizedBox(
-                        height: 500, // Fixed height or could be aspect ratio
-                        child: const TerroirGlobe(),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 120,
-                  ), // Padding to account for the MainScaffold nav bar capsule
                 ],
               ),
             ),
-          ),
-        ],
+
+            // Tab Bar Segmented Control
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _TabOption(
+                      icon: Icons.radar,
+                      label: 'Профіль',
+                      isSelected: _selectedTab == 0,
+                      onTap: () => _setTab(0),
+                    ),
+                  ),
+                  Expanded(
+                    child: _TabOption(
+                      icon: Icons.public,
+                      label: 'Сфера',
+                      isSelected: _selectedTab == 1,
+                      onTap: () => _setTab(1),
+                    ),
+                  ),
+                  Expanded(
+                    child: _TabOption(
+                      icon: Icons.pie_chart_outline,
+                      label: 'Коло смаків',
+                      isSelected: _selectedTab == 2,
+                      onTap: () => _setTab(2),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Content Area
+            Expanded(
+              child: IndexedStack(
+                index: _selectedTab,
+                children: [
+                  // Tab 0: Profile
+                  ListView(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    children: [
+                      GlassContainer(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          children: [
+                            Text(
+                              'Sensory Profile',
+                              style: GoogleFonts.poppins(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            SizedBox(
+                              height: 350,
+                              child: const InteractiveSpiderChart(),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 120), // Bottom nav padding
+                    ],
+                  ),
+
+                  // Tab 1: Sphere
+                  const TerroirGlobe(),
+
+                  // Tab 2: Flavor Wheel
+                  Column(
+                    children: [
+                      Expanded(
+                        child:
+                            ScaFlavorWheel(), // Assume it takes available space
+                      ),
+                      const SizedBox(height: 120),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TabOption extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _TabOption({
+    required this.icon,
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? const Color(0xFFC8A96E).withValues(alpha: 0.15)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(16),
+          border: isSelected
+              ? Border.all(
+                  color: const Color(0xFFC8A96E).withValues(alpha: 0.5),
+                )
+              : Border.all(color: Colors.transparent),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 16,
+              color: isSelected ? const Color(0xFFC8A96E) : Colors.white54,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: GoogleFonts.poppins(
+                fontSize: 12,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                color: isSelected ? const Color(0xFFC8A96E) : Colors.white54,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -225,9 +401,11 @@ class _InteractiveSpiderChartState
                   size: Size(constraints.maxWidth, constraints.maxHeight),
                   painter: RadarPainter(
                     values: values,
-                    primaryColor: theme.colorScheme.secondary,
+                    primaryColor: const Color(
+                      0xFFC8A96E,
+                    ), // Gold instead of secondary
                     gridColor: theme.colorScheme.surface,
-                    textColor: theme.colorScheme.onSurface,
+                    textColor: Colors.white,
                   ),
                 ),
               );
@@ -421,48 +599,6 @@ class RadarPainter extends CustomPainter {
         oldDelegate.primaryColor != primaryColor ||
         oldDelegate.gridColor != gridColor ||
         oldDelegate.textColor != textColor;
-  }
-}
-
-class _SensoryLegend extends StatelessWidget {
-  const _SensoryLegend();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Wrap(
-      spacing: 16,
-      runSpacing: 16,
-      alignment: WrapAlignment.center,
-      children: [
-        _LegendItem(label: 'Fruits', color: Colors.orange),
-        _LegendItem(label: 'Acidity', color: Colors.yellow),
-        _LegendItem(label: 'Body', color: Colors.brown),
-        _LegendItem(label: 'Sweetness', color: Colors.pink),
-        _LegendItem(label: 'Aftertaste', color: Colors.purple),
-      ],
-    );
-  }
-}
-
-class _LegendItem extends StatelessWidget {
-  final String label;
-  final Color color;
-  const _LegendItem({required this.label, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 12,
-          height: 12,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-        ),
-        const SizedBox(width: 8),
-        Text(label, style: const TextStyle(fontSize: 12)),
-      ],
-    );
   }
 }
 

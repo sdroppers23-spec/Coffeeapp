@@ -116,7 +116,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
             Positioned(
               left: 0,
               right: 0,
-              bottom: 25, // Fixed position for capsule look
+              bottom: 40, // Increased to avoid system nav bar overlap
               child: AnimatedSlide(
                 duration: const Duration(milliseconds: 400),
                 curve: Curves.fastOutSlowIn,
@@ -148,12 +148,8 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   _NavBarItem(
-                                    icon: Icons.radar,
-                                    label:
-                                        AppLocalizations.of(
-                                          context,
-                                        )?.specialty ??
-                                        'Specialty',
+                                    icon: Icons.track_changes_rounded,
+                                    label: 'Спешелті',
                                     isSelected:
                                         widget.navigationShell.currentIndex ==
                                         0,
@@ -161,11 +157,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                                   ),
                                   _NavBarItem(
                                     icon: Icons.explore_rounded,
-                                    label:
-                                        AppLocalizations.of(
-                                          context,
-                                        )?.discover ??
-                                        'Discover',
+                                    label: 'Відкриття',
                                     isSelected:
                                         widget.navigationShell.currentIndex ==
                                         1,
@@ -173,9 +165,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                                   ),
                                   _NavBarItem(
                                     icon: Icons.coffee_rounded,
-                                    label:
-                                        AppLocalizations.of(context)?.recipes ??
-                                        'Recipes',
+                                    label: 'Рецепти',
                                     isSelected:
                                         widget.navigationShell.currentIndex ==
                                         2,
@@ -189,27 +179,31 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
 
                         const SizedBox(width: 12),
 
-                        // Rounded Settings Island
+                        // Solid Gold Settings Island
                         PressableScale(
                           onTap: () {
                             ref.read(settingsProvider.notifier).triggerHaptic();
                             context.push('/settings');
                           },
-                          child: GlassContainer(
-                            width: 56,
-                            height: 56,
-                            borderRadius: 28, // Perfect circle
-                            padding: EdgeInsets.zero,
-                            blur: 40,
-                            opacity: 0.18,
-                            borderColor: const Color(
-                              0xFFC8A96E,
-                            ).withValues(alpha: 0.25),
+                          child: Container(
+                            width: 62,
+                            height: 62,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFC8A96E),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black45,
+                                  blurRadius: 10,
+                                  offset: Offset(0, 4),
+                                ),
+                              ],
+                            ),
                             child: const Center(
                               child: Icon(
                                 Icons.settings_rounded,
                                 color: Colors.white,
-                                size: 26,
+                                size: 28,
                               ),
                             ),
                           ),

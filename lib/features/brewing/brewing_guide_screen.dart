@@ -5,6 +5,7 @@ import '../../core/database/app_database.dart';
 import '../../core/database/database_provider.dart';
 import '../../shared/widgets/glass_container.dart';
 import 'brewing_detail_screen.dart';
+import 'method_tile.dart';
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
 final brewingRecipesProvider = FutureProvider<List<BrewingRecipe>>((ref) async {
@@ -65,7 +66,7 @@ class BrewingGuideScreen extends ConsumerWidget {
               childAspectRatio: 0.85,
             ),
             itemCount: recipes.length,
-            itemBuilder: (context, i) => _MethodCard(recipe: recipes[i]),
+            itemBuilder: (context, i) => MethodTile(recipe: recipes[i]),
           );
         },
       ),
@@ -73,116 +74,3 @@ class BrewingGuideScreen extends ConsumerWidget {
   }
 }
 
-// ─── Method Card ─────────────────────────────────────────────────────────────
-class _MethodCard extends StatelessWidget {
-  final BrewingRecipe recipe;
-  const _MethodCard({required this.recipe});
-
-  String get _formattedTime {
-    final s = recipe.totalTimeSec;
-    if (s >= 3600) return '${s ~/ 3600}h';
-    if (s >= 60) return '${s ~/ 60}m';
-    return '${s}s';
-  }
-
-  Color _difficultyColor(String d) {
-    switch (d) {
-      case 'Beginner':
-        return Colors.greenAccent;
-      case 'Intermediate':
-        return Colors.amberAccent;
-      default:
-        return Colors.redAccent;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final meta = _methodMeta[recipe.methodKey] ??
-        const _MethodMeta(assetPath: 'assets/images/methods/v60.png', gradient: [Color(0xFFD4A574), Color(0xFF8B5E3C)]);
-
-    return GestureDetector(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => BrewingDetailScreen(recipe: recipe)),
-      ),
-      child: GlassContainer(
-        padding: EdgeInsets.zero,
-        opacity: 0.08,
-        imageUrl: meta.assetPath,
-        imageOpacity: 0.4,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 8),
-              Text(
-                recipe.name,
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  shadows: const [Shadow(color: Colors.black54, blurRadius: 4)],
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                recipe.flavorProfile,
-                style: const TextStyle(fontSize: 12, color: Colors.white70),
-              ),
-              const Spacer(),
-              // Stats row
-              Row(
-                children: [
-                  _StatChip(label: _formattedTime, icon: Icons.timer_outlined),
-                  const SizedBox(width: 6),
-                  _StatChip(
-                    label: '${recipe.tempC.toInt()}°',
-                    icon: Icons.thermostat_outlined,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: _difficultyColor(recipe.difficulty).withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: _difficultyColor(recipe.difficulty).withOpacity(0.5),
-                  ),
-                ),
-                child: Text(
-                  recipe.difficulty,
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: _difficultyColor(recipe.difficulty),
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _StatChip extends StatelessWidget {
-  final String label;
-  final IconData icon;
-  const _StatChip({required this.label, required this.icon});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 12, color: Colors.white60),
-        const SizedBox(width: 3),
-        Text(label, style: const TextStyle(fontSize: 11, color: Colors.white60)),
-      ],
-    );
-  }
-}

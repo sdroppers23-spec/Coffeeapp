@@ -8,21 +8,16 @@ import '../../core/database/coffee_data_seed.dart';
 import '../../core/database/sync_service.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../shared/widgets/glass_container.dart';
-import '../encyclopedia/encyclopedia_screen.dart';
-import '../specialty/specialty_screen.dart';
-import '../latte_art/latte_art_screen.dart';
 import 'brand_details_screen.dart';
 import 'farmers_screen.dart';
+import '../../core/l10n/l10n_helpers.dart';
+import '../../core/database/dtos.dart';
+import 'discovery_providers.dart';
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
-final brandsProvider = FutureProvider<List<Brand>>((ref) async {
+final brandsProvider = FutureProvider<List<LocalizedBrandDto>>((ref) async {
   final db = ref.watch(databaseProvider);
-  return db.getAllBrands();
-});
-
-final brandByIdProvider = FutureProvider.family<Brand?, int>((ref, id) async {
-  final db = ref.watch(databaseProvider);
-  return db.getBrandById(id);
+  return db.getAllBrands(ref.watch(localeProvider));
 });
 
 class RoastersScreen extends ConsumerWidget {
@@ -41,20 +36,42 @@ class RoastersScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    ref.t('premium_roasters'),
-                    style: GoogleFonts.poppins(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        ref.t('premium_roasters'),
+                        style: GoogleFonts.poppins(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => _showAddRoasterDialog(context, ref),
+                        icon: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: const Color(
+                              0xFFC8A96E,
+                            ).withValues(alpha: 0.2),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.add,
+                            color: Color(0xFFC8A96E),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 8),
                   const SizedBox(height: 8),
                   Text(
                     ref.t('specialty'),
                     style: GoogleFonts.poppins(
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.6),
                       fontSize: 14,
                     ),
                   ),
@@ -78,7 +95,7 @@ class RoastersScreen extends ConsumerWidget {
                       style: TextStyle(
                         color: Theme.of(
                           context,
-                        ).colorScheme.onSurface.withOpacity(0.4),
+                        ).colorScheme.onSurface.withValues(alpha: 0.4),
                       ),
                     ),
                   ),
@@ -169,14 +186,8 @@ class RoastersScreen extends ConsumerWidget {
         // Ensure we have local data to push by seeding once if empty
         final localBrands = await db.getAllBrands();
         if (localBrands.isEmpty) {
-          await CoffeeDataSeed(db).seedAll(
-            onProgress: (m) => messenger.showSnackBar(
-              SnackBar(
-                content: Text(m),
-                duration: const Duration(milliseconds: 500),
-              ),
-            ),
-          );
+          final db = ref.read(databaseProvider);
+          await CoffeeDataSeed(db).seedAll();
         }
         await syncService.pushLocalToCloud(
           onProgress: (msg) {
@@ -223,6 +234,87 @@ class RoastersScreen extends ConsumerWidget {
       );
     }
   }
+
+  Future<void> _showAddRoasterDialog(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    final nameController = TextEditingController();
+    final shortDescController = TextEditingController();
+    final locationController = TextEditingController();
+
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF1A1A1A),
+        title: const Text(
+          'Add New Roaster',
+          style: TextStyle(color: Colors.white),
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  labelText: 'Roaster Name',
+                  labelStyle: TextStyle(color: Colors.white70),
+                ),
+              ),
+              TextField(
+                controller: shortDescController,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  labelText: 'Description',
+                  labelStyle: TextStyle(color: Colors.white70),
+                ),
+              ),
+              TextField(
+                controller: locationController,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  labelText: 'Location',
+                  labelStyle: TextStyle(color: Colors.white70),
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(
+              ref.t('cancel'),
+              style: const TextStyle(color: Colors.white54),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              if (nameController.text.isNotEmpty) {
+                Navigator.pop(ctx, true);
+              }
+            },
+            child: const Text(
+              'Save',
+              style: TextStyle(color: Color(0xFFC8A96E)),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true) {
+      final db = ref.read(databaseProvider);
+      await db.addBrand(
+        nameController.text,
+        locationController.text,
+        shortDescController.text,
+      );
+      ref.invalidate(brandsProvider);
+    }
+  }
 }
 
 class _RoasterCard extends ConsumerStatefulWidget {
@@ -235,6 +327,61 @@ class _RoasterCard extends ConsumerStatefulWidget {
 
 class _RoasterCardState extends ConsumerState<_RoasterCard> {
   bool _isExpanded = false;
+
+  Future<void> _showDeleteConfirmation() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF1A1A1A),
+        title: Text(
+          ref.t('confirm_delete'),
+          style: const TextStyle(color: Colors.white),
+        ),
+        content: Text(
+          'Are you sure you want to delete ${widget.brand.name}? This will unlink all associated coffees.',
+          style: const TextStyle(color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(
+              ref.t('cancel'),
+              style: const TextStyle(color: Colors.white54),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: Colors.redAccent),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        final db = ref.read(databaseProvider);
+        await db.deleteBrand(widget.brand.id);
+        ref.invalidate(brandsProvider);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Roaster deleted successfully')),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to delete: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -258,7 +405,7 @@ class _RoasterCardState extends ConsumerState<_RoasterCard> {
                     height: 160,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.05),
+                      color: Colors.white.withValues(alpha: 0.05),
                     ),
                     child: widget.brand.logoUrl.isNotEmpty
                         ? Opacity(
@@ -294,6 +441,27 @@ class _RoasterCardState extends ConsumerState<_RoasterCard> {
                     ),
                   ),
                 ),
+                // Delete button (only for user-added roasters, e.g. id > 10)
+                if (widget.brand.id > 10)
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: IconButton(
+                      onPressed: _showDeleteConfirmation,
+                      icon: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.black45,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.delete_outline,
+                          color: Colors.redAccent,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                  ),
               ],
             ),
             Padding(
@@ -330,7 +498,7 @@ class _RoasterCardState extends ConsumerState<_RoasterCard> {
                     style: TextStyle(
                       color: Theme.of(
                         context,
-                      ).colorScheme.onSurface.withOpacity(0.8),
+                      ).colorScheme.onSurface.withValues(alpha: 0.8),
                       fontSize: 14,
                       fontStyle: FontStyle.italic,
                     ),
@@ -344,7 +512,7 @@ class _RoasterCardState extends ConsumerState<_RoasterCard> {
                         style: TextStyle(
                           color: Theme.of(
                             context,
-                          ).colorScheme.onSurface.withOpacity(0.6),
+                          ).colorScheme.onSurface.withValues(alpha: 0.6),
                           fontSize: 13,
                           height: 1.5,
                         ),

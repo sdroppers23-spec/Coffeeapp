@@ -4,12 +4,14 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../core/database/app_database.dart';
 import '../../core/database/database_provider.dart';
+import '../../core/database/dtos.dart';
+import '../../core/l10n/app_localizations.dart';
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
-final latteArtPatternsProvider = FutureProvider<List<LatteArtPattern>>((ref) async {
-  return ref.watch(databaseProvider).getAllPatterns();
+final latteArtPatternsProvider = FutureProvider<List<LatteArtPatternDto>>((ref) async {
+  final lang = ref.watch(localeProvider);
+  return ref.watch(databaseProvider).getAllLatteArtPatterns(lang);
 });
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
@@ -24,7 +26,7 @@ class _LatteArtScreenState extends ConsumerState<LatteArtScreen>
     with SingleTickerProviderStateMixin {
   CameraController? _controller;
   double opacity = 0.6;
-  LatteArtPattern? _activePattern;
+  LatteArtPatternDto? _activePattern;
   int _activeStepIndex = 0;
   bool _showSteps = true;
   late AnimationController _drawController;
@@ -54,13 +56,8 @@ class _LatteArtScreenState extends ConsumerState<LatteArtScreen>
     super.dispose();
   }
 
-  List<Map<String, dynamic>> _parseSteps(String json) {
-    try {
-      return (jsonDecode(json) as List).cast<Map<String, dynamic>>();
-    } catch (_) {
-      return [];
-    }
-  }
+  // Steps are already parsed in the DTO
+
 
   Widget _buildDifficultyStars(int d) {
     return Row(
@@ -106,8 +103,8 @@ class _LatteArtScreenState extends ConsumerState<LatteArtScreen>
           }
 
           final steps = _activePattern != null
-              ? _parseSteps(_activePattern!.stepsJson)
-              : <Map<String, dynamic>>[];
+              ? _activePattern!.steps
+              : <dynamic>[];
 
           return Stack(
             fit: StackFit.expand,
@@ -223,7 +220,7 @@ class _LatteArtScreenState extends ConsumerState<LatteArtScreen>
                                 width: 80,
                                 decoration: BoxDecoration(
                                   color: isActive
-                                      ? const Color(0xFFC8A96E).withOpacity(0.25)
+                                      ? const Color(0xFFC8A96E).withValues(alpha: 0.25)
                                       : Colors.black54,
                                   borderRadius: BorderRadius.circular(14),
                                   border: Border.all(
@@ -297,7 +294,7 @@ class _LatteArtScreenState extends ConsumerState<LatteArtScreen>
 
 // ─── Step Guide ───────────────────────────────────────────────────────────────
 class _StepGuide extends StatelessWidget {
-  final List<Map<String, dynamic>> steps;
+  final List<dynamic> steps;
   final int activeIndex;
   final VoidCallback? onPrev;
   final VoidCallback? onNext;
@@ -312,12 +309,13 @@ class _StepGuide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final step = steps[activeIndex];
+    final String instruction = step is Map ? (step['instruction'] ?? '') : step.toString();
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.7),
+        color: Colors.black.withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFC8A96E).withOpacity(0.3)),
+        border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -352,7 +350,7 @@ class _StepGuide extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            step['instruction'] ?? '',
+            instruction,
             style: const TextStyle(color: Colors.white, fontSize: 13, height: 1.4),
           ),
           const SizedBox(height: 8),
@@ -395,7 +393,7 @@ class AdvancedStencilPainter extends CustomPainter {
     final r = size.width / 2;
 
     final guidePaint = Paint()
-      ..color = Colors.white.withOpacity(0.15)
+      ..color = Colors.white.withValues(alpha: 0.15)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
     canvas.drawCircle(center, r - 10, guidePaint);
@@ -424,7 +422,7 @@ class AdvancedStencilPainter extends CustomPainter {
 
     // 3. Draw outline (faint, complete) so user sees the whole structure
     final outlinePaint = Paint()
-      ..color = Colors.white.withOpacity(0.2)
+      ..color = Colors.white.withValues(alpha: 0.2)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3.0
       ..strokeCap = StrokeCap.round

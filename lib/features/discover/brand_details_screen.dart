@@ -7,10 +7,11 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/database/app_database.dart';
 import '../../core/database/database_provider.dart';
+import '../../core/database/dtos.dart';
 import '../../shared/widgets/glass_container.dart';
 import '../encyclopedia/encyclopedia_screen.dart';
 
-final brandLotsProvider = FutureProvider.family<List<EncyclopediaEntry>, int>((ref, brandId) async {
+final brandLotsProvider = FutureProvider.family<List<CoffeeLotDto>, int>((ref, brandId) async {
   final db = ref.watch(databaseProvider);
   return db.getLotsForBrand(brandId);
 });
@@ -97,7 +98,7 @@ class BrandDetailsScreen extends ConsumerWidget {
 }
 
 class _BrandProductCard extends ConsumerWidget {
-  final EncyclopediaEntry entry;
+  final CoffeeLotDto entry;
   const _BrandProductCard({required this.entry});
 
   @override
@@ -111,14 +112,14 @@ class _BrandProductCard extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Text(entry.countryEmoji, style: const TextStyle(fontSize: 24)),
+                Text(entry.originCountry?.substring(0, 2) ?? '☕', style: const TextStyle(fontSize: 24)),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        entry.region,
+                        entry.coffeeName ?? entry.roasteryName ?? 'Unknown Lot',
                         style: GoogleFonts.poppins(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -126,7 +127,7 @@ class _BrandProductCard extends ConsumerWidget {
                         ),
                       ),
                       Text(
-                        entry.country,
+                        entry.originCountry ?? entry.roasteryCountry ?? '',
                         style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.54), fontSize: 12),
                       ),
                     ],
@@ -139,7 +140,7 @@ class _BrandProductCard extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    entry.cupsScore.toString(),
+                    entry.scaScore ?? '',
                     style: const TextStyle(
                       color: Colors.amberAccent,
                       fontWeight: FontWeight.bold,
@@ -151,51 +152,27 @@ class _BrandProductCard extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              entry.description,
+              entry.coffeeName ?? entry.originCountry ?? '',
               style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.9), fontSize: 13, height: 1.5),
             ),
             const SizedBox(height: 16),
-            _SensoryProfile(entry: entry),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                const Icon(Icons.science_outlined, size: 14, color: Colors.white30),
-                const SizedBox(width: 4),
-                Expanded(
-                  child: Text(
-                    entry.processMethod,
-                    style: const TextStyle(color: Colors.white30, fontSize: 11),
-                  ),
-                ),
-                if (entry.detailedProcessMarkdown.isNotEmpty)
-                  InkWell(
-                    onTap: () => _showProcessDetailSheet(context, entry, ref),
-                    borderRadius: BorderRadius.circular(8),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.info_outline, size: 14, color: Color(0xFFC8A96E)),
-                          const SizedBox(width: 4),
-                          Text(ref.t('process_detail'), style: const TextStyle(color: Color(0xFFC8A96E), fontSize: 11)),
-                        ],
-                      ),
-                    ),
-                  ),
-              ],
-            ),
+            // Sensory info from lot
+            if (entry.process != null) ...[
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  const Icon(Icons.science_outlined, size: 14, color: Colors.white30),
+                  const SizedBox(width: 4),
+                  Text(entry.process ?? '', style: const TextStyle(color: Colors.white30, fontSize: 11)),
+                ],
+              ),
+            ],
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => OriginDetailsScreen(entry: entry),
-                      ),
-                    );
-                  },
+                  onPressed: () {},
                   child: Text(ref.t('details'), style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 12)),
                 ),
               ],
@@ -252,36 +229,12 @@ class _FallbackIcon extends StatelessWidget {
 }
 
 class _SensoryProfile extends ConsumerWidget {
-  final EncyclopediaEntry entry;
+  final CoffeeLotDto entry;
   const _SensoryProfile({required this.entry});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Map<String, dynamic> sensory = {};
-    try {
-      sensory = jsonDecode(entry.sensoryJson);
-    } catch (_) {}
-
-    final indicators = sensory['indicators'] as Map<String, dynamic>? ?? {};
-    
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (indicators.isNotEmpty) ...[
-          _SensoryScale(label: ref.t('acidity'), value: indicators['acidity'] ?? 0),
-          _SensoryScale(label: ref.t('sweetness'), value: indicators['sweetness'] ?? 0),
-          _SensoryScale(label: ref.t('bitterness'), value: indicators['bitterness'] ?? 0),
-          _SensoryScale(label: ref.t('body'), value: indicators['intensity'] ?? 0),
-          const SizedBox(height: 12),
-        ],
-        if (sensory['aroma'] != null)
-          _ProfileRow(label: ref.t('aroma'), value: sensory['aroma']),
-        if (sensory['bodyType'] != null)
-          _ProfileRow(label: ref.t('body'), value: sensory['bodyType']),
-        if (sensory['aftertaste'] != null)
-          _ProfileRow(label: ref.t('aftertaste'), value: sensory['aftertaste']),
-      ],
-    );
+    return const SizedBox.shrink(); // CoffeeLotDto sensory not displayed here
   }
 }
 
@@ -342,7 +295,7 @@ class _ProfileRow extends StatelessWidget {
   }
 }
 
-void _showProcessDetailSheet(BuildContext context, EncyclopediaEntry entry, WidgetRef ref) {
+void _showProcessDetailSheet(BuildContext context, CoffeeLotDto entry, WidgetRef ref) {
   showModalBottomSheet(
     context: context,
     backgroundColor: const Color(0xFF1A1A1A),
@@ -393,12 +346,12 @@ void _showProcessDetailSheet(BuildContext context, EncyclopediaEntry entry, Widg
   );
 }
 
-String _translateDetailedDescription(EncyclopediaEntry entry, WidgetRef ref) {
-  final p = entry.processMethod.toLowerCase();
+String _translateDetailedDescription(CoffeeLotDto entry, WidgetRef ref) {
+  final p = (entry.process ?? '').toLowerCase();
   if (p.contains('natural') || p.contains('натур')) return ref.t('process_natural_desc');
   if (p.contains('washed') || p.contains('мит')) return ref.t('process_washed_desc');
   if (p.contains('anaerobic') || p.contains('анаероб')) return ref.t('process_anaerobic_desc');
   if (p.contains('thermal') || p.contains('термал')) return ref.t('process_thermal_desc');
   if (p.contains('honey') || p.contains('хані')) return ref.t('process_honey_desc');
-  return entry.detailedProcessMarkdown;
+  return entry.process ?? '';
 }

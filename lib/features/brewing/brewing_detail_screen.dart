@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/database/app_database.dart';
-import 'custom_recipe_list.dart';
 import '../../core/database/database_provider.dart';
+import '../../core/database/dtos.dart';
+import 'custom_recipe_list.dart';
 import '../../shared/widgets/glass_container.dart';
 
 // ─── Method metadata (shared with BrewingGuideScreen) ──────────────────────────
@@ -22,7 +23,8 @@ class BrewingDetailScreen extends ConsumerStatefulWidget {
   const BrewingDetailScreen({super.key, required this.recipe});
 
   @override
-  ConsumerState<BrewingDetailScreen> createState() => _BrewingDetailScreenState();
+  ConsumerState<BrewingDetailScreen> createState() =>
+      _BrewingDetailScreenState();
 }
 
 class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen>
@@ -102,7 +104,8 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen>
 
   @override
   Widget build(BuildContext context) {
-    final assetPath = _methodMeta[widget.recipe.methodKey] ?? 'assets/images/methods/v60.png';
+    final assetPath =
+        _methodMeta[widget.recipe.methodKey] ?? 'assets/images/methods/v60.png';
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -114,14 +117,25 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen>
             backgroundColor: Colors.transparent,
             elevation: 0,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(widget.recipe.name,
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18, shadows: [const Shadow(blurRadius: 10, color: Colors.black45)])),
+              title: Text(
+                widget.recipe.name,
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  shadows: [
+                    const Shadow(blurRadius: 10, color: Colors.black45),
+                  ],
+                ),
+              ),
               background: Container(
                 foregroundDecoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Colors.black.withOpacity(0.3), Colors.black.withOpacity(0.8)],
+                    colors: [
+                      Colors.black.withOpacity(0.3),
+                      Colors.black.withOpacity(0.8),
+                    ],
                   ),
                 ),
                 child: Image.asset(assetPath, fit: BoxFit.cover),
@@ -149,11 +163,22 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _InfoChip(icon: Icons.thermostat_outlined,
-                          label: '${widget.recipe.tempC.toInt()}°C'),
-                      _InfoChip(icon: Icons.balance_outlined, label: _formattedRatio),
-                      _InfoChip(icon: Icons.timer_outlined, label: _formatTime(widget.recipe.totalTimeSec)),
-                      _InfoChip(icon: Icons.signal_cellular_alt_outlined, label: widget.recipe.difficulty),
+                      _InfoChip(
+                        icon: Icons.thermostat_outlined,
+                        label: '${widget.recipe.tempC.toInt()}°C',
+                      ),
+                      _InfoChip(
+                        icon: Icons.balance_outlined,
+                        label: _formattedRatio,
+                      ),
+                      _InfoChip(
+                        icon: Icons.timer_outlined,
+                        label: _formatTime(widget.recipe.totalTimeSec),
+                      ),
+                      _InfoChip(
+                        icon: Icons.signal_cellular_alt_outlined,
+                        label: widget.recipe.difficulty,
+                      ),
                     ],
                   ),
                 ),
@@ -212,9 +237,14 @@ class _InfoChip extends StatelessWidget {
       children: [
         Icon(icon, color: const Color(0xFFC8A96E), size: 20),
         const SizedBox(height: 6),
-        Text(label,
-            style: GoogleFonts.poppins(
-                fontSize: 11, color: Colors.white, fontWeight: FontWeight.w600)),
+        Text(
+          label,
+          style: GoogleFonts.poppins(
+            fontSize: 11,
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ],
     );
   }
@@ -255,7 +285,9 @@ class _StepsTab extends StatelessWidget {
 
         return GlassContainer(
           opacity: isActive ? 0.15 : 0.05,
-          borderColor: isActive ? const Color(0xFFC8A96E).withOpacity(0.5) : null,
+          borderColor: isActive
+              ? const Color(0xFFC8A96E).withOpacity(0.5)
+              : null,
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -266,28 +298,46 @@ class _StepsTab extends StatelessWidget {
                     width: 32,
                     height: 32,
                     decoration: BoxDecoration(
-                      color: isActive ? const Color(0xFFC8A96E) : Colors.white10,
+                      color: isActive
+                          ? const Color(0xFFC8A96E)
+                          : Colors.white10,
                       shape: BoxShape.circle,
                     ),
                     child: Center(
-                      child: Text('${i + 1}',
-                        style: TextStyle(color: isActive ? Colors.black : Colors.white70, fontWeight: FontWeight.bold)),
+                      child: Text(
+                        '${i + 1}',
+                        style: TextStyle(
+                          color: isActive ? Colors.black : Colors.white70,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 14),
                   Expanded(
-                    child: Text(step['title'] ?? 'Step ${i + 1}',
-                        style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                            color: isActive ? const Color(0xFFC8A96E) : Colors.white)),
+                    child: Text(
+                      step['title'] ?? 'Step ${i + 1}',
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                        color: isActive
+                            ? const Color(0xFFC8A96E)
+                            : Colors.white,
+                      ),
+                    ),
                   ),
                   _DurationBadge(label: formatTime(duration)),
                 ],
               ),
               const SizedBox(height: 12),
-              Text(step['desc'] ?? '',
-                  style: GoogleFonts.inter(color: Colors.white70, height: 1.6, fontSize: 13.5)),
+              Text(
+                step['desc'] ?? '',
+                style: GoogleFonts.inter(
+                  color: Colors.white70,
+                  height: 1.6,
+                  fontSize: 13.5,
+                ),
+              ),
               if (isActive) ...[
                 const SizedBox(height: 20),
                 _TimerSection(
@@ -303,8 +353,19 @@ class _StepsTab extends StatelessWidget {
                 Center(
                   child: TextButton.icon(
                     onPressed: () => onStartTimer(i),
-                    icon: const Icon(Icons.play_arrow_rounded, color: Color(0xFFC8A96E)),
-                    label: Text('START TIMER', style: GoogleFonts.poppins(fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.2, color: const Color(0xFFC8A96E))),
+                    icon: const Icon(
+                      Icons.play_arrow_rounded,
+                      color: Color(0xFFC8A96E),
+                    ),
+                    label: Text(
+                      'START TIMER',
+                      style: GoogleFonts.poppins(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                        color: const Color(0xFFC8A96E),
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -323,8 +384,18 @@ class _DurationBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(color: Colors.white.withOpacity(0.06), borderRadius: BorderRadius.circular(10)),
-      child: Text(label, style: const TextStyle(fontSize: 10, color: Colors.white54, fontWeight: FontWeight.bold)),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.06),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 10,
+          color: Colors.white54,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     );
   }
 }
@@ -355,7 +426,9 @@ class _TimerSection extends StatelessWidget {
           builder: (context, _) => LinearProgressIndicator(
             value: progressController.value,
             backgroundColor: Colors.white12,
-            valueColor: AlwaysStoppedAnimation<Color>(timerRunning ? const Color(0xFFC8A96E) : Colors.white24),
+            valueColor: AlwaysStoppedAnimation<Color>(
+              timerRunning ? const Color(0xFFC8A96E) : Colors.white24,
+            ),
             minHeight: 8,
             borderRadius: BorderRadius.circular(10),
           ),
@@ -364,17 +437,36 @@ class _TimerSection extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(formatTime(remainingSec),
-                style: GoogleFonts.poppins(fontSize: 28, fontWeight: FontWeight.bold, color: const Color(0xFFC8A96E))),
+            Text(
+              formatTime(remainingSec),
+              style: GoogleFonts.poppins(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFFC8A96E),
+              ),
+            ),
             ElevatedButton.icon(
               onPressed: timerRunning ? onStop : onRestart,
-              icon: Icon(timerRunning ? Icons.stop_rounded : Icons.replay_rounded, size: 20),
-              label: Text(timerRunning ? 'STOP' : 'RESTART', style: const TextStyle(fontWeight: FontWeight.bold)),
+              icon: Icon(
+                timerRunning ? Icons.stop_rounded : Icons.replay_rounded,
+                size: 20,
+              ),
+              label: Text(
+                timerRunning ? 'STOP' : 'RESTART',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: timerRunning ? Colors.redAccent.withOpacity(0.8) : const Color(0xFFC8A96E),
+                backgroundColor: timerRunning
+                    ? Colors.redAccent.withOpacity(0.8)
+                    : const Color(0xFFC8A96E),
                 foregroundColor: Colors.black,
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
           ],
@@ -383,6 +475,7 @@ class _TimerSection extends StatelessWidget {
     );
   }
 }
+
 class _RecommendedRecipesTab extends ConsumerWidget {
   final String methodKey;
   const _RecommendedRecipesTab({required this.methodKey});
@@ -400,10 +493,16 @@ class _RecommendedRecipesTab extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.auto_awesome_outlined, size: 48, color: Colors.white24),
+                const Icon(
+                  Icons.auto_awesome_outlined,
+                  size: 48,
+                  color: Colors.white24,
+                ),
                 const SizedBox(height: 12),
-                Text('No recommended recipes yet',
-                  style: TextStyle(color: Colors.white.withOpacity(0.3))),
+                Text(
+                  'No recommended recipes yet',
+                  style: TextStyle(color: Colors.white.withOpacity(0.3)),
+                ),
               ],
             ),
           );
@@ -412,20 +511,25 @@ class _RecommendedRecipesTab extends ConsumerWidget {
           padding: const EdgeInsets.all(16),
           itemCount: recipes.length,
           separatorBuilder: (_, __) => const SizedBox(height: 16),
-          itemBuilder: (context, i) => _RecommendedRecipeCard(recipe: recipes[i]),
+          itemBuilder: (context, i) =>
+              _RecommendedRecipeCard(recipe: recipes[i]),
         );
       },
     );
   }
 }
 
-final recommendedRecipesProvider = FutureProvider.family<List<RecommendedRecipe>, String>((ref, methodKey) async {
-  final db = ref.watch(databaseProvider);
-  return db.getRecommendedRecipesForMethod(methodKey);
-});
+final recommendedRecipesProvider =
+    FutureProvider.family<List<RecommendedRecipeDto>, String>((
+      ref,
+      methodKey,
+    ) async {
+      final db = ref.watch(databaseProvider);
+      return db.getRecommendedRecipesForMethod(methodKey);
+    });
 
 class _RecommendedRecipeCard extends StatelessWidget {
-  final RecommendedRecipe recipe;
+  final RecommendedRecipeDto recipe;
   const _RecommendedRecipeCard({required this.recipe});
 
   @override
@@ -445,14 +549,23 @@ class _RecommendedRecipeCard extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: Center(
-                  child: Icon(Icons.coffee_maker_outlined, color: const Color(0xFFC8A96E), size: 30),
+                  child: Icon(
+                    Icons.coffee_maker_outlined,
+                    color: const Color(0xFFC8A96E),
+                    size: 30,
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
               Row(
                 children: [
-                  Text(recipe.rating.toStringAsFixed(1), 
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                  Text(
+                    recipe.rating.toStringAsFixed(1),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                    ),
+                  ),
                   const Icon(Icons.star, color: Colors.amber, size: 14),
                 ],
               ),
@@ -465,7 +578,10 @@ class _RecommendedRecipeCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _StatLine(icon: Icons.coffee, label: '${recipe.coffeeGrams} g'),
-                _StatLine(icon: Icons.water_drop, label: '${recipe.waterGrams} g'),
+                _StatLine(
+                  icon: Icons.water_drop,
+                  label: '${recipe.waterGrams} g',
+                ),
                 _StatLine(icon: Icons.thermostat, label: '${recipe.tempC}°C'),
                 _StatLine(icon: Icons.timer, label: '${recipe.timeSec} s'),
               ],

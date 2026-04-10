@@ -12,10 +12,12 @@ class CustomRecipeTimerScreen extends ConsumerStatefulWidget {
   const CustomRecipeTimerScreen({super.key, required this.recipe});
 
   @override
-  ConsumerState<CustomRecipeTimerScreen> createState() => _CustomRecipeTimerScreenState();
+  ConsumerState<CustomRecipeTimerScreen> createState() =>
+      _CustomRecipeTimerScreenState();
 }
 
-class _CustomRecipeTimerScreenState extends ConsumerState<CustomRecipeTimerScreen> {
+class _CustomRecipeTimerScreenState
+    extends ConsumerState<CustomRecipeTimerScreen> {
   bool _isRunning = false;
   int _elapsedSec = 0;
   Timer? _timer;
@@ -28,7 +30,9 @@ class _CustomRecipeTimerScreenState extends ConsumerState<CustomRecipeTimerScree
       _pours = (jsonDecode(widget.recipe.pourScheduleJson) as List)
           .cast<Map<String, dynamic>>();
       // Sort by minute just in case
-      _pours.sort((a, b) => (a['atMinute'] as num).compareTo(b['atMinute'] as num));
+      _pours.sort(
+        (a, b) => (a['atMinute'] as num).compareTo(b['atMinute'] as num),
+      );
     } catch (_) {
       _pours = [];
     }
@@ -82,12 +86,12 @@ class _CustomRecipeTimerScreenState extends ConsumerState<CustomRecipeTimerScree
   String _getActiveStepText(int activeIndex) {
     if (activeIndex < 0) return 'Ready to brew';
     if (activeIndex >= _pours.length) return 'Brewing complete';
-    
+
     final pour = _pours[activeIndex];
     final isBloom = activeIndex == 0;
     final ml = pour['waterMl'];
     final notes = pour['notes']?.toString();
-    
+
     String text = isBloom ? 'Bloom: Pour $ml ml' : 'Pour $ml ml';
     if (notes != null && notes.isNotEmpty) {
       text += ' - $notes';
@@ -135,10 +139,14 @@ class _CustomRecipeTimerScreenState extends ConsumerState<CustomRecipeTimerScree
                       width: 220,
                       height: 220,
                       child: CircularProgressIndicator(
-                        value: _isRunning ? null : 0.0, // Or calculate based on step
+                        value: _isRunning
+                            ? null
+                            : 0.0, // Or calculate based on step
                         strokeWidth: 8,
                         backgroundColor: Colors.white10,
-                        valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFC8A96E)),
+                        valueColor: const AlwaysStoppedAnimation<Color>(
+                          Color(0xFFC8A96E),
+                        ),
                       ),
                     ),
                     Column(
@@ -149,13 +157,19 @@ class _CustomRecipeTimerScreenState extends ConsumerState<CustomRecipeTimerScree
                           style: GoogleFonts.poppins(
                             fontSize: 64,
                             fontWeight: FontWeight.w300,
-                            color: _isRunning ? const Color(0xFFC8A96E) : Colors.white,
+                            color: _isRunning
+                                ? const Color(0xFFC8A96E)
+                                : Colors.white,
                             fontFeatures: const [FontFeature.tabularFigures()],
                           ),
                         ),
                         Text(
                           _isRunning ? 'RUNNING' : 'PAUSED',
-                          style: const TextStyle(fontSize: 12, letterSpacing: 4, color: Colors.white38),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            letterSpacing: 4,
+                            color: Colors.white38,
+                          ),
                         ),
                       ],
                     ),
@@ -164,25 +178,44 @@ class _CustomRecipeTimerScreenState extends ConsumerState<CustomRecipeTimerScree
                 const SizedBox(height: 24),
                 ElevatedButton.icon(
                   onPressed: _toggleTimer,
-                  icon: Icon(_isRunning ? Icons.pause : Icons.play_arrow, size: 28),
+                  icon: Icon(
+                    _isRunning ? Icons.pause : Icons.play_arrow,
+                    size: 28,
+                  ),
                   label: Text(
                     _isRunning ? 'PAUSE' : 'START',
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 2),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2,
+                    ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _isRunning ? Colors.white24 : const Color(0xFFC8A96E),
+                    backgroundColor: _isRunning
+                        ? Colors.white24
+                        : const Color(0xFFC8A96E),
                     foregroundColor: _isRunning ? Colors.white : Colors.black,
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 40,
+                      vertical: 16,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFFC8A96E).withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: const Color(0xFFC8A96E).withOpacity(0.3)),
+                    border: Border.all(
+                      color: const Color(0xFFC8A96E).withOpacity(0.3),
+                    ),
                   ),
                   child: Text(
                     _getActiveStepText(activeIndex),
@@ -197,7 +230,7 @@ class _CustomRecipeTimerScreenState extends ConsumerState<CustomRecipeTimerScree
               ],
             ),
           ),
-          
+
           // ── Info Row ────────────────────────────────────────────────────────
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -236,9 +269,13 @@ class _CustomRecipeTimerScreenState extends ConsumerState<CustomRecipeTimerScree
                   decoration: BoxDecoration(
                     color: isActive
                         ? const Color(0xFFC8A96E).withOpacity(0.15)
-                        : (isPast ? Colors.white.withOpacity(0.02) : Colors.white.withOpacity(0.05)),
+                        : (isPast
+                              ? Colors.white.withOpacity(0.02)
+                              : Colors.white.withOpacity(0.05)),
                     border: Border.all(
-                      color: isActive ? const Color(0xFFC8A96E) : Colors.transparent,
+                      color: isActive
+                          ? const Color(0xFFC8A96E)
+                          : Colors.transparent,
                     ),
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -251,8 +288,14 @@ class _CustomRecipeTimerScreenState extends ConsumerState<CustomRecipeTimerScree
                           _formatTime(pourSec),
                           style: TextStyle(
                             fontSize: 16,
-                            fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-                            color: isPast ? Colors.white38 : (isActive ? const Color(0xFFC8A96E) : Colors.white),
+                            fontWeight: isActive
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                            color: isPast
+                                ? Colors.white38
+                                : (isActive
+                                      ? const Color(0xFFC8A96E)
+                                      : Colors.white),
                           ),
                         ),
                       ),
@@ -269,14 +312,17 @@ class _CustomRecipeTimerScreenState extends ConsumerState<CustomRecipeTimerScree
                                 color: isPast ? Colors.white38 : Colors.white,
                               ),
                             ),
-                            if (pour['notes'] != null && pour['notes'].toString().isNotEmpty)
+                            if (pour['notes'] != null &&
+                                pour['notes'].toString().isNotEmpty)
                               Padding(
                                 padding: const EdgeInsets.only(top: 4),
                                 child: Text(
                                   pour['notes'],
                                   style: TextStyle(
                                     fontSize: 13,
-                                    color: isPast ? Colors.white24 : Colors.white70,
+                                    color: isPast
+                                        ? Colors.white24
+                                        : Colors.white70,
                                   ),
                                 ),
                               ),
@@ -288,7 +334,9 @@ class _CustomRecipeTimerScreenState extends ConsumerState<CustomRecipeTimerScree
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: isPast ? Colors.white38 : Colors.lightBlueAccent.shade100,
+                          color: isPast
+                              ? Colors.white38
+                              : Colors.lightBlueAccent.shade100,
                         ),
                       ),
                     ],
@@ -311,7 +359,11 @@ class _StatText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w600, fontSize: 13),
+      style: const TextStyle(
+        color: Colors.white70,
+        fontWeight: FontWeight.w600,
+        fontSize: 13,
+      ),
     );
   }
 }

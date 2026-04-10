@@ -11,9 +11,19 @@ final localeProvider = NotifierProvider<LocaleNotifier, String>(() => LocaleNoti
 
 extension LocalizationExtension on WidgetRef {
   String t(String key) {
-    final locale = watch(localeProvider); // watch, not read — triggers rebuild on locale change
+    final locale = watch(localeProvider); // watch triggers rebuild on locale change
     return AppLocalizations(locale).translate(key);
   }
+}
+
+extension BuildContextLocalization on BuildContext {
+  String t(String key) {
+    return AppLocalizations.of(this).translate(key);
+  }
+}
+
+class LocaleService {
+  static String get currentLocale => 'uk'; // Default to UK for v17 bridge
 }
 
 class AppLocalizations {

@@ -1,0 +1,241 @@
+part of 'app_database.dart';
+
+class SeedDataSpecialty {
+  static List<Insertable<SpecialtyArticle>> getArticles() {
+    return [
+      _art(
+          1,
+          'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80',
+          5),
+      _art(
+          2,
+          'https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&q=80',
+          7),
+      _art(
+          3,
+          'https://images.unsplash.com/photo-1501339819302-ee4467264a2c?auto=format&fit=crop&q=80',
+          6),
+    ];
+  }
+
+  static List<Insertable<SpecialtyArticleTranslation>>
+      getArticleTranslations() {
+    return [
+      _artTrans(
+          1,
+          'uk',
+          'Мистецтво обсмажування',
+          'Від зерна до ідеального профілю',
+          '<h3>Магія піролізу</h3><p>Обсмажування — це не просто нагрівання зерен. Це серія складних хімічних реакцій Маяра, що перетворюють крохмаль на цукор, а органічні кислоти — на складні ефіри з ароматом жасмину, чорниці чи шоколаду.</p><h3>Перший крек</h3><p>У момент, коли волога всередині зерна перетворюється на пару, ви чуєте характерний хрускіт. Це точка неповернення, де починається формування характеру вашої кави.</p>'),
+      _artTrans(
+          1,
+          'en',
+          'The Art of Roasting',
+          'From green bean to perfect profile',
+          '<h1>The Roasting Process</h1><p>Roasting coffee involves precise temperature control to unlock complex sugars and volatile oils.</p>'),
+      _artTrans(
+          2,
+          'uk',
+          'Теорія екстракції Espresso',
+          'Фізика та хімія в одній чашці',
+          '<h3>Баланс TDS та виходу</h3><p>Еспресо — це тонка гра між розчинними речовинами. Ми прагнемо балансу між солодкістю та кислотністю, уникаючи гіркоти надмірної екстракції.</p><h3>Гідродинаміка холдера</h3><p>Тиск у 9 бар змушує воду проходити крізь кавову таблетку, вимиваючи ефірні масла, що формують крема.</p>'),
+      _artTrans(
+          2,
+          'en',
+          'Espresso Extraction Theory',
+          'Physics and chemistry in a cup',
+          '<h1>Extraction Basics</h1><p>Learn how grind size and water temperature affect the flavor profile of your espresso shot.</p>'),
+      _artTrans(3, 'uk', 'Світ мікро-лотів', 'Чому походження має значення',
+          '<h3>Генетика та терруар</h3><p>Сорт Geisha на висоті 1900м в Ефіопії та в Панамі дасть абсолютно різні результати. Саме терруар створює унікальний відбиток смаку.</p><h3>Ферментаційні експерименти</h3><p>Анаеробна ферментація відкриває двері у світ винних нот та яскравої тропічної кислотності.</p>'),
+      _artTrans(3, 'en', 'The World of Micro-lots', 'Why origin matters',
+          '<h1>Terroir and Processing</h1><p>Discover how high-altitude farming and innovative processing create world-class coffee profiles.</p>'),
+    ];
+  }
+
+  static List<Insertable<LocalizedFarmer>> getFarmers() {
+    return [
+      _far(1, 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/carlos_montero_portrait_1775681700053.png', '🇨🇷', 9.6, -84.0),
+      _far(4, 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/farmer_oscar_francisca_chacon_1775463574148.png', '🇨🇷', 10.0, -84.1),
+      _far(5, 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/farmer_carlos_felipe_arcila_1775463591773.png', '🇨🇴', 4.5, -75.7),
+      _far(6, 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/farmer_adam_rachel_overton_1775463606712.png', '🇪🇹', 7.0, 35.5),
+      _far(7, 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/farmer_aida_batlle_1775463622660.png', '🇸🇻', 13.9, -89.5),
+      _far(8, 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/farmer_pepe_jijon_1775463639704.png', '🇪🇨', 0.3, -78.2),
+      _far(9, 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/farmer_alejo_castro_1775463657692.png', '🇨🇷', 10.2, -84.3),
+      _far(10, 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/farmer_luis_norberto_pascoal_1775463672082.png', '🇧🇷', -19.8, -46.7),
+      _far(11, 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/wilton_benitez.png', '🇨🇴', 2.44, -76.6),
+      _far(12, 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/samuel_rony.png', '🇮🇩', -7.9, 114.2),
+    ];
+  }
+
+  static List<Insertable<LocalizedFarmerTranslation>> getFarmerTranslations() {
+    return [
+      _farTrans(
+          1,
+          'uk',
+          'Карлос Монтеро',
+          'La Pastora / Don Eli',
+          '<h3>Майстер Tarrazu</h3><p>Карлос Монтеро — фермер у третьому поколінні. Родина Монтеро займається кавою понад 100 років, але Карлос став легендою завдяки створенню мікро-станції обробки Don Eli. Його пристрасть до якості та інновацій зробила його ферму взірцем для всього регіону.</p><h3>Філософія мікро-лотів</h3><p>Він був одним з перших, хто зрозумів: майбутнє Коста-Рики — в унікальних мікро-лотів. Він збудував власну станцію, щоб контролювати кожен етап: від збору ягоди до фінальної дегідратації. Це дозволяє йому експериментувати з ферментацією та отримувати профілі, які раніше вважалися неможливими для Tarrazu.</p><h3>Соціальна відповідальність</h3><p>Карлос активно підтримує місцеву спільноту, ділячись знаннями з іншими фермерами. Він вірить, що розвиток усього регіону принесе користь кожному окремому господарству.</p>',
+          'Тарразу',
+          'Коста-Ріка'),
+      _farTrans(
+          1,
+          'en',
+          'Carlos Montero',
+          'Don Eli',
+          'A legend of Tarrazu. His family has been growing coffee for four generations. He built his own micro-mill to control every aspect of production.',
+          'Tarrazu',
+          'Costa Rica'),
+      _farTrans(
+          4,
+          'uk',
+          'Оскар та Франциска Чакон',
+          'Las Lajas',
+          '<h3>Піонери натуральної обробки</h3><p>Родина Чакон змінила історію Коста-Рики після вимушеного переходу на "сухий" метод у 2008 році. Це зробило їх світовими лідерами Honey-обробки та натурального способу в країні, де традиційно панувала мита кава.</p><h3>Органічне серце</h3><p>Las Lajas — одна з небагатьох ферм з повною органічною сертифікацією. Вони використовують власні добрива, виготовлені з кавової пульпи, та зберігають біорізноманіття тропічного лісу прямо на плантаціях.</p><h3>Майстерність Honey</h3><p>Оскар розробив унікальну класифікацію Honey-обробки: Yellow, Red, Black та Perla Negra, кожна з яких має свій неповторний смаковий пробіль.</p>',
+          'Центральна Долина',
+          'Коста-Ріка'),
+      _farTrans(
+          5,
+          'uk',
+          'Карлос та Феліпе Арсіла',
+          'Cofinet / Jardines del Eden',
+          '<h3>Революція в ферментації</h3><p>Брати Карлос та Феліпе Арсіла — це колумбійські революціонери, які заснували експортну компанію Cofinet і змінили правила гри у "ко-ферментації". Їхній підхід поєднує глибокі знання агрономії з сучасними харчовими технологіями.</p><h3>Інновації в Jardines del Eden</h3><p>Вони спеціалізуються на інфузіях — процесі додавання сторонніх натуральних інгредієнтів (фруктів, трав) під час бродіння кави. Це створює неймовірно яскраві смакові профілі, які нагадують тропічні коктейлі.</p><h3>Родинні традиції</h3><p>Незважаючи на інновації, брати поважають досвід свого батька, який десятиліттями вирощував каву класичними методами. Вони вірять у симбіоз традицій та прогресу.</p>',
+          'Кіндіо',
+          'Колумбія'),
+      _farTrans(
+          6,
+          'uk',
+          'Адам Овертон та Рейчел Семюел',
+          'Gesha Village Coffee Estate',
+          '<h3>Відродження легенди</h3><p>У 2011 році Адам Овертон і Рейчел Семюел розпочали грандіозний проект у віддаленому регіоні Бенч-Мажі в Ефіопії. Їхньою метою було знайти дикі сорти Геші в лісі Горі-Геша та висадити їх на власній фермі.</p><h3>Світове визнання</h3><p>Сьогодні Gesha Village є один з найбільш престижних кавових господарств у світі, пропонуючи каву неймовірної чистоти та ароматичної складності.</p><h3>Експорт якості</h3><p>Вони створили систему лотів, що дозволяє обсмажчикам з усього світу купувати конкретні ділянки врожаю, забезпечуючи повну простежуваність.</p>',
+          'Бенчі-Маджі',
+          'Ефіопія'),
+      _farTrans(
+          7,
+          'uk',
+          'Аїда Батлл',
+          'Finca Kilimanjaro',
+          '<h3>Бунтарка та інноваторка</h3><p>Аїда Батлл — одна з найбільш впізнаваних постатей у світі specialty кави. Вона стала першою жінкою, яка виграла Cup of Excellence в Сальвадорі, і з того часу продовжує ламати стереотипи.</p><h3>Філософія якості</h3><p>Її підхід базується на ретельній селекції та експериментальних методах обробки, багато з яких вона розробляє самостійно на своїх фермах Kilimanjaro та Los Alpes.</p><h3>Аїда Батлл Selection</h3><p>Вона створила бренд "Aida Batlle Selection", який гарантує обсмажчикам найвищий рівень якості та контроль за кожним зерном.</p>',
+          'Санта-Ана',
+          'Сальвадор'),
+      _farTrans(
+          8,
+          'uk',
+          'Пепе Хіхон',
+          'Finca Soledad',
+          '<h3>Від альпінізму до кавової алхімії</h3><p>Пепе Хіхон — колишній професійний альпініст, що підкорив 7 найвищих вершин світу. Його ферма Finca Soledad в Еквадорі — це унікальне місце, де кава росте в гармонії з хмарним лісом.</p><h3>Біодинамічний підхід</h3><p>Пепе практикує біодинаміку: повна відмова від хімії та робота в циклах природи. Його легендарний сорт Sidra стає справжнім витвором мистецтва завдяки особливій ферментації Wave.</p><h3>Чистота смаку</h3><p>Його кава характеризується надзвичайною чистотою та елегантністю, що зробило її улюбленою серед чемпіонів бариста по всьому світу.</p>',
+          'Імбабура',
+          'Еквадор'),
+      _farTrans(
+          9,
+          'uk',
+          'Алехо Кастро',
+          'Volcan Azul',
+          '<h3>Спадкоємець кавової імперії</h3><p>Алехо — представник п’ятого покоління династії Кастро. Його ферма Volcan Azul розташована на схилах вулкану Поас, де багатий на мінерали вулканічний ґрунт створює ідеальні умови для кави.</p><h3>Ботанічний заповідник</h3><p>На фермі висаджено понад 40 рідкісних ботанічних різновидів. Алехо активно інвестує у захист дикої природи, намагаючись зберегти первісний стан тропічних лісів.</p><h3>Сучасна обробка</h3><p>Він поєднує старі сімейні рецепти з сучасними технологіями сортування та сушіння, що дозволяє отримувати стабільну якість з року в рік.</p>',
+          'Західна Долина',
+          'Коста-Ріка'),
+      _farTrans(
+          10,
+          'uk',
+          'Луїс Паскоаль',
+          'Daterra Coffee',
+          '<h3>Кремнієва долина кави</h3><p>Daterra — це маєток площею 6000 гектарів, де 50% території відведено під заповідник. Вони першими в Бразилії отримали сертифікат B-Corp, підтверджуючи свою соціальну та екологічну відповідальність.</p><h3>Технологічна досконалість</h3><p>Луїс впровадив у каву передові технології: від аналізу ґрунту дронами до оптичного сортування на молекулярному рівні. Їхня лінійка "Masterpieces" створюється спеціально для світових чемпіонатів.</p><h3>Майстерність блендування</h3><p>Daterra відома своїми складними блендами та лотами, що мають унікальні смакові характеристики, такі як "Sweet Blue" чи "Reserve".</p>',
+          'Серрадо Мінейро',
+          'Бразилія'),
+      _farTrans(
+          11,
+          'uk',
+          'Вілтон Бенітез',
+          'Granja Paraiso 92',
+          '<h3>Магістр термічного шоку</h3><p>Вілтон Бенітез — колумбійський хімік та фермер, чия праця в Granja Paraiso 92 стала світовим еталоном наукового підходу до кави. Його метод "термічного шоку" дозволяє зафіксувати найтонші ароматичні сполуки всередині зерна.</p><h3>Точна мікробіологія</h3><p>Вілтон використовує власні культури дріжджів та мікроорганізмів, спеціально підібрані для кожного сорту. Це робить його каву схожою на парфумерну композицію з нотами полуничного йогурту, лічі або жасмину.</p><h3>Прозорість процесів</h3><p>Кожен лот Вілтона супроводжується детальним звітом про час ферментації, pH, температуру та тиск. Це новий рівень прозорості у світі спешелті.</p>',
+          'Каука',
+          'Колумбія'),
+      _farTrans(
+          12,
+          'uk',
+          'Самуель Роні',
+          'Avatara Coffee',
+          '<h3>Король анаеробної Індонезії</h3><p>Самуель Роні — один з провідних виробників експериментальної кави в Індонезії. Його робота на острові Ява та Суматра відкрила світу каву з профілем, що більше нагадує витримане вино або тропічний сік.</p><h3>Співпраця з 3 Champs</h3><p>Саме лоти Самуеля (наприклад, Pegasing Avatara) стали візитівкою багатьох українських обсмажчиків, даруючи шанувальників неймовірні поєднання ананасу та спецій.</p><h3>Еко-свідомість</h3><p>Самуель активно інвестує у збереження диких лісів навколо своїх плантацій, вірячи, що здорова екосистема — це ключ до чистоти смаку кави.</p>',
+          'Східна Ява',
+          'Індонезія'),
+    ];
+  }
+
+  static List<Insertable<BrewingRecipe>> getBrewingMethods() {
+    return [
+      _brew('v60', 'V60', 'Classic pour-over with clean clarity', 0.06, 93, 180, 'Medium', '{"steps":["Rinse filter","Add 20g coffee","Bloom 45s","Slow pour to 300g"]}', 'Clean, acidic, floral', 'v60'),
+      _brew('aeropress', 'Aeropress', 'Versatile and full-bodied', 0.07, 85, 120, 'Easy', '{"steps":["Invert method","Add 15g coffee","Bloom 30s","Press gently"]}', 'Sweet, balanced', 'aeropress'),
+      _brew('french_press', 'French Press', 'Rich and heavy body', 0.065, 95, 240, 'Easy', '{"steps":["Add 30g coarse coffee","Fill with water","Wait 4 min","Plunge"]}', 'Chocolatey, bold', 'french_press'),
+      _brew('chemex', 'Chemex', 'Elegant and bright clarity', 0.06, 94, 240, 'Medium', '{"steps":["Thick filter rinse","Add 30g coffee","Bloom 45s","Consistent pour"]}', 'Bright, tea-like', 'chemex'),
+      _brew('espresso', 'Espresso', 'Intense and concentrated', 0.5, 93, 28, 'Hard', '{"steps":["Dose 18g","Level & Tamp","Extract 36g","Smooth body"]}', 'Sweet, syrupy', 'espresso'),
+      _brew('cold_brew', 'Cold Brew', 'Smooth and refreshing', 0.1, 20, 43200, 'Easy', '{"steps":["Immersion for 12-18h","Dilute with water","Serve over ice"]}', 'Low acidity, sweet', 'cold_brew'),
+    ];
+  }
+
+  static Insertable<BrewingRecipe> _brew(
+      String key,
+      String name,
+      String desc,
+      double ratio,
+      double temp,
+      int time,
+      String diff,
+      String steps,
+      String flavor,
+      String icon) {
+    return BrewingRecipesCompanion.insert(
+      methodKey: key,
+      name: name,
+      description: desc,
+      ratioGramsPerMl: ratio,
+      tempC: temp,
+      totalTimeSec: time,
+      difficulty: diff,
+      stepsJson: steps,
+      flavorProfile: flavor,
+      iconName: icon,
+    );
+  }
+
+  static Insertable<SpecialtyArticle> _art(int id, String url, int time) {
+    return SpecialtyArticlesCompanion.insert(
+      id: Value(id),
+      imageUrl: url,
+      readTimeMin: time,
+    );
+  }
+
+  static Insertable<SpecialtyArticleTranslation> _artTrans(
+      int id, String lang, String title, String sub, String content) {
+    return SpecialtyArticleTranslationsCompanion.insert(
+      articleId: id,
+      languageCode: lang,
+      title: title,
+      subtitle: sub,
+      contentHtml: content,
+    );
+  }
+
+  static Insertable<LocalizedFarmer> _far(
+      int id, String url, String emoji, double lat, double lon) {
+    return LocalizedFarmersCompanion.insert(
+      id: Value(id),
+      imageUrl: Value(url),
+      countryEmoji: Value(emoji),
+      latitude: Value(lat),
+      longitude: Value(lon),
+    );
+  }
+
+  static Insertable<LocalizedFarmerTranslation> _farTrans(int id, String lang,
+      String name, String story, String desc, String region, String country) {
+    return LocalizedFarmerTranslationsCompanion.insert(
+      farmerId: id,
+      languageCode: lang,
+      name: Value(name),
+      story: Value(story),
+      description: Value(desc),
+      region: Value(region),
+      country: Value(country),
+    );
+  }
+}

@@ -1,0 +1,146 @@
+[
+  {
+    "id": "item_1",
+    "img": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=800",
+    "read_time": 4,
+    "category": { "uk": "Основи Specialty Coffee", "en": "Specialty Coffee Basics" },
+    "title": { "uk": "Що таке Specialty Coffee", "en": "What is Specialty Coffee" },
+    "subtitle": { "uk": "Вищий стандарт якості кави в індустрії.", "en": "The highest standard of coffee quality in the industry." },
+    "content": { "uk": "Specialty Coffee — це не просто маркетинговий термін. Це філософія прозорості та якості. Це зерно, яке пройшло суворий контроль на кожному етапі: від вибору правильного сорту дерева та аналізу ґрунту до ідеальної екстракції в чашці. Споживач знає країну, регіон, ферму, висоту зростання та метод обробки.", "en": "Specialty Coffee is more than just a marketing term; it's a philosophy of transparency and quality. It consists of beans that have undergone strict control at every stage—from selecting the right tree variety and soil analysis to the perfect extraction in your cup. Consumers know the country, region, farm, altitude, and processing method." }
+  },
+  {
+    "id": "item_2",
+    "img": "https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=800",
+    "read_time": 4,
+    "category": { "uk": "Основи Specialty Coffee", "en": "Specialty Coffee Basics" },
+    "title": { "uk": "Роль SCA", "en": "The Role of SCA" },
+    "subtitle": { "uk": "Specialty Coffee Association — головна регулююча організація.", "en": "The main regulatory organization in the coffee world." },
+    "content": { "uk": "SCA встановлює стандарти для всієї індустрії. Вони розробили 'Колесо смаків' (Flavor Wheel) та протоколи капінгу. SCA об'єднує фермерів, імпортерів, обсмажчиків та бариста заради сталості, екологічності та справедливості кавового ланцюжка.", "en": "The Specialty Coffee Association (SCA) sets industry-wide standards. They developed the Coffee Taster's Flavor Wheel and cupping protocols. SCA connects farmers, importers, roasters, and baristas to ensure sustainability and fairness throughout the coffee supply chain." }
+  },
+  {
+    "id": "item_3",
+    "img": "https://images.unsplash.com/photo-1522992319-0365e5f11656?q=80&w=800",
+    "read_time": 5,
+    "category": { "uk": "Основи Specialty Coffee", "en": "Specialty Coffee Basics" },
+    "title": { "uk": "Оцінювання та Q-Грейдинг", "en": "Scoring and Q-Grading" },
+    "subtitle": { "uk": "Система 100 балів та роль Q-грейдерів.", "en": "The 100-point system and the role of Q-Graders." },
+    "content": { "uk": "Щоб кава отримала статус 'спешелті', вона має набрати від 80 до 100 балів під час капінгу. Оцінюють її сертифіковані Q-грейдери. Вони аналізують аромат, смак, післясмак, кислотність, тіло, баланс та чистоту.", "en": "To earn 'specialty' status, a coffee must score between 80 and 100 points during a cupping. These scores are given by certified Q-Graders who evaluate aroma, flavor, aftertaste, acidity, body, balance, and clean cup quality." }
+  },
+  {
+    "id": "item_4",
+    "img": "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?q=80&w=800",
+    "read_time": 5,
+    "category": { "uk": "Ботаніка та Тераруар", "en": "Botany and Terroir" },
+    "title": { "uk": "Тераруар (Умови вирощування)", "en": "Terroir: Growing Conditions" },
+    "subtitle": { "uk": "Вплив висоти, ґрунту та клімату на смак.", "en": "The impact of altitude, soil, and climate on flavor." },
+    "content": { "uk": "Спешелті росте переважно на висоті 1000–2500+ метрів. Високогір'я означає прохолодніші ночі: ягода дозріває повільніше, накопичуючи більше цукрів та складних органічних кислот.", "en": "Specialty coffee typically grows at altitudes between 1000 and 2500+ meters. High elevation means cooler nights, allowing the coffee cherry to ripen more slowly and accumulate more sugars and complex acids." }
+  },
+  {
+    "id": "item_5",
+    "img": "https://images.unsplash.com/photo-1587049352846-4a222e784d38?q=80&w=800",
+    "read_time": 6,
+    "category": { "uk": "Ботаніка та Тераруар", "en": "Botany and Terroir" },
+    "title": { "uk": "Генетика та Різновиди (Varieties)", "en": "Genetics and Varieties" },
+    "subtitle": { "uk": "Різновиди арабіки та їхній вплив на чашку.", "en": "Arabica varieties and their impact on the final cup." },
+    "content": { "uk": "Як і у вині, сорт має критичне значення. Базові сорти — Typica та Bourbon, від яких пішли інші. Елітні сорти, такі як Geisha (Гейша), мають складний квітково-чайний профіль.", "en": "Just like in wine, the variety is critical. Typica and Bourbon are the foundation varieties. Elite varieties like Geisha offer incredibly complex floral and tea-like profiles, often commanding the highest prices." }
+  },
+  {
+    "id": "item_6",
+    "img": "https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=800",
+    "read_time": 4,
+    "category": { "uk": "Агрономія та Збір", "en": "Agronomy and Harvesting" },
+    "title": { "uk": "Пікінг (Збір врожаю)", "en": "Picking: The Harvest" },
+    "subtitle": { "uk": "Ручний вибірковий збір стиглих ягід.", "en": "Selective hand-picking of perfectly ripe cherries." },
+    "content": { "uk": "Для спешелті використовують виключно Selective Picking. Пікери проходять плантацією по кілька разів за сезон, зриваючи лише бордові або червоні стиглі ягоди.", "en": "Specialty coffee relies solely on Selective Picking. Pickers traverse the plantation multiple times per season, only plucking deep burgundy or bright red cherries that meet perfect ripeness standards." }
+  },
+  {
+    "id": "item_7",
+    "img": "https://images.unsplash.com/photo-1504630083234-14187a9df0f5?q=80&w=800",
+    "read_time": 4,
+    "category": { "uk": "Базові обробки", "en": "Base Processing" },
+    "title": { "uk": "Натуральна обробка (Natural / Dry)", "en": "Natural Process (Dry)" },
+    "subtitle": { "uk": "Сушіння цілої ягоди під сонцем.", "en": "Sun-drying of the whole coffee cherry." },
+    "content": { "uk": "Стиглі ягоди розкладають на бетонних патіо або 'африканських ліжках'. Ягода сохне цілком 2-4 тижні. Результат: щільне тіло, інтенсивна солодкість, яскраві ягідні ноти.", "en": "Ripe cherries are spread in thin layers on concrete patios or raised 'African beds.' The fruit dries whole for 2 to 4 weeks. This results in heavy body, intense sweetness, and vibrant fruit notes like strawberry or chocolate." }
+  },
+  {
+    "id": "item_8",
+    "img": "https://images.unsplash.com/photo-1462860118935-8df87d5d52f7?q=80&w=800",
+    "read_time": 5,
+    "category": { "uk": "Базові обробки", "en": "Base Processing" },
+    "title": { "uk": "Мита обробка (Washed)", "en": "Washed Process" },
+    "subtitle": { "uk": "Видалення м'якоті та ферментація у воді.", "en": "Depulping and fermentation in water tanks." },
+    "content": { "uk": "Шкірку знімають депульпатором. Зерно поміщають у резервуари для руйнування клейковини, потім промивають. Результат: чиста чашка, висока іскриста кислотність.", "en": "The outer skin is removed by a depulper, and the beans are placed in water tanks to break down the mucilage before being washed. This results in a clean cup with high, sparkling acidity and floral notes." }
+  },
+  {
+    "id": "item_9",
+    "img": "https://images.unsplash.com/photo-1556742393-d75f468bfcb0?q=80&w=800",
+    "read_time": 5,
+    "category": { "uk": "Базові обробки", "en": "Base Processing" },
+    "title": { "uk": "Хані / Напівмита (Honey)", "en": "Honey Process (Semi-Washed)" },
+    "subtitle": { "uk": "Сушіння зерна із залишками клейковини.", "en": "Drying beans with remaining sticky mucilage." },
+    "content": { "uk": "Шкірку знімають, але зерно сушать разом із мусіляжем. Чим більше м'якоті залишили, тим темніший колір (Red/Black Honey). Результат: баланс чистоти та сиропної солодкості.", "en": "The skin is removed, but the beans dry alongside the sticky mucilage. The more mucilage left on, the darker the designation (Red, Black Honey). It offers a perfect balance of clean cup and syrup sweetness." }
+  },
+  {
+    "id": "item_10",
+    "img": "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?q=80&w=800",
+    "read_time": 6,
+    "category": { "uk": "Експериментальні обробки", "en": "Experimental Processing" },
+    "title": { "uk": "Анаеробна ферментація (Anaerobic)", "en": "Anaerobic Fermentation" },
+    "subtitle": { "uk": "Ферментація без доступу кисню.", "en": "Controlled fermentation without oxygen access." },
+    "content": { "uk": "Ягоди поміщають у герметичні бочки з гідрозатворами. Без кисню домінують лактобактерії, що створює незвичні профілі: від тропічних фруктів до винних нот.", "en": "Cherries are placed in sealed stainless steel or plastic barrels with airlocks. Without oxygen, lactic bacteria dominate, creating unique profiles ranging from tropical fruits to complex winey notes." }
+  },
+  {
+    "id": "item_11",
+    "img": "https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?q=80&w=800",
+    "read_time": 6,
+    "category": { "uk": "Експериментальні обробки", "en": "Experimental Processing" },
+    "title": { "uk": "Вуглекислотна мацерація (Carbonic Maceration)", "en": "Carbonic Maceration" },
+    "subtitle": { "uk": "Винна технологія з використанням CO2.", "en": "Wine-making technology applied using CO2." },
+    "content": { "uk": "Цілі ягоди поміщають у танки, де кисень витісняється вуглекислим газом. Це дає яскраві алкогольні ноти, аромати жувальної гумки та червоних ягід.", "en": "Whole cherries are placed in tanks where oxygen is displaced by CO2. Fermentation occurs inside the intact fruit, leading to bright alcoholic notes and intense aromas of bubblegum and red berries." }
+  },
+  {
+    "id": "item_12",
+    "img": "https://images.unsplash.com/photo-1556742400-b5b7c512d7a9?q=80&w=800",
+    "read_time": 5,
+    "category": { "uk": "Експериментальні обробки", "en": "Experimental Processing" },
+    "title": { "uk": "Термальний шок (Thermal Shock)", "en": "Thermal Shock" },
+    "subtitle": { "uk": "Різкий перепад температур для фіксації смаку.", "en": "Sudden temperature changes to 'lock in' flavor." },
+    "content": { "uk": "Після ферментації зерно промивають спочатку гарячою (40-50°C), а потім різко холодною водою (10-12°C). Це 'запечатує' унікальні аромати всередині зерна.", "en": "After fermentation, beans are washed first in hot water (40-50°C) and then immediately in cold water (10-12°C). This process thermally 'seals' the unique fermentation esters inside the grain's structure." }
+  },
+  {
+    "id": "item_13",
+    "img": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=800",
+    "read_time": 7,
+    "category": { "uk": "Авторські профілі", "en": "Artisan Profiles" },
+    "title": { "uk": "Black Diamond / Perla Negra", "en": "Black Diamond / Perla Negra" },
+    "subtitle": { "uk": "Екстремальні різновиди натуральної обробки.", "en": "Extreme variations of natural processing." },
+    "content": { "uk": "Ягоди сохнуть дуже товстим шаром у тіні. Це стимулює довгу внутрішню ферментацію, під час якої зерно чорніє. Результат: ромово-лікерний, шоколадний і важкий профіль.", "en": "Cherries dry in thick layers, often in the shade, stimulating intense long-term internal fermentation. The beans turn dark and sticky, resulting in heavy, chocolatey, rum-like profiles." }
+  },
+  {
+    "id": "item_14",
+    "img": "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=800",
+    "read_time": 4,
+    "category": { "uk": "Мілінг та Підготовка", "en": "Milling and Preparation" },
+    "title": { "uk": "Відпочинок (Reposo)", "en": "Reposo (Resting)" },
+    "subtitle": { "uk": "Стабілізація зерна після сушіння.", "en": "Grain stabilization after the drying process." },
+    "content": { "uk": "Зерно залишають у парчменті на складі відпочивати 1-3 місяці. За цей час волога всередині рівномірно розподіляється, а хімічні процеси стабілізуються.", "en": "Beans are left in their parchment on farm warehouse shelves for 1 to 3 months. This 'reposo' period allows moisture to distribute uniformly and chemical compounds to stabilize before export." }
+  },
+  {
+    "id": "item_15",
+    "img": "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=800",
+    "read_time": 4,
+    "category": { "uk": "Мілінг та Підготовка", "en": "Milling and Preparation" },
+    "title": { "uk": "Халлінг та Сортування (Hulling & Sorting)", "en": "Hulling and Sorting" },
+    "subtitle": { "uk": "Очищення зерна та контроль якості перед експортом.", "en": "Cleaning and quality control before global export." },
+    "content": { "uk": "Перед експортом халлери злущують парчмент — кава стає 'зеленою'. Потім її сортують за розміром та відстрілюють дефекти колорсертерами.", "en": "Before export, hullers strip the parchment to reveal the 'green' coffee. Beans are then mechanically sorted by size—screen—and laser-sorted to remove any remaining defects." }
+  },
+  {
+    "id": "item_16",
+    "img": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=800",
+    "read_time": 5,
+    "category": { "uk": "Пакування та Логістика", "en": "Packaging and Logistics" },
+    "title": { "uk": "Пакування (GrainPro) та Експорт", "en": "Packaging (GrainPro) and Export" },
+    "subtitle": { "uk": "Захист зерна під час трансокеанських перевезень.", "en": "Protecting green coffee during transoceanic shipping." },
+    "content": { "uk": "Використовуються герметичні пакети GrainPro, які зберігають мікроклімат. Ці пакети захищають від вологи океану та сторонніх запахів під час перевезення.", "en": "Hermetic GrainPro or Ecotact bags are used to maintain a stable microclimate, shielding specialty coffee from ocean humidity and unwanted odors during international transit." }
+  }
+]

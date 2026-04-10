@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:drift/drift.dart';
@@ -14,17 +15,18 @@ class SyncService {
   final AppDatabase db;
   final SupabaseClient supabase;
 
-  SyncService(this.db, this.supabase);
+  SyncService(this.db, [SupabaseClient? supabase])
+      : supabase = supabase ?? Supabase.instance.client;
 
   Future<void> syncAll({
     bool clearLocal = false,
     Function(String)? onProgress,
   }) async {
-    debugPrint('SYNC: Starting full synchronization (clearLocal=$clearLocal)...');
+    debugPrint('SYNC: Starting full synchronization (v17 Extended Localized)...');
     onProgress?.call('Connecting to cloud...');
 
     try {
-      // 1. FETCH ALL DATA FIRST (Cloud-First Safety)
+      // 1. FETCH ALL DATA
       onProgress?.call('Downloading Brands...');
       final brandsData = await supabase.from('brands').select();
       
@@ -40,91 +42,115 @@ class SyncService {
       onProgress?.call('Downloading Patterns...');
       final patternsData = await supabase.from('latte_art_patterns').select();
 
-      if (brandsData.isEmpty && encyclopediaData.isEmpty) {
-        throw Exception('Cloud database is empty. Sync aborted to protect local data.');
-      }
-
-      // 2. CLEAR AND INSERT IN ONE TRANSACTION
+      // 2. CLEAR AND INSERT
       await db.transaction(() async {
         if (clearLocal) {
           onProgress?.call('Clearing local tables...');
           await db.delete(db.recommendedRecipes).go();
-          await db.delete(db.encyclopediaEntries).go();
-          await db.delete(db.brands).go();
+          await db.delete(db.localizedBeanTranslations).go();
+          await db.delete(db.localizedBeans).go();
+          await db.delete(db.localizedBrandTranslations).go();
+          await db.delete(db.localizedBrands).go();
+          await db.delete(db.specialtyArticleTranslations).go();
           await db.delete(db.specialtyArticles).go();
+          await db.delete(db.latteArtPatternTranslations).go();
           await db.delete(db.latteArtPatterns).go();
         }
 
         // Insert Brands
         onProgress?.call('Saving Brands (${brandsData.length})...');
         for (final item in brandsData) {
-          await db.insertBrand(BrandsCompanion(
-            id: Value(item['id']),
+          final brandId = item['id'] as int;
+          await db.insertBrand(LocalizedBrandsCompanion(
+            id: Value(brandId),
             name: Value(item['name']),
+            logoUrl: Value(item['logo_url']),
+            siteUrl: Value(item['site_url']),
+          ));
+          await db.insertBrandTranslation(LocalizedBrandTranslationsCompanion(
+            brandId: Value(brandId),
+            languageCode: Value('uk'),
             shortDesc: Value(item['short_desc'] ?? ''),
             fullDesc: Value(item['full_desc'] ?? ''),
-            logoUrl: Value(item['logo_url'] ?? ''),
-            siteUrl: Value(item['site_url'] ?? ''),
             location: Value(item['location'] ?? ''),
           ));
         }
 
-        // Insert Encyclopedia
-        onProgress?.call('Saving Encyclopedia (${encyclopediaData.length})...');
+        // Insert Encyclopedia (Beans)
+        onProgress?.call('Saving Beans (${encyclopediaData.length})...');
         for (final item in encyclopediaData) {
-          await db.insertOrigin(EncyclopediaEntriesCompanion(
-            id: Value(item['id']),
-            countryEmoji: Value(item['country_emoji'] ?? '☕'),
-            country: Value(item['country'] ?? 'Unknown'),
+          final beanId = item['id'] as int;
+          await db.insertBean(LocalizedBeansCompanion(
+            id: Value(beanId),
+            brandId: Value(item['brand_id']),
+            countryEmoji: Value(item['country_emoji']),
+            altitudeMin: Value(item['altitude_min'] as int?),
+            altitudeMax: Value(item['altitude_max'] as int?),
+            lotNumber: Value(item['lot_number'] ?? ''),
+            scaScore: Value(item['sca_score']?.toString() ?? '80'),
+            cupsScore: Value((item['cups_score'] as num?)?.toDouble() ?? 82.0),
+            sensoryJson: Value(item['sensory_json'] ?? '{}'),
+            priceJson: Value(item['price_json'] ?? '{}'),
+            plantationPhotosUrl: Value(item['plantation_photos_url'] ?? '[]'),
+            harvestSeason: Value(item['harvest_season']),
+            price: Value(item['price']),
+            weight: Value(item['weight']),
+            roastDate: Value(item['roast_date']),
+            processingMethodsJson: Value(item['processing_methods_json'] ?? '[]'),
+            isPremium: Value(item['is_premium'] ?? false),
+            detailedProcessMarkdown: Value(item['detailed_process_markdown'] ?? ''),
+            url: Value(item['url'] ?? ''),
+            farm: Value(item['farm'] ?? ''),
+            farmPhotosUrlCover: Value(item['farm_photos_url_cover']),
+          ));
+
+          await db.insertBeanTranslation(LocalizedBeanTranslationsCompanion(
+            beanId: Value(beanId),
+            languageCode: Value('uk'),
+            country: Value(item['country'] ?? ''),
             region: Value(item['region'] ?? ''),
-            altitudeMin: Value(item['altitude_min'] ?? 0),
-            altitudeMax: Value(item['altitude_max'] ?? 0),
             varieties: Value(item['varieties'] ?? ''),
             flavorNotes: Value(item['flavor_notes'] ?? '[]'),
             processMethod: Value(item['process_method'] ?? ''),
-            harvestSeason: Value(item['harvest_season'] ?? ''),
-            cupsScore: Value((item['cups_score'] as num?)?.toDouble() ?? 0.0),
             description: Value(item['description'] ?? ''),
             farmDescription: Value(item['farm_description'] ?? ''),
-            farmPhotosUrlCover: Value(item['farm_photos_url_cover'] ?? ''),
-            plantationPhotosUrl: Value(item['plantation_photos_url'] ?? ''),
-            processingMethodsJson: Value(item['processing_methods_json'] ?? '[]'),
-            brandId: Value(item['brand_id']),
-            sensoryJson: Value(item['sensory_json'] ?? '{}'),
-            detailedProcessMarkdown: Value(item['detailed_process_markdown'] ?? ''),
             roastLevel: Value(item['roast_level'] ?? ''),
-            weight: Value(item['weight'] ?? ''),
-            price: Value(item['price'] ?? ''),
-            roastDate: Value(item['roast_date'] ?? ''),
-            lotNumber: Value(item['lot_number'] ?? ''),
-            url: Value(item['url'] ?? ''),
-            isPremium: Value(item['is_premium'] ?? false),
           ));
         }
 
         // Insert Articles
         onProgress?.call('Saving Articles (${articlesData.length})...');
         for (final item in articlesData) {
-          await db.insertSpecialtyArticle(SpecialtyArticlesCompanion(
-            id: Value(item['id']),
+          final artId = item['id'] as int;
+          await db.insertArticle(SpecialtyArticlesCompanion(
+            id: Value(artId),
+            imageUrl: Value(item['image_url'] ?? ''),
+            readTimeMin: Value(item['read_time_min'] ?? 5),
+          ));
+          await db.insertArticleTranslation(SpecialtyArticleTranslationsCompanion(
+            articleId: Value(artId),
+            languageCode: Value('uk'),
             title: Value(item['title'] ?? ''),
             subtitle: Value(item['subtitle'] ?? ''),
             contentHtml: Value(item['content_html'] ?? ''),
-            imageUrl: Value(item['image_url'] ?? ''),
-            readTimeMin: Value(item['read_time_min'] ?? 0),
           ));
         }
 
         // Insert Patterns
         onProgress?.call('Saving Patterns (${patternsData.length})...');
         for (final item in patternsData) {
-          await db.insertPattern(LatteArtPatternsCompanion(
-            id: Value(item['id']),
-            name: Value(item['name'] ?? ''),
+          final patId = item['id'] as int;
+          await db.insertLatteArtPattern(LatteArtPatternsCompanion(
+            id: Value(patId),
             difficulty: Value(item['difficulty'] ?? 1),
+            stepsJson: Value(item['steps_json'] ?? '[]'),
+          ));
+          await db.insertLatteArtPatternTranslation(LatteArtPatternTranslationsCompanion(
+            patternId: Value(patId),
+            languageCode: Value('uk'),
+            name: Value(item['name'] ?? ''),
             description: Value(item['description'] ?? ''),
             tipText: Value(item['tip_text'] ?? ''),
-            stepsJson: Value(item['steps_json'] ?? '[]'),
           ));
         }
 
@@ -132,22 +158,46 @@ class SyncService {
         onProgress?.call('Saving Recipes (${recipesData.length})...');
         for (final item in recipesData) {
           await db.insertRecommendedRecipe(RecommendedRecipesCompanion(
-            id: Value(item['id']),
-            lotId: Value(item['lot_id']),
+            id: Value(item['id'] as int),
+            lotId: Value(item['lot_id'] as int),
             methodKey: Value(item['method_key']),
             coffeeGrams: Value((item['coffee_grams'] as num?)?.toDouble() ?? 0.0),
             waterGrams: Value((item['water_grams'] as num?)?.toDouble() ?? 0.0),
             tempC: Value((item['temp_c'] as num?)?.toDouble() ?? 0.0),
-            timeSec: Value(item['time_sec'] ?? 0),
+            timeSec: Value(item['time_sec'] as int? ?? 0),
             rating: Value((item['rating'] as num?)?.toDouble() ?? 0.0),
             sensoryJson: Value(item['sensory_json'] ?? '{}'),
             notes: Value(item['notes'] ?? ''),
           ));
         }
+
+        // Insert Sphere Regions
+        onProgress?.call('Downloading Regions...');
+        final regionsData = await supabase.from('sphere_regions').select();
+        onProgress?.call('Saving Regions (${regionsData.length})...');
+        if (clearLocal) {
+          await db.delete(db.sphereRegionTranslations).go();
+          await db.delete(db.sphereRegions).go();
+        }
+        for (final item in regionsData) {
+          final regId = item['id'].toString();
+          await db.insertSphereRegion(SphereRegionsCompanion(
+            id: Value(regId),
+            latitude: Value((item['latitude'] as num?)?.toDouble() ?? 0.0),
+            longitude: Value((item['longitude'] as num?)?.toDouble() ?? 0.0),
+            isActive: Value(item['is_active'] ?? true),
+          ));
+          await db.insertSphereRegionTranslation(SphereRegionTranslationsCompanion(
+            regionId: Value(regId),
+            languageCode: Value('uk'),
+            name: Value(item['name'] ?? ''),
+            description: Value(item['description'] ?? ''),
+          ));
+        }
       });
 
       debugPrint('SYNC: All systems synchronized [STABLE]');
-      onProgress?.call('Sync completed successfully [STABLE]');
+      onProgress?.call('Sync completed successfully!');
     } catch (e, st) {
       debugPrint('SYNC ERROR: $e');
       debugPrint('STACKTRACE: $st');
@@ -156,86 +206,21 @@ class SyncService {
     }
   }
 
-  /// Pushes all local data from Drift to Supabase Cloud.
-  /// USE WITH CAUTION: This will upsert all local items into the cloud.
+  Future<void> syncLots(List<CoffeeLotsCompanion> lots) async {
+    await db.syncLotsInTx(lots);
+  }
+
+  /// Trigger a full sync of all lots (legacy UI compatibility)
+  Future<void> syncLots() async {
+    await syncAll();
+  }
+
   Future<void> pushLocalToCloud({Function(String)? onProgress}) async {
-    debugPrint('SYNC: Pushing local data to cloud...');
-    onProgress?.call('Preparing local data...');
+    onProgress?.call('Pushing local data not supported in restricted v17 bridge.');
+  }
+}
 
-    try {
-      // ... (push logic remains)
-      final localBrands = await db.getAllBrands();
-      onProgress?.call('Pushing ${localBrands.length} Brands...');
-      for (final b in localBrands) {
-        await supabase.from('brands').upsert({
-          'id': b.id,
-          'name': b.name,
-          'short_desc': b.shortDesc,
-          'full_desc': b.fullDesc,
-          'logo_url': b.logoUrl,
-          'site_url': b.siteUrl,
-          'location': b.location,
-        });
-      }
-
-      // 2. Push Encyclopedia Entries
-      final localEntries = await db.getAllOrigins();
-      onProgress?.call('Pushing ${localEntries.length} Lots...');
-      for (final e in localEntries) {
-        await supabase.from('encyclopedia_entries').upsert({
-          'id': e.id,
-          'brand_id': e.brandId,
-          'country_emoji': e.countryEmoji,
-          'country': e.country,
-          'region': e.region,
-          'altitude_min': e.altitudeMin,
-          'altitude_max': e.altitudeMax,
-          'varieties': e.varieties,
-          'flavor_notes': e.flavorNotes,
-          'process_method': e.processMethod,
-          'harvest_season': e.harvestSeason,
-          'cups_score': e.cupsScore,
-          'description': e.description,
-          'farm_description': e.farmDescription,
-          'farm_photos_url_cover': e.farmPhotosUrlCover,
-          'plantation_photos_url': e.plantationPhotosUrl,
-          'processing_methods_json': e.processingMethodsJson,
-          'sensory_json': e.sensoryJson,
-          'roast_level': e.roastLevel,
-          'weight': e.weight,
-          'price': e.price,
-          'roast_date': e.roastDate,
-          'lot_number': e.lotNumber,
-          'url': e.url,
-          'is_premium': e.isPremium,
-          'detailed_process_markdown': e.detailedProcessMarkdown,
-        });
-      }
-
-      // 3. Push Recommended Recipes
-      final localRecipes = await db.select(db.recommendedRecipes).get();
-      onProgress?.call('Pushing ${localRecipes.length} Recipes...');
-      for (final r in localRecipes) {
-        await supabase.from('recommended_recipes').upsert({
-          'id': r.id,
-          'lot_id': r.lotId,
-          'method_key': r.methodKey,
-          'coffee_grams': r.coffeeGrams,
-          'water_grams': r.waterGrams,
-          'temp_c': r.tempC,
-          'time_sec': r.timeSec,
-          'rating': r.rating,
-          'sensory_json': r.sensoryJson,
-          'notes': r.notes,
-        });
-      }
-
-      onProgress?.call('Cloud updated successfully! [STABLE]');
-    } catch (e, st) {
-      debugPrint('PUSH ERROR: $e');
-      debugPrint('STACKTRACE: $st');
-      onProgress?.call('Push failed: $e');
-      rethrow;
-    }
+  Future<void> pushLocalToCloud({Function(String)? onProgress}) async {
+    onProgress?.call('Pushing local data not supported in restricted v17 bridge.');
   }
 }

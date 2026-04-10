@@ -34,59 +34,73 @@ class _AgtronTier {
 const _agtronTiers = [
   _AgtronTier(
     label: 'Extra Light',
-    min: 90, max: 100,
+    min: 90,
+    max: 100,
     color: Color(0xFFF5DEB3),
     flavors: ['Grassy', 'Tea', 'Cereal', 'Floral'],
     recommendedMethod: 'V60',
-    description: 'Underextraction risk. Distinct cereal and grassy notes — acquired taste.',
+    description:
+        'Underextraction risk. Distinct cereal and grassy notes — acquired taste.',
   ),
   _AgtronTier(
     label: 'Light',
-    min: 76, max: 90,
+    min: 76,
+    max: 90,
     color: Color(0xFFD2A679),
     flavors: ['Jasmine', 'Citrus', 'Stone Fruit', 'Delicate Sweetness'],
     recommendedMethod: 'Chemex',
-    description: 'Ideal for showcasing terroir. High clarity and acidity. Ethiopian Yirgacheffe thrives here.',
+    description:
+        'Ideal for showcasing terroir. High clarity and acidity. Ethiopian Yirgacheffe thrives here.',
   ),
   _AgtronTier(
     label: 'Medium Light',
-    min: 61, max: 76,
+    min: 61,
+    max: 76,
     color: Color(0xFFB8845A),
     flavors: ['Caramel', 'Nectarine', 'Brown Sugar', 'Hazelnut'],
     recommendedMethod: 'Aeropress',
-    description: 'Balance of clarity and sweetness. Popular third-wave range for washed coffees.',
+    description:
+        'Balance of clarity and sweetness. Popular third-wave range for washed coffees.',
   ),
   _AgtronTier(
     label: 'Medium',
-    min: 46, max: 61,
+    min: 46,
+    max: 61,
     color: Color(0xFF8B6445),
     flavors: ['Milk Chocolate', 'Walnut', 'Dried Fruit', 'Vanilla'],
     recommendedMethod: 'Cold Brew',
-    description: 'Classic specialty range. Balanced body, sweetness and mild acidity.',
+    description:
+        'Classic specialty range. Balanced body, sweetness and mild acidity.',
   ),
   _AgtronTier(
     label: 'Medium Dark',
-    min: 31, max: 46,
+    min: 31,
+    max: 46,
     color: Color(0xFF5C3D2E),
     flavors: ['Dark Chocolate', 'Roasted Nut', 'Tobacco', 'Spice'],
     recommendedMethod: 'French Press',
-    description: 'Roast character begins to dominate. Full body, low-acid. Great espresso base.',
+    description:
+        'Roast character begins to dominate. Full body, low-acid. Great espresso base.',
   ),
   _AgtronTier(
     label: 'Dark',
-    min: 16, max: 31,
+    min: 16,
+    max: 31,
     color: Color(0xFF3B2218),
     flavors: ['Bittersweet Chocolate', 'Smoky', 'Molasses', 'Char'],
     recommendedMethod: 'Espresso',
-    description: 'Roast oils visible on surface. Intense, bold. Minimal origin character remains.',
+    description:
+        'Roast oils visible on surface. Intense, bold. Minimal origin character remains.',
   ),
   _AgtronTier(
     label: 'Extra Dark',
-    min: 0, max: 16,
+    min: 0,
+    max: 16,
     color: Color(0xFF1A0E0A),
     flavors: ['Ash', 'Charcoal', 'Dark Molasses', 'Bitter'],
     recommendedMethod: 'Espresso',
-    description: 'Over-roasted. Carbonized notes. Best used sparingly as a blend component.',
+    description:
+        'Over-roasted. Carbonized notes. Best used sparingly as a blend component.',
   ),
 ];
 
@@ -119,8 +133,9 @@ class _BeanEyeScreenState extends ConsumerState<BeanEyeScreen>
   void initState() {
     super.initState();
     _scanAnim = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1500))
-      ..repeat(reverse: true);
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    )..repeat(reverse: true);
     _initCamera();
   }
 
@@ -146,16 +161,21 @@ class _BeanEyeScreenState extends ConsumerState<BeanEyeScreen>
     });
     // Analyze image logic (Simulated heavily using Math.Random for true dynamism instead of time-based index)
     await Future.delayed(const Duration(milliseconds: kIsWeb ? 800 : 2000));
-    
+
     // Simulate smart analysis based on random spread (weighted towards medium roasts)
     final random = math.Random();
     double value;
     final r = random.nextDouble();
-    if (r < 0.1) value = 80.0 + random.nextDouble() * 20; // 10% chance light
-    else if (r < 0.3) value = 60.0 + random.nextDouble() * 20; // 20% medium light
-    else if (r < 0.7) value = 40.0 + random.nextDouble() * 20; // 40% medium
-    else if (r < 0.9) value = 20.0 + random.nextDouble() * 20; // 20% dark
-    else value = random.nextDouble() * 20; // 10% extra dark
+    if (r < 0.1)
+      value = 80.0 + random.nextDouble() * 20; // 10% chance light
+    else if (r < 0.3)
+      value = 60.0 + random.nextDouble() * 20; // 20% medium light
+    else if (r < 0.7)
+      value = 40.0 + random.nextDouble() * 20; // 40% medium
+    else if (r < 0.9)
+      value = 20.0 + random.nextDouble() * 20; // 20% dark
+    else
+      value = random.nextDouble() * 20; // 10% extra dark
 
     if (mounted) {
       setState(() {
@@ -186,13 +206,15 @@ class _BeanEyeScreenState extends ConsumerState<BeanEyeScreen>
   Future<void> _saveToJournal() async {
     if (_resultTier == null) return;
     final db = ref.read(databaseProvider);
-    await db.insertScan(BeanScansCompanion.insert(
-      scannedAt: DateTime.now(),
-      agtronValue: _agtronValue,
-      roastLabel: _resultTier!.label,
-      flavorProfile: jsonEncode(_resultTier!.flavors),
-      recommendedMethod: _resultTier!.recommendedMethod,
-    ));
+    await db.insertScan(
+      BeanScansCompanion.insert(
+        scannedAt: DateTime.now(),
+        agtronValue: _agtronValue,
+        roastLabel: _resultTier!.label,
+        flavorProfile: jsonEncode(_resultTier!.flavors),
+        recommendedMethod: _resultTier!.recommendedMethod,
+      ),
+    );
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -211,7 +233,10 @@ class _BeanEyeScreenState extends ConsumerState<BeanEyeScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bean Eye AI', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+        title: Text(
+          'Bean Eye AI',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+        ),
         actions: [
           IconButton(
             icon: Icon(_showHistory ? Icons.camera_alt : Icons.history),
@@ -249,8 +274,11 @@ class _BeanEyeScreenState extends ConsumerState<BeanEyeScreen>
                             decoration: BoxDecoration(
                               border: Border.all(
                                 color: _isAnalyzing
-                                    ? Color.lerp(Colors.amber, Colors.green,
-                                            _scanAnim.value)!
+                                    ? Color.lerp(
+                                        Colors.amber,
+                                        Colors.green,
+                                        _scanAnim.value,
+                                      )!
                                     : Colors.amber,
                                 width: 2.5,
                               ),
@@ -261,9 +289,14 @@ class _BeanEyeScreenState extends ConsumerState<BeanEyeScreen>
                               child: Padding(
                                 padding: const EdgeInsets.only(top: 8),
                                 child: Text(
-                                  _isAnalyzing ? 'Scanning…' : 'Place beans here',
+                                  _isAnalyzing
+                                      ? 'Scanning…'
+                                      : 'Place beans here',
                                   style: const TextStyle(
-                                      color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 12),
+                                    color: Colors.amber,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
                                 ),
                               ),
                             ),
@@ -273,9 +306,13 @@ class _BeanEyeScreenState extends ConsumerState<BeanEyeScreen>
                       // Calibration badge
                       if (_isCalibrated)
                         Positioned(
-                          top: 12, right: 12,
+                          top: 12,
+                          right: 12,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
                             decoration: BoxDecoration(
                               color: Colors.green.withOpacity(0.85),
                               borderRadius: BorderRadius.circular(20),
@@ -283,9 +320,19 @@ class _BeanEyeScreenState extends ConsumerState<BeanEyeScreen>
                             child: const Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(Icons.check_circle, color: Colors.white, size: 14),
+                                Icon(
+                                  Icons.check_circle,
+                                  color: Colors.white,
+                                  size: 14,
+                                ),
                                 SizedBox(width: 4),
-                                Text('Calibrated', style: TextStyle(color: Colors.white, fontSize: 11)),
+                                Text(
+                                  'Calibrated',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 11,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -307,19 +354,31 @@ class _BeanEyeScreenState extends ConsumerState<BeanEyeScreen>
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              Text('AI Roast Analysis',
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 18, fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center),
+                              Text(
+                                'AI Roast Analysis',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
                               const SizedBox(height: 16),
                               if (_isAnalyzing)
-                                const Column(children: [
-                                  SkeletonLoader(width: double.infinity, height: 20),
-                                  SizedBox(height: 10),
-                                  SkeletonLoader(width: 180, height: 16),
-                                  SizedBox(height: 10),
-                                  SkeletonLoader(width: double.infinity, height: 14),
-                                ])
+                                const Column(
+                                  children: [
+                                    SkeletonLoader(
+                                      width: double.infinity,
+                                      height: 20,
+                                    ),
+                                    SizedBox(height: 10),
+                                    SkeletonLoader(width: 180, height: 16),
+                                    SizedBox(height: 10),
+                                    SkeletonLoader(
+                                      width: double.infinity,
+                                      height: 14,
+                                    ),
+                                  ],
+                                )
                               else if (_resultTier != null)
                                 _ResultCard(
                                   tier: _resultTier!,
@@ -334,13 +393,21 @@ class _BeanEyeScreenState extends ConsumerState<BeanEyeScreen>
                                         padding: EdgeInsets.only(bottom: 12),
                                         child: Text(
                                           '⚠️ Calibrate with a white sheet first for accurate results.',
-                                          style: TextStyle(color: Colors.orangeAccent, fontSize: 12),
+                                          style: TextStyle(
+                                            color: Colors.orangeAccent,
+                                            fontSize: 12,
+                                          ),
                                           textAlign: TextAlign.center,
                                         ),
                                       ),
-                                    const Text('Position beans in the frame and tap Analyze.',
-                                        style: TextStyle(color: Colors.white54, fontSize: 13),
-                                        textAlign: TextAlign.center),
+                                    const Text(
+                                      'Position beans in the frame and tap Analyze.',
+                                      style: TextStyle(
+                                        color: Colors.white54,
+                                        fontSize: 13,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ],
                                 ),
                             ],
@@ -352,7 +419,9 @@ class _BeanEyeScreenState extends ConsumerState<BeanEyeScreen>
                           children: [
                             Expanded(
                               child: ElevatedButton.icon(
-                                onPressed: (_isCalibrated && !_isAnalyzing) ? _analyzeRoast : null,
+                                onPressed: (_isCalibrated && !_isAnalyzing)
+                                    ? _analyzeRoast
+                                    : null,
                                 icon: const Icon(Icons.auto_awesome, size: 18),
                                 label: const Text('Analyze Roast'),
                                 style: ElevatedButton.styleFrom(
@@ -360,21 +429,28 @@ class _BeanEyeScreenState extends ConsumerState<BeanEyeScreen>
                                   foregroundColor: Colors.black,
                                   minimumSize: const Size.fromHeight(48),
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(14)),
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
                                 ),
                               ),
                             ),
                             const SizedBox(width: 10),
                             OutlinedButton.icon(
                               onPressed: _isAnalyzing ? null : _calibrate,
-                              icon: const Icon(Icons.settings_overscan, size: 18),
-                              label: Text(_isCalibrated ? 'Recalibrate' : 'Calibrate'),
+                              icon: const Icon(
+                                Icons.settings_overscan,
+                                size: 18,
+                              ),
+                              label: Text(
+                                _isCalibrated ? 'Recalibrate' : 'Calibrate',
+                              ),
                               style: OutlinedButton.styleFrom(
                                 foregroundColor: Colors.white70,
                                 side: const BorderSide(color: Colors.white30),
                                 minimumSize: const Size(0, 48),
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(14)),
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
                               ),
                             ),
                           ],
@@ -395,7 +471,11 @@ class _ResultCard extends StatelessWidget {
   final double agtronValue;
   final VoidCallback onSave;
 
-  const _ResultCard({required this.tier, required this.agtronValue, required this.onSave});
+  const _ResultCard({
+    required this.tier,
+    required this.agtronValue,
+    required this.onSave,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -419,10 +499,18 @@ class _ResultCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(agtronValue.toStringAsFixed(1),
-                    style: const TextStyle(
-                        fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
-                const Text('Agtron', style: TextStyle(fontSize: 10, color: Colors.white38)),
+                Text(
+                  agtronValue.toStringAsFixed(1),
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const Text(
+                  'Agtron',
+                  style: TextStyle(fontSize: 10, color: Colors.white38),
+                ),
               ],
             ),
           ],
@@ -441,7 +529,8 @@ class _ResultCard extends StatelessWidget {
             builder: (context, constraints) => Align(
               alignment: Alignment(((100 - agtronValue) / 100) * 2 - 1, 0),
               child: Container(
-                width: 12, height: 12,
+                width: 12,
+                height: 12,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
@@ -452,21 +541,41 @@ class _ResultCard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        Text(tier.description,
-            style: const TextStyle(color: Colors.white70, fontSize: 12, height: 1.4)),
+        Text(
+          tier.description,
+          style: const TextStyle(
+            color: Colors.white70,
+            fontSize: 12,
+            height: 1.4,
+          ),
+        ),
         const SizedBox(height: 12),
         // Flavor notes
         Wrap(
-          spacing: 6, runSpacing: 6,
-          children: tier.flavors.map((f) => Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: tier.color.withOpacity(0.25),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: tier.color.withOpacity(0.5)),
-            ),
-            child: Text(f, style: TextStyle(fontSize: 11, color: Colors.white.withOpacity(0.8))),
-          )).toList(),
+          spacing: 6,
+          runSpacing: 6,
+          children: tier.flavors
+              .map(
+                (f) => Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: tier.color.withOpacity(0.25),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: tier.color.withOpacity(0.5)),
+                  ),
+                  child: Text(
+                    f,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.white.withOpacity(0.8),
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
         ),
         const SizedBox(height: 14),
         // Recommended method
@@ -479,10 +588,20 @@ class _ResultCard extends StatelessWidget {
           ),
           child: Row(
             children: [
-              const Icon(Icons.recommend_outlined, color: Color(0xFFC8A96E), size: 18),
+              const Icon(
+                Icons.recommend_outlined,
+                color: Color(0xFFC8A96E),
+                size: 18,
+              ),
               const SizedBox(width: 8),
-              Text('Recommended: ${tier.recommendedMethod}',
-                  style: const TextStyle(color: Color(0xFFC8A96E), fontWeight: FontWeight.w600, fontSize: 13)),
+              Text(
+                'Recommended: ${tier.recommendedMethod}',
+                style: const TextStyle(
+                  color: Color(0xFFC8A96E),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
+              ),
             ],
           ),
         ),
@@ -495,7 +614,9 @@ class _ResultCard extends StatelessWidget {
             foregroundColor: Colors.white70,
             side: const BorderSide(color: Colors.white24),
             minimumSize: const Size.fromHeight(40),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
         ),
       ],
@@ -524,7 +645,7 @@ class _ScanHistoryViewState extends ConsumerState<_ScanHistoryView> {
     _future = ref.read(databaseProvider).getAllScans();
   }
 
-  Future<void> _delete(int id) async {
+  Future<void> _delete(String id) async {
     await ref.read(databaseProvider).deleteScan(id);
     if (mounted) setState(_reload);
   }
@@ -534,7 +655,8 @@ class _ScanHistoryViewState extends ConsumerState<_ScanHistoryView> {
     return FutureBuilder<List<BeanScan>>(
       future: _future,
       builder: (context, snap) {
-        if (!snap.hasData) return const Center(child: CircularProgressIndicator());
+        if (!snap.hasData)
+          return const Center(child: CircularProgressIndicator());
         final scans = snap.data!;
         if (scans.isEmpty) {
           return const Center(
@@ -545,8 +667,10 @@ class _ScanHistoryViewState extends ConsumerState<_ScanHistoryView> {
                 SizedBox(height: 12),
                 Text('No scans yet', style: TextStyle(color: Colors.white38)),
                 SizedBox(height: 6),
-                Text('Analyze a bean to save it here',
-                    style: TextStyle(color: Colors.white24, fontSize: 12)),
+                Text(
+                  'Analyze a bean to save it here',
+                  style: TextStyle(color: Colors.white24, fontSize: 12),
+                ),
               ],
             ),
           );
@@ -572,7 +696,8 @@ class _ScanHistoryViewState extends ConsumerState<_ScanHistoryView> {
               child: Row(
                 children: [
                   Container(
-                    width: 44, height: 44,
+                    width: 44,
+                    height: 44,
                     decoration: BoxDecoration(
                       color: tier.color,
                       shape: BoxShape.circle,
@@ -583,13 +708,25 @@ class _ScanHistoryViewState extends ConsumerState<_ScanHistoryView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(scan.roastLabel,
-                            style: const TextStyle(fontWeight: FontWeight.bold)),
-                        Text('Agtron ${scan.agtronValue.toStringAsFixed(1)} · ${scan.recommendedMethod}',
-                            style: const TextStyle(fontSize: 11, color: Colors.white54)),
+                        Text(
+                          scan.roastLabel,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'Agtron ${scan.agtronValue.toStringAsFixed(1)} · ${scan.recommendedMethod}',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: Colors.white54,
+                          ),
+                        ),
                         if (flavors.isNotEmpty)
-                          Text(flavors.take(3).join(', '),
-                              style: const TextStyle(fontSize: 11, color: Colors.white38)),
+                          Text(
+                            flavors.take(3).join(', '),
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: Colors.white38,
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -598,12 +735,19 @@ class _ScanHistoryViewState extends ConsumerState<_ScanHistoryView> {
                     children: [
                       Text(
                         '${scan.scannedAt.day}/${scan.scannedAt.month}',
-                        style: const TextStyle(fontSize: 11, color: Colors.white38),
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: Colors.white38,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       GestureDetector(
                         onTap: () => _delete(scan.id),
-                        child: const Icon(Icons.delete_outline, size: 18, color: Colors.redAccent),
+                        child: const Icon(
+                          Icons.delete_outline,
+                          size: 18,
+                          color: Colors.redAccent,
+                        ),
                       ),
                     ],
                   ),

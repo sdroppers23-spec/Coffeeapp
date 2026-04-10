@@ -5,16 +5,18 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import '../../core/database/app_database.dart';
-import '../discover/roasters_screen.dart';
+import '../../core/database/app_database.dart' hide Brand, Farmer, RecommendedRecipe, SpecialtyArticle;
 import '../../core/database/database_provider.dart';
 import '../../core/l10n/app_localizations.dart';
+import '../../core/database/dtos.dart';
 import '../../shared/widgets/glass_container.dart';
+import '../discover/discovery_providers.dart';
 
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
 final encyclopediaProvider = FutureProvider<List<EncyclopediaEntry>>((ref) async {
-  return ref.watch(databaseProvider).getAllOrigins();
+  final lang = ref.watch(localeProvider);
+  return ref.watch(databaseProvider).getAllOrigins(lang);
 });
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
@@ -49,11 +51,11 @@ class _EncyclopediaScreenState extends ConsumerState<EncyclopediaScreen> {
               style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
               decoration: InputDecoration(
                 hintText: ref.t('search_origins'),
-                hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.38)),
-                prefixIcon: Icon(Icons.search, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.38), size: 20),
+                hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38)),
+                prefixIcon: Icon(Icons.search, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), size: 20),
                 contentPadding: const EdgeInsets.symmetric(vertical: 10),
                 filled: true,
-                fillColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.08),
+                fillColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -80,7 +82,7 @@ class _EncyclopediaScreenState extends ConsumerState<EncyclopediaScreen> {
                     .where((e) =>
                         e.country.toLowerCase().contains(_search) ||
                         e.region.toLowerCase().contains(_search) ||
-                        e.flavorNotes.toLowerCase().contains(_search))
+                        e.flavorNotes.any((f) => f.toLowerCase().contains(_search)))
                     .toList();
 
             if (filtered.isEmpty) {
@@ -91,7 +93,7 @@ class _EncyclopediaScreenState extends ConsumerState<EncyclopediaScreen> {
                     const Icon(Icons.travel_explore, size: 56, color: Colors.black26),
                     const SizedBox(height: 12),
                     Text('${ref.t('no_results')} "$_search"',
-                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.38))),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38))),
                   ],
                 ),
               );
@@ -104,15 +106,7 @@ class _EncyclopediaScreenState extends ConsumerState<EncyclopediaScreen> {
               itemBuilder: (context, i) {
                 final entry = filtered[i];
                 final isExpanded = _expandedIndex == i;
-                List<String> flavors = [];
-                try {
-                  final decoded = jsonDecode(entry.flavorNotes);
-                  if (decoded is List) {
-                    flavors = decoded.cast<String>();
-                  }
-                } catch (e) {
-                  debugPrint('ENCYCLOPEDIA: Error decoding flavors for ${entry.id}: $e');
-                }
+                final flavors = entry.flavorNotes;
 
                 return _OriginCard(
                   entry: entry,
@@ -158,7 +152,7 @@ class _OriginCard extends ConsumerWidget {
       child: GlassContainer(
         padding: const EdgeInsets.all(0),
         opacity: isExpanded ? 0.12 : 0.08,
-        borderColor: isExpanded ? const Color(0xFFC8A96E).withOpacity(0.5) : null,
+        borderColor: isExpanded ? const Color(0xFFC8A96E).withValues(alpha: 0.5) : null,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -175,7 +169,7 @@ class _OriginCard extends ConsumerWidget {
                       color: Colors.black12,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Text(entry.countryEmoji, style: const TextStyle(fontSize: 28)),
+                    child: Text(entry.countryEmoji ?? '', style: const TextStyle(fontSize: 28)),
                   ),
                   const SizedBox(width: 14),
                   Expanded(
@@ -197,9 +191,9 @@ class _OriginCard extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
-                      color: _scoreColor.withOpacity(0.1),
+                      color: _scoreColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: _scoreColor.withOpacity(0.2)),
+                      border: Border.all(color: _scoreColor.withValues(alpha: 0.2)),
                     ),
                     child: Column(
                       children: [
@@ -210,7 +204,7 @@ class _OriginCard extends ConsumerWidget {
                               color: _scoreColor,
                               fontSize: 15),
                         ),
-                        Text('SCA', style: TextStyle(fontSize: 8, color: _scoreColor.withOpacity(0.7), fontWeight: FontWeight.bold)),
+                        Text('SCA', style: TextStyle(fontSize: 8, color: _scoreColor.withValues(alpha: 0.7), fontWeight: FontWeight.bold)),
                       ],
                     ),
                   ),
@@ -245,15 +239,15 @@ class _OriginCard extends ConsumerWidget {
                   children: [
                     Text(entry.description,
                         style: GoogleFonts.inter(
-                            color: Colors.white.withOpacity(0.85), height: 1.6, fontSize: 13.5)),
+                            color: Colors.white.withValues(alpha: 0.85), height: 1.6, fontSize: 13.5)),
                     const SizedBox(height: 20),
                     _SensoryVisualization(entry: entry),
                     const SizedBox(height: 20),
                     // Detail grid
                     _DetailGrid(entry: entry),
-
+                    
                     // Farm Details
-                    if (entry.farmDescription.isNotEmpty || entry.farmPhotosUrlCover.isNotEmpty) ...[
+                    if (entry.farmDescription.isNotEmpty || (entry.farmPhotosUrlCover?.isNotEmpty ?? false)) ...[
                       const SizedBox(height: 28),
                       Row(
                         children: [
@@ -264,7 +258,8 @@ class _OriginCard extends ConsumerWidget {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      if (entry.farmPhotosUrlCover.isNotEmpty)
+                      const SizedBox(height: 16),
+                      if (entry.farmPhotosUrlCover?.isNotEmpty ?? false)
                         Container(
                           margin: const EdgeInsets.only(bottom: 16),
                           decoration: BoxDecoration(
@@ -276,13 +271,13 @@ class _OriginCard extends ConsumerWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(16),
                             child: Image.network(
-                              entry.farmPhotosUrlCover,
+                              entry.farmPhotosUrlCover!,
                               height: 160,
                               width: double.infinity,
                               fit: BoxFit.cover,
                               errorBuilder: (_, __, ___) => Container(
                                 height: 160,
-                                color: Colors.white.withOpacity(0.05),
+                                color: Colors.white.withValues(alpha: 0.05),
                                 child: const Icon(Icons.broken_image_outlined, color: Colors.white24),
                               ),
                             ),
@@ -328,9 +323,9 @@ class _FlavorChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary.withOpacity(0.12),
+        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(0.3)),
+        border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)),
       ),
       child: Text(label,
           style: TextStyle(
@@ -350,7 +345,7 @@ class _DetailGrid extends ConsumerWidget {
       ('⛰ ${ref.t('altitude')}', '${entry.altitudeMin}–${entry.altitudeMax} m'),
       ('🌿 ${ref.t('varieties')}', entry.varieties),
       ('⚙️ ${ref.t('process')}', entry.processMethod),
-      ('📅 ${ref.t('harvest')}', entry.harvestSeason),
+      ('📅 ${ref.t('harvest')}', entry.harvestSeason ?? 'N/A'),
     ];
 
     return Column(
@@ -446,8 +441,8 @@ class OriginDetailsScreen extends ConsumerWidget {
                 background: Stack(
                   fit: StackFit.expand,
                   children: [
-                    if (entry.farmPhotosUrlCover.isNotEmpty)
-                      Image.network(entry.farmPhotosUrlCover, fit: BoxFit.cover)
+                    if (entry.farmPhotosUrlCover?.isNotEmpty ?? false)
+                      Image.network(entry.farmPhotosUrlCover!, fit: BoxFit.cover)
                     else
                       Container(color: Colors.grey.shade900),
                     Container(
@@ -455,7 +450,7 @@ class OriginDetailsScreen extends ConsumerWidget {
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          colors: [Colors.transparent, Colors.black.withOpacity(0.8)],
+                          colors: [Colors.transparent, Colors.black.withValues(alpha: 0.8)],
                         ),
                       ),
                     ),
@@ -541,15 +536,15 @@ class _ProductTab extends ConsumerWidget {
       padding: const EdgeInsets.all(24),
       children: [
         _SectionHeader(ref.t('purchase_details')),
-        _InfoTile(label: ref.t('price'), value: entry.price.isEmpty ? 'N/A' : entry.price, icon: Icons.payments_outlined),
-        _InfoTile(label: ref.t('weight'), value: entry.weight.isEmpty ? 'N/A' : entry.weight, icon: Icons.scale_outlined),
-        _InfoTile(label: ref.t('roast_date'), value: entry.roastDate.isEmpty ? 'N/A' : entry.roastDate, icon: Icons.calendar_today_outlined),
+        _InfoTile(label: ref.t('price'), value: (entry.price ?? 'N/A'), icon: Icons.payments_outlined),
+        _InfoTile(label: ref.t('weight'), value: (entry.weight ?? 'N/A'), icon: Icons.scale_outlined),
+        _InfoTile(label: ref.t('roast_date'), value: (entry.roastDate ?? 'N/A'), icon: Icons.calendar_today_outlined),
         _InfoTile(label: ref.t('lot_number'), value: entry.lotNumber.isEmpty ? 'N/A' : entry.lotNumber, icon: Icons.tag),
         const SizedBox(height: 24),
         _SectionHeader(ref.t('roast_level')),
         _RoastLevelIndicator(level: entry.roastLevel),
         const SizedBox(height: 32),
-        if (entry.url.isNotEmpty)
+        if (entry.url?.isNotEmpty ?? false)
           ElevatedButton.icon(
             onPressed: () {},
             icon: const Icon(Icons.shopping_bag_outlined),
@@ -660,7 +655,7 @@ class _RecipesTab extends ConsumerWidget {
   }
 }
 
-final lotRecipesProvider = FutureProvider.family<List<RecommendedRecipe>, int>((ref, lotId) async {
+final lotRecipesProvider = FutureProvider.family<List<RecommendedRecipeDto>, int>((ref, lotId) async {
   final db = ref.watch(databaseProvider);
   return db.getRecommendedRecipesForLot(lotId);
 });
@@ -749,9 +744,9 @@ class _CuppingScoreCard extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFFC8A96E).withOpacity(0.1),
+        color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFC8A96E).withOpacity(0.3)),
+        border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
@@ -772,14 +767,14 @@ class _CuppingScoreCard extends ConsumerWidget {
 
 // Dummy classes to support _RecommendedRecipeCard reuse (need to implement shared widgets)
 class _RecommendedRecipeCard extends StatelessWidget {
-  final RecommendedRecipe recipe;
+  final RecommendedRecipeDto recipe;
   const _RecommendedRecipeCard({required this.recipe});
 
   @override
   Widget build(BuildContext context) {
     return Container(
        padding: const EdgeInsets.all(16),
-       decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), borderRadius: BorderRadius.circular(12)),
+       decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(12)),
        child: Column(
          children: [
            Row(
@@ -824,7 +819,7 @@ class _SensoryVisualization extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.03),
+        color: Colors.white.withValues(alpha: 0.03),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.white10),
       ),
@@ -983,14 +978,14 @@ class _RadarChart extends ConsumerWidget {
         radarShape: RadarShape.polygon,
         dataSets: [
           RadarDataSet(
-            fillColor: const Color(0xFFC8A96E).withOpacity(0.2),
+            fillColor: const Color(0xFFC8A96E).withValues(alpha: 0.2),
             borderColor: const Color(0xFFC8A96E),
             entryRadius: 3,
             dataEntries: [
-              RadarEntry(value: (indicators['acidity'] ?? 0).toDouble()),
-              RadarEntry(value: (indicators['sweetness'] ?? 0).toDouble()),
-              RadarEntry(value: (indicators['bitterness'] ?? 0).toDouble()),
-              RadarEntry(value: (indicators['intensity'] ?? 0).toDouble()),
+              RadarEntry(value: (indicators['acidity'] as num? ?? 0).toDouble()),
+              RadarEntry(value: (indicators['sweetness'] as num? ?? 0).toDouble()),
+              RadarEntry(value: (indicators['bitterness'] as num? ?? 0).toDouble()),
+              RadarEntry(value: (indicators['intensity'] as num? ?? 0).toDouble()),
               RadarEntry(value: 3), // placeholder for balance/body
             ],
           ),

@@ -4,15 +4,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/database/app_database.dart';
 import '../../core/database/database_provider.dart';
+import '../../core/database/dtos.dart';
 import '../../shared/widgets/glass_container.dart';
 import 'custom_recipe_form.dart';
 import 'custom_recipe_timer_screen.dart';
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
 final customRecipesForMethodProvider =
-    FutureProvider.family<List<CustomRecipe>, String>((ref, methodKey) async {
+    FutureProvider.family<List<CustomRecipeDto>, String>((ref, methodKey) async {
   final db = ref.watch(databaseProvider);
-  return db.getCustomRecipesForMethod(methodKey);
+  return db.getCustomRecipesForMethod('', methodKey);
+});
+
+final globalCustomRecipesProvider = FutureProvider<List<CustomRecipeDto>>((ref) async {
+  final db = ref.watch(databaseProvider);
+  return db.getAllCustomRecipes('');
 });
 
 // ─── Tab widget (embedded inside BrewingDetailScreen Tab 2) ───────────────────
@@ -82,9 +88,49 @@ class CustomRecipeListTab extends ConsumerWidget {
   }
 }
 
+class GlobalCustomRecipeList extends ConsumerWidget {
+  const GlobalCustomRecipeList({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final recipesAsync = ref.watch(globalCustomRecipesProvider);
+
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: recipesAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator(color: Color(0xFFC8A96E))),
+        error: (e, _) => Center(child: Text('Error: $e', style: const TextStyle(color: Colors.white70))),
+        data: (recipes) {
+          if (recipes.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.history_rounded, size: 48, color: Colors.white24),
+                  const SizedBox(height: 16),
+                  Text('History is empty',
+                      style: GoogleFonts.poppins(color: Colors.white38, fontSize: 16)),
+                ],
+              ),
+            );
+          }
+
+          return ListView.separated(
+            padding: const EdgeInsets.fromLTRB(16, 120, 16, 100),
+            itemCount: recipes.length,
+            separatorBuilder: (_, __) => const SizedBox(height: 16),
+            itemBuilder: (context, i) =>
+                _CustomRecipeCard(recipe: recipes[i], methodKey: recipes[i].methodKey, ref: ref),
+          );
+        },
+      ),
+    );
+  }
+}
+
 // ─── Recipe Card ─────────────────────────────────────────────────────────────
 class _CustomRecipeCard extends StatelessWidget {
-  final CustomRecipe recipe;
+  final CustomRecipeDto recipe;
   final String methodKey;
   final WidgetRef ref;
   const _CustomRecipeCard(
@@ -116,7 +162,7 @@ class _CustomRecipeCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFC8A96E).withOpacity(0.15),
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Icon(Icons.coffee_rounded, color: Color(0xFFC8A96E), size: 18),
@@ -223,9 +269,9 @@ class _CustomRecipeCard extends StatelessWidget {
                     margin: const EdgeInsets.only(right: 10),
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.05),
+                      color: Colors.white.withValues(alpha: 0.05),
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.white.withOpacity(0.1)),
+                      border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -295,9 +341,9 @@ class _Tag extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -308,5 +354,4 @@ class _Tag extends StatelessWidget {
         ],
       ),
     );
-  }
 }

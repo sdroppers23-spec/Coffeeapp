@@ -5,9 +5,11 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/database/app_database.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/l10n/app_localizations.dart';
+import '../../core/database/dtos.dart';
 
 final allOriginsProvider = FutureProvider<List<EncyclopediaEntry>>((ref) {
-  return ref.watch(databaseProvider).getAllOrigins();
+  final lang = ref.watch(localeProvider);
+  return ref.watch(databaseProvider).getAllEncyclopediaEntries(lang);
 });
 
 class ComparisonScreen extends ConsumerStatefulWidget {
@@ -54,7 +56,7 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
                         value: _coffeeA,
                         items: origins,
                         onChanged: (val) => setState(() => _coffeeA = val),
-                        color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.2),
+                        color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.2),
                         borderColor: Theme.of(context).colorScheme.primary,
                       ),
                     ),
@@ -64,7 +66,7 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
                         value: _coffeeB,
                         items: origins,
                         onChanged: (val) => setState(() => _coffeeB = val),
-                        color: Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.2),
+                        color: Theme.of(context).colorScheme.secondaryContainer.withValues(alpha: 0.2),
                         borderColor: Theme.of(context).colorScheme.secondary,
                       ),
                     ),
@@ -76,19 +78,19 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
                 if (_coffeeA != null && _coffeeB != null)
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.05),
+                      color: Colors.white.withValues(alpha: 0.05),
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.white.withOpacity(0.1)),
+                      border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
                     ),
                     child: Column(
                       children: [
                         _CompareRow(ref.t('score_sca'), '${_coffeeA!.cupsScore}', '${_coffeeB!.cupsScore}', highlightWinner: true),
-                        _CompareRow(ref.t('origin'), '${_coffeeA!.countryEmoji} ${_coffeeA!.country}', '${_coffeeB!.countryEmoji} ${_coffeeB!.country}'),
+                        _CompareRow(ref.t('origin'), '${_coffeeA!.countryEmoji ?? ""} ${_coffeeA!.country}', '${_coffeeB!.countryEmoji ?? ""} ${_coffeeB!.country}'),
                         _CompareRow(ref.t('region'), _coffeeA!.region, _coffeeB!.region),
                         _CompareRow(ref.t('altitude'), '${_coffeeA!.altitudeMin}-${_coffeeA!.altitudeMax}m', '${_coffeeB!.altitudeMin}-${_coffeeB!.altitudeMax}m'),
                         _CompareRow(ref.t('varieties'), _coffeeA!.varieties, _coffeeB!.varieties, isTextHeavy: true),
                         _CompareRow(ref.t('process'), _coffeeA!.processMethod, _coffeeB!.processMethod),
-                        _CompareRow(ref.t('harvest'), _coffeeA!.harvestSeason, _coffeeB!.harvestSeason),
+                        _CompareRow(ref.t('harvest'), _coffeeA!.harvestSeason ?? "N/A", _coffeeB!.harvestSeason ?? "N/A"),
                         _CompareRow(ref.t('flavor_notes'), _getFlavors(_coffeeA!), _getFlavors(_coffeeB!), isTextHeavy: true),
                       ],
                     ),
@@ -102,12 +104,7 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
   }
 
   String _getFlavors(EncyclopediaEntry entry) {
-    try {
-      final list = (jsonDecode(entry.flavorNotes) as List).cast<String>();
-      return list.join(', ');
-    } catch (_) {
-      return '';
-    }
+    return entry.flavorNotes.join(', ');
   }
 }
 
@@ -145,7 +142,7 @@ class _CoffeeSelector extends StatelessWidget {
             return DropdownMenuItem(
               value: e,
               child: Text(
-                '${e.countryMarker} ${e.country}',
+                '${e.countryEmoji ?? ""} ${e.country}',
                 style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -159,9 +156,7 @@ class _CoffeeSelector extends StatelessWidget {
   }
 }
 
-extension on EncyclopediaEntry {
-  String get countryMarker => countryEmoji.isNotEmpty ? countryEmoji : '☕';
-}
+// Removed countryMarker extension since we used countryEmoji directly
 
 class _CompareRow extends StatelessWidget {
   final String title;
@@ -190,7 +185,7 @@ class _CompareRow extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.05))),
+        border: Border(bottom: BorderSide(color: Colors.white.withValues(alpha: 0.05))),
       ),
       child: Column(
         children: [

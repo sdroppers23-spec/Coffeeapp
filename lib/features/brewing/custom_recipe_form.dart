@@ -42,11 +42,13 @@ class _PourEntry {
 // ─── Form Screen ──────────────────────────────────────────────────────────────
 class CustomRecipeFormScreen extends ConsumerStatefulWidget {
   final String methodKey;
+  final String? lotId;
   final CustomRecipe? existingRecipe;
 
   const CustomRecipeFormScreen({
     super.key,
     required this.methodKey,
+    this.lotId,
     this.existingRecipe,
   });
 
@@ -190,8 +192,9 @@ class _CustomRecipeFormScreenState extends ConsumerState<CustomRecipeFormScreen>
     } else {
       await db.insertCustomRecipe(CustomRecipesCompanion.insert(
         methodKey: widget.methodKey,
+        lotId: Value(widget.lotId),
         name: _nameCtrl.text.trim(),
-        createdAt: now,
+        createdAt: Value(now),
         updatedAt: now,
         coffeeGrams: double.tryParse(_coffeeGCtrl.text) ?? 0,
         totalWaterMl: double.tryParse(_waterMlCtrl.text) ?? 0,
@@ -614,4 +617,5 @@ class _CircleBtn extends StatelessWidget {
       ),
     );
   }
+}
 }

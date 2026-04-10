@@ -2,19 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../core/database/app_database.dart';
+
 import '../../core/database/database_provider.dart';
-import '../../core/database/coffee_data_seed.dart';
-import '../../core/database/sync_service.dart';
+
 import '../../core/l10n/app_localizations.dart';
-import '../../shared/widgets/glass_container.dart';
 import 'brand_details_screen.dart';
-import 'farmers_screen.dart';
-import '../../core/l10n/l10n_helpers.dart';
+
 import '../../core/database/dtos.dart';
 import 'discovery_providers.dart';
-import '../specialty/specialty_encyclopedia_provider.dart';
-import '../latte_art/latte_art_screen.dart';
 
 
 // Removed redundant local brandsProvider. Using the one from discovery_providers.dart.
@@ -30,52 +25,24 @@ class RoastersScreen extends ConsumerWidget {
       body: CustomScrollView(
         slivers: [
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             sliver: SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        ref.t('premium_roasters'),
-                        style: GoogleFonts.poppins(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () => _showAddRoasterDialog(context, ref),
-                        icon: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: const Color(
-                              0xFFC8A96E,
-                            ).withValues(alpha: 0.2),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.add,
-                            color: Color(0xFFC8A96E),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    ref.t('specialty'),
-                    style: GoogleFonts.poppins(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withValues(alpha: 0.6),
-                      fontSize: 14,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: IconButton(
+                  onPressed: () => _showAddRoasterDialog(context, ref),
+                  icon: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.add,
+                      color: Color(0xFFC8A96E),
                     ),
                   ),
-                  const SizedBox(height: 24),
-                ],
+                ),
               ),
             ),
           ),
@@ -117,122 +84,7 @@ class RoastersScreen extends ConsumerWidget {
           const SliverToBoxAdapter(child: SizedBox(height: 100)),
         ],
       ),
-      floatingActionButton: FloatingActionButton.small(
-        onPressed: () async {
-          showDialog(
-            context: context,
-            builder: (ctx) => AlertDialog(
-              backgroundColor: const Color(0xFF1A1A1A),
-              title: Text(
-                ref.t('sync_options'),
-                style: const TextStyle(color: Colors.white),
-              ),
-              content: Text(
-                ref.t('sync_choice_desc'),
-                style: const TextStyle(color: Colors.white70),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () async {
-                    Navigator.pop(ctx);
-                    _handleSync(ref, context, isPush: false);
-                  },
-                  child: Text(
-                    ref.t('cloud_sync'),
-                    style: const TextStyle(color: Color(0xFFC8A96E)),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () async {
-                    Navigator.pop(ctx);
-                    _handleSync(ref, context, isPush: true);
-                  },
-                  child: Text(
-                    ref.t('push_local'),
-                    style: const TextStyle(color: Colors.orange),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-        backgroundColor: const Color(0xFFC8A96E),
-        child: const Icon(Icons.cloud_sync, color: Colors.black),
-      ),
     );
-  }
-
-  Future<void> _handleSync(
-    WidgetRef ref,
-    BuildContext context, {
-    required bool isPush,
-  }) async {
-    final db = ref.read(databaseProvider);
-    final syncService = ref.read(syncServiceProvider);
-    final messenger = ScaffoldMessenger.of(context);
-
-    messenger.showSnackBar(
-      SnackBar(
-        content: Text(
-          isPush ? 'Pushing to Cloud...' : 'Connecting to Cloud Sync...',
-        ),
-        duration: const Duration(seconds: 1),
-      ),
-    );
-
-    try {
-      if (isPush) {
-        // Ensure we have local data to push by seeding once if empty
-        final locale = ref.read(localeProvider);
-        final localBrands = await db.getAllBrands(locale);
-        if (localBrands.isEmpty) {
-          await CoffeeDataSeed(db).seedAll();
-        }
-        await syncService.pushLocalToCloud(
-          onProgress: (msg) {
-            messenger.hideCurrentSnackBar();
-            messenger.showSnackBar(
-              SnackBar(
-                content: Text(msg),
-                duration: const Duration(seconds: 2),
-                backgroundColor: msg.contains('[STABLE]')
-                    ? Colors.green
-                    : Colors.orange,
-              ),
-            );
-          },
-        );
-      } else {
-        await syncService.syncAll(
-          clearLocal: true,
-          onProgress: (msg) {
-            messenger.hideCurrentSnackBar();
-            messenger.showSnackBar(
-              SnackBar(
-                content: Text(msg),
-                duration: const Duration(seconds: 2),
-                backgroundColor: msg.contains('[STABLE]')
-                    ? Colors.green
-                    : const Color(0xFFC8A96E),
-              ),
-            );
-          },
-        );
-      }
-      ref.invalidate(brandsProvider);
-      ref.invalidate(farmersProvider);
-      ref.invalidate(specialtyEncyclopediaProvider);
-      ref.invalidate(specialtyArticlesProvider);
-      ref.invalidate(latteArtPatternsProvider);
-
-    } catch (e) {
-      messenger.showSnackBar(
-        SnackBar(
-          content: Text('Action failed: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
   }
 
   Future<void> _showAddRoasterDialog(
@@ -391,9 +243,20 @@ class _RoasterCardState extends ConsumerState<_RoasterCard> {
           builder: (_) => BrandDetailsScreen(brand: widget.brand),
         ),
       ),
-      child: GlassContainer(
-        padding: EdgeInsets.zero,
-        opacity: 0.1,
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFF1E293B).withValues(alpha: 0.7),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.3),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        clipBehavior: Clip.antiAlias,
         child: Column(
           children: [
             // Header Image/Video Placeholder
@@ -402,21 +265,15 @@ class _RoasterCardState extends ConsumerState<_RoasterCard> {
                 Hero(
                   tag: 'brand_bg_${widget.brand.id}',
                   child: Container(
-                    height: 160,
+                    height: 140,
                     width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.05),
-                    ),
+                    color: Colors.black12,
                     child: widget.brand.logoUrl.isNotEmpty
                         ? Opacity(
                             opacity: 0.15,
                             child: _BrandLogo(url: widget.brand.logoUrl),
                           )
-                        : const Icon(
-                            Icons.business,
-                            size: 40,
-                            color: Colors.white24,
-                          ),
+                        : const SizedBox(),
                   ),
                 ),
                 Positioned(
@@ -425,18 +282,25 @@ class _RoasterCardState extends ConsumerState<_RoasterCard> {
                   child: Hero(
                     tag: 'brand_logo_${widget.brand.id}',
                     child: Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF1E293B),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.white10),
+                        color: const Color(0xFF2D3748),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.white24, width: 0.5),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.3),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
                       ),
                       child: widget.brand.logoUrl.isNotEmpty
-                          ? _BrandLogo(url: widget.brand.logoUrl, height: 40)
+                          ? _BrandLogo(url: widget.brand.logoUrl, height: 36)
                           : const Icon(
-                              Icons.coffee,
-                              color: Colors.black,
-                              size: 30,
+                              Icons.coffee_maker_outlined,
+                              color: Colors.white,
+                              size: 32,
                             ),
                     ),
                   ),
@@ -450,7 +314,7 @@ class _RoasterCardState extends ConsumerState<_RoasterCard> {
                       onPressed: _showDeleteConfirmation,
                       icon: Container(
                         padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.black45,
                           shape: BoxShape.circle,
                         ),
@@ -477,7 +341,7 @@ class _RoasterCardState extends ConsumerState<_RoasterCard> {
                         style: GoogleFonts.poppins(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
+                          color: const Color(0xFFC8A96E),
                         ),
                       ),
                       IconButton(
@@ -496,9 +360,7 @@ class _RoasterCardState extends ConsumerState<_RoasterCard> {
                   Text(
                     widget.brand.shortDesc,
                     style: TextStyle(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withValues(alpha: 0.8),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                       fontSize: 14,
                       fontStyle: FontStyle.italic,
                     ),
@@ -510,9 +372,7 @@ class _RoasterCardState extends ConsumerState<_RoasterCard> {
                       child: Text(
                         widget.brand.fullDesc,
                         style: TextStyle(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withValues(alpha: 0.6),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                           fontSize: 13,
                           height: 1.5,
                         ),
@@ -542,17 +402,17 @@ class _RoasterCardState extends ConsumerState<_RoasterCard> {
                       const Spacer(),
                       Text(
                         ref.t('browse_lots'),
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
+                        style: GoogleFonts.poppins(
+                          color: const Color(0xFFC8A96E),
                           fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                           letterSpacing: 1.2,
                         ),
                       ),
-                      Icon(
+                      const Icon(
                         Icons.chevron_right,
                         size: 16,
-                        color: Theme.of(context).colorScheme.primary,
+                        color: Color(0xFFC8A96E),
                       ),
                     ],
                   ),

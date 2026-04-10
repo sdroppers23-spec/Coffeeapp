@@ -314,7 +314,7 @@ class _BeanEyeScreenState extends ConsumerState<BeanEyeScreen>
                               vertical: 5,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.green.withOpacity(0.85),
+                              color: Colors.green.withValues(alpha: 0.85),
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: const Row(
@@ -562,15 +562,15 @@ class _ResultCard extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: tier.color.withOpacity(0.25),
+                    color: tier.color.withValues(alpha: 0.25),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: tier.color.withOpacity(0.5)),
+                    border: Border.all(color: tier.color.withValues(alpha: 0.5)),
                   ),
                   child: Text(
                     f,
                     style: TextStyle(
                       fontSize: 11,
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withValues(alpha: 0.8),
                     ),
                   ),
                 ),
@@ -582,9 +582,9 @@ class _ResultCard extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
-            color: const Color(0xFFC8A96E).withOpacity(0.1),
+            color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: const Color(0xFFC8A96E).withOpacity(0.3)),
+            border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.3)),
           ),
           child: Row(
             children: [
@@ -689,7 +689,7 @@ class _ScanHistoryViewState extends ConsumerState<_ScanHistoryView> {
             return Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.06),
+                color: Colors.white.withValues(alpha: 0.06),
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(color: Colors.white12),
               ),

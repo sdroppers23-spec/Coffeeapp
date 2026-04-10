@@ -65,7 +65,7 @@ class LocalizedBeanDto {
     required this.detailedProcess,
     this.url,
     this.farmerId,
-    required this.isDecaf,
+    this.isDecaf = false,
     this.farm,
     this.farmPhotosUrlCover,
     this.washStation,

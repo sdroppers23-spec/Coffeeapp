@@ -4,7 +4,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../navigation/main_scaffold.dart';
-import 'specialty_article_detail_screen.dart';
+
 import '../../core/database/dtos.dart';
 
 class SpecialtyArticleDetailScreen extends ConsumerStatefulWidget {
@@ -70,7 +70,7 @@ class _SpecialtyArticleDetailScreenState
               background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  if (imageUrl != null && imageUrl.isNotEmpty)
+                  if (imageUrl.isNotEmpty)
                     CachedNetworkImage(
                       imageUrl: imageUrl,
                       fit: BoxFit.cover,

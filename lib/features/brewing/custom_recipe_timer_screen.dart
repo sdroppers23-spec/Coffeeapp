@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/database/app_database.dart';
+
 import '../../core/database/dtos.dart';
 import '../../core/l10n/app_localizations.dart';
 
@@ -127,7 +127,7 @@ class _CustomRecipeTimerScreenState
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  const Color(0xFFC8A96E).withOpacity(0.15),
+                  const Color(0xFFC8A96E).withValues(alpha: 0.15),
                   Colors.transparent,
                 ],
               ),
@@ -213,10 +213,10 @@ class _CustomRecipeTimerScreenState
                     vertical: 10,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFC8A96E).withOpacity(0.1),
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: const Color(0xFFC8A96E).withOpacity(0.3),
+                      color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
                     ),
                   ),
                   child: Text(
@@ -270,10 +270,10 @@ class _CustomRecipeTimerScreenState
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: isActive
-                        ? const Color(0xFFC8A96E).withOpacity(0.15)
+                        ? const Color(0xFFC8A96E).withValues(alpha: 0.15)
                         : (isPast
-                              ? Colors.white.withOpacity(0.02)
-                              : Colors.white.withOpacity(0.05)),
+                              ? Colors.white.withValues(alpha: 0.02)
+                              : Colors.white.withValues(alpha: 0.05)),
                     border: Border.all(
                       color: isActive
                           ? const Color(0xFFC8A96E)

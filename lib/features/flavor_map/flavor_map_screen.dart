@@ -414,8 +414,8 @@ class _TemplateChip extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.05),
-          border: Border.all(color: const Color(0xFFC8A96E).withOpacity(0.5)),
+          color: Colors.white.withValues(alpha: 0.05),
+          border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.5)),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(

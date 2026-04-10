@@ -96,8 +96,8 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
   @override
   Widget build(BuildContext context) {
     final navVisible = ref.watch(navBarVisibleProvider);
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
     
+
     return PremiumBackground(
       child: Scaffold(
         backgroundColor: Colors.transparent,

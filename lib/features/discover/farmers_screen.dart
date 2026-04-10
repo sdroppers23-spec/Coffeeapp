@@ -55,7 +55,7 @@ class _FarmersScreenState extends ConsumerState<FarmersScreen> {
             // Extract unique regions for filter
             final regions = [
               'All',
-              ...entries.map((e) => e.region).toSet().toList(),
+              ...entries.map((e) => e.region).toSet(),
             ];
 
             return CustomScrollView(
@@ -68,7 +68,7 @@ class _FarmersScreenState extends ConsumerState<FarmersScreen> {
                         // Filter dropdown
                         Expanded(
                           child: DropdownButtonFormField<String>(
-                            value: _filterRegion,
+                            initialValue: _filterRegion,
                             dropdownColor: const Color(0xFF1E1E1E),
                             decoration: InputDecoration(
                               labelText: 'Регіон',
@@ -76,7 +76,7 @@ class _FarmersScreenState extends ConsumerState<FarmersScreen> {
                                 color: Color(0xFFC8A96E),
                               ),
                               filled: true,
-                              fillColor: Colors.white.withOpacity(0.05),
+                              fillColor: Colors.white.withValues(alpha: 0.05),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -95,8 +95,9 @@ class _FarmersScreenState extends ConsumerState<FarmersScreen> {
                                 )
                                 .toList(),
                             onChanged: (val) {
-                              if (val != null)
+                              if (val != null) {
                                 setState(() => _filterRegion = val);
+                              }
                             },
                           ),
                         ),
@@ -104,7 +105,7 @@ class _FarmersScreenState extends ConsumerState<FarmersScreen> {
                         // Sort dropdown
                         Expanded(
                           child: DropdownButtonFormField<String>(
-                            value: _sortMode,
+                            initialValue: _sortMode,
                             dropdownColor: const Color(0xFF1E1E1E),
                             decoration: InputDecoration(
                               labelText: 'Сортування',
@@ -112,7 +113,7 @@ class _FarmersScreenState extends ConsumerState<FarmersScreen> {
                                 color: Color(0xFFC8A96E),
                               ),
                               filled: true,
-                              fillColor: Colors.white.withOpacity(0.05),
+                              fillColor: Colors.white.withValues(alpha: 0.05),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -173,9 +174,9 @@ class _FarmCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -190,7 +191,7 @@ class _FarmCard extends StatelessWidget {
                 farm.imageUrl,
                 height: 160,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
+                errorBuilder: (_, _, _) => Container(
                   height: 160,
                   color: Colors.black45,
                   child: const Center(
@@ -236,7 +237,7 @@ class _FarmCard extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFC8A96E).withOpacity(0.2),
+                        color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(color: const Color(0xFFC8A96E)),
                       ),

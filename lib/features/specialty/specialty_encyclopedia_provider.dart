@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
-import '../../core/l10n/app_localizations.dart';
+
 import 'specialty_encyclopedia_models.dart';
 
 final currentLanguageProvider = Provider<String>((ref) {

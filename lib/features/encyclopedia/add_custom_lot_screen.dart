@@ -11,7 +11,7 @@ import 'package:drift/drift.dart' hide Column;
 import 'package:go_router/go_router.dart';
 
 import '../../core/l10n/app_localizations.dart';
-import '../../core/database/sync_service.dart';
+
 import '../../shared/widgets/sensory_radar_chart.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/providers/settings_provider.dart';

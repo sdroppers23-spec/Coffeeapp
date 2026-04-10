@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/database/app_database.dart';
+
 import '../../core/database/dtos.dart';
 import '../../core/config/flag_constants.dart';
 import '../navigation/main_scaffold.dart';

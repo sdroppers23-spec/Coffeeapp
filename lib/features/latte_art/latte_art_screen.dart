@@ -1,4 +1,3 @@
-
 import 'dart:math' as math;
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,9 @@ import '../../core/database/dtos.dart';
 import '../../core/l10n/app_localizations.dart';
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
-final latteArtPatternsProvider = FutureProvider<List<LatteArtPatternDto>>((ref) async {
+final latteArtPatternsProvider = FutureProvider<List<LatteArtPatternDto>>((
+  ref,
+) async {
   final lang = ref.watch(localeProvider);
   return ref.watch(databaseProvider).getAllLatteArtPatterns(lang);
 });
@@ -58,7 +59,6 @@ class _LatteArtScreenState extends ConsumerState<LatteArtScreen>
 
   // Steps are already parsed in the DTO
 
-
   Widget _buildDifficultyStars(int d) {
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -85,8 +85,10 @@ class _LatteArtScreenState extends ConsumerState<LatteArtScreen>
             children: [
               const CircularProgressIndicator(),
               const SizedBox(height: 12),
-              Text('Initializing camera…',
-                  style: TextStyle(color: Colors.white54)),
+              Text(
+                'Initializing camera…',
+                style: TextStyle(color: Colors.white54),
+              ),
             ],
           ),
         ),
@@ -151,17 +153,26 @@ class _LatteArtScreenState extends ConsumerState<LatteArtScreen>
                   ),
                   child: Row(
                     children: [
-                      BackButton(color: Colors.white, onPressed: () => Navigator.of(context).pop()),
-                      Text('Latte Art Trainer',
-                          style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                              color: Colors.white)),
+                      BackButton(
+                        color: Colors.white,
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                      Text(
+                        'Latte Art Trainer',
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                      ),
                       const Spacer(),
                       IconButton(
-                        icon: Icon(_showSteps ? Icons.info_outline : Icons.info,
-                            color: Colors.white),
-                        onPressed: () => setState(() => _showSteps = !_showSteps),
+                        icon: Icon(
+                          _showSteps ? Icons.info_outline : Icons.info,
+                          color: Colors.white,
+                        ),
+                        onPressed: () =>
+                            setState(() => _showSteps = !_showSteps),
                       ),
                     ],
                   ),
@@ -206,7 +217,8 @@ class _LatteArtScreenState extends ConsumerState<LatteArtScreen>
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
                           itemCount: patterns.length,
-                          separatorBuilder: (_, __) => const SizedBox(width: 10),
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(width: 10),
                           itemBuilder: (context, i) {
                             final p = patterns[i];
                             final isActive = _activePattern?.id == p.id;
@@ -220,7 +232,9 @@ class _LatteArtScreenState extends ConsumerState<LatteArtScreen>
                                 width: 80,
                                 decoration: BoxDecoration(
                                   color: isActive
-                                      ? const Color(0xFFC8A96E).withValues(alpha: 0.25)
+                                      ? const Color(
+                                          0xFFC8A96E,
+                                        ).withValues(alpha: 0.25)
                                       : Colors.black54,
                                   borderRadius: BorderRadius.circular(14),
                                   border: Border.all(
@@ -259,7 +273,11 @@ class _LatteArtScreenState extends ConsumerState<LatteArtScreen>
                       // Opacity slider
                       Row(
                         children: [
-                          const Icon(Icons.opacity, size: 18, color: Colors.white60),
+                          const Icon(
+                            Icons.opacity,
+                            size: 18,
+                            color: Colors.white60,
+                          ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: SliderTheme(
@@ -268,8 +286,9 @@ class _LatteArtScreenState extends ConsumerState<LatteArtScreen>
                                 thumbColor: const Color(0xFFC8A96E),
                                 inactiveTrackColor: Colors.white24,
                                 trackHeight: 3,
-                                thumbShape:
-                                    const RoundSliderThumbShape(enabledThumbRadius: 8),
+                                thumbShape: const RoundSliderThumbShape(
+                                  enabledThumbRadius: 8,
+                                ),
                               ),
                               child: Slider(
                                 value: opacity,
@@ -277,7 +296,11 @@ class _LatteArtScreenState extends ConsumerState<LatteArtScreen>
                               ),
                             ),
                           ),
-                          const Icon(Icons.visibility, size: 18, color: Colors.white60),
+                          const Icon(
+                            Icons.visibility,
+                            size: 18,
+                            color: Colors.white60,
+                          ),
                         ],
                       ),
                     ],
@@ -309,13 +332,17 @@ class _StepGuide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final step = steps[activeIndex];
-    final String instruction = step is Map ? (step['instruction'] ?? '') : step.toString();
+    final String instruction = step is Map
+        ? (step['instruction'] ?? '')
+        : step.toString();
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.black.withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.3)),
+        border: Border.all(
+          color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,9 +350,14 @@ class _StepGuide extends StatelessWidget {
           // Step progress dots
           Row(
             children: [
-              Text('Step ${activeIndex + 1}/${steps.length}',
-                  style: const TextStyle(
-                      fontSize: 11, color: Color(0xFFC8A96E), fontWeight: FontWeight.w600)),
+              Text(
+                'Step ${activeIndex + 1}/${steps.length}',
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: Color(0xFFC8A96E),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               const SizedBox(width: 8),
               Expanded(
                 child: Row(
@@ -351,7 +383,11 @@ class _StepGuide extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             instruction,
-            style: const TextStyle(color: Colors.white, fontSize: 13, height: 1.4),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 13,
+              height: 1.4,
+            ),
           ),
           const SizedBox(height: 8),
           Row(
@@ -361,15 +397,19 @@ class _StepGuide extends StatelessWidget {
                 onPressed: onPrev,
                 icon: const Icon(Icons.chevron_left, size: 18),
                 label: const Text('Prev'),
-                style:
-                    TextButton.styleFrom(foregroundColor: Colors.white54, padding: EdgeInsets.zero),
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.white54,
+                  padding: EdgeInsets.zero,
+                ),
               ),
               TextButton.icon(
                 onPressed: onNext,
                 icon: const Icon(Icons.chevron_right, size: 18),
                 label: const Text('Next'),
                 style: TextButton.styleFrom(
-                    foregroundColor: const Color(0xFFC8A96E), padding: EdgeInsets.zero),
+                  foregroundColor: const Color(0xFFC8A96E),
+                  padding: EdgeInsets.zero,
+                ),
               ),
             ],
           ),
@@ -436,23 +476,35 @@ class AdvancedStencilPainter extends CustomPainter {
       ..strokeWidth = 5.0
       ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round
-      ..maskFilter = const MaskFilter.blur(BlurStyle.solid, 2.0); // Slight soft edge
+      ..maskFilter = const MaskFilter.blur(
+        BlurStyle.solid,
+        2.0,
+      ); // Slight soft edge
 
     final metrics = fullPath.computeMetrics().toList();
     if (metrics.isEmpty) return;
 
     // We want the total animation to smooth over all contours sequentially
-    double totalLength = metrics.fold(0.0, (prev, metric) => prev + metric.length);
+    double totalLength = metrics.fold(
+      0.0,
+      (prev, metric) => prev + metric.length,
+    );
     double currentLength = totalLength * progress;
 
     final animatedPath = Path();
     for (final metric in metrics) {
       if (currentLength <= 0.0) break;
       if (metric.length <= currentLength) {
-        animatedPath.addPath(metric.extractPath(0.0, metric.length), Offset.zero);
+        animatedPath.addPath(
+          metric.extractPath(0.0, metric.length),
+          Offset.zero,
+        );
         currentLength -= metric.length;
       } else {
-        animatedPath.addPath(metric.extractPath(0.0, currentLength), Offset.zero);
+        animatedPath.addPath(
+          metric.extractPath(0.0, currentLength),
+          Offset.zero,
+        );
         currentLength = 0.0;
       }
     }
@@ -511,7 +563,12 @@ class AdvancedStencilPainter extends CustomPainter {
 
   void _addWrapper(Path path, Offset base, double width) {
     path.moveTo(base.dx - width, base.dy - width * 0.5);
-    path.quadraticBezierTo(base.dx, base.dy + width * 0.5, base.dx + width, base.dy - width * 0.5);
+    path.quadraticBezierTo(
+      base.dx,
+      base.dy + width * 0.5,
+      base.dx + width,
+      base.dy - width * 0.5,
+    );
   }
 
   Path _createRosettaPath(Offset c, double size) {
@@ -529,7 +586,7 @@ class AdvancedStencilPainter extends CustomPainter {
       double envelope = 85.0 * (1.0 - t * 0.4);
       // Higher frequency sin wave for the "wiggle"
       double dx = math.sin(t * math.pi * (wiggles / 1.5)) * envelope;
-      
+
       if (i == 0) {
         path.moveTo(c.dx + dx * 0.2, y);
       } else {
@@ -546,7 +603,7 @@ class AdvancedStencilPainter extends CustomPainter {
     final path = Path();
     double startY = c.dy + 60;
     double topY = c.dy - 60;
-    
+
     // Tighter, highly symmetric wiggle
     // Tighter, highly symmetric wiggle with quadratic curves
     int wiggles = 28;
@@ -580,15 +637,19 @@ class AdvancedStencilPainter extends CustomPainter {
       double y = startY - 120 * t;
       double envelope = 60.0 * (1.0 - t * 0.5);
       double dx = math.sin(t * math.pi * wiggles) * envelope;
-      if (i == 0) path.moveTo(baseX + dx, y);
-      else path.lineTo(baseX + dx, y);
+      if (i == 0)
+        path.moveTo(baseX + dx, y);
+      else
+        path.lineTo(baseX + dx, y);
     }
     // The swooping tail
     path.moveTo(c.dx - 20, c.dy - 60);
     path.quadraticBezierTo(c.dx + 80, c.dy - 90, c.dx + 60, c.dy + 50);
     path.quadraticBezierTo(c.dx + 50, c.dy + 90, c.dx, c.dy + 80);
     // Small head flourish
-    path.addOval(Rect.fromCircle(center: Offset(c.dx + 65, c.dy - 50), radius: 8));
+    path.addOval(
+      Rect.fromCircle(center: Offset(c.dx + 65, c.dy - 50), radius: 8),
+    );
     return path;
   }
 
@@ -603,18 +664,29 @@ class AdvancedStencilPainter extends CustomPainter {
       double baseX = c.dx + 20;
       double envelope = 50.0 * math.sin(t * math.pi);
       double dx = math.sin(t * math.pi * wiggles) * envelope;
-      if (i == 0) path.moveTo(baseX + dx, y);
-      else path.lineTo(baseX + dx, y);
+      if (i == 0)
+        path.moveTo(baseX + dx, y);
+      else
+        path.lineTo(baseX + dx, y);
     }
     // Base strike
     path.moveTo(c.dx + 20, c.dy - 40);
     path.lineTo(c.dx + 20, c.dy + 70);
-    
+
     // Sweeping Neck
     path.moveTo(c.dx + 20, c.dy + 40);
-    path.cubicTo(c.dx - 80, c.dy + 30, c.dx - 80, c.dy - 60, c.dx - 30, c.dy - 60);
+    path.cubicTo(
+      c.dx - 80,
+      c.dy + 30,
+      c.dx - 80,
+      c.dy - 60,
+      c.dx - 30,
+      c.dy - 60,
+    );
     // Head and beak
-    path.addOval(Rect.fromCircle(center: Offset(c.dx - 20, c.dy - 60), radius: 10));
+    path.addOval(
+      Rect.fromCircle(center: Offset(c.dx - 20, c.dy - 60), radius: 10),
+    );
     path.moveTo(c.dx - 30, c.dy - 60);
     path.lineTo(c.dx - 50, c.dy - 55);
     return path;
@@ -631,18 +703,20 @@ class AdvancedStencilPainter extends CustomPainter {
       double baseX = c.dx + math.sin(t * math.pi * 2) * 30;
       double envelope = 40.0;
       double dx = math.sin(t * math.pi * wiggles * 1.5) * envelope;
-      if (i == 0) path.moveTo(baseX + dx, y);
-      else path.lineTo(baseX + dx, y);
+      if (i == 0)
+        path.moveTo(baseX + dx, y);
+      else
+        path.lineTo(baseX + dx, y);
     }
     // Wings
     path.moveTo(c.dx - 20, c.dy);
     path.quadraticBezierTo(c.dx - 90, c.dy - 40, c.dx - 70, c.dy - 80);
     path.quadraticBezierTo(c.dx - 50, c.dy - 40, c.dx - 10, c.dy - 20);
-    
+
     path.moveTo(c.dx + 20, c.dy);
     path.quadraticBezierTo(c.dx + 90, c.dy - 40, c.dx + 70, c.dy - 80);
     path.quadraticBezierTo(c.dx + 50, c.dy - 40, c.dx + 10, c.dy - 20);
-    
+
     // Horned Head
     path.addOval(Rect.fromCircle(center: Offset(c.dx, c.dy - 90), radius: 12));
     path.moveTo(c.dx - 10, c.dy - 95);
@@ -661,8 +735,10 @@ class AdvancedStencilPainter extends CustomPainter {
       double angle = t * math.pi * 8; // 4 full turns
       double x = c.dx + math.cos(angle) * r;
       double y = c.dy + math.sin(angle) * r;
-      if (i == 0) path.moveTo(x, y);
-      else path.lineTo(x, y);
+      if (i == 0)
+        path.moveTo(x, y);
+      else
+        path.lineTo(x, y);
     }
     return path;
   }

@@ -37,50 +37,52 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-        onCreate: (m) => m.createAll(),
-        onUpgrade: (m, from, to) async {
-          if (from < 17) {
-            // Safe upgrade to v17
-            // The user reports 'duplicate column name: brand_id' in coffee_lots.
-            // We use a try-catch or explicit check to avoid this.
-            await transaction(() async {
-              // Ensure brand_id exists in coffee_lots
-              try {
-                await customStatement('ALTER TABLE coffee_lots ADD COLUMN brand_id INTEGER;');
-              } catch (e) {
-                // Column likely already exists
-              }
-              
-              // Add other v17 columns if missing
-              final List<TableInfo> tablesToCreate = [
-                localizedBeans,
-                localizedBeanTranslations,
-                localizedBrands,
-                localizedBrandTranslations,
-                localizedFarmers,
-                localizedFarmerTranslations,
-                sphereRegions,
-                sphereRegionTranslations,
-                specialtyArticles,
-                specialtyArticleTranslations,
-                latteArtPatterns,
-                latteArtPatternTranslations,
-              ];
-              
-              for (final table in tablesToCreate) {
-                try {
-                  await m.createTable(table);
-                } catch (e) {
-                  // Table already exists
-                }
-              }
-            });
+    onCreate: (m) => m.createAll(),
+    onUpgrade: (m, from, to) async {
+      if (from < 17) {
+        // Safe upgrade to v17
+        // The user reports 'duplicate column name: brand_id' in coffee_lots.
+        // We use a try-catch or explicit check to avoid this.
+        await transaction(() async {
+          // Ensure brand_id exists in coffee_lots
+          try {
+            await customStatement(
+              'ALTER TABLE coffee_lots ADD COLUMN brand_id INTEGER;',
+            );
+          } catch (e) {
+            // Column likely already exists
           }
-        },
-        beforeOpen: (details) async {
-          await customStatement('PRAGMA foreign_keys = ON');
-        },
-      );
+
+          // Add other v17 columns if missing
+          final List<TableInfo> tablesToCreate = [
+            localizedBeans,
+            localizedBeanTranslations,
+            localizedBrands,
+            localizedBrandTranslations,
+            localizedFarmers,
+            localizedFarmerTranslations,
+            sphereRegions,
+            sphereRegionTranslations,
+            specialtyArticles,
+            specialtyArticleTranslations,
+            latteArtPatterns,
+            latteArtPatternTranslations,
+          ];
+
+          for (final table in tablesToCreate) {
+            try {
+              await m.createTable(table);
+            } catch (e) {
+              // Table already exists
+            }
+          }
+        });
+      }
+    },
+    beforeOpen: (details) async {
+      await customStatement('PRAGMA foreign_keys = ON');
+    },
+  );
 
   // ── Specialty Articles ───────────────────────────────────────────────────────
   Future<List<SpecialtyArticleDto>> getAllSpecialtyArticles(String lang) async {
@@ -126,7 +128,6 @@ class AppDatabase extends _$AppDatabase {
       (await select(localizedBrands).get()).isEmpty;
 
   Future<int> upsertSpecialtyArticle(SpecialtyArticlesCompanion article) =>
-
       insertArticle(article);
 
   Future<int> upsertSpecialtyArticleTranslation(
@@ -223,20 +224,29 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<int> addBrand(String name, String location, String shortDesc) async {
-    final brandId = (await (select(localizedBrands)..orderBy([(t) => OrderingTerm(expression: t.id, mode: OrderingMode.desc)])).get()).firstOrNull?.id ?? 0;
+    final brandId =
+        (await (select(localizedBrands)..orderBy([
+                  (t) =>
+                      OrderingTerm(expression: t.id, mode: OrderingMode.desc),
+                ]))
+                .get())
+            .firstOrNull
+            ?.id ??
+        0;
     final nextId = brandId + 1;
-    
-    await insertBrand(LocalizedBrandsCompanion.insert(
-      id: Value(nextId),
-      name: name,
-    ));
-    
-    return await insertBrandTranslation(LocalizedBrandTranslationsCompanion.insert(
-      brandId: nextId,
-      languageCode: 'uk', // Default for now
-      shortDesc: Value(shortDesc),
-      location: Value(location),
-    ));
+
+    await insertBrand(
+      LocalizedBrandsCompanion.insert(id: Value(nextId), name: name),
+    );
+
+    return await insertBrandTranslation(
+      LocalizedBrandTranslationsCompanion.insert(
+        brandId: nextId,
+        languageCode: 'uk', // Default for now
+        shortDesc: Value(shortDesc),
+        location: Value(location),
+      ),
+    );
   }
 
   Future<int> insertBrand(LocalizedBrandsCompanion b) =>
@@ -263,7 +273,6 @@ class AppDatabase extends _$AppDatabase {
 
   Future<int> deleteBrand(int id) =>
       (delete(localizedBrands)..where((t) => t.id.equals(id))).go();
-
 
   // ── Origins / Beans ──────────────────────────────────────────────────────────
   Future<List<LocalizedBeanDto>> getAllOrigins(String lang) async {
@@ -470,7 +479,6 @@ class AppDatabase extends _$AppDatabase {
   Future<int> deleteBeansForBrand(int brandId) =>
       (delete(localizedBeans)..where((t) => t.brandId.equals(brandId))).go();
 
-
   // ── Sphere Regions ───────────────────────────────────────────────────────────
   Future<List<SphereRegionDto>> getAllSphereRegions(String lang) async {
     final query = select(sphereRegions).join([
@@ -531,7 +539,9 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<CoffeeLotDto?> findConflictLot(String id) async {
-    final row = await (select(coffeeLots)..where((t) => t.id.equals(id))).getSingleOrNull();
+    final row = await (select(
+      coffeeLots,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
     return row != null ? _mapLotRow(row) : null;
   }
 
@@ -550,6 +560,7 @@ class AppDatabase extends _$AppDatabase {
       }
     });
   }
+
   Future<int> insertUserLot(CoffeeLotsCompanion lot) =>
       into(coffeeLots).insertOnConflictUpdate(lot);
 

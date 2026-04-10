@@ -2,8 +2,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../shared/widgets/glass_container.dart';
 import '../../core/l10n/app_localizations.dart';
+import 'terroir_globe.dart';
 
 class FlavorValuesNotifier extends Notifier<Map<String, double>> {
   @override
@@ -23,9 +25,10 @@ class FlavorValuesNotifier extends Notifier<Map<String, double>> {
   }
 }
 
-final flavorValuesProvider = NotifierProvider<FlavorValuesNotifier, Map<String, double>>(() {
-  return FlavorValuesNotifier();
-});
+final flavorValuesProvider =
+    NotifierProvider<FlavorValuesNotifier, Map<String, double>>(() {
+      return FlavorValuesNotifier();
+    });
 
 class FlavorMapScreen extends ConsumerWidget {
   const FlavorMapScreen({super.key});
@@ -33,67 +36,84 @@ class FlavorMapScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Flavor Map'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () => context.push('/profile'),
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              GlassContainer(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  children: [
-                    const Text(
-                      'Sensory Profile',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 350,
-                      child: InteractiveSpiderChart(),
-                    ),
-                  ],
-                ),
+      backgroundColor:
+          Colors.transparent, // Let premium background show through
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            floating: true,
+            title: Text(
+              ref.t('specialty'),
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.bold,
+                fontSize: 28,
+                color: const Color(0xFFC8A96E),
               ),
-              const SizedBox(height: 24),
-              const GlassContainer(
-                padding: EdgeInsets.all(16),
-                child: _SensoryLegend(),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        selectedItemColor: Theme.of(context).colorScheme.secondary,
-        unselectedItemColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-        type: BottomNavigationBarType.fixed,
-        onTap: (index) {
-          if (index == 1) {
-            context.push('/discover');
-          } else if (index == 2) {
-            context.push('/brewing');
-          } else if (index == 3) {
-            context.push('/latte_art');
-          } else if (index == 4) {
-            context.push('/bean_eye');
-          }
-        },
-        items: [
-          BottomNavigationBarItem(icon: const Icon(Icons.radar), label: ref.t('specialty')),
-          BottomNavigationBarItem(icon: const Icon(Icons.explore), label: ref.t('discover')),
-          BottomNavigationBarItem(icon: const Icon(Icons.coffee), label: ref.t('recipes')),
-          BottomNavigationBarItem(icon: const Icon(Icons.coffee_maker), label: 'Latte Art'),
-          BottomNavigationBarItem(icon: const Icon(Icons.remove_red_eye), label: ref.t('scanner')),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 16),
+                  GlassContainer(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Sensory Profile',
+                          style: GoogleFonts.poppins(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        SizedBox(
+                          height: 350,
+                          child: const InteractiveSpiderChart(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Add Globe Title
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      'Global Terroir',
+                      style: GoogleFonts.poppins(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFFC8A96E),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  // The New Terroir Globe Container
+                  GlassContainer(
+                    padding: EdgeInsets.zero,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(24),
+                      child: SizedBox(
+                        height: 500, // Fixed height or could be aspect ratio
+                        child: const TerroirGlobe(),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 120,
+                  ), // Padding to account for the MainScaffold nav bar capsule
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -124,17 +144,59 @@ class _InteractiveSpiderChartState
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              _TemplateChip('Washed', 'Clean & Bright', {'Acidity': 0.8, 'Sweetness': 0.6, 'Body': 0.4, 'Bitterness': 0.3, 'Aroma': 0.7, 'Finish': 0.6}),
+              _TemplateChip('Washed', 'Clean & Bright', {
+                'Acidity': 0.8,
+                'Sweetness': 0.6,
+                'Body': 0.4,
+                'Bitterness': 0.3,
+                'Aroma': 0.7,
+                'Finish': 0.6,
+              }),
               const SizedBox(width: 8),
-              _TemplateChip('Natural', 'Fruity & Sweet', {'Acidity': 0.5, 'Sweetness': 0.9, 'Body': 0.7, 'Bitterness': 0.2, 'Aroma': 0.9, 'Finish': 0.5}),
+              _TemplateChip('Natural', 'Fruity & Sweet', {
+                'Acidity': 0.5,
+                'Sweetness': 0.9,
+                'Body': 0.7,
+                'Bitterness': 0.2,
+                'Aroma': 0.9,
+                'Finish': 0.5,
+              }),
               const SizedBox(width: 8),
-              _TemplateChip('Honey', 'Sticky & Balanced', {'Acidity': 0.6, 'Sweetness': 0.8, 'Body': 0.6, 'Bitterness': 0.2, 'Aroma': 0.7, 'Finish': 0.7}),
+              _TemplateChip('Honey', 'Sticky & Balanced', {
+                'Acidity': 0.6,
+                'Sweetness': 0.8,
+                'Body': 0.6,
+                'Bitterness': 0.2,
+                'Aroma': 0.7,
+                'Finish': 0.7,
+              }),
               const SizedBox(width: 8),
-              _TemplateChip('Ethiopia', 'Floral & Tea-like', {'Acidity': 0.9, 'Sweetness': 0.7, 'Body': 0.3, 'Bitterness': 0.2, 'Aroma': 1.0, 'Finish': 0.8}),
+              _TemplateChip('Ethiopia', 'Floral & Tea-like', {
+                'Acidity': 0.9,
+                'Sweetness': 0.7,
+                'Body': 0.3,
+                'Bitterness': 0.2,
+                'Aroma': 1.0,
+                'Finish': 0.8,
+              }),
               const SizedBox(width: 8),
-              _TemplateChip('Brazil', 'Nutty & Chocolatey', {'Acidity': 0.4, 'Sweetness': 0.7, 'Body': 0.8, 'Bitterness': 0.4, 'Aroma': 0.6, 'Finish': 0.6}),
+              _TemplateChip('Brazil', 'Nutty & Chocolatey', {
+                'Acidity': 0.4,
+                'Sweetness': 0.7,
+                'Body': 0.8,
+                'Bitterness': 0.4,
+                'Aroma': 0.6,
+                'Finish': 0.6,
+              }),
               const SizedBox(width: 8),
-              _TemplateChip('Anaerobic', 'Funky & Complex', {'Acidity': 0.7, 'Sweetness': 0.8, 'Body': 0.6, 'Bitterness': 0.4, 'Aroma': 0.8, 'Finish': 0.9}),
+              _TemplateChip('Anaerobic', 'Funky & Complex', {
+                'Acidity': 0.7,
+                'Sweetness': 0.8,
+                'Body': 0.6,
+                'Bitterness': 0.4,
+                'Aroma': 0.8,
+                'Finish': 0.9,
+              }),
             ],
           ),
         ),
@@ -150,8 +212,12 @@ class _InteractiveSpiderChartState
                   min(constraints.maxWidth, constraints.maxHeight) / 2 - 40;
 
               return GestureDetector(
-                onPanStart: (details) =>
-                    _handleDragStart(details.localPosition, center, radius, values),
+                onPanStart: (details) => _handleDragStart(
+                  details.localPosition,
+                  center,
+                  radius,
+                  values,
+                ),
                 onPanUpdate: (details) =>
                     _handleDragUpdate(details.localPosition, center, radius),
                 onPanEnd: (_) => setState(() => _draggingLabel = null),
@@ -171,8 +237,6 @@ class _InteractiveSpiderChartState
       ],
     );
   }
-
-
 
   void _handleDragStart(
     Offset localPosition,
@@ -217,7 +281,9 @@ class _InteractiveSpiderChartState
     // Snap to grid (optional 0.1 increments)
     // newValue = (newValue * 10).roundToDouble() / 10;
 
-    ref.read(flavorValuesProvider.notifier).updateValue(_draggingLabel!, newValue);
+    ref
+        .read(flavorValuesProvider.notifier)
+        .updateValue(_draggingLabel!, newValue);
   }
 }
 
@@ -357,6 +423,7 @@ class RadarPainter extends CustomPainter {
         oldDelegate.textColor != textColor;
   }
 }
+
 class _SensoryLegend extends StatelessWidget {
   const _SensoryLegend();
 
@@ -387,7 +454,11 @@ class _LegendItem extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(width: 12, height: 12, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+        Container(
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
         const SizedBox(width: 8),
         Text(label, style: const TextStyle(fontSize: 12)),
       ],
@@ -407,7 +478,9 @@ class _TemplateChip extends ConsumerWidget {
     return InkWell(
       onTap: () {
         for (final entry in values.entries) {
-          ref.read(flavorValuesProvider.notifier).updateValue(entry.key, entry.value);
+          ref
+              .read(flavorValuesProvider.notifier)
+              .updateValue(entry.key, entry.value);
         }
       },
       borderRadius: BorderRadius.circular(12),
@@ -415,15 +488,26 @@ class _TemplateChip extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.05),
-          border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.5)),
+          border: Border.all(
+            color: const Color(0xFFC8A96E).withValues(alpha: 0.5),
+          ),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFC8A96E))),
+            Text(
+              title,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color(0xFFC8A96E),
+              ),
+            ),
             const SizedBox(height: 4),
-            Text(subtitle, style: const TextStyle(fontSize: 11, color: Colors.white54)),
+            Text(
+              subtitle,
+              style: const TextStyle(fontSize: 11, color: Colors.white54),
+            ),
           ],
         ),
       ),

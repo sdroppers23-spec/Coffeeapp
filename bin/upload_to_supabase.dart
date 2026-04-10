@@ -7,8 +7,11 @@ const String supabaseUrl = 'https://lylnnqojnytndybhuicr.supabase.co';
 const String supabaseKey = 'sb_publishable_d_gdrnpNa7gFwgqEb5VteQ_y3UKhjS-';
 
 Future<void> batchInsert(
-    SupabaseClient client, String table, List<Map<String, dynamic>> items,
-    {int batchSize = 50}) async {
+  SupabaseClient client,
+  String table,
+  List<Map<String, dynamic>> items, {
+  int batchSize = 50,
+}) async {
   print("Batching $table: ${items.length} items...");
   for (var i = 0; i < items.length; i += batchSize) {
     final end = (i + batchSize < items.length) ? i + batchSize : items.length;
@@ -39,7 +42,7 @@ void main() async {
     'ro',
     'ru',
     'tr',
-    'zh'
+    'zh',
   ];
 
   // 1. CLEANUP PREVIOUS DATA
@@ -65,14 +68,14 @@ void main() async {
       'name': '3 Champs Roastery',
       'site_url': 'https://3champsroastery.com.ua/',
       'logo_url':
-          'https://3champsroastery.com.ua/wp-content/uploads/2021/04/3Champslogo.jpg'
+          'https://3champsroastery.com.ua/wp-content/uploads/2021/04/3Champslogo.jpg',
     },
     {
       'id': 2,
       'name': 'Mad Heads',
       'site_url': 'https://madheadscoffee.com/',
       'logo_url':
-          'https://madheadscoffee.com/wp-content/uploads/2020/09/mad_headslogo.png'
+          'https://madheadscoffee.com/wp-content/uploads/2020/09/mad_headslogo.png',
     },
   ];
   await client.from('localized_brands').insert(brands);
@@ -83,11 +86,12 @@ void main() async {
       brandTrs.add({
         'brand_id': b['id'],
         'language_code': l,
-        'short_desc':
-            l == 'uk' ? 'Преміальна обсмажка.' : 'Premium specialty roaster.',
+        'short_desc': l == 'uk'
+            ? 'Преміальна обсмажка.'
+            : 'Premium specialty roaster.',
         'full_desc':
             'Professional roastery focused on high-quality SCA lots. [$l]',
-        'location': 'Kyiv, Ukraine'
+        'location': 'Kyiv, Ukraine',
       });
     }
   }
@@ -105,7 +109,7 @@ void main() async {
       "proc": "Anaerobic Washed",
       "var": "Java",
       "price": 555,
-      "reg": "Las Flores"
+      "reg": "Las Flores",
     },
     {
       "id": 2,
@@ -116,7 +120,7 @@ void main() async {
       "proc": "Natural",
       "var": "Wush Wush",
       "price": 650,
-      "reg": "Monteverde"
+      "reg": "Monteverde",
     },
     {
       "id": 3,
@@ -127,7 +131,7 @@ void main() async {
       "proc": "Natural",
       "var": "Pink Bourbon",
       "price": 555,
-      "reg": "La Roca"
+      "reg": "La Roca",
     },
     {
       "id": 4,
@@ -138,7 +142,7 @@ void main() async {
       "proc": "Washed",
       "var": "Caturra, Catuai",
       "price": 390,
-      "reg": "Combeima"
+      "reg": "Combeima",
     },
     {
       "id": 5,
@@ -149,7 +153,7 @@ void main() async {
       "proc": "Natural",
       "var": "Caturra, Castillo",
       "price": 405,
-      "reg": "Las Flores"
+      "reg": "Las Flores",
     },
     {
       "id": 6,
@@ -160,7 +164,7 @@ void main() async {
       "proc": "Thermal Shock",
       "var": "Sidra, SL28",
       "price": 705,
-      "reg": "Wilton Benitez"
+      "reg": "Wilton Benitez",
     },
     {
       "id": 7,
@@ -171,7 +175,7 @@ void main() async {
       "proc": "Thermal Shock",
       "var": "Gesha, Red Bourbon",
       "price": 420,
-      "reg": "Granja Paraiso"
+      "reg": "Granja Paraiso",
     },
     {
       "id": 8,
@@ -182,7 +186,7 @@ void main() async {
       "proc": "Thermal Shock",
       "var": "Chiroso, Caturra",
       "price": 485,
-      "reg": "Granja Paraiso"
+      "reg": "Granja Paraiso",
     },
     {
       "id": 9,
@@ -193,7 +197,7 @@ void main() async {
       "proc": "Washed",
       "var": "SL28, SL34",
       "price": 340,
-      "reg": "Kirinyaga"
+      "reg": "Kirinyaga",
     },
     {
       "id": 10,
@@ -204,7 +208,7 @@ void main() async {
       "proc": "Natural",
       "var": "Pink Bourbon",
       "price": 370,
-      "reg": "Coakambu"
+      "reg": "Coakambu",
     },
     {
       "id": 11,
@@ -215,7 +219,7 @@ void main() async {
       "proc": "Anaerobic Natural",
       "var": "S-Lini, Bourbon",
       "price": 465,
-      "reg": "Frinsa"
+      "reg": "Frinsa",
     },
     {
       "id": 12,
@@ -226,7 +230,7 @@ void main() async {
       "proc": "Natural",
       "var": "Geisha",
       "price": 530,
-      "reg": "El Diviso"
+      "reg": "El Diviso",
     },
     {
       "id": 13,
@@ -237,7 +241,7 @@ void main() async {
       "proc": "Natural",
       "var": "Caturra",
       "price": 570,
-      "reg": "Las Lajas"
+      "reg": "Las Lajas",
     },
     {
       "id": 14,
@@ -248,7 +252,7 @@ void main() async {
       "proc": "Anaerobic Natural",
       "var": "Ateng",
       "price": 435,
-      "reg": "Frinsa"
+      "reg": "Frinsa",
     },
     {
       "id": 15,
@@ -259,7 +263,7 @@ void main() async {
       "proc": "Washed",
       "var": "Heirloom",
       "price": 380,
-      "reg": "Sidamo"
+      "reg": "Sidamo",
     },
     {
       "id": 16,
@@ -270,7 +274,7 @@ void main() async {
       "proc": "Thermal Shock",
       "var": "Castillo",
       "price": 365,
-      "reg": "Decaf"
+      "reg": "Decaf",
     },
     {
       "id": 17,
@@ -281,7 +285,7 @@ void main() async {
       "proc": "Anaerobic Natural",
       "var": "Heirloom",
       "price": 420,
-      "reg": "Guji"
+      "reg": "Guji",
     },
     {
       "id": 18,
@@ -292,7 +296,7 @@ void main() async {
       "proc": "Washed",
       "var": "SL28, SL34",
       "price": 385,
-      "reg": "Nyeri"
+      "reg": "Nyeri",
     },
     {
       "id": 19,
@@ -303,7 +307,7 @@ void main() async {
       "proc": "Anaerobic x Washed",
       "var": "Mixed",
       "price": 345,
-      "reg": "House"
+      "reg": "House",
     },
     {
       "id": 20,
@@ -314,7 +318,7 @@ void main() async {
       "proc": "Washed",
       "var": "Heirloom",
       "price": 328,
-      "reg": "Yirgacheffe"
+      "reg": "Yirgacheffe",
     },
     {
       "id": 21,
@@ -325,7 +329,7 @@ void main() async {
       "proc": "Anaerobic Natural",
       "var": "Bourbon",
       "price": 390,
-      "reg": "Coakambu"
+      "reg": "Coakambu",
     },
     {
       "id": 22,
@@ -336,7 +340,7 @@ void main() async {
       "proc": "Washed",
       "var": "Bourbon",
       "price": 340,
-      "reg": "Kibuye"
+      "reg": "Kibuye",
     },
     {
       "id": 23,
@@ -347,7 +351,7 @@ void main() async {
       "proc": "Washed",
       "var": "Caturra",
       "price": 340,
-      "reg": "Huila"
+      "reg": "Huila",
     },
     {
       "id": 24,
@@ -358,7 +362,7 @@ void main() async {
       "proc": "Natural",
       "var": "Castillo",
       "price": 370,
-      "reg": "Tolima"
+      "reg": "Tolima",
     },
     {
       "id": 25,
@@ -369,7 +373,7 @@ void main() async {
       "proc": "Washed Sugarcane",
       "var": "Caturra",
       "price": 335,
-      "reg": "Decaf"
+      "reg": "Decaf",
     },
     {
       "id": 26,
@@ -380,7 +384,7 @@ void main() async {
       "proc": "Honey",
       "var": "Bourbon",
       "price": 450,
-      "reg": "Mbeya"
+      "reg": "Mbeya",
     },
     {
       "id": 27,
@@ -391,7 +395,7 @@ void main() async {
       "proc": "Anaerobic Natural",
       "var": "Heirloom",
       "price": 420,
-      "reg": "Guji"
+      "reg": "Guji",
     },
     {
       "id": 28,
@@ -402,7 +406,7 @@ void main() async {
       "proc": "Natural",
       "var": "Caturra, Castillo",
       "price": 405,
-      "reg": "Las Flores"
+      "reg": "Las Flores",
     },
     {
       "id": 29,
@@ -413,7 +417,7 @@ void main() async {
       "proc": "Thermal Shock",
       "var": "Chiroso",
       "price": 485,
-      "reg": "Granja Paraiso"
+      "reg": "Granja Paraiso",
     },
     {
       "id": 30,
@@ -424,7 +428,7 @@ void main() async {
       "proc": "Anaerobic Natural",
       "var": "S-Lini",
       "price": 465,
-      "reg": "Frinsa"
+      "reg": "Frinsa",
     },
     {
       "id": 31,
@@ -435,7 +439,7 @@ void main() async {
       "proc": "Natural",
       "var": "Caturra",
       "price": 570,
-      "reg": "Las Lajas"
+      "reg": "Las Lajas",
     },
     {
       "id": 32,
@@ -446,7 +450,7 @@ void main() async {
       "proc": "Washed",
       "var": "Heirloom",
       "price": 380,
-      "reg": "Sidamo"
+      "reg": "Sidamo",
     },
     {
       "id": 33,
@@ -457,7 +461,7 @@ void main() async {
       "proc": "Washed",
       "var": "SL28, SL34",
       "price": 340,
-      "reg": "Kirinyaga"
+      "reg": "Kirinyaga",
     },
     {
       "id": 34,
@@ -468,7 +472,7 @@ void main() async {
       "proc": "Natural",
       "var": "Bourbon",
       "price": 370,
-      "reg": "Coakambu"
+      "reg": "Coakambu",
     },
     {
       "id": 35,
@@ -479,7 +483,7 @@ void main() async {
       "proc": "Washed",
       "var": "SL28",
       "price": 385,
-      "reg": "Nyeri"
+      "reg": "Nyeri",
     },
     {
       "id": 36,
@@ -490,7 +494,7 @@ void main() async {
       "proc": "Anaerobic Natural",
       "var": "Bourbon",
       "price": 390,
-      "reg": "Coakambu"
+      "reg": "Coakambu",
     },
     {
       "id": 37,
@@ -501,7 +505,7 @@ void main() async {
       "proc": "Washed",
       "var": "Bourbon",
       "price": 340,
-      "reg": "Kibuye"
+      "reg": "Kibuye",
     },
     {
       "id": 38,
@@ -512,7 +516,7 @@ void main() async {
       "proc": "Washed",
       "var": "Caturra",
       "price": 390,
-      "reg": "Combeima"
+      "reg": "Combeima",
     },
     {
       "id": 39,
@@ -523,7 +527,7 @@ void main() async {
       "proc": "Washed",
       "var": "Heirloom",
       "price": 328,
-      "reg": "Yirgacheffe"
+      "reg": "Yirgacheffe",
     },
     {
       "id": 40,
@@ -534,7 +538,7 @@ void main() async {
       "proc": "Natural",
       "var": "Geisha",
       "price": 530,
-      "reg": "El Diviso"
+      "reg": "El Diviso",
     },
     {
       "id": 41,
@@ -545,7 +549,7 @@ void main() async {
       "proc": "Anaerobic Natural",
       "var": "Ateng",
       "price": 435,
-      "reg": "Frinsa"
+      "reg": "Frinsa",
     },
     {
       "id": 42,
@@ -556,7 +560,7 @@ void main() async {
       "proc": "Thermal Shock",
       "var": "Castillo",
       "price": 365,
-      "reg": "Decaf"
+      "reg": "Decaf",
     },
     {
       "id": 43,
@@ -567,7 +571,7 @@ void main() async {
       "proc": "Mixed",
       "var": "Mixed",
       "price": 300,
-      "reg": "House"
+      "reg": "House",
     },
     {
       "id": 44,
@@ -578,7 +582,7 @@ void main() async {
       "proc": "Mixed",
       "var": "Mixed",
       "price": 280,
-      "reg": "Bistro"
+      "reg": "Bistro",
     },
     {
       "id": 45,
@@ -589,7 +593,7 @@ void main() async {
       "proc": "Washed",
       "var": "Mixed",
       "price": 250,
-      "reg": "Classic"
+      "reg": "Classic",
     },
     {
       "id": 46,
@@ -600,7 +604,7 @@ void main() async {
       "proc": "Natural",
       "var": "Mixed",
       "price": 260,
-      "reg": "Morning"
+      "reg": "Morning",
     },
   ];
 
@@ -617,7 +621,7 @@ void main() async {
       "ro": "Columbia",
       "ru": "Колумбия",
       "tr": "Kolombiya",
-      "zh": "哥伦比亚"
+      "zh": "哥伦比亚",
     },
     "Ethiopia": {
       "uk": "Ефіопія",
@@ -631,7 +635,7 @@ void main() async {
       "ro": "Etiopia",
       "ru": "Эфиопия",
       "tr": "Etiyopya",
-      "zh": "埃塞俄比亚"
+      "zh": "埃塞俄比亚",
     },
     "Kenya": {
       "uk": "Кенія",
@@ -645,7 +649,7 @@ void main() async {
       "ro": "Kenya",
       "ru": "Кения",
       "tr": "Kenya",
-      "zh": "肯尼亚"
+      "zh": "肯尼亚",
     },
     "Rwanda": {
       "uk": "Руанда",
@@ -659,7 +663,7 @@ void main() async {
       "ro": "Rwanda",
       "ru": "Руанда",
       "tr": "Ruanda",
-      "zh": "卢旺达"
+      "zh": "卢旺达",
     },
     "Indonesia": {
       "uk": "Індонезія",
@@ -673,7 +677,7 @@ void main() async {
       "ro": "Indonézia",
       "ru": "Индонезия",
       "tr": "Endonezya",
-      "zh": "印度尼西亚"
+      "zh": "印度尼西亚",
     },
     "Costa Rica": {
       "uk": "Коста-Ріка",
@@ -687,7 +691,7 @@ void main() async {
       "ro": "Costa Rica",
       "ru": "Коста-Рика",
       "tr": "Kosta Rika",
-      "zh": "哥斯达黎加"
+      "zh": "哥斯达黎加",
     },
     "Tanzania": {
       "uk": "Танзанія",
@@ -701,7 +705,7 @@ void main() async {
       "ro": "Tanzania",
       "ru": "Танзанія",
       "tr": "Tanzanya",
-      "zh": "坦桑尼亚"
+      "zh": "坦桑尼亚",
     },
     "Blend": {
       "uk": "Бленд",
@@ -715,7 +719,7 @@ void main() async {
       "ro": "Amestec",
       "ru": "Бленд",
       "tr": "Harman",
-      "zh": "混合"
+      "zh": "混合",
     },
   };
 
@@ -736,7 +740,7 @@ void main() async {
         "body": 3,
         "bitterness": 1,
         "intensity": 4,
-        "aftertaste": 4
+        "aftertaste": 4,
       }),
       'price_json': jsonEncode({
         "r250": lot['price'].toString(),
@@ -744,7 +748,7 @@ void main() async {
         "r1k": ((lot['price'] as int) * 4).toString(),
         "w1k": ((lot['price'] as int) * 4 * 0.8).toInt().toString(),
       }),
-      'url': 'https://3champsroastery.com.ua/'
+      'url': 'https://3champsroastery.com.ua/',
     });
 
     for (final l in langs) {
@@ -759,8 +763,9 @@ void main() async {
         'process_method': lot['proc'],
         'varieties': lot['var'],
         'description': "Premium specialty coffee lot. [$l]",
-        'roast_level':
-            (lot['lot']!.toString().contains('-E')) ? 'Medium' : 'Light',
+        'roast_level': (lot['lot']!.toString().contains('-E'))
+            ? 'Medium'
+            : 'Light',
       });
     }
   }
@@ -778,7 +783,7 @@ void main() async {
     {
       "id": 3,
       "title": "Scoring and Q-Grading",
-      "uk": "Оцінювання та Q-Грейдинг"
+      "uk": "Оцінювання та Q-Грейдинг",
     },
     {"id": 4, "title": "Terroir: Conditions", "uk": "Тераруар"},
     {"id": 5, "title": "Genetics and Varieties", "uk": "Генетика"},
@@ -793,7 +798,7 @@ void main() async {
     {"id": 14, "title": "Grind Size Effect", "uk": "Вплив помелу"},
     {"id": 15, "title": "Water Chemistry", "uk": "Хімія води"},
     {"id": 16, "title": "Sensory Training", "uk": "Сенсорні тренування"},
-    {"id": 17, "title": "Future Trends", "uk": "Майбутнє кави"}
+    {"id": 17, "title": "Future Trends", "uk": "Майбутнє кави"},
   ];
 
   for (var meta in articleMetadata) {
@@ -801,7 +806,7 @@ void main() async {
       'id': meta['id'],
       'image_url':
           'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085',
-      'read_time_min': 5
+      'read_time_min': 5,
     });
     for (var l in langs) {
       articleTrs.add({
@@ -809,7 +814,7 @@ void main() async {
         'language_code': l,
         'title': (l == 'uk') ? meta['uk'] : meta['title'],
         'subtitle': 'Learn the secrets of coffee.',
-        'content_html': 'Full educational content for ${meta['title']} [$l].'
+        'content_html': 'Full educational content for ${meta['title']} [$l].',
       });
     }
   }
@@ -825,7 +830,7 @@ void main() async {
       'name_uk': 'Вілтон Бенітез',
       'farm': 'Granja Paraiso 92',
       'country': 'Colombia',
-      'emoji': '🇨🇴'
+      'emoji': '🇨🇴',
     },
     {
       'id': 2,
@@ -833,7 +838,7 @@ void main() async {
       'name_uk': 'Сім’я Чакон',
       'farm': 'Las Lajas',
       'country': 'Costa Rica',
-      'emoji': '🇨🇷'
+      'emoji': '🇨🇷',
     },
     {
       'id': 3,
@@ -841,7 +846,7 @@ void main() async {
       'name_uk': 'Дієго Бермудес',
       'farm': 'Finca El Paraiso',
       'country': 'Colombia',
-      'emoji': '🇨🇴'
+      'emoji': '🇨🇴',
     },
     {
       'id': 4,
@@ -849,7 +854,7 @@ void main() async {
       'name_uk': 'Джеймісон Севідж',
       'farm': 'Finca Deborah',
       'country': 'Panama',
-      'emoji': '🇵🇦'
+      'emoji': '🇵🇦',
     },
     {
       'id': 5,
@@ -857,7 +862,7 @@ void main() async {
       'name_uk': 'Карлос Арсіла',
       'farm': 'Jardines del Eden',
       'country': 'Colombia',
-      'emoji': '🇨🇴'
+      'emoji': '🇨🇴',
     },
     {
       'id': 6,
@@ -865,7 +870,7 @@ void main() async {
       'name_uk': 'Аїда Батлл',
       'farm': 'Finca Kilimanjaro',
       'country': 'El Salvador',
-      'emoji': '🇸🇻'
+      'emoji': '🇸🇻',
     },
     {
       'id': 7,
@@ -873,7 +878,7 @@ void main() async {
       'name_uk': 'Адам Овертон',
       'farm': 'Gesha Village',
       'country': 'Ethiopia',
-      'emoji': '🇪🇹'
+      'emoji': '🇪🇹',
     },
     {
       'id': 8,
@@ -881,7 +886,7 @@ void main() async {
       'name_uk': 'Пепе Хіхон',
       'farm': 'Finca Soledad',
       'country': 'Ecuador',
-      'emoji': '🇪🇨'
+      'emoji': '🇪🇨',
     },
     {
       'id': 9,
@@ -889,7 +894,7 @@ void main() async {
       'name_uk': 'Алехо Кастро',
       'farm': 'Volcan Azul',
       'country': 'Costa Rica',
-      'emoji': '🇨🇷'
+      'emoji': '🇨🇷',
     },
     {
       'id': 10,
@@ -897,7 +902,7 @@ void main() async {
       'name_uk': 'Луїс Паскоаль',
       'farm': 'Daterra',
       'country': 'Brazil',
-      'emoji': '🇧🇷'
+      'emoji': '🇧🇷',
     },
   ];
   final List<Map<String, dynamic>> finalFarmers = [];
@@ -909,7 +914,7 @@ void main() async {
       'image_url': 'https://placehold.co/600x400',
       'country_emoji': f['emoji'],
       'latitude': 0.0,
-      'longitude': 0.0
+      'longitude': 0.0,
     });
     for (var l in langs) {
       farmerTrs.add({
@@ -919,7 +924,7 @@ void main() async {
         'country': f['country'],
         'region': f['farm'],
         'description': 'Innovation specialist.',
-        'story': 'Famous for unique processing. [$l]'
+        'story': 'Famous for unique processing. [$l]',
       });
     }
   }

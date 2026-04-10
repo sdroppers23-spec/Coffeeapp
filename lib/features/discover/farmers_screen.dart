@@ -5,13 +5,11 @@ import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import '../../core/l10n/app_localizations.dart';
 
-
 final farmersProvider = FutureProvider<List<LocalizedBeanDto>>((ref) async {
   final db = ref.watch(databaseProvider);
   final locale = ref.watch(localeProvider);
   return db.getAllOrigins(locale);
 });
-
 
 class FarmersScreen extends ConsumerStatefulWidget {
   const FarmersScreen({super.key});
@@ -53,10 +51,7 @@ class _FarmersScreenState extends ConsumerState<FarmersScreen> {
             }
 
             // Extract unique regions for filter
-            final regions = [
-              'All',
-              ...entries.map((e) => e.region).toSet(),
-            ];
+            final regions = ['All', ...entries.map((e) => e.region).toSet()];
 
             return CustomScrollView(
               slivers: [

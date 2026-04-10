@@ -39,13 +39,15 @@ class GlassContainer extends StatelessWidget {
       height: height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
-        boxShadow: shadows ?? [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 10,
-            spreadRadius: 2,
-          ),
-        ],
+        boxShadow:
+            shadows ??
+            [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 10,
+                spreadRadius: 2,
+              ),
+            ],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(borderRadius),
@@ -72,16 +74,16 @@ class GlassContainer extends StatelessWidget {
                       ),
                     )
                   : null,
-              gradient: imageUrl == null 
-                ? LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Colors.white.withValues(alpha: 0.12),
-                      Colors.white.withValues(alpha: 0.04),
-                    ],
-                  )
-                : null,
+              gradient: imageUrl == null
+                  ? LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Colors.white.withValues(alpha: 0.12),
+                        Colors.white.withValues(alpha: 0.04),
+                      ],
+                    )
+                  : null,
             ),
             child: child,
           ),

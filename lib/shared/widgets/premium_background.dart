@@ -9,13 +9,13 @@ class PremiumBackground extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        // Deep dark gradient background
+        // Deep brown gradient background
         const DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Color(0xFF141414), Color(0xFF080808)],
+              colors: [Color(0xFF2C1E16), Color(0xFF130B06)],
             ),
           ),
         ),

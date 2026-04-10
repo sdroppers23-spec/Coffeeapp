@@ -64,16 +64,21 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     try {
       // Use browser-based OAuth with deep link for a "global" fix that doesn't require SHA-1 fingerprints
       // The redirect URL must be io.supabase.specialtytracker://login-callback
-      await ref.read(supabaseProvider).auth.signInWithOAuth(
-        OAuthProvider.google,
-        redirectTo: 'io.supabase.specialtytracker://login-callback',
-      );
+      await ref
+          .read(supabaseProvider)
+          .auth
+          .signInWithOAuth(
+            OAuthProvider.google,
+            redirectTo: 'io.supabase.specialtytracker://login-callback',
+          );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Google Sign-In Error: $e'),
-        backgroundColor: Colors.red,
-      ));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Google Sign-In Error: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -108,14 +113,20 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               TextField(
                 controller: _emailController,
                 style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(labelText: ref.t('email'), labelStyle: const TextStyle(color: Colors.white54)),
+                decoration: InputDecoration(
+                  labelText: ref.t('email'),
+                  labelStyle: const TextStyle(color: Colors.white54),
+                ),
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: _passwordController,
                 style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(labelText: ref.t('password'), labelStyle: const TextStyle(color: Colors.white54)),
+                decoration: InputDecoration(
+                  labelText: ref.t('password'),
+                  labelStyle: const TextStyle(color: Colors.white54),
+                ),
                 obscureText: true,
               ),
               const SizedBox(height: 32),
@@ -125,21 +136,48 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   foregroundColor: Colors.black,
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
                 child: _isLoading
-                    ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black))
-                    : Text(_isLogin ? ref.t('log_in') : ref.t('sign_up'), style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+                    ? const SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.black,
+                        ),
+                      )
+                    : Text(
+                        _isLogin ? ref.t('log_in') : ref.t('sign_up'),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
               ),
               const SizedBox(height: 16),
               OutlinedButton.icon(
                 onPressed: _isLoading ? null : _signInWithGoogle,
-                icon: const Icon(Icons.g_mobiledata, size: 32, color: Colors.white),
-                label: Text(ref.t('google_sign_in'), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                icon: const Icon(
+                  Icons.g_mobiledata,
+                  size: 32,
+                  color: Colors.white,
+                ),
+                label: Text(
+                  ref.t('google_sign_in'),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   side: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
               TextButton(
@@ -151,7 +189,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         });
                       },
                 child: Text(
-                  _isLogin ? ref.t('create_account') : ref.t('already_have_account'),
+                  _isLogin
+                      ? ref.t('create_account')
+                      : ref.t('already_have_account'),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
                     decoration: TextDecoration.underline,

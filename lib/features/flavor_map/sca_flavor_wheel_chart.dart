@@ -28,17 +28,20 @@ final List<FlavorNode> scaWheelData = [
     color: const Color(0xFFDD2C00),
     children: [
       FlavorNode(
-          nameKey: 'note_berry',
-          color: const Color(0xFFC51162),
-          descKey: 'desc_note_berry'),
+        nameKey: 'note_berry',
+        color: const Color(0xFFC51162),
+        descKey: 'desc_note_berry',
+      ),
       FlavorNode(
-          nameKey: 'note_citrus',
-          color: const Color(0xFFFF6D00),
-          descKey: 'desc_note_citrus'),
+        nameKey: 'note_citrus',
+        color: const Color(0xFFFF6D00),
+        descKey: 'desc_note_citrus',
+      ),
       FlavorNode(
-          nameKey: 'note_stone_fruit',
-          color: const Color(0xFFFFAB00),
-          descKey: 'desc_note_stone_fruit'),
+        nameKey: 'note_stone_fruit',
+        color: const Color(0xFFFFAB00),
+        descKey: 'desc_note_stone_fruit',
+      ),
     ],
   ),
   FlavorNode(
@@ -47,13 +50,15 @@ final List<FlavorNode> scaWheelData = [
     color: const Color(0xFFF50057),
     children: [
       FlavorNode(
-          nameKey: 'note_jasmine',
-          color: const Color(0xFFFF80AB),
-          descKey: 'desc_note_jasmine'),
+        nameKey: 'note_jasmine',
+        color: const Color(0xFFFF80AB),
+        descKey: 'desc_note_jasmine',
+      ),
       FlavorNode(
-          nameKey: 'note_tea',
-          color: const Color(0xFF8D6E63),
-          descKey: 'desc_note_tea'),
+        nameKey: 'note_tea',
+        color: const Color(0xFF8D6E63),
+        descKey: 'desc_note_tea',
+      ),
     ],
   ),
   FlavorNode(
@@ -62,17 +67,20 @@ final List<FlavorNode> scaWheelData = [
     color: const Color(0xFFFF9100),
     children: [
       FlavorNode(
-          nameKey: 'note_caramel',
-          color: const Color(0xFFFFAB40),
-          descKey: 'desc_note_caramel'),
+        nameKey: 'note_caramel',
+        color: const Color(0xFFFFAB40),
+        descKey: 'desc_note_caramel',
+      ),
       FlavorNode(
-          nameKey: 'note_honey',
-          color: const Color(0xFFFFD180),
-          descKey: 'desc_note_honey'),
+        nameKey: 'note_honey',
+        color: const Color(0xFFFFD180),
+        descKey: 'desc_note_honey',
+      ),
       FlavorNode(
-          nameKey: 'note_vanilla',
-          color: const Color(0xFFFFE57F),
-          descKey: 'desc_note_vanilla'),
+        nameKey: 'note_vanilla',
+        color: const Color(0xFFFFE57F),
+        descKey: 'desc_note_vanilla',
+      ),
     ],
   ),
   FlavorNode(
@@ -81,13 +89,15 @@ final List<FlavorNode> scaWheelData = [
     color: const Color(0xFF5D4037),
     children: [
       FlavorNode(
-          nameKey: 'note_chocolate',
-          color: const Color(0xFF3E2723),
-          descKey: 'desc_note_chocolate'),
+        nameKey: 'note_chocolate',
+        color: const Color(0xFF3E2723),
+        descKey: 'desc_note_chocolate',
+      ),
       FlavorNode(
-          nameKey: 'note_hazelnut',
-          color: const Color(0xFF6D4C41),
-          descKey: 'desc_note_hazelnut'),
+        nameKey: 'note_hazelnut',
+        color: const Color(0xFF6D4C41),
+        descKey: 'desc_note_hazelnut',
+      ),
     ],
   ),
   FlavorNode(
@@ -96,13 +106,15 @@ final List<FlavorNode> scaWheelData = [
     color: const Color(0xFFC2185B),
     children: [
       FlavorNode(
-          nameKey: 'note_cinnamon',
-          color: const Color(0xFFAD1457),
-          descKey: 'desc_note_cinnamon'),
+        nameKey: 'note_cinnamon',
+        color: const Color(0xFFAD1457),
+        descKey: 'desc_note_cinnamon',
+      ),
       FlavorNode(
-          nameKey: 'note_pepper',
-          color: const Color(0xFF880E4F),
-          descKey: 'desc_note_pepper'),
+        nameKey: 'note_pepper',
+        color: const Color(0xFF880E4F),
+        descKey: 'desc_note_pepper',
+      ),
     ],
   ),
   FlavorNode(
@@ -111,13 +123,15 @@ final List<FlavorNode> scaWheelData = [
     color: const Color(0xFF2E7D32),
     children: [
       FlavorNode(
-          nameKey: 'note_forest',
-          color: const Color(0xFF1B5E20),
-          descKey: 'desc_note_forest'),
+        nameKey: 'note_forest',
+        color: const Color(0xFF1B5E20),
+        descKey: 'desc_note_forest',
+      ),
       FlavorNode(
-          nameKey: 'note_tobacco',
-          color: const Color(0xFF795548),
-          descKey: 'desc_note_tobacco'),
+        nameKey: 'note_tobacco',
+        color: const Color(0xFF795548),
+        descKey: 'desc_note_tobacco',
+      ),
     ],
   ),
 ];
@@ -231,20 +245,22 @@ class _ScaFlavorWheelChartState extends ConsumerState<ScaFlavorWheelChart> {
               const SizedBox(height: 24),
 
               // Interactive Wheel
-              LayoutBuilder(builder: (context, constraints) {
-                final size = math.min(constraints.maxWidth, 350.0);
-                return GestureDetector(
-                  onTapUp: (d) => _handleTap(d.localPosition, size, size),
-                  child: CustomPaint(
-                    size: Size(size, size),
-                    painter: _ScaWheelPainter(
-                      data: scaWheelData,
-                      ref: ref,
-                      selectedNode: _selectedNode,
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final size = math.min(constraints.maxWidth, 350.0);
+                  return GestureDetector(
+                    onTapUp: (d) => _handleTap(d.localPosition, size, size),
+                    child: CustomPaint(
+                      size: Size(size, size),
+                      painter: _ScaWheelPainter(
+                        data: scaWheelData,
+                        ref: ref,
+                        selectedNode: _selectedNode,
+                      ),
                     ),
-                  ),
-                );
-              }),
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -268,9 +284,9 @@ class _ScaFlavorWheelChartState extends ConsumerState<ScaFlavorWheelChart> {
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                              color:
-                                  _selectedNode!.color.withValues(alpha: 0.5),
-                              blurRadius: 6)
+                            color: _selectedNode!.color.withValues(alpha: 0.5),
+                            blurRadius: 6,
+                          ),
                         ],
                       ),
                     ),
@@ -287,8 +303,11 @@ class _ScaFlavorWheelChartState extends ConsumerState<ScaFlavorWheelChart> {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close,
-                          size: 20, color: Colors.white54),
+                      icon: const Icon(
+                        Icons.close,
+                        size: 20,
+                        color: Colors.white54,
+                      ),
                       onPressed: () => setState(() => _selectedNode = null),
                     ),
                   ],
@@ -300,12 +319,15 @@ class _ScaFlavorWheelChartState extends ConsumerState<ScaFlavorWheelChart> {
                       ? 'Тут буде детальний опис для "${ref.t(_selectedNode!.nameKey)}", як знайти його у каві, рецепторах та що його формує під час ферментації чи обсмажки.'
                       : ref.t(_selectedNode!.descKey),
                   style: GoogleFonts.inter(
-                      fontSize: 13, color: Colors.white70, height: 1.5),
+                    fontSize: 13,
+                    color: Colors.white70,
+                    height: 1.5,
+                  ),
                 ),
               ],
             ),
           ),
-        ]
+        ],
       ],
     );
   }
@@ -316,11 +338,7 @@ class _ScaWheelPainter extends CustomPainter {
   final WidgetRef ref;
   final FlavorNode? selectedNode;
 
-  _ScaWheelPainter({
-    required this.data,
-    required this.ref,
-    this.selectedNode,
-  });
+  _ScaWheelPainter({required this.data, required this.ref, this.selectedNode});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -331,9 +349,10 @@ class _ScaWheelPainter extends CustomPainter {
     final ringWidth = (maxRadius - centerRadius) / 2;
 
     final totalWeight = data.fold(
-        0.0,
-        (acc, n) =>
-            acc + (n.children.isEmpty ? 1.0 : n.children.length.toDouble()));
+      0.0,
+      (acc, n) =>
+          acc + (n.children.isEmpty ? 1.0 : n.children.length.toDouble()),
+    );
     final totalAngle = 2 * math.pi;
 
     // Offset by -pi/2 so 0 is at the top
@@ -341,8 +360,9 @@ class _ScaWheelPainter extends CustomPainter {
 
     // Paint Base Ring
     for (final baseNode in data) {
-      final weight =
-          baseNode.children.isEmpty ? 1.0 : baseNode.children.length.toDouble();
+      final weight = baseNode.children.isEmpty
+          ? 1.0
+          : baseNode.children.length.toDouble();
       final sweepAngle = totalAngle * weight / totalWeight;
 
       final isSelected =
@@ -358,19 +378,22 @@ class _ScaWheelPainter extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.5;
 
-      final rect =
-          Rect.fromCircle(center: center, radius: centerRadius + ringWidth);
+      final rect = Rect.fromCircle(
+        center: center,
+        radius: centerRadius + ringWidth,
+      );
       canvas.drawArc(rect, currentAngle, sweepAngle, true, paint);
       canvas.drawArc(rect, currentAngle, sweepAngle, true, borderPaint);
 
       // Paint text
       _drawText(
-          canvas,
-          center,
-          currentAngle + sweepAngle / 2,
-          centerRadius + ringWidth / 2,
-          ref.t(baseNode.nameKey),
-          isSelected || selectedNode == null ? Colors.white : Colors.white54);
+        canvas,
+        center,
+        currentAngle + sweepAngle / 2,
+        centerRadius + ringWidth / 2,
+        ref.t(baseNode.nameKey),
+        isSelected || selectedNode == null ? Colors.white : Colors.white54,
+      );
 
       currentAngle += sweepAngle;
     }
@@ -381,8 +404,9 @@ class _ScaWheelPainter extends CustomPainter {
     currentAngle = -math.pi / 2;
     // 1. Draw Outer Ring
     for (final baseNode in data) {
-      final weight =
-          baseNode.children.isEmpty ? 1.0 : baseNode.children.length.toDouble();
+      final weight = baseNode.children.isEmpty
+          ? 1.0
+          : baseNode.children.length.toDouble();
       final sweepAngle = totalAngle * weight / totalWeight;
 
       if (baseNode.children.isNotEmpty) {
@@ -391,21 +415,28 @@ class _ScaWheelPainter extends CustomPainter {
         for (final child in baseNode.children) {
           final isChildSelected =
               selectedNode == child || selectedNode == baseNode;
-          final cAlpha =
-              isChildSelected ? 0.9 : (selectedNode == null ? 0.7 : 0.3);
+          final cAlpha = isChildSelected
+              ? 0.9
+              : (selectedNode == null ? 0.7 : 0.3);
 
           final rect = Rect.fromCircle(center: center, radius: maxRadius);
-          canvas.drawArc(rect, cAngle, childSweep, true,
-              Paint()..color = child.color.withValues(alpha: cAlpha));
           canvas.drawArc(
-              rect,
-              cAngle,
-              childSweep,
-              true,
-              Paint()
-                ..color = Colors.black45
-                ..style = PaintingStyle.stroke
-                ..strokeWidth = 1.0);
+            rect,
+            cAngle,
+            childSweep,
+            true,
+            Paint()..color = child.color.withValues(alpha: cAlpha),
+          );
+          canvas.drawArc(
+            rect,
+            cAngle,
+            childSweep,
+            true,
+            Paint()
+              ..color = Colors.black45
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 1.0,
+          );
 
           _drawText(
             canvas,
@@ -428,27 +459,36 @@ class _ScaWheelPainter extends CustomPainter {
     currentAngle = -math.pi / 2;
     // 2. Draw Inner Ring
     for (final baseNode in data) {
-      final weight =
-          baseNode.children.isEmpty ? 1.0 : baseNode.children.length.toDouble();
+      final weight = baseNode.children.isEmpty
+          ? 1.0
+          : baseNode.children.length.toDouble();
       final sweepAngle = totalAngle * weight / totalWeight;
 
       final isSelected =
           selectedNode == baseNode || baseNode.children.contains(selectedNode);
       final alpha = isSelected ? 1.0 : (selectedNode == null ? 0.9 : 0.4);
 
-      final rect =
-          Rect.fromCircle(center: center, radius: centerRadius + ringWidth);
-      canvas.drawArc(rect, currentAngle, sweepAngle, true,
-          Paint()..color = baseNode.color.withValues(alpha: alpha));
+      final rect = Rect.fromCircle(
+        center: center,
+        radius: centerRadius + ringWidth,
+      );
       canvas.drawArc(
-          rect,
-          currentAngle,
-          sweepAngle,
-          true,
-          Paint()
-            ..color = Colors.black
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 2.0);
+        rect,
+        currentAngle,
+        sweepAngle,
+        true,
+        Paint()..color = baseNode.color.withValues(alpha: alpha),
+      );
+      canvas.drawArc(
+        rect,
+        currentAngle,
+        sweepAngle,
+        true,
+        Paint()
+          ..color = Colors.black
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.0,
+      );
 
       _drawText(
         canvas,
@@ -465,14 +505,18 @@ class _ScaWheelPainter extends CustomPainter {
 
     // 3. Draw Center Hole (Glass / Dark)
     canvas.drawCircle(
-        center, centerRadius, Paint()..color = const Color(0xFF1E1E1E));
+      center,
+      centerRadius,
+      Paint()..color = const Color(0xFF1E1E1E),
+    );
     canvas.drawCircle(
-        center,
-        centerRadius,
-        Paint()
-          ..color = const Color(0xFFC8A96E)
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2);
+      center,
+      centerRadius,
+      Paint()
+        ..color = const Color(0xFFC8A96E)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2,
+    );
 
     // Draw Center text
     final centerPainter = TextPainter(
@@ -488,13 +532,21 @@ class _ScaWheelPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     );
     centerPainter.layout();
-    centerPainter.paint(canvas,
-        center - Offset(centerPainter.width / 2, centerPainter.height / 2));
+    centerPainter.paint(
+      canvas,
+      center - Offset(centerPainter.width / 2, centerPainter.height / 2),
+    );
   }
 
-  void _drawText(Canvas canvas, Offset center, double angle, double distance,
-      String text, Color color,
-      {double fontSize = 10}) {
+  void _drawText(
+    Canvas canvas,
+    Offset center,
+    double angle,
+    double distance,
+    String text,
+    Color color, {
+    double fontSize = 10,
+  }) {
     // Determine position
     final dx = center.dx + distance * math.cos(angle);
     final dy = center.dy + distance * math.sin(angle);

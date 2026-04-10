@@ -37,14 +37,15 @@ class _PressableScaleState extends ConsumerState<PressableScale>
       duration: const Duration(milliseconds: 100),
       reverseDuration: const Duration(milliseconds: 200),
     );
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: widget.scaleAmount,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-      reverseCurve: Curves.elasticOut, // Gives that springy feel on release
-    ));
+    _scaleAnimation = Tween<double>(begin: 1.0, end: widget.scaleAmount)
+        .animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: Curves.easeInOut,
+            reverseCurve:
+                Curves.elasticOut, // Gives that springy feel on release
+          ),
+        );
   }
 
   @override
@@ -91,10 +92,8 @@ class _PressableScaleState extends ConsumerState<PressableScale>
           : null,
       child: AnimatedBuilder(
         animation: _scaleAnimation,
-        builder: (context, child) => Transform.scale(
-          scale: _scaleAnimation.value,
-          child: child,
-        ),
+        builder: (context, child) =>
+            Transform.scale(scale: _scaleAnimation.value, child: child),
         child: widget.child,
       ),
     );

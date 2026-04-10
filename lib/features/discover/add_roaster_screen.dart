@@ -73,7 +73,11 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
       if (!file.path.toLowerCase().endsWith('.png')) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(AppLocalizations.of(context).translate('invalid_file_format'))),
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context).translate('invalid_file_format'),
+              ),
+            ),
           );
         }
         return;
@@ -81,9 +85,13 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
 
       if (size > 5 * 1024 * 1024) {
         if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).translate('file_too_large'))));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context).translate('file_too_large'),
+              ),
+            ),
+          );
         }
         return;
       }
@@ -174,15 +182,17 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
 
       if (isCopy || (conflict != null && lotToProcess.id != lot.id)) {
         // Copy logic or Replace logic (which is basically an insert/replace with same ID)
-        await db.upsertUserLot(CoffeeLotsCompanion.insert(
-          id: lotToProcess.id,
-          userId: lotToProcess.userId ?? 'me',
-          roasteryName: Value(lotToProcess.roasteryName),
-          coffeeName: Value(lotToProcess.coffeeName),
-          originCountry: Value(lotToProcess.originCountry),
-          sensoryJson: const Value('{}'),
-          priceJson: const Value('{}'),
-        ));
+        await db.upsertUserLot(
+          CoffeeLotsCompanion.insert(
+            id: lotToProcess.id,
+            userId: lotToProcess.userId ?? 'me',
+            roasteryName: Value(lotToProcess.roasteryName),
+            coffeeName: Value(lotToProcess.coffeeName),
+            originCountry: Value(lotToProcess.originCountry),
+            sensoryJson: const Value('{}'),
+            priceJson: const Value('{}'),
+          ),
+        );
         affectedLots.add(lotToProcess);
       } else {
         // Simple Move logic
@@ -193,15 +203,17 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
           updatedAt: DateTime.now(),
         );
 
-        await db.upsertUserLot(CoffeeLotsCompanion.insert(
-          id: updatedLot.id,
-          userId: updatedLot.userId ?? 'me',
-          roasteryName: Value(updatedLot.roasteryName),
-          coffeeName: Value(updatedLot.coffeeName),
-          originCountry: Value(updatedLot.originCountry),
-          sensoryJson: const Value('{}'),
-          priceJson: const Value('{}'),
-        ));
+        await db.upsertUserLot(
+          CoffeeLotsCompanion.insert(
+            id: updatedLot.id,
+            userId: updatedLot.userId ?? 'me',
+            roasteryName: Value(updatedLot.roasteryName),
+            coffeeName: Value(updatedLot.coffeeName),
+            originCountry: Value(updatedLot.originCountry),
+            sensoryJson: const Value('{}'),
+            priceJson: const Value('{}'),
+          ),
+        );
         affectedLots.add(updatedLot);
       }
     }
@@ -210,7 +222,9 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            isCopy ? AppLocalizations.of(context).translate('lot_copied') : AppLocalizations.of(context).translate('lot_moved'),
+            isCopy
+                ? AppLocalizations.of(context).translate('lot_copied')
+                : AppLocalizations.of(context).translate('lot_moved'),
           ),
           duration: const Duration(seconds: 5),
           action: SnackBarAction(
@@ -224,15 +238,17 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
                   final original = originalLotsState.firstWhere(
                     (o) => o.id == lot.id,
                   );
-                  await db.upsertUserLot(CoffeeLotsCompanion.insert(
-                    id: original.id,
-                    userId: original.userId ?? 'me',
-                    roasteryName: Value(original.roasteryName),
-                    coffeeName: Value(original.coffeeName),
-                    originCountry: Value(original.originCountry),
-                    sensoryJson: const Value('{}'),
-                    priceJson: const Value('{}'),
-                  ));
+                  await db.upsertUserLot(
+                    CoffeeLotsCompanion.insert(
+                      id: original.id,
+                      userId: original.userId ?? 'me',
+                      roasteryName: Value(original.roasteryName),
+                      coffeeName: Value(original.coffeeName),
+                      originCountry: Value(original.originCountry),
+                      sensoryJson: const Value('{}'),
+                      priceJson: const Value('{}'),
+                    ),
+                  );
                 }
               }
               ref.invalidate(brandsProvider);

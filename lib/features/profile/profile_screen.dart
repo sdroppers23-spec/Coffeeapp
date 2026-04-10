@@ -28,10 +28,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   void _editProfile(User user) {
     showDialog(
       context: context,
-      builder: (context) => _EditProfileDialog(
-        user: user,
-        supabase: ref.read(supabaseProvider),
-      ),
+      builder: (context) =>
+          _EditProfileDialog(user: user, supabase: ref.read(supabaseProvider)),
     ).then((_) => setState(() {})); // refresh UI
   }
 
@@ -55,14 +53,28 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
     final meta = user.userMetadata ?? {};
     final displayName = meta['full_name'] as String? ?? 'Barista';
-    final avatarUrl = meta['avatar_url'] as String? ?? 'https://api.dicebear.com/7.x/adventurer/png?seed=${user.id}';
+    final avatarUrl =
+        meta['avatar_url'] as String? ??
+        'https://api.dicebear.com/7.x/adventurer/png?seed=${user.id}';
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(ref.t('profile'), style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+        title: Text(
+          ref.t('profile'),
+          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+        ),
         actions: [
           if (_isLoading)
-            const Center(child: Padding(padding: EdgeInsets.only(right: 16), child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))))
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.only(right: 16),
+                child: SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ),
+            )
           else
             IconButton(
               icon: const Icon(Icons.logout),
@@ -84,7 +96,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     radius: 60,
                     backgroundColor: Colors.white12,
                     backgroundImage: NetworkImage(avatarUrl),
-                    onBackgroundImageError: (_, __) => const Icon(Icons.person, size: 60, color: Colors.white54),
+                    onBackgroundImageError: (_, __) => const Icon(
+                      Icons.person,
+                      size: 60,
+                      color: Colors.white54,
+                    ),
                   ),
                   Container(
                     decoration: const BoxDecoration(
@@ -92,7 +108,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(
-                      icon: const Icon(Icons.edit, color: Colors.black, size: 20),
+                      icon: const Icon(
+                        Icons.edit,
+                        color: Colors.black,
+                        size: 20,
+                      ),
                       onPressed: () => _editProfile(user),
                     ),
                   ),
@@ -102,7 +122,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             const SizedBox(height: 24),
             Text(
               displayName,
-              style: GoogleFonts.poppins(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+              style: GoogleFonts.poppins(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
             const SizedBox(height: 4),
             Text(
@@ -110,7 +134,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               style: const TextStyle(fontSize: 14, color: Colors.white54),
             ),
             const SizedBox(height: 40),
-            
+
             // Stats / Bio Area
             Container(
               padding: const EdgeInsets.all(20),
@@ -133,21 +157,42 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(ref.t('language'), style: const TextStyle(color: Colors.white70, fontSize: 16)),
+                      Text(
+                        ref.t('language'),
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 16,
+                        ),
+                      ),
                       DropdownButton<String>(
                         value: ref.watch(localeProvider),
                         dropdownColor: const Color(0xFF1E1E1E),
                         underline: const SizedBox(),
-                        style: const TextStyle(color: Color(0xFFC8A96E), fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                          color: Color(0xFFC8A96E),
+                          fontWeight: FontWeight.bold,
+                        ),
                         items: const [
                           DropdownMenuItem(value: 'en', child: Text('English')),
-                          DropdownMenuItem(value: 'uk', child: Text('Українська')),
+                          DropdownMenuItem(
+                            value: 'uk',
+                            child: Text('Українська'),
+                          ),
                           DropdownMenuItem(value: 'ru', child: Text('Русский')),
                           DropdownMenuItem(value: 'es', child: Text('Español')),
-                          DropdownMenuItem(value: 'fr', child: Text('Français')),
+                          DropdownMenuItem(
+                            value: 'fr',
+                            child: Text('Français'),
+                          ),
                           DropdownMenuItem(value: 'de', child: Text('Deutsch')),
-                          DropdownMenuItem(value: 'it', child: Text('Italiano')),
-                          DropdownMenuItem(value: 'pt', child: Text('Português')),
+                          DropdownMenuItem(
+                            value: 'it',
+                            child: Text('Italiano'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'pt',
+                            child: Text('Português'),
+                          ),
                           DropdownMenuItem(value: 'ja', child: Text('日本語')),
                           DropdownMenuItem(value: 'zh', child: Text('中文')),
                         ],
@@ -162,7 +207,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 40),
             SizedBox(
               width: double.infinity,
@@ -170,11 +215,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               child: ElevatedButton.icon(
                 onPressed: () => _editProfile(user),
                 icon: const Icon(Icons.settings),
-                label: Text(ref.t('edit_profile'), style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+                label: Text(
+                  ref.t('edit_profile'),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
+                  ),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFC8A96E),
                   foregroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                 ),
               ),
             ),
@@ -194,9 +247,19 @@ class _StatColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(val, style: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.bold, color: const Color(0xFFC8A96E))),
+        Text(
+          val,
+          style: GoogleFonts.poppins(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: const Color(0xFFC8A96E),
+          ),
+        ),
         const SizedBox(height: 4),
-        Text(label, style: const TextStyle(fontSize: 12, color: Colors.white60)),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 12, color: Colors.white60),
+        ),
       ],
     );
   }
@@ -222,8 +285,12 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
   void initState() {
     super.initState();
     final meta = widget.user.userMetadata ?? {};
-    _nameController = TextEditingController(text: meta['full_name'] as String? ?? '');
-    _avatarUrlController = TextEditingController(text: meta['avatar_url'] as String? ?? '');
+    _nameController = TextEditingController(
+      text: meta['full_name'] as String? ?? '',
+    );
+    _avatarUrlController = TextEditingController(
+      text: meta['avatar_url'] as String? ?? '',
+    );
   }
 
   @override
@@ -247,7 +314,15 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e', style: const TextStyle(color: Colors.white)), backgroundColor: Colors.red));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Error: $e',
+              style: const TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     } finally {
       if (mounted) setState(() => _isSaving = false);
@@ -256,18 +331,23 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
 
   Future<void> _pickAndUploadImage() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery, maxWidth: 800, maxHeight: 800);
-    
+    final pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 800,
+      maxHeight: 800,
+    );
+
     if (pickedFile == null) return;
 
     setState(() => _isUploading = true);
     try {
       final bytes = await pickedFile.readAsBytes();
       final fileExt = pickedFile.name.split('.').last;
-      final fileName = '${widget.user.id}-${DateTime.now().millisecondsSinceEpoch}.$fileExt';
+      final fileName =
+          '${widget.user.id}-${DateTime.now().millisecondsSinceEpoch}.$fileExt';
 
       final storage = widget.supabase.storage.from('avatars');
-      
+
       await storage.uploadBinary(
         fileName,
         bytes,
@@ -275,21 +355,31 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
       );
 
       final imageUrl = storage.getPublicUrl(fileName);
-      
+
       setState(() {
         _avatarUrlController.text = imageUrl;
       });
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Image uploaded successfully!'), backgroundColor: Colors.green));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Image uploaded successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Upload failed: $e. Make sure you have an "avatars" bucket initialized in Supabase.', style: const TextStyle(color: Colors.white)),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 4),
-        ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Upload failed: $e. Make sure you have an "avatars" bucket initialized in Supabase.',
+              style: const TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
+          ),
+        );
       }
     } finally {
       if (mounted) setState(() => _isUploading = false);
@@ -300,8 +390,14 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: const Color(0xFF1E1E1E),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: Colors.white.withValues(alpha: 0.1))),
-      title: Text('Edit Profile', style: GoogleFonts.poppins(color: Colors.white)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+      ),
+      title: Text(
+        'Edit Profile',
+        style: GoogleFonts.poppins(color: Colors.white),
+      ),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -309,7 +405,10 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
             TextField(
               controller: _nameController,
               style: const TextStyle(color: Colors.white),
-              decoration: const InputDecoration(labelText: 'Display Name', labelStyle: TextStyle(color: Colors.white54)),
+              decoration: const InputDecoration(
+                labelText: 'Display Name',
+                labelStyle: TextStyle(color: Colors.white54),
+              ),
             ),
             const SizedBox(height: 16),
             Row(
@@ -318,28 +417,56 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
                   child: TextField(
                     controller: _avatarUrlController,
                     style: const TextStyle(color: Colors.white, fontSize: 13),
-                    decoration: const InputDecoration(labelText: 'Avatar URL', labelStyle: TextStyle(color: Colors.white54)),
+                    decoration: const InputDecoration(
+                      labelText: 'Avatar URL',
+                      labelStyle: TextStyle(color: Colors.white54),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
                 IconButton(
                   icon: _isUploading
-                      ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFFC8A96E)))
-                      : const Icon(Icons.photo_library, color: Color(0xFFC8A96E)),
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Color(0xFFC8A96E),
+                          ),
+                        )
+                      : const Icon(
+                          Icons.photo_library,
+                          color: Color(0xFFC8A96E),
+                        ),
                   tooltip: 'Upload from Gallery',
                   onPressed: _isUploading ? null : _pickAndUploadImage,
-                )
+                ),
               ],
             ),
           ],
         ),
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel', style: TextStyle(color: Colors.white54))),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel', style: TextStyle(color: Colors.white54)),
+        ),
         ElevatedButton(
           onPressed: _isSaving ? null : _save,
-          style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFC8A96E), foregroundColor: Colors.black),
-          child: _isSaving ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black)) : const Text('Save'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFFC8A96E),
+            foregroundColor: Colors.black,
+          ),
+          child: _isSaving
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.black,
+                  ),
+                )
+              : const Text('Save'),
         ),
       ],
     );

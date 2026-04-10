@@ -17,7 +17,7 @@ void main() {
       "sca": "87.5",
       "orig": "Колумбія",
       "reg": "Лас Флорес",
-      "emoji": "🇨🇴"
+      "emoji": "🇨🇴",
     },
     {
       "lot": "50",
@@ -30,7 +30,7 @@ void main() {
       "sca": "87.25",
       "orig": "Колумбія",
       "reg": "Монтеверде",
-      "emoji": "🇨🇴"
+      "emoji": "🇨🇴",
     },
     {
       "lot": "48",
@@ -43,7 +43,7 @@ void main() {
       "sca": "87.0",
       "orig": "Колумбія",
       "reg": "Ла Рока",
-      "emoji": "🇨🇴"
+      "emoji": "🇨🇴",
     },
     {
       "lot": "47",
@@ -56,7 +56,7 @@ void main() {
       "sca": "86.5",
       "orig": "Колумбія",
       "reg": "Комбеіма",
-      "emoji": "🇨🇴"
+      "emoji": "🇨🇴",
     },
     {
       "lot": "46",
@@ -69,7 +69,7 @@ void main() {
       "sca": "86.0",
       "orig": "Колумбія",
       "reg": "Лас Флорес",
-      "emoji": "🇨🇴"
+      "emoji": "🇨🇴",
     },
     {
       "lot": "44",
@@ -82,7 +82,7 @@ void main() {
       "sca": "88.5",
       "orig": "Колумбія",
       "reg": "Вілтон Бенітез",
-      "emoji": "🇨🇴"
+      "emoji": "🇨🇴",
     },
     {
       "lot": "45",
@@ -95,7 +95,7 @@ void main() {
       "sca": "86.75",
       "orig": "Колумбія",
       "reg": "Гранха Параїсо",
-      "emoji": "🇨🇴"
+      "emoji": "🇨🇴",
     },
     {
       "lot": "31",
@@ -108,7 +108,7 @@ void main() {
       "sca": "88.0",
       "orig": "Колумбія",
       "reg": "Гранха Параїсо",
-      "emoji": "🇨🇴"
+      "emoji": "🇨🇴",
     },
     {
       "lot": "20",
@@ -121,7 +121,7 @@ void main() {
       "sca": "85.5",
       "orig": "Кенія",
       "reg": "Кірініяга",
-      "emoji": "🇰🇪"
+      "emoji": "🇰🇪",
     },
     {
       "lot": "14",
@@ -134,7 +134,7 @@ void main() {
       "sca": "84.75",
       "orig": "Руанда",
       "reg": "Коакамбу",
-      "emoji": "🇷🇼"
+      "emoji": "🇷🇼",
     },
     {
       "lot": "4",
@@ -147,7 +147,7 @@ void main() {
       "sca": "86.0",
       "orig": "Індонезія",
       "reg": "Фрінза",
-      "emoji": "🇮🇩"
+      "emoji": "🇮🇩",
     },
     {
       "lot": "9",
@@ -160,7 +160,7 @@ void main() {
       "sca": "87.5",
       "orig": "Колумбія",
       "reg": "Ель Дівізо",
-      "emoji": "🇨🇴"
+      "emoji": "🇨🇴",
     },
     {
       "lot": "12",
@@ -173,7 +173,7 @@ void main() {
       "sca": "86.5",
       "orig": "Коста-Ріка",
       "reg": "Лас Лахас",
-      "emoji": "🇨🇷"
+      "emoji": "🇨🇷",
     },
     {
       "lot": "5",
@@ -186,7 +186,7 @@ void main() {
       "sca": "85.75",
       "orig": "Індонезія",
       "reg": "Фрінза",
-      "emoji": "🇮🇩"
+      "emoji": "🇮🇩",
     },
     {
       "lot": "8",
@@ -199,7 +199,7 @@ void main() {
       "sca": "85.0",
       "orig": "Ефіопія",
       "reg": "Сідамо",
-      "emoji": "🇪🇹"
+      "emoji": "🇪🇹",
     },
     {
       "lot": "2-D",
@@ -212,7 +212,7 @@ void main() {
       "sca": "86.5",
       "orig": "Колумбія",
       "reg": "Без кофеїну",
-      "emoji": "🇨🇴"
+      "emoji": "🇨🇴",
     },
     {
       "lot": "37",
@@ -225,7 +225,7 @@ void main() {
       "sca": "86.5",
       "orig": "Ефіопія",
       "reg": "Гуджі",
-      "emoji": "🇪🇹"
+      "emoji": "🇪🇹",
     },
     {
       "lot": "10",
@@ -238,7 +238,7 @@ void main() {
       "sca": "85.25",
       "orig": "Кенія",
       "reg": "Ньєрі",
-      "emoji": "🇰🇪"
+      "emoji": "🇰🇪",
     },
     {
       "lot": "BB2",
@@ -251,7 +251,7 @@ void main() {
       "sca": "85.0",
       "orig": "Blend",
       "reg": "House",
-      "emoji": "🌍"
+      "emoji": "🌍",
     },
     {
       "lot": "28",
@@ -264,7 +264,7 @@ void main() {
       "sca": "84.0",
       "orig": "Ефіопія",
       "reg": "Іргачеффе",
-      "emoji": "🇪🇹"
+      "emoji": "🇪🇹",
     },
     {
       "lot": "4-R",
@@ -277,7 +277,7 @@ void main() {
       "sca": "86.0",
       "orig": "Руанда",
       "reg": "Коакамбу",
-      "emoji": "🇷🇼"
+      "emoji": "🇷🇼",
     },
     {
       "lot": "13",
@@ -290,7 +290,7 @@ void main() {
       "sca": "84.5",
       "orig": "Руанда",
       "reg": "Кібує",
-      "emoji": "🇷🇼"
+      "emoji": "🇷🇼",
     },
     {
       "lot": "4-C",
@@ -303,7 +303,7 @@ void main() {
       "sca": "83.0",
       "orig": "Колумбія",
       "reg": "Уїла",
-      "emoji": "🇨🇴"
+      "emoji": "🇨🇴",
     },
     {
       "lot": "37-C",
@@ -316,7 +316,7 @@ void main() {
       "sca": "85.75",
       "orig": "Колумбія",
       "reg": "Толіма",
-      "emoji": "🇨🇴"
+      "emoji": "🇨🇴",
     },
     {
       "lot": "1-D",
@@ -329,7 +329,7 @@ void main() {
       "sca": "82.0",
       "orig": "Колумбія",
       "reg": "Decaf",
-      "emoji": "🇨🇴"
+      "emoji": "🇨🇴",
     },
     {
       "lot": "UT",
@@ -342,7 +342,7 @@ void main() {
       "sca": "85.5",
       "orig": "Танзанія",
       "reg": "Мбея",
-      "emoji": "🇹🇿"
+      "emoji": "🇹🇿",
     },
     // Espresso
     {
@@ -356,7 +356,7 @@ void main() {
       "sca": "87.0",
       "orig": "Ефіопія",
       "reg": "Гуджі",
-      "emoji": "🇪🇹"
+      "emoji": "🇪🇹",
     },
     {
       "lot": "46-E",
@@ -369,7 +369,7 @@ void main() {
       "sca": "86.0",
       "orig": "Колумбія",
       "reg": "Лас Флорес",
-      "emoji": "🇨🇴"
+      "emoji": "🇨🇴",
     },
     {
       "lot": "31-E",
@@ -382,7 +382,7 @@ void main() {
       "sca": "88.0",
       "orig": "Колумбія",
       "reg": "Гранха Параїсо",
-      "emoji": "🇨🇴"
+      "emoji": "🇨🇴",
     },
     {
       "lot": "4-E",
@@ -395,7 +395,7 @@ void main() {
       "sca": "86.0",
       "orig": "Індонезія",
       "reg": "Фрінза",
-      "emoji": "🇮🇩"
+      "emoji": "🇮🇩",
     },
     {
       "lot": "12-E",
@@ -408,7 +408,7 @@ void main() {
       "sca": "86.5",
       "orig": "Коста-Ріка",
       "reg": "Лас Лахас",
-      "emoji": "🇨🇷"
+      "emoji": "🇨🇷",
     },
     {
       "lot": "8-E",
@@ -421,7 +421,7 @@ void main() {
       "sca": "85.0",
       "orig": "Ефіопія",
       "reg": "Сідамо",
-      "emoji": "🇪🇹"
+      "emoji": "🇪🇹",
     },
     {
       "lot": "20-E",
@@ -434,7 +434,7 @@ void main() {
       "sca": "85.5",
       "orig": "Кенія",
       "reg": "Кірініяга",
-      "emoji": "🇰🇪"
+      "emoji": "🇰🇪",
     },
     {
       "lot": "14-E",
@@ -447,7 +447,7 @@ void main() {
       "sca": "84.75",
       "orig": "Руанда",
       "reg": "Коакамбу",
-      "emoji": "🇷🇼"
+      "emoji": "🇷🇼",
     },
     {
       "lot": "10-E",
@@ -460,7 +460,7 @@ void main() {
       "sca": "85.25",
       "orig": "Кенія",
       "reg": "Ньєрі",
-      "emoji": "🇰🇪"
+      "emoji": "🇰🇪",
     },
     {
       "lot": "4-RE",
@@ -473,7 +473,7 @@ void main() {
       "sca": "86.0",
       "orig": "Руанда",
       "reg": "Коакамбу",
-      "emoji": "🇷🇼"
+      "emoji": "🇷🇼",
     },
     {
       "lot": "13-E",
@@ -486,7 +486,7 @@ void main() {
       "sca": "84.5",
       "orig": "Руанда",
       "reg": "Кібує",
-      "emoji": "🇷🇼"
+      "emoji": "🇷🇼",
     },
     {
       "lot": "47-E",
@@ -499,7 +499,7 @@ void main() {
       "sca": "86.5",
       "orig": "Колумбія",
       "reg": "Комбеіма",
-      "emoji": "🇨🇴"
+      "emoji": "🇨🇴",
     },
     {
       "lot": "28-E",
@@ -512,7 +512,7 @@ void main() {
       "sca": "84.0",
       "orig": "Ефіопія",
       "reg": "Іргачеффе",
-      "emoji": "🇪🇹"
+      "emoji": "🇪🇹",
     },
     {
       "lot": "9-E",
@@ -525,7 +525,7 @@ void main() {
       "sca": "87.5",
       "orig": "Колумбія",
       "reg": "Ель Дівізо",
-      "emoji": "🇨🇴"
+      "emoji": "🇨🇴",
     },
     {
       "lot": "5-E",
@@ -538,7 +538,7 @@ void main() {
       "sca": "85.75",
       "orig": "Індонезія",
       "reg": "Фрінза",
-      "emoji": "🇮🇩"
+      "emoji": "🇮🇩",
     },
     {
       "lot": "2-DE",
@@ -551,7 +551,7 @@ void main() {
       "sca": "86.5",
       "orig": "Колумбія",
       "reg": "Decaf",
-      "emoji": "🇨🇴"
+      "emoji": "🇨🇴",
     },
     {
       "lot": "100-E",
@@ -564,7 +564,7 @@ void main() {
       "sca": "83.0",
       "orig": "Blend",
       "reg": "House",
-      "emoji": "🌍"
+      "emoji": "🌍",
     },
     {
       "lot": "50-E",
@@ -577,7 +577,7 @@ void main() {
       "sca": "82.0",
       "orig": "Blend",
       "reg": "Bistro",
-      "emoji": "🌍"
+      "emoji": "🌍",
     },
     {
       "lot": "CL-E",
@@ -590,7 +590,7 @@ void main() {
       "sca": "80.0",
       "orig": "Blend",
       "reg": "Classic",
-      "emoji": "🌍"
+      "emoji": "🌍",
     },
     {
       "lot": "HB-E",
@@ -603,8 +603,8 @@ void main() {
       "sca": "81.0",
       "orig": "Blend",
       "reg": "Morning",
-      "emoji": "🌍"
-    }
+      "emoji": "🌍",
+    },
   ];
 
   // 2. Translation Maps (Simplified for hand-crafting descriptions later)
@@ -622,7 +622,7 @@ void main() {
       'ro': 'Columbia',
       'ru': 'Колумбия',
       'tr': 'Kolombiya',
-      'zh': '哥伦比亚'
+      'zh': '哥伦比亚',
     },
     'Ефіопія': {
       'en': 'Ethiopia',
@@ -637,7 +637,7 @@ void main() {
       'ro': 'Etiopia',
       'ru': 'Эфиопия',
       'tr': 'Etiyopya',
-      'zh': '埃塞俄比亚'
+      'zh': '埃塞俄比亚',
     },
     'Кенія': {
       'en': 'Kenya',
@@ -652,7 +652,7 @@ void main() {
       'ro': 'Kenya',
       'ru': 'Кения',
       'tr': 'Kenya',
-      'zh': '肯尼亚'
+      'zh': '肯尼亚',
     },
     'Руанда': {
       'en': 'Rwanda',
@@ -667,7 +667,7 @@ void main() {
       'ro': 'Rwanda',
       'ru': 'Руанда',
       'tr': 'Ruanda',
-      'zh': '卢旺达'
+      'zh': '卢旺达',
     },
     'Індонезія': {
       'en': 'Indonesia',
@@ -682,7 +682,7 @@ void main() {
       'ro': 'Indonezia',
       'ru': 'Индонезия',
       'tr': 'Endonezya',
-      'zh': '印度尼西亚'
+      'zh': '印度尼西亚',
     },
     'Коста-Ріка': {
       'en': 'Costa Rica',
@@ -697,7 +697,7 @@ void main() {
       'ro': 'Costa Rica',
       'ru': 'Коста-Рика',
       'tr': 'Kosta Rika',
-      'zh': '哥斯达黎加'
+      'zh': '哥斯达黎加',
     },
     'Танзанія': {
       'en': 'Tanzania',
@@ -712,7 +712,7 @@ void main() {
       'ro': 'Tanzania',
       'ru': 'Танзания',
       'tr': 'Tanzanya',
-      'zh': '坦桑尼亚'
+      'zh': '坦桑尼亚',
     },
     'Blend': {
       'en': 'Blend',
@@ -727,8 +727,8 @@ void main() {
       'ro': 'Amestec',
       'ru': 'Бленд',
       'tr': 'Harman',
-      'zh': '混合'
-    }
+      'zh': '混合',
+    },
   };
 
   final processes = {
@@ -738,13 +738,13 @@ void main() {
     'Термал Шок': {'en': 'Thermal Shock', 'uk': 'Термал Шок'},
     'Анаеробна натуральна': {
       'en': 'Anaerobic Natural',
-      'uk': 'Анаеробна натуральна'
+      'uk': 'Анаеробна натуральна',
     },
     'Анаеробна Х Мита': {'en': 'Anaerobic x Washed', 'uk': 'Анаеробна х мита'},
     'Мита Шугакейн': {'en': 'Washed Sugarcane', 'uk': 'Мита Шугакейн'},
     'Хані': {'en': 'Honey', 'uk': 'Хані'},
     'Mixed': {'en': 'Mixed', 'uk': 'Змішана'},
-    'Washed': {'en': 'Washed', 'uk': 'Мита'}
+    'Washed': {'en': 'Washed', 'uk': 'Мита'},
   };
 
   List result = [];
@@ -764,18 +764,20 @@ void main() {
         "r250": r["price"],
         "w250": (r["price"] as int) * 0.8,
         "r1k": (r["price"] as int) * 4,
-        "w1k": (r["price"] as int) * 4 * 0.8
+        "w1k": (r["price"] as int) * 4 * 0.8,
       },
       "sensory": {
         "aroma": (r["notes"] as List)[0],
         "body": "Medium",
-        "acidity":
-            (r["notes"] as List).length > 1 ? (r["notes"] as List)[1] : "",
-        "aftertaste":
-            (r["notes"] as List).length > 2 ? (r["notes"] as List)[2] : "",
-        "dots": {"acidity": 4, "sweetness": 4, "bitterness": 1, "intensity": 3}
+        "acidity": (r["notes"] as List).length > 1
+            ? (r["notes"] as List)[1]
+            : "",
+        "aftertaste": (r["notes"] as List).length > 2
+            ? (r["notes"] as List)[2]
+            : "",
+        "dots": {"acidity": 4, "sweetness": 4, "bitterness": 1, "intensity": 3},
       },
-      "translations": {}
+      "translations": {},
     };
 
     for (var lang in [
@@ -791,7 +793,7 @@ void main() {
       'ro',
       'ru',
       'tr',
-      'zh'
+      'zh',
     ]) {
       final originMap = origins[r['orig']];
       String country = originMap?[lang] ?? r['orig'].toString();
@@ -811,13 +813,14 @@ void main() {
         "notes": r['notes'],
         "proc": proc,
         "desc": "${r['name']} - Premium coffee from 3 Champs Roastery.",
-        "roast": roast
+        "roast": roast,
       };
     }
     result.add(bean);
   }
 
-  File('scripts/coffee_full_catalog.json')
-      .writeAsStringSync(jsonEncode(result));
+  File(
+    'scripts/coffee_full_catalog.json',
+  ).writeAsStringSync(jsonEncode(result));
   print('Generated ${result.length} lots.');
 }

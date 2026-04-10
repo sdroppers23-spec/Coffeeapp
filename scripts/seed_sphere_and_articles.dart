@@ -80,17 +80,19 @@ void main() {
       'color': '#4682B4',
       'desc_en': 'Balanced acidity and sweet citrus.',
       'desc_uk': 'Збалансована кислотність та солодкі цитруси.',
-    }
+    },
   ];
 
   for (final r in regions) {
     sql.writeln(
-        "INSERT INTO sphere_regions (id, key, name_en, name_uk, name_pl, name_de, name_fr, name_es, name_it, name_pt, name_ro, name_tr, description_en, description_uk, latitude, longitude, marker_color, flavor_profile_en, flavor_profile_uk) VALUES ('${r['id']}', '${r['key']}', '${r['name_en']}', '${r['name_uk']}', '${r['name_pl']}', '${r['name_de']}', '${r['name_fr']}', '${r['name_es']}', '${r['name_it']}', '${r['name_pt']}', '${r['name_ro']}', '${r['name_tr']}', '${r['desc_en']}', '${r['desc_uk']}', ${r['lat']}, ${r['lon']}, '${r['color']}', '[]', '[]') ON CONFLICT (id) DO UPDATE SET name_en = EXCLUDED.name_en;");
+      "INSERT INTO sphere_regions (id, key, name_en, name_uk, name_pl, name_de, name_fr, name_es, name_it, name_pt, name_ro, name_tr, description_en, description_uk, latitude, longitude, marker_color, flavor_profile_en, flavor_profile_uk) VALUES ('${r['id']}', '${r['key']}', '${r['name_en']}', '${r['name_uk']}', '${r['name_pl']}', '${r['name_de']}', '${r['name_fr']}', '${r['name_es']}', '${r['name_it']}', '${r['name_pt']}', '${r['name_ro']}', '${r['name_tr']}', '${r['desc_en']}', '${r['desc_uk']}', ${r['lat']}, ${r['lon']}, '${r['color']}', '[]', '[]') ON CONFLICT (id) DO UPDATE SET name_en = EXCLUDED.name_en;",
+    );
   }
 
   // 2. SEED ARTICLES
   sql.writeln(
-      "INSERT INTO specialty_articles (title_en, title_uk, subtitle_en, subtitle_uk, content_html_en, content_html_uk, image_url, read_time_min) VALUES ('Washed Process Guide', 'Гід по митій обробці', 'Clarity and Brightness', 'Чистота та яскравість', 'Detailed guide about washed processing...', 'Детальний гід про миту обробку...', 'https://images.unsplash.com/photo-1518057111178-44a106bad636', 5);");
+    "INSERT INTO specialty_articles (title_en, title_uk, subtitle_en, subtitle_uk, content_html_en, content_html_uk, image_url, read_time_min) VALUES ('Washed Process Guide', 'Гід по митій обробці', 'Clarity and Brightness', 'Чистота та яскравість', 'Detailed guide about washed processing...', 'Детальний гід про миту обробку...', 'https://images.unsplash.com/photo-1518057111178-44a106bad636', 5);",
+  );
 
   File('seed_sphere_and_articles.sql').writeAsStringSync(sql.toString());
   stdout.writeln('Generated seed_sphere_and_articles.sql');

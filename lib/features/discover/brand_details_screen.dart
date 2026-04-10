@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,8 +9,10 @@ import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import '../../shared/widgets/glass_container.dart';
 
-
-final brandLotsProvider = FutureProvider.family<List<CoffeeLotDto>, int>((ref, brandId) async {
+final brandLotsProvider = FutureProvider.family<List<CoffeeLotDto>, int>((
+  ref,
+  brandId,
+) async {
   final db = ref.watch(databaseProvider);
   return db.getLotsForBrand(brandId);
 });
@@ -31,12 +32,13 @@ class BrandDetailsScreen extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(brand.name, style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+        title: Text(
+          brand.name,
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-        ),
+        decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface),
         child: Column(
           children: [
             const SizedBox(height: 100),
@@ -50,14 +52,15 @@ class BrandDetailsScreen extends ConsumerWidget {
                     height: 120,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(32),
-                      border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+                      border: Border.all(
+                        color: Theme.of(context).colorScheme.outlineVariant,
+                      ),
                     ),
-                    child: _BrandLogo(
-                      url: brand.logoUrl,
-                      height: 80,
-                    ),
+                    child: _BrandLogo(url: brand.logoUrl, height: 80),
                   ),
                 ),
               ),
@@ -67,7 +70,13 @@ class BrandDetailsScreen extends ConsumerWidget {
               child: Text(
                 brand.fullDesc,
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, height: 1.6),
+                style: TextStyle(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.7),
+                  fontSize: 13,
+                  height: 1.6,
+                ),
               ),
             ),
             const SizedBox(height: 24),
@@ -79,13 +88,21 @@ class BrandDetailsScreen extends ConsumerWidget {
                 data: (lots) {
                   if (lots.isEmpty) {
                     return Center(
-                      child: Text(ref.t('no_lots_found'), style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54))),
+                      child: Text(
+                        ref.t('no_lots_found'),
+                        style: TextStyle(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withValues(alpha: 0.54),
+                        ),
+                      ),
                     );
                   }
                   return ListView.builder(
                     padding: const EdgeInsets.all(16),
                     itemCount: lots.length,
-                    itemBuilder: (context, i) => _BrandProductCard(entry: lots[i]),
+                    itemBuilder: (context, i) =>
+                        _BrandProductCard(entry: lots[i]),
                   );
                 },
               ),
@@ -112,7 +129,10 @@ class _BrandProductCard extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Text(entry.originCountry?.substring(0, 2) ?? '☕', style: const TextStyle(fontSize: 24)),
+                Text(
+                  entry.originCountry?.substring(0, 2) ?? '☕',
+                  style: const TextStyle(fontSize: 24),
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -128,13 +148,21 @@ class _BrandProductCard extends ConsumerWidget {
                       ),
                       Text(
                         entry.originCountry ?? entry.roasteryCountry ?? '',
-                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54), fontSize: 12),
+                        style: TextStyle(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withValues(alpha: 0.54),
+                          fontSize: 12,
+                        ),
                       ),
                     ],
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
@@ -153,7 +181,13 @@ class _BrandProductCard extends ConsumerWidget {
             const SizedBox(height: 12),
             Text(
               entry.coffeeName ?? entry.originCountry ?? '',
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.9), fontSize: 13, height: 1.5),
+              style: TextStyle(
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.9),
+                fontSize: 13,
+                height: 1.5,
+              ),
             ),
             const SizedBox(height: 16),
             // Sensory info from lot
@@ -161,9 +195,16 @@ class _BrandProductCard extends ConsumerWidget {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  const Icon(Icons.science_outlined, size: 14, color: Colors.white30),
+                  const Icon(
+                    Icons.science_outlined,
+                    size: 14,
+                    color: Colors.white30,
+                  ),
                   const SizedBox(width: 4),
-                  Text(entry.process ?? '', style: const TextStyle(color: Colors.white30, fontSize: 11)),
+                  Text(
+                    entry.process ?? '',
+                    style: const TextStyle(color: Colors.white30, fontSize: 11),
+                  ),
                 ],
               ),
             ],
@@ -173,7 +214,13 @@ class _BrandProductCard extends ConsumerWidget {
               children: [
                 TextButton(
                   onPressed: () {},
-                  child: Text(ref.t('details'), style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 12)),
+                  child: Text(
+                    ref.t('details'),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontSize: 12,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -188,10 +235,7 @@ class _BrandLogo extends StatelessWidget {
   final String url;
   final double? height;
 
-  const _BrandLogo({
-    required this.url,
-    this.height,
-  });
+  const _BrandLogo({required this.url, this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -227,5 +271,3 @@ class _FallbackIcon extends StatelessWidget {
     );
   }
 }
-
-

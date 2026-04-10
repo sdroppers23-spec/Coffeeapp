@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../shared/widgets/glass_container.dart';
 
-
 import '../../core/database/dtos.dart';
 import 'specialty_article_detail_screen.dart';
 
@@ -56,7 +55,9 @@ class SpecialtyArticleCard extends StatelessWidget {
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: gold.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
@@ -98,7 +99,9 @@ class SpecialtyArticleCard extends StatelessWidget {
                 const SizedBox(height: 12),
                 Text(
                   content.replaceAll(
-                      RegExp(r'<[^>]*>'), ''), // Strip HTML for preview
+                    RegExp(r'<[^>]*>'),
+                    '',
+                  ), // Strip HTML for preview
                   maxLines: 4,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.inter(

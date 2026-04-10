@@ -28,7 +28,9 @@ final List<FlavorNode> volumetricFlavorData = [
         color: const Color(0xFFFF4081),
         children: [
           FlavorNode(
-              nameKey: 'note_strawberry', color: const Color(0xFFF06292)),
+            nameKey: 'note_strawberry',
+            color: const Color(0xFFF06292),
+          ),
           FlavorNode(nameKey: 'note_raspberry', color: const Color(0xFFEC407A)),
           FlavorNode(nameKey: 'note_blueberry', color: const Color(0xFFD81B60)),
         ],
@@ -150,8 +152,10 @@ class _VolumetricFlavorWheelState extends ConsumerState<VolumetricFlavorWheel>
 
     double currentAngle = 0.0;
     final totalAngle = 2 * math.pi;
-    final totalWeight =
-        volumetricFlavorData.fold(0.0, (acc, n) => acc + _nodeWeight(n));
+    final totalWeight = volumetricFlavorData.fold(
+      0.0,
+      (acc, n) => acc + _nodeWeight(n),
+    );
 
     for (final node in volumetricFlavorData) {
       final sweep = totalAngle * _nodeWeight(node) / totalWeight;
@@ -231,7 +235,10 @@ class _VolumetricFlavorWheelState extends ConsumerState<VolumetricFlavorWheel>
               'Відчуйте нотки ${ref.t(_selectedNode!.nameKey).toLowerCase()} у вашій каві. Цей дескриптор характерний для високогірних лотів з особливою ферментацією.',
               textAlign: TextAlign.center,
               style: const TextStyle(
-                  color: Colors.white70, fontSize: 13, height: 1.5),
+                color: Colors.white70,
+                fontSize: 13,
+                height: 1.5,
+              ),
             ),
           ),
         ],
@@ -270,7 +277,15 @@ class _VolumetricPainter extends CustomPainter {
     for (final node in data) {
       final sweep = (2 * math.pi) * _totalWeight(node) / totalWeight;
       _drawArcSegment(
-          canvas, center, centerRadius, ringWidth, angle1, sweep, node, 1);
+        canvas,
+        center,
+        centerRadius,
+        ringWidth,
+        angle1,
+        sweep,
+        node,
+        1,
+      );
       angle1 += sweep;
     }
 
@@ -282,8 +297,16 @@ class _VolumetricPainter extends CustomPainter {
         double subAngle = angle2;
         for (final child in node.children) {
           final subSweep = sweep * _totalWeight(child) / _totalWeight(node);
-          _drawArcSegment(canvas, center, centerRadius + ringWidth, ringWidth,
-              subAngle, subSweep, child, 2);
+          _drawArcSegment(
+            canvas,
+            center,
+            centerRadius + ringWidth,
+            ringWidth,
+            subAngle,
+            subSweep,
+            child,
+            2,
+          );
 
           // Ring 3 (Outer)
           if (child.children.isNotEmpty) {
@@ -291,8 +314,16 @@ class _VolumetricPainter extends CustomPainter {
             for (final grandchild in child.children) {
               final subSubSweep =
                   subSweep * _totalWeight(grandchild) / _totalWeight(child);
-              _drawArcSegment(canvas, center, centerRadius + ringWidth * 2,
-                  ringWidth, subSubAngle, subSubSweep, grandchild, 3);
+              _drawArcSegment(
+                canvas,
+                center,
+                centerRadius + ringWidth * 2,
+                ringWidth,
+                subSubAngle,
+                subSubSweep,
+                grandchild,
+                3,
+              );
               subSubAngle += subSubSweep;
             }
           }
@@ -309,27 +340,29 @@ class _VolumetricPainter extends CustomPainter {
         centerRadius,
         [
           const Color(0xFFC8A96E).withValues(alpha: 0.3),
-          const Color(0xFF1A1A1A).withValues(alpha: 0.8)
+          const Color(0xFF1A1A1A).withValues(alpha: 0.8),
         ],
         [0.0, 1.0],
       );
     canvas.drawCircle(center, centerRadius, glassPaint);
     canvas.drawCircle(
-        center,
-        centerRadius,
-        Paint()
-          ..color = Colors.white10
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 1);
+      center,
+      centerRadius,
+      Paint()
+        ..color = Colors.white10
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1,
+    );
 
     final tp = TextPainter(
       text: TextSpan(
         text: 'CHOOSER',
         style: GoogleFonts.orbitron(
-            color: const Color(0xFFC8A96E),
-            fontSize: 10,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 2),
+          color: const Color(0xFFC8A96E),
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 2,
+        ),
       ),
       textDirection: TextDirection.ltr,
     )..layout();
@@ -337,14 +370,15 @@ class _VolumetricPainter extends CustomPainter {
   }
 
   void _drawArcSegment(
-      Canvas canvas,
-      Offset center,
-      double innerR,
-      double width,
-      double startAngle,
-      double sweep,
-      FlavorNode node,
-      int level) {
+    Canvas canvas,
+    Offset center,
+    double innerR,
+    double width,
+    double startAngle,
+    double sweep,
+    FlavorNode node,
+    int level,
+  ) {
     if (sweep < 0.01) return;
 
     final outerR = innerR + width;
@@ -353,9 +387,16 @@ class _VolumetricPainter extends CustomPainter {
 
     final path = Path()
       ..addArc(
-          Rect.fromCircle(center: center, radius: outerR), startAngle, sweep)
-      ..arcTo(Rect.fromCircle(center: center, radius: innerR),
-          startAngle + sweep, -sweep, false)
+        Rect.fromCircle(center: center, radius: outerR),
+        startAngle,
+        sweep,
+      )
+      ..arcTo(
+        Rect.fromCircle(center: center, radius: innerR),
+        startAngle + sweep,
+        -sweep,
+        false,
+      )
       ..close();
 
     // Volumetric Gradient
@@ -370,21 +411,34 @@ class _VolumetricPainter extends CustomPainter {
 
     // Glass Border
     canvas.drawPath(
-        path,
-        Paint()
-          ..color = Colors.white24
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 0.5);
+      path,
+      Paint()
+        ..color = Colors.white24
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.5,
+    );
 
     // Text (Simplified - only if sweep is large enough)
     if (sweep > 0.15) {
-      _drawRadialText(canvas, center, startAngle + sweep / 2,
-          innerR + width / 2, ref.t(node.nameKey), level);
+      _drawRadialText(
+        canvas,
+        center,
+        startAngle + sweep / 2,
+        innerR + width / 2,
+        ref.t(node.nameKey),
+        level,
+      );
     }
   }
 
-  void _drawRadialText(Canvas canvas, Offset center, double angle,
-      double distance, String text, int level) {
+  void _drawRadialText(
+    Canvas canvas,
+    Offset center,
+    double angle,
+    double distance,
+    String text,
+    int level,
+  ) {
     final tp = TextPainter(
       text: TextSpan(
         text: text.toUpperCase(),

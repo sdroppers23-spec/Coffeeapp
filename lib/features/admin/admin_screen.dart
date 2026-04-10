@@ -16,12 +16,17 @@ class AdminScreen extends ConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new,
-                color: Colors.white, size: 20),
+            icon: const Icon(
+              Icons.arrow_back_ios_new,
+              color: Colors.white,
+              size: 20,
+            ),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: Text('Admin Console',
-              style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+          title: Text(
+            'Admin Console',
+            style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+          ),
           backgroundColor: Colors.black,
           bottom: const TabBar(
             indicatorColor: Color(0xFFC8A96E),
@@ -35,11 +40,7 @@ class AdminScreen extends ConsumerWidget {
           ),
         ),
         body: const TabBarView(
-          children: [
-            AdminBrandsTab(),
-            AdminBeansTab(),
-            AdminSphereTab(),
-          ],
+          children: [AdminBrandsTab(), AdminBeansTab(), AdminSphereTab()],
         ),
       ),
     );

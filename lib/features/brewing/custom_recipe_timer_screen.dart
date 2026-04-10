@@ -12,7 +12,6 @@ class CustomRecipeTimerScreen extends ConsumerStatefulWidget {
 
   const CustomRecipeTimerScreen({super.key, required this.recipe});
 
-
   @override
   ConsumerState<CustomRecipeTimerScreen> createState() =>
       _CustomRecipeTimerScreenState();

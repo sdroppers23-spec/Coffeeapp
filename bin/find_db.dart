@@ -9,8 +9,12 @@ void main() async {
 
   final userProfile = Platform.environment['USERPROFILE'] ?? 'C:\\Users\\gkill';
   final docs = p.join(userProfile, 'Documents');
-  final appData =
-      p.join(userProfile, 'AppData', 'Roaming', 'specialty_tracker');
+  final appData = p.join(
+    userProfile,
+    'AppData',
+    'Roaming',
+    'specialty_tracker',
+  );
 
   final candidates = [
     p.join(docs, 'speciality_coffee_v17.sqlite'),

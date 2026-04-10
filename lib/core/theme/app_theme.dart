@@ -14,18 +14,19 @@ class AppTheme {
   static const Color darkAccent = Color(0xFFC6AC8F); // Crema Gold
 
   static ThemeData get theme => _buildTheme(
-      brightness: Brightness.dark,
-      bg: darkBg,
-      surface: darkSurface,
-      primary: darkPrimary,
-      accent: darkAccent,
-      textPrimary: Colors.white,
-      textSecondary: Colors.white70,
-    );
+    brightness: Brightness.dark,
+    bg: darkBg,
+    surface: darkSurface,
+    primary: darkPrimary,
+    accent: darkAccent,
+    textPrimary: Colors.white,
+    textSecondary: Colors.white70,
+  );
 
   // Compatibility getters for existing code
   static ThemeData get darkTheme => theme;
-  static ThemeData get lightTheme => theme; // Always use dark brown as per user request
+  static ThemeData get lightTheme =>
+      theme; // Always use dark brown as per user request
 
   static ThemeData _buildTheme({
     required Brightness brightness,
@@ -36,8 +37,10 @@ class AppTheme {
     required Color textPrimary,
     required Color textSecondary,
   }) {
-    final base = brightness == Brightness.dark ? ThemeData.dark() : ThemeData.light();
-    
+    final base = brightness == Brightness.dark
+        ? ThemeData.dark()
+        : ThemeData.light();
+
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
@@ -53,8 +56,14 @@ class AppTheme {
         onSurface: textPrimary,
       ),
       textTheme: GoogleFonts.interTextTheme(base.textTheme).copyWith(
-        displayLarge: GoogleFonts.poppins(color: textPrimary, fontWeight: FontWeight.bold),
-        titleLarge: GoogleFonts.poppins(color: textPrimary, fontWeight: FontWeight.w600),
+        displayLarge: GoogleFonts.poppins(
+          color: textPrimary,
+          fontWeight: FontWeight.bold,
+        ),
+        titleLarge: GoogleFonts.poppins(
+          color: textPrimary,
+          fontWeight: FontWeight.w600,
+        ),
         bodyLarge: GoogleFonts.inter(color: textPrimary),
         bodyMedium: GoogleFonts.inter(color: textSecondary),
       ),
@@ -74,15 +83,26 @@ class AppTheme {
           backgroundColor: primary,
           foregroundColor: bg,
           minimumSize: const Size.fromHeight(56),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          textStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          textStyle: GoogleFonts.poppins(
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+          ),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: surface,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide.none,
+        ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: primary, width: 2),

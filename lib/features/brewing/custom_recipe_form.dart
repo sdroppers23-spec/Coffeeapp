@@ -7,7 +7,6 @@ import '../../core/database/app_database.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 
-
 // ─── Pour entry (local model) ─────────────────────────────────────────────────
 class _PourEntry {
   int? pourNumber;
@@ -25,20 +24,20 @@ class _PourEntry {
   });
 
   Map<String, dynamic> toJson() => {
-        'pourNumber': pourNumber,
-        'waterMl': waterMl,
-        'atMinute': atMinute,
-        'durationSec': durationSec,
-        'notes': notes,
-      };
+    'pourNumber': pourNumber,
+    'waterMl': waterMl,
+    'atMinute': atMinute,
+    'durationSec': durationSec,
+    'notes': notes,
+  };
 
   static _PourEntry fromJson(Map<String, dynamic> j) => _PourEntry(
-        pourNumber: j['pourNumber'] as int?,
-        waterMl: (j['waterMl'] as num?)?.toDouble(),
-        atMinute: (j['atMinute'] as num?)?.toDouble(),
-        durationSec: j['durationSec'] as int?,
-        notes: j['notes'] as String? ?? '',
-      );
+    pourNumber: j['pourNumber'] as int?,
+    waterMl: (j['waterMl'] as num?)?.toDouble(),
+    atMinute: (j['atMinute'] as num?)?.toDouble(),
+    durationSec: j['durationSec'] as int?,
+    notes: j['notes'] as String? ?? '',
+  );
 }
 
 // ─── Form Screen ──────────────────────────────────────────────────────────────
@@ -46,7 +45,6 @@ class CustomRecipeFormScreen extends ConsumerStatefulWidget {
   final String methodKey;
   final String? lotId;
   final CustomRecipeDto? existingRecipe;
-
 
   const CustomRecipeFormScreen({
     super.key,
@@ -60,7 +58,8 @@ class CustomRecipeFormScreen extends ConsumerStatefulWidget {
       _CustomRecipeFormScreenState();
 }
 
-class _CustomRecipeFormScreenState extends ConsumerState<CustomRecipeFormScreen> {
+class _CustomRecipeFormScreenState
+    extends ConsumerState<CustomRecipeFormScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _saving = false;
 
@@ -86,15 +85,26 @@ class _CustomRecipeFormScreenState extends ConsumerState<CustomRecipeFormScreen>
     super.initState();
     final r = widget.existingRecipe;
     _nameCtrl = TextEditingController(text: r?.name ?? '');
-    _coffeeGCtrl = TextEditingController(text: r != null ? r.coffeeGrams.toString() : '');
-    _waterMlCtrl = TextEditingController(text: r != null ? r.totalWaterMl.toString() : '');
-    _grindCtrl = TextEditingController(text: r != null && r.grindNumber > 0 ? r.grindNumber.toString() : '');
+    _coffeeGCtrl = TextEditingController(
+      text: r != null ? r.coffeeGrams.toString() : '',
+    );
+    _waterMlCtrl = TextEditingController(
+      text: r != null ? r.totalWaterMl.toString() : '',
+    );
+    _grindCtrl = TextEditingController(
+      text: r != null && r.grindNumber > 0 ? r.grindNumber.toString() : '',
+    );
     _comandanteCtrl = TextEditingController(
-        text: r != null && r.comandanteClicks > 0 ? r.comandanteClicks.toString() : '');
+      text: r != null && r.comandanteClicks > 0
+          ? r.comandanteClicks.toString()
+          : '',
+    );
     _ek43Ctrl = TextEditingController(
-        text: r != null && r.ek43Division > 0 ? r.ek43Division.toString() : '');
+      text: r != null && r.ek43Division > 0 ? r.ek43Division.toString() : '',
+    );
     _tempCtrl = TextEditingController(
-        text: r != null ? r.brewTempC.toString() : '93.0');
+      text: r != null ? r.brewTempC.toString() : '93.0',
+    );
     _notesCtrl = TextEditingController(text: r?.notes ?? '');
     _rating = r?.rating ?? 0;
     _totalPours = r?.totalPours ?? 1;
@@ -125,23 +135,36 @@ class _CustomRecipeFormScreenState extends ConsumerState<CustomRecipeFormScreen>
     }
     _pourCtrlsList
       ..clear()
-      ..addAll(List.generate(_totalPours, (i) {
-        final p = _pours[i];
-        return {
-          'waterMl': TextEditingController(text: p.waterMl?.toString() ?? ''),
-          'atMinute': TextEditingController(text: p.atMinute?.toString() ?? ''),
-          'durationSec': TextEditingController(text: p.durationSec?.toString() ?? ''),
-          'notes': TextEditingController(text: p.notes),
-        };
-      }));
+      ..addAll(
+        List.generate(_totalPours, (i) {
+          final p = _pours[i];
+          return {
+            'waterMl': TextEditingController(text: p.waterMl?.toString() ?? ''),
+            'atMinute': TextEditingController(
+              text: p.atMinute?.toString() ?? '',
+            ),
+            'durationSec': TextEditingController(
+              text: p.durationSec?.toString() ?? '',
+            ),
+            'notes': TextEditingController(text: p.notes),
+          };
+        }),
+      );
   }
 
   @override
   void dispose() {
     for (final c in [
-      _nameCtrl, _coffeeGCtrl, _waterMlCtrl, _grindCtrl,
-      _comandanteCtrl, _ek43Ctrl, _tempCtrl, _notesCtrl
-    ]) c.dispose();
+      _nameCtrl,
+      _coffeeGCtrl,
+      _waterMlCtrl,
+      _grindCtrl,
+      _comandanteCtrl,
+      _ek43Ctrl,
+      _tempCtrl,
+      _notesCtrl,
+    ])
+      c.dispose();
     for (final m in _pourCtrlsList) {
       for (final c in m.values) c.dispose();
     }
@@ -175,7 +198,9 @@ class _CustomRecipeFormScreenState extends ConsumerState<CustomRecipeFormScreen>
         id: Value(widget.existingRecipe!.id),
         methodKey: Value(widget.methodKey),
         name: Value(_nameCtrl.text.trim()),
-        createdAt: Value(widget.existingRecipe!.updatedAt ?? now), // Best effort for createdAt
+        createdAt: Value(
+          widget.existingRecipe!.updatedAt ?? now,
+        ), // Best effort for createdAt
         updatedAt: Value(now),
         coffeeGrams: Value(double.tryParse(_coffeeGCtrl.text) ?? 0),
 
@@ -191,28 +216,28 @@ class _CustomRecipeFormScreenState extends ConsumerState<CustomRecipeFormScreen>
         userId: Value(''), // v17 compatibility
       );
       await db.updateCustomRecipe(updateCompanion);
-
     } else {
-      await db.insertCustomRecipe(CustomRecipesCompanion.insert(
-        methodKey: widget.methodKey,
-        lotId: Value(widget.lotId),
-        name: _nameCtrl.text.trim(),
-        createdAt: Value(now),
-        updatedAt: Value(now),
+      await db.insertCustomRecipe(
+        CustomRecipesCompanion.insert(
+          methodKey: widget.methodKey,
+          lotId: Value(widget.lotId),
+          name: _nameCtrl.text.trim(),
+          createdAt: Value(now),
+          updatedAt: Value(now),
 
-        coffeeGrams: double.tryParse(_coffeeGCtrl.text) ?? 0,
-        totalWaterMl: double.tryParse(_waterMlCtrl.text) ?? 0,
-        grindNumber: Value(int.tryParse(_grindCtrl.text) ?? 0),
-        comandanteClicks: Value(int.tryParse(_comandanteCtrl.text) ?? 0),
-        ek43Division: Value(int.tryParse(_ek43Ctrl.text) ?? 0),
-        totalPours: Value(_totalPours),
-        pourScheduleJson: Value(pourJson),
-        brewTempC: Value(double.tryParse(_tempCtrl.text) ?? 93.0),
-        notes: Value(_notesCtrl.text),
-        rating: Value(_rating),
-        userId: '', // v17 compatibility
-      ));
-
+          coffeeGrams: double.tryParse(_coffeeGCtrl.text) ?? 0,
+          totalWaterMl: double.tryParse(_waterMlCtrl.text) ?? 0,
+          grindNumber: Value(int.tryParse(_grindCtrl.text) ?? 0),
+          comandanteClicks: Value(int.tryParse(_comandanteCtrl.text) ?? 0),
+          ek43Division: Value(int.tryParse(_ek43Ctrl.text) ?? 0),
+          totalPours: Value(_totalPours),
+          pourScheduleJson: Value(pourJson),
+          brewTempC: Value(double.tryParse(_tempCtrl.text) ?? 93.0),
+          notes: Value(_notesCtrl.text),
+          rating: Value(_rating),
+          userId: '', // v17 compatibility
+        ),
+      );
     }
 
     if (mounted) {
@@ -227,18 +252,30 @@ class _CustomRecipeFormScreenState extends ConsumerState<CustomRecipeFormScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEdit ? 'Edit Recipe' : 'New Recipe',
-            style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+        title: Text(
+          isEdit ? 'Edit Recipe' : 'New Recipe',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+        ),
         actions: [
           if (_saving)
             const Padding(
               padding: EdgeInsets.all(16),
-              child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
             )
           else
             TextButton(
               onPressed: _save,
-              child: const Text('Save', style: TextStyle(color: Color(0xFFC8A96E), fontWeight: FontWeight.w600)),
+              child: const Text(
+                'Save',
+                style: TextStyle(
+                  color: Color(0xFFC8A96E),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
         ],
       ),
@@ -257,7 +294,10 @@ class _CustomRecipeFormScreenState extends ConsumerState<CustomRecipeFormScreen>
             ),
             const SizedBox(height: 12),
             // ── Rating ────────────────────────────────────────────────────────
-            _RatingRow(rating: _rating, onChanged: (v) => setState(() => _rating = v)),
+            _RatingRow(
+              rating: _rating,
+              onChanged: (v) => setState(() => _rating = v),
+            ),
             const SizedBox(height: 20),
 
             // ── Coffee & Water ─────────────────────────────────────────────────
@@ -270,7 +310,8 @@ class _CustomRecipeFormScreenState extends ConsumerState<CustomRecipeFormScreen>
                     label: 'Coffee (g)',
                     hint: '18',
                     keyboardType: TextInputType.number,
-                    validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
+                    validator: (v) =>
+                        (v == null || v.isEmpty) ? 'Required' : null,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -280,7 +321,8 @@ class _CustomRecipeFormScreenState extends ConsumerState<CustomRecipeFormScreen>
                     label: 'Total Water (ml)',
                     hint: '300',
                     keyboardType: TextInputType.number,
-                    validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
+                    validator: (v) =>
+                        (v == null || v.isEmpty) ? 'Required' : null,
                   ),
                 ),
               ],
@@ -311,7 +353,11 @@ class _CustomRecipeFormScreenState extends ConsumerState<CustomRecipeFormScreen>
                     label: 'Comandante Clicks',
                     hint: '28',
                     keyboardType: TextInputType.number,
-                    prefixIcon: const Icon(Icons.circle, color: Colors.redAccent, size: 14),
+                    prefixIcon: const Icon(
+                      Icons.circle,
+                      color: Colors.redAccent,
+                      size: 14,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -320,8 +366,14 @@ class _CustomRecipeFormScreenState extends ConsumerState<CustomRecipeFormScreen>
                     controller: _ek43Ctrl,
                     label: 'Mahlkoenig EK43 Div.',
                     hint: '8.5',
-                    keyboardType: TextInputType.numberWithOptions(decimal: true),
-                    prefixIcon: const Icon(Icons.circle, color: Colors.lightBlueAccent, size: 14),
+                    keyboardType: TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    prefixIcon: const Icon(
+                      Icons.circle,
+                      color: Colors.lightBlueAccent,
+                      size: 14,
+                    ),
                   ),
                 ),
               ],
@@ -332,7 +384,10 @@ class _CustomRecipeFormScreenState extends ConsumerState<CustomRecipeFormScreen>
             _SectionHeader('Pour Schedule'),
             Row(
               children: [
-                const Text('Number of pours:', style: TextStyle(color: Colors.white70)),
+                const Text(
+                  'Number of pours:',
+                  style: TextStyle(color: Colors.white70),
+                ),
                 const SizedBox(width: 16),
                 _CounterWidget(
                   value: _totalPours,
@@ -347,10 +402,10 @@ class _CustomRecipeFormScreenState extends ConsumerState<CustomRecipeFormScreen>
             ),
             const SizedBox(height: 12),
             // Pour rows
-            ...List.generate(_totalPours, (i) => _PourRow(
-              index: i,
-              ctrls: _pourCtrlsList[i],
-            )),
+            ...List.generate(
+              _totalPours,
+              (i) => _PourRow(index: i, ctrls: _pourCtrlsList[i]),
+            ),
             const SizedBox(height: 20),
 
             // ── Notes ─────────────────────────────────────────────────────────
@@ -369,10 +424,14 @@ class _CustomRecipeFormScreenState extends ConsumerState<CustomRecipeFormScreen>
                 backgroundColor: const Color(0xFFC8A96E),
                 foregroundColor: Colors.black,
                 minimumSize: const Size.fromHeight(52),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
-              child: Text(isEdit ? 'Save Changes' : 'Save Recipe',
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+              child: Text(
+                isEdit ? 'Save Changes' : 'Save Recipe',
+                style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+              ),
             ),
             const SizedBox(height: 24),
           ],
@@ -400,11 +459,14 @@ class _PourRow extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Pour #${index + 1}',
-              style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 13,
-                  color: const Color(0xFFC8A96E))),
+          Text(
+            'Pour #${index + 1}',
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+              color: const Color(0xFFC8A96E),
+            ),
+          ),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -423,7 +485,9 @@ class _PourRow extends StatelessWidget {
                   controller: ctrls['atMinute']!,
                   label: 'At minute',
                   hint: '0.5',
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   dense: true,
                 ),
               ),
@@ -463,13 +527,18 @@ class _SectionHeader extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
-          Text(title,
-              style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFFC8A96E),
-                  fontSize: 14)),
+          Text(
+            title,
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFFC8A96E),
+              fontSize: 14,
+            ),
+          ),
           const SizedBox(width: 8),
-          const Expanded(child: Divider(color: Color(0xFFC8A96E), thickness: 0.5)),
+          const Expanded(
+            child: Divider(color: Color(0xFFC8A96E), thickness: 0.5),
+          ),
         ],
       ),
     );
@@ -545,17 +614,20 @@ class _RatingRow extends StatelessWidget {
       children: [
         const Text('Rating:', style: TextStyle(color: Colors.white70)),
         const SizedBox(width: 12),
-        ...List.generate(5, (i) => GestureDetector(
-          onTap: () => onChanged(i + 1 == rating ? 0 : i + 1),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 3),
-            child: Icon(
-              i < rating ? Icons.star_rounded : Icons.star_outline_rounded,
-              color: const Color(0xFFC8A96E),
-              size: 28,
+        ...List.generate(
+          5,
+          (i) => GestureDetector(
+            onTap: () => onChanged(i + 1 == rating ? 0 : i + 1),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 3),
+              child: Icon(
+                i < rating ? Icons.star_rounded : Icons.star_outline_rounded,
+                color: const Color(0xFFC8A96E),
+                size: 28,
+              ),
             ),
           ),
-        )),
+        ),
       ],
     );
   }
@@ -566,8 +638,12 @@ class _CounterWidget extends StatelessWidget {
   final int min;
   final int max;
   final void Function(int) onChanged;
-  const _CounterWidget(
-      {required this.value, required this.min, required this.max, required this.onChanged});
+  const _CounterWidget({
+    required this.value,
+    required this.min,
+    required this.max,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -581,9 +657,14 @@ class _CounterWidget extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text('$value',
-              style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white)),
+          child: Text(
+            '$value',
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: Colors.white,
+            ),
+          ),
         ),
         _CircleBtn(
           icon: Icons.add,
@@ -599,7 +680,11 @@ class _CircleBtn extends StatelessWidget {
   final IconData icon;
   final bool enabled;
   final VoidCallback onTap;
-  const _CircleBtn({required this.icon, required this.enabled, required this.onTap});
+  const _CircleBtn({
+    required this.icon,
+    required this.enabled,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -617,11 +702,12 @@ class _CircleBtn extends StatelessWidget {
             color: enabled ? const Color(0xFFC8A96E) : Colors.white12,
           ),
         ),
-        child: Icon(icon,
-            size: 18,
-            color: enabled ? const Color(0xFFC8A96E) : Colors.white24),
+        child: Icon(
+          icon,
+          size: 18,
+          color: enabled ? const Color(0xFFC8A96E) : Colors.white24,
+        ),
       ),
     );
   }
 }
-

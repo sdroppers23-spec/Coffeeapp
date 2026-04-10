@@ -53,7 +53,11 @@ class SpecialtyTrackerApp extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.error_outline, size: 64, color: Colors.orange),
+                  const Icon(
+                    Icons.error_outline,
+                    size: 64,
+                    color: Colors.orange,
+                  ),
                   const SizedBox(height: 24),
                   const Text(
                     'Configuration Required',

@@ -61,8 +61,10 @@ class SpecialtyEncyclopediaRoot {
     }
     return SpecialtyEncyclopediaRoot(
       modules: raw
-          .map((e) =>
-              SpecialtyModule.fromJson(Map<String, dynamic>.from(e as Map)))
+          .map(
+            (e) =>
+                SpecialtyModule.fromJson(Map<String, dynamic>.from(e as Map)),
+          )
           .toList(),
     );
   }

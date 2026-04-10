@@ -40,7 +40,7 @@ class RadarChartPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     // Leave room for labels
     final radius = math.min(size.width / 2, size.height / 2) * 0.7;
-    
+
     final bgPaint = Paint()
       ..color = Colors.white.withValues(alpha: 0.05)
       ..style = PaintingStyle.stroke
@@ -81,7 +81,7 @@ class RadarChartPainter extends CustomPainter {
         center.dx + radius * math.cos(angle),
         center.dy + radius * math.sin(angle),
       );
-      
+
       // Axis line
       canvas.drawLine(center, axisEnd, bgPaint);
 
@@ -129,14 +129,14 @@ class RadarChartPainter extends CustomPainter {
       double valRaw = values[keys[j]] ?? 0.0;
       double normalizedVal = valRaw / maxPossibleValue;
       if (valRaw <= 1.0 && maxPossibleValue == 5.0) {
-         // Keep normalized as is if it's already 0-1
-         normalizedVal = valRaw;
+        // Keep normalized as is if it's already 0-1
+        normalizedVal = valRaw;
       }
-      
+
       final r = radius * normalizedVal.clamp(0.0, 1.0);
       final x = center.dx + r * math.cos(angle);
       final y = center.dy + r * math.sin(angle);
-      
+
       if (j == 0) {
         valuePath.moveTo(x, y);
       } else {
@@ -144,10 +144,10 @@ class RadarChartPainter extends CustomPainter {
       }
     }
     valuePath.close();
-    
+
     canvas.drawPath(valuePath, valueFillPaint);
     canvas.drawPath(valuePath, valueStrokePaint);
-    
+
     // Draw dots at vertices
     final dotPaint = Paint()..color = mainColor;
     for (var j = 0; j < keys.length; j++) {
@@ -155,10 +155,13 @@ class RadarChartPainter extends CustomPainter {
       double valRaw = values[keys[j]] ?? 0.0;
       double normalizedVal = valRaw / maxPossibleValue;
       if (valRaw <= 1.0 && maxPossibleValue == 5.0) normalizedVal = valRaw;
-      
+
       final r = radius * normalizedVal.clamp(0.0, 1.0);
       canvas.drawCircle(
-        Offset(center.dx + r * math.cos(angle), center.dy + r * math.sin(angle)),
+        Offset(
+          center.dx + r * math.cos(angle),
+          center.dy + r * math.sin(angle),
+        ),
         2.5,
         dotPaint,
       );

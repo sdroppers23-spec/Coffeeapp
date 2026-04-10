@@ -48,7 +48,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
     super.initState();
     // Measure nav bar after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) => _updateNavBarHeight());
-    
+
     // Auto-show nav bar when switching tabs
     // This fixes the issue where full-screen pages might leave it hidden
     _setupNavListener();
@@ -74,7 +74,8 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
   void didUpdateWidget(MainScaffold oldWidget) {
     super.didUpdateWidget(oldWidget);
     // If branch index changed, force show the bar
-    if (widget.navigationShell.currentIndex != oldWidget.navigationShell.currentIndex) {
+    if (widget.navigationShell.currentIndex !=
+        oldWidget.navigationShell.currentIndex) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.read(navBarVisibleProvider.notifier).show();
       });
@@ -83,7 +84,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
 
   void _onTap(int index) {
     ref.read(settingsProvider.notifier).triggerSelectionVibrate();
-    
+
     // Force show bar when tapping a tab
     ref.read(navBarVisibleProvider.notifier).show();
 
@@ -96,7 +97,6 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
   @override
   Widget build(BuildContext context) {
     final navVisible = ref.watch(navBarVisibleProvider);
-    
 
     return PremiumBackground(
       child: Scaffold(
@@ -136,29 +136,49 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                             constraints: const BoxConstraints(maxWidth: 400),
                             child: GlassContainer(
                               borderRadius: 40, // Oval shape
-                              padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 12),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 2,
+                                horizontal: 12,
+                              ),
                               blur: 40,
                               opacity: 0.15,
                               borderColor: Colors.white.withValues(alpha: 0.1),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
                                   _NavBarItem(
                                     icon: Icons.radar,
-                                    label: AppLocalizations.of(context)?.specialty ?? 'Specialty',
-                                    isSelected: widget.navigationShell.currentIndex == 0,
+                                    label:
+                                        AppLocalizations.of(
+                                          context,
+                                        )?.specialty ??
+                                        'Specialty',
+                                    isSelected:
+                                        widget.navigationShell.currentIndex ==
+                                        0,
                                     onTap: () => _onTap(0),
                                   ),
                                   _NavBarItem(
                                     icon: Icons.explore_rounded,
-                                    label: AppLocalizations.of(context)?.discover ?? 'Discover',
-                                    isSelected: widget.navigationShell.currentIndex == 1,
+                                    label:
+                                        AppLocalizations.of(
+                                          context,
+                                        )?.discover ??
+                                        'Discover',
+                                    isSelected:
+                                        widget.navigationShell.currentIndex ==
+                                        1,
                                     onTap: () => _onTap(1),
                                   ),
                                   _NavBarItem(
                                     icon: Icons.coffee_rounded,
-                                    label: AppLocalizations.of(context)?.recipes ?? 'Recipes',
-                                    isSelected: widget.navigationShell.currentIndex == 2,
+                                    label:
+                                        AppLocalizations.of(context)?.recipes ??
+                                        'Recipes',
+                                    isSelected:
+                                        widget.navigationShell.currentIndex ==
+                                        2,
                                     onTap: () => _onTap(2),
                                   ),
                                 ],
@@ -166,7 +186,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                             ),
                           ),
                         ),
-                        
+
                         const SizedBox(width: 12),
 
                         // Rounded Settings Island
@@ -182,11 +202,13 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                             padding: EdgeInsets.zero,
                             blur: 40,
                             opacity: 0.18,
-                            borderColor: const Color(0xFFC8A96E).withValues(alpha: 0.25),
+                            borderColor: const Color(
+                              0xFFC8A96E,
+                            ).withValues(alpha: 0.25),
                             child: const Center(
                               child: Icon(
-                                Icons.settings_rounded, 
-                                color: Colors.white, 
+                                Icons.settings_rounded,
+                                color: Colors.white,
                                 size: 26,
                               ),
                             ),
@@ -232,7 +254,9 @@ class _NavBarItem extends ConsumerWidget {
               duration: const Duration(milliseconds: 300),
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFFC8A96E).withValues(alpha: 0.1) : Colors.transparent,
+                color: isSelected
+                    ? const Color(0xFFC8A96E).withValues(alpha: 0.1)
+                    : Colors.transparent,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Icon(

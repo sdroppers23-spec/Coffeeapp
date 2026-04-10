@@ -62,7 +62,7 @@ class DiscoveryFilterNotifier extends Notifier<DiscoveryFilterState> {
   DiscoveryFilterState build() => const DiscoveryFilterState();
 
   void updateSearch(String val) => state = state.copyWith(search: val);
-  
+
   void toggleCountry(String country) {
     final next = Set<String>.from(state.selectedCountries);
     if (next.contains(country)) {
@@ -94,10 +94,11 @@ class DiscoveryFilterNotifier extends Notifier<DiscoveryFilterState> {
   }
 
   void updateSort(SortType type) => state = state.copyWith(sortType: type);
-  
+
   void toggleViewMode() => state = state.copyWith(isGrid: !state.isGrid);
 
-  void toggleFavoritesOnly() => state = state.copyWith(showFavoritesOnly: !state.showFavoritesOnly);
+  void toggleFavoritesOnly() =>
+      state = state.copyWith(showFavoritesOnly: !state.showFavoritesOnly);
 
   void clearFilters() {
     state = state.copyWith(
@@ -127,10 +128,10 @@ class DiscoveryFilterNotifier extends Notifier<DiscoveryFilterState> {
 
 final encyclopediaFilterProvider =
     NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState>(() {
-  return DiscoveryFilterNotifier();
-});
+      return DiscoveryFilterNotifier();
+    });
 
 final myLotsFilterProvider =
     NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState>(() {
-  return DiscoveryFilterNotifier();
-});
+      return DiscoveryFilterNotifier();
+    });

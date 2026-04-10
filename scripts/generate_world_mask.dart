@@ -3,8 +3,9 @@ import 'dart:io';
 import 'dart:convert';
 
 void main() async {
-  final jsonFile =
-      File('D:/Games/Coffeeapp/build/app/outputs/flutter-apk/world_map.json');
+  final jsonFile = File(
+    'D:/Games/Coffeeapp/build/app/outputs/flutter-apk/world_map.json',
+  );
   if (!jsonFile.existsSync()) {
     print('Error: world_map.json not found');
     return;
@@ -25,18 +26,22 @@ void main() async {
   buffer.writeln('  static bool isLand(double lat, double lon) {');
   buffer.writeln('    // Map latitude (-90 to 90) to row (0 to 119)');
   buffer.writeln('    // Map longitude (-180 to 180) to col (0 to 239)');
-  buffer
-      .writeln('    int row = ((90 - lat) / 180 * 119).round().clamp(0, 119);');
   buffer.writeln(
-      '    int col = ((lon + 180) / 360 * 239).round().clamp(0, 239);');
+    '    int row = ((90 - lat) / 180 * 119).round().clamp(0, 119);',
+  );
+  buffer.writeln(
+    '    int col = ((lon + 180) / 360 * 239).round().clamp(0, 239);',
+  );
   buffer.writeln('    ');
   buffer.writeln('    return maskRows[row][col] == "1";');
   buffer.writeln('  }');
   buffer.writeln('}');
 
-  final outFile =
-      File('D:/Games/Coffeeapp/lib/features/flavor_map/world_mask_data.dart');
+  final outFile = File(
+    'D:/Games/Coffeeapp/lib/features/flavor_map/world_mask_data.dart',
+  );
   await outFile.writeAsString(buffer.toString());
   print(
-      'Successfully generated world_mask_data.dart with ${mapData.length} rows.');
+    'Successfully generated world_mask_data.dart with ${mapData.length} rows.',
+  );
 }

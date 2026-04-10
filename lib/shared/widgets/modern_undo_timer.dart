@@ -58,10 +58,7 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
   void initState() {
     super.initState();
     _secondsRemaining = widget.duration.inSeconds;
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    );
+    _controller = AnimationController(vsync: this, duration: widget.duration);
 
     _controller.addListener(() {
       setState(() {});
@@ -96,15 +93,23 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
   Widget build(BuildContext context) {
     // Progress from 1.0 down to 0.0
     final progress = 1.0 - _controller.value;
-    
+
     // Multi-stage color interpolation (Green -> Yellow -> Orange -> Red)
     Color getInterpolatedColor(double t) {
       if (t < 0.33) {
         return Color.lerp(Colors.greenAccent, Colors.yellowAccent, t / 0.33)!;
       } else if (t < 0.66) {
-        return Color.lerp(Colors.yellowAccent, Colors.orangeAccent, (t - 0.33) / 0.33)!;
+        return Color.lerp(
+          Colors.yellowAccent,
+          Colors.orangeAccent,
+          (t - 0.33) / 0.33,
+        )!;
       } else {
-        return Color.lerp(Colors.orangeAccent, Colors.redAccent, (t - 0.66) / 0.34)!;
+        return Color.lerp(
+          Colors.orangeAccent,
+          Colors.redAccent,
+          (t - 0.66) / 0.34,
+        )!;
       }
     }
 
@@ -151,7 +156,7 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Horizontal Layout: OK? on LEFT, UNDO on RIGHT
                   Row(
                     children: [
@@ -162,7 +167,9 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
                           color: Colors.transparent,
                           child: InkWell(
                             onTap: () {
-                              ref.read(settingsProvider.notifier).triggerSelectionVibrate();
+                              ref
+                                  .read(settingsProvider.notifier)
+                                  .triggerSelectionVibrate();
                               widget.onDismiss();
                               ModernUndoTimer.hide();
                             },
@@ -172,7 +179,10 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(26),
                               child: BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                                filter: ImageFilter.blur(
+                                  sigmaX: 20,
+                                  sigmaY: 20,
+                                ),
                                 child: Container(
                                   height: 52,
                                   decoration: BoxDecoration(
@@ -196,15 +206,19 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
                                                 begin: Alignment.centerRight,
                                                 end: Alignment.centerLeft,
                                                 colors: [
-                                                  barColor.withValues(alpha: 0.8),
-                                                  barColor.withValues(alpha: 0.4),
+                                                  barColor.withValues(
+                                                    alpha: 0.8,
+                                                  ),
+                                                  barColor.withValues(
+                                                    alpha: 0.4,
+                                                  ),
                                                 ],
                                               ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                      
+
                                       // 3D Glass Shine Layer
                                       Container(
                                         decoration: BoxDecoration(
@@ -212,9 +226,13 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
                                             begin: Alignment.topCenter,
                                             end: Alignment.bottomCenter,
                                             colors: [
-                                              Colors.white.withValues(alpha: 0.2),
+                                              Colors.white.withValues(
+                                                alpha: 0.2,
+                                              ),
                                               Colors.transparent,
-                                              Colors.black.withValues(alpha: 0.1),
+                                              Colors.black.withValues(
+                                                alpha: 0.1,
+                                              ),
                                             ],
                                             stops: const [0.0, 0.5, 1.0],
                                           ),
@@ -224,7 +242,8 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
                                       // Text and Timer
                                       Center(
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             Text(
                                               'OK?',
@@ -243,10 +262,17 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
                                             ),
                                             const SizedBox(width: 8),
                                             Container(
-                                              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 7,
+                                                    vertical: 2,
+                                                  ),
                                               decoration: BoxDecoration(
-                                                color: Colors.black.withValues(alpha: 0.4),
-                                                borderRadius: BorderRadius.circular(7),
+                                                color: Colors.black.withValues(
+                                                  alpha: 0.4,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(7),
                                               ),
                                               child: Text(
                                                 '$_secondsRemaining',
@@ -268,9 +294,9 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
                           ),
                         ),
                       ),
-                      
+
                       const SizedBox(width: 8),
-                      
+
                       // 2. Undo Button (RIGHT)
                       Expanded(
                         flex: 12,
@@ -278,7 +304,9 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
                           color: Colors.transparent,
                           child: InkWell(
                             onTap: () {
-                              ref.read(settingsProvider.notifier).triggerHaptic();
+                              ref
+                                  .read(settingsProvider.notifier)
+                                  .triggerHaptic();
                               widget.onUndo();
                               ModernUndoTimer.hide();
                             },
@@ -288,14 +316,19 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(26),
                               child: BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                                filter: ImageFilter.blur(
+                                  sigmaX: 20,
+                                  sigmaY: 20,
+                                ),
                                 child: Container(
                                   height: 52,
                                   decoration: BoxDecoration(
                                     color: Colors.white.withValues(alpha: 0.03),
                                     borderRadius: BorderRadius.circular(26),
                                     border: Border.all(
-                                      color: Colors.white.withValues(alpha: 0.1),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.1,
+                                      ),
                                       width: 0.5,
                                     ),
                                   ),

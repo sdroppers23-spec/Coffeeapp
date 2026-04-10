@@ -20,17 +20,18 @@ class LocalizedBeans extends Table {
   TextColumn get lotNumber => text().withDefault(const Constant(''))();
   TextColumn get scaScore => text().withDefault(const Constant('80-84'))();
   RealColumn get cupsScore => real().withDefault(const Constant(82.0))();
-  
+
   TextColumn get sensoryJson => text().withDefault(const Constant('{}'))();
   TextColumn get priceJson => text().withDefault(const Constant('{}'))();
   TextColumn get plantationPhotosUrl =>
       text().withDefault(const Constant('[]'))();
-  
+
   TextColumn get harvestSeason => text().nullable()();
   TextColumn get price => text().nullable()();
   TextColumn get weight => text().nullable()();
   TextColumn get roastDate => text().nullable()();
-  TextColumn get processingMethodsJson => text().withDefault(const Constant('[]'))();
+  TextColumn get processingMethodsJson =>
+      text().withDefault(const Constant('[]'))();
 
   BoolColumn get isPremium => boolean().withDefault(const Constant(false))();
   TextColumn get detailedProcessMarkdown =>
@@ -67,8 +68,8 @@ class LocalizedBeanTranslations extends Table {
 
   @override
   List<Set<Column>> get uniqueKeys => [
-        {beanId, languageCode},
-      ];
+    {beanId, languageCode},
+  ];
 }
 
 // ─── LocalizedBrands ─────────────────────────────────────────────────────────
@@ -92,8 +93,8 @@ class LocalizedBrandTranslations extends Table {
 
   @override
   List<Set<Column>> get uniqueKeys => [
-        {brandId, languageCode},
-      ];
+    {brandId, languageCode},
+  ];
 }
 
 // ─── LocalizedFarmers ────────────────────────────────────────────────────────
@@ -119,8 +120,8 @@ class LocalizedFarmerTranslations extends Table {
 
   @override
   List<Set<Column>> get uniqueKeys => [
-        {farmerId, languageCode},
-      ];
+    {farmerId, languageCode},
+  ];
 }
 
 // ─── SphereRegions ───────────────────────────────────────────────────────────
@@ -149,8 +150,8 @@ class SphereRegionTranslations extends Table {
 
   @override
   List<Set<Column>> get uniqueKeys => [
-        {regionId, languageCode},
-      ];
+    {regionId, languageCode},
+  ];
 }
 
 // ─── SpecialtyArticles ───────────────────────────────────────────────────────
@@ -171,8 +172,8 @@ class SpecialtyArticleTranslations extends Table {
 
   @override
   List<Set<Column>> get uniqueKeys => [
-        {articleId, languageCode},
-      ];
+    {articleId, languageCode},
+  ];
 }
 
 // ─── LatteArtPatterns ────────────────────────────────────────────────────────
@@ -195,8 +196,8 @@ class LatteArtPatternTranslations extends Table {
 
   @override
   List<Set<Column>> get uniqueKeys => [
-        {patternId, languageCode},
-      ];
+    {patternId, languageCode},
+  ];
 }
 
 // ─── CoffeeLots (User's Private) ─────────────────────────────────────────────
@@ -207,7 +208,8 @@ class CoffeeLots extends Table {
   // Roastery
   TextColumn get roasteryName => text().nullable()();
   TextColumn get roasteryCountry => text().nullable()();
-  IntColumn get brandId => integer().nullable().references(LocalizedBrands, #id)();
+  IntColumn get brandId =>
+      integer().nullable().references(LocalizedBrands, #id)();
 
   // Coffee Data
   TextColumn get coffeeName => text().nullable()();

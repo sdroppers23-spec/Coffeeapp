@@ -78,7 +78,8 @@ class _TerroirGlobeState extends ConsumerState<TerroirGlobe>
 
     // 2. Normalize and apply Inverse Rotations
     // Current total rotation Y
-    final rotY = _manualRotationY +
+    final rotY =
+        _manualRotationY +
         (_isAutoRotating ? (_rotationController.value * 2 * math.pi) : 0);
     final rotX = _tiltAngle;
 
@@ -108,7 +109,8 @@ class _TerroirGlobeState extends ConsumerState<TerroirGlobe>
   void _handlePointTap(Offset pos, String descriptor) {
     ref.read(settingsProvider.notifier).triggerHaptic();
     // Freeze current total rotation angle before stopping
-    final currentY = _frozenRotationY +
+    final currentY =
+        _frozenRotationY +
         (_isAutoRotating ? (_rotationController.value * 2 * math.pi) : 0);
     setState(() {
       _frozenRotationY = currentY;
@@ -167,7 +169,8 @@ class _TerroirGlobeState extends ConsumerState<TerroirGlobe>
                     _rippleController,
                   ]),
                   builder: (context, child) {
-                    final currentRotationY = _frozenRotationY +
+                    final currentRotationY =
+                        _frozenRotationY +
                         (_isAutoRotating
                             ? (_rotationController.value * 2 * math.pi)
                             : 0);
@@ -253,8 +256,11 @@ class _TerroirGlobeState extends ConsumerState<TerroirGlobe>
                   Tooltip(
                     message: 'Reset position',
                     child: IconButton(
-                      icon: const Icon(Icons.refresh_rounded,
-                          color: Colors.white54, size: 20),
+                      icon: const Icon(
+                        Icons.refresh_rounded,
+                        color: Colors.white54,
+                        size: 20,
+                      ),
                       onPressed: locked
                           ? null
                           : () {
@@ -285,7 +291,8 @@ class _TerroirGlobeState extends ConsumerState<TerroirGlobe>
                               _rotationController.repeat();
                             } else {
                               // Save current angle before stopping
-                              _frozenRotationY = _frozenRotationY +
+                              _frozenRotationY =
+                                  _frozenRotationY +
                                   (_rotationController.value * 2 * math.pi);
                               _rotationController
                                 ..stop()
@@ -483,24 +490,32 @@ class _GlobePainter extends CustomPainter {
     if (rippleCenter != null) {
       // Glow background for point
       final glowPaint = Paint()
-        ..color = Colors.red.withValues(alpha: 0.3 * (1.0 - rippleValue))
+        ..color = const Color(
+          0xFFC8A96E,
+        ).withValues(alpha: 0.3 * (1.0 - rippleValue))
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
       canvas.drawCircle(rippleCenter!, 15, glowPaint);
 
       // Selected point
-      canvas.drawCircle(rippleCenter!, 4, Paint()..color = Colors.red);
+      canvas.drawCircle(
+        rippleCenter!,
+        4,
+        Paint()..color = const Color(0xFFC8A96E),
+      );
 
       // Ripple Ring
       if (rippleValue > 0) {
         final ripplePaint = Paint()
-          ..color = Colors.red.withValues(alpha: (1.0 - rippleValue) * 0.8)
+          ..color = const Color(
+            0xFFC8A96E,
+          ).withValues(alpha: (1.0 - rippleValue) * 0.8)
           ..style = PaintingStyle.stroke
           ..strokeWidth = 2.0;
         canvas.drawCircle(rippleCenter!, rippleValue * 80, ripplePaint);
       }
     }
 
-    // Draw Regional Blue Points (Mayors)
+    // Draw Regional Gold Points (Mayors)
     _drawRegionalPoint(canvas, center, radius, -15.0, -60.0); // S. America
     _drawRegionalPoint(canvas, center, radius, 0.0, 38.0); // E. Africa
     _drawRegionalPoint(canvas, center, radius, 15.0, -85.0); // C. America
@@ -548,9 +563,9 @@ class _GlobePainter extends CustomPainter {
       canvas.drawCircle(
         pos,
         5,
-        Paint()..color = Colors.blue.withValues(alpha: 0.8),
+        Paint()..color = const Color(0xFFC8A96E).withValues(alpha: 0.8),
       );
-      canvas.drawCircle(pos, 3, Paint()..color = Colors.white70);
+      canvas.drawCircle(pos, 3, Paint()..color = const Color(0xFF2C1E16));
     }
   }
 

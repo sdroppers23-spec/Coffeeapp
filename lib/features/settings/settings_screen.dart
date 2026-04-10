@@ -43,12 +43,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
+            icon: const Icon(
+              Icons.arrow_back_ios_new,
+              color: Colors.white,
+              size: 20,
+            ),
             onPressed: () => context.pop(),
           ),
           title: Text(
             ref.t('settings'),
-            style: GoogleFonts.outfit(fontWeight: FontWeight.bold, color: Colors.white),
+            style: GoogleFonts.outfit(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
           centerTitle: true,
         ),
@@ -64,11 +71,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.language, color: Colors.white70, size: 20),
+                        const Icon(
+                          Icons.language,
+                          color: Colors.white70,
+                          size: 20,
+                        ),
                         const SizedBox(width: 12),
                         Text(
                           _getLanguageName(ref.watch(localeProvider)),
-                          style: GoogleFonts.outfit(color: Colors.white, fontSize: 16),
+                          style: GoogleFonts.outfit(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
                         ),
                       ],
                     ),
@@ -76,7 +90,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       value: ref.watch(localeProvider),
                       dropdownColor: const Color(0xFF1E1E1E),
                       underline: const SizedBox(),
-                      icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xFFC8A96E)),
+                      icon: const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Color(0xFFC8A96E),
+                      ),
                       onChanged: (val) {
                         if (val != null) {
                           ref.read(localeProvider.notifier).setLocale(val);
@@ -84,7 +101,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       },
                       items: const [
                         DropdownMenuItem(value: 'en', child: Text('English')),
-                        DropdownMenuItem(value: 'uk', child: Text('Українська')),
+                        DropdownMenuItem(
+                          value: 'uk',
+                          child: Text('Українська'),
+                        ),
                         DropdownMenuItem(value: 'ru', child: Text('Русский')),
                         DropdownMenuItem(value: 'fr', child: Text('Français')),
                         DropdownMenuItem(value: 'de', child: Text('Deutsch')),
@@ -105,11 +125,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         children: [
                           Text(
                             ref.t('enable_vibration'),
-                            style: GoogleFonts.outfit(color: Colors.white, fontSize: 16),
+                            style: GoogleFonts.outfit(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
                           ),
                           Text(
                             ref.t('haptic_desc'),
-                            style: GoogleFonts.outfit(color: Colors.white38, fontSize: 12),
+                            style: GoogleFonts.outfit(
+                              color: Colors.white38,
+                              fontSize: 12,
+                            ),
                           ),
                         ],
                       ),
@@ -118,7 +144,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       value: ref.watch(settingsProvider),
                       activeThumbColor: const Color(0xFFC8A96E),
                       onChanged: (val) {
-                        ref.read(settingsProvider.notifier).toggleVibration(val);
+                        ref
+                            .read(settingsProvider.notifier)
+                            .toggleVibration(val);
                       },
                     ),
                   ],
@@ -126,8 +154,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
               const SizedBox(height: 8),
               TextButton.icon(
-                onPressed: () => ref.read(settingsProvider.notifier).triggerVibrate(),
-                icon: const Icon(Icons.vibration, color: Color(0xFFC8A96E), size: 16),
+                onPressed: () =>
+                    ref.read(settingsProvider.notifier).triggerVibrate(),
+                icon: const Icon(
+                  Icons.vibration,
+                  color: Color(0xFFC8A96E),
+                  size: 16,
+                ),
                 label: Text(
                   'TEST HAPTIC',
                   style: GoogleFonts.outfit(
@@ -146,13 +179,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     _buildSettingsItem(
                       icon: Icons.privacy_tip_outlined,
                       title: ref.t('privacy_policy'),
-                      onTap: () => _showPolicyDialog(context, ref.t('privacy_policy')),
+                      onTap: () =>
+                          _showPolicyDialog(context, ref.t('privacy_policy')),
                     ),
                     const Divider(color: Colors.white10, height: 1),
                     _buildSettingsItem(
                       icon: Icons.description_outlined,
                       title: ref.t('terms_of_use'),
-                      onTap: () => _showPolicyDialog(context, ref.t('terms_of_use')),
+                      onTap: () =>
+                          _showPolicyDialog(context, ref.t('terms_of_use')),
                     ),
                   ],
                 ),
@@ -168,7 +203,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       onTap: () {
                         // Placeholder for contact action
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Redirecting to support...')),
+                          const SnackBar(
+                            content: Text('Redirecting to support...'),
+                          ),
                         );
                       },
                     ),
@@ -194,7 +231,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       child: Center(
                         child: _isLoading
-                            ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
                             : Text(
                                 ref.t('logout'),
                                 style: GoogleFonts.outfit(
@@ -212,7 +255,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               Center(
                 child: Text(
                   'Version 1.2.0 (Build 42)',
-                  style: GoogleFonts.outfit(color: Colors.white24, fontSize: 12),
+                  style: GoogleFonts.outfit(
+                    color: Colors.white24,
+                    fontSize: 12,
+                  ),
                 ),
               ),
             ],
@@ -237,9 +283,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  Widget _buildGlassCard({required Widget child, EdgeInsets? padding, double opacity = 0.1}) {
+  Widget _buildGlassCard({
+    required Widget child,
+    EdgeInsets? padding,
+    double opacity = 0.1,
+  }) {
     return GlassContainer(
-      padding: padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding:
+          padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       borderRadius: 20,
       opacity: opacity,
       blur: 20,
@@ -248,7 +299,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  Widget _buildSettingsItem({required IconData icon, required String title, required VoidCallback onTap}) {
+  Widget _buildSettingsItem({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       child: Padding(
@@ -272,11 +327,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   String _getLanguageName(String code) {
     switch (code) {
-      case 'uk': return 'Українська';
-      case 'ru': return 'Русский';
-      case 'fr': return 'Français';
-      case 'de': return 'Deutsch';
-      default: return 'English';
+      case 'uk':
+        return 'Українська';
+      case 'ru':
+        return 'Русский';
+      case 'fr':
+        return 'Français';
+      case 'de':
+        return 'Deutsch';
+      default:
+        return 'English';
     }
   }
 
@@ -300,7 +360,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(title, style: GoogleFonts.outfit(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
+                    Text(
+                      title,
+                      style: GoogleFonts.outfit(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
                     const SizedBox(height: 16),
                     const Flexible(
                       child: SingleChildScrollView(
@@ -318,7 +385,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFC8A96E),
                           foregroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
                         ),
                         child: const Text('GOT IT'),
                       ),

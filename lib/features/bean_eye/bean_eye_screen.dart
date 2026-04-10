@@ -564,7 +564,9 @@ class _ResultCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: tier.color.withValues(alpha: 0.25),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: tier.color.withValues(alpha: 0.5)),
+                    border: Border.all(
+                      color: tier.color.withValues(alpha: 0.5),
+                    ),
                   ),
                   child: Text(
                     f,
@@ -584,7 +586,9 @@ class _ResultCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.3)),
+            border: Border.all(
+              color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
+            ),
           ),
           child: Row(
             children: [

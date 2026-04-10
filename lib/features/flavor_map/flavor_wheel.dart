@@ -17,8 +17,9 @@ class GeoPoint {
   const GeoPoint(this.lat, this.lon);
 }
 
-final sphereRegionsProvider =
-    FutureProvider<List<SphereRegionDto>>((ref) async {
+final sphereRegionsProvider = FutureProvider<List<SphereRegionDto>>((
+  ref,
+) async {
   final db = ref.watch(databaseProvider);
   final lang = ref.watch(localeProvider);
   return db.getAllSphereRegions(lang);
@@ -118,13 +119,14 @@ class GlobePainter extends CustomPainter {
 
     // 2. Atmospheric Glow
     canvas.drawCircle(
-        center,
-        radius,
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2
-          ..color = const Color(0xFFC8A96E).withValues(alpha: 0.3)
-          ..maskFilter = const MaskFilter.blur(BlurStyle.outer, 10));
+      center,
+      radius,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2
+        ..color = const Color(0xFFC8A96E).withValues(alpha: 0.3)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.outer, 10),
+    );
 
     // 3. Coordinate Grid (Subtle)
     _drawGrid(canvas, center, radius, focal);
@@ -144,8 +146,11 @@ class GlobePainter extends CustomPainter {
       final lon = i * 30.0;
       final path = Path();
       for (int lat = -90; lat <= 90; lat += 10) {
-        final p3d =
-            _geoTo3D(lat.toDouble(), lon, radius).rotateY(yaw).rotateX(pitch);
+        final p3d = _geoTo3D(
+          lat.toDouble(),
+          lon,
+          radius,
+        ).rotateY(yaw).rotateX(pitch);
         final cp = p3d.project(center.dx * 2, center.dy * 2, focal);
         if (p3d.z < 0) {
           if (lat == -90) {
@@ -164,9 +169,11 @@ class GlobePainter extends CustomPainter {
       if (!reg.isActive) continue;
 
       final currentYaw = yaw;
-      final p3d = _geoTo3D(reg.latitude, reg.longitude, radius * 1.05)
-          .rotateY(currentYaw)
-          .rotateX(pitch);
+      final p3d = _geoTo3D(
+        reg.latitude,
+        reg.longitude,
+        radius * 1.05,
+      ).rotateY(currentYaw).rotateX(pitch);
 
       if (p3d.z < 0) {
         final cp = p3d.project(size.width, size.height, focal);
@@ -176,7 +183,7 @@ class GlobePainter extends CustomPainter {
         final pillarPaint = Paint()
           ..shader = ui.Gradient.linear(cp - const Offset(0, 30), cp, [
             markerColor.withValues(alpha: 0.0),
-            markerColor.withValues(alpha: 0.8)
+            markerColor.withValues(alpha: 0.8),
           ])
           ..strokeWidth = 1.5;
         canvas.drawLine(cp - const Offset(0, 30), cp, pillarPaint);
@@ -184,11 +191,12 @@ class GlobePainter extends CustomPainter {
         // Marker Point
         canvas.drawCircle(cp, 3, Paint()..color = markerColor);
         canvas.drawCircle(
-            cp,
-            6,
-            Paint()
-              ..color = markerColor.withValues(alpha: 0.3)
-              ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3));
+          cp,
+          6,
+          Paint()
+            ..color = markerColor.withValues(alpha: 0.3)
+            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
+        );
 
         // Continent Title
         final tp = TextPainter(textDirection: TextDirection.ltr);
@@ -237,12 +245,14 @@ class _TerroirGlobeState extends ConsumerState<FlavorWheel>
   @override
   void initState() {
     super.initState();
-    _timeCtrl =
-        AnimationController(vsync: this, duration: const Duration(seconds: 40))
-          ..repeat();
-    _autoRotateCtrl =
-        AnimationController(vsync: this, duration: const Duration(seconds: 120))
-          ..repeat();
+    _timeCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 40),
+    )..repeat();
+    _autoRotateCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 120),
+    )..repeat();
     _loadAssets();
   }
 
@@ -254,7 +264,8 @@ class _TerroirGlobeState extends ConsumerState<FlavorWheel>
       if (mounted) setState(() => _landMask = frame.image);
 
       final program = await ui.FragmentProgram.fromAsset(
-          'assets/shaders/nebula_globe.frag');
+        'assets/shaders/nebula_globe.frag',
+      );
       if (mounted) setState(() => _nebulaShader = program.fragmentShader());
     } catch (e) {
       debugPrint('Globe Asset Load Error: $e');
@@ -272,30 +283,32 @@ class _TerroirGlobeState extends ConsumerState<FlavorWheel>
   Widget build(BuildContext context) {
     final sphereRegionsAsync = ref.watch(sphereRegionsProvider);
 
-    return LayoutBuilder(builder: (context, constraints) {
-      final size = Size(constraints.maxWidth, constraints.maxWidth * 0.9);
-      return GestureDetector(
-        onPanUpdate: (d) => setState(() => _yaw -= d.delta.dx * 0.005),
-        child: RepaintBoundary(
-          child: AnimatedBuilder(
-            animation: Listenable.merge([_timeCtrl, _autoRotateCtrl]),
-            builder: (context, _) => CustomPaint(
-              size: size,
-              painter: GlobePainter(
-                yaw: _yaw + (_autoRotateCtrl.value * 2 * math.pi),
-                pitch: _pitch,
-                regions: sphereRegionsAsync.value ?? [],
-                shader: _nebulaShader,
-                landMask: _landMask,
-                time: _timeCtrl.value * 6.283,
-                ref: ref,
-                hitPoint: _lastHitPoint,
-                hitIntensity: _hitIntensity,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final size = Size(constraints.maxWidth, constraints.maxWidth * 0.9);
+        return GestureDetector(
+          onPanUpdate: (d) => setState(() => _yaw -= d.delta.dx * 0.005),
+          child: RepaintBoundary(
+            child: AnimatedBuilder(
+              animation: Listenable.merge([_timeCtrl, _autoRotateCtrl]),
+              builder: (context, _) => CustomPaint(
+                size: size,
+                painter: GlobePainter(
+                  yaw: _yaw + (_autoRotateCtrl.value * 2 * math.pi),
+                  pitch: _pitch,
+                  regions: sphereRegionsAsync.value ?? [],
+                  shader: _nebulaShader,
+                  landMask: _landMask,
+                  time: _timeCtrl.value * 6.283,
+                  ref: ref,
+                  hitPoint: _lastHitPoint,
+                  hitIntensity: _hitIntensity,
+                ),
               ),
             ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }

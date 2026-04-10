@@ -84,7 +84,11 @@ int estimateReadMinutes(Map<String, dynamic> item) {
   }
 
   walk(item);
-  final words = buf.toString().split(RegExp(r'\s+')).where((w) => w.isNotEmpty).length;
+  final words = buf
+      .toString()
+      .split(RegExp(r'\s+'))
+      .where((w) => w.isNotEmpty)
+      .length;
   return (words / 200).ceil().clamp(1, 120);
 }
 
@@ -148,7 +152,10 @@ List<Widget> _buildValue(
     return [
       Text(
         value.toString(),
-        style: GoogleFonts.outfit(fontSize: 15, color: onSurface.withValues(alpha: 0.9)),
+        style: GoogleFonts.outfit(
+          fontSize: 15,
+          color: onSurface.withValues(alpha: 0.9),
+        ),
       ),
     ];
   }
@@ -161,7 +168,10 @@ List<Widget> _buildValue(
   return [
     Text(
       value.toString(),
-      style: GoogleFonts.outfit(fontSize: 14, color: onSurface.withValues(alpha: 0.7)),
+      style: GoogleFonts.outfit(
+        fontSize: 14,
+        color: onSurface.withValues(alpha: 0.7),
+      ),
     ),
   ];
 }
@@ -181,7 +191,10 @@ List<Widget> _buildList(List list, {required Color onSurface}) {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('•  ', style: TextStyle(color: _copper, fontSize: 16, height: 1.4)),
+                  Text(
+                    '•  ',
+                    style: TextStyle(color: _copper, fontSize: 16, height: 1.4),
+                  ),
                   Expanded(
                     child: SelectableText(
                       e.toString(),
@@ -208,7 +221,10 @@ List<Widget> _buildList(List list, {required Color onSurface}) {
           for (final raw in list)
             Padding(
               padding: const EdgeInsets.only(bottom: 16),
-              child: _buildMapCard(Map<String, dynamic>.from(raw as Map), onSurface: onSurface),
+              child: _buildMapCard(
+                Map<String, dynamic>.from(raw as Map),
+                onSurface: onSurface,
+              ),
             ),
         ],
       ),
@@ -224,7 +240,11 @@ Widget _buildMapCard(Map<String, dynamic> map, {required Color onSurface}) {
   if (map.containsKey('attribute') && map.containsKey('details')) {
     return RichText(
       text: TextSpan(
-        style: GoogleFonts.outfit(fontSize: 15, height: 1.55, color: onSurface.withValues(alpha: 0.92)),
+        style: GoogleFonts.outfit(
+          fontSize: 15,
+          height: 1.55,
+          color: onSurface.withValues(alpha: 0.92),
+        ),
         children: [
           TextSpan(
             text: '${map['attribute']}: ',
@@ -260,7 +280,9 @@ Widget _buildMapCard(Map<String, dynamic> map, {required Color onSurface}) {
     );
   }
   if (map.containsKey('name') &&
-      (map.containsKey('recipe') || map.containsKey('role') || map.containsKey('description'))) {
+      (map.containsKey('recipe') ||
+          map.containsKey('role') ||
+          map.containsKey('description'))) {
     final body = map['recipe'] ?? map['role'] ?? map['description'];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -284,7 +306,11 @@ Widget _buildMapCard(Map<String, dynamic> map, {required Color onSurface}) {
             ),
           ),
         ],
-        ..._buildRemainingMapEntries(map, skipKeys: {'name', 'recipe', 'role', 'description'}, onSurface: onSurface),
+        ..._buildRemainingMapEntries(
+          map,
+          skipKeys: {'name', 'recipe', 'role', 'description'},
+          onSurface: onSurface,
+        ),
       ],
     );
   }
@@ -308,7 +334,11 @@ Widget _buildMapCard(Map<String, dynamic> map, {required Color onSurface}) {
   if (map.containsKey('type') && map.containsKey('description')) {
     return RichText(
       text: TextSpan(
-        style: GoogleFonts.outfit(fontSize: 15, height: 1.55, color: onSurface.withValues(alpha: 0.92)),
+        style: GoogleFonts.outfit(
+          fontSize: 15,
+          height: 1.55,
+          color: onSurface.withValues(alpha: 0.92),
+        ),
         children: [
           TextSpan(
             text: '${map['type']}: ',
@@ -334,7 +364,11 @@ Widget _buildMapCard(Map<String, dynamic> map, {required Color onSurface}) {
         const SizedBox(height: 6),
         SelectableText(
           map['action']?.toString() ?? '',
-          style: GoogleFonts.outfit(fontSize: 14, height: 1.5, color: onSurface.withValues(alpha: 0.88)),
+          style: GoogleFonts.outfit(
+            fontSize: 14,
+            height: 1.5,
+            color: onSurface.withValues(alpha: 0.88),
+          ),
         ),
       ],
     );
@@ -355,14 +389,16 @@ List<Widget> _buildRemainingMapEntries(
   for (final e in map.entries) {
     if (skipKeys.contains(e.key)) continue;
     out.add(const SizedBox(height: 10));
-    out.add(Text(
-      sectionTitleForKey(e.key),
-      style: GoogleFonts.poppins(
-        fontSize: 12,
-        fontWeight: FontWeight.w600,
-        color: onSurface.withValues(alpha: 0.65),
+    out.add(
+      Text(
+        sectionTitleForKey(e.key),
+        style: GoogleFonts.poppins(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: onSurface.withValues(alpha: 0.65),
+        ),
       ),
-    ));
+    );
     out.add(const SizedBox(height: 4));
     out.addAll(_buildValue(e.value, onSurface: onSurface));
   }
@@ -382,20 +418,25 @@ List<Widget> _buildMap(Map<String, dynamic> map, {required Color onSurface}) {
           padding: const EdgeInsets.only(left: 4),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: _buildMap(Map<String, dynamic>.from(v), onSurface: onSurface),
+            children: _buildMap(
+              Map<String, dynamic>.from(v),
+              onSurface: onSurface,
+            ),
           ),
         ),
       );
       children.add(const SizedBox(height: 14));
     } else {
-      children.add(Text(
-        sectionTitleForKey(k),
-        style: GoogleFonts.poppins(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-          color: onSurface.withValues(alpha: 0.7),
+      children.add(
+        Text(
+          sectionTitleForKey(k),
+          style: GoogleFonts.poppins(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: onSurface.withValues(alpha: 0.7),
+          ),
         ),
-      ));
+      );
       children.add(const SizedBox(height: 6));
       children.addAll(_buildValue(v, onSurface: onSurface));
       children.add(const SizedBox(height: 12));
@@ -442,7 +483,11 @@ class SpecialtyArticleCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(Icons.timer_outlined, size: 17, color: onSurface.withValues(alpha: 0.45)),
+                  Icon(
+                    Icons.timer_outlined,
+                    size: 17,
+                    color: onSurface.withValues(alpha: 0.45),
+                  ),
                   const SizedBox(width: 8),
                   Text(
                     '$minutes хв',

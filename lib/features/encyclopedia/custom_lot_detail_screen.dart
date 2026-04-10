@@ -58,8 +58,11 @@ class _CustomLotDetailScreenState extends ConsumerState<CustomLotDetailScreen>
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new,
-              color: Colors.white, size: 20),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.white,
+            size: 20,
+          ),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
@@ -95,8 +98,10 @@ class _CustomLotDetailScreenState extends ConsumerState<CustomLotDetailScreen>
               dividerColor: Colors.transparent,
               labelColor: theme.colorScheme.primary,
               unselectedLabelColor: Colors.white54,
-              labelStyle:
-                  GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.bold),
+              labelStyle: GoogleFonts.outfit(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Expanded(
               child: TabBarView(
@@ -198,7 +203,9 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
                           child: Text(
                             ref.t('add_recipe').toUpperCase(),
                             style: GoogleFonts.outfit(
-                              color: limitReached ? Colors.white24 : Colors.black,
+                              color: limitReached
+                                  ? Colors.white24
+                                  : Colors.black,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 2,
                             ),
@@ -233,8 +240,10 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
                 color: Colors.white.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.coffee_maker_outlined,
-                  color: Color(0xFFC8A96E)),
+              child: const Icon(
+                Icons.coffee_maker_outlined,
+                color: Color(0xFFC8A96E),
+              ),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -288,12 +297,17 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.delete_outline_rounded,
-                  color: Colors.white24, size: 20),
+              icon: const Icon(
+                Icons.delete_outline_rounded,
+                color: Colors.white24,
+                size: 20,
+              ),
               onPressed: () async {
                 final confirmed = await _showDeleteRecipeConfirmation(recipe);
                 if (confirmed) {
-                  await ref.read(databaseProvider).deleteCustomRecipe(recipe.id);
+                  await ref
+                      .read(databaseProvider)
+                      .deleteCustomRecipe(recipe.id);
                   if (mounted) setState(() {});
                 }
               },
@@ -326,11 +340,16 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
                       decoration: BoxDecoration(
                         color: Colors.redAccent.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
-                        border: Border.all(color: Colors.redAccent.withValues(alpha: 0.2), width: 1.5),
+                        border: Border.all(
+                          color: Colors.redAccent.withValues(alpha: 0.2),
+                          width: 1.5,
+                        ),
                       ),
-                      child: const Icon(Icons.delete_sweep_rounded,
-                          size: 40,
-                          color: Colors.redAccent),
+                      child: const Icon(
+                        Icons.delete_sweep_rounded,
+                        size: 40,
+                        color: Colors.redAccent,
+                      ),
                     ),
                     const SizedBox(height: 28),
                     Text(
@@ -349,7 +368,11 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
                           : 'Are you sure you want to delete the recipe "${recipe.name}"?',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.outfit(
-                          color: Colors.white60, fontSize: 14, height: 1.5, fontWeight: FontWeight.w400),
+                        color: Colors.white60,
+                        fontSize: 14,
+                        height: 1.5,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                     const SizedBox(height: 36),
                     Row(
@@ -366,7 +389,9 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
                           child: _buildGlassDialogButton(
                             label: isUk ? 'ВИДАЛИТИ' : 'DELETE',
                             onTap: () {
-                              ref.read(settingsProvider.notifier).triggerHeavyVibrate();
+                              ref
+                                  .read(settingsProvider.notifier)
+                                  .triggerHeavyVibrate();
                               Navigator.pop(context, true);
                             },
                             color: Colors.redAccent,
@@ -400,9 +425,9 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(27),
           border: Border.all(
-            color: isPrimary 
-              ? color.withValues(alpha: 0.4) 
-              : Colors.white.withValues(alpha: 0.15),
+            color: isPrimary
+                ? color.withValues(alpha: 0.4)
+                : Colors.white.withValues(alpha: 0.15),
             width: 1.5,
           ),
           boxShadow: [
@@ -421,9 +446,9 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
             child: Container(
               alignment: Alignment.center,
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              color: isPrimary 
-                ? color.withValues(alpha: 0.25) 
-                : Colors.white.withValues(alpha: 0.08),
+              color: isPrimary
+                  ? color.withValues(alpha: 0.25)
+                  : Colors.white.withValues(alpha: 0.08),
               child: Text(
                 label,
                 style: GoogleFonts.outfit(
@@ -460,42 +485,55 @@ class _InfoTab extends ConsumerWidget {
               Row(
                 children: [
                   Expanded(
-                      child: _CompactStat(
-                          label: ref.t('roastery'), value: lot.roasteryName ?? '—')),
+                    child: _CompactStat(
+                      label: ref.t('roastery'),
+                      value: lot.roasteryName ?? '—',
+                    ),
+                  ),
                   Container(
-                      width: 1,
-                      height: 30,
-                      color: Colors.white.withValues(alpha: 0.05)),
+                    width: 1,
+                    height: 30,
+                    color: Colors.white.withValues(alpha: 0.05),
+                  ),
                   Expanded(
-                      child: _CompactStat(
-                          label: ref.t('origin'),
-                          value: lot.originCountry ?? '—')),
+                    child: _CompactStat(
+                      label: ref.t('origin'),
+                      value: lot.originCountry ?? '—',
+                    ),
+                  ),
                 ],
               ),
               const Divider(height: 24, color: Colors.white10),
               Row(
                 children: [
                   Expanded(
-                      child: _CompactStat(
-                          label: ref.t('process'), value: lot.process ?? '—')),
+                    child: _CompactStat(
+                      label: ref.t('process'),
+                      value: lot.process ?? '—',
+                    ),
+                  ),
                   Container(
-                      width: 1,
-                      height: 30,
-                      color: Colors.white.withValues(alpha: 0.05)),
+                    width: 1,
+                    height: 30,
+                    color: Colors.white.withValues(alpha: 0.05),
+                  ),
                   Expanded(
-                      child: _CompactStat(
-                          label: 'SCA SCORE', value: lot.scaScore ?? '—')),
+                    child: _CompactStat(
+                      label: 'SCA SCORE',
+                      value: lot.scaScore ?? '—',
+                    ),
+                  ),
                 ],
               ),
               if (lot.region?.isNotEmpty ?? false) ...[
                 const Divider(height: 24, color: Colors.white10),
                 _CompactStat(label: ref.t('region'), value: lot.region!),
               ],
-               if (lot.altitude?.isNotEmpty ?? false) ...[
+              if (lot.altitude?.isNotEmpty ?? false) ...[
                 const Divider(height: 24, color: Colors.white10),
                 _CompactStat(label: ref.t('altitude'), value: lot.altitude!),
               ],
-               if (lot.varieties?.isNotEmpty ?? false) ...[
+              if (lot.varieties?.isNotEmpty ?? false) ...[
                 const Divider(height: 24, color: Colors.white10),
                 _CompactStat(label: ref.t('varieties'), value: lot.varieties!),
               ],
@@ -504,27 +542,41 @@ class _InfoTab extends ConsumerWidget {
         ),
         const SizedBox(height: 24),
         if (lot.flavorProfile?.isNotEmpty ?? false) ...[
-           Text(ref.t('flavor_profile').toUpperCase(),
+          Text(
+            ref.t('flavor_profile').toUpperCase(),
             style: GoogleFonts.outfit(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.primary,
-                letterSpacing: 1.5)),
-            const SizedBox(height: 12),
-            Text(lot.flavorProfile!,
-                style: GoogleFonts.outfit(
-                    fontSize: 13, height: 1.5, color: Colors.white70)),
-            const SizedBox(height: 24),
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.primary,
+              letterSpacing: 1.5,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            lot.flavorProfile!,
+            style: GoogleFonts.outfit(
+              fontSize: 13,
+              height: 1.5,
+              color: Colors.white70,
+            ),
+          ),
+          const SizedBox(height: 24),
         ],
-        
-        Text(ref.t('lot_details').toUpperCase(),
-            style: GoogleFonts.outfit(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.primary,
-                letterSpacing: 1.5)),
+
+        Text(
+          ref.t('lot_details').toUpperCase(),
+          style: GoogleFonts.outfit(
+            fontSize: 11,
+            fontWeight: FontWeight.bold,
+            color: theme.colorScheme.primary,
+            letterSpacing: 1.5,
+          ),
+        ),
         const SizedBox(height: 12),
-        _DetailRow(label: ref.t('lot_number_label'), value: lot.lotNumber ?? '—'),
+        _DetailRow(
+          label: ref.t('lot_number_label'),
+          value: lot.lotNumber ?? '—',
+        ),
         _DetailRow(label: ref.t('weight'), value: lot.weight ?? '—'),
         _DetailRow(label: ref.t('roast_level'), value: lot.roastLevel ?? '—'),
         _DetailRow(label: ref.t('farm'), value: lot.farm ?? '—'),
@@ -554,19 +606,24 @@ class _ProfileTab extends ConsumerWidget {
             staticValues: lot.sensoryPoints.map((k, v) {
               final val = (v as num).toDouble();
               // Round to 1-5 scale, then map to 0.2-1.0
-              final normalized =
-                  (val > 5 ? val / 2.0 : val).round().clamp(1, 5);
+              final normalized = (val > 5 ? val / 2.0 : val).round().clamp(
+                1,
+                5,
+              );
               return MapEntry(k, normalized / 5.0);
             }),
             height: 400,
           ),
         ),
-        Text(ref.t('sensory_profile_header').toUpperCase(),
-            style: GoogleFonts.outfit(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.primary,
-                letterSpacing: 1.5)),
+        Text(
+          ref.t('sensory_profile_header').toUpperCase(),
+          style: GoogleFonts.outfit(
+            fontSize: 11,
+            fontWeight: FontWeight.bold,
+            color: theme.colorScheme.primary,
+            letterSpacing: 1.5,
+          ),
+        ),
         const SizedBox(height: 16),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -588,19 +645,25 @@ class _CompactStat extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(label.toUpperCase(),
-            style: GoogleFonts.outfit(
-                fontSize: 9,
-                color: Colors.white38,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 0.5)),
+        Text(
+          label.toUpperCase(),
+          style: GoogleFonts.outfit(
+            fontSize: 9,
+            color: Colors.white38,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 0.5,
+          ),
+        ),
         const SizedBox(height: 4),
-        Text(value,
-            textAlign: TextAlign.center,
-            style: GoogleFonts.outfit(
-                fontSize: 13,
-                color: Colors.white,
-                fontWeight: FontWeight.w600)),
+        Text(
+          value,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.outfit(
+            fontSize: 13,
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ],
     );
   }
@@ -618,8 +681,18 @@ class _DetailRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: GoogleFonts.outfit(fontSize: 13, color: Colors.white54)),
-          Text(value, style: GoogleFonts.outfit(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w500)),
+          Text(
+            label,
+            style: GoogleFonts.outfit(fontSize: 13, color: Colors.white54),
+          ),
+          Text(
+            value,
+            style: GoogleFonts.outfit(
+              fontSize: 13,
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         ],
       ),
     );

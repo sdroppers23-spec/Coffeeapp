@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/database/app_database.dart';
 import '../../core/database/database_provider.dart';
 
-
 import 'method_tile.dart';
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
@@ -12,8 +11,6 @@ final brewingRecipesProvider = FutureProvider<List<BrewingRecipe>>((ref) async {
   final db = ref.watch(databaseProvider);
   return db.getAllRecipes();
 });
-
-
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
 class BrewingGuideScreen extends ConsumerWidget {
@@ -25,7 +22,10 @@ class BrewingGuideScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Brewing Guide', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+        title: Text(
+          'Brewing Guide',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+        ),
       ),
       body: recipesAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -38,7 +38,10 @@ class BrewingGuideScreen extends ConsumerWidget {
                 children: [
                   CircularProgressIndicator(),
                   SizedBox(height: 16),
-                  Text('Loading recipes…', style: TextStyle(color: Colors.white54)),
+                  Text(
+                    'Loading recipes…',
+                    style: TextStyle(color: Colors.white54),
+                  ),
                 ],
               ),
             );
@@ -59,4 +62,3 @@ class BrewingGuideScreen extends ConsumerWidget {
     );
   }
 }
-

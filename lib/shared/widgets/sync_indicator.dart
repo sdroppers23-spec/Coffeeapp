@@ -37,10 +37,12 @@ class SyncStatusNotifier extends Notifier<SyncState> {
     lastError = null;
     state = SyncState.syncing;
     try {
-      await _syncService.syncAll(onProgress: (m) {
-        state = SyncState.syncing;
-        lastMessage = m;
-      });
+      await _syncService.syncAll(
+        onProgress: (m) {
+          state = SyncState.syncing;
+          lastMessage = m;
+        },
+      );
       state = SyncState.success;
       await Future.delayed(const Duration(seconds: 3));
       state = SyncState.idle;
@@ -116,7 +118,9 @@ class SyncIndicator extends ConsumerWidget {
                 width: 12,
                 height: 12,
                 child: CircularProgressIndicator(
-                    strokeWidth: 2, color: Color(0xFFC8A96E)),
+                  strokeWidth: 2,
+                  color: Color(0xFFC8A96E),
+                ),
               )
             else
               Icon(icon, size: 14, color: color),
@@ -124,7 +128,10 @@ class SyncIndicator extends ConsumerWidget {
             Text(
               label,
               style: TextStyle(
-                  color: color, fontSize: 10, fontWeight: FontWeight.bold),
+                color: color,
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),

@@ -10,11 +10,7 @@ class ScaFlavorWheel extends ConsumerStatefulWidget {
   final double size;
   final Function(String key, Color color, List<String> items)? onSelect;
 
-  const ScaFlavorWheel({
-    super.key,
-    this.size = 350,
-    this.onSelect,
-  });
+  const ScaFlavorWheel({super.key, this.size = 350, this.onSelect});
 
   @override
   ConsumerState<ScaFlavorWheel> createState() => _ScaFlavorWheelState();
@@ -31,7 +27,9 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
   void initState() {
     super.initState();
     _controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1000));
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    );
     _controller.forward();
   }
 
@@ -60,27 +58,35 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
 
     if (!isCatRing && !isSubRing && !isNoteRing) return;
 
-    final angle = (math.atan2(
-                localPosition.dy - center.dy, localPosition.dx - center.dx) +
+    final angle =
+        (math.atan2(
+              localPosition.dy - center.dy,
+              localPosition.dx - center.dx,
+            ) +
             (math.pi / 2)) %
         (2 * math.pi);
 
     double currentAngle = 0;
     final totalNotesCount = _data.fold(
-        0,
-        (sum, cat) =>
-            sum + cat.sub.fold(0, (s, sub) => s + sub.noteKeys.length));
+      0,
+      (sum, cat) => sum + cat.sub.fold(0, (s, sub) => s + sub.noteKeys.length),
+    );
     final angleStep = (2 * math.pi) / totalNotesCount;
 
     for (var cat in _data) {
-      final catNotesCount =
-          cat.sub.fold(0, (s, sub) => s + sub.noteKeys.length);
+      final catNotesCount = cat.sub.fold(
+        0,
+        (s, sub) => s + sub.noteKeys.length,
+      );
       final catAngle = catNotesCount * angleStep;
 
       if (angle >= currentAngle && angle < currentAngle + catAngle) {
         if (isCatRing) {
-          widget.onSelect
-              ?.call(cat.key, cat.color, cat.sub.map((s) => s.key).toList());
+          widget.onSelect?.call(
+            cat.key,
+            cat.color,
+            cat.sub.map((s) => s.key).toList(),
+          );
           setState(() => _selectedCategory = cat.key);
           return;
         }
@@ -117,8 +123,10 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final currentSize =
-            math.min(constraints.maxWidth, constraints.maxHeight);
+        final currentSize = math.min(
+          constraints.maxWidth,
+          constraints.maxHeight,
+        );
 
         return Center(
           child: AspectRatio(
@@ -187,9 +195,10 @@ class _ScaWheelPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final totalNotesCount = data.fold<int>(
-        0,
-        (sum, cat) =>
-            sum + cat.sub.fold<int>(0, (s, sub) => s + sub.noteKeys.length));
+      0,
+      (sum, cat) =>
+          sum + cat.sub.fold<int>(0, (s, sub) => s + sub.noteKeys.length),
+    );
     final fullRadius = size.width / 2;
     final angleStep = (2 * math.pi) / totalNotesCount;
 
@@ -202,8 +211,10 @@ class _ScaWheelPainter extends CustomPainter {
     double currentAngle = -math.pi / 2; // Start from top
 
     for (var cat in data) {
-      final catNotesCount =
-          cat.sub.fold<int>(0, (s, sub) => s + sub.noteKeys.length);
+      final catNotesCount = cat.sub.fold<int>(
+        0,
+        (s, sub) => s + sub.noteKeys.length,
+      );
       final catSweepAngle = catNotesCount * angleStep * animationValue;
 
       // 1. Draw Inner Ring (Category)
@@ -216,13 +227,37 @@ class _ScaWheelPainter extends CustomPainter {
         ..strokeWidth = 0.5;
 
       _drawFlatArc(
-          canvas, center, r0, r1, currentAngle, catSweepAngle, catPaint);
+        canvas,
+        center,
+        r0,
+        r1,
+        currentAngle,
+        catSweepAngle,
+        catPaint,
+      );
       _drawFlatArc(
-          canvas, center, r0, r1, currentAngle, catSweepAngle, borderPaint);
+        canvas,
+        center,
+        r0,
+        r1,
+        currentAngle,
+        catSweepAngle,
+        borderPaint,
+      );
 
       // Label for Cat
-      _drawTextInsideArc(canvas, ref.t(cat.key), center, currentAngle,
-          catSweepAngle, r0, r1, Colors.white, 11, true);
+      _drawTextInsideArc(
+        canvas,
+        ref.t(cat.key),
+        center,
+        currentAngle,
+        catSweepAngle,
+        r0,
+        r1,
+        Colors.white,
+        11,
+        true,
+      );
 
       // 2. Draw Middle Ring (Subcategory)
       double subStartAngle = currentAngle;
@@ -233,14 +268,38 @@ class _ScaWheelPainter extends CustomPainter {
           ..style = PaintingStyle.fill;
 
         _drawFlatArc(
-            canvas, center, r1, r2, subStartAngle, subSweepAngle, subPaint);
+          canvas,
+          center,
+          r1,
+          r2,
+          subStartAngle,
+          subSweepAngle,
+          subPaint,
+        );
         _drawFlatArc(
-            canvas, center, r1, r2, subStartAngle, subSweepAngle, borderPaint);
+          canvas,
+          center,
+          r1,
+          r2,
+          subStartAngle,
+          subSweepAngle,
+          borderPaint,
+        );
 
         // Label for Subcategory (only if wide enough)
         if (subSweepAngle > 0.05) {
-          _drawTextInsideArc(canvas, ref.t(sub.key), center, subStartAngle,
-              subSweepAngle, r1, r2, Colors.white, 9, false);
+          _drawTextInsideArc(
+            canvas,
+            ref.t(sub.key),
+            center,
+            subStartAngle,
+            subSweepAngle,
+            r1,
+            r2,
+            Colors.white,
+            9,
+            false,
+          );
         }
 
         // 3. Draw Outer Ring (Notes)
@@ -251,25 +310,40 @@ class _ScaWheelPainter extends CustomPainter {
             ..color = sub.color.withValues(alpha: 0.7)
             ..style = PaintingStyle.fill;
 
-          _drawFlatArc(canvas, center, r2, r3, noteStartAngle, noteSweepAngle,
-              notePaint);
-          _drawFlatArc(canvas, center, r2, r3, noteStartAngle, noteSweepAngle,
-              borderPaint);
+          _drawFlatArc(
+            canvas,
+            center,
+            r2,
+            r3,
+            noteStartAngle,
+            noteSweepAngle,
+            notePaint,
+          );
+          _drawFlatArc(
+            canvas,
+            center,
+            r2,
+            r3,
+            noteStartAngle,
+            noteSweepAngle,
+            borderPaint,
+          );
 
           // Label for Note (Inside tile)
           if (animationValue > 0.8) {
             if (noteSweepAngle > 0.005) {
               _drawTextInsideArc(
-                  canvas,
-                  ref.t(noteKey),
-                  center,
-                  noteStartAngle,
-                  noteSweepAngle,
-                  r2,
-                  r3,
-                  Colors.white.withValues(alpha: 0.9),
-                  7,
-                  false);
+                canvas,
+                ref.t(noteKey),
+                center,
+                noteStartAngle,
+                noteSweepAngle,
+                r2,
+                r3,
+                Colors.white.withValues(alpha: 0.9),
+                7,
+                false,
+              );
             }
           }
 
@@ -293,30 +367,45 @@ class _ScaWheelPainter extends CustomPainter {
     canvas.drawCircle(center, r3, gridPaint);
   }
 
-  void _drawFlatArc(Canvas canvas, Offset center, double innerR, double outerR,
-      double startAngle, double sweepAngle, Paint paint) {
+  void _drawFlatArc(
+    Canvas canvas,
+    Offset center,
+    double innerR,
+    double outerR,
+    double startAngle,
+    double sweepAngle,
+    Paint paint,
+  ) {
     canvas.drawPath(
       Path()
-        ..addArc(Rect.fromCircle(center: center, radius: outerR), startAngle,
-            sweepAngle)
-        ..arcTo(Rect.fromCircle(center: center, radius: innerR),
-            startAngle + sweepAngle, -sweepAngle, false)
+        ..addArc(
+          Rect.fromCircle(center: center, radius: outerR),
+          startAngle,
+          sweepAngle,
+        )
+        ..arcTo(
+          Rect.fromCircle(center: center, radius: innerR),
+          startAngle + sweepAngle,
+          -sweepAngle,
+          false,
+        )
         ..close(),
       paint,
     );
   }
 
   void _drawTextInsideArc(
-      Canvas canvas,
-      String text,
-      Offset center,
-      double startAngle,
-      double sweepAngle,
-      double rStart,
-      double rEnd,
-      Color color,
-      double baseFontSize,
-      bool bold) {
+    Canvas canvas,
+    String text,
+    Offset center,
+    double startAngle,
+    double sweepAngle,
+    double rStart,
+    double rEnd,
+    Color color,
+    double baseFontSize,
+    bool bold,
+  ) {
     double fontSize = baseFontSize;
     final middleAngle = startAngle + sweepAngle / 2;
     final middleRadius = (rStart + rEnd) / 2;
@@ -356,7 +445,9 @@ class _ScaWheelPainter extends CustomPainter {
     if (shouldFlip) {
       canvas.rotate(math.pi);
       canvas.translate(
-          -tp.width / 2, -tp.height / 2); // Center horizontally too
+        -tp.width / 2,
+        -tp.height / 2,
+      ); // Center horizontally too
     } else {
       canvas.translate(-tp.width / 2, -tp.height / 2);
     }

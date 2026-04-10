@@ -1264,9 +1264,12 @@ class ScaFlavorWheelL10n {
         .replaceFirst('wheel_cat_', '')
         .replaceAll('_', ' ');
     if (base.isEmpty) return key;
-    return base.split(' ').map((s) {
-      if (s.isEmpty) return s;
-      return s[0].toUpperCase() + s.substring(1);
-    }).join(' ');
+    return base
+        .split(' ')
+        .map((s) {
+          if (s.isEmpty) return s;
+          return s[0].toUpperCase() + s.substring(1);
+        })
+        .join(' ');
   }
 }

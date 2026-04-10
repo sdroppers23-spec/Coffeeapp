@@ -11,9 +11,10 @@ import '../../core/database/dtos.dart';
 import '../../shared/widgets/glass_container.dart';
 import '../discover/discovery_providers.dart';
 
-
 // ─── Provider ─────────────────────────────────────────────────────────────────
-final encyclopediaProvider = FutureProvider<List<EncyclopediaEntry>>((ref) async {
+final encyclopediaProvider = FutureProvider<List<EncyclopediaEntry>>((
+  ref,
+) async {
   final lang = ref.watch(localeProvider);
   return ref.watch(databaseProvider).getAllOrigins(lang);
 });
@@ -36,8 +37,10 @@ class _EncyclopediaScreenState extends ConsumerState<EncyclopediaScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(ref.t('coffee_origins'),
-            style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+        title: Text(
+          ref.t('coffee_origins'),
+          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+        ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(56),
           child: Padding(
@@ -50,11 +53,23 @@ class _EncyclopediaScreenState extends ConsumerState<EncyclopediaScreen> {
               style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
               decoration: InputDecoration(
                 hintText: ref.t('search_origins'),
-                hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38)),
-                prefixIcon: Icon(Icons.search, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), size: 20),
+                hintStyle: TextStyle(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.38),
+                ),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.38),
+                  size: 20,
+                ),
                 contentPadding: const EdgeInsets.symmetric(vertical: 10),
                 filled: true,
-                fillColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
+                fillColor: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.08),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -67,8 +82,17 @@ class _EncyclopediaScreenState extends ConsumerState<EncyclopediaScreen> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/compare'),
         backgroundColor: Theme.of(context).colorScheme.primary,
-        icon: Icon(Icons.compare_arrows, color: Theme.of(context).colorScheme.onPrimary),
-        label: Text(ref.t('compare'), style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontWeight: FontWeight.bold)),
+        icon: Icon(
+          Icons.compare_arrows,
+          color: Theme.of(context).colorScheme.onPrimary,
+        ),
+        label: Text(
+          ref.t('compare'),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onPrimary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: SafeArea(
         child: originsAsync.when(
@@ -78,21 +102,35 @@ class _EncyclopediaScreenState extends ConsumerState<EncyclopediaScreen> {
             final filtered = _search.isEmpty
                 ? entries
                 : entries
-                    .where((e) =>
-                        e.country.toLowerCase().contains(_search) ||
-                        e.region.toLowerCase().contains(_search) ||
-                        e.flavorNotes.any((f) => f.toLowerCase().contains(_search)))
-                    .toList();
+                      .where(
+                        (e) =>
+                            e.country.toLowerCase().contains(_search) ||
+                            e.region.toLowerCase().contains(_search) ||
+                            e.flavorNotes.any(
+                              (f) => f.toLowerCase().contains(_search),
+                            ),
+                      )
+                      .toList();
 
             if (filtered.isEmpty) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.travel_explore, size: 56, color: Colors.black26),
+                    const Icon(
+                      Icons.travel_explore,
+                      size: 56,
+                      color: Colors.black26,
+                    ),
                     const SizedBox(height: 12),
-                    Text('${ref.t('no_results')} "$_search"',
-                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38))),
+                    Text(
+                      '${ref.t('no_results')} "$_search"',
+                      style: TextStyle(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withValues(alpha: 0.38),
+                      ),
+                    ),
                   ],
                 ),
               );
@@ -111,8 +149,8 @@ class _EncyclopediaScreenState extends ConsumerState<EncyclopediaScreen> {
                   entry: entry,
                   flavors: flavors,
                   isExpanded: isExpanded,
-                  onTap: () => setState(() =>
-                      _expandedIndex = isExpanded ? null : i),
+                  onTap: () =>
+                      setState(() => _expandedIndex = isExpanded ? null : i),
                 );
               },
             );
@@ -151,7 +189,9 @@ class _OriginCard extends ConsumerWidget {
       child: GlassContainer(
         padding: const EdgeInsets.all(0),
         opacity: isExpanded ? 0.12 : 0.08,
-        borderColor: isExpanded ? const Color(0xFFC8A96E).withValues(alpha: 0.5) : null,
+        borderColor: isExpanded
+            ? const Color(0xFFC8A96E).withValues(alpha: 0.5)
+            : null,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -168,48 +208,73 @@ class _OriginCard extends ConsumerWidget {
                       color: Colors.black12,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Text(entry.countryEmoji ?? '', style: const TextStyle(fontSize: 28)),
+                    child: Text(
+                      entry.countryEmoji ?? '',
+                      style: const TextStyle(fontSize: 28),
+                    ),
                   ),
                   const SizedBox(width: 14),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(entry.country,
-                            style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17,
-                                color: Theme.of(context).colorScheme.onSurface)),
-                        Text(entry.region,
-                            style: const TextStyle(
-                                fontSize: 12, color: Colors.white54)),
+                        Text(
+                          entry.country,
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 17,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                        Text(
+                          entry.region,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.white54,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                   // SCA Score badge
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: _scoreColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: _scoreColor.withValues(alpha: 0.2)),
+                      border: Border.all(
+                        color: _scoreColor.withValues(alpha: 0.2),
+                      ),
                     ),
                     child: Column(
                       children: [
                         Text(
                           entry.cupsScore.toStringAsFixed(1),
                           style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: _scoreColor,
-                              fontSize: 15),
+                            fontWeight: FontWeight.bold,
+                            color: _scoreColor,
+                            fontSize: 15,
+                          ),
                         ),
-                        Text('SCA', style: TextStyle(fontSize: 8, color: _scoreColor.withValues(alpha: 0.7), fontWeight: FontWeight.bold)),
+                        Text(
+                          'SCA',
+                          style: TextStyle(
+                            fontSize: 8,
+                            color: _scoreColor.withValues(alpha: 0.7),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                   const SizedBox(width: 8),
                   Icon(
-                    isExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
+                    isExpanded
+                        ? Icons.keyboard_arrow_up_rounded
+                        : Icons.keyboard_arrow_down_rounded,
                     color: Colors.white38,
                   ),
                 ],
@@ -236,24 +301,41 @@ class _OriginCard extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(entry.description,
-                        style: GoogleFonts.inter(
-                            color: Colors.white.withValues(alpha: 0.85), height: 1.6, fontSize: 13.5)),
+                    Text(
+                      entry.description,
+                      style: GoogleFonts.inter(
+                        color: Colors.white.withValues(alpha: 0.85),
+                        height: 1.6,
+                        fontSize: 13.5,
+                      ),
+                    ),
                     const SizedBox(height: 20),
                     _SensoryVisualization(entry: entry),
                     const SizedBox(height: 20),
                     // Detail grid
                     _DetailGrid(entry: entry),
-                    
+
                     // Farm Details
-                    if (entry.farmDescription.isNotEmpty || (entry.farmPhotosUrlCover?.isNotEmpty ?? false)) ...[
+                    if (entry.farmDescription.isNotEmpty ||
+                        (entry.farmPhotosUrlCover?.isNotEmpty ?? false)) ...[
                       const SizedBox(height: 28),
                       Row(
                         children: [
-                           const Icon(Icons.terrain_rounded, size: 16, color: Color(0xFFC8A96E)),
+                          const Icon(
+                            Icons.terrain_rounded,
+                            size: 16,
+                            color: Color(0xFFC8A96E),
+                          ),
                           const SizedBox(width: 8),
-                          Text(ref.t('about_farm_region'), 
-                            style: GoogleFonts.poppins(fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.2, color: Theme.of(context).colorScheme.primary)),
+                          Text(
+                            ref.t('about_farm_region'),
+                            style: GoogleFonts.poppins(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.2,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 16),
@@ -264,7 +346,11 @@ class _OriginCard extends ConsumerWidget {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(16),
                             boxShadow: [
-                              BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4)),
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.3),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
                             ],
                           ),
                           child: ClipRRect(
@@ -277,14 +363,23 @@ class _OriginCard extends ConsumerWidget {
                               errorBuilder: (_, __, ___) => Container(
                                 height: 160,
                                 color: Colors.white.withValues(alpha: 0.05),
-                                child: const Icon(Icons.broken_image_outlined, color: Colors.white24),
+                                child: const Icon(
+                                  Icons.broken_image_outlined,
+                                  color: Colors.white24,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       if (entry.farmDescription.isNotEmpty)
-                        Text(entry.farmDescription, 
-                          style: GoogleFonts.inter(color: Colors.white70, height: 1.6, fontSize: 13)),
+                        Text(
+                          entry.farmDescription,
+                          style: GoogleFonts.inter(
+                            color: Colors.white70,
+                            height: 1.6,
+                            fontSize: 13,
+                          ),
+                        ),
                     ],
 
                     // Processing Methods
@@ -292,14 +387,27 @@ class _OriginCard extends ConsumerWidget {
                       const SizedBox(height: 32),
                       Row(
                         children: [
-                           const Icon(Icons.science_rounded, size: 16, color: Color(0xFFC8A96E)),
+                          const Icon(
+                            Icons.science_rounded,
+                            size: 16,
+                            color: Color(0xFFC8A96E),
+                          ),
                           const SizedBox(width: 8),
-                          Text(ref.t('recipes_processing'), 
-                            style: GoogleFonts.poppins(fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1.2, color: Theme.of(context).colorScheme.primary)),
+                          Text(
+                            ref.t('recipes_processing'),
+                            style: GoogleFonts.poppins(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.2,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 16),
-                      _ProcessingMethodsList(jsonInfo: entry.processingMethodsJson),
+                      _ProcessingMethodsList(
+                        jsonInfo: entry.processingMethodsJson,
+                      ),
                     ],
                   ],
                 ),
@@ -324,11 +432,18 @@ class _FlavorChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+        ),
       ),
-      child: Text(label,
-          style: TextStyle(
-              fontSize: 11, color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w500)),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 11,
+          color: Theme.of(context).colorScheme.primary,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
     );
   }
 }
@@ -356,12 +471,16 @@ class _DetailGrid extends ConsumerWidget {
             children: [
               SizedBox(
                 width: 110,
-                child: Text(item.$1,
-                    style: const TextStyle(fontSize: 12, color: Colors.white38)),
+                child: Text(
+                  item.$1,
+                  style: const TextStyle(fontSize: 12, color: Colors.white38),
+                ),
               ),
               Expanded(
-                child: Text(item.$2,
-                    style: const TextStyle(fontSize: 12, color: Colors.white70)),
+                child: Text(
+                  item.$2,
+                  style: const TextStyle(fontSize: 12, color: Colors.white70),
+                ),
               ),
             ],
           ),
@@ -391,16 +510,33 @@ class _ProcessingMethodsList extends StatelessWidget {
               children: [
                 const Padding(
                   padding: EdgeInsets.only(top: 2),
-                  child: Icon(Icons.water_drop, size: 16, color: Color(0xFFC8A96E)),
+                  child: Icon(
+                    Icons.water_drop,
+                    size: 16,
+                    color: Color(0xFFC8A96E),
+                  ),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(map['name']?.toString() ?? '', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                      Text(
+                        map['name']?.toString() ?? '',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                        ),
+                      ),
                       const SizedBox(height: 2),
-                      Text(map['desc']?.toString() ?? '', style: const TextStyle(color: Colors.white70, fontSize: 13, height: 1.4)),
+                      Text(
+                        map['desc']?.toString() ?? '',
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 13,
+                          height: 1.4,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -441,7 +577,10 @@ class OriginDetailsScreen extends ConsumerWidget {
                   fit: StackFit.expand,
                   children: [
                     if (entry.farmPhotosUrlCover?.isNotEmpty ?? false)
-                      Image.network(entry.farmPhotosUrlCover!, fit: BoxFit.cover)
+                      Image.network(
+                        entry.farmPhotosUrlCover!,
+                        fit: BoxFit.cover,
+                      )
                     else
                       Container(color: Colors.grey.shade900),
                     Container(
@@ -449,7 +588,10 @@ class OriginDetailsScreen extends ConsumerWidget {
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          colors: [Colors.transparent, Colors.black.withValues(alpha: 0.8)],
+                          colors: [
+                            Colors.transparent,
+                            Colors.black.withValues(alpha: 0.8),
+                          ],
                         ),
                       ),
                     ),
@@ -461,19 +603,36 @@ class OriginDetailsScreen extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           roasterAsync.when(
-                            data: (brand) => Text(brand?.name.toUpperCase() ?? '', 
-                              style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.bold, color: const Color(0xFFC8A96E), letterSpacing: 2)),
+                            data: (brand) => Text(
+                              brand?.name.toUpperCase() ?? '',
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFFC8A96E),
+                                letterSpacing: 2,
+                              ),
+                            ),
                             loading: () => const SizedBox(),
                             error: (_, __) => const SizedBox(),
                           ),
                           const SizedBox(height: 8),
                           Text(
                             entry.region,
-                            style: GoogleFonts.poppins(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white, height: 1),
+                            style: GoogleFonts.poppins(
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              height: 1,
+                            ),
                           ),
                           const SizedBox(height: 4),
-                          Text('${entry.countryEmoji} ${entry.country}', 
-                            style: GoogleFonts.inter(fontSize: 16, color: Colors.white70)),
+                          Text(
+                            '${entry.countryEmoji} ${entry.country}',
+                            style: GoogleFonts.inter(
+                              fontSize: 16,
+                              color: Colors.white70,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -518,9 +677,14 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   double get maxExtent => _tabBar.preferredSize.height;
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     return Container(color: Colors.black, child: _tabBar);
   }
+
   @override
   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) => false;
 }
@@ -535,10 +699,26 @@ class _ProductTab extends ConsumerWidget {
       padding: const EdgeInsets.all(24),
       children: [
         _SectionHeader(ref.t('purchase_details')),
-        _InfoTile(label: ref.t('price'), value: (entry.price ?? 'N/A'), icon: Icons.payments_outlined),
-        _InfoTile(label: ref.t('weight'), value: (entry.weight ?? 'N/A'), icon: Icons.scale_outlined),
-        _InfoTile(label: ref.t('roast_date'), value: (entry.roastDate ?? 'N/A'), icon: Icons.calendar_today_outlined),
-        _InfoTile(label: ref.t('lot_number'), value: entry.lotNumber.isEmpty ? 'N/A' : entry.lotNumber, icon: Icons.tag),
+        _InfoTile(
+          label: ref.t('price'),
+          value: (entry.price ?? 'N/A'),
+          icon: Icons.payments_outlined,
+        ),
+        _InfoTile(
+          label: ref.t('weight'),
+          value: (entry.weight ?? 'N/A'),
+          icon: Icons.scale_outlined,
+        ),
+        _InfoTile(
+          label: ref.t('roast_date'),
+          value: (entry.roastDate ?? 'N/A'),
+          icon: Icons.calendar_today_outlined,
+        ),
+        _InfoTile(
+          label: ref.t('lot_number'),
+          value: entry.lotNumber.isEmpty ? 'N/A' : entry.lotNumber,
+          icon: Icons.tag,
+        ),
         const SizedBox(height: 24),
         _SectionHeader(ref.t('roast_level')),
         _RoastLevelIndicator(level: entry.roastLevel),
@@ -552,7 +732,9 @@ class _ProductTab extends ConsumerWidget {
               backgroundColor: const Color(0xFFC8A96E),
               foregroundColor: Colors.black,
               padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
           ),
       ],
@@ -570,24 +752,45 @@ class _SourceTab extends ConsumerWidget {
       padding: const EdgeInsets.all(24),
       children: [
         _SectionHeader(ref.t('terroir_farm')),
-        _InfoTile(label: ref.t('region'), value: entry.region, icon: Icons.location_on_outlined),
-        _InfoTile(label: ref.t('altitude'), value: '${entry.altitudeMin} - ${entry.altitudeMax}m', icon: Icons.height_outlined),
-        _InfoTile(label: ref.t('varieties'), value: entry.varieties, icon: Icons.grass_outlined),
+        _InfoTile(
+          label: ref.t('region'),
+          value: entry.region,
+          icon: Icons.location_on_outlined,
+        ),
+        _InfoTile(
+          label: ref.t('altitude'),
+          value: '${entry.altitudeMin} - ${entry.altitudeMax}m',
+          icon: Icons.height_outlined,
+        ),
+        _InfoTile(
+          label: ref.t('varieties'),
+          value: entry.varieties,
+          icon: Icons.grass_outlined,
+        ),
         _InfoTile(
           label: ref.t('process'),
           value: entry.processMethod,
           icon: Icons.shutter_speed_outlined,
-          trailing: _hasLocalizedDescription(entry.processMethod, ref) 
-            ? IconButton(
-                onPressed: () => _showLocalizedProcessSheet(context, entry, ref),
-                icon: const Icon(Icons.info_outline, color: Color(0xFFC8A96E), size: 18),
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-              )
-            : entry.detailedProcessMarkdown.isNotEmpty 
+          trailing: _hasLocalizedDescription(entry.processMethod, ref)
+              ? IconButton(
+                  onPressed: () =>
+                      _showLocalizedProcessSheet(context, entry, ref),
+                  icon: const Icon(
+                    Icons.info_outline,
+                    color: Color(0xFFC8A96E),
+                    size: 18,
+                  ),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                )
+              : entry.detailedProcessMarkdown.isNotEmpty
               ? IconButton(
                   onPressed: () => _showProcessDetailSheet(context, entry, ref),
-                  icon: const Icon(Icons.info_outline, color: Color(0xFFC8A96E), size: 18),
+                  icon: const Icon(
+                    Icons.info_outline,
+                    color: Color(0xFFC8A96E),
+                    size: 18,
+                  ),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                 )
@@ -599,26 +802,38 @@ class _SourceTab extends ConsumerWidget {
         _CuppingScoreCard(score: entry.cupsScore),
         const SizedBox(height: 24),
         _SectionHeader(ref.t('story_terroir')),
-        Text(_getLocalizedDescription(entry, ref), style: const TextStyle(color: Colors.white70, height: 1.6)),
+        Text(
+          _getLocalizedDescription(entry, ref),
+          style: const TextStyle(color: Colors.white70, height: 1.6),
+        ),
       ],
     );
   }
 
   String _getLocalizedDescription(EncyclopediaEntry entry, WidgetRef ref) {
     final country = entry.country.toLowerCase();
-    
+
     // Mad Heads
-    if (country.contains('utengule')) return ref.t('lot_desc_tanzania_utengule');
-    if (country.contains('alto de osos')) return ref.t('lot_desc_col_alto_osos');
-    if (country.contains('frinsa manis')) return ref.t('lot_desc_indonesia_manis');
-    if (country.contains('gichathaini')) return ref.t('lot_desc_kenya_gichathaini');
-    
+    if (country.contains('utengule'))
+      return ref.t('lot_desc_tanzania_utengule');
+    if (country.contains('alto de osos'))
+      return ref.t('lot_desc_col_alto_osos');
+    if (country.contains('frinsa manis'))
+      return ref.t('lot_desc_indonesia_manis');
+    if (country.contains('gichathaini'))
+      return ref.t('lot_desc_kenya_gichathaini');
+
     // 3Champs
-    if (country.contains('colombia 46 filter')) return ref.t('lot_desc_col_46_filter');
-    if (country.contains('colombia 31 filter')) return ref.t('lot_desc_col_31_filter');
-    if (country.contains('kenya 20 filter')) return ref.t('lot_desc_kenya_20_filter');
-    if (country.contains('ethiopia 37 filter')) return ref.t('lot_desc_eth_37_filter');
-    if (country.contains('colombia 46 espresso')) return ref.t('lot_desc_col_46_espresso');
+    if (country.contains('colombia 46 filter'))
+      return ref.t('lot_desc_col_46_filter');
+    if (country.contains('colombia 31 filter'))
+      return ref.t('lot_desc_col_31_filter');
+    if (country.contains('kenya 20 filter'))
+      return ref.t('lot_desc_kenya_20_filter');
+    if (country.contains('ethiopia 37 filter'))
+      return ref.t('lot_desc_eth_37_filter');
+    if (country.contains('colombia 46 espresso'))
+      return ref.t('lot_desc_col_46_espresso');
 
     // Fallback to original database string (which is Ukrainian for 3Champs seed)
     return entry.description;
@@ -645,8 +860,8 @@ class _RecipesTab extends ConsumerWidget {
           itemCount: recipes.length,
           separatorBuilder: (_, __) => const SizedBox(height: 16),
           itemBuilder: (context, i) {
-             // Reusing the same card logic as BrewingDetailScreen
-             return _RecommendedRecipeCard(recipe: recipes[i]);
+            // Reusing the same card logic as BrewingDetailScreen
+            return _RecommendedRecipeCard(recipe: recipes[i]);
           },
         );
       },
@@ -654,10 +869,11 @@ class _RecipesTab extends ConsumerWidget {
   }
 }
 
-final lotRecipesProvider = FutureProvider.family<List<RecommendedRecipeDto>, int>((ref, lotId) async {
-  final db = ref.watch(databaseProvider);
-  return db.getRecommendedRecipesForLot(lotId);
-});
+final lotRecipesProvider =
+    FutureProvider.family<List<RecommendedRecipeDto>, int>((ref, lotId) async {
+      final db = ref.watch(databaseProvider);
+      return db.getRecommendedRecipesForLot(lotId);
+    });
 
 class _SectionHeader extends StatelessWidget {
   final String title;
@@ -666,7 +882,15 @@ class _SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: Text(title, style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white38, letterSpacing: 1.5)),
+      child: Text(
+        title,
+        style: GoogleFonts.poppins(
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+          color: Colors.white38,
+          letterSpacing: 1.5,
+        ),
+      ),
     );
   }
 }
@@ -676,7 +900,12 @@ class _InfoTile extends StatelessWidget {
   final String value;
   final IconData icon;
   final Widget? trailing;
-  const _InfoTile({required this.label, required this.value, required this.icon, this.trailing});
+  const _InfoTile({
+    required this.label,
+    required this.value,
+    required this.icon,
+    this.trailing,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -687,12 +916,15 @@ class _InfoTile extends StatelessWidget {
           Icon(icon, size: 20, color: const Color(0xFFC8A96E)),
           const SizedBox(width: 16),
           Text(label, style: const TextStyle(color: Colors.white54)),
-          if (trailing != null) ...[
-            const SizedBox(width: 4),
-            trailing!,
-          ],
+          if (trailing != null) ...[const SizedBox(width: 4), trailing!],
           const Spacer(),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+          Text(
+            value,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
         ],
       ),
     );
@@ -724,9 +956,18 @@ class _RoastLevelIndicator extends ConsumerWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(ref.t('roast_light'), style: const TextStyle(fontSize: 10, color: Colors.white38)),
-            Text(ref.t('roast_medium'), style: const TextStyle(fontSize: 10, color: Colors.white38)),
-            Text(ref.t('roast_dark'), style: const TextStyle(fontSize: 10, color: Colors.white38)),
+            Text(
+              ref.t('roast_light'),
+              style: const TextStyle(fontSize: 10, color: Colors.white38),
+            ),
+            Text(
+              ref.t('roast_medium'),
+              style: const TextStyle(fontSize: 10, color: Colors.white38),
+            ),
+            Text(
+              ref.t('roast_dark'),
+              style: const TextStyle(fontSize: 10, color: Colors.white38),
+            ),
           ],
         ),
       ],
@@ -745,7 +986,9 @@ class _CuppingScoreCard extends ConsumerWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.3)),
+        border: Border.all(
+          color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
+        ),
       ),
       child: Row(
         children: [
@@ -754,8 +997,22 @@ class _CuppingScoreCard extends ConsumerWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(ref.t('cupping_score').toUpperCase(), style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
-              Text(score.toString(), style: GoogleFonts.poppins(fontSize: 32, fontWeight: FontWeight.bold, color: const Color(0xFFC8A96E))),
+              Text(
+                ref.t('cupping_score').toUpperCase(),
+                style: const TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.2,
+                ),
+              ),
+              Text(
+                score.toString(),
+                style: GoogleFonts.poppins(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFFC8A96E),
+                ),
+              ),
             ],
           ),
         ],
@@ -772,31 +1029,37 @@ class _RecommendedRecipeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-       padding: const EdgeInsets.all(16),
-       decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(12)),
-       child: Column(
-         children: [
-           Row(
-             children: [
-               Icon(Icons.coffee_maker, color: const Color(0xFFC8A96E)),
-               const SizedBox(width: 12),
-               Text(recipe.methodKey.toUpperCase(), style: const TextStyle(fontWeight: FontWeight.bold)),
-               const Spacer(),
-               Text('${recipe.rating} ★'),
-             ],
-           ),
-           const Divider(color: Colors.white10, height: 24),
-           Row(
-             mainAxisAlignment: MainAxisAlignment.spaceAround,
-             children: [
-               Text('${recipe.coffeeGrams}g'),
-               Text('${recipe.waterGrams}g'),
-               Text('${recipe.tempC}°C'),
-               Text('${recipe.timeSec}s'),
-             ],
-           ),
-         ],
-       ),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Icon(Icons.coffee_maker, color: const Color(0xFFC8A96E)),
+              const SizedBox(width: 12),
+              Text(
+                recipe.methodKey.toUpperCase(),
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const Spacer(),
+              Text('${recipe.rating} ★'),
+            ],
+          ),
+          const Divider(color: Colors.white10, height: 24),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Text('${recipe.coffeeGrams}g'),
+              Text('${recipe.waterGrams}g'),
+              Text('${recipe.tempC}°C'),
+              Text('${recipe.timeSec}s'),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -826,15 +1089,24 @@ class _SensoryVisualization extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (indicators.isNotEmpty) ...[
-            SizedBox(
-              height: 200,
-              child: _RadarChart(indicators: indicators),
-            ),
+            SizedBox(height: 200, child: _RadarChart(indicators: indicators)),
             const SizedBox(height: 16),
-            _DotScale(label: 'Acidity', value: (indicators['acidity'] ?? 0).toDouble()),
-            _DotScale(label: 'Sweetness', value: (indicators['sweetness'] ?? 0).toDouble()),
-            _DotScale(label: 'Bitterness', value: (indicators['bitterness'] ?? 0).toDouble()),
-            _DotScale(label: 'Intensity', value: (indicators['intensity'] ?? 0).toDouble()),
+            _DotScale(
+              label: 'Acidity',
+              value: (indicators['acidity'] ?? 0).toDouble(),
+            ),
+            _DotScale(
+              label: 'Sweetness',
+              value: (indicators['sweetness'] ?? 0).toDouble(),
+            ),
+            _DotScale(
+              label: 'Bitterness',
+              value: (indicators['bitterness'] ?? 0).toDouble(),
+            ),
+            _DotScale(
+              label: 'Intensity',
+              value: (indicators['intensity'] ?? 0).toDouble(),
+            ),
             const SizedBox(height: 16),
           ],
           if (sensory['aroma'] != null)
@@ -864,7 +1136,10 @@ class _DotScale extends StatelessWidget {
         children: [
           SizedBox(
             width: 90,
-            child: Text(label, style: const TextStyle(fontSize: 12, color: Colors.white38)),
+            child: Text(
+              label,
+              style: const TextStyle(fontSize: 12, color: Colors.white38),
+            ),
           ),
           ...List.generate(5, (i) {
             final filled = i < value;
@@ -875,7 +1150,9 @@ class _DotScale extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: filled ? const Color(0xFFC8A96E) : Colors.white10,
-                border: filled ? null : Border.all(color: Colors.white24, width: 0.5),
+                border: filled
+                    ? null
+                    : Border.all(color: Colors.white24, width: 0.5),
               ),
             );
           }),
@@ -897,20 +1174,34 @@ class _ProfileLine extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('$label: ', style: const TextStyle(fontSize: 12, color: Colors.white38)),
-          Expanded(child: Text(value, style: const TextStyle(fontSize: 12, color: Colors.white70))),
+          Text(
+            '$label: ',
+            style: const TextStyle(fontSize: 12, color: Colors.white38),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(fontSize: 12, color: Colors.white70),
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-void _showProcessDetailSheet(BuildContext context, EncyclopediaEntry entry, WidgetRef ref) {
+void _showProcessDetailSheet(
+  BuildContext context,
+  EncyclopediaEntry entry,
+  WidgetRef ref,
+) {
   showModalBottomSheet(
     context: context,
     backgroundColor: const Color(0xFF1A1A1A),
     isScrollControlled: true,
-    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
     builder: (context) => DraggableScrollableSheet(
       initialChildSize: 0.6,
       maxChildSize: 0.9,
@@ -919,7 +1210,14 @@ void _showProcessDetailSheet(BuildContext context, EncyclopediaEntry entry, Widg
       builder: (context, scrollController) => Column(
         children: [
           const SizedBox(height: 12),
-          Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.white10, borderRadius: BorderRadius.circular(2))),
+          Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: Colors.white10,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
           const SizedBox(height: 24),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -928,7 +1226,13 @@ void _showProcessDetailSheet(BuildContext context, EncyclopediaEntry entry, Widg
                 const Icon(Icons.history_edu, color: Color(0xFFC8A96E)),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: Text(ref.t('process_detail').toUpperCase(), style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18)),
+                  child: Text(
+                    ref.t('process_detail').toUpperCase(),
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -936,7 +1240,14 @@ void _showProcessDetailSheet(BuildContext context, EncyclopediaEntry entry, Widg
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Text(entry.processMethod.toUpperCase(), style: const TextStyle(color: Colors.white38, letterSpacing: 1.2, fontSize: 12)),
+            child: Text(
+              entry.processMethod.toUpperCase(),
+              style: const TextStyle(
+                color: Colors.white38,
+                letterSpacing: 1.2,
+                fontSize: 12,
+              ),
+            ),
           ),
           const Divider(height: 32, color: Colors.white10),
           Expanded(
@@ -944,8 +1255,16 @@ void _showProcessDetailSheet(BuildContext context, EncyclopediaEntry entry, Widg
               controller: scrollController,
               data: _translateDetailedDescription(entry, ref),
               styleSheet: MarkdownStyleSheet(
-                h3: GoogleFonts.poppins(color: const Color(0xFFC8A96E), fontWeight: FontWeight.bold, fontSize: 16),
-                p: const TextStyle(color: Colors.white70, height: 1.6, fontSize: 14),
+                h3: GoogleFonts.poppins(
+                  color: const Color(0xFFC8A96E),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+                p: const TextStyle(
+                  color: Colors.white70,
+                  height: 1.6,
+                  fontSize: 14,
+                ),
                 listBullet: const TextStyle(color: Color(0xFFC8A96E)),
               ),
             ),
@@ -958,11 +1277,16 @@ void _showProcessDetailSheet(BuildContext context, EncyclopediaEntry entry, Widg
 
 String _translateDetailedDescription(EncyclopediaEntry entry, WidgetRef ref) {
   final p = entry.processMethod.toLowerCase();
-  if (p.contains('natural') || p.contains('натур')) return ref.t('process_natural_desc');
-  if (p.contains('washed') || p.contains('мит')) return ref.t('process_washed_desc');
-  if (p.contains('anaerobic') || p.contains('анаероб')) return ref.t('process_anaerobic_desc');
-  if (p.contains('thermal') || p.contains('термал')) return ref.t('process_thermal_desc');
-  if (p.contains('honey') || p.contains('хані')) return ref.t('process_honey_desc');
+  if (p.contains('natural') || p.contains('натур'))
+    return ref.t('process_natural_desc');
+  if (p.contains('washed') || p.contains('мит'))
+    return ref.t('process_washed_desc');
+  if (p.contains('anaerobic') || p.contains('анаероб'))
+    return ref.t('process_anaerobic_desc');
+  if (p.contains('thermal') || p.contains('термал'))
+    return ref.t('process_thermal_desc');
+  if (p.contains('honey') || p.contains('хані'))
+    return ref.t('process_honey_desc');
   return entry.detailedProcessMarkdown;
 }
 
@@ -981,10 +1305,18 @@ class _RadarChart extends ConsumerWidget {
             borderColor: const Color(0xFFC8A96E),
             entryRadius: 3,
             dataEntries: [
-              RadarEntry(value: (indicators['acidity'] as num? ?? 0).toDouble()),
-              RadarEntry(value: (indicators['sweetness'] as num? ?? 0).toDouble()),
-              RadarEntry(value: (indicators['bitterness'] as num? ?? 0).toDouble()),
-              RadarEntry(value: (indicators['intensity'] as num? ?? 0).toDouble()),
+              RadarEntry(
+                value: (indicators['acidity'] as num? ?? 0).toDouble(),
+              ),
+              RadarEntry(
+                value: (indicators['sweetness'] as num? ?? 0).toDouble(),
+              ),
+              RadarEntry(
+                value: (indicators['bitterness'] as num? ?? 0).toDouble(),
+              ),
+              RadarEntry(
+                value: (indicators['intensity'] as num? ?? 0).toDouble(),
+              ),
               RadarEntry(value: 3), // placeholder for balance/body
             ],
           ),
@@ -997,37 +1329,72 @@ class _RadarChart extends ConsumerWidget {
         ticksTextStyle: const TextStyle(color: Colors.transparent),
         getTitle: (index, angle) {
           switch (index) {
-            case 0: return RadarChartTitle(text: ref.t('acidity').toUpperCase(), angle: 0);
-            case 1: return RadarChartTitle(text: ref.t('sweetness').toUpperCase(), angle: 0);
-            case 2: return RadarChartTitle(text: ref.t('bitterness').toUpperCase(), angle: 0);
-            case 3: return RadarChartTitle(text: ref.t('intensity').toUpperCase(), angle: 0);
-            case 4: return RadarChartTitle(text: ref.t('body').toUpperCase(), angle: 0);
-            default: return const RadarChartTitle(text: '');
+            case 0:
+              return RadarChartTitle(
+                text: ref.t('acidity').toUpperCase(),
+                angle: 0,
+              );
+            case 1:
+              return RadarChartTitle(
+                text: ref.t('sweetness').toUpperCase(),
+                angle: 0,
+              );
+            case 2:
+              return RadarChartTitle(
+                text: ref.t('bitterness').toUpperCase(),
+                angle: 0,
+              );
+            case 3:
+              return RadarChartTitle(
+                text: ref.t('intensity').toUpperCase(),
+                angle: 0,
+              );
+            case 4:
+              return RadarChartTitle(
+                text: ref.t('body').toUpperCase(),
+                angle: 0,
+              );
+            default:
+              return const RadarChartTitle(text: '');
           }
         },
-        titleTextStyle: const TextStyle(color: Colors.white38, fontSize: 10, fontWeight: FontWeight.bold),
+        titleTextStyle: const TextStyle(
+          color: Colors.white38,
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
 }
 
-
 bool _hasLocalizedDescription(String process, WidgetRef ref) {
   final p = process.toLowerCase();
-  return p.contains('natural') || p.contains('натур') || 
-         p.contains('washed') || p.contains('мит') || 
-         p.contains('anaerobic') || p.contains('анаероб') || 
-         p.contains('thermal') || p.contains('термал') ||
-         p.contains('honey') || p.contains('хані');
+  return p.contains('natural') ||
+      p.contains('натур') ||
+      p.contains('washed') ||
+      p.contains('мит') ||
+      p.contains('anaerobic') ||
+      p.contains('анаероб') ||
+      p.contains('thermal') ||
+      p.contains('термал') ||
+      p.contains('honey') ||
+      p.contains('хані');
 }
 
-void _showLocalizedProcessSheet(BuildContext context, EncyclopediaEntry entry, WidgetRef ref) {
+void _showLocalizedProcessSheet(
+  BuildContext context,
+  EncyclopediaEntry entry,
+  WidgetRef ref,
+) {
   final description = _getLocalizedDetailedProcess(entry.processMethod, ref);
   showModalBottomSheet(
     context: context,
     backgroundColor: const Color(0xFF1A1A1A),
     isScrollControlled: true,
-    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
     builder: (context) => DraggableScrollableSheet(
       initialChildSize: 0.7,
       minChildSize: 0.5,
@@ -1041,9 +1408,19 @@ void _showLocalizedProcessSheet(BuildContext context, EncyclopediaEntry entry, W
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(ref.t('process_detail').toUpperCase(), 
-                  style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold, color: const Color(0xFFC8A96E), letterSpacing: 1.2)),
-                IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close, color: Colors.white54)),
+                Text(
+                  ref.t('process_detail').toUpperCase(),
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFFC8A96E),
+                    letterSpacing: 1.2,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.close, color: Colors.white54),
+                ),
               ],
             ),
             const Divider(color: Colors.white10, height: 32),
@@ -1054,8 +1431,16 @@ void _showLocalizedProcessSheet(BuildContext context, EncyclopediaEntry entry, W
                   MarkdownBody(
                     data: description,
                     styleSheet: MarkdownStyleSheet(
-                      p: const TextStyle(color: Colors.white70, fontSize: 15, height: 1.6),
-                      h3: GoogleFonts.poppins(color: const Color(0xFFC8A96E), fontSize: 18, fontWeight: FontWeight.bold),
+                      p: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 15,
+                        height: 1.6,
+                      ),
+                      h3: GoogleFonts.poppins(
+                        color: const Color(0xFFC8A96E),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                       listBullet: const TextStyle(color: Colors.white70),
                     ),
                   ),
@@ -1071,9 +1456,13 @@ void _showLocalizedProcessSheet(BuildContext context, EncyclopediaEntry entry, W
 
 String _getLocalizedDetailedProcess(String process, WidgetRef ref) {
   final p = process.toLowerCase();
-  if (p.contains('natural') || p.contains('натур')) return ref.t('process_natural_desc');
-  if (p.contains('washed') || p.contains('мит')) return ref.t('process_washed_desc');
-  if (p.contains('anaerobic') || p.contains('анаероб')) return ref.t('process_anaerobic_desc');
-  if (p.contains('thermal') || p.contains('термал')) return ref.t('process_thermal_desc');
+  if (p.contains('natural') || p.contains('натур'))
+    return ref.t('process_natural_desc');
+  if (p.contains('washed') || p.contains('мит'))
+    return ref.t('process_washed_desc');
+  if (p.contains('anaerobic') || p.contains('анаероб'))
+    return ref.t('process_anaerobic_desc');
+  if (p.contains('thermal') || p.contains('термал'))
+    return ref.t('process_thermal_desc');
   return ''; // Fallback
 }

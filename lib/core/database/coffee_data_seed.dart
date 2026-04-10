@@ -208,7 +208,8 @@ class CoffeeDataSeed {
         process: 'Natural',
         varieties: 'Caturra, Castillo',
         notes: ['Pear', 'Kiwi', 'Marzipan'],
-        desc: 'Складна кислотність, довгий ожиновий післясмак. Ціна (250г): 405₴ роздріб / 325₴ опт.',
+        desc:
+            'Складна кислотність, довгий ожиновий післясмак. Ціна (250г): 405₴ роздріб / 325₴ опт.',
         roast: 'Light',
         price: '405₴',
         weight: '250g',
@@ -218,7 +219,8 @@ class CoffeeDataSeed {
           'bitterness': 1,
           'intensity': 4,
         },
-        markdown: '### Етап 1: Селективний збір\n### Етап 2: Натуральна сушка на ліжках\n### Етап 3: Стабілізація вологості',
+        markdown:
+            '### Етап 1: Селективний збір\n### Етап 2: Натуральна сушка на ліжках\n### Етап 3: Стабілізація вологості',
       ),
     ];
 
@@ -280,7 +282,8 @@ class CoffeeDataSeed {
       BrewingRecipesCompanion.insert(
         methodKey: 'v60',
         name: 'Hario V60',
-        description: 'The V60 produces a clean, bright cup that highlights delicate floral and citrus notes.',
+        description:
+            'The V60 produces a clean, bright cup that highlights delicate floral and citrus notes.',
         ratioGramsPerMl: 1 / 15,
         tempC: 93.0,
         totalTimeSec: 165,
@@ -288,8 +291,16 @@ class CoffeeDataSeed {
         flavorProfile: 'Clean & Bright',
         iconName: 'v60',
         stepsJson: jsonEncode([
-          {'title': 'Bloom', 'desc': 'Pour 30ml water. Wait 30s.', 'durationSec': 30},
-          {'title': 'Brew', 'desc': 'Pour to 250ml in circles.', 'durationSec': 135},
+          {
+            'title': 'Bloom',
+            'desc': 'Pour 30ml water. Wait 30s.',
+            'durationSec': 30,
+          },
+          {
+            'title': 'Brew',
+            'desc': 'Pour to 250ml in circles.',
+            'durationSec': 135,
+          },
         ]),
       ),
     ];
@@ -357,7 +368,9 @@ class CoffeeDataSeed {
     ];
 
     for (var p in patterns) {
-      final id = await db.insertLatteArtPattern(p['main'] as LatteArtPatternsCompanion);
+      final id = await db.insertLatteArtPattern(
+        p['main'] as LatteArtPatternsCompanion,
+      );
       await db.insertLatteArtPatternTranslation(
         (p['trans'] as LatteArtPatternTranslationsCompanion).copyWith(
           patternId: Value(id),
@@ -373,7 +386,8 @@ class CoffeeDataSeed {
     final articles = [
       {
         'main': SpecialtyArticlesCompanion.insert(
-          imageUrl: 'https://images.unsplash.com/photo-1559525839-b184a4d698c7?w=600&q=80',
+          imageUrl:
+              'https://images.unsplash.com/photo-1559525839-b184a4d698c7?w=600&q=80',
           readTimeMin: 6,
         ),
         'trans': SpecialtyArticleTranslationsCompanion.insert(
@@ -387,7 +401,9 @@ class CoffeeDataSeed {
     ];
 
     for (var art in articles) {
-      final id = await db.insertArticle(art['main'] as SpecialtyArticlesCompanion);
+      final id = await db.insertArticle(
+        art['main'] as SpecialtyArticlesCompanion,
+      );
       await db.insertArticleTranslation(
         (art['trans'] as SpecialtyArticleTranslationsCompanion).copyWith(
           articleId: Value(id),

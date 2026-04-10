@@ -15,35 +15,38 @@ class SpecialtyEducationScreen extends ConsumerWidget {
     final asyncArticles = ref.watch(specialtyArticlesProvider);
 
     return SafeArea(
-        child: asyncArticles.when(
-          data: (articles) {
-            if (articles.isEmpty) {
-              return Center(child: Text(ref.t('no_articles')));
-            }
-            return ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-              itemCount: articles.length,
-              itemBuilder: (context, index) {
-                final art = articles[index];
-                return SpecialtyArticleCard(
-                  article: art,
-                  moduleName: ref.t('education'),
-                  index: index + 1,
-                );
-              },
-            );
-          },
-          loading: () => ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: 3,
-            itemBuilder: (_, __) => const Padding(
-              padding: EdgeInsets.only(bottom: 24),
-              child: SkeletonLoader(width: double.infinity, height: 350, borderRadius: 24),
+      child: asyncArticles.when(
+        data: (articles) {
+          if (articles.isEmpty) {
+            return Center(child: Text(ref.t('no_articles')));
+          }
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            itemCount: articles.length,
+            itemBuilder: (context, index) {
+              final art = articles[index];
+              return SpecialtyArticleCard(
+                article: art,
+                moduleName: ref.t('education'),
+                index: index + 1,
+              );
+            },
+          );
+        },
+        loading: () => ListView.builder(
+          padding: const EdgeInsets.all(16),
+          itemCount: 3,
+          itemBuilder: (_, __) => const Padding(
+            padding: EdgeInsets.only(bottom: 24),
+            child: SkeletonLoader(
+              width: double.infinity,
+              height: 350,
+              borderRadius: 24,
             ),
           ),
-          error: (e, st) => Center(child: Text('${ref.t('error_loading')}: $e')),
         ),
-      );
+        error: (e, st) => Center(child: Text('${ref.t('error_loading')}: $e')),
+      ),
+    );
   }
 }
-

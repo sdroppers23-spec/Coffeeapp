@@ -5,7 +5,8 @@ import '../discovery_filter_provider.dart';
 import '../../../core/providers/settings_provider.dart';
 
 class FilterChipBar extends ConsumerWidget {
-  final NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState> filterProvider;
+  final NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState>
+  filterProvider;
 
   const FilterChipBar({
     super.key,
@@ -24,52 +25,62 @@ class FilterChipBar extends ConsumerWidget {
 
     // Add Favorites chip
     if (state.showFavoritesOnly && !hideFavorites) {
-      chips.add(_FilterChipData(
-        type: 'favorites',
-        value: 'favorites',
-        label: 'Favorites',
-        icon: Icons.favorite_rounded,
-      ));
+      chips.add(
+        _FilterChipData(
+          type: 'favorites',
+          value: 'favorites',
+          label: 'Favorites',
+          icon: Icons.favorite_rounded,
+        ),
+      );
     }
 
     // Add Sort chip
     if (state.sortType != SortType.none) {
-      chips.add(_FilterChipData(
-        type: 'sort',
-        value: 'sort',
-        label: _getSortLabel(state.sortType),
-        icon: Icons.sort_rounded,
-      ));
+      chips.add(
+        _FilterChipData(
+          type: 'sort',
+          value: 'sort',
+          label: _getSortLabel(state.sortType),
+          icon: Icons.sort_rounded,
+        ),
+      );
     }
 
     // Add Country chips
     for (final country in state.selectedCountries) {
-      chips.add(_FilterChipData(
-        type: 'country',
-        value: country,
-        label: country,
-        icon: Icons.public_rounded,
-      ));
+      chips.add(
+        _FilterChipData(
+          type: 'country',
+          value: country,
+          label: country,
+          icon: Icons.public_rounded,
+        ),
+      );
     }
 
     // Add Flavor chips
     for (final flavor in state.selectedFlavorNotes) {
-      chips.add(_FilterChipData(
-        type: 'flavor',
-        value: flavor,
-        label: flavor,
-        icon: Icons.local_cafe_rounded,
-      ));
+      chips.add(
+        _FilterChipData(
+          type: 'flavor',
+          value: flavor,
+          label: flavor,
+          icon: Icons.local_cafe_rounded,
+        ),
+      );
     }
 
     // Add Process chips
     for (final process in state.selectedProcesses) {
-      chips.add(_FilterChipData(
-        type: 'process',
-        value: process,
-        label: process,
-        icon: Icons.settings_input_component_rounded,
-      ));
+      chips.add(
+        _FilterChipData(
+          type: 'process',
+          value: process,
+          label: process,
+          icon: Icons.settings_input_component_rounded,
+        ),
+      );
     }
 
     return Container(
@@ -111,14 +122,22 @@ class FilterChipBar extends ConsumerWidget {
                 const SizedBox(width: 8),
                 InkWell(
                   onTap: () {
-                    ref.read(settingsProvider.notifier).triggerSelectionVibrate();
+                    ref
+                        .read(settingsProvider.notifier)
+                        .triggerSelectionVibrate();
                     if (chip.type == 'favorites') {
                       ref.read(filterProvider.notifier).toggleFavoritesOnly();
                     } else {
-                      ref.read(filterProvider.notifier).removeFilter(chip.type, chip.value);
+                      ref
+                          .read(filterProvider.notifier)
+                          .removeFilter(chip.type, chip.value);
                     }
                   },
-                  child: const Icon(Icons.close_rounded, size: 16, color: Colors.black54),
+                  child: const Icon(
+                    Icons.close_rounded,
+                    size: 16,
+                    color: Colors.black54,
+                  ),
                 ),
               ],
             ),
@@ -130,13 +149,20 @@ class FilterChipBar extends ConsumerWidget {
 
   String _getSortLabel(SortType type) {
     switch (type) {
-      case SortType.alphabetAsc: return 'A-Z';
-      case SortType.alphabetDesc: return 'Z-A';
-      case SortType.priceAsc: return 'Cost ↑';
-      case SortType.priceDesc: return 'Cost ↓';
-      case SortType.dateAsc: return 'Oldest';
-      case SortType.dateDesc: return 'Newest';
-      default: return 'Sorted';
+      case SortType.alphabetAsc:
+        return 'A-Z';
+      case SortType.alphabetDesc:
+        return 'Z-A';
+      case SortType.priceAsc:
+        return 'Cost ↑';
+      case SortType.priceDesc:
+        return 'Cost ↓';
+      case SortType.dateAsc:
+        return 'Oldest';
+      case SortType.dateDesc:
+        return 'Newest';
+      default:
+        return 'Sorted';
     }
   }
 }

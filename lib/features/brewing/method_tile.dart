@@ -6,12 +6,30 @@ import 'brewing_detail_screen.dart';
 
 // ─── Method metadata for icons and gradient colors ────────────────────────────
 const _methodMeta = {
-  'v60': _MethodMeta(assetPath: 'assets/images/methods/v60.png', gradient: [Color(0xFFD4A574), Color(0xFF8B5E3C)]),
-  'chemex': _MethodMeta(assetPath: 'assets/images/methods/chemex.png', gradient: [Color(0xFFE8D5B7), Color(0xFF9C7048)]),
-  'aeropress': _MethodMeta(assetPath: 'assets/images/methods/aeropress.png', gradient: [Color(0xFFB8C4CC), Color(0xFF5A7A8A)]),
-  'french_press': _MethodMeta(assetPath: 'assets/images/methods/french_press.png', gradient: [Color(0xFFC8A96E), Color(0xFF7A5C2E)]),
-  'espresso': _MethodMeta(assetPath: 'assets/images/methods/espresso.png', gradient: [Color(0xFF8B2635), Color(0xFF4A1520)]),
-  'cold_brew': _MethodMeta(assetPath: 'assets/images/methods/cold_brew.png', gradient: [Color(0xFF4A90D9), Color(0xFF1A3A5C)]),
+  'v60': _MethodMeta(
+    assetPath: 'assets/images/methods/v60.png',
+    gradient: [Color(0xFFD4A574), Color(0xFF8B5E3C)],
+  ),
+  'chemex': _MethodMeta(
+    assetPath: 'assets/images/methods/chemex.png',
+    gradient: [Color(0xFFE8D5B7), Color(0xFF9C7048)],
+  ),
+  'aeropress': _MethodMeta(
+    assetPath: 'assets/images/methods/aeropress.png',
+    gradient: [Color(0xFFB8C4CC), Color(0xFF5A7A8A)],
+  ),
+  'french_press': _MethodMeta(
+    assetPath: 'assets/images/methods/french_press.png',
+    gradient: [Color(0xFFC8A96E), Color(0xFF7A5C2E)],
+  ),
+  'espresso': _MethodMeta(
+    assetPath: 'assets/images/methods/espresso.png',
+    gradient: [Color(0xFF8B2635), Color(0xFF4A1520)],
+  ),
+  'cold_brew': _MethodMeta(
+    assetPath: 'assets/images/methods/cold_brew.png',
+    gradient: [Color(0xFF4A90D9), Color(0xFF1A3A5C)],
+  ),
 };
 
 class _MethodMeta {
@@ -44,8 +62,12 @@ class MethodTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final meta = _methodMeta[recipe.methodKey] ??
-        const _MethodMeta(assetPath: 'assets/images/methods/v60.png', gradient: [Color(0xFFD4A574), Color(0xFF8B5E3C)]);
+    final meta =
+        _methodMeta[recipe.methodKey] ??
+        const _MethodMeta(
+          assetPath: 'assets/images/methods/v60.png',
+          gradient: [Color(0xFFD4A574), Color(0xFF8B5E3C)],
+        );
 
     return GestureDetector(
       onTap: () => Navigator.of(context).push(
@@ -62,7 +84,9 @@ class MethodTile extends StatelessWidget {
                 children: [
                   Positioned.fill(
                     child: ClipRRect(
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(24),
+                      ),
                       child: Image.asset(
                         meta.assetPath,
                         fit: BoxFit.cover,
@@ -109,7 +133,11 @@ class MethodTile extends StatelessWidget {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      Icon(Icons.timer_outlined, size: 12, color: Colors.white.withValues(alpha: 0.6)),
+                      Icon(
+                        Icons.timer_outlined,
+                        size: 12,
+                        color: Colors.white.withValues(alpha: 0.6),
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         _formattedTime,

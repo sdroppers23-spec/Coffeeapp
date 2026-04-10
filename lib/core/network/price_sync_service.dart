@@ -32,18 +32,18 @@ class PriceSyncService {
       // 2. Try to find retail prices in .regular-price or .price span
       // This is more complex as it might be a dropdown.
       // Usually, 3 Champs uses standard WooCommerce structure.
-      final priceElements =
-          document.querySelectorAll('.woocommerce-Price-amount');
+      final priceElements = document.querySelectorAll(
+        '.woocommerce-Price-amount',
+      );
       String? retail250;
       if (priceElements.isNotEmpty) {
-        retail250 =
-            priceElements.first.text.trim().replaceAll(RegExp(r'[^0-9]'), '');
+        retail250 = priceElements.first.text.trim().replaceAll(
+          RegExp(r'[^0-9]'),
+          '',
+        );
       }
 
-      return {
-        ...wholesale,
-        'retail_250': retail250,
-      };
+      return {...wholesale, 'retail_250': retail250};
     } catch (e) {
       return {};
     }

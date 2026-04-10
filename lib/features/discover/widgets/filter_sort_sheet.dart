@@ -5,7 +5,8 @@ import '../discovery_filter_provider.dart';
 import '../../../core/config/flag_constants.dart';
 
 class FilterSortSheet extends ConsumerWidget {
-  final NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState> filterProvider;
+  final NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState>
+  filterProvider;
   final List<String> availableCountries;
   final List<String> availableFlavors;
   final List<String> availableProcesses;
@@ -141,33 +142,76 @@ class FilterSortSheet extends ConsumerWidget {
       spacing: 8,
       runSpacing: 8,
       children: [
-        _SortChip(label: 'А-Я', type: SortType.alphabetAsc, current: state.sortType, provider: filterProvider),
-        _SortChip(label: 'Я-А', type: SortType.alphabetDesc, current: state.sortType, provider: filterProvider),
-        _SortChip(label: 'Вартість ↑', type: SortType.priceAsc, current: state.sortType, provider: filterProvider),
-        _SortChip(label: 'Вартість ↓', type: SortType.priceDesc, current: state.sortType, provider: filterProvider),
-        _SortChip(label: 'Спочатку нові', type: SortType.dateDesc, current: state.sortType, provider: filterProvider),
-        _SortChip(label: 'Спочатку старі', type: SortType.dateAsc, current: state.sortType, provider: filterProvider),
+        _SortChip(
+          label: 'А-Я',
+          type: SortType.alphabetAsc,
+          current: state.sortType,
+          provider: filterProvider,
+        ),
+        _SortChip(
+          label: 'Я-А',
+          type: SortType.alphabetDesc,
+          current: state.sortType,
+          provider: filterProvider,
+        ),
+        _SortChip(
+          label: 'Вартість ↑',
+          type: SortType.priceAsc,
+          current: state.sortType,
+          provider: filterProvider,
+        ),
+        _SortChip(
+          label: 'Вартість ↓',
+          type: SortType.priceDesc,
+          current: state.sortType,
+          provider: filterProvider,
+        ),
+        _SortChip(
+          label: 'Спочатку нові',
+          type: SortType.dateDesc,
+          current: state.sortType,
+          provider: filterProvider,
+        ),
+        _SortChip(
+          label: 'Спочатку старі',
+          type: SortType.dateAsc,
+          current: state.sortType,
+          provider: filterProvider,
+        ),
       ],
     );
   }
 
-  Widget _buildFilterChips(List<String> options, Set<String> selected, Function(String) onToggle) {
-    if (options.isEmpty) return const Text('Варіанти відсутні', style: TextStyle(color: Colors.white24, fontSize: 12));
-    
+  Widget _buildFilterChips(
+    List<String> options,
+    Set<String> selected,
+    Function(String) onToggle,
+  ) {
+    if (options.isEmpty)
+      return const Text(
+        'Варіанти відсутні',
+        style: TextStyle(color: Colors.white24, fontSize: 12),
+      );
+
     return Wrap(
       spacing: 8,
       runSpacing: 8,
       children: options.map((opt) {
         final isSelected = selected.contains(opt);
         final flagUrl = FlagConstants.getFlag(opt);
-        
+
         return FilterChip(
-          avatar: flagUrl != null 
-            ? ClipRRect(
-                borderRadius: BorderRadius.circular(2),
-                child: Image.network(flagUrl, width: 20, height: 14, fit: BoxFit.cover),
-              )
-            : null,
+          avatar: flagUrl != null
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(2),
+                  child: Image.network(
+                    flagUrl,
+                    width: 20,
+                    height: 14,
+                    fit: BoxFit.cover,
+                  ),
+                )
+              : null,
           label: Text(opt),
           selected: isSelected,
           onSelected: (_) => onToggle(opt),
@@ -180,7 +224,9 @@ class FilterSortSheet extends ConsumerWidget {
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
-            side: BorderSide(color: isSelected ? Colors.transparent : Colors.white10),
+            side: BorderSide(
+              color: isSelected ? Colors.transparent : Colors.white10,
+            ),
           ),
           showCheckmark: false,
         );
@@ -193,7 +239,8 @@ class _SortChip extends ConsumerWidget {
   final String label;
   final SortType type;
   final SortType current;
-  final NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState> provider;
+  final NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState>
+  provider;
 
   const _SortChip({
     required this.label,
@@ -213,9 +260,13 @@ class _SortChip extends ConsumerWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFFC8A96E) : Colors.white.withValues(alpha: 0.05),
+            color: isSelected
+                ? const Color(0xFFC8A96E)
+                : Colors.white.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: isSelected ? Colors.transparent : Colors.white10),
+            border: Border.all(
+              color: isSelected ? Colors.transparent : Colors.white10,
+            ),
           ),
           child: Text(
             label,

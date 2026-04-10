@@ -50,9 +50,15 @@ class SkeletonList extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SkeletonLoader(width: MediaQuery.of(context).size.width * 0.4, height: 16),
+                  SkeletonLoader(
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    height: 16,
+                  ),
                   const SizedBox(height: 8),
-                  SkeletonLoader(width: MediaQuery.of(context).size.width * 0.6, height: 12),
+                  SkeletonLoader(
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    height: 12,
+                  ),
                 ],
               ),
             ),

@@ -93,7 +93,9 @@ class LocalizedBeanDto {
   String get detailedProcessMarkdown => detailedProcess;
   String get sensoryJson => jsonEncode(sensoryPoints);
   String get priceJson => jsonEncode(pricing);
-  String get imageUrl => farmPhotosUrlCover ?? (plantationPhotos.isNotEmpty ? plantationPhotos.first : '');
+  String get imageUrl =>
+      farmPhotosUrlCover ??
+      (plantationPhotos.isNotEmpty ? plantationPhotos.first : '');
 }
 
 class LocalizedBrandDto {
@@ -145,7 +147,6 @@ class LocalizedFarmerDto {
 
   String get effectiveImageUrl => farmPhotosUrlCover ?? imageUrl;
 }
-
 
 class SpecialtyArticleDto {
   final int id;
@@ -356,7 +357,6 @@ class CoffeeLotDto {
     );
   }
 }
-
 
 class CustomRecipeDto {
   final String id;

@@ -11,7 +11,6 @@ import 'brand_details_screen.dart';
 import '../../core/database/dtos.dart';
 import 'discovery_providers.dart';
 
-
 // Removed redundant local brandsProvider. Using the one from discovery_providers.dart.
 
 class RoastersScreen extends ConsumerWidget {
@@ -37,10 +36,7 @@ class RoastersScreen extends ConsumerWidget {
                       color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
-                      Icons.add,
-                      color: Color(0xFFC8A96E),
-                    ),
+                    child: const Icon(Icons.add, color: Color(0xFFC8A96E)),
                   ),
                 ),
               ),
@@ -360,7 +356,9 @@ class _RoasterCardState extends ConsumerState<_RoasterCard> {
                   Text(
                     widget.brand.shortDesc,
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.5),
                       fontSize: 14,
                       fontStyle: FontStyle.italic,
                     ),
@@ -372,7 +370,9 @@ class _RoasterCardState extends ConsumerState<_RoasterCard> {
                       child: Text(
                         widget.brand.fullDesc,
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withValues(alpha: 0.6),
                           fontSize: 13,
                           height: 1.5,
                         ),

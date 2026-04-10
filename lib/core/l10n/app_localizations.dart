@@ -7,11 +7,15 @@ class LocaleNotifier extends Notifier<String> {
   void setLocale(String lang) => state = lang;
 }
 
-final localeProvider = NotifierProvider<LocaleNotifier, String>(() => LocaleNotifier());
+final localeProvider = NotifierProvider<LocaleNotifier, String>(
+  () => LocaleNotifier(),
+);
 
 extension LocalizationExtension on WidgetRef {
   String t(String key) {
-    final locale = watch(localeProvider); // watch triggers rebuild on locale change
+    final locale = watch(
+      localeProvider,
+    ); // watch triggers rebuild on locale change
     return AppLocalizations(locale).translate(key);
   }
 }
@@ -31,7 +35,9 @@ class AppLocalizations {
   AppLocalizations(this.locale);
 
   static AppLocalizations of(BuildContext context) {
-    return AppLocalizations(ProviderScope.containerOf(context).read(localeProvider));
+    return AppLocalizations(
+      ProviderScope.containerOf(context).read(localeProvider),
+    );
   }
 
   static const Map<String, Map<String, String>> _translations = {
@@ -79,10 +85,14 @@ class AppLocalizations {
       'process_washed': 'Washed',
       'process_anaerobic': 'Anaerobic',
       'process_honey': 'Honey',
-      'process_washed_desc': '### Stage 1: Depulping\nThe skin and pulp are removed mechanically. The sticky mucilage stays on the parchment.\n### Stage 2: Fermentation\nBeans soak in water tanks for 12-48 hours where bacteria break down the mucilage.\n### Stage 3: Washing & Drying\nBeans are washed with clean water and dried on patios or beds for 1-2 weeks.',
-      'process_natural_desc': '### Stage 1: Sorting\nOnly ripe cherries are selected and spread out on African beds or patios.\n### Stage 2: Drying\nThe whole fruit dries for 2-4 weeks, allowing sugars to concentrate inside the bean.\n### Stage 3: Hulling\nThe dried "raisin-like" husk is removed only after reaching 11-12% moisture.',
-      'process_anaerobic_desc': '### Stage 1: Sealing\nCherries are placed in airtight tanks where oxygen is removed.\n### Stage 2: Controlled Fermentation\nLactic acid bacteria thrive for 48-120 hours creating complex, funky flavor profiles.',
-      'process_thermal_desc': '### Stage 1: Hot Shock\nBeans are washed with 40°C water to expand pores and absorb fermentation products.\n### Stage 2: Cold Shock\nImmediately rinsed with 12°C water to "lock" the intense flavors inside the bean.',
+      'process_washed_desc':
+          '### Stage 1: Depulping\nThe skin and pulp are removed mechanically. The sticky mucilage stays on the parchment.\n### Stage 2: Fermentation\nBeans soak in water tanks for 12-48 hours where bacteria break down the mucilage.\n### Stage 3: Washing & Drying\nBeans are washed with clean water and dried on patios or beds for 1-2 weeks.',
+      'process_natural_desc':
+          '### Stage 1: Sorting\nOnly ripe cherries are selected and spread out on African beds or patios.\n### Stage 2: Drying\nThe whole fruit dries for 2-4 weeks, allowing sugars to concentrate inside the bean.\n### Stage 3: Hulling\nThe dried "raisin-like" husk is removed only after reaching 11-12% moisture.',
+      'process_anaerobic_desc':
+          '### Stage 1: Sealing\nCherries are placed in airtight tanks where oxygen is removed.\n### Stage 2: Controlled Fermentation\nLactic acid bacteria thrive for 48-120 hours creating complex, funky flavor profiles.',
+      'process_thermal_desc':
+          '### Stage 1: Hot Shock\nBeans are washed with 40°C water to expand pores and absorb fermentation products.\n### Stage 2: Cold Shock\nImmediately rinsed with 12°C water to "lock" the intense flavors inside the bean.',
       'shop_coffee': 'SHOP THIS COFFEE',
       'terroir_farm': 'TERROIR & FARM',
       'sensory_grid': 'SENSORY PROFILE',
@@ -114,15 +124,24 @@ class AppLocalizations {
       'varieties': 'Varieties',
       'region': 'Region',
       'process': 'Process',
-      'lot_desc_col_46_filter': 'Complex acidity, long blackberry aftertaste. Light roast for filter brewing.',
-      'lot_desc_col_31_filter': 'Long apple acidity. Thermal shock processed Chiroso variety.',
-      'lot_desc_kenya_20_filter': 'Bright berry classic. Notes of red berries and honey.',
-      'lot_desc_eth_37_filter': 'Clean and elegant tea profile. Jasmine and lemon notes.',
-      'lot_desc_col_46_espresso': 'Full body, perfect for milk-based drinks. Notes of pear and marzipan.',
-      'lot_desc_tanzania_utengule': 'Sweet and balanced lot from Tanzania. Honey process adds honey sweetness and fruit clarity.',
-      'lot_desc_col_alto_osos': 'Aged natural processing with anaerobic-like sweetness. High complexity with tropical fruit and rum notes.',
-      'lot_desc_indonesia_manis': 'Indonesia without earthiness. Only fruit, rum, and chocolate delight.',
-      'lot_desc_kenya_gichathaini': 'Bright and juicy Kenya with characteristic currant acidity and long aftertaste.',
+      'lot_desc_col_46_filter':
+          'Complex acidity, long blackberry aftertaste. Light roast for filter brewing.',
+      'lot_desc_col_31_filter':
+          'Long apple acidity. Thermal shock processed Chiroso variety.',
+      'lot_desc_kenya_20_filter':
+          'Bright berry classic. Notes of red berries and honey.',
+      'lot_desc_eth_37_filter':
+          'Clean and elegant tea profile. Jasmine and lemon notes.',
+      'lot_desc_col_46_espresso':
+          'Full body, perfect for milk-based drinks. Notes of pear and marzipan.',
+      'lot_desc_tanzania_utengule':
+          'Sweet and balanced lot from Tanzania. Honey process adds honey sweetness and fruit clarity.',
+      'lot_desc_col_alto_osos':
+          'Aged natural processing with anaerobic-like sweetness. High complexity with tropical fruit and rum notes.',
+      'lot_desc_indonesia_manis':
+          'Indonesia without earthiness. Only fruit, rum, and chocolate delight.',
+      'lot_desc_kenya_gichathaini':
+          'Bright and juicy Kenya with characteristic currant acidity and long aftertaste.',
     },
     'uk': {
       'discover': 'Відкриття',
@@ -185,10 +204,14 @@ class AppLocalizations {
       'sync_choice_desc': 'Оберіть режим:',
       'cloud_sync': 'Завантажити з хмари',
       'push_local': 'Вивантажити у хмару',
-      'process_washed_desc': '### Етап 1: Депульпація\nЗнімається шкірка та м\'якоть механічним способом.\n### Етап 2: Ферментація\nЗерна у слизу занурюються у воду на 12-48 годин для очищення ферментами.\n### Етап 3: Промивка та Сушка\nЗерно промивають чистою водою та сушать на сонці до вологості 11-12%.',
-      'process_natural_desc': '### Етап 1: Сортування\nЦілі ягоди розкладають на африканських ліжках.\n### Етап 2: Сушка у ягоді\nТриває 2-4 тижні. Ягода засихає, віддаючи всі цукри зерну всередині.\n### Етап 3: Халлінг\nСуха оболонка знімається лише після повної сушки.',
-      'process_anaerobic_desc': '### Етап 1: Герметизація\nЯгоди завантажують у бочки без доступу кисню.\n### Етап 2: Анаеробна ферментація\nТриває 48-120 годин, створюючи складний "фанкі" смак.',
-      'process_thermal_desc': '### Етап 1: Гарячий шок\nПромивання водою 40°C для розкриття пор.\n### Етап 2: Холодний шок\nРізке охолодження водою 12°C для "запечатування" смаку.',
+      'process_washed_desc':
+          '### Етап 1: Депульпація\nЗнімається шкірка та м\'якоть механічним способом.\n### Етап 2: Ферментація\nЗерна у слизу занурюються у воду на 12-48 годин для очищення ферментами.\n### Етап 3: Промивка та Сушка\nЗерно промивають чистою водою та сушать на сонці до вологості 11-12%.',
+      'process_natural_desc':
+          '### Етап 1: Сортування\nЦілі ягоди розкладають на африканських ліжках.\n### Етап 2: Сушка у ягоді\nТриває 2-4 тижні. Ягода засихає, віддаючи всі цукри зерну всередині.\n### Етап 3: Халлінг\nСуха оболонка знімається лише після повної сушки.',
+      'process_anaerobic_desc':
+          '### Етап 1: Герметизація\nЯгоди завантажують у бочки без доступу кисню.\n### Етап 2: Анаеробна ферментація\nТриває 48-120 годин, створюючи складний "фанкі" смак.',
+      'process_thermal_desc':
+          '### Етап 1: Гарячий шок\nПромивання водою 40°C для розкриття пор.\n### Етап 2: Холодний шок\nРізке охолодження водою 12°C для "запечатування" смаку.',
       'process_honey': 'Хані',
       'story_terroir': 'ІСТОРІЯ ТА ТЕРРУАР',
       'auth_subtitle': 'Увійдіть, щоб відстежувати свій шлях',
@@ -199,15 +222,24 @@ class AppLocalizations {
       'altitude': 'Висота',
       'varieties': 'Сорти',
       'process': 'Обробка',
-      'lot_desc_col_46_filter': 'Складна кислотність, довгий ожиновий післясмак. Світле обсмаження для фільтр-заварювання.',
-      'lot_desc_col_31_filter': 'Тривала яблучна кислотність. Лот оброблений методом термального шоку.',
-      'lot_desc_kenya_20_filter': 'Яскрава ягідна класика. Ноти червоних ягід та меду.',
-      'lot_desc_eth_37_filter': 'Чистий та елегантний чайний профіль. Ноти жасмину та лимону.',
-      'lot_desc_col_46_espresso': 'Щільне тіло, ідеально для молочних напоїв. Ноти груші та марципану.',
-      'lot_desc_tanzania_utengule': 'Солодкий та збалансований лот з Танзанії. Оброблений методом Honey, що додає медової солодкості.',
-      'lot_desc_col_alto_osos': 'Витримана натуральна обробка з перевагами анаеробного смаку. Висока солодкість, нотки тропічних фруктів та рому.',
-      'lot_desc_indonesia_manis': 'Індонезія без землі. Тільки фрукти, ром та шоколадна насолода.',
-      'lot_desc_kenya_gichathaini': 'Яскрава та соковита Кенія з характерною смородиновою кислотністю та тривалим післясмаком.',
+      'lot_desc_col_46_filter':
+          'Складна кислотність, довгий ожиновий післясмак. Світле обсмаження для фільтр-заварювання.',
+      'lot_desc_col_31_filter':
+          'Тривала яблучна кислотність. Лот оброблений методом термального шоку.',
+      'lot_desc_kenya_20_filter':
+          'Яскрава ягідна класика. Ноти червоних ягід та меду.',
+      'lot_desc_eth_37_filter':
+          'Чистий та елегантний чайний профіль. Ноти жасмину та лимону.',
+      'lot_desc_col_46_espresso':
+          'Щільне тіло, ідеально для молочних напоїв. Ноти груші та марципану.',
+      'lot_desc_tanzania_utengule':
+          'Солодкий та збалансований лот з Танзанії. Оброблений методом Honey, що додає медової солодкості.',
+      'lot_desc_col_alto_osos':
+          'Витримана натуральна обробка з перевагами анаеробного смаку. Висока солодкість, нотки тропічних фруктів та рому.',
+      'lot_desc_indonesia_manis':
+          'Індонезія без землі. Тільки фрукти, ром та шоколадна насолода.',
+      'lot_desc_kenya_gichathaini':
+          'Яскрава та соковита Кенія з характерною смородиновою кислотністю та тривалим післясмаком.',
     },
     'ru': {
       'discover': 'Открытия',
@@ -271,10 +303,14 @@ class AppLocalizations {
       'sync_choice_desc': 'Выберите режим:',
       'cloud_sync': 'Загрузить из облака',
       'push_local': 'Выгрузить в облако',
-      'process_washed_desc': '### Этап 1: Депульпация\nСнимается кожица и мякоть механическим способом.\n### Этап 2: Ферментация\nЗерна в слизи погружаются в воду на 12-48 часов для очистки ферментами.\n### Этап 3: Промывка и Сушка\nЗерно промывают чистой водой и сушат на солнце до влажности 11-12%.',
-      'process_natural_desc': '### Этап 1: Сортировка\nЦелые ягоды раскладывают на африканских кроватях.\n### Этап 2: Сушка в ягоде\nДлится 2-4 недели. Ягода засыхает, отдавая все сахара зерну внутри.\n### Этап 3: Халлинг\nСухая оболонка снимается только после полной сушки.',
-      'process_anaerobic_desc': '### Этап 1: Герметизация\nЯгоды загружают в бочки без доступа кислорода.\n### Этап 2: Анаэробная ферментация\nДлится 48-120 часов, создавая сложный "фанки" вкус.',
-      'process_thermal_desc': '### Этап 1: Горячий шок\nПромывка водой 40°C для открытия пор.\n### Этап 2: Холодный шок\nРезкое охолодження водой 12°C для "запечатывания" вкуса.',
+      'process_washed_desc':
+          '### Этап 1: Депульпация\nСнимается кожица и мякоть механическим способом.\n### Этап 2: Ферментация\nЗерна в слизи погружаются в воду на 12-48 часов для очистки ферментами.\n### Этап 3: Промывка и Сушка\nЗерно промывают чистой водой и сушат на солнце до влажности 11-12%.',
+      'process_natural_desc':
+          '### Этап 1: Сортировка\nЦелые ягоды раскладывают на африканских кроватях.\n### Этап 2: Сушка в ягоде\nДлится 2-4 недели. Ягода засыхает, отдавая все сахара зерну внутри.\n### Этап 3: Халлинг\nСухая оболонка снимается только после полной сушки.',
+      'process_anaerobic_desc':
+          '### Этап 1: Герметизация\nЯгоды загружают в бочки без доступа кислорода.\n### Этап 2: Анаэробная ферментация\nДлится 48-120 часов, создавая сложный "фанки" вкус.',
+      'process_thermal_desc':
+          '### Этап 1: Горячий шок\nПромывка водой 40°C для открытия пор.\n### Этап 2: Холодный шок\nРезкое охолодження водой 12°C для "запечатывания" вкуса.',
       'process_honey': 'Хани',
       'auth_subtitle': 'Войдите, чтобы отслеживать свой путь',
       'search_origins': 'Поиск...',
@@ -284,15 +320,24 @@ class AppLocalizations {
       'altitude': 'Высота',
       'varieties': 'Сорта',
       'process': 'Обработка',
-      'lot_desc_col_46_filter': 'Сложная кислотность, долгое ежевичное послевкусие. Светлая обжарка для фильтр-заваривания.',
-      'lot_desc_col_31_filter': 'Длительная яблочная кислотность. Лот обработан методом термального шока.',
-      'lot_desc_kenya_20_filter': 'Яркая ягодная классика. Ноты красных ягод и меда.',
-      'lot_desc_eth_37_filter': 'Чистый и элегантный чайный профиль. Ноты жасмина и лимона.',
-      'lot_desc_col_46_espresso': 'Плотное тело, идеально для молочных напитков. Ноты груши и марципана.',
-      'lot_desc_tanzania_utengule': 'Сладкий и сбалансированный лот из Танзании. Обработан методом Honey, добавляющим медовую сладость.',
-      'lot_desc_col_alto_osos': 'Выдержанная натуральная обработка с преимуществами анаэробного вкуса. Высокая сладость, нотки тропических фруктов и рома.',
-      'lot_desc_indonesia_manis': 'Индонезия без земли. Только фрукты, ром и шоколадное наслаждение.',
-      'lot_desc_kenya_gichathaini': 'Яркая и сочная Кения с характерной смородиновой кислотностью и длительным послевкусием.',
+      'lot_desc_col_46_filter':
+          'Сложная кислотность, долгое ежевичное послевкусие. Светлая обжарка для фильтр-заваривания.',
+      'lot_desc_col_31_filter':
+          'Длительная яблочная кислотность. Лот обработан методом термального шока.',
+      'lot_desc_kenya_20_filter':
+          'Яркая ягодная классика. Ноты красных ягод и меда.',
+      'lot_desc_eth_37_filter':
+          'Чистый и элегантный чайный профиль. Ноты жасмина и лимона.',
+      'lot_desc_col_46_espresso':
+          'Плотное тело, идеально для молочных напитков. Ноты груши и марципана.',
+      'lot_desc_tanzania_utengule':
+          'Сладкий и сбалансированный лот из Танзании. Обработан методом Honey, добавляющим медовую сладость.',
+      'lot_desc_col_alto_osos':
+          'Выдержанная натуральная обработка с преимуществами анаэробного вкуса. Высокая сладость, нотки тропических фруктов и рома.',
+      'lot_desc_indonesia_manis':
+          'Индонезия без земли. Только фрукты, ром и шоколадное наслаждение.',
+      'lot_desc_kenya_gichathaini':
+          'Яркая и сочная Кения с характерной смородиновой кислотностью и длительным послевкусием.',
     },
   };
 

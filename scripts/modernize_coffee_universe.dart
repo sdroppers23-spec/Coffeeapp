@@ -50,19 +50,20 @@ void main() async {
       {
         'id': 1,
         'name': 'Mad Heads',
-        'logo_url': 'https://madheadscoffee.com/logo.png'
+        'logo_url': 'https://madheadscoffee.com/logo.png',
       },
       {
         'id': 2,
         'name': '3 Champs Roastery',
-        'logo_url': 'https://3champs.com.ua/logo.png'
+        'logo_url': 'https://3champs.com.ua/logo.png',
       },
     ];
     await client.upsert('brands', brands);
 
     print('👨‍🌾 Seeding Farmers...');
-    final farmersJson =
-        jsonDecode(File('Img/unified_farmers.json').readAsStringSync());
+    final farmersJson = jsonDecode(
+      File('Img/unified_farmers.json').readAsStringSync(),
+    );
     final List<Map<String, dynamic>> farmersToInsert = [];
     final List<Map<String, dynamic>> farmerTranslations = [];
 
@@ -93,7 +94,8 @@ void main() async {
         'name': f['farmer_name_en'],
         'farm_name': f['farm_name'],
         'country': f['country_en'],
-        'image_url': farmerImages[jsonId] ??
+        'image_url':
+            farmerImages[jsonId] ??
             'https://placehold.co/600x400?text=${f['farmer_name_en']}',
         'altitude': f['altitude_max'] ?? 0,
         'varieties': f['varieties'] is List
@@ -125,9 +127,9 @@ void main() async {
     await client.upsert('localized_farmer_translations', farmerTranslations);
 
     print('📖 Seeding Encyclopedia...');
-    final encyclopediaContent =
-        File('Img/extended_specialty_coffee_encyclopedia.json')
-            .readAsStringSync();
+    final encyclopediaContent = File(
+      'Img/extended_specialty_coffee_encyclopedia.json',
+    ).readAsStringSync();
     final objects = encyclopediaContent.split(RegExp(r'\}\n\{'));
 
     final List<Map<String, dynamic>> articlesList = [];
@@ -162,7 +164,8 @@ void main() async {
         articlesList.add({
           'id': id,
           'category': moduleName,
-          'image_url': moduleImages[moduleId] ??
+          'image_url':
+              moduleImages[moduleId] ??
               'https://placehold.co/800x400?text=$topic',
           'is_published': true,
         });
@@ -180,7 +183,7 @@ void main() async {
           'title': topic,
           'content_html':
               '<p>Extended information about $topic is coming soon in English.</p>' +
-                  htmlContent,
+              htmlContent,
         });
       }
     }
@@ -264,7 +267,8 @@ String formatToHtml(Map<String, dynamic> data) {
       for (var item in value) {
         if (item is Map) {
           sb.write(
-              '<li><strong>${item.values.first}</strong>: ${item.values.last}</li>');
+            '<li><strong>${item.values.first}</strong>: ${item.values.last}</li>',
+          );
         } else {
           sb.write('<li>$item</li>');
         }
@@ -312,8 +316,9 @@ class NativeSupabaseClient {
       final end = (i + 50 > rows.length) ? rows.length : i + 50;
       final chunk = rows.sublist(i, end);
 
-      final request =
-          await httpClient.postUrl(Uri.parse('$baseUrl/rest/v1/$table'));
+      final request = await httpClient.postUrl(
+        Uri.parse('$baseUrl/rest/v1/$table'),
+      );
       request.headers.add('apikey', anonKey);
       request.headers.add('Authorization', 'Bearer $anonKey');
       request.headers.add('Content-Type', 'application/json');
@@ -332,8 +337,9 @@ class NativeSupabaseClient {
   Future<void> deleteTable(String table) async {
     final idCols = ['article_id', 'farmer_id', 'bean_id', 'id'];
     for (var col in idCols) {
-      final request = await httpClient
-          .deleteUrl(Uri.parse('$baseUrl/rest/v1/$table?$col=neq.-1'));
+      final request = await httpClient.deleteUrl(
+        Uri.parse('$baseUrl/rest/v1/$table?$col=neq.-1'),
+      );
       request.headers.add('apikey', anonKey);
       request.headers.add('Authorization', 'Bearer $anonKey');
       final response = await request.close();

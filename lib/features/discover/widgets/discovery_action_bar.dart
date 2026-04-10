@@ -6,7 +6,8 @@ import 'filter_sort_sheet.dart';
 import '../../../shared/widgets/pressable_scale.dart';
 
 class DiscoveryActionBar extends ConsumerWidget {
-  final NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState> filterProvider;
+  final NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState>
+  filterProvider;
   final VoidCallback onCompareTap;
   final List<String> availableCountries;
   final List<String> availableFlavors;
@@ -52,10 +53,14 @@ class DiscoveryActionBar extends ConsumerWidget {
                   if (showFavoritesButton) ...[
                     const SizedBox(width: 8),
                     _ActionButton(
-                      icon: state.showFavoritesOnly ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                      icon: state.showFavoritesOnly
+                          ? Icons.favorite_rounded
+                          : Icons.favorite_border_rounded,
                       label: 'Обране',
                       isActive: state.showFavoritesOnly,
-                      onTap: () => ref.read(filterProvider.notifier).toggleFavoritesOnly(),
+                      onTap: () => ref
+                          .read(filterProvider.notifier)
+                          .toggleFavoritesOnly(),
                     ),
                   ],
                 ],
@@ -73,7 +78,9 @@ class DiscoveryActionBar extends ConsumerWidget {
                 border: Border.all(color: Colors.white10),
               ),
               child: Icon(
-                state.isGrid ? Icons.view_list_rounded : Icons.grid_view_rounded,
+                state.isGrid
+                    ? Icons.view_list_rounded
+                    : Icons.grid_view_rounded,
                 color: const Color(0xFFC8A96E),
                 size: 20,
               ),
@@ -120,9 +127,13 @@ class _ActionButton extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isActive ? const Color(0xFFC8A96E) : Colors.white.withValues(alpha: 0.05),
+          color: isActive
+              ? const Color(0xFFC8A96E)
+              : Colors.white.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: isActive ? Colors.transparent : Colors.white10),
+          border: Border.all(
+            color: isActive ? Colors.transparent : Colors.white10,
+          ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,

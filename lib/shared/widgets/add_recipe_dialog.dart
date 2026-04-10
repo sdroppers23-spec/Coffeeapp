@@ -103,9 +103,19 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                   dropdownColor: const Color(0xFF1E1E1E),
                   style: GoogleFonts.outfit(color: Colors.white),
                   decoration: _inputDecoration(),
-                  items: ['V60', 'Chemex', 'Aeropress', 'Espresso', 'Batch Brew', 'French Press']
-                      .map((m) => DropdownMenuItem(value: m, child: Text(m)))
-                      .toList(),
+                  items:
+                      [
+                            'V60',
+                            'Chemex',
+                            'Aeropress',
+                            'Espresso',
+                            'Batch Brew',
+                            'French Press',
+                          ]
+                          .map(
+                            (m) => DropdownMenuItem(value: m, child: Text(m)),
+                          )
+                          .toList(),
                   onChanged: (val) => setState(() => _method = val!),
                 ),
                 const SizedBox(height: 16),
@@ -188,19 +198,29 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                   controller: _notesController,
                   maxLines: 3,
                   style: GoogleFonts.outfit(color: Colors.white),
-                  decoration: _inputDecoration(hint: 'Aroma, bloom duration, etc.'),
+                  decoration: _inputDecoration(
+                    hint: 'Aroma, bloom duration, etc.',
+                  ),
                 ),
                 const SizedBox(height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('RATING', style: GoogleFonts.outfit(color: Colors.white54, fontSize: 12)),
+                    Text(
+                      'RATING',
+                      style: GoogleFonts.outfit(
+                        color: Colors.white54,
+                        fontSize: 12,
+                      ),
+                    ),
                     Row(
                       children: List.generate(5, (index) {
                         return GestureDetector(
                           onTap: () => setState(() => _rating = index + 1),
                           child: Icon(
-                            index < _rating ? Icons.star_rounded : Icons.star_outline_rounded,
+                            index < _rating
+                                ? Icons.star_rounded
+                                : Icons.star_outline_rounded,
                             color: const Color(0xFFC8A96E),
                             size: 28,
                           ),
@@ -218,12 +238,17 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFC8A96E),
                       foregroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                       elevation: 0,
                     ),
                     child: Text(
                       ref.t('save').toUpperCase(),
-                      style: GoogleFonts.outfit(fontWeight: FontWeight.bold, letterSpacing: 2),
+                      style: GoogleFonts.outfit(
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 2,
+                      ),
                     ),
                   ),
                 ),
@@ -232,7 +257,10 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                   child: Center(
                     child: Text(
                       'CANCEL',
-                      style: GoogleFonts.outfit(color: Colors.white38, fontSize: 12),
+                      style: GoogleFonts.outfit(
+                        color: Colors.white38,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                 ),

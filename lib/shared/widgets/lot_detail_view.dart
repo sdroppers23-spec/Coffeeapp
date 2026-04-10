@@ -52,7 +52,10 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
           labelColor: gold,
           unselectedLabelColor: Colors.white38,
           labelStyle: GoogleFonts.outfit(
-              fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1),
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1,
+          ),
           tabs: [
             Tab(text: ref.t('description').toUpperCase()),
             Tab(text: ref.t('sensory').toUpperCase()),
@@ -133,18 +136,23 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
             child: Column(
               children: [
                 _SpecRow(
-                    label1: ref.t('varieties'),
-                    value1: widget.entry.varieties,
-                    label2: ref.t('altitude'),
-                    value2:
-                        '${widget.entry.altitudeMin ?? '?'}-${widget.entry.altitudeMax ?? '?'} m'),
+                  label1: ref.t('varieties'),
+                  value1: widget.entry.varieties,
+                  label2: ref.t('altitude'),
+                  value2:
+                      '${widget.entry.altitudeMin ?? '?'}-${widget.entry.altitudeMax ?? '?'} m',
+                ),
                 const Divider(
-                    height: 24, thickness: 0.5, color: Colors.white10),
+                  height: 24,
+                  thickness: 0.5,
+                  color: Colors.white10,
+                ),
                 _SpecRow(
-                    label1: "LOT #",
-                    value1: widget.entry.lotNumber,
-                    label2: ref.t('roast_level'),
-                    value2: widget.entry.roastLevel),
+                  label1: "LOT #",
+                  value1: widget.entry.lotNumber,
+                  label2: ref.t('roast_level'),
+                  value2: widget.entry.roastLevel,
+                ),
               ],
             ),
           ),
@@ -157,13 +165,16 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
               Text(
                 pTable['retail_250']?.toString() ?? '?',
                 style: GoogleFonts.outfit(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white),
+                  fontSize: 28,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.white,
+                ),
               ),
               const SizedBox(width: 4),
-              Text("₴",
-                  style: GoogleFonts.outfit(fontSize: 24, color: Colors.white)),
+              Text(
+                "₴",
+                style: GoogleFonts.outfit(fontSize: 24, color: Colors.white),
+              ),
               const SizedBox(width: 20),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,22 +184,28 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                       Text(
                         pTable['wholesale_1k']?.toString() ?? '?',
                         style: GoogleFonts.outfit(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white38),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white38,
+                        ),
                       ),
                       const SizedBox(width: 2),
-                      Text("₴",
-                          style: GoogleFonts.outfit(
-                              fontSize: 14, color: Colors.white38)),
+                      Text(
+                        "₴",
+                        style: GoogleFonts.outfit(
+                          fontSize: 14,
+                          color: Colors.white38,
+                        ),
+                      ),
                     ],
                   ),
                   Text(
                     ref.t('wholesale').toUpperCase(),
                     style: GoogleFonts.outfit(
-                        fontSize: 8,
-                        color: Colors.white24,
-                        fontWeight: FontWeight.bold),
+                      fontSize: 8,
+                      color: Colors.white24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -200,7 +217,10 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
           Text(
             widget.entry.description,
             style: GoogleFonts.outfit(
-                fontSize: 13, height: 1.5, color: Colors.white70),
+              fontSize: 13,
+              height: 1.5,
+              color: Colors.white70,
+            ),
           ),
         ],
       ),
@@ -217,8 +237,9 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
             aspectRatio: 1.2,
             child: SensoryRadarChart(
               interactive: false,
-              staticValues: widget.entry.sensoryPoints.map((k, v) => MapEntry(
-                  k, (v as num).toDouble() / 5.0)), // Scale 1-5 instead of 1-10
+              staticValues: widget.entry.sensoryPoints.map(
+                (k, v) => MapEntry(k, (v as num).toDouble() / 5.0),
+              ), // Scale 1-5 instead of 1-10
             ),
           ),
           const SizedBox(height: 32),
@@ -231,48 +252,60 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                 Row(
                   children: [
                     Expanded(
-                        child: _SensoryPointBar(
-                            label: ref.t('aroma'),
-                            points: (sPoints['aroma'] as num? ?? 0).toInt(),
-                            theme: theme)),
+                      child: _SensoryPointBar(
+                        label: ref.t('aroma'),
+                        points: (sPoints['aroma'] as num? ?? 0).toInt(),
+                        theme: theme,
+                      ),
+                    ),
                     const SizedBox(width: 24),
                     Expanded(
-                        child: _SensoryPointBar(
-                            label: ref.t('flavor'),
-                            points: (sPoints['flavor'] as num? ?? 0).toInt(),
-                            theme: theme)),
+                      child: _SensoryPointBar(
+                        label: ref.t('flavor'),
+                        points: (sPoints['flavor'] as num? ?? 0).toInt(),
+                        theme: theme,
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 16),
                 Row(
                   children: [
                     Expanded(
-                        child: _SensoryPointBar(
-                            label: ref.t('acidity'),
-                            points: (sPoints['acidity'] as num? ?? 0).toInt(),
-                            theme: theme)),
+                      child: _SensoryPointBar(
+                        label: ref.t('acidity'),
+                        points: (sPoints['acidity'] as num? ?? 0).toInt(),
+                        theme: theme,
+                      ),
+                    ),
                     const SizedBox(width: 24),
                     Expanded(
-                        child: _SensoryPointBar(
-                            label: ref.t('body'),
-                            points: (sPoints['body'] as num? ?? 0).toInt(),
-                            theme: theme)),
+                      child: _SensoryPointBar(
+                        label: ref.t('body'),
+                        points: (sPoints['body'] as num? ?? 0).toInt(),
+                        theme: theme,
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 16),
                 Row(
                   children: [
                     Expanded(
-                        child: _SensoryPointBar(
-                            label: ref.t('aftertaste'),
-                            points: (sPoints['aftertaste'] as num? ?? 0).toInt(),
-                            theme: theme)),
+                      child: _SensoryPointBar(
+                        label: ref.t('aftertaste'),
+                        points: (sPoints['aftertaste'] as num? ?? 0).toInt(),
+                        theme: theme,
+                      ),
+                    ),
                     const SizedBox(width: 24),
                     Expanded(
-                        child: _SensoryPointBar(
-                            label: ref.t('balance'),
-                            points: (sPoints['balance'] as num? ?? 0).toInt(),
-                            theme: theme)),
+                      child: _SensoryPointBar(
+                        label: ref.t('balance'),
+                        points: (sPoints['balance'] as num? ?? 0).toInt(),
+                        theme: theme,
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -299,11 +332,14 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
           children: [
             if (recipes.isEmpty)
               Center(
-                  child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Text("No recipes added to this lot yet.",
-                    style: TextStyle(color: Colors.white24)),
-              )),
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Text(
+                    "No recipes added to this lot yet.",
+                    style: TextStyle(color: Colors.white24),
+                  ),
+                ),
+              ),
             ...recipes.map((r) => _RecipeCard(recipe: r, theme: theme)),
             const Spacer(),
             Padding(
@@ -323,12 +359,14 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                 icon: const Icon(Icons.add),
                 label: const Text("Add Custom Recipe"),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      theme.colorScheme.primary.withValues(alpha: 0.1),
+                  backgroundColor: theme.colorScheme.primary.withValues(
+                    alpha: 0.1,
+                  ),
                   foregroundColor: theme.colorScheme.primary,
                   minimumSize: const Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16)),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                 ),
               ),
             ),
@@ -352,21 +390,30 @@ class _ScaBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.colorScheme.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border:
-            Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.3)),
+        border: Border.all(
+          color: theme.colorScheme.primary.withValues(alpha: 0.3),
+        ),
       ),
-      child: Column(children: [
-        Text("SCA",
+      child: Column(
+        children: [
+          Text(
+            "SCA",
             style: GoogleFonts.outfit(
-                fontSize: 8,
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.primary)),
-        Text(score,
+              fontSize: 8,
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.primary,
+            ),
+          ),
+          Text(
+            score,
             style: GoogleFonts.outfit(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.white)),
-      ]),
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -377,29 +424,39 @@ class _SectionTitle extends StatelessWidget {
   const _SectionTitle({required this.title, required this.theme});
   @override
   Widget build(BuildContext context) {
-    return Text(title.toUpperCase(),
-        style: GoogleFonts.outfit(
-            fontSize: 11,
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.primary.withValues(alpha: 0.7),
-            letterSpacing: 1));
+    return Text(
+      title.toUpperCase(),
+      style: GoogleFonts.outfit(
+        fontSize: 11,
+        fontWeight: FontWeight.bold,
+        color: theme.colorScheme.primary.withValues(alpha: 0.7),
+        letterSpacing: 1,
+      ),
+    );
   }
 }
 
 class _SpecRow extends StatelessWidget {
   final String label1, value1, label2, value2;
-  const _SpecRow(
-      {required this.label1,
-      required this.value1,
-      required this.label2,
-      required this.value2});
+  const _SpecRow({
+    required this.label1,
+    required this.value1,
+    required this.label2,
+    required this.value2,
+  });
   @override
   Widget build(BuildContext context) {
-    return Row(children: [
-      Expanded(child: _SpecItem(label: label1, value: value1)),
-      const SizedBox(width: 16),
-      Expanded(child: _SpecItem(label: label2, value: value2)),
-    ]);
+    return Row(
+      children: [
+        Expanded(
+          child: _SpecItem(label: label1, value: value1),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: _SpecItem(label: label2, value: value2),
+        ),
+      ],
+    );
   }
 }
 
@@ -408,17 +465,28 @@ class _SpecItem extends StatelessWidget {
   const _SpecItem({required this.label, required this.value});
   @override
   Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(label.toUpperCase(),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label.toUpperCase(),
           style: GoogleFonts.outfit(
-              fontSize: 9, color: Colors.white38, fontWeight: FontWeight.bold)),
-      const SizedBox(height: 2),
-      Text(value,
+            fontSize: 9,
+            color: Colors.white38,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          value,
           style: GoogleFonts.outfit(
-              fontSize: 13,
-              color: Colors.white70,
-              fontWeight: FontWeight.w500)),
-    ]);
+            fontSize: 13,
+            color: Colors.white70,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -428,8 +496,11 @@ class _SensoryPointBar extends StatelessWidget {
   final String label;
   final num points;
   final ThemeData theme;
-  const _SensoryPointBar(
-      {required this.label, required this.points, required this.theme});
+  const _SensoryPointBar({
+    required this.label,
+    required this.points,
+    required this.theme,
+  });
   @override
   Widget build(BuildContext context) {
     final cyan = const Color(0xFF88DDEE);
@@ -447,15 +518,23 @@ class _SensoryPointBar extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(label.toUpperCase(),
-                  style: GoogleFonts.outfit(
-                      fontSize: 10,
-                      letterSpacing: 1.2,
-                      color: Colors.white38,
-                      fontWeight: FontWeight.bold)),
-              Text("$intValue / 5",
-                  style: GoogleFonts.outfit(
-                      fontSize: 10, color: cyan, fontWeight: FontWeight.bold)),
+              Text(
+                label.toUpperCase(),
+                style: GoogleFonts.outfit(
+                  fontSize: 10,
+                  letterSpacing: 1.2,
+                  color: Colors.white38,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "$intValue / 5",
+                style: GoogleFonts.outfit(
+                  fontSize: 10,
+                  color: cyan,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 4),
@@ -468,8 +547,9 @@ class _SensoryPointBar extends StatelessWidget {
                   height: 2,
                   margin: EdgeInsets.only(right: i == 4 ? 0 : 4),
                   decoration: BoxDecoration(
-                    color:
-                        isActive ? cyan : Colors.white.withValues(alpha: 0.1),
+                    color: isActive
+                        ? cyan
+                        : Colors.white.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(1),
                   ),
                 ),
@@ -492,20 +572,31 @@ class _RecipeCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       opacity: 0.05,
-      child: Row(children: [
-        Icon(Icons.coffee_maker, color: theme.colorScheme.primary, size: 30),
-        const SizedBox(width: 16),
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(recipe.methodKey.toUpperCase(),
-              style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
-          Text("${recipe.coffeeGrams}g / ${recipe.waterGrams}ml",
-              style: TextStyle(fontSize: 12, color: Colors.white38)),
-        ]),
-        const Spacer(),
-        Text("${recipe.rating}",
-            style: const TextStyle(fontWeight: FontWeight.bold)),
-        const Icon(Icons.star, size: 14, color: Colors.amber),
-      ]),
+      child: Row(
+        children: [
+          Icon(Icons.coffee_maker, color: theme.colorScheme.primary, size: 30),
+          const SizedBox(width: 16),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                recipe.methodKey.toUpperCase(),
+                style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                "${recipe.coffeeGrams}g / ${recipe.waterGrams}ml",
+                style: TextStyle(fontSize: 12, color: Colors.white38),
+              ),
+            ],
+          ),
+          const Spacer(),
+          Text(
+            "${recipe.rating}",
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const Icon(Icons.star, size: 14, color: Colors.amber),
+        ],
+      ),
     );
   }
 }

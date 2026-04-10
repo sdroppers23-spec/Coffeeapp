@@ -11,8 +11,10 @@ void main() async {
     return;
   }
 
-  final arbFiles =
-      arbDir.listSync().where((f) => f.path.endsWith('.arb')).toList();
+  final arbFiles = arbDir
+      .listSync()
+      .where((f) => f.path.endsWith('.arb'))
+      .toList();
   if (arbFiles.isEmpty) {
     print('No arb files!');
     return;
@@ -31,7 +33,8 @@ void main() async {
   final buffer = StringBuffer();
   buffer.writeln("import 'package:flutter/widgets.dart';");
   buffer.writeln(
-      "import 'package:flutter_localizations/flutter_localizations.dart';");
+    "import 'package:flutter_localizations/flutter_localizations.dart';",
+  );
   buffer.writeln("");
   buffer.writeln("abstract class AppLocalizations {");
   buffer.writeln("  AppLocalizations(String locale) : localeName = locale;");
@@ -39,15 +42,19 @@ void main() async {
   buffer.writeln("");
   buffer.writeln("  static AppLocalizations of(BuildContext context) {");
   buffer.writeln(
-      "    return Localizations.of<AppLocalizations>(context, AppLocalizations)!;");
+    "    return Localizations.of<AppLocalizations>(context, AppLocalizations)!;",
+  );
   buffer.writeln("  }");
   buffer.writeln("");
   buffer.writeln(
-      "  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();");
+    "  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();",
+  );
   buffer.writeln(
-      "  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = [delegate, GlobalMaterialLocalizations.delegate, GlobalWidgetsLocalizations.delegate, GlobalCupertinoLocalizations.delegate];");
+    "  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = [delegate, GlobalMaterialLocalizations.delegate, GlobalWidgetsLocalizations.delegate, GlobalCupertinoLocalizations.delegate];",
+  );
   buffer.writeln(
-      "  static const List<Locale> supportedLocales = [${langs.keys.map((l) => "Locale('$l')").join(', ')}];");
+    "  static const List<Locale> supportedLocales = [${langs.keys.map((l) => "Locale('$l')").join(', ')}];",
+  );
   buffer.writeln("");
 
   for (var k in keys) {
@@ -86,14 +93,18 @@ void main() async {
   buffer.writeln("");
 
   buffer.writeln(
-      "class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {");
+    "class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {",
+  );
   buffer.writeln("  const _AppLocalizationsDelegate();");
   buffer.writeln(
-      "  @override bool isSupported(Locale locale) => [${langs.keys.map((l) => "'$l'").join(', ')}].contains(locale.languageCode);");
+    "  @override bool isSupported(Locale locale) => [${langs.keys.map((l) => "'$l'").join(', ')}].contains(locale.languageCode);",
+  );
   buffer.writeln(
-      "  @override Future<AppLocalizations> load(Locale locale) async => lookupAppLocalizations(locale);");
+    "  @override Future<AppLocalizations> load(Locale locale) async => lookupAppLocalizations(locale);",
+  );
   buffer.writeln(
-      "  @override bool shouldReload(_AppLocalizationsDelegate old) => false;");
+    "  @override bool shouldReload(_AppLocalizationsDelegate old) => false;",
+  );
   buffer.writeln("}");
 
   await outputFile.writeAsString(buffer.toString());

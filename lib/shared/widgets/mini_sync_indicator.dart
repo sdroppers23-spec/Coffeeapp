@@ -49,10 +49,7 @@ class MiniSyncIndicator extends ConsumerWidget {
       decoration: BoxDecoration(
         color: statusColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: statusColor.withValues(alpha: 0.2),
-          width: 1,
-        ),
+        border: Border.all(color: statusColor.withValues(alpha: 0.2), width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

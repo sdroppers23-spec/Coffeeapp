@@ -1,12 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum DiscoverTabType {
-  farmers,
-  roasters,
-  history,
-  encyclopedia,
-  myLots,
-}
+enum DiscoverTabType { farmers, roasters, history, encyclopedia, myLots }
 
 class DiscoveryTabOrderNotifier extends Notifier<List<DiscoverTabType>> {
   @override
@@ -33,5 +27,5 @@ class DiscoveryTabOrderNotifier extends Notifier<List<DiscoverTabType>> {
 
 final discoveryTabOrderProvider =
     NotifierProvider<DiscoveryTabOrderNotifier, List<DiscoverTabType>>(() {
-  return DiscoveryTabOrderNotifier();
-});
+      return DiscoveryTabOrderNotifier();
+    });

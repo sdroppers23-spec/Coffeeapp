@@ -61,8 +61,11 @@ class _SpecialtyArticleDetailScreenState
             leading: IconButton(
               icon: const CircleAvatar(
                 backgroundColor: Colors.black45,
-                child: Icon(Icons.arrow_back_ios_new,
-                    color: Colors.white, size: 18),
+                child: Icon(
+                  Icons.arrow_back_ios_new,
+                  color: Colors.white,
+                  size: 18,
+                ),
               ),
               onPressed: () => Navigator.of(context).pop(),
             ),
@@ -113,8 +116,10 @@ class _SpecialtyArticleDetailScreenState
                   const SizedBox(height: 12),
                   // Chip
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: gold.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(12),
@@ -177,9 +182,7 @@ class _SpecialtyArticleDetailScreenState
                         fontWeight: FontWeight.w700,
                         margin: Margins.only(top: 24, bottom: 12),
                       ),
-                      "p": Style(
-                        margin: Margins.only(bottom: 16),
-                      ),
+                      "p": Style(margin: Margins.only(bottom: 16)),
                       "b": Style(color: gold),
                       "li": Style(
                         margin: Margins.only(bottom: 8),

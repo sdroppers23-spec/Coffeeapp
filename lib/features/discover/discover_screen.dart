@@ -54,63 +54,70 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
             // Header: Title, Badge, Avatar
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              child: Row(
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  const Spacer(),
-                  // Centered Title
-                  Text(
-                    'Відкриття',
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
-                      color: const Color(0xFFC8A96E),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  // Badge
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.greenAccent.withValues(alpha: 0.4),
-                        width: 1,
+                  // Centered Title and Badge
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Відкриття',
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                          color: const Color(0xFFC8A96E),
+                        ),
                       ),
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.greenAccent.withValues(alpha: 0.05),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.cloud_done_outlined,
-                          color: Colors.greenAccent,
-                          size: 14,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          "Cloud Connected",
-                          style: GoogleFonts.poppins(
-                            color: Colors.greenAccent,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
+                      const SizedBox(width: 12),
+                      // Badge
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.greenAccent.withValues(alpha: 0.3),
+                            width: 1,
                           ),
+                          borderRadius: BorderRadius.circular(20),
+                          color: const Color(0xFF2D322F), // Dark grey-green
                         ),
-                      ],
-                    ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.cloud_done_outlined,
+                              color: Colors.greenAccent,
+                              size: 14,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              "Cloud Connected",
+                              style: GoogleFonts.poppins(
+                                color: Colors.greenAccent,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  const Spacer(),
-                  // Avatar
-                  GestureDetector(
-                    onTap: () => _showProfileMenu(context),
-                    child: Container(
-                      width: 38,
-                      height: 38,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white10, width: 1),
-                        image: const DecorationImage(
-                          image: AssetImage('assets/images/placeholder_avatar.jpg'),
-                          fit: BoxFit.cover,
+                  // Avatar on the Far Right
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: () => _showProfileMenu(context),
+                      child: Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white24, width: 1.5),
+                          image: const DecorationImage(
+                            image: AssetImage('assets/images/placeholder_avatar.jpg'),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
@@ -289,18 +296,47 @@ class _RoasteryCard extends StatelessWidget {
             child: Container(
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-                color: Color(0xFF1A1513),
+                color: Color(0xFF141414), // Almost black
               ),
-              child: Center(
-                child: Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF232D3F),
-                    borderRadius: BorderRadius.circular(12),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Large background ghost icon
+                  Icon(
+                    Icons.coffee_maker_rounded, 
+                    color: Colors.white.withValues(alpha: 0.03), 
+                    size: 120
                   ),
-                  child: const Icon(Icons.coffee_maker_rounded, color: Colors.white70, size: 24),
-                ),
+                  // Centered Blue Icon Island
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Container(
+                        width: 64,
+                        height: 64,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF2C3E50), // Steel blue
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.4),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Icon(
+                            Icons.coffee_maker_rounded, 
+                            color: Colors.white, 
+                            size: 32
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

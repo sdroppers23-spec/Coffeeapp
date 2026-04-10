@@ -1,0 +1,101 @@
+﻿Analyzing Coffeeapp...                                          
+
+   info - Don't invoke 'print' in production code - diag_gsi.dart:2:3 - avoid_print
+   info - Statements in an if should be enclosed in a block - lib\features\bean_eye\bean_eye_screen.dart:172:7 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\features\bean_eye\bean_eye_screen.dart:174:7 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\features\bean_eye\bean_eye_screen.dart:176:7 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\features\bean_eye\bean_eye_screen.dart:178:7 - curly_braces_in_flow_control_structures
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\bean_eye\bean_eye_screen.dart:317:51 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\bean_eye\bean_eye_screen.dart:565:39 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\bean_eye\bean_eye_screen.dart:567:58 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\bean_eye\bean_eye_screen.dart:573:43 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\bean_eye\bean_eye_screen.dart:585:44 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\bean_eye\bean_eye_screen.dart:587:63 - deprecated_member_use
+   info - Statements in an if should be enclosed in a block - lib\features\bean_eye\bean_eye_screen.dart:659:11 - curly_braces_in_flow_control_structures
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\bean_eye\bean_eye_screen.dart:692:37 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\brewing_detail_screen.dart:175:40 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\brewing_detail_screen.dart:331:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\brewing_detail_screen.dart:430:29 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\brewing_detail_screen.dart:502:40 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\brewing_detail_screen.dart:547:56 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\brewing_detail_screen.dart:591:39 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\brewing_detail_screen.dart:688:50 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\brewing_guide_screen.dart:177:62 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\brewing_guide_screen.dart:180:64 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\custom_recipe_form.dart:454:29 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\custom_recipe_form.dart:585:33 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\custom_recipe_form.dart:592:54 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\custom_recipe_form.dart:697:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\custom_recipe_form.dart:698:30 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\custom_recipe_list.dart:161:52 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\custom_recipe_list.dart:323:43 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\custom_recipe_list.dart:325:62 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\custom_recipe_list.dart:418:29 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\custom_recipe_list.dart:420:48 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\custom_recipe_timer_screen.dart:128:43 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\custom_recipe_timer_screen.dart:214:52 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\custom_recipe_timer_screen.dart:217:54 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\custom_recipe_timer_screen.dart:271:51 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\custom_recipe_timer_screen.dart:273:46 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\brewing\custom_recipe_timer_screen.dart:274:46 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\discover\brand_details_screen.dart:77:43 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\discover\brand_details_screen.dart:97:51 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\discover\brand_details_screen.dart:152:51 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\discover\brand_details_screen.dart:165:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\discover\brand_details_screen.dart:183:64 - deprecated_member_use
+   info - Statements in an if should be enclosed in a block - lib\features\discover\brand_details_screen.dart:507:5 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\features\discover\brand_details_screen.dart:509:5 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\features\discover\brand_details_screen.dart:511:5 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\features\discover\brand_details_screen.dart:513:5 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\features\discover\brand_details_screen.dart:515:5 - curly_braces_in_flow_control_structures
+warning - The value of the local variable 'themeMode' isn't used - lib\features\discover\discover_screen.dart:19:11 - unused_local_variable
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\discover\discover_screen.dart:50:41 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\discover\farmers_screen.dart:72:55 - deprecated_member_use
+   info - Statements in an if should be enclosed in a block - lib\features\discover\farmers_screen.dart:92:33 - curly_braces_in_flow_control_structures
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\discover\farmers_screen.dart:108:55 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\discover\farmers_screen.dart:169:29 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\discover\farmers_screen.dart:171:48 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\discover\farmers_screen.dart:232:56 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\encyclopedia\comparison_screen.dart:66:56 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\encyclopedia\comparison_screen.dart:80:58 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\encyclopedia\comparison_screen.dart:92:43 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\encyclopedia\comparison_screen.dart:94:62 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\encyclopedia\comparison_screen.dart:252:50 - deprecated_member_use
+  error - Expected an identifier - lib\features\encyclopedia\encyclopedia_screen.dart:165:77 - missing_identifier
+  error - Expected an identifier - lib\features\encyclopedia\encyclopedia_screen.dart:204:60 - missing_identifier
+  error - Expected an identifier - lib\features\encyclopedia\encyclopedia_screen.dart:206:79 - missing_identifier
+  error - Expected an identifier - lib\features\encyclopedia\encyclopedia_screen.dart:217:104 - missing_identifier
+  error - Expected an identifier - lib\features\encyclopedia\encyclopedia_screen.dart:252:67 - missing_identifier
+  error - Expected an identifier - lib\features\encyclopedia\encyclopedia_screen.dart:277:79 - missing_identifier
+  error - Expected an identifier - lib\features\encyclopedia\encyclopedia_screen.dart:289:71 - missing_identifier
+  error - Expected an identifier - lib\features\encyclopedia\encyclopedia_screen.dart:335:72 - missing_identifier
+  error - Expected an identifier - lib\features\encyclopedia\encyclopedia_screen.dart:337:91 - missing_identifier
+  error - Expected an identifier - lib\features\encyclopedia\encyclopedia_screen.dart:462:87 - missing_identifier
+  error - Expected an identifier - lib\features\encyclopedia\encyclopedia_screen.dart:756:58 - missing_identifier
+  error - Expected an identifier - lib\features\encyclopedia\encyclopedia_screen.dart:758:77 - missing_identifier
+  error - Expected an identifier - lib\features\encyclopedia\encyclopedia_screen.dart:786:72 - missing_identifier
+  error - Expected an identifier - lib\features\encyclopedia\encyclopedia_screen.dart:831:47 - missing_identifier
+  error - Expected an identifier - lib\features\encyclopedia\encyclopedia_screen.dart:990:66 - missing_identifier
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\flavor_map\flavor_map_screen.dart:172:55 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\flavor_map\flavor_map_screen.dart:177:64 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\flavor_map\flavor_map_screen.dart:576:31 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\flavor_map\flavor_map_screen.dart:577:61 - deprecated_member_use
+warning - The value of the local variable 'opacity' isn't used - lib\features\flavor_map\flavor_wheel.dart:258:15 - unused_local_variable
+   info - Don't invoke 'print' in production code - lib\features\flavor_map\flavor_wheel.dart:333:19 - avoid_print
+  error - Expected an identifier - lib\features\flavor_map\flavor_wheel.dart:412:64 - missing_identifier
+  error - Expected an identifier - lib\features\flavor_map\flavor_wheel.dart:444:80 - missing_identifier
+  error - Expected an identifier - lib\features\flavor_map\flavor_wheel.dart:444:176 - missing_identifier
+  error - Expected an identifier - lib\features\flavor_map\flavor_wheel.dart:458:92 - missing_identifier
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\navigation\main_scaffold.dart:90:39 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\navigation\main_scaffold.dart:99:39 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\profile\profile_screen.dart:142:37 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\profile\profile_screen.dart:144:56 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\profile\profile_screen.dart:395:46 - deprecated_member_use
+  error - Expected an identifier - lib\features\specialty\specialty_screen.dart:65:137 - missing_identifier
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\shared\widgets\glass_container.dart:41:37 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\shared\widgets\glass_container.dart:56:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\shared\widgets\glass_container.dart:59:52 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\shared\widgets\glass_container.dart:67:38 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\shared\widgets\glass_container.dart:77:38 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\shared\widgets\glass_container.dart:78:38 - deprecated_member_use
+

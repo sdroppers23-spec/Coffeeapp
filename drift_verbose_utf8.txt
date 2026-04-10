@@ -1,0 +1,2 @@
+﻿Running build hooks...Running build hooks...  0s drift_dev on 432 inputs; bin/find_db.dart
+  0s drift_dev on 432 inputs: 1 skipped; bin/upload_to_supabase.dart

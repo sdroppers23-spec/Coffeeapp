@@ -1,0 +1,54 @@
+{
+  "SC-001": {
+    "module_name": "Standards, Institutions, and Ethics",
+    "topics": {
+      "Розширене визначення Specialty Coffee": {
+        "title": "Extended Definition of Specialty Coffee",
+        "definition": "Specialty Coffee is not just a product category, but a closed ecosystem of quality control where every stage of production is focused on preserving and highlighting the natural genetic potential of the bean.",
+        "attributes": "Full Traceability (identifying coffee down to the micro-lot or farm plot), Sensory excellence (unique flavor descriptors from terroir rather than roasting)."
+      },
+      "Світові інституції: SCA та CQI": {
+        "title": "Global Institutions: SCA and CQI",
+        "role": "SCA sets technical standards (water, cupping protocol, green grading). CQI focuses on education and Q-Grader certification — the highest professional judge level in coffee scoring."
+      },
+      "Протокол оцінювання та Капінг": {
+        "title": "Cupping and Scoring Protocol",
+        "parameters": "8.25g per 150ml water, 92-94°C temperature. Evaluation criteria: Fragrance, Flavor, Acidity, Body, Uniformity, Clean Cup.",
+        "scoring": "Professional Specialty Grade is 80.00 - 100.00 points."
+      }
+    }
+  },
+  "SC-002": {
+    "module_name": "Botany, Genetics, and Terroir",
+    "topics": {
+      "Теруар: Геологія, Клімат та Хімічний метаболізм": {
+        "title": "Terroir: Geology, Climate, and Metabolism",
+        "altitude": "High altitudes (1000-2500m) cause thermal stress, slowing down the cherry's development and increasing bean density (SHB).",
+        "soil": "Volcanic soils (Andosols) add sparkling acidity. Ferruginous Kenyan soils (Oxisols) provide phosphoric-berry notes."
+      },
+      "Генетика: Базові різновиди Арабіки (Coffea Arabica)": {
+        "title": "Genetics: Foundational Arabica Varieties",
+        "varieties": "Typica (foundational, clean, balanced), Bourbon (sweet, complex body), Caturra (acidic, dwarf mutation), Pacamara (huge beans, savory-hop profile)."
+      },
+      "Генетика: Елітні, Аукціонні та Реліктові Різновиди": {
+        "title": "Genetics: Elite and Auction Varieties",
+        "geisha": "Jasmine, bergamot, tea-like. High-altitude Panamanian treasure.",
+        "sl28": "The legendary taste of Kenya: intense blackcurrant and phosphoric acidity.",
+        "eugenioides": "The low-caffeine 'father' of Arabica. Extremely sweet like cotton candy."
+      }
+    }
+  },
+  "SC-004": {
+    "module_name": "Advanced Processing",
+    "topics": {
+      "Анаеробна ферментація (Anaerobic Fermentation)": {
+        "title": "Anaerobic Fermentation",
+        "process": "Controlled fermentation in oxygen-free steel tanks. Enhances esters, yielding yogurt-like acidity and complex fruit profiles."
+      },
+      "Термальний шок (Thermal Shock)": {
+        "title": "Thermal Shock",
+        "process": "Hot washing expands pores followed by an ice-cold wash to lock in aromatic esters. Yields extremely intense flavors like peach milkshake."
+      }
+    }
+  }
+}

@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'app_database.dart';
+import 'sync_service.dart';
+import 'coffee_data_seed.dart';
 
 final databaseProvider = Provider<AppDatabase>((ref) {
   final db = AppDatabase();
@@ -7,9 +9,17 @@ final databaseProvider = Provider<AppDatabase>((ref) {
   return db;
 });
 
-final databaseInitializerProvider = FutureProvider<void>((ref) async {
+final coffeeDataSeedProvider = Provider<CoffeeDataSeed>((ref) {
   final db = ref.watch(databaseProvider);
-  // Optional: Add initialization logic or initial seeding here
-  // For now, it just ensures the DB is ready
-  return;
+  return CoffeeDataSeed(db);
+});
+
+final databaseInitializerProvider = FutureProvider<void>((ref) async {
+  final seeder = ref.watch(coffeeDataSeedProvider);
+  await seeder.seedAll();
+});
+
+final syncServiceProvider = Provider<SyncService>((ref) {
+  final db = ref.watch(databaseProvider);
+  return SyncService(db);
 });

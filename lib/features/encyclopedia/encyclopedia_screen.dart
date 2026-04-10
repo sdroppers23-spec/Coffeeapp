@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import '../../core/database/app_database.dart' hide Brand, Farmer, RecommendedRecipe, SpecialtyArticle;
 import '../../core/database/database_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/database/dtos.dart';

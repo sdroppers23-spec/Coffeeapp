@@ -1,19 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/l10n/app_localizations.dart';
-import '../../core/database/database_provider.dart';
 import '../../shared/widgets/skeleton_loader.dart';
-import '../../core/database/dtos.dart';
 
 import 'specialty_encyclopedia_body_v2.dart';
-
-final specialtyArticlesProvider = FutureProvider<List<SpecialtyArticleDto>>((ref) async {
-  final db = ref.watch(databaseProvider);
-  final lang = ref.watch(localeProvider);
-  return db.getAllSpecialtyArticles(lang);
-});
+import 'specialty_encyclopedia_provider.dart';
 
 class SpecialtyEducationScreen extends ConsumerWidget {
   const SpecialtyEducationScreen({super.key});
@@ -22,11 +14,7 @@ class SpecialtyEducationScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncArticles = ref.watch(specialtyArticlesProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(ref.t('all_specialty')),
-      ),
-      body: SafeArea(
+    return SafeArea(
         child: asyncArticles.when(
           data: (articles) {
             if (articles.isEmpty) {
@@ -55,7 +43,7 @@ class SpecialtyEducationScreen extends ConsumerWidget {
           ),
           error: (e, st) => Center(child: Text('${ref.t('error_loading')}: $e')),
         ),
-      ),
-    );
+      );
   }
 }
+

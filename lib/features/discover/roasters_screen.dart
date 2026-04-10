@@ -13,12 +13,11 @@ import 'farmers_screen.dart';
 import '../../core/l10n/l10n_helpers.dart';
 import '../../core/database/dtos.dart';
 import 'discovery_providers.dart';
+import '../specialty/specialty_encyclopedia_provider.dart';
+import '../latte_art/latte_art_screen.dart';
 
-// ─── Provider ─────────────────────────────────────────────────────────────────
-final brandsProvider = FutureProvider<List<LocalizedBrandDto>>((ref) async {
-  final db = ref.watch(databaseProvider);
-  return db.getAllBrands(ref.watch(localeProvider));
-});
+
+// Removed redundant local brandsProvider. Using the one from discovery_providers.dart.
 
 class RoastersScreen extends ConsumerWidget {
   const RoastersScreen({super.key});
@@ -184,9 +183,9 @@ class RoastersScreen extends ConsumerWidget {
     try {
       if (isPush) {
         // Ensure we have local data to push by seeding once if empty
-        final localBrands = await db.getAllBrands();
+        final locale = ref.read(localeProvider);
+        final localBrands = await db.getAllBrands(locale);
         if (localBrands.isEmpty) {
-          final db = ref.read(databaseProvider);
           await CoffeeDataSeed(db).seedAll();
         }
         await syncService.pushLocalToCloud(
@@ -222,9 +221,10 @@ class RoastersScreen extends ConsumerWidget {
       }
       ref.invalidate(brandsProvider);
       ref.invalidate(farmersProvider);
-      ref.invalidate(encyclopediaProvider);
+      ref.invalidate(specialtyEncyclopediaProvider);
       ref.invalidate(specialtyArticlesProvider);
       ref.invalidate(latteArtPatternsProvider);
+
     } catch (e) {
       messenger.showSnackBar(
         SnackBar(

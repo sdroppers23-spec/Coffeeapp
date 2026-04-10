@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/database/database_provider.dart';
 import '../../../core/database/dtos.dart';
-import '../../../core/database/sync_service.dart';
 import '../widgets/admin_edit_bean_sheet.dart';
 
 class AdminBeansTab extends ConsumerStatefulWidget {

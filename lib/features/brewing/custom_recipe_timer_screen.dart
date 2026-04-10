@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/database/app_database.dart';
+import '../../core/database/dtos.dart';
 import '../../core/l10n/app_localizations.dart';
 
 class CustomRecipeTimerScreen extends ConsumerStatefulWidget {
-  final CustomRecipe recipe;
+  final CustomRecipeDto recipe;
 
   const CustomRecipeTimerScreen({super.key, required this.recipe});
+
 
   @override
   ConsumerState<CustomRecipeTimerScreen> createState() =>

@@ -35,6 +35,53 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 17;
 
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onCreate: (m) => m.createAll(),
+        onUpgrade: (m, from, to) async {
+          if (from < 17) {
+            // Safe upgrade to v17
+            // The user reports 'duplicate column name: brand_id' in coffee_lots.
+            // We use a try-catch or explicit check to avoid this.
+            await transaction(() async {
+              // Ensure brand_id exists in coffee_lots
+              try {
+                await customStatement('ALTER TABLE coffee_lots ADD COLUMN brand_id INTEGER;');
+              } catch (e) {
+                // Column likely already exists
+              }
+              
+              // Add other v17 columns if missing
+              final List<TableInfo> tablesToCreate = [
+                localizedBeans,
+                localizedBeanTranslations,
+                localizedBrands,
+                localizedBrandTranslations,
+                localizedFarmers,
+                localizedFarmerTranslations,
+                sphereRegions,
+                sphereRegionTranslations,
+                specialtyArticles,
+                specialtyArticleTranslations,
+                latteArtPatterns,
+                latteArtPatternTranslations,
+              ];
+              
+              for (final table in tablesToCreate) {
+                try {
+                  await m.createTable(table);
+                } catch (e) {
+                  // Table already exists
+                }
+              }
+            });
+          }
+        },
+        beforeOpen: (details) async {
+          await customStatement('PRAGMA foreign_keys = ON');
+        },
+      );
+
   // ── Specialty Articles ───────────────────────────────────────────────────────
   Future<List<SpecialtyArticleDto>> getAllSpecialtyArticles(String lang) async {
     final query = select(specialtyArticles).join([
@@ -66,7 +113,20 @@ class AppDatabase extends _$AppDatabase {
     SpecialtyArticleTranslationsCompanion t,
   ) => into(specialtyArticleTranslations).insertOnConflictUpdate(t);
 
+  Future<bool> encyclopediaIsEmpty() async =>
+      (await select(localizedBeans).get()).isEmpty;
+
+  Future<bool> patternsIsEmpty() async =>
+      (await select(latteArtPatterns).get()).isEmpty;
+
+  Future<bool> specialtyArticlesIsEmpty() async =>
+      (await select(specialtyArticles).get()).isEmpty;
+
+  Future<bool> brandsIsEmpty() async =>
+      (await select(localizedBrands).get()).isEmpty;
+
   Future<int> upsertSpecialtyArticle(SpecialtyArticlesCompanion article) =>
+
       insertArticle(article);
 
   Future<int> upsertSpecialtyArticleTranslation(
@@ -97,6 +157,7 @@ class AppDatabase extends _$AppDatabase {
         description: translation.description ?? '',
         story: translation.story ?? '',
         country: translation.country ?? '',
+        farmPhotosUrlCover: null, // Placeholder for future join if needed
       );
     }).toList();
   }
@@ -109,7 +170,7 @@ class AppDatabase extends _$AppDatabase {
   ) => into(localizedFarmerTranslations).insertOnConflictUpdate(t);
 
   // ── Brands ───────────────────────────────────────────────────────────────────
-  Future<List<LocalizedBrandDto>> getAllBrands(String lang) async {
+  Future<List<LocalizedBrandDto>> getAllBrands([String lang = 'uk']) async {
     final query = select(localizedBrands).join([
       innerJoin(
         localizedBrandTranslations,
@@ -161,6 +222,23 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
+  Future<int> addBrand(String name, String location, String shortDesc) async {
+    final brandId = (await (select(localizedBrands)..orderBy([(t) => OrderingTerm(expression: t.id, mode: OrderingMode.desc)])).get()).firstOrNull?.id ?? 0;
+    final nextId = brandId + 1;
+    
+    await insertBrand(LocalizedBrandsCompanion.insert(
+      id: Value(nextId),
+      name: name,
+    ));
+    
+    return await insertBrandTranslation(LocalizedBrandTranslationsCompanion.insert(
+      brandId: nextId,
+      languageCode: 'uk', // Default for now
+      shortDesc: Value(shortDesc),
+      location: Value(location),
+    ));
+  }
+
   Future<int> insertBrand(LocalizedBrandsCompanion b) =>
       into(localizedBrands).insertOnConflictUpdate(b);
 
@@ -182,6 +260,10 @@ class AppDatabase extends _$AppDatabase {
             (t) => t.brandId.equals(brandId) & t.languageCode.equals(lang),
           ))
           .getSingleOrNull();
+
+  Future<int> deleteBrand(int id) =>
+      (delete(localizedBrands)..where((t) => t.id.equals(id))).go();
+
 
   // ── Origins / Beans ──────────────────────────────────────────────────────────
   Future<List<LocalizedBeanDto>> getAllOrigins(String lang) async {
@@ -237,6 +319,12 @@ class AppDatabase extends _$AppDatabase {
             (t) => t.beanId.equals(beanId) & t.languageCode.equals(lang),
           ))
           .getSingleOrNull();
+
+  // Legacy/Seeding Aliases
+  Future<int> insertOrigin(LocalizedBeansCompanion b) => insertBean(b);
+  Future<int> upsertOrigin(LocalizedBeansCompanion b) => insertBean(b);
+  Future<int> deleteLotsForBrand(int brandId) =>
+      (delete(localizedBeans)..where((t) => t.brandId.equals(brandId))).go();
 
   LocalizedBeanDto _mapBeanRow(TypedResult row) {
     final bean = row.readTable(localizedBeans);
@@ -376,6 +464,13 @@ class AppDatabase extends _$AppDatabase {
   Future<int> upsertRecommendedRecipe(RecommendedRecipesCompanion r) =>
       insertRecommendedRecipe(r);
 
+  Future<int> insertRecipe(RecommendedRecipesCompanion r) =>
+      insertRecommendedRecipe(r);
+
+  Future<int> deleteBeansForBrand(int brandId) =>
+      (delete(localizedBeans)..where((t) => t.brandId.equals(brandId))).go();
+
+
   // ── Sphere Regions ───────────────────────────────────────────────────────────
   Future<List<SphereRegionDto>> getAllSphereRegions(String lang) async {
     final query = select(sphereRegions).join([
@@ -391,11 +486,13 @@ class AppDatabase extends _$AppDatabase {
       final translation = row.readTable(sphereRegionTranslations);
       return SphereRegionDto(
         id: region.id,
+        key: region.key,
         name: translation.name,
         description: translation.description ?? '',
         imageUrl: '', // Default if needed
         latitude: region.latitude,
         longitude: region.longitude,
+        markerColor: region.markerColor,
         isActive: region.isActive,
       );
     }).toList();
@@ -433,8 +530,10 @@ class AppDatabase extends _$AppDatabase {
     return rows.map((r) => _mapLotRow(r)).toList();
   }
 
-  Future<CoffeeLot?> findConflictLot(String id) =>
-      (select(coffeeLots)..where((t) => t.id.equals(id))).getSingleOrNull();
+  Future<CoffeeLotDto?> findConflictLot(String id) async {
+    final row = await (select(coffeeLots)..where((t) => t.id.equals(id))).getSingleOrNull();
+    return row != null ? _mapLotRow(row) : null;
+  }
 
   Future<int> upsertUserLot(CoffeeLotsCompanion lot) =>
       into(coffeeLots).insertOnConflictUpdate(lot);
@@ -451,6 +550,11 @@ class AppDatabase extends _$AppDatabase {
       }
     });
   }
+  Future<int> insertUserLot(CoffeeLotsCompanion lot) =>
+      into(coffeeLots).insertOnConflictUpdate(lot);
+
+  Future<int> deleteUserLotsByBrand(int brandId) =>
+      (delete(coffeeLots)..where((t) => t.brandId.equals(brandId))).go();
 
   CoffeeLotDto _mapLotRow(CoffeeLot r) {
     return CoffeeLotDto(
@@ -482,6 +586,8 @@ class AppDatabase extends _$AppDatabase {
       createdAt: r.createdAt,
       sensoryPoints: _parseJson(r.sensoryJson),
       pricing: _parseJson(r.priceJson),
+      brandId: r.brandId,
+      isDeletedLocal: r.isDeletedLocal,
     );
   }
 

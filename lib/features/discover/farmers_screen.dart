@@ -3,11 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
+import '../../core/l10n/app_localizations.dart';
+
 
 final farmersProvider = FutureProvider<List<LocalizedBeanDto>>((ref) async {
   final db = ref.watch(databaseProvider);
-  return db.getAllOrigins('uk');
+  final locale = ref.watch(localeProvider);
+  return db.getAllOrigins(locale);
 });
+
 
 class FarmersScreen extends ConsumerStatefulWidget {
   const FarmersScreen({super.key});
@@ -177,13 +181,13 @@ class _FarmCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Farm Header Image
-          if (farm.plantationPhotosUrl?.isNotEmpty ?? false)
+          if (farm.imageUrl.isNotEmpty)
             ClipRRect(
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(16),
               ),
               child: Image.network(
-                farm.plantationPhotosUrl!,
+                farm.imageUrl,
                 height: 160,
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) => Container(
@@ -256,7 +260,7 @@ class _FarmCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      '${farm.region ?? ''} • ${farm.altitudeMin ?? 0}-${farm.altitudeMax ?? 0}m',
+                      '${farm.region} • ${farm.altitudeMin ?? 0}-${farm.altitudeMax ?? 0}m',
                       style: const TextStyle(
                         color: Colors.white54,
                         fontSize: 13,
@@ -266,9 +270,7 @@ class _FarmCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  farm.description?.isNotEmpty ?? false
-                      ? farm.description!
-                      : '',
+                  farm.description,
                   style: const TextStyle(
                     color: Colors.white70,
                     fontSize: 14,

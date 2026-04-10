@@ -1,0 +1,9 @@
+﻿Analyzing Coffeeapp...                                          
+
+   info - Don't invoke 'print' in production code - diag_gsi.dart:2:3 - avoid_print
+   info - Statements in an if should be enclosed in a block - lib\features\bean_eye\bean_eye_screen.dart:660:11 - curly_braces_in_flow_control_structures
+warning - The value of the local variable 'themeMode' isn't used - lib\features\discover\discover_screen.dart:19:11 - unused_local_variable
+   info - Statements in an if should be enclosed in a block - lib\features\discover\farmers_screen.dart:92:33 - curly_braces_in_flow_control_structures
+warning - The value of the local variable 'opacity' isn't used - lib\features\flavor_map\flavor_wheel.dart:258:15 - unused_local_variable
+   info - Don't invoke 'print' in production code - lib\features\flavor_map\flavor_wheel.dart:333:19 - avoid_print
+

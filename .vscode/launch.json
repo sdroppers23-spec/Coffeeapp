@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Coffee App (Dev)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": ["--debug", "--dart-define=FLAVOR=dev"]
+        },
+        {
+            "name": "Coffee App (Release Mode Simulation)",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": ["--debug", "--dart-define=FLAVOR=release"]
+        }
+    ]
+}

@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "skills": {
+    "ai-image-generation": {
+      "source": "C:\\Users\\gkill\\.agents\\skills\\ai-image-generation",
+      "sourceType": "local",
+      "computedHash": "9ee6d37669b89f87bb0b1e1f89bf06cca35d69d461786a3fb847b07c4f2c8375"
+    },
+    "ai-seo": {
+      "source": "C:\\Users\\gkill\\.agents\\skills\\ai-seo",
+      "sourceType": "local",
+      "computedHash": "ede5108491794bd39caf5f673ecfd2349e5a398e7034d1beedc615ef59c74958"
+    },
+    "asc-subscription-localization": {
+      "source": "C:\\Users\\gkill\\.agents\\skills\\asc-subscription-localization",
+      "sourceType": "local",
+      "computedHash": "ac128fb576e300cae18f764cd165b8951957e1390cad6d7f8b703d2ce0b51e51"
+    },
+    "canvas-design": {
+      "source": "C:\\Users\\gkill\\.agents\\skills\\canvas-design",
+      "sourceType": "local",
+      "computedHash": "21e7c68d336893e4f2aa8d269854fd5e253c89cfc6dd0e74fa487fe7e96abdeb"
+    },
+    "chat-ui": {
+      "source": "C:\\Users\\gkill\\.agents\\skills\\chat-ui",
+      "sourceType": "local",
+      "computedHash": "f28ca5f4c57a8c587305d8ac7f090f4f8dd1723b403e126a95677606a4dc9572"
+    },
+    "docx": {
+      "source": "C:\\Users\\gkill\\.agents\\skills\\docx",
+      "sourceType": "local",
+      "computedHash": "150be87ff7b18f273ad07da303adb1cf2ca21cc3e76db7a2cf0373405178a278"
+    },
+    "flutter-localizing-apps": {
+      "source": "C:\\Users\\gkill\\.agents\\skills\\flutter-localizing-apps",
+      "sourceType": "local",
+      "computedHash": "690113b21a870fd9f3621f85f2005994b3def6dbe0ad4ffc65f769cb093b4953"
+    },
+    "frontend-design": {
+      "source": "C:\\Users\\gkill\\.agents\\skills\\frontend-design",
+      "sourceType": "local",
+      "computedHash": "516bd2154eb843a8240e43d5b285229129853114ad7075a5e141e1c08e408c84"
+    },
+    "git-commit": {
+      "source": "C:\\Users\\gkill\\.agents\\skills\\git-commit",
+      "sourceType": "local",
+      "computedHash": "2607fc60629b82b257136dd2a7a373f0a4466c0b49df7746d845d59313c99b21"
+    },
+    "google-play-store-review": {
+      "source": "C:\\Users\\gkill\\.agents\\skills\\google-play-store-review",
+      "sourceType": "local",
+      "computedHash": "9d1fd9baa287c2a5ac634b7f71acce826774f9c7db5b82754aef964f5efd9e12"
+    },
+    "i18n-localization": {
+      "source": "C:\\Users\\gkill\\.agents\\skills\\i18n-localization",
+      "sourceType": "local",
+      "computedHash": "d3a49b9afcbacf68b5aad8646b69dc863becd90240dddca9d0c7bea5c1ffc2d4"
+    },
+    "pptx": {
+      "source": "C:\\Users\\gkill\\.agents\\skills\\pptx",
+      "sourceType": "local",
+      "computedHash": "2275e4d8dba1790d52f6619b3e2fed04edc948beef545a2ad18e4a1be644426d"
+    },
+    "pricing-strategy": {
+      "source": "C:\\Users\\gkill\\.agents\\skills\\pricing-strategy",
+      "sourceType": "local",
+      "computedHash": "45dcee6fb615d7db2ed85764a91c57b6f6806cbca92b0a348fc901aeda02b10b"
+    },
+    "requesting-code-review": {
+      "source": "C:\\Users\\gkill\\.agents\\skills\\requesting-code-review",
+      "sourceType": "local",
+      "computedHash": "246e65cd72a7e360987d94e6c61564ce6d71c6361d1784d529d70e4cbbe8522d"
+    },
+    "web-search": {
+      "source": "C:\\Users\\gkill\\.agents\\skills\\web-search",
+      "sourceType": "local",
+      "computedHash": "cc1d8170964262c18b0046946d33c380e349630134ea29eb0e61dee18bc049e1"
+    },
+    "webapp-testing": {
+      "source": "C:\\Users\\gkill\\.agents\\skills\\webapp-testing",
+      "sourceType": "local",
+      "computedHash": "5a6a18c0137cfbabec058e86fc1c8f6919d846a7b2a34ee978cc8ced866ee2e5"
+    },
+    "writing-skills": {
+      "source": "C:\\Users\\gkill\\.agents\\skills\\writing-skills",
+      "sourceType": "local",
+      "computedHash": "b0e3065034610df41b9119445b5fd052042752bb3e598ca66aea2403a7c7685e"
+    },
+    "xlsx": {
+      "source": "C:\\Users\\gkill\\.agents\\skills\\xlsx",
+      "sourceType": "local",
+      "computedHash": "cb7fba2177d0d35d14b3244272b25d1b05246e99b3468a087fe06c84193dbd20"
+    }
+  }
+}

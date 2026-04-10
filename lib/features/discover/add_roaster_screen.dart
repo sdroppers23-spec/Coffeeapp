@@ -151,6 +151,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
             );
             originalLotsState.add(conflict); // Keep original to undo replace
             break;
+
           case ConflictResult.copyRestart:
             // Add suffix and create new
             lotToProcess = lot.copyWith(
@@ -161,6 +162,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
               createdAt: DateTime.now(),
             );
             break;
+
           case ConflictResult.cancel:
           default:
             skip = true;
@@ -190,6 +192,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
           roasteryName: _nameController.text,
           updatedAt: DateTime.now(),
         );
+
         await db.upsertUserLot(CoffeeLotsCompanion.insert(
           id: updatedLot.id,
           userId: updatedLot.userId ?? 'me',

@@ -1,11 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
+import '../../core/l10n/app_localizations.dart';
+
 
 final brandsProvider = FutureProvider<List<LocalizedBrandDto>>((ref) async {
   await ref.watch(databaseInitializerProvider.future);
   final db = ref.watch(databaseProvider);
-  return db.getAllBrands('uk');
+  final locale = ref.watch(localeProvider);
+  return db.getAllBrands(locale);
+
+
 });
 
 final brandByIdProvider = FutureProvider.family<LocalizedBrandDto?, int>((
@@ -13,5 +18,8 @@ final brandByIdProvider = FutureProvider.family<LocalizedBrandDto?, int>((
   id,
 ) async {
   final db = ref.watch(databaseProvider);
-  return db.getBrandById(id, 'uk');
+  final locale = ref.watch(localeProvider);
+  return db.getBrandById(id, locale);
+
+
 });

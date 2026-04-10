@@ -307,6 +307,7 @@ class _CustomRecipeCard extends StatelessWidget {
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute(builder: (_) => CustomRecipeTimerScreen(recipe: recipe)),
                   ),
+
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFC8A96E),
                     foregroundColor: Colors.black,
@@ -354,4 +355,6 @@ class _Tag extends StatelessWidget {
         ],
       ),
     );
+  }
 }
+

@@ -6,6 +6,8 @@ import '../encyclopedia/encyclopedia_screen.dart';
 import '../specialty/specialty_screen.dart';
 import 'farmers_screen.dart';
 import 'roasters_screen.dart';
+import '../flavor_map/terroir_globe.dart';
+import '../encyclopedia/add_custom_lot_screen.dart';
 
 import '../../core/l10n/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
@@ -18,7 +20,7 @@ class DiscoverScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeProvider);
     return DefaultTabController(
-      length: 4,
+      length: 5,
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: PreferredSize(
@@ -46,10 +48,11 @@ class DiscoverScreen extends ConsumerWidget {
                 unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                 labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 13),
                 tabs: [
-                  Tab(text: ref.t('encyclopedia')),
                   Tab(text: ref.t('farmers')),
                   Tab(text: ref.t('roasters')),
-                  Tab(text: ref.t('specialty')),
+                  Tab(text: ref.t('history')),
+                  Tab(text: ref.t('encyclopedia')),
+                  Tab(text: ref.t('my_lots')),
                 ],
               ),
             ),
@@ -57,10 +60,11 @@ class DiscoverScreen extends ConsumerWidget {
         ),
         body: const TabBarView(
           children: [
-            EncyclopediaScreen(),
             FarmersScreen(),
             RoastersScreen(),
+            TerroirGlobe(),
             SpecialtyEducationScreen(),
+            AddCustomLotScreen(openAsAdd: false),
           ],
         ),
       ),

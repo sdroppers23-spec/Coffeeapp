@@ -1,0 +1,3 @@
+﻿Running build hooks...Running build hooks...  0s drift_dev on 432 inputs; bin/find_db.dart
+  0s drift_dev on 432 inputs: 1 skipped; bin/upload_to_supabase.dart
+  10s drift_dev on 432 inputs: 17 skipped, 1 output; spent 7s analyzing, 2s resolving; lib/core/l10n/sca_flavor_wheel_l10n.dart

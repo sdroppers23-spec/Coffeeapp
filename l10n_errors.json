@@ -1,0 +1,24 @@
+{
+  "ru": [
+    "appTitle",
+    "discoverTitle",
+    "timerTitle",
+    "scannerTitle",
+    "settingsTitle",
+    "profileTitle",
+    "process_natural",
+    "process_washed",
+    "process_anaerobic",
+    "premium_roasters",
+    "region_asia_pacific",
+    "tap_wheel_to_explore"
+  ],
+
+  "uk": [
+    "process_natural",
+    "process_washed",
+    "process_anaerobic",
+    "premium_roasters",
+    "region_se_asia"
+  ]
+}

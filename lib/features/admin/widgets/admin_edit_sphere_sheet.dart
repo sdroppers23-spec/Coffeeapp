@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:drift/drift.dart' as drift;
 import '../../../core/database/app_database.dart';
 import '../../../core/database/database_provider.dart';
+import '../../../core/database/dtos.dart';
 import 'package:uuid/uuid.dart';
 
 class AdminEditSphereSheet extends ConsumerStatefulWidget {

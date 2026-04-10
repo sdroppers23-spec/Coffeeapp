@@ -1,0 +1,18 @@
+﻿Analyzing flavor_wheel.dart...                                  
+
+  error - Expected an identifier - lib\features\flavor_map\flavor_wheel.dart:165:51 - missing_identifier
+  error - Expected an identifier - lib\features\flavor_map\flavor_wheel.dart:235:51 - missing_identifier
+  error - Expected an identifier - lib\features\flavor_map\flavor_wheel.dart:236:51 - missing_identifier
+  error - Expected an identifier - lib\features\flavor_map\flavor_wheel.dart:237:51 - missing_identifier
+warning - The value of the local variable 'opacity' isn't used - lib\features\flavor_map\flavor_wheel.dart:258:15 - unused_local_variable
+  error - Expected an identifier - lib\features\flavor_map\flavor_wheel.dart:262:114 - missing_identifier
+  error - Expected an identifier - lib\features\flavor_map\flavor_wheel.dart:262:159 - missing_identifier
+  error - Expected an identifier - lib\features\flavor_map\flavor_wheel.dart:267:93 - missing_identifier
+  error - Expected an identifier - lib\features\flavor_map\flavor_wheel.dart:275:51 - missing_identifier
+  error - Expected an identifier - lib\features\flavor_map\flavor_wheel.dart:294:51 - missing_identifier
+   info - Don't invoke 'print' in production code - lib\features\flavor_map\flavor_wheel.dart:333:19 - avoid_print
+  error - Expected an identifier - lib\features\flavor_map\flavor_wheel.dart:412:64 - missing_identifier
+  error - Expected an identifier - lib\features\flavor_map\flavor_wheel.dart:444:80 - missing_identifier
+  error - Expected an identifier - lib\features\flavor_map\flavor_wheel.dart:444:176 - missing_identifier
+  error - Expected an identifier - lib\features\flavor_map\flavor_wheel.dart:458:92 - missing_identifier
+

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import '../../core/network/connectivity_provider.dart';
 import '../../core/database/sync_service.dart';
+import '../../core/database/database_provider.dart';
 
 enum SyncState { idle, syncing, success, error, offline }
 

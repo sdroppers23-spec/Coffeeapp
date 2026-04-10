@@ -1,8 +1,8 @@
 library;
 
 import 'dart:convert';
-import 'package:drift/drift.dart';
-import 'app_database.dart';
+// Removed unused foundation.dart import
+// Removed unused drift and app_database imports
 
 /// Data Transfer Objects for the Specialty Coffee app.
 /// Optimized for the v17 schema with full sensory and pricing support.
@@ -65,7 +65,7 @@ class LocalizedBeanDto {
     required this.detailedProcess,
     this.url,
     this.farmerId,
-    this.isDecaf,
+    required this.isDecaf,
     this.farm,
     this.farmPhotosUrlCover,
     this.washStation,
@@ -93,6 +93,7 @@ class LocalizedBeanDto {
   String get detailedProcessMarkdown => detailedProcess;
   String get sensoryJson => jsonEncode(sensoryPoints);
   String get priceJson => jsonEncode(pricing);
+  String get imageUrl => farmPhotosUrlCover ?? (plantationPhotos.isNotEmpty ? plantationPhotos.first : '');
 }
 
 class LocalizedBrandDto {
@@ -126,6 +127,7 @@ class LocalizedFarmerDto {
   final String description;
   final String story;
   final String country;
+  final String? farmPhotosUrlCover;
 
   LocalizedFarmerDto({
     required this.id,
@@ -138,8 +140,12 @@ class LocalizedFarmerDto {
     required this.description,
     required this.story,
     required this.country,
+    this.farmPhotosUrlCover,
   });
+
+  String get effectiveImageUrl => farmPhotosUrlCover ?? imageUrl;
 }
+
 
 class SpecialtyArticleDto {
   final int id;
@@ -183,24 +189,30 @@ class RecommendedRecipeDto {
     required this.sensoryPoints,
     required this.notes,
   });
+
+  String get sensoryJson => jsonEncode(sensoryPoints);
 }
 
 class SphereRegionDto {
   final String id;
+  final String key; // Identifier for map assets/regions
   final String name;
   final String description;
   final String imageUrl;
   final double latitude;
   final double longitude;
+  final String markerColor;
   final bool isActive;
 
   SphereRegionDto({
     required this.id,
+    required this.key,
     required this.name,
     required this.description,
     required this.imageUrl,
     required this.latitude,
     required this.longitude,
+    required this.markerColor,
     this.isActive = true,
   });
 }
@@ -234,6 +246,9 @@ class CoffeeLotDto {
   final DateTime? createdAt;
   final Map<String, dynamic> sensoryPoints;
   final Map<String, dynamic> pricing;
+  final DateTime? updatedAt;
+  final bool isDeletedLocal;
+  final int? brandId;
 
   CoffeeLotDto({
     required this.id,
@@ -262,10 +277,86 @@ class CoffeeLotDto {
     this.isOpen = false,
     this.isGround = false,
     this.createdAt,
+    this.updatedAt,
     required this.sensoryPoints,
     required this.pricing,
+    this.brandId,
+    this.isDeletedLocal = false,
   });
+
+  String get sensoryJson => jsonEncode(sensoryPoints);
+  String get priceJson => jsonEncode(pricing);
+  String get processMethod => process ?? '';
+
+  CoffeeLotDto copyWith({
+    String? id,
+    String? userId,
+    String? roasteryName,
+    String? roasteryCountry,
+    String? coffeeName,
+    String? originCountry,
+    String? region,
+    String? altitude,
+    String? process,
+    String? roastLevel,
+    DateTime? roastDate,
+    DateTime? openedAt,
+    String? weight,
+    String? lotNumber,
+    bool? isDecaf,
+    String? farm,
+    String? washStation,
+    String? farmer,
+    String? varieties,
+    String? flavorProfile,
+    String? scaScore,
+    bool? isFavorite,
+    bool? isArchived,
+    bool? isOpen,
+    bool? isGround,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    Map<String, dynamic>? sensoryPoints,
+    Map<String, dynamic>? pricing,
+    int? brandId,
+    bool? isDeletedLocal,
+  }) {
+    return CoffeeLotDto(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      roasteryName: roasteryName ?? this.roasteryName,
+      roasteryCountry: roasteryCountry ?? this.roasteryCountry,
+      coffeeName: coffeeName ?? this.coffeeName,
+      originCountry: originCountry ?? this.originCountry,
+      region: region ?? this.region,
+      altitude: altitude ?? this.altitude,
+      process: process ?? this.process,
+      roastLevel: roastLevel ?? this.roastLevel,
+      roastDate: roastDate ?? this.roastDate,
+      openedAt: openedAt ?? this.openedAt,
+      weight: weight ?? this.weight,
+      lotNumber: lotNumber ?? this.lotNumber,
+      isDecaf: isDecaf ?? this.isDecaf,
+      farm: farm ?? this.farm,
+      washStation: washStation ?? this.washStation,
+      farmer: farmer ?? this.farmer,
+      varieties: varieties ?? this.varieties,
+      flavorProfile: flavorProfile ?? this.flavorProfile,
+      scaScore: scaScore ?? this.scaScore,
+      isFavorite: isFavorite ?? this.isFavorite,
+      isArchived: isArchived ?? this.isArchived,
+      isOpen: isOpen ?? this.isOpen,
+      isGround: isGround ?? this.isGround,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      sensoryPoints: sensoryPoints ?? this.sensoryPoints,
+      pricing: pricing ?? this.pricing,
+      brandId: brandId ?? this.brandId,
+      isDeletedLocal: isDeletedLocal ?? this.isDeletedLocal,
+    );
+  }
 }
+
 
 class CustomRecipeDto {
   final String id;
@@ -301,6 +392,8 @@ class CustomRecipeDto {
     required this.rating,
     this.updatedAt,
   });
+
+  String get pourScheduleJson => jsonEncode(pours);
 }
 
 class LatteArtPatternDto {

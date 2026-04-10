@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/database/app_database.dart';
 import '../../core/database/database_provider.dart';
+import '../../core/database/dtos.dart';
+
 
 // ─── Pour entry (local model) ─────────────────────────────────────────────────
 class _PourEntry {
@@ -43,7 +45,8 @@ class _PourEntry {
 class CustomRecipeFormScreen extends ConsumerStatefulWidget {
   final String methodKey;
   final String? lotId;
-  final CustomRecipe? existingRecipe;
+  final CustomRecipeDto? existingRecipe;
+
 
   const CustomRecipeFormScreen({
     super.key,
@@ -98,15 +101,12 @@ class _CustomRecipeFormScreenState extends ConsumerState<CustomRecipeFormScreen>
 
     // Load existing pours or create empty ones
     if (r != null) {
-      try {
-        _pours = (jsonDecode(r.pourScheduleJson) as List)
-            .cast<Map<String, dynamic>>()
-            .map(_PourEntry.fromJson)
-            .toList();
-      } catch (_) {
-        _pours = [];
-      }
+      _pours = r.pours
+          .cast<Map<String, dynamic>>()
+          .map(_PourEntry.fromJson)
+          .toList();
     }
+
     _syncPourRows();
   }
 
@@ -175,9 +175,10 @@ class _CustomRecipeFormScreenState extends ConsumerState<CustomRecipeFormScreen>
         id: Value(widget.existingRecipe!.id),
         methodKey: Value(widget.methodKey),
         name: Value(_nameCtrl.text.trim()),
-        createdAt: Value(widget.existingRecipe!.createdAt),
+        createdAt: Value(widget.existingRecipe!.updatedAt ?? now), // Best effort for createdAt
         updatedAt: Value(now),
         coffeeGrams: Value(double.tryParse(_coffeeGCtrl.text) ?? 0),
+
         totalWaterMl: Value(double.tryParse(_waterMlCtrl.text) ?? 0),
         grindNumber: Value(int.tryParse(_grindCtrl.text) ?? 0),
         comandanteClicks: Value(int.tryParse(_comandanteCtrl.text) ?? 0),
@@ -187,15 +188,18 @@ class _CustomRecipeFormScreenState extends ConsumerState<CustomRecipeFormScreen>
         brewTempC: Value(double.tryParse(_tempCtrl.text) ?? 93.0),
         notes: Value(_notesCtrl.text),
         rating: Value(_rating),
+        userId: Value(''), // v17 compatibility
       );
       await db.updateCustomRecipe(updateCompanion);
+
     } else {
       await db.insertCustomRecipe(CustomRecipesCompanion.insert(
         methodKey: widget.methodKey,
         lotId: Value(widget.lotId),
         name: _nameCtrl.text.trim(),
         createdAt: Value(now),
-        updatedAt: now,
+        updatedAt: Value(now),
+
         coffeeGrams: double.tryParse(_coffeeGCtrl.text) ?? 0,
         totalWaterMl: double.tryParse(_waterMlCtrl.text) ?? 0,
         grindNumber: Value(int.tryParse(_grindCtrl.text) ?? 0),
@@ -206,7 +210,9 @@ class _CustomRecipeFormScreenState extends ConsumerState<CustomRecipeFormScreen>
         brewTempC: Value(double.tryParse(_tempCtrl.text) ?? 93.0),
         notes: Value(_notesCtrl.text),
         rating: Value(_rating),
+        userId: '', // v17 compatibility
       ));
+
     }
 
     if (mounted) {
@@ -618,4 +624,4 @@ class _CircleBtn extends StatelessWidget {
     );
   }
 }
-}
+

@@ -321,6 +321,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
               );
             },
           );
+        }
         return ListView.builder(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16).copyWith(bottom: 100),
           itemCount: filteredLots.length,

@@ -133,12 +133,12 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                         // Main Capsule Bar
                         Flexible(
                           child: ConstrainedBox(
-                            constraints: const BoxConstraints(maxWidth: 380),
+                            constraints: const BoxConstraints(maxWidth: 330),
                             child: GlassContainer(
                               borderRadius: 40,
                               padding: const EdgeInsets.symmetric(
-                                vertical: 2,
-                                horizontal: 10,
+                                vertical: 1,
+                                horizontal: 6,
                               ),
                               blur: 60,
                               opacity: 0.1, // Reduced for better transparency
@@ -331,7 +331,7 @@ class _NavBarItemState extends ConsumerState<_NavBarItem>
               );
             },
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 2),
           Text(
             widget.label,
             style: TextStyle(

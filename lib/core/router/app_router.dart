@@ -13,6 +13,8 @@ import '../../features/settings/settings_screen.dart';
 import '../../features/flavor_map/flavor_map_screen.dart';
 import '../../features/brewing/brewing_main_screen.dart';
 import '../../features/navigation/main_scaffold.dart';
+import '../../features/discover/lots/add_lot_screen.dart';
+import '../../core/database/dtos.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorSpecialtyKey = GlobalKey<NavigatorState>(
@@ -97,6 +99,17 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/settings',
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: '/add_lot',
+        builder: (context, state) => const AddLotScreen(openAsAdd: true),
+      ),
+      GoRoute(
+        path: '/edit_lot',
+        builder: (context, state) {
+          final lot = state.extra as CoffeeLotDto?;
+          return AddLotScreen(initialLot: lot);
+        },
       ),
     ],
   );

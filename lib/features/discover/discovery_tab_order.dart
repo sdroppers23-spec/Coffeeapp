@@ -6,11 +6,11 @@ class DiscoveryTabOrderNotifier extends Notifier<List<DiscoverTabType>> {
   @override
   List<DiscoverTabType> build() {
     return [
+      DiscoverTabType.myLots,
+      DiscoverTabType.history,
       DiscoverTabType.farmers,
       DiscoverTabType.roasters,
-      DiscoverTabType.history,
       DiscoverTabType.encyclopedia,
-      DiscoverTabType.myLots,
     ];
   }
 

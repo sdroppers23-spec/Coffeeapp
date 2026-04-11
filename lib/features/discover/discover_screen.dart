@@ -1,11 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-import '../../core/providers/settings_provider.dart';
-import '../../core/supabase/supabase_provider.dart';
 import '../../shared/widgets/glass_container.dart';
 import '../../shared/widgets/user_profile_avatar.dart';
+import './discovery_tab_order.dart';
+import './lots/widgets/my_lots_content.dart';
 
 class DiscoverTabItem {
   final String id;
@@ -21,34 +17,64 @@ class DiscoverScreen extends ConsumerStatefulWidget {
 }
 
 class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
-  late List<DiscoverTabItem> _tabs;
-  String _selectedTabId = 'roasters';
+  String _selectedTabId = 'myLots'; // Default to My Lots
   final ScrollController _reorderController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _tabs = [
-      DiscoverTabItem('farmers', 'Фермери'),
-      DiscoverTabItem('roasters', 'Мої обсмажчики'),
-      DiscoverTabItem('history', 'Історія Спешелті'),
-    ];
+    // Tabs are built from discoveryTabOrderProvider
+  }
+
+  String _getTabLabel(DiscoverTabType type) {
+    switch (type) {
+      case DiscoverTabType.myLots:
+        return 'Мої лоти';
+      case DiscoverTabType.history:
+        return 'Історія Спешелті';
+      case DiscoverTabType.farmers:
+        return 'Фермери';
+      case DiscoverTabType.roasters:
+        return 'Мої обсмажчики';
+      case DiscoverTabType.encyclopedia:
+        return 'Енциклопедія';
+    }
+  }
+
+  String _getTabId(DiscoverTabType type) {
+    return type.name;
   }
 
   void _onReorder(int oldIndex, int newIndex) {
-    if (oldIndex < newIndex) newIndex -= 1;
-    ref.read(settingsProvider.notifier).triggerHaptic();
-
-    setState(() {
-      final item = _tabs.removeAt(oldIndex);
-      _tabs.insert(newIndex, item);
-    });
+    ref.read(discoveryTabOrderProvider.notifier).reorder(oldIndex, newIndex);
   }
 
   @override
   Widget build(BuildContext context) {
+    final tabOrder = ref.watch(discoveryTabOrderProvider);
+    
+    // Ensure we have a valid selection
+    if (!tabOrder.any((t) => t.name == _selectedTabId) && tabOrder.isNotEmpty) {
+      _selectedTabId = tabOrder.first.name;
+    }
+
     return Scaffold(
       backgroundColor: Colors.black, // Pure black background
+      floatingActionButton: _selectedTabId == 'myLots'
+          ? Padding(
+              padding: const EdgeInsets.only(bottom: 45),
+              child: FloatingActionButton.extended(
+                onPressed: () => context.push('/add_lot'),
+                backgroundColor: const Color(0xFFC8A96E),
+                foregroundColor: Colors.black,
+                icon: const Icon(Icons.add_rounded),
+                label: Text(
+                  'Додати лот'.toUpperCase(),
+                  style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 13),
+                ),
+              ),
+            )
+          : null,
       body: SafeArea(
         child: Column(
           children: [
@@ -58,7 +84,6 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  // Centered Title and Badge
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -71,28 +96,20 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      // Badge
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 6,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: Colors.greenAccent.withValues(alpha: 0.3),
                             width: 1,
                           ),
                           borderRadius: BorderRadius.circular(20),
-                          color: const Color(0xFF2D322F), // Dark grey-green
+                          color: const Color(0xFF2D322F),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(
-                              Icons.cloud_done_outlined,
-                              color: Colors.greenAccent,
-                              size: 14,
-                            ),
+                            const Icon(Icons.cloud_done_outlined, color: Colors.greenAccent, size: 14),
                             const SizedBox(width: 6),
                             Text(
                               "Cloud Connected",
@@ -107,7 +124,6 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                       ),
                     ],
                   ),
-                  // Avatar on the Far Right
                   Align(
                     alignment: Alignment.centerRight,
                     child: UserProfileAvatar(radius: 17),
@@ -120,9 +136,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
             SizedBox(
               height: 54,
               child: Theme(
-                data: Theme.of(
-                  context,
-                ).copyWith(canvasColor: Colors.transparent),
+                data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
                 child: ReorderableListView.builder(
                   scrollController: _reorderController,
                   scrollDirection: Axis.horizontal,
@@ -131,24 +145,24 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                   proxyDecorator: (child, index, animation) {
                     return Material(color: Colors.transparent, child: child);
                   },
-                  itemCount: _tabs.length,
-                  onReorderStart: (_) =>
-                      ref.read(settingsProvider.notifier).triggerVibrate(),
+                  itemCount: tabOrder.length,
+                  onReorderStart: (_) => ref.read(settingsProvider.notifier).triggerVibrate(),
                   onReorder: _onReorder,
                   itemBuilder: (context, index) {
-                    final tab = _tabs[index];
-                    final isSelected = _selectedTabId == tab.id;
+                    final type = tabOrder[index];
+                    final tabId = type.name;
+                    final isSelected = _selectedTabId == tabId;
 
                     return ReorderableDelayedDragStartListener(
-                      key: ValueKey(tab.id),
+                      key: ValueKey(tabId),
                       index: index,
                       child: _CapsuleTab(
-                        label: tab.label,
+                        label: _getTabLabel(type),
                         isSelected: isSelected,
                         onTap: () {
                           ref.read(settingsProvider.notifier).triggerHaptic();
                           setState(() {
-                            _selectedTabId = tab.id;
+                            _selectedTabId = tabId;
                           });
                         },
                       ),
@@ -175,6 +189,8 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
 
   Widget _buildTabContent(String tabId) {
     switch (tabId) {
+      case 'myLots':
+        return const MyLotsContent();
       case 'roasters':
         return ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

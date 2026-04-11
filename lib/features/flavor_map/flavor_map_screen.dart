@@ -71,55 +71,62 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Top Bar: Matches Screenshot
+            // Top Bar: Matches Discover Screen Style
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              child: Row(
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  const Spacer(),
-                  Text(
-                    'Мапа смаків',
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
-                      color: const Color(0xFFC8A96E),
-                    ),
-                  ),
-                  const Spacer(),
-                  // Connected Badge
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1B231F), // Very dark green-grey
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: Colors.greenAccent.withValues(alpha: 0.2),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.cloud_done,
-                          size: 14,
-                          color: Color(0xFF62D39F), // Brighter green
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Мапа смаків',
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                          color: const Color(0xFFC8A96E),
                         ),
-                        const SizedBox(width: 6),
-                        Text(
-                          'Connected',
-                          style: GoogleFonts.poppins(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF62D39F),
+                      ),
+                      const SizedBox(width: 12),
+                      // Connected Badge
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF1B231F),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: Colors.greenAccent.withValues(alpha: 0.2),
                           ),
                         ),
-                      ],
-                    ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.cloud_done,
+                              size: 14,
+                              color: Color(0xFF62D39F),
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Connected',
+                              style: GoogleFonts.poppins(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFF62D39F),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 12),
-                  const UserProfileAvatar(radius: 17),
+                  const Align(
+                    alignment: Alignment.centerRight,
+                    child: UserProfileAvatar(radius: 17),
+                  ),
                 ],
               ),
             ),

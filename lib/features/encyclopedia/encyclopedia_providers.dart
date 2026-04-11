@@ -42,12 +42,13 @@ final localEncyclopediaStreamProvider =
   final db = ref.watch(databaseProvider);
   final lang = ref.watch(localeProvider);
 
-  // Trigger background sync when this provider is first used
-  // We use Future.microtask to avoid performing sync during widget build
+  // Trigger background sync and subscription when this provider is first used
   Future.microtask(() async {
     try {
       final syncService = ref.read(syncServiceProvider);
       await syncService.syncEncyclopedia();
+      // Start real-time subscription
+      syncService.subscribeToEncyclopedia();
     } catch (e) {
       debugPrint('BACKGROUND SYNC ERROR: $e');
     }

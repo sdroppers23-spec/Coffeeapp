@@ -32,36 +32,69 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
       length: 3,
       child: Column(
         children: [
-          // ── Search & Filter Row ─────────────────────────────────────────────
+          // ── Search & Action Row ─────────────────────────────────────────────
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-            child: Row(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+            child: Column(
               children: [
-                Expanded(
-                  child: TextField(
-                    onChanged: (v) => ref
-                        .read(encyclopediaSearchQueryProvider.notifier)
-                        .state = v,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      hintText: ref.t('search_origins'),
-                      prefixIcon: const Icon(
-                        Icons.search,
-                        size: 20,
-                        color: Colors.white38,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 8),
-                      filled: true,
-                      fillColor: Colors.white.withValues(alpha: 0.08),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.06),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: TextField(
+                          onChanged: (v) => ref
+                              .read(encyclopediaSearchQueryProvider.notifier)
+                              .update(v),
+                          style: GoogleFonts.outfit(color: Colors.white, fontSize: 14),
+                          decoration: InputDecoration(
+                            hintText: 'Пошук за сортами, країнами, регіонами...',
+                            hintStyle: GoogleFonts.outfit(color: Colors.white38, fontSize: 13),
+                            prefixIcon: const Icon(
+                              Icons.search,
+                              size: 20,
+                              color: Color(0xFFC8A96E),
+                            ),
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-                _SortMenu(ref: ref),
+                const SizedBox(height: 12),
+                // Premium Action Bar (Filter, Compare, Favorites, Layout)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _ActionButton(
+                      icon: Icons.tune_rounded,
+                      label: 'Фільтри',
+                      onTap: () {}, // TODO: Open Filter
+                    ),
+                    _ActionButton(
+                      icon: Icons.compare_arrows_rounded,
+                      label: 'Порівняння',
+                      onTap: () {}, // TODO: Switch to Comparison Tab logic
+                    ),
+                    _ActionButton(
+                      icon: Icons.star_border_rounded,
+                      label: 'Обране',
+                      onTap: () {}, // TODO: Filter favorites
+                    ),
+                    _ActionButton(
+                      icon: Icons.grid_view_rounded,
+                      label: 'Вигляд',
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
               ],
             ),
           ),
@@ -307,20 +340,25 @@ class _OriginCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scoreColor = _getScoreColor(entry.cupsScore);
-
     return GestureDetector(
       onTap: onTap,
-      child: GlassContainer(
-        padding: const EdgeInsets.all(0),
-        opacity: isExpanded ? 0.12 : 0.08,
-        borderColor: isExpanded
-            ? const Color(0xFFC8A96E).withValues(alpha: 0.5)
-            : null,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        decoration: BoxDecoration(
+          color: isExpanded
+              ? const Color(0xFFC8A96E).withValues(alpha: 0.06)
+              : Colors.white.withValues(alpha: 0.03),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isExpanded
+                ? const Color(0xFFC8A96E).withValues(alpha: 0.2)
+                : Colors.white.withValues(alpha: 0.05),
+          ),
+        ),
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
                 children: [
                   _OriginAvatar(url: entry.url, emoji: entry.countryEmoji),
@@ -330,53 +368,35 @@ class _OriginCard extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          entry.country,
-                          style: GoogleFonts.poppins(
+                          '${entry.country} ${entry.region} - ${entry.processMethod}',
+                          style: GoogleFonts.outfit(
                             fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                            fontSize: 14,
+                            color: Colors.white,
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
+                        const SizedBox(height: 2),
                         Text(
-                          entry.region,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.white54,
+                          '${entry.country} • ${entry.processMethod}',
+                          style: GoogleFonts.outfit(
+                            fontSize: 11,
+                            color: Colors.white38,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  _ScaBadge(score: entry.cupsScore, color: scoreColor),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    icon: Icon(
-                      entry.isFavorite
-                          ? Icons.star_rounded
-                          : Icons.star_outline_rounded,
-                      color: entry.isFavorite
-                          ? const Color(0xFFC8A96E)
-                          : Colors.white24,
-                    ),
-                    onPressed: () async {
-                      await ref
-                          .read(databaseProvider)
-                          .toggleFavorite(entry.id, !entry.isFavorite);
-                    },
+                  const Icon(
+                    Icons.chevron_right_rounded,
+                    color: Colors.white12,
+                    size: 20,
                   ),
                 ],
               ),
             ),
-            if (entry.flavorNotes.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                child: Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
-                  children: entry.flavorNotes
-                      .map((f) => _FlavorChip(f))
-                      .toList(),
-                ),
-              ),
             if (isExpanded) ...[
               const Divider(color: Colors.white10, height: 1),
               Padding(
@@ -386,7 +406,7 @@ class _OriginCard extends ConsumerWidget {
                   children: [
                     Text(
                       entry.description,
-                      style: const TextStyle(
+                      style: GoogleFonts.outfit(
                         fontSize: 13,
                         color: Colors.white70,
                         height: 1.5,
@@ -394,6 +414,9 @@ class _OriginCard extends ConsumerWidget {
                     ),
                     const SizedBox(height: 16),
                     _DetailGrid(entry: entry),
+                    const SizedBox(height: 12),
+                    // Dash-style Sensory Overview
+                    _SensoryDashes(sensory: entry.sensoryPoints),
                     const SizedBox(height: 16),
                     Center(
                       child: TextButton(
@@ -405,7 +428,10 @@ class _OriginCard extends ConsumerWidget {
                         ),
                         child: Text(
                           ref.t('read_more'),
-                          style: const TextStyle(color: Color(0xFFC8A96E)),
+                          style: GoogleFonts.outfit(
+                            color: const Color(0xFFC8A96E),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
@@ -424,6 +450,88 @@ class _OriginCard extends ConsumerWidget {
     if (score >= 87) return Colors.amber;
     if (score >= 85) return Colors.greenAccent;
     return Colors.white70;
+  }
+}
+
+class _ActionButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  const _ActionButton({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.03),
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+            ),
+            child: Icon(icon, color: const Color(0xFFC8A96E), size: 18),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: GoogleFonts.outfit(
+              fontSize: 9,
+              color: Colors.white38,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SensoryDashes extends StatelessWidget {
+  final Map<String, dynamic> sensory;
+  const _SensoryDashes({required this.sensory});
+
+  @override
+  Widget build(BuildContext context) {
+    final keys = ['aroma', 'sweetness', 'acidity', 'bitterness', 'body', 'intensity'];
+    return Wrap(
+      spacing: 12,
+      runSpacing: 8,
+      children: keys.map((key) {
+        final val = (sensory[key] ?? 1).toInt();
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              key.toUpperCase(),
+              style: GoogleFonts.outfit(fontSize: 8, color: Colors.white24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 4),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: List.generate(5, (i) {
+                return Container(
+                  width: 12,
+                  height: 2,
+                  margin: const EdgeInsets.only(right: 2),
+                  decoration: BoxDecoration(
+                    color: i < val ? const Color(0xFFC8A96E) : Colors.white.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(1),
+                  ),
+                );
+              }),
+            ),
+          ],
+        );
+      }).toList(),
+    );
   }
 }
 

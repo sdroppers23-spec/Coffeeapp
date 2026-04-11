@@ -18,7 +18,7 @@ class DiscoverScreen extends ConsumerStatefulWidget {
 }
 
 class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
-  String _selectedTabId = 'myLots'; // Default to My Lots
+  String _selectedTabId = 'encyclopedia'; // Default to Encyclopedia
   final ScrollController _reorderController = ScrollController();
 
   @override

@@ -211,7 +211,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0908),
+      backgroundColor: Colors.black,
       body: SafeArea(
         child: Column(
           children: [
@@ -293,8 +293,8 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         labelStyle: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 11, letterSpacing: 0.5),
         unselectedLabelStyle: GoogleFonts.outfit(fontWeight: FontWeight.w500, fontSize: 11),
         tabs: const [
-          Tab(text: 'ОБСМАЖЧИК'),
-          Tab(text: 'КАВА'),
+          Tab(text: 'ФЕРМА'),
+          Tab(text: 'ПРОДУКТ'),
           Tab(text: 'СМАК'),
         ],
       ),
@@ -586,49 +586,81 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
 
   Widget _sensorySlider(String label, double value, Function(double) onChanged) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(label,
-                  style: GoogleFonts.outfit(fontSize: 10, color: const Color(0xFFC8A96E).withValues(alpha: 0.54), fontWeight: FontWeight.bold, letterSpacing: 1.0)),
-              Text(value.toInt().toString(),
-                  style: GoogleFonts.outfit(fontSize: 13, color: const Color(0xFFC8A96E), fontWeight: FontWeight.bold)),
+              Text(
+                label,
+                style: GoogleFonts.outfit(
+                  fontSize: 10,
+                  color: const Color(0xFFC8A96E).withValues(alpha: 0.54),
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.0,
+                ),
+              ),
+              Text(
+                '${value.toInt()}/5',
+                style: GoogleFonts.outfit(
+                  fontSize: 13,
+                  color: const Color(0xFFC8A96E),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
-          SliderTheme(
-            data: SliderTheme.of(context).copyWith(
-              activeTrackColor: const Color(0xFFC8A96E),
-              inactiveTrackColor: Colors.white.withValues(alpha: 0.1),
-              thumbColor: const Color(0xFFC8A96E),
-              overlayColor: const Color(0xFFC8A96E).withValues(alpha: 0.2),
-              trackHeight: 2,
-              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
-            ),
-            child: Slider(
-              value: value,
-              min: 1,
-              max: 5,
-              divisions: 4,
-              onChanged: (v) {
-                ref.read(settingsProvider.notifier).triggerSelectionVibrate();
-                onChanged(v);
-              },
-            ),
+          const SizedBox(height: 12),
+          Row(
+            children: List.generate(5, (i) {
+              final active = i < value;
+              return Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    ref.read(settingsProvider.notifier).triggerSelectionHaptic();
+                    onChanged((i + 1).toDouble());
+                  },
+                  child: Container(
+                    height: 6,
+                    margin: EdgeInsets.only(
+                      left: i == 0 ? 0 : 4,
+                      right: i == 4 ? 0 : 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: active
+                          ? const Color(0xFFC8A96E)
+                          : Colors.white.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(3),
+                      boxShadow: active
+                          ? [
+                              BoxShadow(
+                                color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
+                                blurRadius: 4,
+                                spreadRadius: -1,
+                              )
+                            ]
+                          : [],
+                    ),
+                  ),
+                ),
+              );
+            }),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(
-                5,
-                (i) => Text('${i + 1}',
-                    style: GoogleFonts.outfit(fontSize: 8, color: Colors.white24, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'MIN',
+                style: GoogleFonts.outfit(fontSize: 8, color: Colors.white24, fontWeight: FontWeight.bold),
               ),
-            ),
+              Text(
+                'MAX',
+                style: GoogleFonts.outfit(fontSize: 8, color: Colors.white24, fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
         ],
       ),

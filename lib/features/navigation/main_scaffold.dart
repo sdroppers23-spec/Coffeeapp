@@ -137,7 +137,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                             child: GlassContainer(
                               borderRadius: 40,
                               padding: const EdgeInsets.symmetric(
-                                vertical: 8,
+                                vertical: 2,
                                 horizontal: 10,
                               ),
                               blur: 60,
@@ -164,7 +164,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                                         0,
                                     onTap: () => _onTap(0),
                                   ),
-                                  const SizedBox(width: 32),
+                                  const SizedBox(width: 24),
                                   _NavBarItem(
                                     icon: Icons.explore_outlined,
                                     label: 'Відкриття',
@@ -173,7 +173,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                                         1,
                                     onTap: () => _onTap(1),
                                   ),
-                                  const SizedBox(width: 32),
+                                  const SizedBox(width: 24),
                                   _NavBarItem(
                                     icon: Icons.local_cafe_outlined,
                                     label: 'Рецепти',
@@ -193,13 +193,13 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                         // Separate Settings Island - Now Milky Glass
                         PressableScale(
                           onTap: () {
-                            ref.read(settingsProvider.notifier).triggerHaptic();
+                            ref.read(settingsProvider.notifier).triggerSelectionVibrate();
                             context.push('/settings');
                           },
                             child: GlassContainer(
-                              width: 64,
-                              height: 64,
-                              borderRadius: 32,
+                              width: 52,
+                              height: 52,
+                              borderRadius: 26,
                               blur: 60,
                               opacity: 0.1,
                               backgroundGradient: LinearGradient(
@@ -217,7 +217,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                               child: Icon(
                                 Icons.settings_rounded,
                                 color: Colors.white,
-                                size: 28,
+                                size: 24,
                               ),
                             ),
                           ),
@@ -301,7 +301,7 @@ class _NavBarItemState extends ConsumerState<_NavBarItem>
                 scale: widget.isSelected ? scale : 1.0,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color:
                         widget.isSelected
@@ -325,7 +325,7 @@ class _NavBarItemState extends ConsumerState<_NavBarItem>
                         widget.isSelected
                             ? const Color(0xFFC8A96E) // Gold for active
                             : Colors.white54,
-                    size: 24,
+                    size: 22,
                   ),
                 ),
               );

@@ -111,7 +111,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                     alignment: Alignment.centerRight,
                     child: GestureDetector(
                       onTap: () => _showProfileMenu(context, ref),
-                      child: _UserAvatar(radius: 22),
+                      child: _UserAvatar(radius: 17),
                     ),
                   ),
                 ],
@@ -516,11 +516,13 @@ class _UserAvatar extends ConsumerWidget {
     return CircleAvatar(
       radius: radius,
       backgroundColor: Colors.white12,
-      backgroundImage: NetworkImage(avatarUrl),
+      backgroundImage: avatarUrl.startsWith('http') 
+          ? NetworkImage(avatarUrl)
+          : const AssetImage('assets/images/placeholder_avatar.jpg') as ImageProvider,
       onBackgroundImageError: (_, _) {},
       child:
           (avatarUrl.isEmpty)
-              ? const Icon(Icons.person, color: Colors.white54)
+              ? const Icon(Icons.person, color: Colors.white54, size: 16)
               : null,
     );
   }

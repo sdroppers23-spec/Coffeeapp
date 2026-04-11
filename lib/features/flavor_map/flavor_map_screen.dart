@@ -120,8 +120,8 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                   const SizedBox(width: 12),
                   // Avatar
                   Container(
-                    width: 44,
-                    height: 44,
+                    width: 34,
+                    height: 34,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(

@@ -116,7 +116,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
             Positioned(
               left: 0,
               right: 0,
-              bottom: 45, // Raised from 40 to 45
+              bottom: 50, // Raised from 45 to 50
               child: AnimatedSlide(
                 duration: const Duration(milliseconds: 400),
                 curve: Curves.fastOutSlowIn,

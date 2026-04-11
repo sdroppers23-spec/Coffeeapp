@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../shared/widgets/glass_container.dart';
+import '../../shared/widgets/user_profile_avatar.dart';
 import '../../core/providers/settings_provider.dart';
 import 'terroir_globe.dart';
 import 'sca_flavor_wheel.dart';
@@ -118,24 +119,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  // Avatar
-                  Container(
-                    width: 34,
-                    height: 34,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.1),
-                        width: 1.5,
-                      ),
-                      image: const DecorationImage(
-                        image: AssetImage(
-                          'assets/images/placeholder_avatar.jpg',
-                        ),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
+                  const UserProfileAvatar(radius: 17),
                 ],
               ),
             ),

@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/providers/settings_provider.dart';
 import '../../core/supabase/supabase_provider.dart';
 import '../../shared/widgets/glass_container.dart';
+import '../../shared/widgets/user_profile_avatar.dart';
 
 class DiscoverTabItem {
   final String id;
@@ -109,10 +110,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                   // Avatar on the Far Right
                   Align(
                     alignment: Alignment.centerRight,
-                    child: GestureDetector(
-                      onTap: () => _showProfileMenu(context, ref),
-                      child: _UserAvatar(radius: 17),
-                    ),
+                    child: UserProfileAvatar(radius: 17),
                   ),
                 ],
               ),

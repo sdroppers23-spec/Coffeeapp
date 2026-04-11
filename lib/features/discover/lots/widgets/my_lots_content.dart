@@ -41,28 +41,102 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
   Future<bool> _confirmDeleteDialog(CoffeeLotDto lot) async {
     final result = await showDialog<bool>(
       context: context,
+      barrierColor: Colors.black54,
       builder: (ctx) {
-        return AlertDialog(
-          backgroundColor: const Color(0xFF1D1B1A),
+        return Dialog(
+          backgroundColor: const Color(0xFF1D1812),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-          title: Row(
-            children: [
-              const Icon(Icons.warning_amber_rounded, color: Colors.redAccent),
-              const SizedBox(width: 8),
-              Text('Видалити лот?', style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 64,
+                  height: 64,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2A1F14),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.warning_amber_rounded,
+                    color: Color(0xFFD4A843),
+                    size: 36,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Видалити лот?',
+                  style: GoogleFonts.outfit(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Ви впевнені, що хочете видалити ${lot.coffeeName ?? 'цей лот'}?',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.outfit(
+                    color: Colors.white60,
+                    fontSize: 15,
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 28),
+                Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => Navigator.pop(ctx, false),
+                        child: Container(
+                          height: 52,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(color: Colors.white24),
+                            color: Colors.transparent,
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            'СКАСУВАТИ',
+                            style: GoogleFonts.outfit(
+                              color: Colors.white70,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                              letterSpacing: 1.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => Navigator.pop(ctx, true),
+                        child: Container(
+                          height: 52,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            color: const Color(0xFFD32F2F),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            'ВИДАЛИТИ',
+                            style: GoogleFonts.outfit(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                              letterSpacing: 1.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          content: Text('Ви впевнені, що хочете видалити ${lot.coffeeName ?? 'цей лот'}?', style: GoogleFonts.outfit(color: Colors.white70, fontSize: 15)),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text('СКАСУВАТИ', style: GoogleFonts.outfit(color: Colors.white54)),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: Text('ВИДАЛИТИ', style: GoogleFonts.outfit(color: Colors.redAccent, fontWeight: FontWeight.bold)),
-            ),
-          ],
         );
       }
     );
@@ -163,7 +237,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                 return _buildSubTabs(visibleLots);
               },
               loading: () => _buildSubTabs([]),
-              error: (_, __) => _buildSubTabs([]),
+              error: (_, _) => _buildSubTabs([]),
             ),
             Expanded(
               child: _buildListView(lotsAsync, filter),
@@ -173,7 +247,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
 
         // Floating Action Button OR Selection Bar
         Positioned(
-          bottom: 24,
+          bottom: 100,
           left: 16,
           right: 16,
           child: AnimatedSwitcher(
@@ -376,32 +450,33 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
 
   Widget _buildFloatingAddButton() {
     return GestureDetector(
-      onTap: () => context.push('/add_lot_screen'),
+      onTap: () => context.push('/add_lot'),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
         decoration: BoxDecoration(
-          color: const Color(0xFFC8A96E),
-          borderRadius: BorderRadius.circular(30),
+          color: const Color(0xFFB8955A),
+          borderRadius: BorderRadius.circular(50),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
+              color: const Color(0xFFC8A96E).withValues(alpha: 0.35),
               blurRadius: 20,
               spreadRadius: 2,
+              offset: const Offset(0, 6),
             )
           ],
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.add_rounded, color: Colors.black, size: 20),
+            const Icon(Icons.add_rounded, color: Colors.black87, size: 20),
             const SizedBox(width: 8),
             Text(
               'ДОДАТИ НОВИЙ ЛОТ',
-              style: GoogleFonts.poppins(
-                fontWeight: FontWeight.bold,
+              style: GoogleFonts.outfit(
+                fontWeight: FontWeight.w800,
                 fontSize: 12,
-                letterSpacing: 1.2,
-                color: Colors.black,
+                letterSpacing: 1.5,
+                color: Colors.black87,
               ),
             ),
           ],
@@ -425,7 +500,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
         children: [
           Expanded(
             child: Text(
-              '$_selectionCountText',
+              _selectionCountText,
               style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
             ),
           ),

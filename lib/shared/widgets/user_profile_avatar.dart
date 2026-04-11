@@ -26,7 +26,7 @@ class UserProfileAvatar extends ConsumerWidget {
             ? NetworkImage(avatarUrl)
             : const AssetImage('assets/images/placeholder_avatar.jpg')
                 as ImageProvider,
-        onBackgroundImageError: (_, __) {},
+        onBackgroundImageError: (_, _) {},
         child: (avatarUrl.isEmpty)
             ? Icon(Icons.person, color: Colors.white54, size: radius * 0.8)
             : null,

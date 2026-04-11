@@ -425,10 +425,10 @@ class MyLotListCard extends ConsumerWidget {
                   width: 24,
                   height: 24,
                   decoration: BoxDecoration(
-                    color: isSelected ? theme.colorScheme.primary : Colors.transparent,
-                    borderRadius: BorderRadius.circular(6),
+                    color: isSelected ? const Color(0xFFC8A96E) : Colors.transparent,
+                    shape: BoxShape.circle,
                     border: Border.all(
-                      color: isSelected ? theme.colorScheme.primary : Colors.white38,
+                      color: isSelected ? const Color(0xFFC8A96E) : Colors.white38,
                       width: 2,
                     ),
                   ),

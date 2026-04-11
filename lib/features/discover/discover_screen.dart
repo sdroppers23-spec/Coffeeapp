@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:go_router/go_router.dart';
 import '../../shared/widgets/user_profile_avatar.dart';
 import '../../core/providers/settings_provider.dart';
 import 'lots/widgets/my_lots_content.dart';
@@ -54,21 +53,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
 
     return Scaffold(
       backgroundColor: Colors.black, // Pure black background
-      floatingActionButton: _selectedTabId == 'myLots'
-          ? Padding(
-              padding: const EdgeInsets.only(bottom: 45),
-              child: FloatingActionButton.extended(
-                onPressed: () => context.push('/add_lot'),
-                backgroundColor: const Color(0xFFC8A96E),
-                foregroundColor: Colors.black,
-                icon: const Icon(Icons.add_rounded),
-                label: Text(
-                  'Додати лот'.toUpperCase(),
-                  style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 13),
-                ),
-              ),
-            )
-          : null,
+      floatingActionButton: null,
       body: SafeArea(
         child: Column(
           children: [

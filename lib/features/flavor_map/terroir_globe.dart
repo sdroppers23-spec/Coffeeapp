@@ -563,19 +563,19 @@ class _GlobePainter extends CustomPainter {
 
       // Glow effect
       final glowPaint = Paint()
-        ..color = const Color(0xFF42A5F5).withValues(alpha: 0.6)
+        ..color = const Color(0xFFC8A96E).withValues(alpha: 0.6)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
       canvas.drawCircle(pos, 8, glowPaint);
 
-      // Outer Blue
+      // Outer Gold
       canvas.drawCircle(
         pos,
         5,
-        Paint()..color = const Color(0xFF42A5F5),
+        Paint()..color = const Color(0xFFC8A96E),
       );
       
-      // Inner White
-      canvas.drawCircle(pos, 2, Paint()..color = Colors.white);
+      // Inner Light Gold/White
+      canvas.drawCircle(pos, 2, Paint()..color = const Color(0xFFFFE0B2));
     }
   }
 

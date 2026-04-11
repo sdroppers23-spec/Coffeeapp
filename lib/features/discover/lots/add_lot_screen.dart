@@ -42,7 +42,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   String _altitude = '';
   String _varieties = '';
   String _process = 'Washed';
-  String _otherProcess = '';
+  final String _otherProcess = '';
   bool _isDecaf = false;
   String _decafProcess = 'Sugar Cane';
   String _flavorProfile = '';
@@ -277,14 +277,14 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.04),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(50),
       ),
       child: TabBar(
         controller: _tabController,
         indicator: BoxDecoration(
           color: const Color(0xFF1A1714),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.3)),
+          borderRadius: BorderRadius.circular(50),
+          border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.4)),
         ),
         indicatorSize: TabBarIndicatorSize.tab,
         dividerColor: Colors.transparent,
@@ -565,7 +565,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
           color: active ? Colors.white.withValues(alpha: 0.06) : Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(50),
           border: Border.all(
             color: active ? const Color(0xFFC8A96E) : Colors.white.withValues(alpha: 0.1),
           ),

@@ -427,6 +427,17 @@ class _GlobePainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2;
 
+    // Draw dark chocolate/black background
+    final bgPaint = Paint()
+      ..shader = RadialGradient(
+        colors: [
+          const Color(0xFF0F0804),
+          const Color(0xFF050302),
+        ],
+        stops: const [0.7, 1.0],
+      ).createShader(Rect.fromCircle(center: center, radius: radius));
+    canvas.drawCircle(center, radius, bgPaint);
+
     // Grid configuration
     const int latCount = 45;
     const int lonCount = 90;
@@ -470,8 +481,8 @@ class _GlobePainter extends CustomPainter {
           final pSize = (depthFactor * (isLand ? 2.5 : 1.0)).clamp(0.4, 3.5);
 
           paint.color = isLand
-              ? theme.colorScheme.primary.withValues(alpha: opacity)
-              : theme.colorScheme.primary.withValues(alpha: opacity * 0.3);
+              ? const Color(0xFFB8955A).withValues(alpha: opacity)   // Rich gold-brown land
+              : Colors.white.withValues(alpha: opacity * 0.08);      // Even fainter ocean
 
           canvas.drawCircle(pos, pSize, paint);
 

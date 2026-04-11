@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,7 +9,7 @@ import '../../../../core/database/app_database.dart';
 import '../../../../core/providers/settings_provider.dart';
 import '../../../../core/database/dtos.dart';
 import '../../discovery_filter_provider.dart';
-import '../lots_providers.dart';
+import '../lots_provider.dart';
 import 'lot_card_widgets.dart';
 import '../../widgets/discovery_action_bar.dart';
 
@@ -30,6 +31,10 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
   void initState() {
     super.initState();
     _subTabController = TabController(length: 3, vsync: this);
+    _subTabController.addListener(() {
+      if (_subTabController.indexIsChanging) return;
+      setState(() {});
+    });
   }
 
   @override
@@ -39,151 +44,223 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
   }
 
   Future<bool> _confirmDeleteDialog(CoffeeLotDto lot) async {
-    final result = await showDialog<bool>(
+    final result = await showGeneralDialog<bool>(
       context: context,
+      barrierDismissible: true,
+      barrierLabel: '',
       barrierColor: Colors.black54,
-      builder: (ctx) {
-        return Dialog(
-          backgroundColor: const Color(0xFF1D1812),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 64,
-                  height: 64,
+      transitionDuration: const Duration(milliseconds: 200),
+      pageBuilder: (ctx, anim1, anim2) {
+        return Center(
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 40),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF2A1F14),
-                    shape: BoxShape.circle,
+                    color: Colors.white.withValues(alpha: 0.05),
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
                   ),
-                  child: const Icon(
-                    Icons.warning_amber_rounded,
-                    color: Color(0xFFD4A843),
-                    size: 36,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  'Видалити лот?',
-                  style: GoogleFonts.outfit(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  'Ви впевнені, що хочете видалити ${lot.coffeeName ?? 'цей лот'}?',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.outfit(
-                    color: Colors.white60,
-                    fontSize: 15,
-                    height: 1.4,
-                  ),
-                ),
-                const SizedBox(height: 28),
-                Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => Navigator.pop(ctx, false),
-                        child: Container(
-                          height: 52,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 64,
+                          height: 64,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: Colors.white24),
-                            color: Colors.transparent,
+                            color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                            shape: BoxShape.circle,
                           ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            'СКАСУВАТИ',
-                            style: GoogleFonts.outfit(
-                              color: Colors.white70,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                              letterSpacing: 1.0,
-                            ),
+                          child: const Icon(
+                            Icons.warning_amber_rounded,
+                            color: Color(0xFFC8A96E),
+                            size: 32,
                           ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => Navigator.pop(ctx, true),
-                        child: Container(
-                          height: 52,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(14),
-                            color: const Color(0xFFD32F2F),
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            'ВИДАЛИТИ',
-                            style: GoogleFonts.outfit(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                              letterSpacing: 1.0,
-                            ),
+                        const SizedBox(height: 20),
+                        Text(
+                          'Видалити лот?',
+                          style: GoogleFonts.outfit(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
                           ),
                         ),
-                      ),
+                        const SizedBox(height: 12),
+                        Text(
+                          'Ви впевнені, що хочете видалити ${lot.coffeeName ?? 'цей лот'}?',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.outfit(
+                            color: Colors.white70,
+                            fontSize: 14,
+                            height: 1.4,
+                          ),
+                        ),
+                        const SizedBox(height: 32),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => Navigator.pop(ctx, false),
+                                child: Container(
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(14),
+                                    color: Colors.white.withValues(alpha: 0.05),
+                                    border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    'СКАСУВАТИ',
+                                    style: GoogleFonts.outfit(
+                                      color: Colors.white70,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                      letterSpacing: 1.2,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => Navigator.pop(ctx, true),
+                                child: Container(
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(14),
+                                    color: Colors.redAccent.withValues(alpha: 0.2),
+                                    border: Border.all(color: Colors.redAccent.withValues(alpha: 0.3)),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    'ВИДАЛИТИ',
+                                    style: GoogleFonts.outfit(
+                                      color: Colors.redAccent,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                      letterSpacing: 1.2,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ],
+              ),
             ),
           ),
         );
-      }
+      },
     );
     return result ?? false;
   }
 
-  void _stageDelete(CoffeeLotDto lot) {
-    setState(() => _pendingDeleteIds.add(lot.id));
-
+  void _showPremiumUndo(CoffeeLotDto lot, BuildContext context, WidgetRef ref) {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: const Color(0xFF1D1B1A),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
         behavior: SnackBarBehavior.floating,
-        margin: const EdgeInsets.only(bottom: 20, left: 16, right: 16),
-        content: Row(
-          children: [
-            const SizedBox(
-              width: 16, height: 16,
-              child: CircularProgressIndicator(color: Colors.white54, strokeWidth: 2),
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 90),
+        duration: const Duration(seconds: 4),
+        content: ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(
+              height: 50,
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(50),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 42,
+                    height: 42,
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.05),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFC8A96E)),
+                          ),
+                        ),
+                        const Icon(
+                          Icons.timer_outlined,
+                          color: Color(0xFFC8A96E),
+                          size: 14,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Лот видалено',
+                      style: GoogleFonts.outfit(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      ref.read(userLotsProvider.notifier).undoDelete(lot);
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    },
+                    child: Container(
+                      height: 38,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFC8A96E).withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(50),
+                        border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.3)),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        'СКАСУВАТИ',
+                        style: GoogleFonts.outfit(
+                          color: const Color(0xFFC8A96E),
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                ],
+              ),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text('Лот видалено. Скасувати?', style: GoogleFonts.outfit(color: Colors.white)),
-            ),
-          ],
+          ),
         ),
-        action: SnackBarAction(
-          label: 'СКАСУВАТИ',
-          textColor: const Color(0xFFC8A96E),
-          onPressed: () {
-            setState(() => _pendingDeleteIds.remove(lot.id));
-          },
-        ),
-        duration: const Duration(seconds: 15),
       ),
-    ).closed.then((reason) async {
-      if (reason != SnackBarClosedReason.action && mounted) {
-        if (_pendingDeleteIds.contains(lot.id)) {
-          final db = ref.read(databaseProvider);
-          await db.deleteUserLot(lot.id);
-          if (mounted) setState(() => _pendingDeleteIds.remove(lot.id));
-          ref.invalidate(userLotsProvider);
-        }
-      }
-    });
+    );
   }
 
   void _toggleLotSelection(String id) {
@@ -247,7 +324,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
 
         // Floating Action Button OR Selection Bar
         Positioned(
-          bottom: 100,
+          bottom: 90,
           left: 16,
           right: 16,
           child: AnimatedSwitcher(
@@ -367,7 +444,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
 
         if (filter.isGrid) {
           return GridView.builder(
-            padding: const EdgeInsets.all(16).copyWith(bottom: 100),
+            padding: const EdgeInsets.fromLTRB(21, 16, 21, 100),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               mainAxisSpacing: 16,
@@ -397,7 +474,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
           );
         }
         return ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16).copyWith(bottom: 100),
+          padding: const EdgeInsets.fromLTRB(26, 16, 26, 100),
           itemCount: filteredLots.length,
           itemBuilder: (context, index) {
             final lot = filteredLots[index];
@@ -422,7 +499,10 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
               onDeleteSwipe: (lot) async {
                 final confirm = await _confirmDeleteDialog(lot);
                 if (confirm) {
-                  _stageDelete(lot);
+                  await ref.read(userLotsProvider.notifier).deleteLot(lot.id);
+                  if (context.mounted) {
+                    _showPremiumUndo(lot, context, ref);
+                  }
                   return true;
                 }
                 return false;
@@ -534,13 +614,22 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
             Icons.delete_outline_rounded,
             Colors.redAccent,
             () async {
-              // Delete multiple items (can implement similar staging or direct delete)
-              final db = ref.read(databaseProvider);
-              for (var id in _selectedLotIds) {
-                await db.deleteUserLot(id);
+              final toDelete = _selectedLotIds.toList();
+              // Just use the first lot for the confirmation dialog title reference
+              final firstLot = userLots.data?.firstWhere((l) => l.id == toDelete.first);
+              if (firstLot == null) return;
+              
+              final confirmed = await _confirmDeleteDialog(firstLot);
+              if (confirmed) {
+                for (var id in toDelete) {
+                  final lot = userLots.data?.firstWhere((l) => l.id == id);
+                  await ref.read(userLotsProvider.notifier).deleteLot(id);
+                  if (id == toDelete.last && lot != null) {
+                    _showPremiumUndo(lot, context, ref);
+                  }
+                }
+                setState(() => _selectedLotIds.clear());
               }
-              setState(() => _selectedLotIds.clear());
-              ref.invalidate(userLotsProvider);
             },
           ),
         ],

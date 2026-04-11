@@ -86,7 +86,7 @@ class MyLotGridCard extends ConsumerWidget {
                   style: GoogleFonts.outfit(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: const Color(0xFFC8A96E),
                     height: 1.1,
                   ),
                 ),
@@ -94,7 +94,7 @@ class MyLotGridCard extends ConsumerWidget {
                   (lot.roasteryName ?? 'Personal').toUpperCase(),
                   style: GoogleFonts.outfit(
                     fontSize: 9,
-                    color: Colors.white24,
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.24),
                     letterSpacing: 1.2,
                     fontWeight: FontWeight.w600,
                   ),
@@ -122,7 +122,7 @@ class MyLotGridCard extends ConsumerWidget {
                   '${lot.originCountry} • ${lot.process}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.outfit(fontSize: 9, color: Colors.white38),
+                  style: GoogleFonts.outfit(fontSize: 9, color: const Color(0xFFC8A96E).withValues(alpha: 0.38)),
                 ),
               ],
             ),
@@ -186,7 +186,7 @@ class _SensoryFiveSegmentBarSmall extends StatelessWidget {
               label,
               style: GoogleFonts.outfit(
                 fontSize: 8.5,
-                color: Colors.white38,
+                color: const Color(0xFFC8A96E).withValues(alpha: 0.38),
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -201,7 +201,7 @@ class _SensoryFiveSegmentBarSmall extends StatelessWidget {
                     height: 3.5,
                     margin: const EdgeInsets.only(right: 2),
                     decoration: BoxDecoration(
-                      color: isFilled ? theme.colorScheme.primary : Colors.white.withValues(alpha: 0.1),
+                      color: isFilled ? theme.colorScheme.primary : const Color(0xFFC8A96E).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(1),
                     ),
                   ),
@@ -277,7 +277,7 @@ class MyLotListCard extends ConsumerWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.outfit(
-                            color: Colors.white,
+                            color: const Color(0xFFC8A96E),
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
@@ -286,7 +286,7 @@ class MyLotListCard extends ConsumerWidget {
                           Text(
                             lot.roasteryName!,
                             style: GoogleFonts.outfit(
-                              color: Colors.white38,
+                              color: const Color(0xFFC8A96E).withValues(alpha: 0.38),
                               fontSize: 12,
                             ),
                           ),
@@ -316,7 +316,7 @@ class MyLotListCard extends ConsumerWidget {
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.05),
+                      color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
                       shape: BoxShape.circle,
                     ),
                     child: Center(
@@ -428,7 +428,7 @@ class MyLotListCard extends ConsumerWidget {
                     color: isSelected ? const Color(0xFFC8A96E) : Colors.transparent,
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: isSelected ? const Color(0xFFC8A96E) : Colors.white38,
+                      color: isSelected ? const Color(0xFFC8A96E) : const Color(0xFFC8A96E).withValues(alpha: 0.38),
                       width: 2,
                     ),
                   ),
@@ -466,7 +466,7 @@ class _HorizontalSensoryBar extends StatelessWidget {
           label,
           maxLines: 1,
           overflow: TextOverflow.clip,
-          style: GoogleFonts.outfit(fontSize: 8, color: Colors.white38, fontWeight: FontWeight.bold, letterSpacing: 0.5),
+          style: GoogleFonts.outfit(fontSize: 8, color: const Color(0xFFC8A96E).withValues(alpha: 0.38), fontWeight: FontWeight.bold, letterSpacing: 0.5),
         ),
         const SizedBox(height: 4),
         Row(
@@ -477,7 +477,7 @@ class _HorizontalSensoryBar extends StatelessWidget {
                 height: 2.5,
                 margin: const EdgeInsets.only(right: 2),
                 decoration: BoxDecoration(
-                  color: isFilled ? theme.colorScheme.primary : Colors.white.withValues(alpha: 0.1),
+                  color: isFilled ? theme.colorScheme.primary : const Color(0xFFC8A96E).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(1),
                 ),
               ),
@@ -501,9 +501,9 @@ class _TagChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
+        color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.03)),
+        border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.03)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -513,7 +513,7 @@ class _TagChip extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               text!,
-              style: GoogleFonts.outfit(fontSize: 10, color: Colors.white, fontWeight: FontWeight.w500),
+              style: GoogleFonts.outfit(fontSize: 10, color: const Color(0xFFC8A96E), fontWeight: FontWeight.w500),
             ),
           ]
         ],
@@ -554,7 +554,7 @@ class _FreshnessProgressBar extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(isUk ? 'Свіжість' : 'Freshness', style: GoogleFonts.outfit(fontSize: 10, color: Colors.white38)),
+            Text(isUk ? 'Свіжість' : 'Freshness', style: GoogleFonts.outfit(fontSize: 10, color: const Color(0xFFC8A96E).withValues(alpha: 0.38))),
             Text('$ageDays ${isUk ? 'дн.' : 'd.'}', style: GoogleFonts.outfit(fontSize: 10, color: Colors.tealAccent, fontWeight: FontWeight.bold)),
           ],
         ),
@@ -563,7 +563,7 @@ class _FreshnessProgressBar extends StatelessWidget {
           height: 3,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.05),
+            color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(2),
           ),
           child: FractionallySizedBox(

@@ -248,9 +248,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               height: 36,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withValues(alpha: 0.05),
+                color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
               ),
-              child: const Icon(Icons.close_rounded, color: Colors.white70, size: 18),
+              child: const Icon(Icons.close_rounded, color: Color(0xFFC8A96E), size: 18),
             ),
           ),
           const Spacer(),
@@ -276,7 +276,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       margin: const EdgeInsets.fromLTRB(16, 0, 16, 8),
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.04),
+        color: const Color(0xFFC8A96E).withValues(alpha: 0.04),
         borderRadius: BorderRadius.circular(50),
       ),
       child: TabBar(
@@ -289,7 +289,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         indicatorSize: TabBarIndicatorSize.tab,
         dividerColor: Colors.transparent,
         labelColor: const Color(0xFFC8A96E),
-        unselectedLabelColor: Colors.white38,
+        unselectedLabelColor: const Color(0xFFC8A96E).withValues(alpha: 0.38),
         labelStyle: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 11, letterSpacing: 0.5),
         unselectedLabelStyle: GoogleFonts.outfit(fontWeight: FontWeight.w500, fontSize: 11),
         tabs: const [
@@ -319,7 +319,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             child: Text(
               'ЗБЕРЕГТИ ЛОТ',
               style: GoogleFonts.outfit(
-                color: Colors.white,
+                color: const Color(0xFFC8A96E),
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
                 letterSpacing: 2.0,
@@ -467,20 +467,20 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         padding: const EdgeInsets.fromLTRB(4, 20, 4, 10),
         child: Text(
           text,
-          style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+          style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.bold, color: const Color(0xFFC8A96E)),
         ),
       );
 
   Widget _darkCard({required List<Widget> children}) => Container(
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.04),
+          color: const Color(0xFFC8A96E).withValues(alpha: 0.04),
           borderRadius: BorderRadius.circular(20),
         ),
         clipBehavior: Clip.hardEdge,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: children),
       );
 
-  Widget _divider() => Divider(height: 1, color: Colors.white.withValues(alpha: 0.06));
+  Widget _divider() => Divider(height: 1, color: const Color(0xFFC8A96E).withValues(alpha: 0.06));
 
   Widget _fieldRow({
     required String label,
@@ -496,7 +496,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         children: [
           Text(
             label,
-            style: GoogleFonts.outfit(fontSize: 9, color: Colors.white38, fontWeight: FontWeight.bold, letterSpacing: 1.2),
+            style: GoogleFonts.outfit(fontSize: 9, color: const Color(0xFFC8A96E).withValues(alpha: 0.5), fontWeight: FontWeight.bold, letterSpacing: 1.2),
           ),
           const SizedBox(height: 2),
           Row(
@@ -505,7 +505,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 child: TextField(
                   controller: TextEditingController(text: value)
                     ..selection = TextSelection.fromPosition(TextPosition(offset: value.length)),
-                  style: GoogleFonts.outfit(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
+                  style: GoogleFonts.outfit(color: const Color(0xFFC8A96E), fontSize: 15, fontWeight: FontWeight.w500),
                   keyboardType: keyboardType,
                   decoration: const InputDecoration(
                     isDense: true,
@@ -544,13 +544,13 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(label,
-                    style: GoogleFonts.outfit(fontSize: 9, color: Colors.white38, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+                    style: GoogleFonts.outfit(fontSize: 9, color: const Color(0xFFC8A96E).withValues(alpha: 0.5), fontWeight: FontWeight.bold, letterSpacing: 1.2)),
                 const SizedBox(height: 4),
                 Text(display,
-                    style: GoogleFonts.outfit(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500)),
+                    style: GoogleFonts.outfit(color: const Color(0xFFC8A96E), fontSize: 15, fontWeight: FontWeight.w500)),
               ],
             ),
-            const Icon(Icons.calendar_today_rounded, color: Colors.white24, size: 16),
+            const Icon(Icons.calendar_today_rounded, color: Color(0xFFC8A96E), size: 16),
           ],
         ),
       ),
@@ -564,17 +564,17 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: active ? Colors.white.withValues(alpha: 0.06) : Colors.transparent,
+          color: active ? const Color(0xFFC8A96E).withValues(alpha: 0.06) : Colors.transparent,
           borderRadius: BorderRadius.circular(50),
           border: Border.all(
-            color: active ? const Color(0xFFC8A96E) : Colors.white.withValues(alpha: 0.1),
+            color: active ? const Color(0xFFC8A96E) : const Color(0xFFC8A96E).withValues(alpha: 0.1),
           ),
         ),
         alignment: Alignment.center,
         child: Text(
           label,
           style: GoogleFonts.outfit(
-            color: active ? const Color(0xFFC8A96E) : Colors.white38,
+            color: active ? const Color(0xFFC8A96E) : const Color(0xFFC8A96E).withValues(alpha: 0.38),
             fontSize: 11,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.0,
@@ -594,9 +594,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(label,
-                  style: GoogleFonts.outfit(fontSize: 10, color: Colors.white54, fontWeight: FontWeight.bold, letterSpacing: 1.0)),
+                  style: GoogleFonts.outfit(fontSize: 10, color: const Color(0xFFC8A96E).withValues(alpha: 0.54), fontWeight: FontWeight.bold, letterSpacing: 1.0)),
               Text(value.toInt().toString(),
-                  style: GoogleFonts.outfit(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold)),
+                  style: GoogleFonts.outfit(fontSize: 13, color: const Color(0xFFC8A96E), fontWeight: FontWeight.bold)),
             ],
           ),
           SliderTheme(

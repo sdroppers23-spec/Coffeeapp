@@ -560,12 +560,22 @@ class _GlobePainter extends CustomPainter {
 
     if (z > 0) {
       final pos = Offset(center.dx + x, center.dy + y);
+
+      // Glow effect
+      final glowPaint = Paint()
+        ..color = const Color(0xFF42A5F5).withValues(alpha: 0.6)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
+      canvas.drawCircle(pos, 8, glowPaint);
+
+      // Outer Blue
       canvas.drawCircle(
         pos,
         5,
-        Paint()..color = const Color(0xFFC8A96E).withValues(alpha: 0.8),
+        Paint()..color = const Color(0xFF42A5F5),
       );
-      canvas.drawCircle(pos, 3, Paint()..color = const Color(0xFF2C1E16));
+      
+      // Inner White
+      canvas.drawCircle(pos, 2, Paint()..color = Colors.white);
     }
   }
 
@@ -573,3 +583,4 @@ class _GlobePainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _GlobePainter oldDelegate) => true;
 }
+

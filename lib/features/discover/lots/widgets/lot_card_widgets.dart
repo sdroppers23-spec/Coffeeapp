@@ -230,6 +230,8 @@ class MyLotListCard extends ConsumerWidget {
   final Function(String) onLongPress;
   final Function(String) onTap;
   final Function(CoffeeLotDto) onFavoriteToggle;
+  final Function(CoffeeLotDto)? onEditSwipe;
+  final Future<bool> Function(CoffeeLotDto)? onDeleteSwipe;
 
   const MyLotListCard({
     super.key,
@@ -239,6 +241,8 @@ class MyLotListCard extends ConsumerWidget {
     required this.onLongPress,
     required this.onTap,
     required this.onFavoriteToggle,
+    this.onEditSwipe,
+    this.onDeleteSwipe,
   });
 
   @override
@@ -246,18 +250,16 @@ class MyLotListCard extends ConsumerWidget {
     final theme = Theme.of(context);
     final isUk = LocaleService.currentLocale == 'uk';
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: PressableScale(
-        onLongPress: () => onLongPress(lot.id),
-        onTap: () => onTap(lot.id),
-        child: GlassContainer(
-          padding: const EdgeInsets.all(16),
-          opacity: isSelected ? 0.2 : 0.05, // Slightly lower base opacity for a darker look
-          borderRadius: 20,
-          borderColor: isSelected
-              ? theme.colorScheme.primary.withValues(alpha: 0.6)
-              : Colors.white.withValues(alpha: 0.08),
+    final card = PressableScale(
+      onLongPress: () => onLongPress(lot.id),
+      onTap: () => isSelectionMode ? onLongPress(lot.id) : onTap(lot.id),
+      child: GlassContainer(
+        padding: const EdgeInsets.all(16),
+        opacity: isSelected ? 0.2 : 0.05, 
+        borderRadius: 20,
+        borderColor: isSelected
+            ? theme.colorScheme.primary.withValues(alpha: 0.6)
+            : Colors.white.withValues(alpha: 0.08),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -293,22 +295,7 @@ class MyLotListCard extends ConsumerWidget {
                   ),
                   const SizedBox(width: 8),
                   isSelectionMode
-                      ? Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: isSelected ? theme.colorScheme.primary : Colors.transparent,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: isSelected ? theme.colorScheme.primary : Colors.white24,
-                              width: 1.5,
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.check,
-                            size: 14,
-                            color: isSelected ? Colors.black : Colors.transparent,
-                          ),
-                        )
+                      ? const SizedBox.shrink()
                       : PressableScale(
                           onTap: () => onFavoriteToggle(lot),
                           child: Icon(
@@ -385,8 +372,81 @@ class MyLotListCard extends ConsumerWidget {
             ],
           ),
         ),
-      ),
-    );
+      );
+
+      final dismissibleCard = isSelectionMode ? card : Dismissible(
+        key: Key(lot.id),
+        direction: DismissDirection.horizontal,
+        confirmDismiss: (direction) async {
+          if (direction == DismissDirection.endToStart) {
+            // Delete
+            if (onDeleteSwipe != null) {
+              return await onDeleteSwipe!(lot);
+            }
+          } else if (direction == DismissDirection.startToEnd) {
+            // Edit
+            if (onEditSwipe != null) {
+              onEditSwipe!(lot);
+            }
+            return false; // Don't actually dismiss the item off screen for info edits
+          }
+          return false;
+        },
+        background: Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFF62D39F).withValues(alpha: 0.8),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.only(left: 20),
+          child: const Icon(Icons.edit_rounded, color: Colors.black, size: 32),
+        ),
+        secondaryBackground: Container(
+          decoration: BoxDecoration(
+            color: Colors.redAccent.withValues(alpha: 0.8),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(right: 20),
+          child: const Icon(Icons.delete_outline_rounded, color: Colors.white, size: 32),
+        ),
+        child: card,
+      );
+
+      if (isSelectionMode) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: () => onLongPress(lot.id),
+                child: Container(
+                  margin: const EdgeInsets.only(left: 4, right: 12),
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    color: isSelected ? theme.colorScheme.primary : Colors.transparent,
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(
+                      color: isSelected ? theme.colorScheme.primary : Colors.white38,
+                      width: 2,
+                    ),
+                  ),
+                  child: isSelected
+                      ? const Icon(Icons.check, size: 16, color: Colors.black)
+                      : null,
+                ),
+              ),
+              Expanded(child: dismissibleCard),
+            ],
+          ),
+        );
+      }
+
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: dismissibleCard,
+      );
   }
 }
 

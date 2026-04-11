@@ -22,6 +22,7 @@ class MyLotsContent extends ConsumerStatefulWidget {
 
 class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTickerProviderStateMixin {
   late TabController _subTabController;
+  bool _isUndoVisible = false;
   final Set<String> _selectedLotIds = {};
   final Set<String> _pendingDeleteIds = {};
   
@@ -169,7 +170,10 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
 
   void _showPremiumUndo(CoffeeLotDto lot, BuildContext context, WidgetRef ref) {
     ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
+    
+    if (mounted) setState(() => _isUndoVisible = true);
+
+    final controller = ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -201,13 +205,10 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        const SizedBox(
+                        SizedBox(
                           width: 24,
                           height: 24,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFC8A96E)),
-                          ),
+                          child: _CountdownProgress(duration: const Duration(seconds: 4)),
                         ),
                         const Icon(
                           Icons.timer_outlined,
@@ -230,6 +231,9 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                   ),
                   GestureDetector(
                     onTap: () async {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      }
                       final db = ref.read(databaseProvider);
                       // Re-insert the lot into database to "undo" deletion
                       await db.upsertUserLot(CoffeeLotsCompanion(
@@ -296,6 +300,12 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
         ),
       ),
     );
+
+    controller.closed.then((reason) {
+      if (mounted) {
+        setState(() => _isUndoVisible = false);
+      }
+    });
   }
 
   void _toggleLotSelection(String id) {
@@ -366,9 +376,14 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
             duration: const Duration(milliseconds: 300),
             child: _isSelectionMode
                 ? _buildSelectionBar(lotsAsync)
-                : Align(
-                    alignment: Alignment.bottomRight,
-                    child: _buildFloatingAddButton(),
+                : AnimatedScale(
+                    scale: _isUndoVisible ? 0.0 : 1.0,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOutBack,
+                    child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: _buildFloatingAddButton(),
+                    ),
                   ),
           ),
         ),
@@ -699,5 +714,45 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
     } else {
       return 'Обрано $count лотів';
     }
+  }
+}
+
+class _CountdownProgress extends StatefulWidget {
+  final Duration duration;
+  const _CountdownProgress({required this.duration});
+
+  @override
+  State<_CountdownProgress> createState() => _CountdownProgressState();
+}
+
+class _CountdownProgressState extends State<_CountdownProgress> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: widget.duration);
+    _controller.reverse(from: 1.0);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return CircularProgressIndicator(
+          value: _controller.value,
+          strokeWidth: 2,
+          valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFC8A96E)),
+          backgroundColor: Colors.white.withValues(alpha: 0.1),
+        );
+      },
+    );
   }
 }

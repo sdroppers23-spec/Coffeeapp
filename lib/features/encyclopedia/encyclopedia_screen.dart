@@ -10,14 +10,8 @@ import '../../core/l10n/app_localizations.dart';
 import '../../core/database/dtos.dart';
 import '../../shared/widgets/glass_container.dart';
 import '../discover/discovery_providers.dart';
-
-// ─── Provider ─────────────────────────────────────────────────────────────────
-final encyclopediaProvider = FutureProvider<List<EncyclopediaEntry>>((
-  ref,
-) async {
-  final lang = ref.watch(localeProvider);
-  return ref.watch(databaseProvider).getAllOrigins(lang);
-});
+import 'encyclopedia_providers.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
 class EncyclopediaScreen extends ConsumerStatefulWidget {
@@ -33,13 +27,48 @@ class _EncyclopediaScreenState extends ConsumerState<EncyclopediaScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final originsAsync = ref.watch(encyclopediaProvider);
+    final originsAsync = ref.watch(supabaseEncyclopediaProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          ref.t('coffee_origins'),
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+        title: Row(
+          children: [
+            Text(
+              ref.t('coffee_origins'),
+              style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(width: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.green.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 6,
+                    height: 6,
+                    decoration: const BoxDecoration(
+                      color: Colors.green,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Text(
+                    'Cloud Connected',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(56),
@@ -208,10 +237,37 @@ class _OriginCard extends ConsumerWidget {
                       color: Colors.black12,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Text(
-                      entry.countryEmoji ?? '',
-                      style: const TextStyle(fontSize: 28),
-                    ),
+                    child: entry.url != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: CachedNetworkImage(
+                              imageUrl: entry.url!,
+                              placeholder: (context, url) => Container(
+                                color: Colors.white10,
+                                child: const Center(
+                                  child: SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 1.5,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Color(0xFFC8A96E),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Text(
+                                entry.countryEmoji ?? '',
+                                style: const TextStyle(fontSize: 28),
+                              ),
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : Text(
+                            entry.countryEmoji ?? '',
+                            style: const TextStyle(fontSize: 28),
+                          ),
                   ),
                   const SizedBox(width: 14),
                   Expanded(

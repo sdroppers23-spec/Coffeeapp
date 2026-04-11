@@ -159,7 +159,16 @@ class LocalizedFarmerDto {
     this.farmPhotosUrlCover,
   });
 
-  String get effectiveImageUrl => farmPhotosUrlCover ?? imageUrl;
+  String get effectiveImageUrl {
+    final raw = farmPhotosUrlCover ?? imageUrl;
+    if (raw.isEmpty) return '';
+    if (raw.startsWith('http')) return raw;
+    if (raw.startsWith('assets/')) return raw;
+    
+    // Default to specialty-articles bucket if it's just a filename
+    // Standard format for farmers in the bucket is: farmers/filename.png
+    return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/farmers/$raw';
+  }
 }
 
 class SpecialtyArticleDto {

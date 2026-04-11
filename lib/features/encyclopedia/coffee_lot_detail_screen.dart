@@ -13,7 +13,7 @@ import '../brewing/custom_recipe_form.dart';
 import '../navigation/main_scaffold.dart';
 
 class CoffeeLotDetailScreen extends ConsumerStatefulWidget {
-  final EncyclopediaEntry entry;
+  final LocalizedBeanDto entry;
   const CoffeeLotDetailScreen({super.key, required this.entry});
 
   @override
@@ -111,7 +111,7 @@ class _CoffeeLotDetailScreenState extends ConsumerState<CoffeeLotDetailScreen>
 }
 
 class _InfoTab extends ConsumerStatefulWidget {
-  final EncyclopediaEntry entry;
+  final LocalizedBeanDto entry;
   const _InfoTab({required this.entry});
 
   @override
@@ -302,7 +302,7 @@ class _InfoTabState extends ConsumerState<_InfoTab> {
 }
 
 class _ProfileTab extends ConsumerWidget {
-  final EncyclopediaEntry entry;
+  final LocalizedBeanDto entry;
   const _ProfileTab({required this.entry});
 
   void _showProcessDetails(BuildContext context, WidgetRef ref) {
@@ -440,7 +440,7 @@ class _ProfileTab extends ConsumerWidget {
 }
 
 class _RecipesTab extends ConsumerWidget {
-  final EncyclopediaEntry entry;
+  final LocalizedBeanDto entry;
   const _RecipesTab({required this.entry});
 
   @override

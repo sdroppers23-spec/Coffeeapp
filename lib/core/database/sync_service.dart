@@ -27,12 +27,12 @@ class SyncService {
         return;
       }
 
-      // 1. Sync Encyclopedia (Origins/Beans)
-      onProgress?.call('Syncing Encyclopedia (Lots)...');
-      await syncEncyclopedia();
+      // 2. Sync Farmers
+      onProgress?.call('Syncing Farmers...');
+      await syncFarmers();
 
-      // 2. Future: Sync Brands, Farmers, etc.
-      // onProgress?.call('Syncing Brands & Farmers...');
+      // 3. Future: Sync Brands
+      // onProgress?.call('Syncing Brands...');
       // await syncMetadata();
 
       onProgress?.call('Synchronization completed successfully!');
@@ -134,11 +134,73 @@ class SyncService {
         .from('localized_beans')
         .stream(primaryKey: ['id'])
         .listen((data) {
-          debugPrint('SYNC: Cloud data changed, triggering re-sync...');
+          debugPrint('SYNC: Beans cloud data changed, triggering re-sync...');
           syncEncyclopedia().catchError((e) {
-            debugPrint('SYNC ERROR after stream update: $e');
+            debugPrint('SYNC ERROR after stream update (beans): $e');
           });
         });
+
+    supabase!
+        .from('localized_farmers')
+        .stream(primaryKey: ['id'])
+        .listen((data) {
+          debugPrint('SYNC: Farmers cloud data changed, triggering re-sync...');
+          syncFarmers().catchError((e) {
+            debugPrint('SYNC ERROR after stream update (farmers): $e');
+          });
+        });
+  }
+
+  /// Pulls farmer data from Supabase and updates local storage.
+  Future<void> syncFarmers() async {
+    if (supabase == null) return;
+
+    try {
+      debugPrint('SYNC: Pulling farmers from Supabase...');
+      final data = await supabase!.from('localized_farmers').select().order('id');
+      
+      int successCount = 0;
+      int errorCount = 0;
+
+      for (final item in data) {
+        try {
+          final id = item['id'] as int;
+
+          final farmer = LocalizedFarmersCompanion(
+            id: Value(id),
+            imageUrl: Value(item['image_url'] as String?),
+            countryEmoji: Value(item['country_emoji'] as String?),
+            latitude: Value((item['latitude'] as num?)?.toDouble() ?? 0.0),
+            longitude: Value((item['longitude'] as num?)?.toDouble() ?? 0.0),
+          );
+
+          final List<LocalizedFarmerTranslationsCompanion> translations = [];
+          for (final lang in ['uk', 'en']) {
+            translations.add(
+              LocalizedFarmerTranslationsCompanion(
+                farmerId: Value(id),
+                languageCode: Value(lang),
+                name: Value(item['name_$lang'] as String?),
+                region: Value(item['region_$lang'] as String?),
+                description: Value(item['description_$lang'] as String?),
+                story: Value(item['story_$lang'] as String?),
+                country: Value(item['country_$lang'] as String?),
+              ),
+            );
+          }
+
+          await db.smartUpsertFarmer(farmer, translations);
+          successCount++;
+        } catch (e) {
+          debugPrint('SYNC ERROR for farmer ID ${item['id']}: $e');
+          errorCount++;
+        }
+      }
+      debugPrint('SYNC: Farmers synchronized ($successCount success, $errorCount errors)');
+    } catch (e) {
+      debugPrint('SYNC ERROR (Farmers): $e');
+      rethrow;
+    }
   }
 
   /// Helper for manual lot synchronization if needed.

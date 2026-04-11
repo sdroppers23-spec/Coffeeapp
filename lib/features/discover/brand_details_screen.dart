@@ -7,9 +7,9 @@ import '../../core/l10n/app_localizations.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import '../../shared/widgets/glass_container.dart';
-import '../encyclopedia/encyclopedia_screen.dart';
+import '../encyclopedia/coffee_lot_detail_screen.dart';
 
-final brandLotsProvider = FutureProvider.family<List<EncyclopediaEntry>, int>((
+final brandLotsProvider = FutureProvider.family<List<LocalizedBeanDto>, int>((
   ref,
   brandId,
 ) async {
@@ -99,7 +99,7 @@ class BrandDetailsScreen extends ConsumerWidget {
 }
 
 class _BrandProductCard extends ConsumerWidget {
-  final EncyclopediaEntry entry;
+  final LocalizedBeanDto entry;
   const _BrandProductCard({required this.entry});
 
   @override
@@ -204,7 +204,7 @@ class _BrandProductCard extends ConsumerWidget {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (_) => OriginDetailsScreen(entry: entry),
+                        builder: (_) => CoffeeLotDetailScreen(entry: entry),
                       ),
                     );
                   },

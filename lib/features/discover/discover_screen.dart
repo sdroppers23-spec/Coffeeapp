@@ -8,6 +8,7 @@ import './discovery_tab_order.dart';
 import '../encyclopedia/encyclopedia_screen.dart';
 import './farmers_screen.dart';
 import './roasters_screen.dart';
+import '../navigation/main_scaffold.dart';
 import '../specialty/specialty_screen.dart';
 
 class DiscoverScreen extends ConsumerStatefulWidget {
@@ -24,7 +25,12 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
   @override
   void initState() {
     super.initState();
-    // Tabs are built from discoveryTabOrderProvider
+    // Ensure navigation bar is visible when entering Discover
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        ref.read(navBarVisibleProvider.notifier).show();
+      }
+    });
   }
 
   String _getTabLabel(DiscoverTabType type) {

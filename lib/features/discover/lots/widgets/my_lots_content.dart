@@ -11,6 +11,7 @@ import '../../../../core/database/dtos.dart';
 import '../../discovery_filter_provider.dart';
 import '../lots_providers.dart';
 import 'lot_card_widgets.dart';
+import '../../../navigation/main_scaffold.dart';
 import '../../widgets/discovery_action_bar.dart';
 
 class MyLotsContent extends ConsumerStatefulWidget {
@@ -231,9 +232,11 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                   ),
                   GestureDetector(
                     onTap: () async {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).removeCurrentSnackBar(); // Immediate dismissal
-                      }
+                      // Prevent multiple taps
+                      if (!_isUndoVisible) return;
+                      
+                      final messenger = ScaffoldMessenger.of(context);
+                      messenger.removeCurrentSnackBar(); // Trigger .closed immediately
                       final db = ref.read(databaseProvider);
                       // Re-insert the lot into database to "undo" deletion
                       await db.upsertUserLot(CoffeeLotsCompanion(
@@ -268,9 +271,6 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                         updatedAt: Value(DateTime.now()),
                       ));
                       ref.invalidate(userLotsProvider);
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).removeCurrentSnackBar(); // Consistent immediate dismissal
-                      }
                     },
                     child: Container(
                       height: 38,
@@ -309,7 +309,11 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
     controller.closed.then((reason) {
       if (mounted) {
         setState(() => _isUndoVisible = false);
+        // Force show nav bar and ensure UI is in correct state
+        ref.read(navBarVisibleProvider.notifier).show();
       }
+    }).catchError((_) {
+      if (mounted) setState(() => _isUndoVisible = false);
     });
   }
 

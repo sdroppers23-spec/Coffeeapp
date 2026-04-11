@@ -135,8 +135,8 @@ class _PremiumFarmerCard extends ConsumerWidget {
                         color: const Color(0xFFC8A96E).withValues(alpha: 0.5),
                         width: 1.5,
                       ),
-                      image: DecorationImage(
-                        image: NetworkImage(farmer.imageUrl),
+                        image: DecorationImage(
+                        image: NetworkImage(farmer.effectiveImageUrl),
                         fit: BoxFit.cover,
                       ),
                     ),

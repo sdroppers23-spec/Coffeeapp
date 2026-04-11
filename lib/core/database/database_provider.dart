@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'app_database.dart';
 import 'sync_service.dart';
 import 'coffee_data_seed.dart';
@@ -21,5 +22,5 @@ final databaseInitializerProvider = FutureProvider<void>((ref) async {
 
 final syncServiceProvider = Provider<SyncService>((ref) {
   final db = ref.watch(databaseProvider);
-  return SyncService(db);
+  return SyncService(db, Supabase.instance.client);
 });

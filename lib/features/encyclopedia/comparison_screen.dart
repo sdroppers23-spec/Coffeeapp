@@ -6,7 +6,7 @@ import '../../core/database/database_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/database/dtos.dart';
 
-final allOriginsProvider = FutureProvider<List<EncyclopediaEntry>>((ref) {
+final allOriginsProvider = FutureProvider<List<LocalizedBeanDto>>((ref) {
   final lang = ref.watch(localeProvider);
   return ref.watch(databaseProvider).getAllEncyclopediaEntries(lang);
 });
@@ -19,8 +19,8 @@ class ComparisonScreen extends ConsumerStatefulWidget {
 }
 
 class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
-  EncyclopediaEntry? _coffeeA;
-  EncyclopediaEntry? _coffeeB;
+  LocalizedBeanDto? _coffeeA;
+  LocalizedBeanDto? _coffeeB;
 
   @override
   Widget build(BuildContext context) {
@@ -148,15 +148,15 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
     );
   }
 
-  String _getFlavors(EncyclopediaEntry entry) {
+  String _getFlavors(LocalizedBeanDto entry) {
     return entry.flavorNotes.join(', ');
   }
 }
 
 class _CoffeeSelector extends StatelessWidget {
-  final EncyclopediaEntry? value;
-  final List<EncyclopediaEntry> items;
-  final ValueChanged<EncyclopediaEntry?> onChanged;
+  final LocalizedBeanDto? value;
+  final List<LocalizedBeanDto> items;
+  final ValueChanged<LocalizedBeanDto?> onChanged;
   final Color color;
   final Color borderColor;
 
@@ -178,7 +178,7 @@ class _CoffeeSelector extends StatelessWidget {
         border: Border.all(color: borderColor),
       ),
       child: DropdownButtonHideUnderline(
-        child: DropdownButton<EncyclopediaEntry>(
+        child: DropdownButton<LocalizedBeanDto>(
           isExpanded: true,
           dropdownColor: const Color(0xFF1E1E1E),
           icon: Icon(Icons.keyboard_arrow_down, color: borderColor),

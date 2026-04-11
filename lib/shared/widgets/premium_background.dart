@@ -9,10 +9,9 @@ class PremiumBackground extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        // Solid black background
         const DecoratedBox(
           decoration: BoxDecoration(
-            color: Colors.black,
+            color: Color(0xFF2A2422), // 7/10 darkness level of our Hearth & Bean palette
           ),
         ),
 

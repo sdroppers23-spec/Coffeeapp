@@ -64,9 +64,9 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
               background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  if (widget.farmer.imageUrl.isNotEmpty)
+                  if (widget.farmer.effectiveImageUrl.isNotEmpty)
                     _LocalOrNetworkImage(
-                      url: widget.farmer.imageUrl,
+                      url: widget.farmer.effectiveImageUrl,
                       fit: BoxFit.cover,
                     )
                   else

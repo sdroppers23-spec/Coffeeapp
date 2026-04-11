@@ -5,35 +5,17 @@ import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import '../../core/l10n/app_localizations.dart';
 
+import '../discover/discovery_filter_provider.dart';
+
 /// Notifier for the Encyclopedia search query
-class SearchQueryNotifier extends Notifier<String> {
-  @override
-  String build() => '';
-
-  void update(String query) {
-    state = query;
-  }
-}
-
-/// Provider for the current search query in the Encyclopedia
+// DEPRECATED: Use encyclopediaFilterProvider instead
 final encyclopediaSearchQueryProvider =
-    NotifierProvider<SearchQueryNotifier, String>(SearchQueryNotifier.new);
-
-/// Notifier for the Encyclopedia sorting state
-class EncyclopediaSortNotifier extends Notifier<EncyclopediaSortOption> {
-  @override
-  EncyclopediaSortOption build() => EncyclopediaSortOption.countryAsc;
-
-  void update(EncyclopediaSortOption newState) {
-    state = newState;
-  }
-}
+    Provider<String>((ref) => ref.watch(encyclopediaFilterProvider).search);
 
 /// Provider for the current sorting state of the Encyclopedia
+// DEPRECATED: Use encyclopediaFilterProvider instead
 final encyclopediaSortProvider =
-    NotifierProvider<EncyclopediaSortNotifier, EncyclopediaSortOption>(
-  EncyclopediaSortNotifier.new,
-);
+    Provider<SortType>((ref) => ref.watch(encyclopediaFilterProvider).sortType);
 
 /// Reactive stream of Encyclopedia entries from the local database.
 /// This ensures offline availability and high performance.
@@ -60,59 +42,66 @@ final localEncyclopediaStreamProvider =
 /// Final processed data for the Encyclopedia UI (sorted and filtered).
 final encyclopediaDataProvider = Provider<AsyncValue<List<LocalizedBeanDto>>>((ref) {
   final entriesAsync = ref.watch(localEncyclopediaStreamProvider);
-  final sortOption = ref.watch(encyclopediaSortProvider);
-  final search = ref.watch(encyclopediaSearchQueryProvider).toLowerCase();
+  final filterState = ref.watch(encyclopediaFilterProvider);
+  final search = filterState.search.toLowerCase();
 
   return entriesAsync.whenData((entries) {
-    // 1. Filter by search query
+    // 1. Filter by search query, countries, flavors, and processes
     var filtered = entries.where((e) {
-      if (search.isEmpty) return true;
-      return e.country.toLowerCase().contains(search) ||
-          e.region.toLowerCase().contains(search) ||
-          e.varieties.toLowerCase().contains(search);
+      // Search
+      if (search.isNotEmpty) {
+        final matchesSearch = e.country.toLowerCase().contains(search) ||
+            e.region.toLowerCase().contains(search) ||
+            e.varieties.toLowerCase().contains(search);
+        if (!matchesSearch) return false;
+      }
+
+      // Countries
+      if (filterState.selectedCountries.isNotEmpty &&
+          !filterState.selectedCountries.contains(e.country)) {
+        return false;
+      }
+
+      // Flavor Notes
+      if (filterState.selectedFlavorNotes.isNotEmpty) {
+        final matchesFlavor = e.flavorNotes.any((f) => filterState.selectedFlavorNotes.contains(f));
+        if (!matchesFlavor) return false;
+      }
+
+      // Process Methods
+      if (filterState.selectedProcesses.isNotEmpty &&
+          !filterState.selectedProcesses.contains(e.processMethod)) {
+        return false;
+      }
+
+      // Favorites Only
+      if (filterState.showFavoritesOnly && !e.isFavorite) {
+        return false;
+      }
+
+      return true;
     }).toList();
 
     // 2. Apply Sorting
     filtered.sort((a, b) {
-      int compareResult = 0;
-      switch (sortOption) {
-        case EncyclopediaSortOption.countryAsc:
-          compareResult = a.country.compareTo(b.country);
-          break;
-        case EncyclopediaSortOption.countryDesc:
-          compareResult = b.country.compareTo(a.country);
-          break;
-        case EncyclopediaSortOption.regionAsc:
-          compareResult = a.region.compareTo(b.region);
-          break;
-        case EncyclopediaSortOption.regionDesc:
-          compareResult = b.region.compareTo(a.region);
-          break;
-        case EncyclopediaSortOption.countryRegionAsc:
-          compareResult = a.country.compareTo(b.country);
-          if (compareResult == 0) compareResult = a.region.compareTo(b.region);
-          break;
-        case EncyclopediaSortOption.priceRetailAsc:
-          compareResult = _comparePrice(a.retailPrice, b.retailPrice);
-          break;
-        case EncyclopediaSortOption.priceRetailDesc:
-          compareResult = _comparePrice(b.retailPrice, a.retailPrice);
-          break;
-        case EncyclopediaSortOption.priceWholesaleAsc:
-          compareResult = _comparePrice(a.wholesalePrice, b.wholesalePrice);
-          break;
-        case EncyclopediaSortOption.priceWholesaleDesc:
-          compareResult = _comparePrice(b.wholesalePrice, a.wholesalePrice);
-          break;
-        case EncyclopediaSortOption.processAsc:
-          compareResult = a.processMethod.compareTo(b.processMethod);
-          break;
-        case EncyclopediaSortOption.newestFirst:
+      switch (filterState.sortType) {
+        case SortType.alphabetAsc:
+          return a.country.compareTo(b.country);
+        case SortType.alphabetDesc:
+          return b.country.compareTo(a.country);
+        case SortType.priceAsc:
+          return _comparePrice(a.retailPrice, b.retailPrice);
+        case SortType.priceDesc:
+          return _comparePrice(b.retailPrice, a.retailPrice);
+        case SortType.dateDesc:
           if (a.createdAt == null || b.createdAt == null) return 0;
-          compareResult = b.createdAt!.compareTo(a.createdAt!);
-          break;
+          return b.createdAt!.compareTo(a.createdAt!);
+        case SortType.dateAsc:
+          if (a.createdAt == null || b.createdAt == null) return 0;
+          return a.createdAt!.compareTo(b.createdAt!);
+        default:
+          return 0;
       }
-      return compareResult;
     });
 
     return filtered;
@@ -134,5 +123,20 @@ final favoriteIdsProvider = StreamProvider<Set<int>>((ref) {
 /// Legacy compatibility - should be migrated to encyclopediaDataProvider
 final supabaseEncyclopediaProvider = Provider<AsyncValue<List<LocalizedBeanDto>>>((ref) {
   return ref.watch(encyclopediaDataProvider);
+});
+
+final availableEncyclopediaCountriesProvider = Provider<List<String>>((ref) {
+  final entries = ref.watch(localEncyclopediaStreamProvider).asData?.value ?? [];
+  return entries.map((e) => e.country).where((c) => c.isNotEmpty).toSet().toList()..sort();
+});
+
+final availableEncyclopediaFlavorsProvider = Provider<List<String>>((ref) {
+  final entries = ref.watch(localEncyclopediaStreamProvider).asData?.value ?? [];
+  return entries.expand((e) => e.flavorNotes).where((f) => f.isNotEmpty).toSet().toList()..sort();
+});
+
+final availableEncyclopediaProcessesProvider = Provider<List<String>>((ref) {
+  final entries = ref.watch(localEncyclopediaStreamProvider).asData?.value ?? [];
+  return entries.map((e) => e.processMethod).where((p) => p.isNotEmpty).toSet().toList()..sort();
 });
 

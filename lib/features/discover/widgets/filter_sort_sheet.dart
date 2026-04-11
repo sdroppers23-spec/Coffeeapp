@@ -187,11 +187,12 @@ class FilterSortSheet extends ConsumerWidget {
     Set<String> selected,
     Function(String) onToggle,
   ) {
-    if (options.isEmpty)
+    if (options.isEmpty) {
       return const Text(
         'Варіанти відсутні',
         style: TextStyle(color: Colors.white24, fontSize: 12),
       );
+    }
 
     return Wrap(
       spacing: 8,

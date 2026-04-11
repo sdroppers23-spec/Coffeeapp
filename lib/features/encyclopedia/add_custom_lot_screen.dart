@@ -636,7 +636,7 @@ class _AddCustomLotScreenState extends ConsumerState<AddCustomLotScreen>
                         );
                       },
                       loading: () => const SizedBox(height: 48),
-                      error: (_, __) => const SizedBox(height: 48),
+                      error: (_, _) => const SizedBox(height: 48),
                     ),
                   Expanded(
                     child: _isAdding

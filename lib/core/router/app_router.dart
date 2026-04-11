@@ -4,26 +4,25 @@ import 'package:go_router/go_router.dart';
 
 import '../supabase/supabase_provider.dart';
 import '../../features/auth/auth_screen.dart';
-import '../../features/flavor_map/flavor_map_screen.dart';
 import '../../features/discover/discover_screen.dart';
 import '../../features/profile/profile_screen.dart';
-import '../../features/latte_art/latte_art_screen.dart';
-import '../../features/bean_eye/bean_eye_screen.dart';
 import '../../features/brewing/brewing_guide_screen.dart';
 import '../../features/encyclopedia/comparison_screen.dart';
 import '../../features/specialty/specialty_screen.dart';
 import '../../features/settings/settings_screen.dart';
+import '../../features/flavor_map/flavor_map_screen.dart';
+import '../../features/brewing/brewing_main_screen.dart';
 import '../../features/navigation/main_scaffold.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorSpecialtyKey = GlobalKey<NavigatorState>(
-  debugLabel: 'specialty',
+  debugLabel: 'specialty_shell',
 );
 final _shellNavigatorDiscoverKey = GlobalKey<NavigatorState>(
-  debugLabel: 'discover',
+  debugLabel: 'discover_shell',
 );
 final _shellNavigatorRecipesKey = GlobalKey<NavigatorState>(
-  debugLabel: 'recipes',
+  debugLabel: 'recipes_shell',
 );
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -54,7 +53,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             navigatorKey: _shellNavigatorSpecialtyKey,
             routes: [
               GoRoute(
-                path: '/',
+                path: '/specialty_hub',
                 builder: (context, state) => const FlavorMapScreen(),
               ),
             ],
@@ -63,7 +62,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             navigatorKey: _shellNavigatorDiscoverKey,
             routes: [
               GoRoute(
-                path: '/discover',
+                path: '/',
                 builder: (context, state) => const DiscoverScreen(),
               ),
             ],
@@ -72,8 +71,8 @@ final routerProvider = Provider<GoRouter>((ref) {
             navigatorKey: _shellNavigatorRecipesKey,
             routes: [
               GoRoute(
-                path: '/brewing',
-                builder: (context, state) => const BrewingGuideScreen(),
+                path: '/recipes',
+                builder: (context, state) => const BrewingMainScreen(),
               ),
             ],
           ),
@@ -84,12 +83,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const ProfileScreen(),
       ),
       GoRoute(
-        path: '/latte_art',
-        builder: (context, state) => const LatteArtScreen(),
-      ),
-      GoRoute(
-        path: '/bean_eye',
-        builder: (context, state) => const BeanEyeScreen(),
+        path: '/brewing',
+        builder: (context, state) => const BrewingGuideScreen(),
       ),
       GoRoute(
         path: '/compare',

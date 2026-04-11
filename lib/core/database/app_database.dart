@@ -19,63 +19,60 @@ part 'app_database.g.dart';
     SphereRegionTranslations,
     SpecialtyArticles,
     SpecialtyArticleTranslations,
-    LatteArtPatterns,
-    LatteArtPatternTranslations,
     CoffeeLots,
     FermentationLogs,
     BrewingRecipes,
     RecommendedRecipes,
     CustomRecipes,
-    BeanScans,
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? e]) : super(e ?? openConnection());
 
   @override
-  int get schemaVersion => 17;
+  int get schemaVersion => 26;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (m) => m.createAll(),
     onUpgrade: (m, from, to) async {
-      if (from < 17) {
-        // Safe upgrade to v17
-        // The user reports 'duplicate column name: brand_id' in coffee_lots.
-        // We use a try-catch or explicit check to avoid this.
+      if (from < 26) {
+        // Migration to Localized Composite Keys & Project Recovery
         await transaction(() async {
+          // Drop tables that need schema change (ID -> Composite Key)
+          // We use the generated table names directly for customStatement
+          final tablesToMigrate = [
+            'localized_bean_translations',
+            'localized_brand_translations',
+            'localized_farmer_translations',
+            'sphere_region_translations',
+            'specialty_article_translations',
+          ];
+
+          for (final tableName in tablesToMigrate) {
+            await customStatement('DROP TABLE IF EXISTS $tableName;');
+          }
+
+          // Recreate them with new schema
+          await m.createTable(localizedBeanTranslations);
+          await m.createTable(localizedBrandTranslations);
+          await m.createTable(localizedFarmerTranslations);
+          await m.createTable(sphereRegionTranslations);
+          await m.createTable(specialtyArticleTranslations);
+
+          // Delete deprecated tables
+          await customStatement('DROP TABLE IF EXISTS latte_art_patterns;');
+          await customStatement(
+            'DROP TABLE IF EXISTS latte_art_pattern_translations;',
+          );
+          await customStatement('DROP TABLE IF EXISTS bean_scans;');
+
           // Ensure brand_id exists in coffee_lots
           try {
             await customStatement(
               'ALTER TABLE coffee_lots ADD COLUMN brand_id INTEGER;',
             );
-          } catch (e) {
-            // Column likely already exists
-          }
-
-          // Add other v17 columns if missing
-          final List<TableInfo> tablesToCreate = [
-            localizedBeans,
-            localizedBeanTranslations,
-            localizedBrands,
-            localizedBrandTranslations,
-            localizedFarmers,
-            localizedFarmerTranslations,
-            sphereRegions,
-            sphereRegionTranslations,
-            specialtyArticles,
-            specialtyArticleTranslations,
-            latteArtPatterns,
-            latteArtPatternTranslations,
-          ];
-
-          for (final table in tablesToCreate) {
-            try {
-              await m.createTable(table);
-            } catch (e) {
-              // Table already exists
-            }
-          }
+          } catch (_) {}
         });
       }
     },
@@ -85,54 +82,12 @@ class AppDatabase extends _$AppDatabase {
   );
 
   // ── Specialty Articles ───────────────────────────────────────────────────────
-  Future<List<SpecialtyArticleDto>> getAllSpecialtyArticles(String lang) async {
-    final query = select(specialtyArticles).join([
-      innerJoin(
-        specialtyArticleTranslations,
-        specialtyArticleTranslations.articleId.equalsExp(specialtyArticles.id),
-      ),
-    ])..where(specialtyArticleTranslations.languageCode.equals(lang));
-
-    final rows = await query.get();
-    return rows.map((row) {
-      final article = row.readTable(specialtyArticles);
-      final translation = row.readTable(specialtyArticleTranslations);
-      return SpecialtyArticleDto(
-        id: article.id,
-        imageUrl: article.imageUrl,
-        readTimeMin: article.readTimeMin,
-        title: translation.title,
-        subtitle: translation.subtitle,
-        contentHtml: translation.contentHtml,
-      );
-    }).toList();
-  }
-
-  Future<int> insertArticle(SpecialtyArticlesCompanion article) =>
-      into(specialtyArticles).insertOnConflictUpdate(article);
-
-  Future<int> insertArticleTranslation(
-    SpecialtyArticleTranslationsCompanion t,
-  ) => into(specialtyArticleTranslations).insertOnConflictUpdate(t);
 
   Future<bool> encyclopediaIsEmpty() async =>
       (await select(localizedBeans).get()).isEmpty;
 
-  Future<bool> patternsIsEmpty() async =>
-      (await select(latteArtPatterns).get()).isEmpty;
-
   Future<bool> specialtyArticlesIsEmpty() async =>
       (await select(specialtyArticles).get()).isEmpty;
-
-  Future<bool> brandsIsEmpty() async =>
-      (await select(localizedBrands).get()).isEmpty;
-
-  Future<int> upsertSpecialtyArticle(SpecialtyArticlesCompanion article) =>
-      insertArticle(article);
-
-  Future<int> upsertSpecialtyArticleTranslation(
-    SpecialtyArticleTranslationsCompanion t,
-  ) => insertArticleTranslation(t);
 
   // ── Farmers ──────────────────────────────────────────────────────────────────
   Future<List<LocalizedFarmerDto>> getAllFarmers(String lang) async {
@@ -224,29 +179,22 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<int> addBrand(String name, String location, String shortDesc) async {
-    final brandId =
-        (await (select(localizedBrands)..orderBy([
-                  (t) =>
-                      OrderingTerm(expression: t.id, mode: OrderingMode.desc),
-                ]))
-                .get())
-            .firstOrNull
-            ?.id ??
-        0;
-    final nextId = brandId + 1;
-
-    await insertBrand(
-      LocalizedBrandsCompanion.insert(id: Value(nextId), name: name),
+    final res = await into(localizedBrands).insert(
+      LocalizedBrandsCompanion.insert(
+        name: name,
+        createdAt: Value(DateTime.now()),
+      ),
     );
 
-    return await insertBrandTranslation(
+    await insertBrandTranslation(
       LocalizedBrandTranslationsCompanion.insert(
-        brandId: nextId,
-        languageCode: 'uk', // Default for now
+        brandId: res,
+        languageCode: 'uk',
         shortDesc: Value(shortDesc),
         location: Value(location),
       ),
     );
+    return res;
   }
 
   Future<int> insertBrand(LocalizedBrandsCompanion b) =>
@@ -261,6 +209,13 @@ class AppDatabase extends _$AppDatabase {
   Future<int> upsertLocalizedBrandTranslation(
     LocalizedBrandTranslationsCompanion t,
   ) => insertBrandTranslation(t);
+
+  Future<bool> brandsIsEmpty() async {
+    final countExp = localizedBrands.id.count();
+    final query = selectOnly(localizedBrands)..addColumns([countExp]);
+    final result = await query.map((row) => row.read(countExp)).getSingle();
+    return (result ?? 0) == 0;
+  }
 
   Future<LocalizedBrandTranslation?> getBrandTranslation(
     int brandId,
@@ -292,6 +247,24 @@ class AppDatabase extends _$AppDatabase {
   Future<List<LocalizedBeanDto>> getAllEncyclopediaEntries(String lang) =>
       getAllOrigins(lang);
 
+  Future<List<LocalizedBeanDto>> getBeansByBrand(
+    int brandId,
+    String lang,
+  ) async {
+    final query = select(localizedBeans).join([
+      innerJoin(
+        localizedBeanTranslations,
+        localizedBeanTranslations.beanId.equalsExp(localizedBeans.id),
+      ),
+    ])..where(
+      localizedBeans.brandId.equals(brandId) &
+          localizedBeanTranslations.languageCode.equals(lang),
+    );
+
+    final rows = await query.get();
+    return rows.map((row) => _mapBeanRow(row)).toList();
+  }
+
   Future<LocalizedBeanDto?> getBeanById(int id, String lang) async {
     final query =
         select(localizedBeans).join([
@@ -311,6 +284,8 @@ class AppDatabase extends _$AppDatabase {
   Future<int> insertBean(LocalizedBeansCompanion b) =>
       into(localizedBeans).insertOnConflictUpdate(b);
 
+  Future<int> insertOrigin(LocalizedBeansCompanion b) => insertBean(b);
+
   Future<int> insertBeanTranslation(LocalizedBeanTranslationsCompanion t) =>
       into(localizedBeanTranslations).insertOnConflictUpdate(t);
 
@@ -318,7 +293,7 @@ class AppDatabase extends _$AppDatabase {
 
   Future<int> upsertLocalizedBeanTranslation(
     LocalizedBeanTranslationsCompanion t,
-  ) => insertBeanTranslation(t);
+  ) => into(localizedBeanTranslations).insertOnConflictUpdate(t);
 
   Future<LocalizedBeanTranslation?> getBeanTranslation(
     int beanId,
@@ -329,15 +304,10 @@ class AppDatabase extends _$AppDatabase {
           ))
           .getSingleOrNull();
 
-  // Legacy/Seeding Aliases
-  Future<int> insertOrigin(LocalizedBeansCompanion b) => insertBean(b);
-  Future<int> upsertOrigin(LocalizedBeansCompanion b) => insertBean(b);
-  Future<int> deleteLotsForBrand(int brandId) =>
-      (delete(localizedBeans)..where((t) => t.brandId.equals(brandId))).go();
-
   LocalizedBeanDto _mapBeanRow(TypedResult row) {
     final bean = row.readTable(localizedBeans);
     final translation = row.readTable(localizedBeanTranslations);
+
     return LocalizedBeanDto(
       id: bean.id,
       brandId: bean.brandId,
@@ -378,45 +348,42 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
-  // ── Latte Art Patterns ───────────────────────────────────────────────────────
-  Future<List<LatteArtPatternDto>> getAllLatteArtPatterns(String lang) async {
-    final query = select(latteArtPatterns).join([
-      innerJoin(
-        latteArtPatternTranslations,
-        latteArtPatternTranslations.patternId.equalsExp(latteArtPatterns.id),
-      ),
-    ])..where(latteArtPatternTranslations.languageCode.equals(lang));
-
-    final rows = await query.get();
-    return rows.map((row) {
-      final pattern = row.readTable(latteArtPatterns);
-      final translation = row.readTable(latteArtPatternTranslations);
-      return LatteArtPatternDto(
-        id: pattern.id,
-        difficulty: pattern.difficulty,
-        steps: _parseList(pattern.stepsJson),
-        isFavorite: pattern.isFavorite,
-        userBestScore: pattern.userBestScore,
-        name: translation.name,
-        description: translation.description,
-        tipText: translation.tipText,
-      );
-    }).toList();
+  // ── Smart Upsert & Conflicts ────────────────────────────────────────────────
+  Future<void> smartUpsertBrand(
+    LocalizedBrandsCompanion brand,
+    List<LocalizedBrandTranslationsCompanion> translations,
+  ) async {
+    await transaction(() async {
+      await into(localizedBrands).insertOnConflictUpdate(brand);
+      for (final t in translations) {
+        await into(localizedBrandTranslations).insertOnConflictUpdate(t);
+      }
+    });
   }
 
-  Future<int> insertLatteArtPattern(LatteArtPatternsCompanion p) =>
-      into(latteArtPatterns).insertOnConflictUpdate(p);
+  Future<void> smartUpsertFarmer(
+    LocalizedFarmersCompanion farmer,
+    List<LocalizedFarmerTranslationsCompanion> translations,
+  ) async {
+    await transaction(() async {
+      await into(localizedFarmers).insertOnConflictUpdate(farmer);
+      for (final t in translations) {
+        await into(localizedFarmerTranslations).insertOnConflictUpdate(t);
+      }
+    });
+  }
 
-  Future<int> insertLatteArtPatternTranslation(
-    LatteArtPatternTranslationsCompanion t,
-  ) => into(latteArtPatternTranslations).insertOnConflictUpdate(t);
-
-  Future<int> upsertLatteArtPattern(LatteArtPatternsCompanion p) =>
-      insertLatteArtPattern(p);
-
-  Future<int> upsertLatteArtPatternTranslation(
-    LatteArtPatternTranslationsCompanion t,
-  ) => insertLatteArtPatternTranslation(t);
+  Future<void> smartUpsertBean(
+    LocalizedBeansCompanion bean,
+    List<LocalizedBeanTranslationsCompanion> translations,
+  ) async {
+    await transaction(() async {
+      await into(localizedBeans).insertOnConflictUpdate(bean);
+      for (final t in translations) {
+        await into(localizedBeanTranslations).insertOnConflictUpdate(t);
+      }
+    });
+  }
 
   // ── Recommended Recipes ──────────────────────────────────────────────────────
   Future<List<RecommendedRecipeDto>> getRecommendedRecipesForLot(
@@ -475,6 +442,37 @@ class AppDatabase extends _$AppDatabase {
 
   Future<int> insertRecipe(RecommendedRecipesCompanion r) =>
       insertRecommendedRecipe(r);
+
+  // ── Articles ────────────────────────────────────────────────────────────────
+  Future<int> insertArticle(SpecialtyArticlesCompanion a) =>
+      into(specialtyArticles).insertOnConflictUpdate(a);
+
+  Future<int> insertArticleTranslation(
+    SpecialtyArticleTranslationsCompanion t,
+  ) => into(specialtyArticleTranslations).insertOnConflictUpdate(t);
+
+  Future<List<SpecialtyArticleDto>> getAllArticles(String lang) async {
+    final query = select(specialtyArticles).join([
+      innerJoin(
+        specialtyArticleTranslations,
+        specialtyArticleTranslations.articleId.equalsExp(specialtyArticles.id),
+      ),
+    ])..where(specialtyArticleTranslations.languageCode.equals(lang));
+
+    final rows = await query.get();
+    return rows.map((row) {
+      final article = row.readTable(specialtyArticles);
+      final translation = row.readTable(specialtyArticleTranslations);
+      return SpecialtyArticleDto(
+        id: article.id,
+        imageUrl: article.imageUrl,
+        readTimeMin: article.readTimeMin,
+        title: translation.title,
+        subtitle: translation.subtitle,
+        contentHtml: translation.contentHtml,
+      );
+    }).toList();
+  }
 
   Future<int> deleteBeansForBrand(int brandId) =>
       (delete(localizedBeans)..where((t) => t.brandId.equals(brandId))).go();
@@ -662,12 +660,6 @@ class AppDatabase extends _$AppDatabase {
 
   Future<int> deleteCustomRecipe(String id) =>
       (delete(customRecipes)..where((t) => t.id.equals(id))).go();
-
-  // ── Bean Eye (Scans) ────────────────────────────────────────────────────────
-  Future<int> insertScan(BeanScansCompanion s) => into(beanScans).insert(s);
-  Future<List<BeanScan>> getAllScans() => select(beanScans).get();
-  Future<int> deleteScan(String id) =>
-      (delete(beanScans)..where((t) => t.id.equals(id))).go();
 
   // ── Brewing (Static) ────────────────────────────────────────────────────────
   Future<List<BrewingRecipe>> getAllRecipes() => select(brewingRecipes).get();

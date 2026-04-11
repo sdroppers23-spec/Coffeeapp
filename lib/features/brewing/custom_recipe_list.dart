@@ -107,7 +107,7 @@ class CustomRecipeListTab extends ConsumerWidget {
           return ListView.separated(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
             itemCount: recipes.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 16),
+            separatorBuilder: (_, _) => const SizedBox(height: 16),
             itemBuilder: (context, i) => _CustomRecipeCard(
               recipe: recipes[i],
               methodKey: methodKey,
@@ -166,7 +166,7 @@ class GlobalCustomRecipeList extends ConsumerWidget {
           return ListView.separated(
             padding: const EdgeInsets.fromLTRB(16, 120, 16, 100),
             itemCount: recipes.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 16),
+            separatorBuilder: (_, _) => const SizedBox(height: 16),
             itemBuilder: (context, i) => _CustomRecipeCard(
               recipe: recipes[i],
               methodKey: recipes[i].methodKey,

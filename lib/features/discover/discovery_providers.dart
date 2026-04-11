@@ -18,3 +18,9 @@ final brandByIdProvider = FutureProvider.family<LocalizedBrandDto?, int>((
   final locale = ref.watch(localeProvider);
   return db.getBrandById(id, locale);
 });
+
+final articlesProvider = FutureProvider<List<SpecialtyArticleDto>>((ref) async {
+  final db = ref.watch(databaseProvider);
+  final locale = ref.watch(localeProvider);
+  return db.getAllArticles(locale);
+});

@@ -96,7 +96,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     radius: 60,
                     backgroundColor: Colors.white12,
                     backgroundImage: NetworkImage(avatarUrl),
-                    onBackgroundImageError: (_, __) => const Icon(
+                    onBackgroundImageError: (_, _) => const Icon(
                       Icons.person,
                       size: 60,
                       color: Colors.white54,

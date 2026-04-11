@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/providers/settings_provider.dart';
 import '../../shared/widgets/glass_container.dart';
-import '../../shared/widgets/pressable_scale.dart';
 
 class DiscoverTabItem {
   final String id;
@@ -72,7 +71,10 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                       const SizedBox(width: 12),
                       // Badge
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: Colors.greenAccent.withValues(alpha: 0.3),
@@ -115,7 +117,9 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                           shape: BoxShape.circle,
                           border: Border.all(color: Colors.white24, width: 1.5),
                           image: const DecorationImage(
-                            image: AssetImage('assets/images/placeholder_avatar.jpg'),
+                            image: AssetImage(
+                              'assets/images/placeholder_avatar.jpg',
+                            ),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -130,7 +134,9 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
             SizedBox(
               height: 54,
               child: Theme(
-                data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
+                data: Theme.of(
+                  context,
+                ).copyWith(canvasColor: Colors.transparent),
                 child: ReorderableListView.builder(
                   scrollController: _reorderController,
                   scrollDirection: Axis.horizontal,
@@ -251,7 +257,7 @@ class _CapsuleTabState extends State<_CapsuleTab> {
                     color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
-                  )
+                  ),
                 ]
               : [],
         ),
@@ -303,9 +309,9 @@ class _RoasteryCard extends StatelessWidget {
                 children: [
                   // Large background ghost icon
                   Icon(
-                    Icons.coffee_maker_rounded, 
-                    color: Colors.white.withValues(alpha: 0.03), 
-                    size: 120
+                    Icons.coffee_maker_rounded,
+                    color: Colors.white.withValues(alpha: 0.03),
+                    size: 120,
                   ),
                   // Centered Blue Icon Island
                   Align(
@@ -328,9 +334,9 @@ class _RoasteryCard extends StatelessWidget {
                         ),
                         child: const Center(
                           child: Icon(
-                            Icons.coffee_maker_rounded, 
-                            color: Colors.white, 
-                            size: 32
+                            Icons.coffee_maker_rounded,
+                            color: Colors.white,
+                            size: 32,
                           ),
                         ),
                       ),
@@ -340,7 +346,7 @@ class _RoasteryCard extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Info Area
           Padding(
             padding: const EdgeInsets.all(20),
@@ -358,7 +364,10 @@ class _RoasteryCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.white38),
+                    const Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      color: Colors.white38,
+                    ),
                   ],
                 ),
                 const SizedBox(height: 6),
@@ -376,7 +385,11 @@ class _RoasteryCard extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.location_on_rounded, color: Colors.white24, size: 16),
+                        const Icon(
+                          Icons.location_on_rounded,
+                          color: Colors.white24,
+                          size: 16,
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           location,
@@ -434,7 +447,9 @@ void _showProfileMenu(BuildContext context) {
                 children: [
                   const CircleAvatar(
                     radius: 30,
-                    backgroundImage: AssetImage('assets/images/placeholder_avatar.jpg'),
+                    backgroundImage: AssetImage(
+                      'assets/images/placeholder_avatar.jpg',
+                    ),
                   ),
                   const SizedBox(width: 16),
                   Column(
@@ -472,7 +487,12 @@ void _showProfileMenu(BuildContext context) {
   );
 }
 
-Widget _buildMenuItem(IconData icon, String title, {String? trailing, Color? color}) {
+Widget _buildMenuItem(
+  IconData icon,
+  String title, {
+  String? trailing,
+  Color? color,
+}) {
   return ListTile(
     contentPadding: EdgeInsets.zero,
     leading: Icon(icon, color: color ?? const Color(0xFFC8A96E)),
@@ -483,7 +503,10 @@ Widget _buildMenuItem(IconData icon, String title, {String? trailing, Color? col
     trailing: trailing != null
         ? Text(
             trailing,
-            style: GoogleFonts.poppins(color: const Color(0xFFC8A96E), fontWeight: FontWeight.bold),
+            style: GoogleFonts.poppins(
+              color: const Color(0xFFC8A96E),
+              fontWeight: FontWeight.bold,
+            ),
           )
         : const Icon(Icons.chevron_right, color: Colors.white10),
     onTap: () {},

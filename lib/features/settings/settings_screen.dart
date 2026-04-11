@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/l10n/app_localizations.dart';
 import '../../core/supabase/supabase_provider.dart';
 import '../../core/providers/settings_provider.dart';
-import '../../shared/widgets/premium_background.dart';
+// import '../../shared/widgets/premium_background.dart'; // Removed unused import
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -35,228 +34,218 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return PremiumBackground(
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back_ios_new_rounded,
-              color: Colors.white,
-              size: 20,
-            ),
-            onPressed: () => context.pop(),
+    return Scaffold(
+      backgroundColor: Colors.black, // Solid black matching screenshot
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.white,
+            size: 20,
           ),
-          title: Text(
-            'Налаштування', // matching screenshot directly
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-              color: Colors.white,
-            ),
-          ),
-          centerTitle: true,
+          onPressed: () => context.pop(),
         ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // МОВА
-              _buildSectionTitle('МОВА'),
-              _buildCard(
+        title: Text(
+          'Налаштування',
+          style: GoogleFonts.outfit(
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+            color: Colors.white,
+          ),
+        ),
+        centerTitle:
+            false, // Screenshot looks slightly left or centered, but let's go with standard clean look
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // МОВА
+            _buildSectionTitle('МОВА'),
+            _buildCard(
+              child: InkWell(
+                onTap: () {},
+                borderRadius: BorderRadius.circular(16),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  padding: const EdgeInsets.all(16),
                   child: Row(
                     children: [
-                      const Icon(Icons.language, color: Colors.white54, size: 22),
+                      const Icon(
+                        Icons.public_rounded,
+                        color: Colors.white70,
+                        size: 22,
+                      ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          _getLanguageName(ref.watch(localeProvider)),
-                          style: GoogleFonts.poppins(
+                          'Українська',
+                          style: GoogleFonts.outfit(
                             color: Colors.white,
                             fontSize: 16,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          // In a real app this would open a dropdown or language sheet
-                        },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              _getLanguageName(ref.watch(localeProvider)),
-                              style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            const Icon(
-                              Icons.keyboard_arrow_down_rounded,
-                              color: Color(0xFFC8A96E),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 32),
-
-              // ВІБРАЦІЯ
-              _buildSectionTitle('ВІБРАЦІЯ'),
-              _buildCard(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Тактильний відгук',
-                              style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              'Легка вібрація при натисканні та\nутриманні',
-                              style: GoogleFonts.poppins(
-                                color: Colors.white38,
-                                fontSize: 12,
-                                height: 1.3,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Switch.adaptive(
-                        value: ref.watch(settingsProvider),
-                        activeColor: const Color(0xFF2C221D),
-                        activeTrackColor: const Color(0xFFC8A96E).withValues(alpha: 0.3),
-                        thumbColor: WidgetStateProperty.resolveWith<Color>((states) {
-                          if (states.contains(WidgetState.selected)) {
-                            return const Color(0xFFC8A96E);
-                          }
-                          return Colors.grey;
-                        }),
-                        onChanged: (val) {
-                          ref.read(settingsProvider.notifier).toggleVibration(val);
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              // TEST HAPTIC
-              GestureDetector(
-                onTap: () => ref.read(settingsProvider.notifier).triggerVibrate(),
-                behavior: HitTestBehavior.opaque,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
                       const Icon(
-                        Icons.vibration_rounded,
+                        Icons.keyboard_arrow_down_rounded,
                         color: Color(0xFFC8A96E),
-                        size: 18,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'TEST HAPTIC',
-                        style: GoogleFonts.poppins(
-                          color: const Color(0xFFC8A96E),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 1.5,
-                        ),
+                        size: 24,
                       ),
                     ],
                   ),
                 ),
               ),
+            ),
 
-              const SizedBox(height: 32),
+            const SizedBox(height: 32),
 
-              // ЮРИДИЧНА ІНФОРМАЦІЯ
-              _buildSectionTitle('ЮРИДИЧНА ІНФОРМАЦІЯ'),
-              _buildCard(
-                child: Column(
+            // ВІБРАЦІЯ
+            _buildSectionTitle('ВІБРАЦІЯ'),
+            _buildCard(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 8, 16),
+                child: Row(
                   children: [
-                    _buildListItem(
-                      icon: Icons.security_rounded,
-                      title: 'Політика конфіденційності',
-                      onTap: () {},
-                    ),
-                    const Divider(color: Colors.white12, height: 1),
-                    _buildListItem(
-                      icon: Icons.insert_drive_file_outlined,
-                      title: 'Умови використання',
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 32),
-
-              // ПІДТРИМКА
-              _buildSectionTitle('ПІДТРИМКА'),
-              _buildCard(
-                child: Column(
-                  children: [
-                    _buildListItem(
-                      icon: Icons.mail_outline_rounded,
-                      title: 'Зв\'язатися з нами',
-                      onTap: () {},
-                    ),
-                    const Divider(color: Colors.white12, height: 1),
-                    _buildListItem(
-                      icon: Icons.star_border_rounded,
-                      title: 'Оцінити додаток',
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 48),
-
-              // Bottom button
-              Center(
-                child: GestureDetector(
-                  onTap: _signOut,
-                  child: _isLoading
-                      ? const CircularProgressIndicator()
-                      : Text(
-                          'Вийти з акаунта',
-                          style: GoogleFonts.poppins(
-                            color: const Color(0xFFE57373),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Тактильний відгук',
+                            style: GoogleFonts.outfit(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
-                        ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Легка вібрація при натисканні та\nутриманні',
+                            style: GoogleFonts.outfit(
+                              color: Colors.white38,
+                              fontSize: 13,
+                              height: 1.2,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Switch(
+                      value: ref.watch(settingsProvider),
+                      activeThumbColor: const Color(0xFFC8A96E),
+                      activeTrackColor: const Color(
+                        0xFFC8A96E,
+                      ).withValues(alpha: 0.2),
+                      inactiveThumbColor: Colors.grey[400],
+                      inactiveTrackColor: Colors.white10,
+                      onChanged: (val) {
+                        ref
+                            .read(settingsProvider.notifier)
+                            .toggleVibration(val);
+                      },
+                    ),
+                  ],
                 ),
               ),
-              
-              const SizedBox(height: 48),
-            ],
-          ),
+            ),
+
+            const SizedBox(height: 12),
+
+            // TEST HAPTIC
+            GestureDetector(
+              onTap: () => ref.read(settingsProvider.notifier).triggerVibrate(),
+              behavior: HitTestBehavior.opaque,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.vibration_rounded,
+                      color: Color(0xFFC8A96E),
+                      size: 18,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'TEST HAPTIC',
+                      style: GoogleFonts.poppins(
+                        color: const Color(0xFFC8A96E),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 32),
+
+            // ЮРИДИЧНА ІНФОРМАЦІЯ
+            _buildSectionTitle('ЮРИДИЧНА ІНФОРМАЦІЯ'),
+            _buildCard(
+              child: Column(
+                children: [
+                  _buildListItem(
+                    icon: Icons.lock_outline_rounded,
+                    title: 'Політика конфіденційності',
+                    onTap: () {},
+                  ),
+                  const Divider(
+                    color: Colors.white10,
+                    height: 1,
+                    indent: 16,
+                    endIndent: 16,
+                  ),
+                  _buildListItem(
+                    icon: Icons.insert_drive_file_outlined,
+                    title: 'Умови використання',
+                    onTap: () {},
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 32),
+
+            // ПІДТРИМКА
+            _buildSectionTitle('ПІДТРИМКА'),
+            _buildCard(
+              child: Column(
+                children: [
+                  _buildListItem(
+                    icon: Icons.help_outline_rounded,
+                    title: 'Служба підтримки',
+                    onTap: () {},
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 48),
+
+            // Bottom button
+            Center(
+              child: GestureDetector(
+                onTap: _signOut,
+                child: _isLoading
+                    ? const CircularProgressIndicator()
+                    : Text(
+                        'Вийти з акаунта',
+                        style: GoogleFonts.poppins(
+                          color: const Color(0xFFE57373),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+              ),
+            ),
+            const SizedBox(height: 48),
+          ],
         ),
       ),
     );
@@ -264,14 +253,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.only(left: 4, bottom: 12),
+      padding: const EdgeInsets.only(left: 8, bottom: 12),
       child: Text(
         title,
-        style: GoogleFonts.poppins(
-          fontSize: 12,
+        style: GoogleFonts.outfit(
+          fontSize: 13,
           fontWeight: FontWeight.bold,
           color: const Color(0xFFC8A96E),
-          letterSpacing: 1.5,
+          letterSpacing: 2.0,
         ),
       ),
     );
@@ -280,9 +269,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget _buildCard({required Widget child}) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF1E1815),
+        color: const Color(
+          0xFF111111,
+        ), // Darkest card color matching screenshot
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
-        borderRadius: BorderRadius.circular(20),
       ),
       child: child,
     );
@@ -295,29 +286,32 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(16),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: Row(
           children: [
-            Icon(icon, color: Colors.white54, size: 22),
+            Icon(icon, color: Colors.white70, size: 22),
             const SizedBox(width: 14),
             Expanded(
               child: Text(
                 title,
-                style: GoogleFonts.poppins(color: Colors.white, fontSize: 15),
+                style: GoogleFonts.outfit(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
-            const Icon(Icons.chevron_right_rounded, color: Colors.white24, size: 20),
+            const Icon(
+              Icons.chevron_right_rounded,
+              color: Colors.white24,
+              size: 24,
+            ),
           ],
         ),
       ),
     );
   }
 
-  String _getLanguageName(String code) {
-    if (code == 'uk') return 'Українська';
-    if (code == 'ru') return 'Русский';
-    return 'Українська'; // default fallback for visual exactness to screenshot
-  }
 }

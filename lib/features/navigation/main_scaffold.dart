@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../l10n/app_localizations.dart' show AppLocalizations;
+// import '../../l10n/app_localizations.dart' show AppLocalizations; // Removed unused import
 import '../../shared/widgets/glass_container.dart';
 import '../../shared/widgets/premium_background.dart';
 import '../../shared/widgets/pressable_scale.dart';
@@ -112,11 +112,11 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
               ),
             ),
 
-            // Floating Navigation Bar
+            // Floating Navigation Bar Area
             Positioned(
               left: 0,
               right: 0,
-              bottom: 40, // Increased to avoid system nav bar overlap
+              bottom: 40, // Height from bottom as requested
               child: AnimatedSlide(
                 duration: const Duration(milliseconds: 400),
                 curve: Curves.fastOutSlowIn,
@@ -126,29 +126,31 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                   opacity: navVisible ? 1.0 : 0.0,
                   child: Padding(
                     key: _navBarKey,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Main Oval Bar
+                        // Main Capsule Bar
                         Flexible(
                           child: ConstrainedBox(
                             constraints: const BoxConstraints(maxWidth: 400),
                             child: GlassContainer(
-                              borderRadius: 40, // Oval shape
+                              borderRadius: 40,
                               padding: const EdgeInsets.symmetric(
-                                vertical: 2,
-                                horizontal: 12,
+                                vertical: 8,
+                                horizontal: 10,
                               ),
-                              blur: 40,
-                              opacity: 0.15,
-                              borderColor: Colors.white.withValues(alpha: 0.1),
+                              blur: 60, // Higher blur for "matte" effect
+                              opacity: 0.05, // Lower opacity for transparency
+                              borderColor: const Color(
+                                0xFFC8A96E,
+                              ).withValues(alpha: 0.15),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   _NavBarItem(
-                                    icon: Icons.track_changes_rounded,
+                                    icon: Icons.auto_graph_outlined,
                                     label: 'Спешелті',
                                     isSelected:
                                         widget.navigationShell.currentIndex ==
@@ -156,15 +158,15 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                                     onTap: () => _onTap(0),
                                   ),
                                   _NavBarItem(
-                                    icon: Icons.explore_rounded,
-                                    label: 'Відкриття',
+                                    icon: Icons.explore_outlined,
+                                    label: 'Енциклопедія',
                                     isSelected:
                                         widget.navigationShell.currentIndex ==
                                         1,
                                     onTap: () => _onTap(1),
                                   ),
                                   _NavBarItem(
-                                    icon: Icons.coffee_rounded,
+                                    icon: Icons.coffee_outlined,
                                     label: 'Рецепти',
                                     isSelected:
                                         widget.navigationShell.currentIndex ==
@@ -179,30 +181,25 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
 
                         const SizedBox(width: 12),
 
-                        // Solid Gold Settings Island
+                        // Separate Settings Island - Now Matte Glass too
                         PressableScale(
                           onTap: () {
                             ref.read(settingsProvider.notifier).triggerHaptic();
                             context.push('/settings');
                           },
-                          child: Container(
-                            width: 62,
-                            height: 62,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFC8A96E),
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black45,
-                                  blurRadius: 10,
-                                  offset: Offset(0, 4),
-                                ),
-                              ],
-                            ),
+                          child: GlassContainer(
+                            width: 64,
+                            height: 64,
+                            borderRadius: 32, // Circular
+                            blur: 60,
+                            opacity: 0.05,
+                            borderColor: const Color(
+                              0xFFC8A96E,
+                            ).withValues(alpha: 0.15),
                             child: const Center(
                               child: Icon(
                                 Icons.settings_rounded,
-                                color: Colors.white,
+                                color: Color(0xFFC8A96E),
                                 size: 28,
                               ),
                             ),
@@ -221,7 +218,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
   }
 }
 
-class _NavBarItem extends ConsumerWidget {
+class _NavBarItem extends ConsumerStatefulWidget {
   final IconData icon;
   final String label;
   final bool isSelected;
@@ -235,41 +232,96 @@ class _NavBarItem extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_NavBarItem> createState() => _NavBarItemState();
+}
+
+class _NavBarItemState extends ConsumerState<_NavBarItem>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _oscillator;
+
+  @override
+  void initState() {
+    super.initState();
+    _oscillator = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+
+    if (widget.isSelected) {
+      _oscillator.repeat(reverse: true);
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant _NavBarItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isSelected && !oldWidget.isSelected) {
+      _oscillator.repeat(reverse: true);
+    } else if (!widget.isSelected && oldWidget.isSelected) {
+      _oscillator.stop();
+      _oscillator.reset();
+    }
+  }
+
+  @override
+  void dispose() {
+    _oscillator.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return PressableScale(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? const Color(0xFFC8A96E).withValues(alpha: 0.1)
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Icon(
-                icon,
-                color: isSelected ? const Color(0xFFC8A96E) : Colors.white54,
-                size: 24,
-              ),
+      onTap: widget.onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AnimatedBuilder(
+            animation: _oscillator,
+            builder: (context, child) {
+              final scale = 1.0 + (_oscillator.value * 0.1);
+              return Transform.scale(
+                scale: widget.isSelected ? scale : 1.0,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: widget.isSelected
+                        ? const Color(0xFFC8A96E)
+                        : Colors.transparent,
+                    shape: BoxShape.circle,
+                    boxShadow: widget.isSelected
+                        ? [
+                            BoxShadow(
+                              color: const Color(
+                                0xFFC8A96E,
+                              ).withValues(alpha: 0.3 * _oscillator.value),
+                              blurRadius: 15,
+                              spreadRadius: 2,
+                            ),
+                          ]
+                        : [],
+                  ),
+                  child: Icon(
+                    widget.icon,
+                    color: widget.isSelected ? Colors.black : Colors.white54,
+                    size: 24,
+                  ),
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 4),
+          Text(
+            widget.label,
+            style: TextStyle(
+              fontSize: 10,
+              color:
+                  widget.isSelected ? const Color(0xFFC8A96E) : Colors.white54,
+              fontWeight: widget.isSelected ? FontWeight.bold : FontWeight.w500,
             ),
-            const SizedBox(height: 1),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 10,
-                color: isSelected ? const Color(0xFFC8A96E) : Colors.white54,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

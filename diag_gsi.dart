@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 void main() {
-  print('GSI check...');
+  debugPrint('GSI check...');
 }

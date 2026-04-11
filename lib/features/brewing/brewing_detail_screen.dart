@@ -277,7 +277,7 @@ class _StepsTab extends StatelessWidget {
     return ListView.separated(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       itemCount: steps.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 16),
+      separatorBuilder: (_, _) => const SizedBox(height: 16),
       itemBuilder: (context, i) {
         final step = steps[i];
         final isActive = activeStep == i;
@@ -510,7 +510,7 @@ class _RecommendedRecipesTab extends ConsumerWidget {
         return ListView.separated(
           padding: const EdgeInsets.all(16),
           itemCount: recipes.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 16),
+          separatorBuilder: (_, _) => const SizedBox(height: 16),
           itemBuilder: (context, i) =>
               _RecommendedRecipeCard(recipe: recipes[i]),
         );

@@ -118,4 +118,54 @@ class FlagConstants {
 
     return null;
   }
+
+  static String getEmoji(String country) {
+    switch (country.toLowerCase().trim()) {
+      case 'colombia':
+      case 'колумбія':
+        return '🇨🇴';
+      case 'ethiopia':
+      case 'ефіопія':
+        return '🇪🇹';
+      case 'brazil':
+      case 'бразилія':
+        return '🇧🇷';
+      case 'kenya':
+      case 'кенія':
+        return '🇰🇪';
+      case 'tanzania':
+      case 'танзанія':
+        return '🇹🇿';
+      case 'costa rica':
+      case 'коста-рика':
+      case 'коста-ріка':
+        return '🇨🇷';
+      case 'el salvador':
+      case 'сальвадор':
+        return '🇸🇻';
+      case 'ecuador':
+      case 'еквадор':
+        return '🇪🇨';
+      case 'guatemala':
+      case 'гватемала':
+        return '🇬🇹';
+      case 'indonesia':
+      case 'індонезія':
+        return '🇮🇩';
+      case 'panama':
+      case 'панама':
+        return '🇵🇦';
+      case 'rwanda':
+      case 'руанда':
+        return '🇷🇼';
+      case 'honduras':
+      case 'гондурас':
+        return '🇭🇳';
+      case 'uganda':
+      case 'уганда':
+        return '🇺🇬';
+      default:
+        return '🌍';
+    }
+  }
 }

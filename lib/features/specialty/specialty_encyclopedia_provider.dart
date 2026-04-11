@@ -20,7 +20,7 @@ final specialtyEncyclopediaProvider = FutureProvider<SpecialtyEncyclopediaRoot>(
       final lang = ref.watch(currentLanguageProvider);
 
       // Fetch articles and beans for the current language
-      final articles = await db.getAllSpecialtyArticles(lang);
+      final articles = await db.getAllArticles(lang);
       final beans = await db.getAllEncyclopediaEntries(lang);
 
       // Group into modules for UI compatibility
@@ -78,5 +78,5 @@ final specialtyArticlesProvider = FutureProvider<List<SpecialtyArticleDto>>((
 ) async {
   final db = ref.watch(databaseProvider);
   final lang = ref.watch(currentLanguageProvider);
-  return db.getAllSpecialtyArticles(lang);
+  return db.getAllArticles(lang);
 });

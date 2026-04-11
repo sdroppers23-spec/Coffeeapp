@@ -4,11 +4,17 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import '../../core/l10n/app_localizations.dart';
+import '../../core/config/flag_constants.dart';
+import '../../shared/widgets/glass_container.dart';
+import '../../shared/widgets/premium_background.dart';
+import '../../shared/widgets/pressable_scale.dart';
+import '../../core/providers/settings_provider.dart';
+import 'farmer_detail_screen.dart';
 
-final farmersProvider = FutureProvider<List<LocalizedBeanDto>>((ref) async {
+final farmersProvider = FutureProvider<List<LocalizedFarmerDto>>((ref) async {
   final db = ref.watch(databaseProvider);
   final locale = ref.watch(localeProvider);
-  return db.getAllOrigins(locale);
+  return db.getAllFarmers(locale);
 });
 
 class FarmersScreen extends ConsumerStatefulWidget {
@@ -19,139 +25,55 @@ class FarmersScreen extends ConsumerStatefulWidget {
 }
 
 class _FarmersScreenState extends ConsumerState<FarmersScreen> {
-  String _filterRegion = 'All';
-  String _sortMode = 'Score'; // 'Score', 'Name', 'Region'
-
   @override
   Widget build(BuildContext context) {
     final asyncFarms = ref.watch(farmersProvider);
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: SafeArea(
-        child: asyncFarms.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('Error: $e')),
-          data: (entries) {
-            // Show all entries, sorted
-            var farms = List<LocalizedBeanDto>.from(entries);
-
-            // Apply region filter
-            if (_filterRegion != 'All') {
-              farms = farms.where((e) => e.region == _filterRegion).toList();
-            }
-
-            // Apply sorting
-            if (_sortMode == 'Score') {
-              farms.sort((a, b) => b.cupsScore.compareTo(a.cupsScore));
-            } else if (_sortMode == 'Name') {
-              farms.sort((a, b) => a.country.compareTo(b.country));
-            } else if (_sortMode == 'Region') {
-              farms.sort((a, b) => a.region.compareTo(b.region));
-            }
-
-            // Extract unique regions for filter
-            final regions = ['All', ...entries.map((e) => e.region).toSet()];
-
-            return CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                    child: Row(
-                      children: [
-                        // Filter dropdown
-                        Expanded(
-                          child: DropdownButtonFormField<String>(
-                            initialValue: _filterRegion,
-                            dropdownColor: const Color(0xFF1E1E1E),
-                            decoration: InputDecoration(
-                              labelText: 'Регіон',
-                              labelStyle: const TextStyle(
-                                color: Color(0xFFC8A96E),
-                              ),
-                              filled: true,
-                              fillColor: Colors.white.withValues(alpha: 0.05),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            items: regions
-                                .map(
-                                  (r) => DropdownMenuItem(
-                                    value: r,
-                                    child: Text(
-                                      r,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                                .toList(),
-                            onChanged: (val) {
-                              if (val != null) {
-                                setState(() => _filterRegion = val);
-                              }
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        // Sort dropdown
-                        Expanded(
-                          child: DropdownButtonFormField<String>(
-                            initialValue: _sortMode,
-                            dropdownColor: const Color(0xFF1E1E1E),
-                            decoration: InputDecoration(
-                              labelText: 'Сортування',
-                              labelStyle: const TextStyle(
-                                color: Color(0xFFC8A96E),
-                              ),
-                              filled: true,
-                              fillColor: Colors.white.withValues(alpha: 0.05),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            items: ['Score', 'Name', 'Region']
-                                .map(
-                                  (s) => DropdownMenuItem(
-                                    value: s,
-                                    child: Text(
-                                      s,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                                .toList(),
-                            onChanged: (val) {
-                              if (val != null) setState(() => _sortMode = val);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+    return PremiumBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          centerTitle: true,
+          title: Text(
+            'Specialty Farmers',
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFFC8A96E),
+            ),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh_rounded, color: Colors.white54),
+              onPressed: () => ref.invalidate(farmersProvider),
+            ),
+          ],
+        ),
+        body: asyncFarms.when(
+          loading: () => const Center(
+            child: CircularProgressIndicator(color: Color(0xFFC8A96E)),
+          ),
+          error: (e, _) => Center(
+            child: Text('Error: $e', style: const TextStyle(color: Colors.red)),
+          ),
+          data: (farmers) {
+            if (farmers.isEmpty) {
+              return Center(
+                child: Text(
+                  'No farmers found. Syncing...',
+                  style: GoogleFonts.poppins(color: Colors.white38),
                 ),
-                if (farms.isEmpty)
-                  SliverFillRemaining(
-                    child: Center(
-                      child: Text(
-                        'Немає записів',
-                        style: TextStyle(color: Colors.white54),
-                      ),
-                    ),
-                  )
-                else
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                      final farm = farms[index];
-                      return _FarmCard(farm: farm);
-                    }, childCount: farms.length),
-                  ),
-              ],
+              );
+            }
+
+            return ListView.builder(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
+              itemCount: farmers.length,
+              itemBuilder: (context, index) {
+                final farmer = farmers[index];
+                return _PremiumFarmerCard(farmer: farmer);
+              },
             );
           },
         ),
@@ -160,123 +82,150 @@ class _FarmersScreenState extends ConsumerState<FarmersScreen> {
   }
 }
 
-class _FarmCard extends StatelessWidget {
-  final LocalizedBeanDto farm;
-  const _FarmCard({required this.farm});
+class _PremiumFarmerCard extends ConsumerWidget {
+  final LocalizedFarmerDto farmer;
+  const _PremiumFarmerCard({required this.farmer});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final flagUrl =
+        FlagConstants.getFlag(farmer.country) ??
+        FlagConstants.getFlag(farmer.countryEmoji);
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: PressableScale(
+        onTap: () {
+          ref.read(settingsProvider.notifier).triggerHaptic();
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => FarmerDetailScreen(farmer: farmer),
+            ),
+          );
+        },
+        child: GlassContainer(
+          borderRadius: 24,
+          padding: const EdgeInsets.all(16),
+          blur: 20,
+          opacity: 0.1,
+          borderColor: Colors.white.withValues(alpha: 0.05),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Farmer Portrait with Glass Border
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: const Color(0xFFC8A96E).withValues(alpha: 0.5),
+                        width: 1.5,
+                      ),
+                      image: DecorationImage(
+                        image: NetworkImage(farmer.imageUrl),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  // Name & Region
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          farmer.name,
+                          style: GoogleFonts.poppins(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFFC8A96E),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${farmer.region}, ${farmer.country}',
+                          style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            color: Colors.white54,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        // Mini specialization chips
+                        Wrap(
+                          spacing: 8,
+                          children: [
+                            _buildMiniChip(farmer.description.split(',').first),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Glass Sphere Flag
+                  if (flagUrl != null)
+                    Image.network(
+                      flagUrl,
+                      width: 48,
+                      height: 48,
+                      errorBuilder: (_, _, _) => const SizedBox(width: 48),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              // Bio Snippet
+              Text(
+                farmer.story,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  height: 1.4,
+                  color: Colors.white.withValues(alpha: 0.7),
+                ),
+              ),
+              const SizedBox(height: 12),
+              // Footer
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Explore Profile',
+                    style: GoogleFonts.poppins(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFFC8A96E),
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  const Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 14,
+                    color: Color(0xFFC8A96E),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMiniChip(String label) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Farm Header Image
-          if (farm.imageUrl.isNotEmpty)
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(16),
-              ),
-              child: Image.network(
-                farm.imageUrl,
-                height: 160,
-                fit: BoxFit.cover,
-                errorBuilder: (_, _, _) => Container(
-                  height: 160,
-                  color: Colors.black45,
-                  child: const Center(
-                    child: Icon(
-                      Icons.broken_image,
-                      color: Colors.white38,
-                      size: 40,
-                    ),
-                  ),
-                ),
-              ),
-            )
-          else
-            Container(
-              height: 160,
-              decoration: const BoxDecoration(
-                color: Colors.black45,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-              ),
-            ),
-
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        '${farm.countryEmoji} ${farm.country}',
-                        style: GoogleFonts.poppins(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: const Color(0xFFC8A96E)),
-                      ),
-                      child: Text(
-                        '${farm.cupsScore} SCA',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFFC8A96E),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.location_on_outlined,
-                      size: 14,
-                      color: Colors.white54,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${farm.region} • ${farm.altitudeMin ?? 0}-${farm.altitudeMax ?? 0}m',
-                      style: const TextStyle(
-                        color: Colors.white54,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  farm.description,
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 14,
-                    height: 1.5,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+      child: Text(
+        label.trim(),
+        style: GoogleFonts.poppins(fontSize: 10, color: Colors.white38),
       ),
     );
   }

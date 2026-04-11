@@ -131,7 +131,9 @@ class _CustomRecipeFormScreenState
 
     // Recreate controllers list
     for (final m in _pourCtrlsList) {
-      for (final c in m.values) c.dispose();
+      for (final c in m.values) {
+        c.dispose();
+      }
     }
     _pourCtrlsList
       ..clear()
@@ -163,10 +165,13 @@ class _CustomRecipeFormScreenState
       _ek43Ctrl,
       _tempCtrl,
       _notesCtrl,
-    ])
+    ]) {
       c.dispose();
+    }
     for (final m in _pourCtrlsList) {
-      for (final c in m.values) c.dispose();
+      for (final c in m.values) {
+        c.dispose();
+      }
     }
     super.dispose();
   }

@@ -1,10 +1,10 @@
-import 'package:drift/drift.dart';
-import 'package:uuid/uuid.dart';
-
-// ─── Schema version: 17 (Sync & Depth Update) ───────────────────────────────
+// ─── Schema version: 26 (Localized Composite Keys & Recovery) ──────────────
 // Per-language columns removed from all main tables.
 // Each table now has a companion *Translations table.
 // ─────────────────────────────────────────────────────────────────────────────
+
+import 'package:drift/drift.dart';
+import 'package:uuid/uuid.dart';
 
 // ─── LocalizedBeans ──────────────────────────────────────────────────────────
 class LocalizedBeans extends Table {
@@ -53,7 +53,6 @@ class LocalizedBeans extends Table {
 }
 
 class LocalizedBeanTranslations extends Table {
-  IntColumn get id => integer().autoIncrement()();
   IntColumn get beanId => integer().references(LocalizedBeans, #id)();
   TextColumn get languageCode => text()(); // 'en', 'uk', 'de', etc.
 
@@ -67,9 +66,7 @@ class LocalizedBeanTranslations extends Table {
   TextColumn get roastLevel => text().nullable()();
 
   @override
-  List<Set<Column>> get uniqueKeys => [
-    {beanId, languageCode},
-  ];
+  Set<Column> get primaryKey => {beanId, languageCode};
 }
 
 // ─── LocalizedBrands ─────────────────────────────────────────────────────────
@@ -83,7 +80,6 @@ class LocalizedBrands extends Table {
 }
 
 class LocalizedBrandTranslations extends Table {
-  IntColumn get id => integer().autoIncrement()();
   IntColumn get brandId => integer().references(LocalizedBrands, #id)();
   TextColumn get languageCode => text()();
 
@@ -92,9 +88,7 @@ class LocalizedBrandTranslations extends Table {
   TextColumn get location => text().nullable()();
 
   @override
-  List<Set<Column>> get uniqueKeys => [
-    {brandId, languageCode},
-  ];
+  Set<Column> get primaryKey => {brandId, languageCode};
 }
 
 // ─── LocalizedFarmers ────────────────────────────────────────────────────────
@@ -108,7 +102,6 @@ class LocalizedFarmers extends Table {
 }
 
 class LocalizedFarmerTranslations extends Table {
-  IntColumn get id => integer().autoIncrement()();
   IntColumn get farmerId => integer().references(LocalizedFarmers, #id)();
   TextColumn get languageCode => text()();
 
@@ -119,9 +112,7 @@ class LocalizedFarmerTranslations extends Table {
   TextColumn get country => text().nullable()();
 
   @override
-  List<Set<Column>> get uniqueKeys => [
-    {farmerId, languageCode},
-  ];
+  Set<Column> get primaryKey => {farmerId, languageCode};
 }
 
 // ─── SphereRegions ───────────────────────────────────────────────────────────
@@ -140,7 +131,6 @@ class SphereRegions extends Table {
 }
 
 class SphereRegionTranslations extends Table {
-  IntColumn get id => integer().autoIncrement()();
   TextColumn get regionId => text().references(SphereRegions, #id)();
   TextColumn get languageCode => text()();
 
@@ -149,9 +139,7 @@ class SphereRegionTranslations extends Table {
   TextColumn get flavorProfile => text().withDefault(const Constant('[]'))();
 
   @override
-  List<Set<Column>> get uniqueKeys => [
-    {regionId, languageCode},
-  ];
+  Set<Column> get primaryKey => {regionId, languageCode};
 }
 
 // ─── SpecialtyArticles ───────────────────────────────────────────────────────
@@ -162,7 +150,6 @@ class SpecialtyArticles extends Table {
 }
 
 class SpecialtyArticleTranslations extends Table {
-  IntColumn get id => integer().autoIncrement()();
   IntColumn get articleId => integer().references(SpecialtyArticles, #id)();
   TextColumn get languageCode => text()();
 
@@ -171,33 +158,7 @@ class SpecialtyArticleTranslations extends Table {
   TextColumn get contentHtml => text()();
 
   @override
-  List<Set<Column>> get uniqueKeys => [
-    {articleId, languageCode},
-  ];
-}
-
-// ─── LatteArtPatterns ────────────────────────────────────────────────────────
-class LatteArtPatterns extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  IntColumn get difficulty => integer()();
-  TextColumn get stepsJson => text()();
-  BoolColumn get isFavorite => boolean().withDefault(const Constant(false))();
-  IntColumn get userBestScore => integer().withDefault(const Constant(0))();
-}
-
-class LatteArtPatternTranslations extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  IntColumn get patternId => integer().references(LatteArtPatterns, #id)();
-  TextColumn get languageCode => text()();
-
-  TextColumn get name => text()();
-  TextColumn get description => text()();
-  TextColumn get tipText => text()();
-
-  @override
-  List<Set<Column>> get uniqueKeys => [
-    {patternId, languageCode},
-  ];
+  Set<Column> get primaryKey => {articleId, languageCode};
 }
 
 // ─── CoffeeLots (User's Private) ─────────────────────────────────────────────
@@ -325,21 +286,4 @@ class CustomRecipes extends Table {
       boolean().withDefault(const Constant(false))();
 }
 
-// ─── BeanScans ───────────────────────────────────────────────────────────────
-class BeanScans extends Table {
-  TextColumn get id => text().clientDefault(() => const Uuid().v4())();
-  @override
-  Set<Column> get primaryKey => {id};
-  TextColumn get userId => text().nullable()();
-  DateTimeColumn get scannedAt => dateTime()();
-  RealColumn get agtronValue => real()();
-  TextColumn get roastLabel => text()();
-  TextColumn get flavorProfile => text()();
-  TextColumn get recommendedMethod => text()();
-  TextColumn get notes => text().withDefault(const Constant(''))();
-
-  // Sync Status
-  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
-  BoolColumn get isDeletedLocal =>
-      boolean().withDefault(const Constant(false))();
-}
+// BeanScans removed as per user request

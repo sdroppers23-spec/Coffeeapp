@@ -1,24 +1,23 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../shared/widgets/glass_container.dart';
-import '../../core/l10n/app_localizations.dart';
 import '../../core/providers/settings_provider.dart';
 import 'terroir_globe.dart';
 import 'sca_flavor_wheel.dart';
+import '../../core/l10n/app_localizations.dart';
 
 class FlavorValuesNotifier extends Notifier<Map<String, double>> {
   @override
   Map<String, double> build() {
     return {
-      'Acidity': 0.6,
-      'Sweetness': 0.8,
-      'Body': 0.5,
-      'Bitterness': 0.3,
-      'Aroma': 0.7,
-      'Finish': 0.4,
+      'АРОМАТ': 0.7,
+      'СМАК': 0.8,
+      'КИСЛОТНІСТЬ': 0.6,
+      'ТІЛО': 0.5,
+      'ПІСЛЯСМАК': 0.6,
+      'БАЛАНС': 0.8,
     };
   }
 
@@ -40,115 +39,115 @@ class FlavorMapScreen extends ConsumerStatefulWidget {
 }
 
 class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
-  int _selectedTab = 1; // Default to Sphere to match screenshot
+  int _selectedTab = 0; // Default to Profile/Radar Chart
+  String? _selectedFlavorKey;
+  Color? _selectedFlavorColor;
+  List<String>? _selectedFlavorItems;
 
   void _setTab(int index) {
     ref.read(settingsProvider.notifier).triggerSelectionVibrate();
-    setState(() => _selectedTab = index);
+    setState(() {
+      _selectedTab = index;
+      if (index != 2) {
+        _selectedFlavorKey = null;
+      }
+    });
+  }
+
+  void _onFlavorSelect(String key, Color color, List<String> items) {
+    ref.read(settingsProvider.notifier).triggerSelectionVibrate();
+    setState(() {
+      _selectedFlavorKey = key;
+      _selectedFlavorColor = color;
+      _selectedFlavorItems = items;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          Colors.transparent, // Let premium background show through
+      backgroundColor: Colors.transparent,
       body: SafeArea(
         child: Column(
           children: [
-            // Top Bar
+            // Top Bar: Matches Screenshot
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 16.0,
-              ),
-              child: Stack(
-                alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Row(
                 children: [
-                  // Centered Title
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Мапа смаків',
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                        color: const Color(0xFFC8A96E), // Gold text
-                      ),
+                  const Spacer(),
+                  Text(
+                    'Мапа смаків',
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
+                      color: const Color(0xFFC8A96E),
                     ),
                   ),
-                  // Right aligned badges
-                  Align(
-                    alignment: Alignment.centerRight,
+                  const Spacer(),
+                  // Connected Badge
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1B231F), // Very dark green-grey
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: Colors.greenAccent.withValues(alpha: 0.2),
+                      ),
+                    ),
                     child: Row(
-                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        // Connected Badge
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.transparent, // Very slight outline
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: Colors.greenAccent.withValues(alpha: 0.3),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.cloud_done,
-                                size: 14,
-                                color: Colors.greenAccent,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                'Connected',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.greenAccent,
-                                ),
-                              ),
-                            ],
-                          ),
+                        const Icon(
+                          Icons.cloud_done,
+                          size: 14,
+                          color: Color(0xFF62D39F), // Brighter green
                         ),
-                        const SizedBox(width: 8),
-                        // Avatar
-                        Container(
-                          width: 32,
-                          height: 32,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white24, width: 1),
-                            image: const DecorationImage(
-                              image: AssetImage(
-                                'assets/images/placeholder_avatar.jpg',
-                              ),
-                              fit: BoxFit.cover,
-                            ),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Connected',
+                          style: GoogleFonts.poppins(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xFF62D39F),
                           ),
-                          child: const Icon(
-                            Icons.person,
-                            color: Colors.transparent,
-                          ), // Fallback shape
                         ),
                       ],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  // Avatar
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        width: 1.5,
+                      ),
+                      image: const DecorationImage(
+                        image: AssetImage(
+                          'assets/images/placeholder_avatar.jpg',
+                        ),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
 
-            // Tab Bar Segmented Control
+            // Internal Tab Bar Segmented Control: Matches Screenshot
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.05),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                color: const Color(0xFF1D1B1A), // Dark brown matte
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
               ),
               child: Row(
                 children: [
@@ -184,57 +183,255 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
 
             // Content Area
             Expanded(
-              child: IndexedStack(
-                index: _selectedTab,
+              child: Stack(
                 children: [
-                  // Tab 0: Profile
-                  ListView(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  IndexedStack(
+                    index: _selectedTab,
                     children: [
-                      GlassContainer(
-                        padding: const EdgeInsets.all(24),
-                        child: Column(
-                          children: [
-                            Text(
-                              'Sensory Profile',
-                              style: GoogleFonts.poppins(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                      // Tab 0: Profile - Matching Screenshot
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF171312),
+                            borderRadius: BorderRadius.circular(40),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.05),
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 32),
+                              Text(
+                                'СЕНСОРНИЙ ПРОФІЛЬ',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xFFC8A96E),
+                                  letterSpacing: 1.5,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 16),
-                            SizedBox(
-                              height: 350,
-                              child: const InteractiveSpiderChart(),
-                            ),
-                          ],
+                              const SizedBox(height: 20),
+                              const Expanded(child: InteractiveSpiderChart()),
+                              const SizedBox(height: 32),
+                            ],
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 120), // Bottom nav padding
-                    ],
-                  ),
 
-                  // Tab 1: Sphere
-                  const TerroirGlobe(),
+                      // Tab 1: Sphere
+                      const TerroirGlobe(),
 
-                  // Tab 2: Flavor Wheel
-                  Column(
-                    children: [
-                      Expanded(
-                        child:
-                            ScaFlavorWheel(), // Assume it takes available space
+                      // Tab 2: Flavor Wheel
+                      Column(
+                        children: [
+                          Expanded(
+                            child: ScaFlavorWheel(
+                              onSelect: _onFlavorSelect,
+                            ),
+                          ),
+                          const SizedBox(height: 120),
+                        ],
                       ),
-                      const SizedBox(height: 120),
                     ],
                   ),
+
+                  // Overlay Info Card if a flavor is selected
+                  if (_selectedFlavorKey != null && _selectedTab == 2)
+                    Positioned(
+                      left: 16,
+                      right: 16,
+                      bottom: 140, // Above bottom nav
+                      child: _FlavorInfoCard(
+                        flavorKey: _selectedFlavorKey!,
+                        color: _selectedFlavorColor!,
+                        relatedItems: _selectedFlavorItems!,
+                        onClose: () => setState(() => _selectedFlavorKey = null),
+                      ),
+                    ),
                 ],
               ),
             ),
+
+            // Simple Legend at the bottom of the stack or column as seen in screenshot
+            if (_selectedTab == 0)
+              Padding(
+                padding: const EdgeInsets.only(top: 24, bottom: 140),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _LegendItem(color: const Color(0xFFFFEB3B), label: 'Кислотність'),
+                    const SizedBox(width: 20),
+                    _LegendItem(color: const Color(0xFF8D6E63), label: 'Тіло'),
+                    const SizedBox(width: 20),
+                    _LegendItem(color: const Color(0xFFE91E63), label: 'Солодкість'),
+                  ],
+                ),
+              ),
           ],
         ),
       ),
     );
+  }
+}
+
+class _LegendItem extends StatelessWidget {
+  final Color color;
+  final String label;
+
+  const _LegendItem({required this.color, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          label,
+          style: GoogleFonts.poppins(color: Colors.white70, fontSize: 12),
+        ),
+      ],
+    );
+  }
+}
+
+class _FlavorInfoCard extends ConsumerWidget {
+  final String flavorKey;
+  final Color color;
+  final List<String> relatedItems;
+  final VoidCallback onClose;
+
+  const _FlavorInfoCard({
+    required this.flavorKey,
+    required this.color,
+    required this.relatedItems,
+    required this.onClose,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return GlassContainer(
+      padding: const EdgeInsets.all(20),
+      borderRadius: 24,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: color,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: color.withValues(alpha: 0.5),
+                          blurRadius: 8,
+                          spreadRadius: 2,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    ref.t(flavorKey).toUpperCase(),
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      letterSpacing: 1.2,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+              IconButton(
+                onPressed: onClose,
+                icon: const Icon(Icons.close, color: Colors.white54, size: 20),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            _getFlavorDescription(flavorKey, ref),
+            style: GoogleFonts.outfit(
+              fontSize: 14,
+              color: Colors.white.withValues(alpha: 0.7),
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Text(
+                'RELATED:',
+                style: GoogleFonts.poppins(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFFC8A96E),
+                  letterSpacing: 1,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: relatedItems.map((item) {
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.05),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.1),
+                            ),
+                          ),
+                          child: Text(
+                            ref.t(item),
+                            style: GoogleFonts.outfit(
+                              fontSize: 10,
+                              color: Colors.white70,
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _getFlavorDescription(String key, WidgetRef ref) {
+    // Ideally this comes from l10n or a mapping
+    if (key.contains('fruity')) return 'Яскрава фруктова кислотність, що нагадує про свіжі плоди та ягоди. Характерна для кави світлого обсмаження.';
+    if (key.contains('floral')) return 'Делікатні квіткові ноти, часто асоціюються з жасмином, чаєм або квітами кави. Ознака високої якості.';
+    if (key.contains('sweet')) return 'Переважаюча солодкість, від карамелі до коричневого цукру. Свідчить про зрілість зерна та баланс.';
+    if (key.contains('roasted')) return 'Ноти карамелізації та смаження. Від солодових хлібних відтінків до темного шоколаду.';
+    
+    return 'Цей смаковий дескриптор описує унікальний характер вибраного сорту кави, що визначається його терруаром та обробкою.';
   }
 }
 
@@ -258,16 +455,12 @@ class _TabOption extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected
-              ? const Color(0xFFC8A96E).withValues(alpha: 0.15)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
+          color: isSelected ? Colors.transparent : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
           border: isSelected
-              ? Border.all(
-                  color: const Color(0xFFC8A96E).withValues(alpha: 0.5),
-                )
+              ? Border.all(color: const Color(0xFFC8A96E), width: 1.5)
               : Border.all(color: Colors.transparent),
         ),
         child: Row(
@@ -275,19 +468,17 @@ class _TabOption extends StatelessWidget {
           children: [
             Icon(
               icon,
-              size: 16,
-              color: isSelected ? const Color(0xFFC8A96E) : Colors.white54,
+              size: 18,
+              color: isSelected ? const Color(0xFFC8A96E) : Colors.white24,
             ),
-            const SizedBox(width: 6),
+            const SizedBox(width: 8),
             Text(
               label,
               style: GoogleFonts.poppins(
-                fontSize: 12,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                color: isSelected ? const Color(0xFFC8A96E) : Colors.white54,
+                fontSize: 13,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                color: isSelected ? const Color(0xFFC8A96E) : Colors.white24,
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
@@ -310,73 +501,57 @@ class _InteractiveSpiderChartState
 
   @override
   Widget build(BuildContext context) {
+    // Watch these exact labels to match screenshot
     final values = ref.watch(flavorValuesProvider);
-    final theme = Theme.of(context);
 
     return Column(
       children: [
-        // Educational selector
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
+        // Educational template selectors - styled as per screenshot
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _TemplateChip('Washed', 'Clean & Bright', {
-                'Acidity': 0.8,
-                'Sweetness': 0.6,
-                'Body': 0.4,
-                'Bitterness': 0.3,
-                'Aroma': 0.7,
-                'Finish': 0.6,
-              }),
-              const SizedBox(width: 8),
-              _TemplateChip('Natural', 'Fruity & Sweet', {
-                'Acidity': 0.5,
-                'Sweetness': 0.9,
-                'Body': 0.7,
-                'Bitterness': 0.2,
-                'Aroma': 0.9,
-                'Finish': 0.5,
-              }),
-              const SizedBox(width: 8),
-              _TemplateChip('Honey', 'Sticky & Balanced', {
-                'Acidity': 0.6,
-                'Sweetness': 0.8,
-                'Body': 0.6,
-                'Bitterness': 0.2,
-                'Aroma': 0.7,
-                'Finish': 0.7,
-              }),
-              const SizedBox(width: 8),
-              _TemplateChip('Ethiopia', 'Floral & Tea-like', {
-                'Acidity': 0.9,
-                'Sweetness': 0.7,
-                'Body': 0.3,
-                'Bitterness': 0.2,
-                'Aroma': 1.0,
-                'Finish': 0.8,
-              }),
-              const SizedBox(width: 8),
-              _TemplateChip('Brazil', 'Nutty & Chocolatey', {
-                'Acidity': 0.4,
-                'Sweetness': 0.7,
-                'Body': 0.8,
-                'Bitterness': 0.4,
-                'Aroma': 0.6,
-                'Finish': 0.6,
-              }),
-              const SizedBox(width: 8),
-              _TemplateChip('Anaerobic', 'Funky & Complex', {
-                'Acidity': 0.7,
-                'Sweetness': 0.8,
-                'Body': 0.6,
-                'Bitterness': 0.4,
-                'Aroma': 0.8,
-                'Finish': 0.9,
-              }),
+              const _TemplateChip(
+                'Митий',
+                'Clean & Bright',
+                {
+                  'АРОМАТ': 0.7,
+                  'СМАК': 0.8,
+                  'КИСЛОТНІСТЬ': 0.9,
+                  'ТІЛО': 0.4,
+                  'ПІСЛЯСМАК': 0.7,
+                  'БАЛАНС': 0.8,
+                },
+              ),
+              const _TemplateChip(
+                'Натуральний',
+                'Fruity & Sweet',
+                {
+                  'АРОМАТ': 0.9,
+                  'СМАК': 0.9,
+                  'КИСЛОТНІСТЬ': 0.5,
+                  'ТІЛО': 0.7,
+                  'ПІСЛЯСМАК': 0.6,
+                  'БАЛАНС': 0.7,
+                },
+              ),
+              const _TemplateChip(
+                'Хані',
+                'Sticky & Balanced',
+                {
+                  'АРОМАТ': 0.8,
+                  'СМАК': 0.8,
+                  'КИСЛОТНІСТЬ': 0.6,
+                  'ТІЛО': 0.6,
+                  'ПІСЛЯСМАК': 0.7,
+                  'БАЛАНС': 0.9,
+                },
+              ),
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 24),
         Expanded(
           child: LayoutBuilder(
             builder: (context, constraints) {
@@ -401,11 +576,8 @@ class _InteractiveSpiderChartState
                   size: Size(constraints.maxWidth, constraints.maxHeight),
                   painter: RadarPainter(
                     values: values,
-                    primaryColor: const Color(
-                      0xFFC8A96E,
-                    ), // Gold instead of secondary
-                    gridColor: theme.colorScheme.surface,
-                    textColor: Colors.white,
+                    primaryColor: const Color(0xFFC8A96E),
+                    textColor: Colors.white54,
                   ),
                 ),
               );
@@ -432,7 +604,6 @@ class _InteractiveSpiderChartState
       final pointX = center.dx + maxRadius * val * cos(angle);
       final pointY = center.dy + maxRadius * val * sin(angle);
 
-      // Check if touch is near this point
       if ((Offset(pointX, pointY) - localPosition).distance < 35.0) {
         setState(() {
           _draggingLabel = labels[i];
@@ -448,17 +619,9 @@ class _InteractiveSpiderChartState
     double maxRadius,
   ) {
     if (_draggingLabel == null) return;
-
-    // Calculate distance from center
     final distance = (localPosition - center).distance;
-
-    // Normalize to 0.0 - 1.0 range
     double newValue = distance / maxRadius;
     newValue = newValue.clamp(0.0, 1.0);
-
-    // Snap to grid (optional 0.1 increments)
-    // newValue = (newValue * 10).roundToDouble() / 10;
-
     ref
         .read(flavorValuesProvider.notifier)
         .updateValue(_draggingLabel!, newValue);
@@ -468,13 +631,11 @@ class _InteractiveSpiderChartState
 class RadarPainter extends CustomPainter {
   final Map<String, double> values;
   final Color primaryColor;
-  final Color gridColor;
   final Color textColor;
 
   RadarPainter({
     required this.values,
     required this.primaryColor,
-    required this.gridColor,
     required this.textColor,
   });
 
@@ -486,18 +647,17 @@ class RadarPainter extends CustomPainter {
     final labels = values.keys.toList();
     final angleStep = 2 * pi / labels.length;
 
-    // 1. Draw grid (concentric polygons)
+    // 1. Draw gridLines
     final gridPaint = Paint()
-      ..color = textColor.withValues(alpha: 0.6)
+      ..color = Colors.white.withValues(alpha: 0.1)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.5;
+      ..strokeWidth = 1;
 
     for (int level = 1; level <= 5; level++) {
       final r = maxRadius * (level / 5);
       final path = Path();
       for (int i = 0; i < labels.length; i++) {
-        final angle =
-            angleStep * i - pi / 2; // Offset by -90 deg so first point is up
+        final angle = angleStep * i - pi / 2;
         final x = center.dx + r * cos(angle);
         final y = center.dy + r * sin(angle);
         if (i == 0) {
@@ -505,8 +665,6 @@ class RadarPainter extends CustomPainter {
         } else {
           path.lineTo(x, y);
         }
-
-        // Draw axis lines from center to outer edge
         if (level == 5) {
           canvas.drawLine(center, Offset(x, y), gridPaint);
         }
@@ -521,7 +679,7 @@ class RadarPainter extends CustomPainter {
 
     for (int i = 0; i < labels.length; i++) {
       final angle = angleStep * i - pi / 2;
-      final val = values[labels[i]]!;
+      final val = values[labels[i]] ?? 0.5;
       final x = center.dx + maxRadius * val * cos(angle);
       final y = center.dy + maxRadius * val * sin(angle);
 
@@ -534,24 +692,22 @@ class RadarPainter extends CustomPainter {
     }
     dataPath.close();
 
-    // Fill
     canvas.drawPath(
       dataPath,
       Paint()
-        ..color = primaryColor.withValues(alpha: 0.3)
+        ..color = primaryColor.withValues(alpha: 0.25)
         ..style = PaintingStyle.fill,
     );
 
-    // Stroke
     canvas.drawPath(
       dataPath,
       Paint()
         ..color = primaryColor
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 3,
+        ..strokeWidth = 2,
     );
 
-    // Data points & Labels
+    // 3. Dots and Labels
     final textPainter = TextPainter(
       textAlign: TextAlign.center,
       textDirection: TextDirection.ltr,
@@ -561,28 +717,20 @@ class RadarPainter extends CustomPainter {
       final point = points[i];
       final angle = angleStep * i - pi / 2;
 
-      // Draw point
-      canvas.drawCircle(
-        point,
-        6,
-        Paint()
-          ..color = primaryColor
-          ..style = PaintingStyle.fill,
-      );
+      canvas.drawCircle(point, 4, Paint()..color = primaryColor);
 
-      // Draw label
       textPainter.text = TextSpan(
         text: labels[i],
         style: TextStyle(
           color: textColor,
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1,
         ),
       );
       textPainter.layout();
 
-      // Calculate label position slightly outside the max radius
-      final labelR = maxRadius + 20;
+      final labelR = maxRadius + 22;
       final labelX = center.dx + labelR * cos(angle);
       final labelY = center.dy + labelR * sin(angle);
 
@@ -594,55 +742,48 @@ class RadarPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant RadarPainter oldDelegate) {
-    return oldDelegate.values != values ||
-        oldDelegate.primaryColor != primaryColor ||
-        oldDelegate.gridColor != gridColor ||
-        oldDelegate.textColor != textColor;
-  }
+  bool shouldRepaint(covariant RadarPainter oldDelegate) => true;
 }
 
 class _TemplateChip extends ConsumerWidget {
   final String title;
   final String subtitle;
-  final Map<String, double> values;
+  final Map<String, double> templateValues;
 
-  const _TemplateChip(this.title, this.subtitle, this.values);
+  const _TemplateChip(this.title, this.subtitle, this.templateValues);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return InkWell(
+    return GestureDetector(
       onTap: () {
-        for (final entry in values.entries) {
+        ref.read(settingsProvider.notifier).triggerSelectionVibrate();
+        for (final entry in templateValues.entries) {
           ref
               .read(flavorValuesProvider.notifier)
               .updateValue(entry.key, entry.value);
         }
       },
-      borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.05),
-          border: Border.all(
-            color: const Color(0xFFC8A96E).withValues(alpha: 0.5),
-          ),
-          borderRadius: BorderRadius.circular(12),
+          color: const Color(0xFF1D1B1A),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               title,
-              style: const TextStyle(
+              style: GoogleFonts.poppins(
+                color: const Color(0xFFC8A96E),
+                fontSize: 14,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFFC8A96E),
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 2),
             Text(
               subtitle,
-              style: const TextStyle(fontSize: 11, color: Colors.white54),
+              style: GoogleFonts.poppins(color: Colors.white24, fontSize: 8),
             ),
           ],
         ),

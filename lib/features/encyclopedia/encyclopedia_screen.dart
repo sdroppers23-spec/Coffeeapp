@@ -139,7 +139,7 @@ class _EncyclopediaScreenState extends ConsumerState<EncyclopediaScreen> {
             return ListView.separated(
               padding: const EdgeInsets.all(16),
               itemCount: filtered.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              separatorBuilder: (_, _) => const SizedBox(height: 12),
               itemBuilder: (context, i) {
                 final entry = filtered[i];
                 final isExpanded = _expandedIndex == i;
@@ -360,7 +360,7 @@ class _OriginCard extends ConsumerWidget {
                               height: 160,
                               width: double.infinity,
                               fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => Container(
+                              errorBuilder: (_, _, _) => Container(
                                 height: 160,
                                 color: Colors.white.withValues(alpha: 0.05),
                                 child: const Icon(
@@ -613,7 +613,7 @@ class OriginDetailsScreen extends ConsumerWidget {
                               ),
                             ),
                             loading: () => const SizedBox(),
-                            error: (_, __) => const SizedBox(),
+                            error: (_, _) => const SizedBox(),
                           ),
                           const SizedBox(height: 8),
                           Text(
@@ -814,26 +814,35 @@ class _SourceTab extends ConsumerWidget {
     final country = entry.country.toLowerCase();
 
     // Mad Heads
-    if (country.contains('utengule'))
+    if (country.contains('utengule')) {
       return ref.t('lot_desc_tanzania_utengule');
-    if (country.contains('alto de osos'))
+    }
+    if (country.contains('alto de osos')) {
       return ref.t('lot_desc_col_alto_osos');
-    if (country.contains('frinsa manis'))
+    }
+    if (country.contains('frinsa manis')) {
       return ref.t('lot_desc_indonesia_manis');
-    if (country.contains('gichathaini'))
+    }
+    if (country.contains('gichathaini')) {
       return ref.t('lot_desc_kenya_gichathaini');
+    }
 
     // 3Champs
-    if (country.contains('colombia 46 filter'))
+    if (country.contains('colombia 46 filter')) {
       return ref.t('lot_desc_col_46_filter');
-    if (country.contains('colombia 31 filter'))
+    }
+    if (country.contains('colombia 31 filter')) {
       return ref.t('lot_desc_col_31_filter');
-    if (country.contains('kenya 20 filter'))
+    }
+    if (country.contains('kenya 20 filter')) {
       return ref.t('lot_desc_kenya_20_filter');
-    if (country.contains('ethiopia 37 filter'))
+    }
+    if (country.contains('ethiopia 37 filter')) {
       return ref.t('lot_desc_eth_37_filter');
-    if (country.contains('colombia 46 espresso'))
+    }
+    if (country.contains('colombia 46 espresso')) {
       return ref.t('lot_desc_col_46_espresso');
+    }
 
     // Fallback to original database string (which is Ukrainian for 3Champs seed)
     return entry.description;
@@ -858,7 +867,7 @@ class _RecipesTab extends ConsumerWidget {
         return ListView.separated(
           padding: const EdgeInsets.all(16),
           itemCount: recipes.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 16),
+          separatorBuilder: (_, _) => const SizedBox(height: 16),
           itemBuilder: (context, i) {
             // Reusing the same card logic as BrewingDetailScreen
             return _RecommendedRecipeCard(recipe: recipes[i]);
@@ -877,7 +886,7 @@ final lotRecipesProvider =
 
 class _SectionHeader extends StatelessWidget {
   final String title;
-  _SectionHeader(this.title);
+  const _SectionHeader(this.title);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -1277,16 +1286,21 @@ void _showProcessDetailSheet(
 
 String _translateDetailedDescription(EncyclopediaEntry entry, WidgetRef ref) {
   final p = entry.processMethod.toLowerCase();
-  if (p.contains('natural') || p.contains('натур'))
+  if (p.contains('natural') || p.contains('натур')) {
     return ref.t('process_natural_desc');
-  if (p.contains('washed') || p.contains('мит'))
+  }
+  if (p.contains('washed') || p.contains('мит')) {
     return ref.t('process_washed_desc');
-  if (p.contains('anaerobic') || p.contains('анаероб'))
+  }
+  if (p.contains('anaerobic') || p.contains('анаероб')) {
     return ref.t('process_anaerobic_desc');
-  if (p.contains('thermal') || p.contains('термал'))
+  }
+  if (p.contains('thermal') || p.contains('термал')) {
     return ref.t('process_thermal_desc');
-  if (p.contains('honey') || p.contains('хані'))
+  }
+  if (p.contains('honey') || p.contains('хані')) {
     return ref.t('process_honey_desc');
+  }
   return entry.detailedProcessMarkdown;
 }
 
@@ -1456,13 +1470,17 @@ void _showLocalizedProcessSheet(
 
 String _getLocalizedDetailedProcess(String process, WidgetRef ref) {
   final p = process.toLowerCase();
-  if (p.contains('natural') || p.contains('натур'))
+  if (p.contains('natural') || p.contains('натур')) {
     return ref.t('process_natural_desc');
-  if (p.contains('washed') || p.contains('мит'))
+  }
+  if (p.contains('washed') || p.contains('мит')) {
     return ref.t('process_washed_desc');
-  if (p.contains('anaerobic') || p.contains('анаероб'))
+  }
+  if (p.contains('anaerobic') || p.contains('анаероб')) {
     return ref.t('process_anaerobic_desc');
-  if (p.contains('thermal') || p.contains('термал'))
+  }
+  if (p.contains('thermal') || p.contains('термал')) {
     return ref.t('process_thermal_desc');
+  }
   return ''; // Fallback
 }

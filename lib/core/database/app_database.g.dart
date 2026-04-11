@@ -2372,19 +2372,6 @@ class $LocalizedBeanTranslationsTable extends LocalizedBeanTranslations
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $LocalizedBeanTranslationsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
   static const VerificationMeta _beanIdMeta = const VerificationMeta('beanId');
   @override
   late final GeneratedColumn<int> beanId = GeneratedColumn<int>(
@@ -2497,7 +2484,6 @@ class $LocalizedBeanTranslationsTable extends LocalizedBeanTranslations
   );
   @override
   List<GeneratedColumn> get $columns => [
-    id,
     beanId,
     languageCode,
     country,
@@ -2521,9 +2507,6 @@ class $LocalizedBeanTranslationsTable extends LocalizedBeanTranslations
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
     if (data.containsKey('bean_id')) {
       context.handle(
         _beanIdMeta,
@@ -2607,11 +2590,7 @@ class $LocalizedBeanTranslationsTable extends LocalizedBeanTranslations
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-    {beanId, languageCode},
-  ];
+  Set<GeneratedColumn> get $primaryKey => {beanId, languageCode};
   @override
   LocalizedBeanTranslation map(
     Map<String, dynamic> data, {
@@ -2619,10 +2598,6 @@ class $LocalizedBeanTranslationsTable extends LocalizedBeanTranslations
   }) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return LocalizedBeanTranslation(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
       beanId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}bean_id'],
@@ -2674,7 +2649,6 @@ class $LocalizedBeanTranslationsTable extends LocalizedBeanTranslations
 
 class LocalizedBeanTranslation extends DataClass
     implements Insertable<LocalizedBeanTranslation> {
-  final int id;
   final int beanId;
   final String languageCode;
   final String? country;
@@ -2686,7 +2660,6 @@ class LocalizedBeanTranslation extends DataClass
   final String? farmDescription;
   final String? roastLevel;
   const LocalizedBeanTranslation({
-    required this.id,
     required this.beanId,
     required this.languageCode,
     this.country,
@@ -2701,7 +2674,6 @@ class LocalizedBeanTranslation extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
     map['bean_id'] = Variable<int>(beanId);
     map['language_code'] = Variable<String>(languageCode);
     if (!nullToAbsent || country != null) {
@@ -2731,7 +2703,6 @@ class LocalizedBeanTranslation extends DataClass
 
   LocalizedBeanTranslationsCompanion toCompanion(bool nullToAbsent) {
     return LocalizedBeanTranslationsCompanion(
-      id: Value(id),
       beanId: Value(beanId),
       languageCode: Value(languageCode),
       country: country == null && nullToAbsent
@@ -2765,7 +2736,6 @@ class LocalizedBeanTranslation extends DataClass
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return LocalizedBeanTranslation(
-      id: serializer.fromJson<int>(json['id']),
       beanId: serializer.fromJson<int>(json['beanId']),
       languageCode: serializer.fromJson<String>(json['languageCode']),
       country: serializer.fromJson<String?>(json['country']),
@@ -2782,7 +2752,6 @@ class LocalizedBeanTranslation extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
       'beanId': serializer.toJson<int>(beanId),
       'languageCode': serializer.toJson<String>(languageCode),
       'country': serializer.toJson<String?>(country),
@@ -2797,7 +2766,6 @@ class LocalizedBeanTranslation extends DataClass
   }
 
   LocalizedBeanTranslation copyWith({
-    int? id,
     int? beanId,
     String? languageCode,
     Value<String?> country = const Value.absent(),
@@ -2809,7 +2777,6 @@ class LocalizedBeanTranslation extends DataClass
     Value<String?> farmDescription = const Value.absent(),
     Value<String?> roastLevel = const Value.absent(),
   }) => LocalizedBeanTranslation(
-    id: id ?? this.id,
     beanId: beanId ?? this.beanId,
     languageCode: languageCode ?? this.languageCode,
     country: country.present ? country.value : this.country,
@@ -2829,7 +2796,6 @@ class LocalizedBeanTranslation extends DataClass
     LocalizedBeanTranslationsCompanion data,
   ) {
     return LocalizedBeanTranslation(
-      id: data.id.present ? data.id.value : this.id,
       beanId: data.beanId.present ? data.beanId.value : this.beanId,
       languageCode: data.languageCode.present
           ? data.languageCode.value
@@ -2858,7 +2824,6 @@ class LocalizedBeanTranslation extends DataClass
   @override
   String toString() {
     return (StringBuffer('LocalizedBeanTranslation(')
-          ..write('id: $id, ')
           ..write('beanId: $beanId, ')
           ..write('languageCode: $languageCode, ')
           ..write('country: $country, ')
@@ -2875,7 +2840,6 @@ class LocalizedBeanTranslation extends DataClass
 
   @override
   int get hashCode => Object.hash(
-    id,
     beanId,
     languageCode,
     country,
@@ -2891,7 +2855,6 @@ class LocalizedBeanTranslation extends DataClass
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is LocalizedBeanTranslation &&
-          other.id == this.id &&
           other.beanId == this.beanId &&
           other.languageCode == this.languageCode &&
           other.country == this.country &&
@@ -2906,7 +2869,6 @@ class LocalizedBeanTranslation extends DataClass
 
 class LocalizedBeanTranslationsCompanion
     extends UpdateCompanion<LocalizedBeanTranslation> {
-  final Value<int> id;
   final Value<int> beanId;
   final Value<String> languageCode;
   final Value<String?> country;
@@ -2917,8 +2879,8 @@ class LocalizedBeanTranslationsCompanion
   final Value<String?> description;
   final Value<String?> farmDescription;
   final Value<String?> roastLevel;
+  final Value<int> rowid;
   const LocalizedBeanTranslationsCompanion({
-    this.id = const Value.absent(),
     this.beanId = const Value.absent(),
     this.languageCode = const Value.absent(),
     this.country = const Value.absent(),
@@ -2929,9 +2891,9 @@ class LocalizedBeanTranslationsCompanion
     this.description = const Value.absent(),
     this.farmDescription = const Value.absent(),
     this.roastLevel = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   LocalizedBeanTranslationsCompanion.insert({
-    this.id = const Value.absent(),
     required int beanId,
     required String languageCode,
     this.country = const Value.absent(),
@@ -2942,10 +2904,10 @@ class LocalizedBeanTranslationsCompanion
     this.description = const Value.absent(),
     this.farmDescription = const Value.absent(),
     this.roastLevel = const Value.absent(),
+    this.rowid = const Value.absent(),
   }) : beanId = Value(beanId),
        languageCode = Value(languageCode);
   static Insertable<LocalizedBeanTranslation> custom({
-    Expression<int>? id,
     Expression<int>? beanId,
     Expression<String>? languageCode,
     Expression<String>? country,
@@ -2956,9 +2918,9 @@ class LocalizedBeanTranslationsCompanion
     Expression<String>? description,
     Expression<String>? farmDescription,
     Expression<String>? roastLevel,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
       if (beanId != null) 'bean_id': beanId,
       if (languageCode != null) 'language_code': languageCode,
       if (country != null) 'country': country,
@@ -2969,11 +2931,11 @@ class LocalizedBeanTranslationsCompanion
       if (description != null) 'description': description,
       if (farmDescription != null) 'farm_description': farmDescription,
       if (roastLevel != null) 'roast_level': roastLevel,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   LocalizedBeanTranslationsCompanion copyWith({
-    Value<int>? id,
     Value<int>? beanId,
     Value<String>? languageCode,
     Value<String?>? country,
@@ -2984,9 +2946,9 @@ class LocalizedBeanTranslationsCompanion
     Value<String?>? description,
     Value<String?>? farmDescription,
     Value<String?>? roastLevel,
+    Value<int>? rowid,
   }) {
     return LocalizedBeanTranslationsCompanion(
-      id: id ?? this.id,
       beanId: beanId ?? this.beanId,
       languageCode: languageCode ?? this.languageCode,
       country: country ?? this.country,
@@ -2997,15 +2959,13 @@ class LocalizedBeanTranslationsCompanion
       description: description ?? this.description,
       farmDescription: farmDescription ?? this.farmDescription,
       roastLevel: roastLevel ?? this.roastLevel,
+      rowid: rowid ?? this.rowid,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
     if (beanId.present) {
       map['bean_id'] = Variable<int>(beanId.value);
     }
@@ -3036,13 +2996,15 @@ class LocalizedBeanTranslationsCompanion
     if (roastLevel.present) {
       map['roast_level'] = Variable<String>(roastLevel.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('LocalizedBeanTranslationsCompanion(')
-          ..write('id: $id, ')
           ..write('beanId: $beanId, ')
           ..write('languageCode: $languageCode, ')
           ..write('country: $country, ')
@@ -3052,7 +3014,8 @@ class LocalizedBeanTranslationsCompanion
           ..write('processMethod: $processMethod, ')
           ..write('description: $description, ')
           ..write('farmDescription: $farmDescription, ')
-          ..write('roastLevel: $roastLevel')
+          ..write('roastLevel: $roastLevel, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -3065,19 +3028,6 @@ class $LocalizedBrandTranslationsTable extends LocalizedBrandTranslations
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $LocalizedBrandTranslationsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
   static const VerificationMeta _brandIdMeta = const VerificationMeta(
     'brandId',
   );
@@ -3138,7 +3088,6 @@ class $LocalizedBrandTranslationsTable extends LocalizedBrandTranslations
   );
   @override
   List<GeneratedColumn> get $columns => [
-    id,
     brandId,
     languageCode,
     shortDesc,
@@ -3157,9 +3106,6 @@ class $LocalizedBrandTranslationsTable extends LocalizedBrandTranslations
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
     if (data.containsKey('brand_id')) {
       context.handle(
         _brandIdMeta,
@@ -3201,11 +3147,7 @@ class $LocalizedBrandTranslationsTable extends LocalizedBrandTranslations
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-    {brandId, languageCode},
-  ];
+  Set<GeneratedColumn> get $primaryKey => {brandId, languageCode};
   @override
   LocalizedBrandTranslation map(
     Map<String, dynamic> data, {
@@ -3213,10 +3155,6 @@ class $LocalizedBrandTranslationsTable extends LocalizedBrandTranslations
   }) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return LocalizedBrandTranslation(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
       brandId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}brand_id'],
@@ -3248,14 +3186,12 @@ class $LocalizedBrandTranslationsTable extends LocalizedBrandTranslations
 
 class LocalizedBrandTranslation extends DataClass
     implements Insertable<LocalizedBrandTranslation> {
-  final int id;
   final int brandId;
   final String languageCode;
   final String? shortDesc;
   final String? fullDesc;
   final String? location;
   const LocalizedBrandTranslation({
-    required this.id,
     required this.brandId,
     required this.languageCode,
     this.shortDesc,
@@ -3265,7 +3201,6 @@ class LocalizedBrandTranslation extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
     map['brand_id'] = Variable<int>(brandId);
     map['language_code'] = Variable<String>(languageCode);
     if (!nullToAbsent || shortDesc != null) {
@@ -3282,7 +3217,6 @@ class LocalizedBrandTranslation extends DataClass
 
   LocalizedBrandTranslationsCompanion toCompanion(bool nullToAbsent) {
     return LocalizedBrandTranslationsCompanion(
-      id: Value(id),
       brandId: Value(brandId),
       languageCode: Value(languageCode),
       shortDesc: shortDesc == null && nullToAbsent
@@ -3303,7 +3237,6 @@ class LocalizedBrandTranslation extends DataClass
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return LocalizedBrandTranslation(
-      id: serializer.fromJson<int>(json['id']),
       brandId: serializer.fromJson<int>(json['brandId']),
       languageCode: serializer.fromJson<String>(json['languageCode']),
       shortDesc: serializer.fromJson<String?>(json['shortDesc']),
@@ -3315,7 +3248,6 @@ class LocalizedBrandTranslation extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
       'brandId': serializer.toJson<int>(brandId),
       'languageCode': serializer.toJson<String>(languageCode),
       'shortDesc': serializer.toJson<String?>(shortDesc),
@@ -3325,14 +3257,12 @@ class LocalizedBrandTranslation extends DataClass
   }
 
   LocalizedBrandTranslation copyWith({
-    int? id,
     int? brandId,
     String? languageCode,
     Value<String?> shortDesc = const Value.absent(),
     Value<String?> fullDesc = const Value.absent(),
     Value<String?> location = const Value.absent(),
   }) => LocalizedBrandTranslation(
-    id: id ?? this.id,
     brandId: brandId ?? this.brandId,
     languageCode: languageCode ?? this.languageCode,
     shortDesc: shortDesc.present ? shortDesc.value : this.shortDesc,
@@ -3343,7 +3273,6 @@ class LocalizedBrandTranslation extends DataClass
     LocalizedBrandTranslationsCompanion data,
   ) {
     return LocalizedBrandTranslation(
-      id: data.id.present ? data.id.value : this.id,
       brandId: data.brandId.present ? data.brandId.value : this.brandId,
       languageCode: data.languageCode.present
           ? data.languageCode.value
@@ -3357,7 +3286,6 @@ class LocalizedBrandTranslation extends DataClass
   @override
   String toString() {
     return (StringBuffer('LocalizedBrandTranslation(')
-          ..write('id: $id, ')
           ..write('brandId: $brandId, ')
           ..write('languageCode: $languageCode, ')
           ..write('shortDesc: $shortDesc, ')
@@ -3369,12 +3297,11 @@ class LocalizedBrandTranslation extends DataClass
 
   @override
   int get hashCode =>
-      Object.hash(id, brandId, languageCode, shortDesc, fullDesc, location);
+      Object.hash(brandId, languageCode, shortDesc, fullDesc, location);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is LocalizedBrandTranslation &&
-          other.id == this.id &&
           other.brandId == this.brandId &&
           other.languageCode == this.languageCode &&
           other.shortDesc == this.shortDesc &&
@@ -3384,71 +3311,68 @@ class LocalizedBrandTranslation extends DataClass
 
 class LocalizedBrandTranslationsCompanion
     extends UpdateCompanion<LocalizedBrandTranslation> {
-  final Value<int> id;
   final Value<int> brandId;
   final Value<String> languageCode;
   final Value<String?> shortDesc;
   final Value<String?> fullDesc;
   final Value<String?> location;
+  final Value<int> rowid;
   const LocalizedBrandTranslationsCompanion({
-    this.id = const Value.absent(),
     this.brandId = const Value.absent(),
     this.languageCode = const Value.absent(),
     this.shortDesc = const Value.absent(),
     this.fullDesc = const Value.absent(),
     this.location = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   LocalizedBrandTranslationsCompanion.insert({
-    this.id = const Value.absent(),
     required int brandId,
     required String languageCode,
     this.shortDesc = const Value.absent(),
     this.fullDesc = const Value.absent(),
     this.location = const Value.absent(),
+    this.rowid = const Value.absent(),
   }) : brandId = Value(brandId),
        languageCode = Value(languageCode);
   static Insertable<LocalizedBrandTranslation> custom({
-    Expression<int>? id,
     Expression<int>? brandId,
     Expression<String>? languageCode,
     Expression<String>? shortDesc,
     Expression<String>? fullDesc,
     Expression<String>? location,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
       if (brandId != null) 'brand_id': brandId,
       if (languageCode != null) 'language_code': languageCode,
       if (shortDesc != null) 'short_desc': shortDesc,
       if (fullDesc != null) 'full_desc': fullDesc,
       if (location != null) 'location': location,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   LocalizedBrandTranslationsCompanion copyWith({
-    Value<int>? id,
     Value<int>? brandId,
     Value<String>? languageCode,
     Value<String?>? shortDesc,
     Value<String?>? fullDesc,
     Value<String?>? location,
+    Value<int>? rowid,
   }) {
     return LocalizedBrandTranslationsCompanion(
-      id: id ?? this.id,
       brandId: brandId ?? this.brandId,
       languageCode: languageCode ?? this.languageCode,
       shortDesc: shortDesc ?? this.shortDesc,
       fullDesc: fullDesc ?? this.fullDesc,
       location: location ?? this.location,
+      rowid: rowid ?? this.rowid,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
     if (brandId.present) {
       map['brand_id'] = Variable<int>(brandId.value);
     }
@@ -3464,18 +3388,21 @@ class LocalizedBrandTranslationsCompanion
     if (location.present) {
       map['location'] = Variable<String>(location.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('LocalizedBrandTranslationsCompanion(')
-          ..write('id: $id, ')
           ..write('brandId: $brandId, ')
           ..write('languageCode: $languageCode, ')
           ..write('shortDesc: $shortDesc, ')
           ..write('fullDesc: $fullDesc, ')
-          ..write('location: $location')
+          ..write('location: $location, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -3491,19 +3418,6 @@ class $LocalizedFarmerTranslationsTable extends LocalizedFarmerTranslations
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $LocalizedFarmerTranslationsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
   static const VerificationMeta _farmerIdMeta = const VerificationMeta(
     'farmerId',
   );
@@ -3580,7 +3494,6 @@ class $LocalizedFarmerTranslationsTable extends LocalizedFarmerTranslations
   );
   @override
   List<GeneratedColumn> get $columns => [
-    id,
     farmerId,
     languageCode,
     name,
@@ -3601,9 +3514,6 @@ class $LocalizedFarmerTranslationsTable extends LocalizedFarmerTranslations
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
     if (data.containsKey('farmer_id')) {
       context.handle(
         _farmerIdMeta,
@@ -3660,11 +3570,7 @@ class $LocalizedFarmerTranslationsTable extends LocalizedFarmerTranslations
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-    {farmerId, languageCode},
-  ];
+  Set<GeneratedColumn> get $primaryKey => {farmerId, languageCode};
   @override
   LocalizedFarmerTranslation map(
     Map<String, dynamic> data, {
@@ -3672,10 +3578,6 @@ class $LocalizedFarmerTranslationsTable extends LocalizedFarmerTranslations
   }) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return LocalizedFarmerTranslation(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
       farmerId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}farmer_id'],
@@ -3715,7 +3617,6 @@ class $LocalizedFarmerTranslationsTable extends LocalizedFarmerTranslations
 
 class LocalizedFarmerTranslation extends DataClass
     implements Insertable<LocalizedFarmerTranslation> {
-  final int id;
   final int farmerId;
   final String languageCode;
   final String? name;
@@ -3724,7 +3625,6 @@ class LocalizedFarmerTranslation extends DataClass
   final String? story;
   final String? country;
   const LocalizedFarmerTranslation({
-    required this.id,
     required this.farmerId,
     required this.languageCode,
     this.name,
@@ -3736,7 +3636,6 @@ class LocalizedFarmerTranslation extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
     map['farmer_id'] = Variable<int>(farmerId);
     map['language_code'] = Variable<String>(languageCode);
     if (!nullToAbsent || name != null) {
@@ -3759,7 +3658,6 @@ class LocalizedFarmerTranslation extends DataClass
 
   LocalizedFarmerTranslationsCompanion toCompanion(bool nullToAbsent) {
     return LocalizedFarmerTranslationsCompanion(
-      id: Value(id),
       farmerId: Value(farmerId),
       languageCode: Value(languageCode),
       name: name == null && nullToAbsent ? const Value.absent() : Value(name),
@@ -3784,7 +3682,6 @@ class LocalizedFarmerTranslation extends DataClass
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return LocalizedFarmerTranslation(
-      id: serializer.fromJson<int>(json['id']),
       farmerId: serializer.fromJson<int>(json['farmerId']),
       languageCode: serializer.fromJson<String>(json['languageCode']),
       name: serializer.fromJson<String?>(json['name']),
@@ -3798,7 +3695,6 @@ class LocalizedFarmerTranslation extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
       'farmerId': serializer.toJson<int>(farmerId),
       'languageCode': serializer.toJson<String>(languageCode),
       'name': serializer.toJson<String?>(name),
@@ -3810,7 +3706,6 @@ class LocalizedFarmerTranslation extends DataClass
   }
 
   LocalizedFarmerTranslation copyWith({
-    int? id,
     int? farmerId,
     String? languageCode,
     Value<String?> name = const Value.absent(),
@@ -3819,7 +3714,6 @@ class LocalizedFarmerTranslation extends DataClass
     Value<String?> story = const Value.absent(),
     Value<String?> country = const Value.absent(),
   }) => LocalizedFarmerTranslation(
-    id: id ?? this.id,
     farmerId: farmerId ?? this.farmerId,
     languageCode: languageCode ?? this.languageCode,
     name: name.present ? name.value : this.name,
@@ -3832,7 +3726,6 @@ class LocalizedFarmerTranslation extends DataClass
     LocalizedFarmerTranslationsCompanion data,
   ) {
     return LocalizedFarmerTranslation(
-      id: data.id.present ? data.id.value : this.id,
       farmerId: data.farmerId.present ? data.farmerId.value : this.farmerId,
       languageCode: data.languageCode.present
           ? data.languageCode.value
@@ -3850,7 +3743,6 @@ class LocalizedFarmerTranslation extends DataClass
   @override
   String toString() {
     return (StringBuffer('LocalizedFarmerTranslation(')
-          ..write('id: $id, ')
           ..write('farmerId: $farmerId, ')
           ..write('languageCode: $languageCode, ')
           ..write('name: $name, ')
@@ -3864,7 +3756,6 @@ class LocalizedFarmerTranslation extends DataClass
 
   @override
   int get hashCode => Object.hash(
-    id,
     farmerId,
     languageCode,
     name,
@@ -3877,7 +3768,6 @@ class LocalizedFarmerTranslation extends DataClass
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is LocalizedFarmerTranslation &&
-          other.id == this.id &&
           other.farmerId == this.farmerId &&
           other.languageCode == this.languageCode &&
           other.name == this.name &&
@@ -3889,7 +3779,6 @@ class LocalizedFarmerTranslation extends DataClass
 
 class LocalizedFarmerTranslationsCompanion
     extends UpdateCompanion<LocalizedFarmerTranslation> {
-  final Value<int> id;
   final Value<int> farmerId;
   final Value<String> languageCode;
   final Value<String?> name;
@@ -3897,8 +3786,8 @@ class LocalizedFarmerTranslationsCompanion
   final Value<String?> description;
   final Value<String?> story;
   final Value<String?> country;
+  final Value<int> rowid;
   const LocalizedFarmerTranslationsCompanion({
-    this.id = const Value.absent(),
     this.farmerId = const Value.absent(),
     this.languageCode = const Value.absent(),
     this.name = const Value.absent(),
@@ -3906,9 +3795,9 @@ class LocalizedFarmerTranslationsCompanion
     this.description = const Value.absent(),
     this.story = const Value.absent(),
     this.country = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   LocalizedFarmerTranslationsCompanion.insert({
-    this.id = const Value.absent(),
     required int farmerId,
     required String languageCode,
     this.name = const Value.absent(),
@@ -3916,10 +3805,10 @@ class LocalizedFarmerTranslationsCompanion
     this.description = const Value.absent(),
     this.story = const Value.absent(),
     this.country = const Value.absent(),
+    this.rowid = const Value.absent(),
   }) : farmerId = Value(farmerId),
        languageCode = Value(languageCode);
   static Insertable<LocalizedFarmerTranslation> custom({
-    Expression<int>? id,
     Expression<int>? farmerId,
     Expression<String>? languageCode,
     Expression<String>? name,
@@ -3927,9 +3816,9 @@ class LocalizedFarmerTranslationsCompanion
     Expression<String>? description,
     Expression<String>? story,
     Expression<String>? country,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
       if (farmerId != null) 'farmer_id': farmerId,
       if (languageCode != null) 'language_code': languageCode,
       if (name != null) 'name': name,
@@ -3937,11 +3826,11 @@ class LocalizedFarmerTranslationsCompanion
       if (description != null) 'description': description,
       if (story != null) 'story': story,
       if (country != null) 'country': country,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   LocalizedFarmerTranslationsCompanion copyWith({
-    Value<int>? id,
     Value<int>? farmerId,
     Value<String>? languageCode,
     Value<String?>? name,
@@ -3949,9 +3838,9 @@ class LocalizedFarmerTranslationsCompanion
     Value<String?>? description,
     Value<String?>? story,
     Value<String?>? country,
+    Value<int>? rowid,
   }) {
     return LocalizedFarmerTranslationsCompanion(
-      id: id ?? this.id,
       farmerId: farmerId ?? this.farmerId,
       languageCode: languageCode ?? this.languageCode,
       name: name ?? this.name,
@@ -3959,15 +3848,13 @@ class LocalizedFarmerTranslationsCompanion
       description: description ?? this.description,
       story: story ?? this.story,
       country: country ?? this.country,
+      rowid: rowid ?? this.rowid,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
     if (farmerId.present) {
       map['farmer_id'] = Variable<int>(farmerId.value);
     }
@@ -3989,20 +3876,23 @@ class LocalizedFarmerTranslationsCompanion
     if (country.present) {
       map['country'] = Variable<String>(country.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('LocalizedFarmerTranslationsCompanion(')
-          ..write('id: $id, ')
           ..write('farmerId: $farmerId, ')
           ..write('languageCode: $languageCode, ')
           ..write('name: $name, ')
           ..write('region: $region, ')
           ..write('description: $description, ')
           ..write('story: $story, ')
-          ..write('country: $country')
+          ..write('country: $country, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -4482,19 +4372,6 @@ class $SphereRegionTranslationsTable extends SphereRegionTranslations
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $SphereRegionTranslationsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
   static const VerificationMeta _regionIdMeta = const VerificationMeta(
     'regionId',
   );
@@ -4554,7 +4431,6 @@ class $SphereRegionTranslationsTable extends SphereRegionTranslations
   );
   @override
   List<GeneratedColumn> get $columns => [
-    id,
     regionId,
     languageCode,
     name,
@@ -4573,9 +4449,6 @@ class $SphereRegionTranslationsTable extends SphereRegionTranslations
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
     if (data.containsKey('region_id')) {
       context.handle(
         _regionIdMeta,
@@ -4625,11 +4498,7 @@ class $SphereRegionTranslationsTable extends SphereRegionTranslations
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-    {regionId, languageCode},
-  ];
+  Set<GeneratedColumn> get $primaryKey => {regionId, languageCode};
   @override
   SphereRegionTranslation map(
     Map<String, dynamic> data, {
@@ -4637,10 +4506,6 @@ class $SphereRegionTranslationsTable extends SphereRegionTranslations
   }) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return SphereRegionTranslation(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
       regionId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}region_id'],
@@ -4672,14 +4537,12 @@ class $SphereRegionTranslationsTable extends SphereRegionTranslations
 
 class SphereRegionTranslation extends DataClass
     implements Insertable<SphereRegionTranslation> {
-  final int id;
   final String regionId;
   final String languageCode;
   final String name;
   final String? description;
   final String flavorProfile;
   const SphereRegionTranslation({
-    required this.id,
     required this.regionId,
     required this.languageCode,
     required this.name,
@@ -4689,7 +4552,6 @@ class SphereRegionTranslation extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
     map['region_id'] = Variable<String>(regionId);
     map['language_code'] = Variable<String>(languageCode);
     map['name'] = Variable<String>(name);
@@ -4702,7 +4564,6 @@ class SphereRegionTranslation extends DataClass
 
   SphereRegionTranslationsCompanion toCompanion(bool nullToAbsent) {
     return SphereRegionTranslationsCompanion(
-      id: Value(id),
       regionId: Value(regionId),
       languageCode: Value(languageCode),
       name: Value(name),
@@ -4719,7 +4580,6 @@ class SphereRegionTranslation extends DataClass
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return SphereRegionTranslation(
-      id: serializer.fromJson<int>(json['id']),
       regionId: serializer.fromJson<String>(json['regionId']),
       languageCode: serializer.fromJson<String>(json['languageCode']),
       name: serializer.fromJson<String>(json['name']),
@@ -4731,7 +4591,6 @@ class SphereRegionTranslation extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
       'regionId': serializer.toJson<String>(regionId),
       'languageCode': serializer.toJson<String>(languageCode),
       'name': serializer.toJson<String>(name),
@@ -4741,14 +4600,12 @@ class SphereRegionTranslation extends DataClass
   }
 
   SphereRegionTranslation copyWith({
-    int? id,
     String? regionId,
     String? languageCode,
     String? name,
     Value<String?> description = const Value.absent(),
     String? flavorProfile,
   }) => SphereRegionTranslation(
-    id: id ?? this.id,
     regionId: regionId ?? this.regionId,
     languageCode: languageCode ?? this.languageCode,
     name: name ?? this.name,
@@ -4759,7 +4616,6 @@ class SphereRegionTranslation extends DataClass
     SphereRegionTranslationsCompanion data,
   ) {
     return SphereRegionTranslation(
-      id: data.id.present ? data.id.value : this.id,
       regionId: data.regionId.present ? data.regionId.value : this.regionId,
       languageCode: data.languageCode.present
           ? data.languageCode.value
@@ -4777,7 +4633,6 @@ class SphereRegionTranslation extends DataClass
   @override
   String toString() {
     return (StringBuffer('SphereRegionTranslation(')
-          ..write('id: $id, ')
           ..write('regionId: $regionId, ')
           ..write('languageCode: $languageCode, ')
           ..write('name: $name, ')
@@ -4789,12 +4644,11 @@ class SphereRegionTranslation extends DataClass
 
   @override
   int get hashCode =>
-      Object.hash(id, regionId, languageCode, name, description, flavorProfile);
+      Object.hash(regionId, languageCode, name, description, flavorProfile);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is SphereRegionTranslation &&
-          other.id == this.id &&
           other.regionId == this.regionId &&
           other.languageCode == this.languageCode &&
           other.name == this.name &&
@@ -4804,72 +4658,69 @@ class SphereRegionTranslation extends DataClass
 
 class SphereRegionTranslationsCompanion
     extends UpdateCompanion<SphereRegionTranslation> {
-  final Value<int> id;
   final Value<String> regionId;
   final Value<String> languageCode;
   final Value<String> name;
   final Value<String?> description;
   final Value<String> flavorProfile;
+  final Value<int> rowid;
   const SphereRegionTranslationsCompanion({
-    this.id = const Value.absent(),
     this.regionId = const Value.absent(),
     this.languageCode = const Value.absent(),
     this.name = const Value.absent(),
     this.description = const Value.absent(),
     this.flavorProfile = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   SphereRegionTranslationsCompanion.insert({
-    this.id = const Value.absent(),
     required String regionId,
     required String languageCode,
     required String name,
     this.description = const Value.absent(),
     this.flavorProfile = const Value.absent(),
+    this.rowid = const Value.absent(),
   }) : regionId = Value(regionId),
        languageCode = Value(languageCode),
        name = Value(name);
   static Insertable<SphereRegionTranslation> custom({
-    Expression<int>? id,
     Expression<String>? regionId,
     Expression<String>? languageCode,
     Expression<String>? name,
     Expression<String>? description,
     Expression<String>? flavorProfile,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
       if (regionId != null) 'region_id': regionId,
       if (languageCode != null) 'language_code': languageCode,
       if (name != null) 'name': name,
       if (description != null) 'description': description,
       if (flavorProfile != null) 'flavor_profile': flavorProfile,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   SphereRegionTranslationsCompanion copyWith({
-    Value<int>? id,
     Value<String>? regionId,
     Value<String>? languageCode,
     Value<String>? name,
     Value<String?>? description,
     Value<String>? flavorProfile,
+    Value<int>? rowid,
   }) {
     return SphereRegionTranslationsCompanion(
-      id: id ?? this.id,
       regionId: regionId ?? this.regionId,
       languageCode: languageCode ?? this.languageCode,
       name: name ?? this.name,
       description: description ?? this.description,
       flavorProfile: flavorProfile ?? this.flavorProfile,
+      rowid: rowid ?? this.rowid,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
     if (regionId.present) {
       map['region_id'] = Variable<String>(regionId.value);
     }
@@ -4885,18 +4736,21 @@ class SphereRegionTranslationsCompanion
     if (flavorProfile.present) {
       map['flavor_profile'] = Variable<String>(flavorProfile.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('SphereRegionTranslationsCompanion(')
-          ..write('id: $id, ')
           ..write('regionId: $regionId, ')
           ..write('languageCode: $languageCode, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
-          ..write('flavorProfile: $flavorProfile')
+          ..write('flavorProfile: $flavorProfile, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -5169,19 +5023,6 @@ class $SpecialtyArticleTranslationsTable extends SpecialtyArticleTranslations
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $SpecialtyArticleTranslationsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
   static const VerificationMeta _articleIdMeta = const VerificationMeta(
     'articleId',
   );
@@ -5240,7 +5081,6 @@ class $SpecialtyArticleTranslationsTable extends SpecialtyArticleTranslations
   );
   @override
   List<GeneratedColumn> get $columns => [
-    id,
     articleId,
     languageCode,
     title,
@@ -5259,9 +5099,6 @@ class $SpecialtyArticleTranslationsTable extends SpecialtyArticleTranslations
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
     if (data.containsKey('article_id')) {
       context.handle(
         _articleIdMeta,
@@ -5312,11 +5149,7 @@ class $SpecialtyArticleTranslationsTable extends SpecialtyArticleTranslations
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-    {articleId, languageCode},
-  ];
+  Set<GeneratedColumn> get $primaryKey => {articleId, languageCode};
   @override
   SpecialtyArticleTranslation map(
     Map<String, dynamic> data, {
@@ -5324,10 +5157,6 @@ class $SpecialtyArticleTranslationsTable extends SpecialtyArticleTranslations
   }) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return SpecialtyArticleTranslation(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
       articleId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}article_id'],
@@ -5359,14 +5188,12 @@ class $SpecialtyArticleTranslationsTable extends SpecialtyArticleTranslations
 
 class SpecialtyArticleTranslation extends DataClass
     implements Insertable<SpecialtyArticleTranslation> {
-  final int id;
   final int articleId;
   final String languageCode;
   final String title;
   final String subtitle;
   final String contentHtml;
   const SpecialtyArticleTranslation({
-    required this.id,
     required this.articleId,
     required this.languageCode,
     required this.title,
@@ -5376,7 +5203,6 @@ class SpecialtyArticleTranslation extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
     map['article_id'] = Variable<int>(articleId);
     map['language_code'] = Variable<String>(languageCode);
     map['title'] = Variable<String>(title);
@@ -5387,7 +5213,6 @@ class SpecialtyArticleTranslation extends DataClass
 
   SpecialtyArticleTranslationsCompanion toCompanion(bool nullToAbsent) {
     return SpecialtyArticleTranslationsCompanion(
-      id: Value(id),
       articleId: Value(articleId),
       languageCode: Value(languageCode),
       title: Value(title),
@@ -5402,7 +5227,6 @@ class SpecialtyArticleTranslation extends DataClass
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return SpecialtyArticleTranslation(
-      id: serializer.fromJson<int>(json['id']),
       articleId: serializer.fromJson<int>(json['articleId']),
       languageCode: serializer.fromJson<String>(json['languageCode']),
       title: serializer.fromJson<String>(json['title']),
@@ -5414,7 +5238,6 @@ class SpecialtyArticleTranslation extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
       'articleId': serializer.toJson<int>(articleId),
       'languageCode': serializer.toJson<String>(languageCode),
       'title': serializer.toJson<String>(title),
@@ -5424,14 +5247,12 @@ class SpecialtyArticleTranslation extends DataClass
   }
 
   SpecialtyArticleTranslation copyWith({
-    int? id,
     int? articleId,
     String? languageCode,
     String? title,
     String? subtitle,
     String? contentHtml,
   }) => SpecialtyArticleTranslation(
-    id: id ?? this.id,
     articleId: articleId ?? this.articleId,
     languageCode: languageCode ?? this.languageCode,
     title: title ?? this.title,
@@ -5442,7 +5263,6 @@ class SpecialtyArticleTranslation extends DataClass
     SpecialtyArticleTranslationsCompanion data,
   ) {
     return SpecialtyArticleTranslation(
-      id: data.id.present ? data.id.value : this.id,
       articleId: data.articleId.present ? data.articleId.value : this.articleId,
       languageCode: data.languageCode.present
           ? data.languageCode.value
@@ -5458,7 +5278,6 @@ class SpecialtyArticleTranslation extends DataClass
   @override
   String toString() {
     return (StringBuffer('SpecialtyArticleTranslation(')
-          ..write('id: $id, ')
           ..write('articleId: $articleId, ')
           ..write('languageCode: $languageCode, ')
           ..write('title: $title, ')
@@ -5470,12 +5289,11 @@ class SpecialtyArticleTranslation extends DataClass
 
   @override
   int get hashCode =>
-      Object.hash(id, articleId, languageCode, title, subtitle, contentHtml);
+      Object.hash(articleId, languageCode, title, subtitle, contentHtml);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is SpecialtyArticleTranslation &&
-          other.id == this.id &&
           other.articleId == this.articleId &&
           other.languageCode == this.languageCode &&
           other.title == this.title &&
@@ -5485,74 +5303,71 @@ class SpecialtyArticleTranslation extends DataClass
 
 class SpecialtyArticleTranslationsCompanion
     extends UpdateCompanion<SpecialtyArticleTranslation> {
-  final Value<int> id;
   final Value<int> articleId;
   final Value<String> languageCode;
   final Value<String> title;
   final Value<String> subtitle;
   final Value<String> contentHtml;
+  final Value<int> rowid;
   const SpecialtyArticleTranslationsCompanion({
-    this.id = const Value.absent(),
     this.articleId = const Value.absent(),
     this.languageCode = const Value.absent(),
     this.title = const Value.absent(),
     this.subtitle = const Value.absent(),
     this.contentHtml = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   SpecialtyArticleTranslationsCompanion.insert({
-    this.id = const Value.absent(),
     required int articleId,
     required String languageCode,
     required String title,
     required String subtitle,
     required String contentHtml,
+    this.rowid = const Value.absent(),
   }) : articleId = Value(articleId),
        languageCode = Value(languageCode),
        title = Value(title),
        subtitle = Value(subtitle),
        contentHtml = Value(contentHtml);
   static Insertable<SpecialtyArticleTranslation> custom({
-    Expression<int>? id,
     Expression<int>? articleId,
     Expression<String>? languageCode,
     Expression<String>? title,
     Expression<String>? subtitle,
     Expression<String>? contentHtml,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
       if (articleId != null) 'article_id': articleId,
       if (languageCode != null) 'language_code': languageCode,
       if (title != null) 'title': title,
       if (subtitle != null) 'subtitle': subtitle,
       if (contentHtml != null) 'content_html': contentHtml,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   SpecialtyArticleTranslationsCompanion copyWith({
-    Value<int>? id,
     Value<int>? articleId,
     Value<String>? languageCode,
     Value<String>? title,
     Value<String>? subtitle,
     Value<String>? contentHtml,
+    Value<int>? rowid,
   }) {
     return SpecialtyArticleTranslationsCompanion(
-      id: id ?? this.id,
       articleId: articleId ?? this.articleId,
       languageCode: languageCode ?? this.languageCode,
       title: title ?? this.title,
       subtitle: subtitle ?? this.subtitle,
       contentHtml: contentHtml ?? this.contentHtml,
+      rowid: rowid ?? this.rowid,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
     if (articleId.present) {
       map['article_id'] = Variable<int>(articleId.value);
     }
@@ -5568,805 +5383,21 @@ class SpecialtyArticleTranslationsCompanion
     if (contentHtml.present) {
       map['content_html'] = Variable<String>(contentHtml.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('SpecialtyArticleTranslationsCompanion(')
-          ..write('id: $id, ')
           ..write('articleId: $articleId, ')
           ..write('languageCode: $languageCode, ')
           ..write('title: $title, ')
           ..write('subtitle: $subtitle, ')
-          ..write('contentHtml: $contentHtml')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $LatteArtPatternsTable extends LatteArtPatterns
-    with TableInfo<$LatteArtPatternsTable, LatteArtPattern> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $LatteArtPatternsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
-  static const VerificationMeta _difficultyMeta = const VerificationMeta(
-    'difficulty',
-  );
-  @override
-  late final GeneratedColumn<int> difficulty = GeneratedColumn<int>(
-    'difficulty',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _stepsJsonMeta = const VerificationMeta(
-    'stepsJson',
-  );
-  @override
-  late final GeneratedColumn<String> stepsJson = GeneratedColumn<String>(
-    'steps_json',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _isFavoriteMeta = const VerificationMeta(
-    'isFavorite',
-  );
-  @override
-  late final GeneratedColumn<bool> isFavorite = GeneratedColumn<bool>(
-    'is_favorite',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_favorite" IN (0, 1))',
-    ),
-    defaultValue: const Constant(false),
-  );
-  static const VerificationMeta _userBestScoreMeta = const VerificationMeta(
-    'userBestScore',
-  );
-  @override
-  late final GeneratedColumn<int> userBestScore = GeneratedColumn<int>(
-    'user_best_score',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(0),
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    difficulty,
-    stepsJson,
-    isFavorite,
-    userBestScore,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'latte_art_patterns';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<LatteArtPattern> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('difficulty')) {
-      context.handle(
-        _difficultyMeta,
-        difficulty.isAcceptableOrUnknown(data['difficulty']!, _difficultyMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_difficultyMeta);
-    }
-    if (data.containsKey('steps_json')) {
-      context.handle(
-        _stepsJsonMeta,
-        stepsJson.isAcceptableOrUnknown(data['steps_json']!, _stepsJsonMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_stepsJsonMeta);
-    }
-    if (data.containsKey('is_favorite')) {
-      context.handle(
-        _isFavoriteMeta,
-        isFavorite.isAcceptableOrUnknown(data['is_favorite']!, _isFavoriteMeta),
-      );
-    }
-    if (data.containsKey('user_best_score')) {
-      context.handle(
-        _userBestScoreMeta,
-        userBestScore.isAcceptableOrUnknown(
-          data['user_best_score']!,
-          _userBestScoreMeta,
-        ),
-      );
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  LatteArtPattern map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return LatteArtPattern(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
-      difficulty: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}difficulty'],
-      )!,
-      stepsJson: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}steps_json'],
-      )!,
-      isFavorite: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}is_favorite'],
-      )!,
-      userBestScore: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}user_best_score'],
-      )!,
-    );
-  }
-
-  @override
-  $LatteArtPatternsTable createAlias(String alias) {
-    return $LatteArtPatternsTable(attachedDatabase, alias);
-  }
-}
-
-class LatteArtPattern extends DataClass implements Insertable<LatteArtPattern> {
-  final int id;
-  final int difficulty;
-  final String stepsJson;
-  final bool isFavorite;
-  final int userBestScore;
-  const LatteArtPattern({
-    required this.id,
-    required this.difficulty,
-    required this.stepsJson,
-    required this.isFavorite,
-    required this.userBestScore,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['difficulty'] = Variable<int>(difficulty);
-    map['steps_json'] = Variable<String>(stepsJson);
-    map['is_favorite'] = Variable<bool>(isFavorite);
-    map['user_best_score'] = Variable<int>(userBestScore);
-    return map;
-  }
-
-  LatteArtPatternsCompanion toCompanion(bool nullToAbsent) {
-    return LatteArtPatternsCompanion(
-      id: Value(id),
-      difficulty: Value(difficulty),
-      stepsJson: Value(stepsJson),
-      isFavorite: Value(isFavorite),
-      userBestScore: Value(userBestScore),
-    );
-  }
-
-  factory LatteArtPattern.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return LatteArtPattern(
-      id: serializer.fromJson<int>(json['id']),
-      difficulty: serializer.fromJson<int>(json['difficulty']),
-      stepsJson: serializer.fromJson<String>(json['stepsJson']),
-      isFavorite: serializer.fromJson<bool>(json['isFavorite']),
-      userBestScore: serializer.fromJson<int>(json['userBestScore']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'difficulty': serializer.toJson<int>(difficulty),
-      'stepsJson': serializer.toJson<String>(stepsJson),
-      'isFavorite': serializer.toJson<bool>(isFavorite),
-      'userBestScore': serializer.toJson<int>(userBestScore),
-    };
-  }
-
-  LatteArtPattern copyWith({
-    int? id,
-    int? difficulty,
-    String? stepsJson,
-    bool? isFavorite,
-    int? userBestScore,
-  }) => LatteArtPattern(
-    id: id ?? this.id,
-    difficulty: difficulty ?? this.difficulty,
-    stepsJson: stepsJson ?? this.stepsJson,
-    isFavorite: isFavorite ?? this.isFavorite,
-    userBestScore: userBestScore ?? this.userBestScore,
-  );
-  LatteArtPattern copyWithCompanion(LatteArtPatternsCompanion data) {
-    return LatteArtPattern(
-      id: data.id.present ? data.id.value : this.id,
-      difficulty: data.difficulty.present
-          ? data.difficulty.value
-          : this.difficulty,
-      stepsJson: data.stepsJson.present ? data.stepsJson.value : this.stepsJson,
-      isFavorite: data.isFavorite.present
-          ? data.isFavorite.value
-          : this.isFavorite,
-      userBestScore: data.userBestScore.present
-          ? data.userBestScore.value
-          : this.userBestScore,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('LatteArtPattern(')
-          ..write('id: $id, ')
-          ..write('difficulty: $difficulty, ')
-          ..write('stepsJson: $stepsJson, ')
-          ..write('isFavorite: $isFavorite, ')
-          ..write('userBestScore: $userBestScore')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(id, difficulty, stepsJson, isFavorite, userBestScore);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is LatteArtPattern &&
-          other.id == this.id &&
-          other.difficulty == this.difficulty &&
-          other.stepsJson == this.stepsJson &&
-          other.isFavorite == this.isFavorite &&
-          other.userBestScore == this.userBestScore);
-}
-
-class LatteArtPatternsCompanion extends UpdateCompanion<LatteArtPattern> {
-  final Value<int> id;
-  final Value<int> difficulty;
-  final Value<String> stepsJson;
-  final Value<bool> isFavorite;
-  final Value<int> userBestScore;
-  const LatteArtPatternsCompanion({
-    this.id = const Value.absent(),
-    this.difficulty = const Value.absent(),
-    this.stepsJson = const Value.absent(),
-    this.isFavorite = const Value.absent(),
-    this.userBestScore = const Value.absent(),
-  });
-  LatteArtPatternsCompanion.insert({
-    this.id = const Value.absent(),
-    required int difficulty,
-    required String stepsJson,
-    this.isFavorite = const Value.absent(),
-    this.userBestScore = const Value.absent(),
-  }) : difficulty = Value(difficulty),
-       stepsJson = Value(stepsJson);
-  static Insertable<LatteArtPattern> custom({
-    Expression<int>? id,
-    Expression<int>? difficulty,
-    Expression<String>? stepsJson,
-    Expression<bool>? isFavorite,
-    Expression<int>? userBestScore,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (difficulty != null) 'difficulty': difficulty,
-      if (stepsJson != null) 'steps_json': stepsJson,
-      if (isFavorite != null) 'is_favorite': isFavorite,
-      if (userBestScore != null) 'user_best_score': userBestScore,
-    });
-  }
-
-  LatteArtPatternsCompanion copyWith({
-    Value<int>? id,
-    Value<int>? difficulty,
-    Value<String>? stepsJson,
-    Value<bool>? isFavorite,
-    Value<int>? userBestScore,
-  }) {
-    return LatteArtPatternsCompanion(
-      id: id ?? this.id,
-      difficulty: difficulty ?? this.difficulty,
-      stepsJson: stepsJson ?? this.stepsJson,
-      isFavorite: isFavorite ?? this.isFavorite,
-      userBestScore: userBestScore ?? this.userBestScore,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (difficulty.present) {
-      map['difficulty'] = Variable<int>(difficulty.value);
-    }
-    if (stepsJson.present) {
-      map['steps_json'] = Variable<String>(stepsJson.value);
-    }
-    if (isFavorite.present) {
-      map['is_favorite'] = Variable<bool>(isFavorite.value);
-    }
-    if (userBestScore.present) {
-      map['user_best_score'] = Variable<int>(userBestScore.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('LatteArtPatternsCompanion(')
-          ..write('id: $id, ')
-          ..write('difficulty: $difficulty, ')
-          ..write('stepsJson: $stepsJson, ')
-          ..write('isFavorite: $isFavorite, ')
-          ..write('userBestScore: $userBestScore')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $LatteArtPatternTranslationsTable extends LatteArtPatternTranslations
-    with
-        TableInfo<
-          $LatteArtPatternTranslationsTable,
-          LatteArtPatternTranslation
-        > {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $LatteArtPatternTranslationsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
-  static const VerificationMeta _patternIdMeta = const VerificationMeta(
-    'patternId',
-  );
-  @override
-  late final GeneratedColumn<int> patternId = GeneratedColumn<int>(
-    'pattern_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES latte_art_patterns (id)',
-    ),
-  );
-  static const VerificationMeta _languageCodeMeta = const VerificationMeta(
-    'languageCode',
-  );
-  @override
-  late final GeneratedColumn<String> languageCode = GeneratedColumn<String>(
-    'language_code',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-    'name',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _descriptionMeta = const VerificationMeta(
-    'description',
-  );
-  @override
-  late final GeneratedColumn<String> description = GeneratedColumn<String>(
-    'description',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _tipTextMeta = const VerificationMeta(
-    'tipText',
-  );
-  @override
-  late final GeneratedColumn<String> tipText = GeneratedColumn<String>(
-    'tip_text',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    patternId,
-    languageCode,
-    name,
-    description,
-    tipText,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'latte_art_pattern_translations';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<LatteArtPatternTranslation> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('pattern_id')) {
-      context.handle(
-        _patternIdMeta,
-        patternId.isAcceptableOrUnknown(data['pattern_id']!, _patternIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_patternIdMeta);
-    }
-    if (data.containsKey('language_code')) {
-      context.handle(
-        _languageCodeMeta,
-        languageCode.isAcceptableOrUnknown(
-          data['language_code']!,
-          _languageCodeMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_languageCodeMeta);
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-        _nameMeta,
-        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
-    if (data.containsKey('description')) {
-      context.handle(
-        _descriptionMeta,
-        description.isAcceptableOrUnknown(
-          data['description']!,
-          _descriptionMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_descriptionMeta);
-    }
-    if (data.containsKey('tip_text')) {
-      context.handle(
-        _tipTextMeta,
-        tipText.isAcceptableOrUnknown(data['tip_text']!, _tipTextMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_tipTextMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-    {patternId, languageCode},
-  ];
-  @override
-  LatteArtPatternTranslation map(
-    Map<String, dynamic> data, {
-    String? tablePrefix,
-  }) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return LatteArtPatternTranslation(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
-      patternId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}pattern_id'],
-      )!,
-      languageCode: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}language_code'],
-      )!,
-      name: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}name'],
-      )!,
-      description: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}description'],
-      )!,
-      tipText: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}tip_text'],
-      )!,
-    );
-  }
-
-  @override
-  $LatteArtPatternTranslationsTable createAlias(String alias) {
-    return $LatteArtPatternTranslationsTable(attachedDatabase, alias);
-  }
-}
-
-class LatteArtPatternTranslation extends DataClass
-    implements Insertable<LatteArtPatternTranslation> {
-  final int id;
-  final int patternId;
-  final String languageCode;
-  final String name;
-  final String description;
-  final String tipText;
-  const LatteArtPatternTranslation({
-    required this.id,
-    required this.patternId,
-    required this.languageCode,
-    required this.name,
-    required this.description,
-    required this.tipText,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['pattern_id'] = Variable<int>(patternId);
-    map['language_code'] = Variable<String>(languageCode);
-    map['name'] = Variable<String>(name);
-    map['description'] = Variable<String>(description);
-    map['tip_text'] = Variable<String>(tipText);
-    return map;
-  }
-
-  LatteArtPatternTranslationsCompanion toCompanion(bool nullToAbsent) {
-    return LatteArtPatternTranslationsCompanion(
-      id: Value(id),
-      patternId: Value(patternId),
-      languageCode: Value(languageCode),
-      name: Value(name),
-      description: Value(description),
-      tipText: Value(tipText),
-    );
-  }
-
-  factory LatteArtPatternTranslation.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return LatteArtPatternTranslation(
-      id: serializer.fromJson<int>(json['id']),
-      patternId: serializer.fromJson<int>(json['patternId']),
-      languageCode: serializer.fromJson<String>(json['languageCode']),
-      name: serializer.fromJson<String>(json['name']),
-      description: serializer.fromJson<String>(json['description']),
-      tipText: serializer.fromJson<String>(json['tipText']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'patternId': serializer.toJson<int>(patternId),
-      'languageCode': serializer.toJson<String>(languageCode),
-      'name': serializer.toJson<String>(name),
-      'description': serializer.toJson<String>(description),
-      'tipText': serializer.toJson<String>(tipText),
-    };
-  }
-
-  LatteArtPatternTranslation copyWith({
-    int? id,
-    int? patternId,
-    String? languageCode,
-    String? name,
-    String? description,
-    String? tipText,
-  }) => LatteArtPatternTranslation(
-    id: id ?? this.id,
-    patternId: patternId ?? this.patternId,
-    languageCode: languageCode ?? this.languageCode,
-    name: name ?? this.name,
-    description: description ?? this.description,
-    tipText: tipText ?? this.tipText,
-  );
-  LatteArtPatternTranslation copyWithCompanion(
-    LatteArtPatternTranslationsCompanion data,
-  ) {
-    return LatteArtPatternTranslation(
-      id: data.id.present ? data.id.value : this.id,
-      patternId: data.patternId.present ? data.patternId.value : this.patternId,
-      languageCode: data.languageCode.present
-          ? data.languageCode.value
-          : this.languageCode,
-      name: data.name.present ? data.name.value : this.name,
-      description: data.description.present
-          ? data.description.value
-          : this.description,
-      tipText: data.tipText.present ? data.tipText.value : this.tipText,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('LatteArtPatternTranslation(')
-          ..write('id: $id, ')
-          ..write('patternId: $patternId, ')
-          ..write('languageCode: $languageCode, ')
-          ..write('name: $name, ')
-          ..write('description: $description, ')
-          ..write('tipText: $tipText')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(id, patternId, languageCode, name, description, tipText);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is LatteArtPatternTranslation &&
-          other.id == this.id &&
-          other.patternId == this.patternId &&
-          other.languageCode == this.languageCode &&
-          other.name == this.name &&
-          other.description == this.description &&
-          other.tipText == this.tipText);
-}
-
-class LatteArtPatternTranslationsCompanion
-    extends UpdateCompanion<LatteArtPatternTranslation> {
-  final Value<int> id;
-  final Value<int> patternId;
-  final Value<String> languageCode;
-  final Value<String> name;
-  final Value<String> description;
-  final Value<String> tipText;
-  const LatteArtPatternTranslationsCompanion({
-    this.id = const Value.absent(),
-    this.patternId = const Value.absent(),
-    this.languageCode = const Value.absent(),
-    this.name = const Value.absent(),
-    this.description = const Value.absent(),
-    this.tipText = const Value.absent(),
-  });
-  LatteArtPatternTranslationsCompanion.insert({
-    this.id = const Value.absent(),
-    required int patternId,
-    required String languageCode,
-    required String name,
-    required String description,
-    required String tipText,
-  }) : patternId = Value(patternId),
-       languageCode = Value(languageCode),
-       name = Value(name),
-       description = Value(description),
-       tipText = Value(tipText);
-  static Insertable<LatteArtPatternTranslation> custom({
-    Expression<int>? id,
-    Expression<int>? patternId,
-    Expression<String>? languageCode,
-    Expression<String>? name,
-    Expression<String>? description,
-    Expression<String>? tipText,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (patternId != null) 'pattern_id': patternId,
-      if (languageCode != null) 'language_code': languageCode,
-      if (name != null) 'name': name,
-      if (description != null) 'description': description,
-      if (tipText != null) 'tip_text': tipText,
-    });
-  }
-
-  LatteArtPatternTranslationsCompanion copyWith({
-    Value<int>? id,
-    Value<int>? patternId,
-    Value<String>? languageCode,
-    Value<String>? name,
-    Value<String>? description,
-    Value<String>? tipText,
-  }) {
-    return LatteArtPatternTranslationsCompanion(
-      id: id ?? this.id,
-      patternId: patternId ?? this.patternId,
-      languageCode: languageCode ?? this.languageCode,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      tipText: tipText ?? this.tipText,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (patternId.present) {
-      map['pattern_id'] = Variable<int>(patternId.value);
-    }
-    if (languageCode.present) {
-      map['language_code'] = Variable<String>(languageCode.value);
-    }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
-    }
-    if (description.present) {
-      map['description'] = Variable<String>(description.value);
-    }
-    if (tipText.present) {
-      map['tip_text'] = Variable<String>(tipText.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('LatteArtPatternTranslationsCompanion(')
-          ..write('id: $id, ')
-          ..write('patternId: $patternId, ')
-          ..write('languageCode: $languageCode, ')
-          ..write('name: $name, ')
-          ..write('description: $description, ')
-          ..write('tipText: $tipText')
+          ..write('contentHtml: $contentHtml, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -10919,632 +9950,6 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
   }
 }
 
-class $BeanScansTable extends BeanScans
-    with TableInfo<$BeanScansTable, BeanScan> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $BeanScansTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-    'id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    clientDefault: () => const Uuid().v4(),
-  );
-  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
-  @override
-  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
-    'user_id',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _scannedAtMeta = const VerificationMeta(
-    'scannedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> scannedAt = GeneratedColumn<DateTime>(
-    'scanned_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _agtronValueMeta = const VerificationMeta(
-    'agtronValue',
-  );
-  @override
-  late final GeneratedColumn<double> agtronValue = GeneratedColumn<double>(
-    'agtron_value',
-    aliasedName,
-    false,
-    type: DriftSqlType.double,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _roastLabelMeta = const VerificationMeta(
-    'roastLabel',
-  );
-  @override
-  late final GeneratedColumn<String> roastLabel = GeneratedColumn<String>(
-    'roast_label',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _flavorProfileMeta = const VerificationMeta(
-    'flavorProfile',
-  );
-  @override
-  late final GeneratedColumn<String> flavorProfile = GeneratedColumn<String>(
-    'flavor_profile',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _recommendedMethodMeta = const VerificationMeta(
-    'recommendedMethod',
-  );
-  @override
-  late final GeneratedColumn<String> recommendedMethod =
-      GeneratedColumn<String>(
-        'recommended_method',
-        aliasedName,
-        false,
-        type: DriftSqlType.string,
-        requiredDuringInsert: true,
-      );
-  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
-  @override
-  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
-    'notes',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant(''),
-  );
-  static const VerificationMeta _isSyncedMeta = const VerificationMeta(
-    'isSynced',
-  );
-  @override
-  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
-    'is_synced',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_synced" IN (0, 1))',
-    ),
-    defaultValue: const Constant(false),
-  );
-  static const VerificationMeta _isDeletedLocalMeta = const VerificationMeta(
-    'isDeletedLocal',
-  );
-  @override
-  late final GeneratedColumn<bool> isDeletedLocal = GeneratedColumn<bool>(
-    'is_deleted_local',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_deleted_local" IN (0, 1))',
-    ),
-    defaultValue: const Constant(false),
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    userId,
-    scannedAt,
-    agtronValue,
-    roastLabel,
-    flavorProfile,
-    recommendedMethod,
-    notes,
-    isSynced,
-    isDeletedLocal,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'bean_scans';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<BeanScan> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('user_id')) {
-      context.handle(
-        _userIdMeta,
-        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
-      );
-    }
-    if (data.containsKey('scanned_at')) {
-      context.handle(
-        _scannedAtMeta,
-        scannedAt.isAcceptableOrUnknown(data['scanned_at']!, _scannedAtMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_scannedAtMeta);
-    }
-    if (data.containsKey('agtron_value')) {
-      context.handle(
-        _agtronValueMeta,
-        agtronValue.isAcceptableOrUnknown(
-          data['agtron_value']!,
-          _agtronValueMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_agtronValueMeta);
-    }
-    if (data.containsKey('roast_label')) {
-      context.handle(
-        _roastLabelMeta,
-        roastLabel.isAcceptableOrUnknown(data['roast_label']!, _roastLabelMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_roastLabelMeta);
-    }
-    if (data.containsKey('flavor_profile')) {
-      context.handle(
-        _flavorProfileMeta,
-        flavorProfile.isAcceptableOrUnknown(
-          data['flavor_profile']!,
-          _flavorProfileMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_flavorProfileMeta);
-    }
-    if (data.containsKey('recommended_method')) {
-      context.handle(
-        _recommendedMethodMeta,
-        recommendedMethod.isAcceptableOrUnknown(
-          data['recommended_method']!,
-          _recommendedMethodMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_recommendedMethodMeta);
-    }
-    if (data.containsKey('notes')) {
-      context.handle(
-        _notesMeta,
-        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
-      );
-    }
-    if (data.containsKey('is_synced')) {
-      context.handle(
-        _isSyncedMeta,
-        isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
-      );
-    }
-    if (data.containsKey('is_deleted_local')) {
-      context.handle(
-        _isDeletedLocalMeta,
-        isDeletedLocal.isAcceptableOrUnknown(
-          data['is_deleted_local']!,
-          _isDeletedLocalMeta,
-        ),
-      );
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  BeanScan map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return BeanScan(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}id'],
-      )!,
-      userId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}user_id'],
-      ),
-      scannedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}scanned_at'],
-      )!,
-      agtronValue: attachedDatabase.typeMapping.read(
-        DriftSqlType.double,
-        data['${effectivePrefix}agtron_value'],
-      )!,
-      roastLabel: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}roast_label'],
-      )!,
-      flavorProfile: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}flavor_profile'],
-      )!,
-      recommendedMethod: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}recommended_method'],
-      )!,
-      notes: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}notes'],
-      )!,
-      isSynced: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}is_synced'],
-      )!,
-      isDeletedLocal: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}is_deleted_local'],
-      )!,
-    );
-  }
-
-  @override
-  $BeanScansTable createAlias(String alias) {
-    return $BeanScansTable(attachedDatabase, alias);
-  }
-}
-
-class BeanScan extends DataClass implements Insertable<BeanScan> {
-  final String id;
-  final String? userId;
-  final DateTime scannedAt;
-  final double agtronValue;
-  final String roastLabel;
-  final String flavorProfile;
-  final String recommendedMethod;
-  final String notes;
-  final bool isSynced;
-  final bool isDeletedLocal;
-  const BeanScan({
-    required this.id,
-    this.userId,
-    required this.scannedAt,
-    required this.agtronValue,
-    required this.roastLabel,
-    required this.flavorProfile,
-    required this.recommendedMethod,
-    required this.notes,
-    required this.isSynced,
-    required this.isDeletedLocal,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
-    if (!nullToAbsent || userId != null) {
-      map['user_id'] = Variable<String>(userId);
-    }
-    map['scanned_at'] = Variable<DateTime>(scannedAt);
-    map['agtron_value'] = Variable<double>(agtronValue);
-    map['roast_label'] = Variable<String>(roastLabel);
-    map['flavor_profile'] = Variable<String>(flavorProfile);
-    map['recommended_method'] = Variable<String>(recommendedMethod);
-    map['notes'] = Variable<String>(notes);
-    map['is_synced'] = Variable<bool>(isSynced);
-    map['is_deleted_local'] = Variable<bool>(isDeletedLocal);
-    return map;
-  }
-
-  BeanScansCompanion toCompanion(bool nullToAbsent) {
-    return BeanScansCompanion(
-      id: Value(id),
-      userId: userId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(userId),
-      scannedAt: Value(scannedAt),
-      agtronValue: Value(agtronValue),
-      roastLabel: Value(roastLabel),
-      flavorProfile: Value(flavorProfile),
-      recommendedMethod: Value(recommendedMethod),
-      notes: Value(notes),
-      isSynced: Value(isSynced),
-      isDeletedLocal: Value(isDeletedLocal),
-    );
-  }
-
-  factory BeanScan.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return BeanScan(
-      id: serializer.fromJson<String>(json['id']),
-      userId: serializer.fromJson<String?>(json['userId']),
-      scannedAt: serializer.fromJson<DateTime>(json['scannedAt']),
-      agtronValue: serializer.fromJson<double>(json['agtronValue']),
-      roastLabel: serializer.fromJson<String>(json['roastLabel']),
-      flavorProfile: serializer.fromJson<String>(json['flavorProfile']),
-      recommendedMethod: serializer.fromJson<String>(json['recommendedMethod']),
-      notes: serializer.fromJson<String>(json['notes']),
-      isSynced: serializer.fromJson<bool>(json['isSynced']),
-      isDeletedLocal: serializer.fromJson<bool>(json['isDeletedLocal']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'userId': serializer.toJson<String?>(userId),
-      'scannedAt': serializer.toJson<DateTime>(scannedAt),
-      'agtronValue': serializer.toJson<double>(agtronValue),
-      'roastLabel': serializer.toJson<String>(roastLabel),
-      'flavorProfile': serializer.toJson<String>(flavorProfile),
-      'recommendedMethod': serializer.toJson<String>(recommendedMethod),
-      'notes': serializer.toJson<String>(notes),
-      'isSynced': serializer.toJson<bool>(isSynced),
-      'isDeletedLocal': serializer.toJson<bool>(isDeletedLocal),
-    };
-  }
-
-  BeanScan copyWith({
-    String? id,
-    Value<String?> userId = const Value.absent(),
-    DateTime? scannedAt,
-    double? agtronValue,
-    String? roastLabel,
-    String? flavorProfile,
-    String? recommendedMethod,
-    String? notes,
-    bool? isSynced,
-    bool? isDeletedLocal,
-  }) => BeanScan(
-    id: id ?? this.id,
-    userId: userId.present ? userId.value : this.userId,
-    scannedAt: scannedAt ?? this.scannedAt,
-    agtronValue: agtronValue ?? this.agtronValue,
-    roastLabel: roastLabel ?? this.roastLabel,
-    flavorProfile: flavorProfile ?? this.flavorProfile,
-    recommendedMethod: recommendedMethod ?? this.recommendedMethod,
-    notes: notes ?? this.notes,
-    isSynced: isSynced ?? this.isSynced,
-    isDeletedLocal: isDeletedLocal ?? this.isDeletedLocal,
-  );
-  BeanScan copyWithCompanion(BeanScansCompanion data) {
-    return BeanScan(
-      id: data.id.present ? data.id.value : this.id,
-      userId: data.userId.present ? data.userId.value : this.userId,
-      scannedAt: data.scannedAt.present ? data.scannedAt.value : this.scannedAt,
-      agtronValue: data.agtronValue.present
-          ? data.agtronValue.value
-          : this.agtronValue,
-      roastLabel: data.roastLabel.present
-          ? data.roastLabel.value
-          : this.roastLabel,
-      flavorProfile: data.flavorProfile.present
-          ? data.flavorProfile.value
-          : this.flavorProfile,
-      recommendedMethod: data.recommendedMethod.present
-          ? data.recommendedMethod.value
-          : this.recommendedMethod,
-      notes: data.notes.present ? data.notes.value : this.notes,
-      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
-      isDeletedLocal: data.isDeletedLocal.present
-          ? data.isDeletedLocal.value
-          : this.isDeletedLocal,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('BeanScan(')
-          ..write('id: $id, ')
-          ..write('userId: $userId, ')
-          ..write('scannedAt: $scannedAt, ')
-          ..write('agtronValue: $agtronValue, ')
-          ..write('roastLabel: $roastLabel, ')
-          ..write('flavorProfile: $flavorProfile, ')
-          ..write('recommendedMethod: $recommendedMethod, ')
-          ..write('notes: $notes, ')
-          ..write('isSynced: $isSynced, ')
-          ..write('isDeletedLocal: $isDeletedLocal')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(
-    id,
-    userId,
-    scannedAt,
-    agtronValue,
-    roastLabel,
-    flavorProfile,
-    recommendedMethod,
-    notes,
-    isSynced,
-    isDeletedLocal,
-  );
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is BeanScan &&
-          other.id == this.id &&
-          other.userId == this.userId &&
-          other.scannedAt == this.scannedAt &&
-          other.agtronValue == this.agtronValue &&
-          other.roastLabel == this.roastLabel &&
-          other.flavorProfile == this.flavorProfile &&
-          other.recommendedMethod == this.recommendedMethod &&
-          other.notes == this.notes &&
-          other.isSynced == this.isSynced &&
-          other.isDeletedLocal == this.isDeletedLocal);
-}
-
-class BeanScansCompanion extends UpdateCompanion<BeanScan> {
-  final Value<String> id;
-  final Value<String?> userId;
-  final Value<DateTime> scannedAt;
-  final Value<double> agtronValue;
-  final Value<String> roastLabel;
-  final Value<String> flavorProfile;
-  final Value<String> recommendedMethod;
-  final Value<String> notes;
-  final Value<bool> isSynced;
-  final Value<bool> isDeletedLocal;
-  final Value<int> rowid;
-  const BeanScansCompanion({
-    this.id = const Value.absent(),
-    this.userId = const Value.absent(),
-    this.scannedAt = const Value.absent(),
-    this.agtronValue = const Value.absent(),
-    this.roastLabel = const Value.absent(),
-    this.flavorProfile = const Value.absent(),
-    this.recommendedMethod = const Value.absent(),
-    this.notes = const Value.absent(),
-    this.isSynced = const Value.absent(),
-    this.isDeletedLocal = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  BeanScansCompanion.insert({
-    this.id = const Value.absent(),
-    this.userId = const Value.absent(),
-    required DateTime scannedAt,
-    required double agtronValue,
-    required String roastLabel,
-    required String flavorProfile,
-    required String recommendedMethod,
-    this.notes = const Value.absent(),
-    this.isSynced = const Value.absent(),
-    this.isDeletedLocal = const Value.absent(),
-    this.rowid = const Value.absent(),
-  }) : scannedAt = Value(scannedAt),
-       agtronValue = Value(agtronValue),
-       roastLabel = Value(roastLabel),
-       flavorProfile = Value(flavorProfile),
-       recommendedMethod = Value(recommendedMethod);
-  static Insertable<BeanScan> custom({
-    Expression<String>? id,
-    Expression<String>? userId,
-    Expression<DateTime>? scannedAt,
-    Expression<double>? agtronValue,
-    Expression<String>? roastLabel,
-    Expression<String>? flavorProfile,
-    Expression<String>? recommendedMethod,
-    Expression<String>? notes,
-    Expression<bool>? isSynced,
-    Expression<bool>? isDeletedLocal,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (userId != null) 'user_id': userId,
-      if (scannedAt != null) 'scanned_at': scannedAt,
-      if (agtronValue != null) 'agtron_value': agtronValue,
-      if (roastLabel != null) 'roast_label': roastLabel,
-      if (flavorProfile != null) 'flavor_profile': flavorProfile,
-      if (recommendedMethod != null) 'recommended_method': recommendedMethod,
-      if (notes != null) 'notes': notes,
-      if (isSynced != null) 'is_synced': isSynced,
-      if (isDeletedLocal != null) 'is_deleted_local': isDeletedLocal,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  BeanScansCompanion copyWith({
-    Value<String>? id,
-    Value<String?>? userId,
-    Value<DateTime>? scannedAt,
-    Value<double>? agtronValue,
-    Value<String>? roastLabel,
-    Value<String>? flavorProfile,
-    Value<String>? recommendedMethod,
-    Value<String>? notes,
-    Value<bool>? isSynced,
-    Value<bool>? isDeletedLocal,
-    Value<int>? rowid,
-  }) {
-    return BeanScansCompanion(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      scannedAt: scannedAt ?? this.scannedAt,
-      agtronValue: agtronValue ?? this.agtronValue,
-      roastLabel: roastLabel ?? this.roastLabel,
-      flavorProfile: flavorProfile ?? this.flavorProfile,
-      recommendedMethod: recommendedMethod ?? this.recommendedMethod,
-      notes: notes ?? this.notes,
-      isSynced: isSynced ?? this.isSynced,
-      isDeletedLocal: isDeletedLocal ?? this.isDeletedLocal,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (userId.present) {
-      map['user_id'] = Variable<String>(userId.value);
-    }
-    if (scannedAt.present) {
-      map['scanned_at'] = Variable<DateTime>(scannedAt.value);
-    }
-    if (agtronValue.present) {
-      map['agtron_value'] = Variable<double>(agtronValue.value);
-    }
-    if (roastLabel.present) {
-      map['roast_label'] = Variable<String>(roastLabel.value);
-    }
-    if (flavorProfile.present) {
-      map['flavor_profile'] = Variable<String>(flavorProfile.value);
-    }
-    if (recommendedMethod.present) {
-      map['recommended_method'] = Variable<String>(recommendedMethod.value);
-    }
-    if (notes.present) {
-      map['notes'] = Variable<String>(notes.value);
-    }
-    if (isSynced.present) {
-      map['is_synced'] = Variable<bool>(isSynced.value);
-    }
-    if (isDeletedLocal.present) {
-      map['is_deleted_local'] = Variable<bool>(isDeletedLocal.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('BeanScansCompanion(')
-          ..write('id: $id, ')
-          ..write('userId: $userId, ')
-          ..write('scannedAt: $scannedAt, ')
-          ..write('agtronValue: $agtronValue, ')
-          ..write('roastLabel: $roastLabel, ')
-          ..write('flavorProfile: $flavorProfile, ')
-          ..write('recommendedMethod: $recommendedMethod, ')
-          ..write('notes: $notes, ')
-          ..write('isSynced: $isSynced, ')
-          ..write('isDeletedLocal: $isDeletedLocal, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -11568,11 +9973,6 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $SpecialtyArticlesTable(this);
   late final $SpecialtyArticleTranslationsTable specialtyArticleTranslations =
       $SpecialtyArticleTranslationsTable(this);
-  late final $LatteArtPatternsTable latteArtPatterns = $LatteArtPatternsTable(
-    this,
-  );
-  late final $LatteArtPatternTranslationsTable latteArtPatternTranslations =
-      $LatteArtPatternTranslationsTable(this);
   late final $CoffeeLotsTable coffeeLots = $CoffeeLotsTable(this);
   late final $FermentationLogsTable fermentationLogs = $FermentationLogsTable(
     this,
@@ -11581,7 +9981,6 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $RecommendedRecipesTable recommendedRecipes =
       $RecommendedRecipesTable(this);
   late final $CustomRecipesTable customRecipes = $CustomRecipesTable(this);
-  late final $BeanScansTable beanScans = $BeanScansTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -11597,14 +9996,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     sphereRegionTranslations,
     specialtyArticles,
     specialtyArticleTranslations,
-    latteArtPatterns,
-    latteArtPatternTranslations,
     coffeeLots,
     fermentationLogs,
     brewingRecipes,
     recommendedRecipes,
     customRecipes,
-    beanScans,
   ];
 }
 
@@ -13697,7 +12093,6 @@ typedef $$LocalizedBeansTableProcessedTableManager =
     >;
 typedef $$LocalizedBeanTranslationsTableCreateCompanionBuilder =
     LocalizedBeanTranslationsCompanion Function({
-      Value<int> id,
       required int beanId,
       required String languageCode,
       Value<String?> country,
@@ -13708,10 +12103,10 @@ typedef $$LocalizedBeanTranslationsTableCreateCompanionBuilder =
       Value<String?> description,
       Value<String?> farmDescription,
       Value<String?> roastLevel,
+      Value<int> rowid,
     });
 typedef $$LocalizedBeanTranslationsTableUpdateCompanionBuilder =
     LocalizedBeanTranslationsCompanion Function({
-      Value<int> id,
       Value<int> beanId,
       Value<String> languageCode,
       Value<String?> country,
@@ -13722,6 +12117,7 @@ typedef $$LocalizedBeanTranslationsTableUpdateCompanionBuilder =
       Value<String?> description,
       Value<String?> farmDescription,
       Value<String?> roastLevel,
+      Value<int> rowid,
     });
 
 final class $$LocalizedBeanTranslationsTableReferences
@@ -13769,11 +12165,6 @@ class $$LocalizedBeanTranslationsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get languageCode => $composableBuilder(
     column: $table.languageCode,
     builder: (column) => ColumnFilters(column),
@@ -13852,11 +12243,6 @@ class $$LocalizedBeanTranslationsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get languageCode => $composableBuilder(
     column: $table.languageCode,
     builder: (column) => ColumnOrderings(column),
@@ -13935,9 +12321,6 @@ class $$LocalizedBeanTranslationsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
   GeneratedColumn<String> get languageCode => $composableBuilder(
     column: $table.languageCode,
     builder: (column) => column,
@@ -14043,7 +12426,6 @@ class $$LocalizedBeanTranslationsTableTableManager
               ),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 Value<int> beanId = const Value.absent(),
                 Value<String> languageCode = const Value.absent(),
                 Value<String?> country = const Value.absent(),
@@ -14054,8 +12436,8 @@ class $$LocalizedBeanTranslationsTableTableManager
                 Value<String?> description = const Value.absent(),
                 Value<String?> farmDescription = const Value.absent(),
                 Value<String?> roastLevel = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => LocalizedBeanTranslationsCompanion(
-                id: id,
                 beanId: beanId,
                 languageCode: languageCode,
                 country: country,
@@ -14066,10 +12448,10 @@ class $$LocalizedBeanTranslationsTableTableManager
                 description: description,
                 farmDescription: farmDescription,
                 roastLevel: roastLevel,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 required int beanId,
                 required String languageCode,
                 Value<String?> country = const Value.absent(),
@@ -14080,8 +12462,8 @@ class $$LocalizedBeanTranslationsTableTableManager
                 Value<String?> description = const Value.absent(),
                 Value<String?> farmDescription = const Value.absent(),
                 Value<String?> roastLevel = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => LocalizedBeanTranslationsCompanion.insert(
-                id: id,
                 beanId: beanId,
                 languageCode: languageCode,
                 country: country,
@@ -14092,6 +12474,7 @@ class $$LocalizedBeanTranslationsTableTableManager
                 description: description,
                 farmDescription: farmDescription,
                 roastLevel: roastLevel,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -14164,21 +12547,21 @@ typedef $$LocalizedBeanTranslationsTableProcessedTableManager =
     >;
 typedef $$LocalizedBrandTranslationsTableCreateCompanionBuilder =
     LocalizedBrandTranslationsCompanion Function({
-      Value<int> id,
       required int brandId,
       required String languageCode,
       Value<String?> shortDesc,
       Value<String?> fullDesc,
       Value<String?> location,
+      Value<int> rowid,
     });
 typedef $$LocalizedBrandTranslationsTableUpdateCompanionBuilder =
     LocalizedBrandTranslationsCompanion Function({
-      Value<int> id,
       Value<int> brandId,
       Value<String> languageCode,
       Value<String?> shortDesc,
       Value<String?> fullDesc,
       Value<String?> location,
+      Value<int> rowid,
     });
 
 final class $$LocalizedBrandTranslationsTableReferences
@@ -14226,11 +12609,6 @@ class $$LocalizedBrandTranslationsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get languageCode => $composableBuilder(
     column: $table.languageCode,
     builder: (column) => ColumnFilters(column),
@@ -14284,11 +12662,6 @@ class $$LocalizedBrandTranslationsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get languageCode => $composableBuilder(
     column: $table.languageCode,
     builder: (column) => ColumnOrderings(column),
@@ -14342,9 +12715,6 @@ class $$LocalizedBrandTranslationsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
   GeneratedColumn<String> get languageCode => $composableBuilder(
     column: $table.languageCode,
     builder: (column) => column,
@@ -14425,35 +12795,35 @@ class $$LocalizedBrandTranslationsTableTableManager
               ),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 Value<int> brandId = const Value.absent(),
                 Value<String> languageCode = const Value.absent(),
                 Value<String?> shortDesc = const Value.absent(),
                 Value<String?> fullDesc = const Value.absent(),
                 Value<String?> location = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => LocalizedBrandTranslationsCompanion(
-                id: id,
                 brandId: brandId,
                 languageCode: languageCode,
                 shortDesc: shortDesc,
                 fullDesc: fullDesc,
                 location: location,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 required int brandId,
                 required String languageCode,
                 Value<String?> shortDesc = const Value.absent(),
                 Value<String?> fullDesc = const Value.absent(),
                 Value<String?> location = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => LocalizedBrandTranslationsCompanion.insert(
-                id: id,
                 brandId: brandId,
                 languageCode: languageCode,
                 shortDesc: shortDesc,
                 fullDesc: fullDesc,
                 location: location,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -14526,7 +12896,6 @@ typedef $$LocalizedBrandTranslationsTableProcessedTableManager =
     >;
 typedef $$LocalizedFarmerTranslationsTableCreateCompanionBuilder =
     LocalizedFarmerTranslationsCompanion Function({
-      Value<int> id,
       required int farmerId,
       required String languageCode,
       Value<String?> name,
@@ -14534,10 +12903,10 @@ typedef $$LocalizedFarmerTranslationsTableCreateCompanionBuilder =
       Value<String?> description,
       Value<String?> story,
       Value<String?> country,
+      Value<int> rowid,
     });
 typedef $$LocalizedFarmerTranslationsTableUpdateCompanionBuilder =
     LocalizedFarmerTranslationsCompanion Function({
-      Value<int> id,
       Value<int> farmerId,
       Value<String> languageCode,
       Value<String?> name,
@@ -14545,6 +12914,7 @@ typedef $$LocalizedFarmerTranslationsTableUpdateCompanionBuilder =
       Value<String?> description,
       Value<String?> story,
       Value<String?> country,
+      Value<int> rowid,
     });
 
 final class $$LocalizedFarmerTranslationsTableReferences
@@ -14592,11 +12962,6 @@ class $$LocalizedFarmerTranslationsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get languageCode => $composableBuilder(
     column: $table.languageCode,
     builder: (column) => ColumnFilters(column),
@@ -14660,11 +13025,6 @@ class $$LocalizedFarmerTranslationsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get languageCode => $composableBuilder(
     column: $table.languageCode,
     builder: (column) => ColumnOrderings(column),
@@ -14728,9 +13088,6 @@ class $$LocalizedFarmerTranslationsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
   GeneratedColumn<String> get languageCode => $composableBuilder(
     column: $table.languageCode,
     builder: (column) => column,
@@ -14819,7 +13176,6 @@ class $$LocalizedFarmerTranslationsTableTableManager
               ),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 Value<int> farmerId = const Value.absent(),
                 Value<String> languageCode = const Value.absent(),
                 Value<String?> name = const Value.absent(),
@@ -14827,8 +13183,8 @@ class $$LocalizedFarmerTranslationsTableTableManager
                 Value<String?> description = const Value.absent(),
                 Value<String?> story = const Value.absent(),
                 Value<String?> country = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => LocalizedFarmerTranslationsCompanion(
-                id: id,
                 farmerId: farmerId,
                 languageCode: languageCode,
                 name: name,
@@ -14836,10 +13192,10 @@ class $$LocalizedFarmerTranslationsTableTableManager
                 description: description,
                 story: story,
                 country: country,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 required int farmerId,
                 required String languageCode,
                 Value<String?> name = const Value.absent(),
@@ -14847,8 +13203,8 @@ class $$LocalizedFarmerTranslationsTableTableManager
                 Value<String?> description = const Value.absent(),
                 Value<String?> story = const Value.absent(),
                 Value<String?> country = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => LocalizedFarmerTranslationsCompanion.insert(
-                id: id,
                 farmerId: farmerId,
                 languageCode: languageCode,
                 name: name,
@@ -14856,6 +13212,7 @@ class $$LocalizedFarmerTranslationsTableTableManager
                 description: description,
                 story: story,
                 country: country,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -15292,21 +13649,21 @@ typedef $$SphereRegionsTableProcessedTableManager =
     >;
 typedef $$SphereRegionTranslationsTableCreateCompanionBuilder =
     SphereRegionTranslationsCompanion Function({
-      Value<int> id,
       required String regionId,
       required String languageCode,
       required String name,
       Value<String?> description,
       Value<String> flavorProfile,
+      Value<int> rowid,
     });
 typedef $$SphereRegionTranslationsTableUpdateCompanionBuilder =
     SphereRegionTranslationsCompanion Function({
-      Value<int> id,
       Value<String> regionId,
       Value<String> languageCode,
       Value<String> name,
       Value<String?> description,
       Value<String> flavorProfile,
+      Value<int> rowid,
     });
 
 final class $$SphereRegionTranslationsTableReferences
@@ -15354,11 +13711,6 @@ class $$SphereRegionTranslationsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get languageCode => $composableBuilder(
     column: $table.languageCode,
     builder: (column) => ColumnFilters(column),
@@ -15412,11 +13764,6 @@ class $$SphereRegionTranslationsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get languageCode => $composableBuilder(
     column: $table.languageCode,
     builder: (column) => ColumnOrderings(column),
@@ -15470,9 +13817,6 @@ class $$SphereRegionTranslationsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
   GeneratedColumn<String> get languageCode => $composableBuilder(
     column: $table.languageCode,
     builder: (column) => column,
@@ -15554,35 +13898,35 @@ class $$SphereRegionTranslationsTableTableManager
               ),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 Value<String> regionId = const Value.absent(),
                 Value<String> languageCode = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String?> description = const Value.absent(),
                 Value<String> flavorProfile = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => SphereRegionTranslationsCompanion(
-                id: id,
                 regionId: regionId,
                 languageCode: languageCode,
                 name: name,
                 description: description,
                 flavorProfile: flavorProfile,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 required String regionId,
                 required String languageCode,
                 required String name,
                 Value<String?> description = const Value.absent(),
                 Value<String> flavorProfile = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => SphereRegionTranslationsCompanion.insert(
-                id: id,
                 regionId: regionId,
                 languageCode: languageCode,
                 name: name,
                 description: description,
                 flavorProfile: flavorProfile,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -15949,21 +14293,21 @@ typedef $$SpecialtyArticlesTableProcessedTableManager =
     >;
 typedef $$SpecialtyArticleTranslationsTableCreateCompanionBuilder =
     SpecialtyArticleTranslationsCompanion Function({
-      Value<int> id,
       required int articleId,
       required String languageCode,
       required String title,
       required String subtitle,
       required String contentHtml,
+      Value<int> rowid,
     });
 typedef $$SpecialtyArticleTranslationsTableUpdateCompanionBuilder =
     SpecialtyArticleTranslationsCompanion Function({
-      Value<int> id,
       Value<int> articleId,
       Value<String> languageCode,
       Value<String> title,
       Value<String> subtitle,
       Value<String> contentHtml,
+      Value<int> rowid,
     });
 
 final class $$SpecialtyArticleTranslationsTableReferences
@@ -16011,11 +14355,6 @@ class $$SpecialtyArticleTranslationsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get languageCode => $composableBuilder(
     column: $table.languageCode,
     builder: (column) => ColumnFilters(column),
@@ -16069,11 +14408,6 @@ class $$SpecialtyArticleTranslationsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get languageCode => $composableBuilder(
     column: $table.languageCode,
     builder: (column) => ColumnOrderings(column),
@@ -16127,9 +14461,6 @@ class $$SpecialtyArticleTranslationsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
   GeneratedColumn<String> get languageCode => $composableBuilder(
     column: $table.languageCode,
     builder: (column) => column,
@@ -16213,35 +14544,35 @@ class $$SpecialtyArticleTranslationsTableTableManager
               ),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 Value<int> articleId = const Value.absent(),
                 Value<String> languageCode = const Value.absent(),
                 Value<String> title = const Value.absent(),
                 Value<String> subtitle = const Value.absent(),
                 Value<String> contentHtml = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
               }) => SpecialtyArticleTranslationsCompanion(
-                id: id,
                 articleId: articleId,
                 languageCode: languageCode,
                 title: title,
                 subtitle: subtitle,
                 contentHtml: contentHtml,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 required int articleId,
                 required String languageCode,
                 required String title,
                 required String subtitle,
                 required String contentHtml,
+                Value<int> rowid = const Value.absent(),
               }) => SpecialtyArticleTranslationsCompanion.insert(
-                id: id,
                 articleId: articleId,
                 languageCode: languageCode,
                 title: title,
                 subtitle: subtitle,
                 contentHtml: contentHtml,
+                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -16314,702 +14645,6 @@ typedef $$SpecialtyArticleTranslationsTableProcessedTableManager =
       ),
       SpecialtyArticleTranslation,
       PrefetchHooks Function({bool articleId})
-    >;
-typedef $$LatteArtPatternsTableCreateCompanionBuilder =
-    LatteArtPatternsCompanion Function({
-      Value<int> id,
-      required int difficulty,
-      required String stepsJson,
-      Value<bool> isFavorite,
-      Value<int> userBestScore,
-    });
-typedef $$LatteArtPatternsTableUpdateCompanionBuilder =
-    LatteArtPatternsCompanion Function({
-      Value<int> id,
-      Value<int> difficulty,
-      Value<String> stepsJson,
-      Value<bool> isFavorite,
-      Value<int> userBestScore,
-    });
-
-final class $$LatteArtPatternsTableReferences
-    extends
-        BaseReferences<_$AppDatabase, $LatteArtPatternsTable, LatteArtPattern> {
-  $$LatteArtPatternsTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static MultiTypedResultKey<
-    $LatteArtPatternTranslationsTable,
-    List<LatteArtPatternTranslation>
-  >
-  _latteArtPatternTranslationsRefsTable(_$AppDatabase db) =>
-      MultiTypedResultKey.fromTable(
-        db.latteArtPatternTranslations,
-        aliasName: $_aliasNameGenerator(
-          db.latteArtPatterns.id,
-          db.latteArtPatternTranslations.patternId,
-        ),
-      );
-
-  $$LatteArtPatternTranslationsTableProcessedTableManager
-  get latteArtPatternTranslationsRefs {
-    final manager = $$LatteArtPatternTranslationsTableTableManager(
-      $_db,
-      $_db.latteArtPatternTranslations,
-    ).filter((f) => f.patternId.id.sqlEquals($_itemColumn<int>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(
-      _latteArtPatternTranslationsRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
-
-class $$LatteArtPatternsTableFilterComposer
-    extends Composer<_$AppDatabase, $LatteArtPatternsTable> {
-  $$LatteArtPatternsTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get difficulty => $composableBuilder(
-    column: $table.difficulty,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get stepsJson => $composableBuilder(
-    column: $table.stepsJson,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get isFavorite => $composableBuilder(
-    column: $table.isFavorite,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get userBestScore => $composableBuilder(
-    column: $table.userBestScore,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  Expression<bool> latteArtPatternTranslationsRefs(
-    Expression<bool> Function(
-      $$LatteArtPatternTranslationsTableFilterComposer f,
-    )
-    f,
-  ) {
-    final $$LatteArtPatternTranslationsTableFilterComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.latteArtPatternTranslations,
-          getReferencedColumn: (t) => t.patternId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$LatteArtPatternTranslationsTableFilterComposer(
-                $db: $db,
-                $table: $db.latteArtPatternTranslations,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
-}
-
-class $$LatteArtPatternsTableOrderingComposer
-    extends Composer<_$AppDatabase, $LatteArtPatternsTable> {
-  $$LatteArtPatternsTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get difficulty => $composableBuilder(
-    column: $table.difficulty,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get stepsJson => $composableBuilder(
-    column: $table.stepsJson,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get isFavorite => $composableBuilder(
-    column: $table.isFavorite,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get userBestScore => $composableBuilder(
-    column: $table.userBestScore,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$LatteArtPatternsTableAnnotationComposer
-    extends Composer<_$AppDatabase, $LatteArtPatternsTable> {
-  $$LatteArtPatternsTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<int> get difficulty => $composableBuilder(
-    column: $table.difficulty,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get stepsJson =>
-      $composableBuilder(column: $table.stepsJson, builder: (column) => column);
-
-  GeneratedColumn<bool> get isFavorite => $composableBuilder(
-    column: $table.isFavorite,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<int> get userBestScore => $composableBuilder(
-    column: $table.userBestScore,
-    builder: (column) => column,
-  );
-
-  Expression<T> latteArtPatternTranslationsRefs<T extends Object>(
-    Expression<T> Function(
-      $$LatteArtPatternTranslationsTableAnnotationComposer a,
-    )
-    f,
-  ) {
-    final $$LatteArtPatternTranslationsTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.latteArtPatternTranslations,
-          getReferencedColumn: (t) => t.patternId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$LatteArtPatternTranslationsTableAnnotationComposer(
-                $db: $db,
-                $table: $db.latteArtPatternTranslations,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
-}
-
-class $$LatteArtPatternsTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $LatteArtPatternsTable,
-          LatteArtPattern,
-          $$LatteArtPatternsTableFilterComposer,
-          $$LatteArtPatternsTableOrderingComposer,
-          $$LatteArtPatternsTableAnnotationComposer,
-          $$LatteArtPatternsTableCreateCompanionBuilder,
-          $$LatteArtPatternsTableUpdateCompanionBuilder,
-          (LatteArtPattern, $$LatteArtPatternsTableReferences),
-          LatteArtPattern,
-          PrefetchHooks Function({bool latteArtPatternTranslationsRefs})
-        > {
-  $$LatteArtPatternsTableTableManager(
-    _$AppDatabase db,
-    $LatteArtPatternsTable table,
-  ) : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$LatteArtPatternsTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$LatteArtPatternsTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$LatteArtPatternsTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                Value<int> difficulty = const Value.absent(),
-                Value<String> stepsJson = const Value.absent(),
-                Value<bool> isFavorite = const Value.absent(),
-                Value<int> userBestScore = const Value.absent(),
-              }) => LatteArtPatternsCompanion(
-                id: id,
-                difficulty: difficulty,
-                stepsJson: stepsJson,
-                isFavorite: isFavorite,
-                userBestScore: userBestScore,
-              ),
-          createCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                required int difficulty,
-                required String stepsJson,
-                Value<bool> isFavorite = const Value.absent(),
-                Value<int> userBestScore = const Value.absent(),
-              }) => LatteArtPatternsCompanion.insert(
-                id: id,
-                difficulty: difficulty,
-                stepsJson: stepsJson,
-                isFavorite: isFavorite,
-                userBestScore: userBestScore,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$LatteArtPatternsTableReferences(db, table, e),
-                ),
-              )
-              .toList(),
-          prefetchHooksCallback: ({latteArtPatternTranslationsRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (latteArtPatternTranslationsRefs)
-                  db.latteArtPatternTranslations,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (latteArtPatternTranslationsRefs)
-                    await $_getPrefetchedData<
-                      LatteArtPattern,
-                      $LatteArtPatternsTable,
-                      LatteArtPatternTranslation
-                    >(
-                      currentTable: table,
-                      referencedTable: $$LatteArtPatternsTableReferences
-                          ._latteArtPatternTranslationsRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$LatteArtPatternsTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).latteArtPatternTranslationsRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.patternId == item.id),
-                      typedResults: items,
-                    ),
-                ];
-              },
-            );
-          },
-        ),
-      );
-}
-
-typedef $$LatteArtPatternsTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $LatteArtPatternsTable,
-      LatteArtPattern,
-      $$LatteArtPatternsTableFilterComposer,
-      $$LatteArtPatternsTableOrderingComposer,
-      $$LatteArtPatternsTableAnnotationComposer,
-      $$LatteArtPatternsTableCreateCompanionBuilder,
-      $$LatteArtPatternsTableUpdateCompanionBuilder,
-      (LatteArtPattern, $$LatteArtPatternsTableReferences),
-      LatteArtPattern,
-      PrefetchHooks Function({bool latteArtPatternTranslationsRefs})
-    >;
-typedef $$LatteArtPatternTranslationsTableCreateCompanionBuilder =
-    LatteArtPatternTranslationsCompanion Function({
-      Value<int> id,
-      required int patternId,
-      required String languageCode,
-      required String name,
-      required String description,
-      required String tipText,
-    });
-typedef $$LatteArtPatternTranslationsTableUpdateCompanionBuilder =
-    LatteArtPatternTranslationsCompanion Function({
-      Value<int> id,
-      Value<int> patternId,
-      Value<String> languageCode,
-      Value<String> name,
-      Value<String> description,
-      Value<String> tipText,
-    });
-
-final class $$LatteArtPatternTranslationsTableReferences
-    extends
-        BaseReferences<
-          _$AppDatabase,
-          $LatteArtPatternTranslationsTable,
-          LatteArtPatternTranslation
-        > {
-  $$LatteArtPatternTranslationsTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static $LatteArtPatternsTable _patternIdTable(_$AppDatabase db) =>
-      db.latteArtPatterns.createAlias(
-        $_aliasNameGenerator(
-          db.latteArtPatternTranslations.patternId,
-          db.latteArtPatterns.id,
-        ),
-      );
-
-  $$LatteArtPatternsTableProcessedTableManager get patternId {
-    final $_column = $_itemColumn<int>('pattern_id')!;
-
-    final manager = $$LatteArtPatternsTableTableManager(
-      $_db,
-      $_db.latteArtPatterns,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_patternIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
-
-class $$LatteArtPatternTranslationsTableFilterComposer
-    extends Composer<_$AppDatabase, $LatteArtPatternTranslationsTable> {
-  $$LatteArtPatternTranslationsTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get languageCode => $composableBuilder(
-    column: $table.languageCode,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get description => $composableBuilder(
-    column: $table.description,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get tipText => $composableBuilder(
-    column: $table.tipText,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  $$LatteArtPatternsTableFilterComposer get patternId {
-    final $$LatteArtPatternsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.patternId,
-      referencedTable: $db.latteArtPatterns,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$LatteArtPatternsTableFilterComposer(
-            $db: $db,
-            $table: $db.latteArtPatterns,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$LatteArtPatternTranslationsTableOrderingComposer
-    extends Composer<_$AppDatabase, $LatteArtPatternTranslationsTable> {
-  $$LatteArtPatternTranslationsTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get languageCode => $composableBuilder(
-    column: $table.languageCode,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get description => $composableBuilder(
-    column: $table.description,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get tipText => $composableBuilder(
-    column: $table.tipText,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  $$LatteArtPatternsTableOrderingComposer get patternId {
-    final $$LatteArtPatternsTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.patternId,
-      referencedTable: $db.latteArtPatterns,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$LatteArtPatternsTableOrderingComposer(
-            $db: $db,
-            $table: $db.latteArtPatterns,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$LatteArtPatternTranslationsTableAnnotationComposer
-    extends Composer<_$AppDatabase, $LatteArtPatternTranslationsTable> {
-  $$LatteArtPatternTranslationsTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get languageCode => $composableBuilder(
-    column: $table.languageCode,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => column);
-
-  GeneratedColumn<String> get description => $composableBuilder(
-    column: $table.description,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get tipText =>
-      $composableBuilder(column: $table.tipText, builder: (column) => column);
-
-  $$LatteArtPatternsTableAnnotationComposer get patternId {
-    final $$LatteArtPatternsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.patternId,
-      referencedTable: $db.latteArtPatterns,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$LatteArtPatternsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.latteArtPatterns,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$LatteArtPatternTranslationsTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $LatteArtPatternTranslationsTable,
-          LatteArtPatternTranslation,
-          $$LatteArtPatternTranslationsTableFilterComposer,
-          $$LatteArtPatternTranslationsTableOrderingComposer,
-          $$LatteArtPatternTranslationsTableAnnotationComposer,
-          $$LatteArtPatternTranslationsTableCreateCompanionBuilder,
-          $$LatteArtPatternTranslationsTableUpdateCompanionBuilder,
-          (
-            LatteArtPatternTranslation,
-            $$LatteArtPatternTranslationsTableReferences,
-          ),
-          LatteArtPatternTranslation,
-          PrefetchHooks Function({bool patternId})
-        > {
-  $$LatteArtPatternTranslationsTableTableManager(
-    _$AppDatabase db,
-    $LatteArtPatternTranslationsTable table,
-  ) : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$LatteArtPatternTranslationsTableFilterComposer(
-                $db: db,
-                $table: table,
-              ),
-          createOrderingComposer: () =>
-              $$LatteArtPatternTranslationsTableOrderingComposer(
-                $db: db,
-                $table: table,
-              ),
-          createComputedFieldComposer: () =>
-              $$LatteArtPatternTranslationsTableAnnotationComposer(
-                $db: db,
-                $table: table,
-              ),
-          updateCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                Value<int> patternId = const Value.absent(),
-                Value<String> languageCode = const Value.absent(),
-                Value<String> name = const Value.absent(),
-                Value<String> description = const Value.absent(),
-                Value<String> tipText = const Value.absent(),
-              }) => LatteArtPatternTranslationsCompanion(
-                id: id,
-                patternId: patternId,
-                languageCode: languageCode,
-                name: name,
-                description: description,
-                tipText: tipText,
-              ),
-          createCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                required int patternId,
-                required String languageCode,
-                required String name,
-                required String description,
-                required String tipText,
-              }) => LatteArtPatternTranslationsCompanion.insert(
-                id: id,
-                patternId: patternId,
-                languageCode: languageCode,
-                name: name,
-                description: description,
-                tipText: tipText,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$LatteArtPatternTranslationsTableReferences(db, table, e),
-                ),
-              )
-              .toList(),
-          prefetchHooksCallback: ({patternId = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (patternId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.patternId,
-                                referencedTable:
-                                    $$LatteArtPatternTranslationsTableReferences
-                                        ._patternIdTable(db),
-                                referencedColumn:
-                                    $$LatteArtPatternTranslationsTableReferences
-                                        ._patternIdTable(db)
-                                        .id,
-                              )
-                              as T;
-                    }
-
-                    return state;
-                  },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
-        ),
-      );
-}
-
-typedef $$LatteArtPatternTranslationsTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $LatteArtPatternTranslationsTable,
-      LatteArtPatternTranslation,
-      $$LatteArtPatternTranslationsTableFilterComposer,
-      $$LatteArtPatternTranslationsTableOrderingComposer,
-      $$LatteArtPatternTranslationsTableAnnotationComposer,
-      $$LatteArtPatternTranslationsTableCreateCompanionBuilder,
-      $$LatteArtPatternTranslationsTableUpdateCompanionBuilder,
-      (
-        LatteArtPatternTranslation,
-        $$LatteArtPatternTranslationsTableReferences,
-      ),
-      LatteArtPatternTranslation,
-      PrefetchHooks Function({bool patternId})
     >;
 typedef $$CoffeeLotsTableCreateCompanionBuilder =
     CoffeeLotsCompanion Function({
@@ -19364,305 +16999,6 @@ typedef $$CustomRecipesTableProcessedTableManager =
       CustomRecipe,
       PrefetchHooks Function()
     >;
-typedef $$BeanScansTableCreateCompanionBuilder =
-    BeanScansCompanion Function({
-      Value<String> id,
-      Value<String?> userId,
-      required DateTime scannedAt,
-      required double agtronValue,
-      required String roastLabel,
-      required String flavorProfile,
-      required String recommendedMethod,
-      Value<String> notes,
-      Value<bool> isSynced,
-      Value<bool> isDeletedLocal,
-      Value<int> rowid,
-    });
-typedef $$BeanScansTableUpdateCompanionBuilder =
-    BeanScansCompanion Function({
-      Value<String> id,
-      Value<String?> userId,
-      Value<DateTime> scannedAt,
-      Value<double> agtronValue,
-      Value<String> roastLabel,
-      Value<String> flavorProfile,
-      Value<String> recommendedMethod,
-      Value<String> notes,
-      Value<bool> isSynced,
-      Value<bool> isDeletedLocal,
-      Value<int> rowid,
-    });
-
-class $$BeanScansTableFilterComposer
-    extends Composer<_$AppDatabase, $BeanScansTable> {
-  $$BeanScansTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get userId => $composableBuilder(
-    column: $table.userId,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get scannedAt => $composableBuilder(
-    column: $table.scannedAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<double> get agtronValue => $composableBuilder(
-    column: $table.agtronValue,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get roastLabel => $composableBuilder(
-    column: $table.roastLabel,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get flavorProfile => $composableBuilder(
-    column: $table.flavorProfile,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get recommendedMethod => $composableBuilder(
-    column: $table.recommendedMethod,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get notes => $composableBuilder(
-    column: $table.notes,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get isSynced => $composableBuilder(
-    column: $table.isSynced,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<bool> get isDeletedLocal => $composableBuilder(
-    column: $table.isDeletedLocal,
-    builder: (column) => ColumnFilters(column),
-  );
-}
-
-class $$BeanScansTableOrderingComposer
-    extends Composer<_$AppDatabase, $BeanScansTable> {
-  $$BeanScansTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get userId => $composableBuilder(
-    column: $table.userId,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get scannedAt => $composableBuilder(
-    column: $table.scannedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<double> get agtronValue => $composableBuilder(
-    column: $table.agtronValue,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get roastLabel => $composableBuilder(
-    column: $table.roastLabel,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get flavorProfile => $composableBuilder(
-    column: $table.flavorProfile,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get recommendedMethod => $composableBuilder(
-    column: $table.recommendedMethod,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get notes => $composableBuilder(
-    column: $table.notes,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get isSynced => $composableBuilder(
-    column: $table.isSynced,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<bool> get isDeletedLocal => $composableBuilder(
-    column: $table.isDeletedLocal,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$BeanScansTableAnnotationComposer
-    extends Composer<_$AppDatabase, $BeanScansTable> {
-  $$BeanScansTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<String> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get userId =>
-      $composableBuilder(column: $table.userId, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get scannedAt =>
-      $composableBuilder(column: $table.scannedAt, builder: (column) => column);
-
-  GeneratedColumn<double> get agtronValue => $composableBuilder(
-    column: $table.agtronValue,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get roastLabel => $composableBuilder(
-    column: $table.roastLabel,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get flavorProfile => $composableBuilder(
-    column: $table.flavorProfile,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get recommendedMethod => $composableBuilder(
-    column: $table.recommendedMethod,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get notes =>
-      $composableBuilder(column: $table.notes, builder: (column) => column);
-
-  GeneratedColumn<bool> get isSynced =>
-      $composableBuilder(column: $table.isSynced, builder: (column) => column);
-
-  GeneratedColumn<bool> get isDeletedLocal => $composableBuilder(
-    column: $table.isDeletedLocal,
-    builder: (column) => column,
-  );
-}
-
-class $$BeanScansTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $BeanScansTable,
-          BeanScan,
-          $$BeanScansTableFilterComposer,
-          $$BeanScansTableOrderingComposer,
-          $$BeanScansTableAnnotationComposer,
-          $$BeanScansTableCreateCompanionBuilder,
-          $$BeanScansTableUpdateCompanionBuilder,
-          (BeanScan, BaseReferences<_$AppDatabase, $BeanScansTable, BeanScan>),
-          BeanScan,
-          PrefetchHooks Function()
-        > {
-  $$BeanScansTableTableManager(_$AppDatabase db, $BeanScansTable table)
-    : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$BeanScansTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$BeanScansTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$BeanScansTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<String> id = const Value.absent(),
-                Value<String?> userId = const Value.absent(),
-                Value<DateTime> scannedAt = const Value.absent(),
-                Value<double> agtronValue = const Value.absent(),
-                Value<String> roastLabel = const Value.absent(),
-                Value<String> flavorProfile = const Value.absent(),
-                Value<String> recommendedMethod = const Value.absent(),
-                Value<String> notes = const Value.absent(),
-                Value<bool> isSynced = const Value.absent(),
-                Value<bool> isDeletedLocal = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => BeanScansCompanion(
-                id: id,
-                userId: userId,
-                scannedAt: scannedAt,
-                agtronValue: agtronValue,
-                roastLabel: roastLabel,
-                flavorProfile: flavorProfile,
-                recommendedMethod: recommendedMethod,
-                notes: notes,
-                isSynced: isSynced,
-                isDeletedLocal: isDeletedLocal,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                Value<String> id = const Value.absent(),
-                Value<String?> userId = const Value.absent(),
-                required DateTime scannedAt,
-                required double agtronValue,
-                required String roastLabel,
-                required String flavorProfile,
-                required String recommendedMethod,
-                Value<String> notes = const Value.absent(),
-                Value<bool> isSynced = const Value.absent(),
-                Value<bool> isDeletedLocal = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => BeanScansCompanion.insert(
-                id: id,
-                userId: userId,
-                scannedAt: scannedAt,
-                agtronValue: agtronValue,
-                roastLabel: roastLabel,
-                flavorProfile: flavorProfile,
-                recommendedMethod: recommendedMethod,
-                notes: notes,
-                isSynced: isSynced,
-                isDeletedLocal: isDeletedLocal,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ),
-      );
-}
-
-typedef $$BeanScansTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $BeanScansTable,
-      BeanScan,
-      $$BeanScansTableFilterComposer,
-      $$BeanScansTableOrderingComposer,
-      $$BeanScansTableAnnotationComposer,
-      $$BeanScansTableCreateCompanionBuilder,
-      $$BeanScansTableUpdateCompanionBuilder,
-      (BeanScan, BaseReferences<_$AppDatabase, $BeanScansTable, BeanScan>),
-      BeanScan,
-      PrefetchHooks Function()
-    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -19705,14 +17041,6 @@ class $AppDatabaseManager {
         _db,
         _db.specialtyArticleTranslations,
       );
-  $$LatteArtPatternsTableTableManager get latteArtPatterns =>
-      $$LatteArtPatternsTableTableManager(_db, _db.latteArtPatterns);
-  $$LatteArtPatternTranslationsTableTableManager
-  get latteArtPatternTranslations =>
-      $$LatteArtPatternTranslationsTableTableManager(
-        _db,
-        _db.latteArtPatternTranslations,
-      );
   $$CoffeeLotsTableTableManager get coffeeLots =>
       $$CoffeeLotsTableTableManager(_db, _db.coffeeLots);
   $$FermentationLogsTableTableManager get fermentationLogs =>
@@ -19723,6 +17051,4 @@ class $AppDatabaseManager {
       $$RecommendedRecipesTableTableManager(_db, _db.recommendedRecipes);
   $$CustomRecipesTableTableManager get customRecipes =>
       $$CustomRecipesTableTableManager(_db, _db.customRecipes);
-  $$BeanScansTableTableManager get beanScans =>
-      $$BeanScansTableTableManager(_db, _db.beanScans);
 }

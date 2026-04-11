@@ -396,33 +396,10 @@ class CustomRecipeDto {
   String get pourScheduleJson => jsonEncode(pours);
 }
 
-class LatteArtPatternDto {
-  final int id;
-  final int difficulty;
-  final List<dynamic> steps;
-  final bool isFavorite;
-  final int userBestScore;
-  final String name;
-  final String description;
-  final String tipText;
-
-  LatteArtPatternDto({
-    required this.id,
-    required this.difficulty,
-    required this.steps,
-    required this.isFavorite,
-    required this.userBestScore,
-    required this.name,
-    required this.description,
-    required this.tipText,
-  });
-}
-
 // Aliases for compatibility with existing UI code
 typedef EncyclopediaEntry = LocalizedBeanDto;
 typedef Brand = LocalizedBrandDto;
 typedef Farmer = LocalizedFarmerDto;
 typedef SpecialtyArticle = SpecialtyArticleDto;
 typedef RecommendedRecipe = RecommendedRecipeDto;
-typedef LatteArtPatternRef = LatteArtPatternDto;
 typedef FarmerDto = LocalizedFarmerDto;

@@ -116,7 +116,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
             Positioned(
               left: 0,
               right: 0,
-              bottom: 40, // Height from bottom as requested
+              bottom: 45, // Raised from 40 to 45
               child: AnimatedSlide(
                 duration: const Duration(milliseconds: 400),
                 curve: Curves.fastOutSlowIn,
@@ -133,40 +133,49 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                         // Main Capsule Bar
                         Flexible(
                           child: ConstrainedBox(
-                            constraints: const BoxConstraints(maxWidth: 400),
+                            constraints: const BoxConstraints(maxWidth: 380),
                             child: GlassContainer(
                               borderRadius: 40,
                               padding: const EdgeInsets.symmetric(
                                 vertical: 8,
                                 horizontal: 10,
                               ),
-                              blur: 60, // Higher blur for "matte" effect
-                              opacity: 0.05, // Lower opacity for transparency
-                              borderColor: const Color(
-                                0xFFC8A96E,
-                              ).withValues(alpha: 0.15),
+                              blur: 60,
+                              opacity: 0.1, // Reduced for better transparency
+                              backgroundGradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  Colors.white.withValues(alpha: 0.15),
+                                  const Color(
+                                    0xFFFFF9E3,
+                                  ).withValues(alpha: 0.08), // Softer Milk
+                                ],
+                              ),
+                              borderColor: Colors.white.withValues(alpha: 0.15),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   _NavBarItem(
-                                    icon: Icons.auto_graph_outlined,
+                                    icon: Icons.track_changes_rounded,
                                     label: 'Спешелті',
                                     isSelected:
                                         widget.navigationShell.currentIndex ==
                                         0,
                                     onTap: () => _onTap(0),
                                   ),
+                                  const SizedBox(width: 32),
                                   _NavBarItem(
                                     icon: Icons.explore_outlined,
-                                    label: 'Енциклопедія',
+                                    label: 'Відкриття',
                                     isSelected:
                                         widget.navigationShell.currentIndex ==
                                         1,
                                     onTap: () => _onTap(1),
                                   ),
+                                  const SizedBox(width: 32),
                                   _NavBarItem(
-                                    icon: Icons.coffee_outlined,
+                                    icon: Icons.local_cafe_outlined,
                                     label: 'Рецепти',
                                     isSelected:
                                         widget.navigationShell.currentIndex ==
@@ -181,25 +190,33 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
 
                         const SizedBox(width: 12),
 
-                        // Separate Settings Island - Now Matte Glass too
+                        // Separate Settings Island - Now Milky Glass
                         PressableScale(
                           onTap: () {
                             ref.read(settingsProvider.notifier).triggerHaptic();
                             context.push('/settings');
                           },
-                          child: GlassContainer(
-                            width: 64,
-                            height: 64,
-                            borderRadius: 32, // Circular
-                            blur: 60,
-                            opacity: 0.05,
-                            borderColor: const Color(
-                              0xFFC8A96E,
-                            ).withValues(alpha: 0.15),
+                            child: GlassContainer(
+                              width: 64,
+                              height: 64,
+                              borderRadius: 32,
+                              blur: 60,
+                              opacity: 0.1,
+                              backgroundGradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  Colors.white.withValues(alpha: 0.15),
+                                  const Color(
+                                    0xFFFFF9E3,
+                                  ).withValues(alpha: 0.08),
+                                ],
+                              ),
+                              borderColor: Colors.white.withValues(alpha: 0.15),
                             child: const Center(
                               child: Icon(
                                 Icons.settings_rounded,
-                                color: Color(0xFFC8A96E),
+                                color: Colors.white,
                                 size: 28,
                               ),
                             ),
@@ -284,27 +301,30 @@ class _NavBarItemState extends ConsumerState<_NavBarItem>
                 scale: widget.isSelected ? scale : 1.0,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: widget.isSelected
-                        ? const Color(0xFFC8A96E)
-                        : Colors.transparent,
+                    color:
+                        widget.isSelected
+                            ? Colors.white.withValues(alpha: 0.1) // Subtle mask
+                            : Colors.transparent,
                     shape: BoxShape.circle,
-                    boxShadow: widget.isSelected
-                        ? [
-                            BoxShadow(
-                              color: const Color(
-                                0xFFC8A96E,
-                              ).withValues(alpha: 0.3 * _oscillator.value),
-                              blurRadius: 15,
-                              spreadRadius: 2,
-                            ),
-                          ]
-                        : [],
+                    boxShadow:
+                        widget.isSelected
+                            ? [
+                              BoxShadow(
+                                color: Colors.white.withValues(alpha: 0.15),
+                                blurRadius: 25, // Softer, more diffuse
+                                spreadRadius: 2,
+                              ),
+                            ]
+                            : [],
                   ),
                   child: Icon(
                     widget.icon,
-                    color: widget.isSelected ? Colors.black : Colors.white54,
+                    color:
+                        widget.isSelected
+                            ? const Color(0xFFC8A96E) // Gold for active
+                            : Colors.white54,
                     size: 24,
                   ),
                 ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/providers/settings_provider.dart';
+import '../../core/supabase/supabase_provider.dart';
 import '../../shared/widgets/glass_container.dart';
 
 class DiscoverTabItem {
@@ -109,21 +110,8 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: GestureDetector(
-                      onTap: () => _showProfileMenu(context),
-                      child: Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white24, width: 1.5),
-                          image: const DecorationImage(
-                            image: AssetImage(
-                              'assets/images/placeholder_avatar.jpg',
-                            ),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
+                      onTap: () => _showProfileMenu(context, ref),
+                      child: _UserAvatar(radius: 22),
                     ),
                   ),
                 ],
@@ -419,7 +407,12 @@ class _RoasteryCard extends StatelessWidget {
   }
 }
 
-void _showProfileMenu(BuildContext context) {
+void _showProfileMenu(BuildContext context, WidgetRef ref) {
+  final user = ref.read(supabaseProvider).auth.currentUser;
+  final meta = user?.userMetadata ?? {};
+  final displayName = meta['full_name'] as String? ?? 'Barista';
+  final email = user?.email ?? '';
+
   showModalBottomSheet(
     context: context,
     backgroundColor: Colors.transparent,
@@ -445,18 +438,13 @@ void _showProfileMenu(BuildContext context) {
               const SizedBox(height: 24),
               Row(
                 children: [
-                  const CircleAvatar(
-                    radius: 30,
-                    backgroundImage: AssetImage(
-                      'assets/images/placeholder_avatar.jpg',
-                    ),
-                  ),
+                  _UserAvatar(radius: 30),
                   const SizedBox(width: 16),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Jack Sparrow',
+                        displayName,
                         style: GoogleFonts.poppins(
                           color: Colors.white,
                           fontSize: 18,
@@ -464,7 +452,7 @@ void _showProfileMenu(BuildContext context) {
                         ),
                       ),
                       Text(
-                        's.dropper.s23@gmail.com',
+                        email,
                         style: GoogleFonts.poppins(
                           color: Colors.white38,
                           fontSize: 12,
@@ -511,4 +499,29 @@ Widget _buildMenuItem(
         : const Icon(Icons.chevron_right, color: Colors.white10),
     onTap: () {},
   );
+}
+
+class _UserAvatar extends ConsumerWidget {
+  final double radius;
+  const _UserAvatar({required this.radius});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(supabaseProvider).auth.currentUser;
+    final meta = user?.userMetadata ?? {};
+    final avatarUrl =
+        meta['avatar_url'] as String? ??
+        'https://api.dicebear.com/7.x/adventurer/png?seed=${user?.id ?? 'default'}';
+
+    return CircleAvatar(
+      radius: radius,
+      backgroundColor: Colors.white12,
+      backgroundImage: NetworkImage(avatarUrl),
+      onBackgroundImageError: (_, _) {},
+      child:
+          (avatarUrl.isEmpty)
+              ? const Icon(Icons.person, color: Colors.white54)
+              : null,
+    );
+  }
 }

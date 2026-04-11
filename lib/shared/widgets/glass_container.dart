@@ -14,6 +14,7 @@ class GlassContainer extends StatelessWidget {
   final double imageOpacity;
   final double? width;
   final double? height;
+  final Gradient? backgroundGradient;
 
   const GlassContainer({
     super.key,
@@ -29,6 +30,7 @@ class GlassContainer extends StatelessWidget {
     this.imageOpacity = 0.4,
     this.width,
     this.height,
+    this.backgroundGradient,
   });
 
   @override
@@ -74,16 +76,18 @@ class GlassContainer extends StatelessWidget {
                       ),
                     )
                   : null,
-              gradient: imageUrl == null
-                  ? LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Colors.white.withValues(alpha: 0.12),
-                        Colors.white.withValues(alpha: 0.04),
-                      ],
-                    )
-                  : null,
+              gradient:
+                  imageUrl == null
+                      ? backgroundGradient ??
+                          LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Colors.white.withValues(alpha: 0.12),
+                              Colors.white.withValues(alpha: 0.04),
+                            ],
+                          )
+                      : null,
             ),
             child: child,
           ),

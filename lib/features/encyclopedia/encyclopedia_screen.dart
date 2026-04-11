@@ -28,163 +28,212 @@ class _EncyclopediaScreenState extends ConsumerState<EncyclopediaScreen> {
   @override
   Widget build(BuildContext context) {
     final originsAsync = ref.watch(supabaseEncyclopediaProvider);
+    final sortState = ref.watch(encyclopediaSortProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Text(
-              ref.t('coffee_origins'),
-              style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(width: 12),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.green.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Row(
+            children: [
+              Text(
+                ref.t('encyclopedia'),
+                style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 6,
-                    height: 6,
-                    decoration: const BoxDecoration(
-                      color: Colors.green,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  const Text(
-                    'Cloud Connected',
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+              const SizedBox(width: 12),
+              const _CloudStatusBadge(),
+            ],
+          ),
+          actions: [
+            _SortMenu(ref: ref),
+            const SizedBox(width: 8),
           ],
-        ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(56),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-            child: TextField(
-              onChanged: (v) => setState(() {
-                _search = v.toLowerCase();
-                _expandedIndex = null;
-              }),
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
-              decoration: InputDecoration(
-                hintText: ref.t('search_origins'),
-                hintStyle: TextStyle(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withValues(alpha: 0.38),
-                ),
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withValues(alpha: 0.38),
-                  size: 20,
-                ),
-                contentPadding: const EdgeInsets.symmetric(vertical: 10),
-                filled: true,
-                fillColor: Theme.of(
-                  context,
-                ).colorScheme.onSurface.withValues(alpha: 0.08),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/compare'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        icon: Icon(
-          Icons.compare_arrows,
-          color: Theme.of(context).colorScheme.onPrimary,
-        ),
-        label: Text(
-          ref.t('compare'),
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimary,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      body: SafeArea(
-        child: originsAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('Error: $e')),
-          data: (entries) {
-            final filtered = _search.isEmpty
-                ? entries
-                : entries
-                      .where(
-                        (e) =>
-                            e.country.toLowerCase().contains(_search) ||
-                            e.region.toLowerCase().contains(_search) ||
-                            e.flavorNotes.any(
-                              (f) => f.toLowerCase().contains(_search),
-                            ),
-                      )
-                      .toList();
-
-            if (filtered.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.travel_explore,
-                      size: 56,
-                      color: Colors.black26,
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      '${ref.t('no_results')} "$_search"',
-                      style: TextStyle(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSurface.withValues(alpha: 0.38),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(100),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                  child: TextField(
+                    onChanged: (v) => setState(() {
+                      _search = v.toLowerCase();
+                      _expandedIndex = null;
+                    }),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                    decoration: InputDecoration(
+                      hintText: ref.t('search_origins'),
+                      prefixIcon: const Icon(Icons.search, size: 20),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                      filled: true,
+                      fillColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
                       ),
                     ),
+                  ),
+                ),
+                TabBar(
+                  indicatorColor: Theme.of(context).colorScheme.primary,
+                  labelColor: Theme.of(context).colorScheme.primary,
+                  unselectedLabelColor: Colors.white54,
+                  labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                  tabs: [
+                    Tab(text: ref.t('catalog')),
+                    Tab(text: ref.t('favorites')),
+                    Tab(text: ref.t('compare_tab')),
                   ],
                 ),
-              );
-            }
+              ],
+            ),
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            // ── Catalog Tab ──────────────────────────────────────────────────
+            _buildList(originsAsync, isFavoriteOnly: false),
+            // ── Favorites Tab ────────────────────────────────────────────────
+            _buildList(originsAsync, isFavoriteOnly: true),
+            // ── Comparison Tab ───────────────────────────────────────────────
+            const _ComparisonTab(),
+          ],
+        ),
+      ),
+    );
+  }
 
-            return ListView.separated(
-              padding: const EdgeInsets.all(16),
-              itemCount: filtered.length,
-              separatorBuilder: (_, _) => const SizedBox(height: 12),
-              itemBuilder: (context, i) {
-                final entry = filtered[i];
-                final isExpanded = _expandedIndex == i;
-                final flavors = entry.flavorNotes;
+  Widget _buildList(AsyncValue<List<EncyclopediaEntry>> originsAsync, {required bool isFavoriteOnly}) {
+    return originsAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text('Error: $e')),
+      data: (entries) {
+        var filtered = entries;
+        if (isFavoriteOnly) {
+          filtered = filtered.where((e) => e.isFavorite).toList();
+        }
+        
+        if (_search.isNotEmpty) {
+          filtered = filtered.where((e) =>
+            e.country.toLowerCase().contains(_search) ||
+            e.region.toLowerCase().contains(_search) ||
+            e.flavorNotes.any((f) => f.toLowerCase().contains(_search))
+          ).toList();
+        }
 
-                return _OriginCard(
-                  entry: entry,
-                  flavors: flavors,
-                  isExpanded: isExpanded,
-                  onTap: () =>
-                      setState(() => _expandedIndex = isExpanded ? null : i),
-                );
-              },
+        if (filtered.isEmpty) {
+          return _EmptyState(
+            message: isFavoriteOnly && _search.isEmpty 
+                ? ref.t('no_favorites')
+                : '${ref.t('no_results')} "$_search"',
+          );
+        }
+
+        return ListView.separated(
+          padding: const EdgeInsets.all(16),
+          itemCount: filtered.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 12),
+          itemBuilder: (context, i) {
+            final entry = filtered[i];
+            final isExpanded = _expandedIndex == i;
+            return _OriginCard(
+              entry: entry,
+              isExpanded: isExpanded,
+              onTap: () => setState(() => _expandedIndex = isExpanded ? null : i),
             );
           },
-        ),
+        );
+      },
+    );
+  }
+}
+
+class _CloudStatusBadge extends StatelessWidget {
+  const _CloudStatusBadge();
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.green.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(width: 6, height: 6, decoration: const BoxDecoration(color: Colors.green, shape: BoxShape.circle)),
+          const SizedBox(width: 4),
+          const Text('Live', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.green)),
+        ],
+      ),
+    );
+  }
+}
+
+class _EmptyState extends StatelessWidget {
+  final String message;
+  const _EmptyState({required this.message});
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.travel_explore, size: 56, color: Colors.black26),
+          const SizedBox(height: 12),
+          Text(message, style: const TextStyle(color: Colors.white38)),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Sorting Menu ─────────────────────────────────────────────────────────────
+class _SortMenu extends StatelessWidget {
+  final WidgetRef ref;
+  const _SortMenu({required this.ref});
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(encyclopediaSortProvider);
+    
+    return PopupMenuButton<EncyclopediaSortState>(
+      icon: const Icon(Icons.sort_rounded),
+      onSelected: (newState) => ref.read(encyclopediaSortProvider.notifier).state = newState,
+      itemBuilder: (context) => [
+        _buildItem(ref, EncyclopediaSortField.country, true, 'country_asc'),
+        _buildItem(ref, EncyclopediaSortField.country, false, 'country_desc'),
+        _buildItem(ref, EncyclopediaSortField.region, true, 'region_asc'),
+        _buildItem(ref, EncyclopediaSortField.region, false, 'region_desc'),
+        _buildItem(ref, EncyclopediaSortField.countryRegion, true, 'country_region_asc'),
+        _buildItem(ref, EncyclopediaSortField.price, false, 'price_desc'),
+        _buildItem(ref, EncyclopediaSortField.price, true, 'price_asc'),
+        _buildItem(ref, EncyclopediaSortField.process, true, 'process_asc'),
+      ],
+    );
+  }
+
+  PopupMenuItem<EncyclopediaSortState> _buildItem(
+    WidgetRef ref, 
+    EncyclopediaSortField field, 
+    bool asc, 
+    String labelKey
+  ) {
+    final current = ref.read(encyclopediaSortProvider);
+    final isSelected = current.field == field && current.ascending == asc;
+    
+    return PopupMenuItem(
+      value: EncyclopediaSortState(field: field, ascending: asc),
+      child: Row(
+        children: [
+          Icon(isSelected ? Icons.radio_button_checked : Icons.radio_button_off, size: 18, 
+               color: isSelected ? const Color(0xFFC8A96E) : Colors.white38),
+          const SizedBox(width: 12),
+          Text(ref.t(labelKey), style: TextStyle(
+            color: isSelected ? const Color(0xFFC8A96E) : Colors.white,
+            fontSize: 13,
+          )),
+        ],
       ),
     );
   }
@@ -193,284 +242,280 @@ class _EncyclopediaScreenState extends ConsumerState<EncyclopediaScreen> {
 // ─── Origin Card ─────────────────────────────────────────────────────────────
 class _OriginCard extends ConsumerWidget {
   final EncyclopediaEntry entry;
-  final List<String> flavors;
   final bool isExpanded;
   final VoidCallback onTap;
 
   const _OriginCard({
     required this.entry,
-    required this.flavors,
     required this.isExpanded,
     required this.onTap,
   });
 
-  Color get _scoreColor {
-    if (entry.cupsScore >= 90) return Colors.purpleAccent;
-    if (entry.cupsScore >= 87) return Colors.amber;
-    if (entry.cupsScore >= 85) return Colors.greenAccent;
-    return Colors.white70;
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final scoreColor = _getScoreColor(entry.cupsScore);
+    
     return GestureDetector(
       onTap: onTap,
       child: GlassContainer(
         padding: const EdgeInsets.all(0),
         opacity: isExpanded ? 0.12 : 0.08,
-        borderColor: isExpanded
-            ? const Color(0xFFC8A96E).withValues(alpha: 0.5)
-            : null,
+        borderColor: isExpanded ? const Color(0xFFC8A96E).withValues(alpha: 0.5) : null,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Header ────────────────────────────────────────────────────────
             Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Colors.black12,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: entry.url != null
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: CachedNetworkImage(
-                              imageUrl: entry.url!,
-                              placeholder: (context, url) => Container(
-                                color: Colors.white10,
-                                child: const Center(
-                                  child: SizedBox(
-                                    width: 16,
-                                    height: 16,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 1.5,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        Color(0xFFC8A96E),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              errorWidget: (context, url, error) => Text(
-                                entry.countryEmoji ?? '',
-                                style: const TextStyle(fontSize: 28),
-                              ),
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                        : Text(
-                            entry.countryEmoji ?? '',
-                            style: const TextStyle(fontSize: 28),
-                          ),
-                  ),
+                  _OriginAvatar(url: entry.url, emoji: entry.countryEmoji),
                   const SizedBox(width: 14),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          entry.country,
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17,
-                            color: Theme.of(context).colorScheme.onSurface,
-                          ),
-                        ),
-                        Text(
-                          entry.region,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.white54,
-                          ),
-                        ),
+                        Text(entry.country, style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16)),
+                        Text(entry.region, style: const TextStyle(fontSize: 12, color: Colors.white54)),
                       ],
                     ),
                   ),
-                  // SCA Score badge
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _scoreColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: _scoreColor.withValues(alpha: 0.2),
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        Text(
-                          entry.cupsScore.toStringAsFixed(1),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: _scoreColor,
-                            fontSize: 15,
-                          ),
-                        ),
-                        Text(
-                          'SCA',
-                          style: TextStyle(
-                            fontSize: 8,
-                            color: _scoreColor.withValues(alpha: 0.7),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  _ScaBadge(score: entry.cupsScore, color: scoreColor),
                   const SizedBox(width: 8),
-                  Icon(
-                    isExpanded
-                        ? Icons.keyboard_arrow_up_rounded
-                        : Icons.keyboard_arrow_down_rounded,
-                    color: Colors.white38,
+                  IconButton(
+                    icon: Icon(
+                      entry.isFavorite ? Icons.star_rounded : Icons.star_outline_rounded,
+                      color: entry.isFavorite ? const Color(0xFFC8A96E) : Colors.white24,
+                    ),
+                    onPressed: () async {
+                      await ref.read(databaseProvider).toggleFavorite(entry.id, !entry.isFavorite);
+                      ref.invalidate(supabaseEncyclopediaProvider);
+                    },
                   ),
                 ],
               ),
             ),
-            // ── Flavor chips (always visible) ─────────────────────────────────
-            if (flavors.isNotEmpty)
+            if (entry.flavorNotes.isNotEmpty)
               Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                 child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: flavors.map((f) => _FlavorChip(f)).toList(),
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: entry.flavorNotes.map((f) => _FlavorChip(f)).toList(),
                 ),
               ),
-            // ── Expanded content ──────────────────────────────────────────────
             if (isExpanded) ...[
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Divider(color: Colors.white12, height: 1),
-              ),
+              const Divider(color: Colors.white10, height: 1),
               Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      entry.description,
-                      style: GoogleFonts.inter(
-                        color: Colors.white.withValues(alpha: 0.85),
-                        height: 1.6,
-                        fontSize: 13.5,
+                    Text(entry.description, style: const TextStyle(fontSize: 13, color: Colors.white70, height: 1.5)),
+                    const SizedBox(height: 16),
+                    _DetailGrid(entry: entry),
+                    const SizedBox(height: 16),
+                    Center(
+                      child: TextButton(
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(
+                          builder: (_) => OriginDetailsScreen(entry: entry),
+                        )),
+                        child: Text(ref.t('read_more'), style: const TextStyle(color: Color(0xFFC8A96E))),
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    _SensoryVisualization(entry: entry),
-                    const SizedBox(height: 20),
-                    // Detail grid
-                    _DetailGrid(entry: entry),
-
-                    // Farm Details
-                    if (entry.farmDescription.isNotEmpty ||
-                        (entry.farmPhotosUrlCover?.isNotEmpty ?? false)) ...[
-                      const SizedBox(height: 28),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.terrain_rounded,
-                            size: 16,
-                            color: Color(0xFFC8A96E),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            ref.t('about_farm_region'),
-                            style: GoogleFonts.poppins(
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1.2,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      const SizedBox(height: 16),
-                      if (entry.farmPhotosUrlCover?.isNotEmpty ?? false)
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 16),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.3),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: Image.network(
-                              entry.farmPhotosUrlCover!,
-                              height: 160,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, _, _) => Container(
-                                height: 160,
-                                color: Colors.white.withValues(alpha: 0.05),
-                                child: const Icon(
-                                  Icons.broken_image_outlined,
-                                  color: Colors.white24,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      if (entry.farmDescription.isNotEmpty)
-                        Text(
-                          entry.farmDescription,
-                          style: GoogleFonts.inter(
-                            color: Colors.white70,
-                            height: 1.6,
-                            fontSize: 13,
-                          ),
-                        ),
-                    ],
-
-                    // Processing Methods
-                    if (entry.processingMethodsJson != '[]') ...[
-                      const SizedBox(height: 32),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.science_rounded,
-                            size: 16,
-                            color: Color(0xFFC8A96E),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            ref.t('recipes_processing'),
-                            style: GoogleFonts.poppins(
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1.2,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      _ProcessingMethodsList(
-                        jsonInfo: entry.processingMethodsJson,
-                      ),
-                    ],
                   ],
                 ),
               ),
-            ],
+            ]
           ],
         ),
+      ),
+    );
+  }
+
+  Color _getScoreColor(double score) {
+    if (score >= 90) return Colors.purpleAccent;
+    if (score >= 87) return Colors.amber;
+    if (score >= 85) return Colors.greenAccent;
+    return Colors.white70;
+  }
+}
+
+class _OriginAvatar extends StatelessWidget {
+  final String? url;
+  final String? emoji;
+  const _OriginAvatar({this.url, this.emoji});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 44, height: 44,
+      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(10)),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: url != null 
+          ? CachedNetworkImage(imageUrl: url!, fit: BoxFit.cover, errorWidget: (_,__,___) => Center(child: Text(emoji ?? '☕', style: const TextStyle(fontSize: 22))))
+          : Center(child: Text(emoji ?? '☕', style: const TextStyle(fontSize: 22))),
+      ),
+    );
+  }
+}
+
+class _ScaBadge extends StatelessWidget {
+  final double score;
+  final Color color;
+  const _ScaBadge({required this.score, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(score.toStringAsFixed(1), style: TextStyle(fontWeight: FontWeight.bold, color: color, fontSize: 14)),
+        const Text('SCA', style: TextStyle(fontSize: 8, color: Colors.white38, fontWeight: FontWeight.bold)),
+      ],
+    );
+  }
+}
+
+// ─── Comparison Tab ───────────────────────────────────────────────────────────
+class _ComparisonTab extends ConsumerStatefulWidget {
+  const _ComparisonTab();
+  @override
+  ConsumerState<_ComparisonTab> createState() => _ComparisonTabState();
+}
+
+class _ComparisonTabState extends ConsumerState<_ComparisonTab> {
+  EncyclopediaEntry? _coffeeA;
+  EncyclopediaEntry? _coffeeB;
+
+  @override
+  Widget build(BuildContext context) {
+    final originsAsync = ref.watch(supabaseEncyclopediaProvider);
+
+    return originsAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text('Error: $e')),
+      data: (entries) {
+        if (entries.isEmpty) return const _EmptyState(message: 'No coffees available');
+        
+        return ListView(
+          padding: const EdgeInsets.all(20),
+          children: [
+            Row(
+              children: [
+                Expanded(child: _Selector(
+                  label: 'Coffee A',
+                  selected: _coffeeA,
+                  entries: entries,
+                  onChanged: (v) => setState(() => _coffeeA = v),
+                  exclude: _coffeeB,
+                )),
+                const SizedBox(width: 16),
+                Expanded(child: _Selector(
+                  label: 'Coffee B',
+                  selected: _coffeeB,
+                  entries: entries,
+                  onChanged: (v) => setState(() => _coffeeB = v),
+                  exclude: _coffeeA,
+                )),
+              ],
+            ),
+            const SizedBox(height: 32),
+            if (_coffeeA != null && _coffeeB != null) 
+              _ComparisonResult(a: _coffeeA!, b: _coffeeB!)
+            else
+              const Center(child: Text('Select two coffees to compare', style: TextStyle(color: Colors.white24))),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _Selector extends StatelessWidget {
+  final String label;
+  final EncyclopediaEntry? selected;
+  final List<EncyclopediaEntry> entries;
+  final ValueChanged<EncyclopediaEntry?> onChanged;
+  final EncyclopediaEntry? exclude;
+
+  const _Selector({required this.label, this.selected, required this.entries, required this.onChanged, this.exclude});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 10, color: Colors.white38, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.white12)),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<EncyclopediaEntry>(
+              isExpanded: true,
+              value: selected,
+              hint: const Text('Select...', style: TextStyle(fontSize: 12)),
+              dropdownColor: const Color(0xFF1A1A1A),
+              items: entries.where((e) => e != exclude).map((e) => DropdownMenuItem(
+                value: e,
+                child: Text('${e.countryEmoji} ${e.country}', style: const TextStyle(fontSize: 13)),
+              )).toList(),
+              onChanged: onChanged,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ComparisonResult extends StatelessWidget {
+  final EncyclopediaEntry a;
+  final EncyclopediaEntry b;
+  const _ComparisonResult({required this.a, required this.b});
+
+  @override
+  Widget build(BuildContext context) {
+    return GlassContainer(
+      padding: const EdgeInsets.all(0),
+      child: Column(
+        children: [
+          _CompRow('SCA Score', a.cupsScore.toString(), b.cupsScore.toString(), highlightHigher: true),
+          _CompRow('Country', a.country, b.country),
+          _CompRow('Region', a.region, b.region),
+          _CompRow('Processing', a.processMethod, b.processMethod),
+          _CompRow('Altitude', '${a.altitudeMin}m', '${b.altitudeMin}m'),
+          _CompRow('Price', a.price ?? 'N/A', b.price ?? 'N/A'),
+        ],
+      ),
+    );
+  }
+}
+
+class _CompRow extends StatelessWidget {
+  final String label, valA, valB;
+  final bool highlightHigher;
+  const _CompRow(this.label, this.valA, this.valB, {this.highlightHigher = false});
+
+  @override
+  Widget build(BuildContext context) {
+    final numA = double.tryParse(valA) ?? 0;
+    final numB = double.tryParse(valB) ?? 0;
+    
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+      decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white05))),
+      child: Row(
+        children: [
+          Expanded(child: Text(valA, textAlign: TextAlign.center, style: TextStyle(
+            fontSize: 14, fontWeight: highlightHigher && numA > numB ? FontWeight.bold : FontWeight.normal,
+            color: highlightHigher && numA > numB ? const Color(0xFFC8A96E) : Colors.white70
+          ))),
+          SizedBox(width: 80, child: Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 10, color: Colors.white24, fontWeight: FontWeight.bold))),
+          Expanded(child: Text(valB, textAlign: TextAlign.center, style: TextStyle(
+            fontSize: 14, fontWeight: highlightHigher && numB > numA ? FontWeight.bold : FontWeight.normal,
+            color: highlightHigher && numB > numA ? const Color(0xFFC8A96E) : Colors.white70
+          ))),
+        ],
       ),
     );
   }

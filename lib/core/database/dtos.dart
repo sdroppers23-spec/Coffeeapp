@@ -396,6 +396,28 @@ class CustomRecipeDto {
   String get pourScheduleJson => jsonEncode(pours);
 }
 
+extension LocalizedBeanDtoExtension on LocalizedBeanDto {
+  /// Gets the maximum price between retail and wholesale for sorting purposes.
+  /// Standardizes to numeric value for comparison.
+  double get maxPrice {
+    final r = _parsePrice(retailPrice);
+    final w = _parsePrice(wholesalePrice);
+    return r > w ? r : w;
+  }
+
+  double _parsePrice(String? priceStr) {
+    if (priceStr == null || priceStr.isEmpty) return 0.0;
+    // Extract first number-like sequence (e.g. "$15" -> 15.0, "1050 UAH" -> 1050.0)
+    final regex = RegExp(r'(\d+([.,]\d+)?)');
+    final match = regex.firstMatch(priceStr);
+    if (match != null) {
+      final val = match.group(1)?.replaceAll(',', '.') ?? '0';
+      return double.tryParse(val) ?? 0.0;
+    }
+    return 0.0;
+  }
+}
+
 // Aliases for compatibility with existing UI code
 typedef EncyclopediaEntry = LocalizedBeanDto;
 typedef Brand = LocalizedBrandDto;

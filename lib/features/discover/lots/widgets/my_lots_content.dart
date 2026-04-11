@@ -137,14 +137,14 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                                   height: 48,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(14),
-                                    color: Colors.redAccent.withValues(alpha: 0.2),
-                                    border: Border.all(color: Colors.redAccent.withValues(alpha: 0.3)),
+                                    color: Colors.redAccent, // Made opaque
+                                    border: Border.all(color: Colors.redAccent.withValues(alpha: 0.5)),
                                   ),
                                   alignment: Alignment.center,
                                   child: Text(
                                     'ВИДАЛИТИ',
                                     style: GoogleFonts.outfit(
-                                      color: Colors.redAccent,
+                                      color: Colors.white, // White text on red background
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12,
                                       letterSpacing: 1.2,
@@ -232,7 +232,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                   GestureDetector(
                     onTap: () async {
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        ScaffoldMessenger.of(context).removeCurrentSnackBar(); // Immediate dismissal
                       }
                       final db = ref.read(databaseProvider);
                       // Re-insert the lot into database to "undo" deletion
@@ -269,22 +269,27 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                       ));
                       ref.invalidate(userLotsProvider);
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        ScaffoldMessenger.of(context).removeCurrentSnackBar(); // Consistent immediate dismissal
                       }
                     },
                     child: Container(
                       height: 38,
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFC8A96E).withValues(alpha: 0.15),
+                        color: const Color(0xFFC8A96E), // Made opaque
                         borderRadius: BorderRadius.circular(50),
-                        border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.3)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
+                            blurRadius: 8,
+                          )
+                        ],
                       ),
                       alignment: Alignment.center,
                       child: Text(
                         'СКАСУВАТИ',
                         style: GoogleFonts.outfit(
-                          color: const Color(0xFFC8A96E),
+                          color: Colors.black, // Dark text on gold button
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.0,

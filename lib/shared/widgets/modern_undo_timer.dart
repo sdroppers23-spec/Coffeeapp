@@ -186,34 +186,27 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
                                 child: Container(
                                   height: 52,
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withValues(alpha: 0.03),
+                                    color: Colors.white.withValues(alpha: 0.1), // More opaque
                                     borderRadius: BorderRadius.circular(26),
                                     border: Border.all(
-                                      color: barColor.withValues(alpha: 0.15),
-                                      width: 0.5,
+                                      color: barColor.withValues(alpha: 0.5),
+                                      width: 1.0,
                                     ),
                                   ),
                                   child: Stack(
                                     children: [
-                                      // Shrinking bar with Dynamic Multi-Color Gradient
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: FractionallySizedBox(
-                                          widthFactor: progress,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              gradient: LinearGradient(
-                                                begin: Alignment.centerRight,
-                                                end: Alignment.centerLeft,
-                                                colors: [
-                                                  barColor.withValues(
-                                                    alpha: 0.8,
-                                                  ),
-                                                  barColor.withValues(
-                                                    alpha: 0.4,
-                                                  ),
-                                                ],
-                                              ),
+                                      // Circular Waiter indicator (Filled to Zero)
+                                      Positioned(
+                                        left: 12,
+                                        child: Center(
+                                          child: SizedBox(
+                                            width: 28,
+                                            height: 28,
+                                            child: CircularProgressIndicator(
+                                              value: progress,
+                                              strokeWidth: 3,
+                                              valueColor: AlwaysStoppedAnimation<Color>(barColor),
+                                              backgroundColor: Colors.white10,
                                             ),
                                           ),
                                         ),
@@ -323,13 +316,13 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
                                 child: Container(
                                   height: 52,
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withValues(alpha: 0.03),
+                                    color: Colors.white.withValues(alpha: 0.1), // More opaque
                                     borderRadius: BorderRadius.circular(26),
                                     border: Border.all(
                                       color: Colors.white.withValues(
-                                        alpha: 0.1,
+                                        alpha: 0.3,
                                       ),
-                                      width: 0.5,
+                                      width: 1.0,
                                     ),
                                   ),
                                   alignment: Alignment.center,

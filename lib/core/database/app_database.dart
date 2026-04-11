@@ -304,6 +304,23 @@ class AppDatabase extends _$AppDatabase {
           ))
           .getSingleOrNull();
 
+  Future<void> toggleFavorite(int beanId, bool isFavorite) async {
+    await into(localizedBeans).insertOnConflictUpdate(
+      LocalizedBeansCompanion(
+        id: Value(beanId),
+        isFavorite: Value(isFavorite),
+      ),
+    );
+  }
+
+  Future<Set<int>> getFavoriteIds() async {
+    final query = selectOnly(localizedBeans)
+      ..addColumns([localizedBeans.id])
+      ..where(localizedBeans.isFavorite.equals(true));
+    final rows = await query.get();
+    return rows.map((r) => r.read(localizedBeans.id)!).toSet();
+  }
+
   LocalizedBeanDto _mapBeanRow(TypedResult row) {
     final bean = row.readTable(localizedBeans);
     final translation = row.readTable(localizedBeanTranslations);

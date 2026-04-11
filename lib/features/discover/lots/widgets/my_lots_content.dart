@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../core/database/dtos.dart';
-import '../../../core/l10n/app_localizations.dart';
-import '../discovery_filter_provider.dart';
-import 'lots_providers.dart';
+import 'package:go_router/go_router.dart';
+import 'package:drift/drift.dart' hide Column;
+import '../../../../core/database/database_provider.dart';
+import '../../../../core/database/app_database.dart';
+import '../../../../core/providers/settings_provider.dart';
+import '../../../../core/database/dtos.dart';
+import '../../discovery_filter_provider.dart';
+import '../lots_providers.dart';
 import 'lot_card_widgets.dart';
-import '../widgets/discovery_action_bar.dart';
+import '../../widgets/discovery_action_bar.dart';
 
 class MyLotsContent extends ConsumerStatefulWidget {
   const MyLotsContent({super.key});
@@ -15,7 +19,7 @@ class MyLotsContent extends ConsumerStatefulWidget {
   ConsumerState<MyLotsContent> createState() => _MyLotsContentState();
 }
 
-class _MyLotsContentState extends ConsumerState<MyLotsContent> with TickerProviderStateMixin {
+class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTickerProviderStateMixin {
   late TabController _subTabController;
   final Set<String> _selectedLotIds = {};
 
@@ -33,102 +37,82 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with TickerProvid
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isUk = LocaleService.currentLocale == 'uk';
-    final lotsAsync = ref.watch(userLotsProvider);
     final filter = ref.watch(myLotsFilterProvider);
+    final lotsAsync = ref.watch(userLotsProvider);
 
     return Column(
       children: [
-        // Sub-tabs for All/Favs/Archive
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-          child: Container(
-            height: 40,
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.05),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: TabBar(
-              controller: _subTabController,
-              indicator: BoxDecoration(
-                color: const Color(0xFFC8A96E),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              indicatorSize: TabBarIndicatorSize.tab,
-              dividerColor: Colors.transparent,
-              labelColor: Colors.black,
-              unselectedLabelColor: Colors.white54,
-              labelStyle: GoogleFonts.outfit(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
-              tabs: [
-                Tab(text: isUk ? 'Усі' : 'All'),
-                Tab(text: isUk ? 'Улюблене' : 'Favs'),
-                Tab(text: isUk ? 'Архів' : 'Archive'),
-              ],
-            ),
-          ),
+        DiscoveryActionBar(
+          filterProvider: myLotsFilterProvider,
+          onCompareTap: () => context.push('/comparison'),
+          availableCountries: const [],
+          availableFlavors: const [],
+          availableProcesses: const [],
+          showFavoritesButton: false,
         ),
-
-        // Action Bar (Filters, View Mode)
-        lotsAsync.when(
-          data: (lots) {
-            final countries = lots.where((l) => l.originCountry != null).map((l) => l.originCountry!).toSet().toList()..sort();
-            final processes = lots.where((l) => l.process != null).map((l) => l.process!).toSet().toList()..sort();
-            final flavors = lots.where((l) => l.flavorProfile != null).expand((l) => l.flavorProfile!.split(',').map((s) => s.trim())).where((s) => s.isNotEmpty).toSet().toList()..sort();
-
-            return DiscoveryActionBar(
-              filterProvider: myLotsFilterProvider,
-              onCompareTap: () {
-                // Navigate to Comparison
-              },
-              availableCountries: countries,
-              availableFlavors: flavors,
-              availableProcesses: processes,
-              showFavoritesButton: false, // We have a sub-tab for this
-            );
-          },
-          loading: () => const SizedBox(height: 48),
-          error: (_, __) => const SizedBox(height: 48),
-        ),
-
+        _buildSubTabs(),
         Expanded(
-          child: TabBarView(
-            controller: _subTabController,
-            children: [
-              _buildListView(lotsAsync, filter, 'all'),
-              _buildListView(lotsAsync, filter, 'favorites'),
-              _buildListView(lotsAsync, filter, 'archive'),
-            ],
-          ),
+          child: _buildListView(lotsAsync, filter),
         ),
       ],
     );
   }
 
-  Widget _buildListView(AsyncValue<List<CoffeeLotDto>> lotsAsync, DiscoveryFilterState filter, String type) {
+  Widget _buildSubTabs() {
+    return Container(
+      height: 40,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: TabBar(
+        controller: _subTabController,
+        dividerColor: Colors.transparent,
+        indicator: BoxDecoration(
+          color: const Color(0xFFC8A96E),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        indicatorSize: TabBarIndicatorSize.tab,
+        labelColor: Colors.black,
+        unselectedLabelColor: Colors.white70,
+        labelStyle: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.bold),
+        tabs: const [
+          Tab(text: 'Усі'),
+          Tab(text: 'Улюблені'),
+          Tab(text: 'Архів'),
+        ],
+        onTap: (_) => setState(() {}),
+      ),
+    );
+  }
+
+  Widget _buildListView(AsyncValue<List<CoffeeLotDto>> lotsAsync, DiscoveryFilterState filter) {
     return lotsAsync.when(
-      data: (lots) {
-        var filteredLots = lots.where((lot) {
-          if (lot.isDeletedLocal) return false;
-          if (type == 'favorites') return lot.isFavorite && !lot.isArchived;
-          if (type == 'archive') return lot.isArchived;
-          return !lot.isArchived;
+      data: (userLots) {
+        final activeTab = _subTabController.index;
+        final filteredByTab = userLots.where((lot) {
+          final isArchived = lot.isArchived;
+          if (activeTab == 0) return !isArchived; // All
+          if (activeTab == 1) return lot.isFavorite && !isArchived; // Favorites
+          if (activeTab == 2) return isArchived; // Archive
+          return !isArchived;
         }).toList();
 
-        // Apply filters
-        filteredLots = _applyFilters(filteredLots, filter);
+        final filteredLots = _applyFilters(filteredByTab, filter);
 
         if (filteredLots.isEmpty) {
-          return const Center(child: Text('Поки порожньо', style: TextStyle(color: Colors.white24)));
+          return const Center(
+            child: Text(
+              'Поки порожньо',
+              style: TextStyle(color: Colors.white24),
+            ),
+          );
         }
 
         if (filter.isGrid) {
           return GridView.builder(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
+            padding: const EdgeInsets.all(16),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               mainAxisSpacing: 16,
@@ -137,14 +121,21 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with TickerProvid
             ),
             itemCount: filteredLots.length,
             itemBuilder: (context, index) {
+              final lot = filteredLots[index];
               return MyLotGridCard(
-                lot: filteredLots[index],
-                isSelected: _selectedLotIds.contains(filteredLots[index].id),
+                lot: lot,
+                isSelected: _selectedLotIds.contains(lot.id),
                 isSelectionMode: _selectedLotIds.isNotEmpty,
                 onLongPress: (id) => setState(() => _selectedLotIds.add(id)),
-                onTap: (id) => context.push('/edit_lot', extra: filteredLots[index]),
-                onFavoriteToggle: (lot) {
-                  // Toggle favorite
+                onTap: (id) => context.push('/edit_lot', extra: lot),
+                onFavoriteToggle: (lot) async {
+                  ref.read(settingsProvider.notifier).triggerHaptic();
+                  final db = ref.read(databaseProvider);
+                  await db.upsertUserLot(CoffeeLotsCompanion(
+                    id: Value(lot.id),
+                    isFavorite: Value(!lot.isFavorite),
+                  ));
+                  ref.invalidate(userLotsProvider);
                 },
               );
             },
@@ -152,24 +143,31 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with TickerProvid
         }
 
         return ListView.builder(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
+          padding: const EdgeInsets.all(16),
           itemCount: filteredLots.length,
           itemBuilder: (context, index) {
+            final lot = filteredLots[index];
             return MyLotListCard(
-              lot: filteredLots[index],
-              isSelected: _selectedLotIds.contains(filteredLots[index].id),
+              lot: lot,
+              isSelected: _selectedLotIds.contains(lot.id),
               isSelectionMode: _selectedLotIds.isNotEmpty,
               onLongPress: (id) => setState(() => _selectedLotIds.add(id)),
-              onTap: (id) => context.push('/edit_lot', extra: filteredLots[index]),
-              onFavoriteToggle: (lot) {
-                // TODO: Implement favorite toggle logic
+              onTap: (id) => context.push('/edit_lot', extra: lot),
+              onFavoriteToggle: (lot) async {
+                ref.read(settingsProvider.notifier).triggerSelectionVibrate();
+                final db = ref.read(databaseProvider);
+                await db.upsertUserLot(CoffeeLotsCompanion(
+                  id: Value(lot.id),
+                  isFavorite: Value(!lot.isFavorite),
+                ));
+                ref.invalidate(userLotsProvider);
               },
             );
           },
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, __) => Center(child: Text('Error: $e')),
+      loading: () => const Center(child: CircularProgressIndicator(color: Color(0xFFC8A96E))),
+      error: (e, s) => Center(child: Text('Error: $e')),
     );
   }
 

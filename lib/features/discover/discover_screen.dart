@@ -1,13 +1,11 @@
-import '../../shared/widgets/glass_container.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:go_router/go_router.dart';
 import '../../shared/widgets/user_profile_avatar.dart';
+import '../../core/providers/settings_provider.dart';
+import 'lots/widgets/my_lots_content.dart';
 import './discovery_tab_order.dart';
-import './lots/widgets/my_lots_content.dart';
-
-class DiscoverTabItem {
-  final String id;
-  final String label;
-  DiscoverTabItem(this.id, this.label);
-}
 
 class DiscoverScreen extends ConsumerStatefulWidget {
   const DiscoverScreen({super.key});
@@ -39,10 +37,6 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
       case DiscoverTabType.encyclopedia:
         return 'Енциклопедія';
     }
-  }
-
-  String _getTabId(DiscoverTabType type) {
-    return type.name;
   }
 
   void _onReorder(int oldIndex, int newIndex) {
@@ -186,6 +180,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
       ),
     );
   }
+
 
   Widget _buildTabContent(String tabId) {
     switch (tabId) {
@@ -421,123 +416,7 @@ class _RoasteryCard extends StatelessWidget {
   }
 }
 
-void _showProfileMenu(BuildContext context, WidgetRef ref) {
-  final user = ref.read(supabaseProvider).auth.currentUser;
-  final meta = user?.userMetadata ?? {};
-  final displayName = meta['full_name'] as String? ?? 'Barista';
-  final email = user?.email ?? '';
+// Profile menu is handled by UserProfileAvatar
 
-  showModalBottomSheet(
-    context: context,
-    backgroundColor: Colors.transparent,
-    isScrollControlled: true,
-    builder: (context) {
-      return GlassContainer(
-        borderRadius: 24,
-        padding: const EdgeInsets.all(20),
-        blur: 30,
-        opacity: 0.15,
-        child: SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.white10,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  _UserAvatar(radius: 30),
-                  const SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        displayName,
-                        style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        email,
-                        style: GoogleFonts.poppins(
-                          color: Colors.white38,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-              _buildMenuItem(Icons.language, 'Мова', trailing: '🇺🇦 UA'),
-              _buildMenuItem(Icons.person_outline, 'Редагувати профіль'),
-              _buildMenuItem(Icons.logout, 'Вийти', color: Colors.redAccent),
-              const SizedBox(height: 12),
-            ],
-          ),
-        ),
-      );
-    },
-  );
-}
 
-Widget _buildMenuItem(
-  IconData icon,
-  String title, {
-  String? trailing,
-  Color? color,
-}) {
-  return ListTile(
-    contentPadding: EdgeInsets.zero,
-    leading: Icon(icon, color: color ?? const Color(0xFFC8A96E)),
-    title: Text(
-      title,
-      style: GoogleFonts.poppins(color: color ?? Colors.white70, fontSize: 14),
-    ),
-    trailing: trailing != null
-        ? Text(
-            trailing,
-            style: GoogleFonts.poppins(
-              color: const Color(0xFFC8A96E),
-              fontWeight: FontWeight.bold,
-            ),
-          )
-        : const Icon(Icons.chevron_right, color: Colors.white10),
-    onTap: () {},
-  );
-}
-
-class _UserAvatar extends ConsumerWidget {
-  final double radius;
-  const _UserAvatar({required this.radius});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(supabaseProvider).auth.currentUser;
-    final meta = user?.userMetadata ?? {};
-    final avatarUrl =
-        meta['avatar_url'] as String? ??
-        'https://api.dicebear.com/7.x/adventurer/png?seed=${user?.id ?? 'default'}';
-
-    return CircleAvatar(
-      radius: radius,
-      backgroundColor: Colors.white12,
-      backgroundImage: avatarUrl.startsWith('http') 
-          ? NetworkImage(avatarUrl)
-          : const AssetImage('assets/images/placeholder_avatar.jpg') as ImageProvider,
-      onBackgroundImageError: (_, _) {},
-      child:
-          (avatarUrl.isEmpty)
-              ? const Icon(Icons.person, color: Colors.white54, size: 16)
-              : null,
-    );
-  }
-}
+// _UserAvatar removal

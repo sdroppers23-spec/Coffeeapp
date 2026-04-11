@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/database/dtos.dart';
-import '../../../core/l10n/app_localizations.dart';
-import '../../../shared/widgets/glass_container.dart';
-import '../../../shared/widgets/pressable_scale.dart';
-import '../../../shared/widgets/sensory_radar_chart.dart';
-import '../../encyclopedia/comparison_screen.dart';
-import '../../encyclopedia/custom_lot_detail_screen.dart';
-import '../../../core/providers/settings_provider.dart';
+import '../../../../core/database/dtos.dart';
+import '../../../../core/l10n/app_localizations.dart';
+import '../../../../shared/widgets/glass_container.dart';
+import '../../../../shared/widgets/pressable_scale.dart';
 
 class MyLotGridCard extends ConsumerWidget {
   final CoffeeLotDto lot;
@@ -258,69 +253,274 @@ class MyLotListCard extends ConsumerWidget {
         onTap: () => onTap(lot.id),
         child: GlassContainer(
           padding: const EdgeInsets.all(16),
-          opacity: isSelected ? 0.2 : 0.1,
+          opacity: isSelected ? 0.2 : 0.05, // Slightly lower base opacity for a darker look
           borderRadius: 20,
           borderColor: isSelected
               ? theme.colorScheme.primary.withValues(alpha: 0.6)
               : Colors.white.withValues(alpha: 0.08),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.05),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                  child: Text(
-                    lot.scaScore ?? '85',
-                    style: GoogleFonts.outfit(
-                      color: theme.colorScheme.primary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+              // Header: Title, Subtitle, Heart
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          lot.coffeeName ?? 'Unnamed',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.outfit(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        if (lot.roasteryName != null && lot.roasteryName!.isNotEmpty)
+                          Text(
+                            lot.roasteryName!,
+                            style: GoogleFonts.outfit(
+                              color: Colors.white38,
+                              fontSize: 12,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
-                ),
+                  const SizedBox(width: 8),
+                  isSelectionMode
+                      ? Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: isSelected ? theme.colorScheme.primary : Colors.transparent,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: isSelected ? theme.colorScheme.primary : Colors.white24,
+                              width: 1.5,
+                            ),
+                          ),
+                          child: Icon(
+                            Icons.check,
+                            size: 14,
+                            color: isSelected ? Colors.black : Colors.transparent,
+                          ),
+                        )
+                      : PressableScale(
+                          onTap: () => onFavoriteToggle(lot),
+                          child: Icon(
+                            lot.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                            size: 20,
+                            color: lot.isFavorite ? Colors.redAccent : Colors.white24,
+                          ),
+                        ),
+                ],
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      lot.coffeeName ?? 'Unnamed',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.outfit(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+              const SizedBox(height: 16),
+              // Body: Score + Traits/Tags
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Score Circle
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.05),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Text(
+                        lot.scaScore ?? '85',
+                        style: GoogleFonts.outfit(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
-                    Text(
-                      '${lot.roasteryName} • ${lot.originCountry}',
-                      style: GoogleFonts.outfit(
-                        color: Colors.white38,
-                        fontSize: 12,
-                      ),
+                  ),
+                  const SizedBox(width: 16),
+                  // Traits and Tags
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Traits Row
+                        Row(
+                          children: [
+                            Expanded(child: _HorizontalSensoryBar(label: isUk ? 'ГІРКОТА' : 'BITTERNESS', value: (lot.sensoryPoints['bitterness'] ?? 3).toDouble(), theme: theme)),
+                            const SizedBox(width: 8),
+                            Expanded(child: _HorizontalSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (lot.sensoryPoints['acidity'] ?? 3).toDouble(), theme: theme)),
+                            const SizedBox(width: 8),
+                            Expanded(child: _HorizontalSensoryBar(label: isUk ? 'СОЛОДКІСТЬ' : 'SWEETNESS', value: (lot.sensoryPoints['sweetness'] ?? 3).toDouble(), theme: theme)),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        // Tags Row
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              _TagChip(icon: Icons.star_border_rounded, text: '${lot.scaScore ?? 85} SCA', theme: theme),
+                              const SizedBox(width: 8),
+                              _TagChip(icon: Icons.location_on_outlined, text: null, theme: theme),
+                              const SizedBox(width: 8),
+                              if (lot.process != null && lot.process!.isNotEmpty)
+                                _TagChip(icon: Icons.water_drop_outlined, text: lot.process, theme: theme),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 12),
-              PressableScale(
-                onTap: () => onFavoriteToggle(lot),
-                child: Icon(
-                  lot.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                  size: 20,
-                  color: lot.isFavorite ? Colors.redAccent : Colors.white24,
-                ),
-              ),
+              const SizedBox(height: 16),
+              // Freshness Bar
+              _FreshnessProgressBar(lot: lot, isUk: isUk, theme: theme),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _HorizontalSensoryBar extends StatelessWidget {
+  final String label;
+  final double value;
+  final ThemeData theme;
+
+  const _HorizontalSensoryBar({required this.label, required this.value, required this.theme});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          maxLines: 1,
+          overflow: TextOverflow.clip,
+          style: GoogleFonts.outfit(fontSize: 8, color: Colors.white38, fontWeight: FontWeight.bold, letterSpacing: 0.5),
+        ),
+        const SizedBox(height: 4),
+        Row(
+          children: List.generate(5, (index) {
+            final isFilled = index < value.toInt();
+            return Expanded(
+              child: Container(
+                height: 2.5,
+                margin: const EdgeInsets.only(right: 2),
+                decoration: BoxDecoration(
+                  color: isFilled ? theme.colorScheme.primary : Colors.white.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(1),
+                ),
+              ),
+            );
+          }),
+        ),
+      ],
+    );
+  }
+}
+
+class _TagChip extends StatelessWidget {
+  final IconData icon;
+  final String? text;
+  final ThemeData theme;
+
+  const _TagChip({required this.icon, this.text, required this.theme});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.03)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 12, color: theme.colorScheme.primary),
+          if (text != null) ...[
+            const SizedBox(width: 4),
+            Text(
+              text!,
+              style: GoogleFonts.outfit(fontSize: 10, color: Colors.white, fontWeight: FontWeight.w500),
+            ),
+          ]
+        ],
+      ),
+    );
+  }
+}
+
+class _FreshnessProgressBar extends StatelessWidget {
+  final CoffeeLotDto lot;
+  final bool isUk;
+  final ThemeData theme;
+
+  const _FreshnessProgressBar({required this.lot, required this.isUk, required this.theme});
+
+  @override
+  Widget build(BuildContext context) {
+    // Determine age
+    int ageDays = 0;
+    if (lot.roastDate != null) {
+      ageDays = DateTime.now().difference(lot.roastDate!).inDays;
+    }
+    double factor = 1.0 - (ageDays / 90.0);
+    if (factor < 0.05) factor = 0.05;
+    if (factor > 1.0) factor = 1.0;
+
+    // Use a greenish gradient for freshness
+    final gradient = LinearGradient(
+      colors: [
+        Colors.tealAccent.withValues(alpha: 0.5),
+        Colors.tealAccent,
+      ],
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(isUk ? 'Свіжість' : 'Freshness', style: GoogleFonts.outfit(fontSize: 10, color: Colors.white38)),
+            Text('$ageDays ${isUk ? 'дн.' : 'd.'}', style: GoogleFonts.outfit(fontSize: 10, color: Colors.tealAccent, fontWeight: FontWeight.bold)),
+          ],
+        ),
+        const SizedBox(height: 6),
+        Container(
+          height: 3,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(2),
+          ),
+          child: FractionallySizedBox(
+            alignment: Alignment.centerLeft,
+            widthFactor: factor,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: gradient,
+                borderRadius: BorderRadius.circular(2),
+                boxShadow: [
+                  BoxShadow(color: Colors.tealAccent.withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 0)),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

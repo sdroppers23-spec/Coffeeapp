@@ -1,22 +1,19 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
+import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:drift/drift.dart' hide Column;
-import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-import '../../../core/l10n/app_localizations.dart';
 import '../../../core/database/database_provider.dart';
 import '../../../core/providers/settings_provider.dart';
-import '../../../shared/widgets/pressable_scale.dart';
 import '../../../shared/widgets/sync_indicator.dart';
+import '../../../shared/widgets/pressable_scale.dart';
 import '../../../core/database/app_database.dart';
-import '../../../shared/widgets/glass_container.dart';
 import '../../../core/database/dtos.dart';
-import '../lots_providers.dart';
+import 'lots_providers.dart';
 
 class AddLotScreen extends ConsumerStatefulWidget {
   final CoffeeLotDto? initialLot;
@@ -32,10 +29,11 @@ class AddLotScreen extends ConsumerStatefulWidget {
   ConsumerState<AddLotScreen> createState() => _AddLotScreenState();
 }
 
-class _AddLotScreenState extends ConsumerState<AddLotScreen> with TickerProviderStateMixin {
-  late TabController _formStepController;
+class _AddLotScreenState extends ConsumerState<AddLotScreen>
+    with TickerProviderStateMixin {
+  late TabController _tabController;
 
-  // Form State
+  // ─── Form State ───────────────────────────────────────────────────
   String _roasteryName = '';
   String _roasteryCountry = 'Ukraine';
   String _coffeeName = '';
@@ -59,7 +57,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen> with TickerProvider
   bool _isFavorite = false;
   bool _isArchived = false;
 
-  // Sensory State (1-5)
+  // ─── Sensory (1-5) ────────────────────────────────────────────────
   double _aroma = 3;
   double _sweetness = 3;
   double _acidity = 3;
@@ -67,18 +65,25 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen> with TickerProvider
   double _body = 3;
   double _intensity = 3;
 
+  // ─── Prices ───────────────────────────────────────────────────────
   String _price = '';
   String _retailPrice1k = '';
   String _wholesalePrice250 = '';
   String _wholesalePrice1k = '';
 
+  // ─── Lifecycle ────────────────────────────────────────────────────
   @override
   void initState() {
     super.initState();
-    _formStepController = TabController(length: 3, vsync: this);
-    if (widget.initialLot != null) {
-      _populateFields(widget.initialLot!);
-    }
+    _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(() => setState(() {}));
+    if (widget.initialLot != null) _populateFields(widget.initialLot!);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   void _populateFields(CoffeeLotDto lot) {
@@ -196,349 +201,435 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen> with TickerProvider
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Помилка: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Помилка: $e')));
       }
     }
   }
 
+  // ─── Build ────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
-    final isUk = LocaleService.currentLocale == 'uk';
-    
     return Scaffold(
       backgroundColor: const Color(0xFF0A0908),
       body: SafeArea(
         child: Column(
           children: [
-            _buildTopBar(),
+            _buildHeader(),
+            _buildTabBar(),
             Expanded(
               child: TabBarView(
-                controller: _formStepController,
+                controller: _tabController,
                 children: [
-                   _buildBasicInfoStep(),
-                   _buildSensoryStep(),
-                   _buildPriceStep(),
+                  _buildRoasteryTab(),
+                  _buildCoffeeTab(),
+                  _buildSensoryTab(),
                 ],
               ),
             ),
-            _buildBottomNavigation(),
+          ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: _buildSaveFab(),
+    );
+  }
+
+  // ─── Header ───────────────────────────────────────────────────────
+  Widget _buildHeader() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () => context.pop(),
+            child: Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: 0.05),
+              ),
+              child: const Icon(Icons.close_rounded, color: Colors.white70, size: 18),
+            ),
+          ),
+          const Spacer(),
+          Text(
+            widget.initialLot != null ? 'РЕДАГУВАТИ' : 'НОВИЙ ЛОТ',
+            style: GoogleFonts.outfit(
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFFC8A96E),
+              letterSpacing: 2.0,
+            ),
+          ),
+          const Spacer(),
+          const SizedBox(width: 36),
+        ],
+      ),
+    );
+  }
+
+  // ─── Tab Bar ──────────────────────────────────────────────────────
+  Widget _buildTabBar() {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.04),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: TabBar(
+        controller: _tabController,
+        indicator: BoxDecoration(
+          color: const Color(0xFF1A1714),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.3)),
+        ),
+        indicatorSize: TabBarIndicatorSize.tab,
+        dividerColor: Colors.transparent,
+        labelColor: const Color(0xFFC8A96E),
+        unselectedLabelColor: Colors.white38,
+        labelStyle: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 11, letterSpacing: 0.5),
+        unselectedLabelStyle: GoogleFonts.outfit(fontWeight: FontWeight.w500, fontSize: 11),
+        tabs: const [
+          Tab(text: 'ОБСМАЖЧИК'),
+          Tab(text: 'КАВА'),
+          Tab(text: 'СМАК'),
+        ],
+      ),
+    );
+  }
+
+  // ─── Save FAB ─────────────────────────────────────────────────────
+  Widget _buildSaveFab() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: PressableScale(
+        onTap: _saveLot,
+        child: Container(
+          width: double.infinity,
+          height: 54,
+          decoration: BoxDecoration(
+            color: const Color(0xFF1A1714),
+            borderRadius: BorderRadius.circular(27),
+            border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.4)),
+          ),
+          child: Center(
+            child: Text(
+              'ЗБЕРЕГТИ ЛОТ',
+              style: GoogleFonts.outfit(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+                letterSpacing: 2.0,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ─── Tab 1: Roastery & Pricing ────────────────────────────────────
+  Widget _buildRoasteryTab() {
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+      children: [
+        _sectionLabel('Обсмажчик'),
+        _darkCard(children: [
+          _fieldRow(label: 'NAME *', value: _roasteryName, onChanged: (v) => _roasteryName = v),
+          _divider(),
+          _fieldRow(label: 'COUNTRY', value: _roasteryCountry, onChanged: (v) => _roasteryCountry = v),
+        ]),
+        _sectionLabel('Дата обсмажування'),
+        _darkCard(children: [
+          _dateRow(
+            label: 'ROAST DATE',
+            date: _roastDate,
+            onTap: () async {
+              final picked = await showDatePicker(
+                context: context, initialDate: _roastDate,
+                firstDate: DateTime(2020), lastDate: DateTime.now(),
+                builder: (ctx, child) => Theme(
+                  data: ThemeData.dark().copyWith(colorScheme: const ColorScheme.dark(primary: Color(0xFFC8A96E))),
+                  child: child!,
+                ),
+              );
+              if (picked != null) setState(() => _roastDate = picked);
+            },
+          ),
+          _divider(),
+          _dateRow(
+            label: 'OPENED AT',
+            date: _openedAt,
+            placeholder: 'Не відкрито',
+            onTap: () async {
+              final picked = await showDatePicker(
+                context: context, initialDate: _openedAt ?? DateTime.now(),
+                firstDate: DateTime(2020), lastDate: DateTime.now(),
+                builder: (ctx, child) => Theme(
+                  data: ThemeData.dark().copyWith(colorScheme: const ColorScheme.dark(primary: Color(0xFFC8A96E))),
+                  child: child!,
+                ),
+              );
+              if (picked != null) setState(() => _openedAt = picked);
+            },
+          ),
+        ]),
+        _sectionLabel('Стан пачки'),
+        Row(
+          children: [
+            Expanded(child: _toggleButton(label: 'ЗАКРИТА', active: !_isOpen, onTap: () => setState(() => _isOpen = false))),
+            const SizedBox(width: 8),
+            Expanded(child: _toggleButton(label: 'ВІДКРИТА', active: _isOpen, onTap: () => setState(() => _isOpen = true))),
+          ],
+        ),
+        _sectionLabel('Ціноутворення'),
+        _darkCard(children: [
+          _fieldRow(label: 'РОЗДРІБ 250G', value: _price, onChanged: (v) => _price = v,
+              keyboardType: TextInputType.number, suffix: '₴'),
+          _divider(),
+          _fieldRow(label: 'РОЗДРІБ 1KG', value: _retailPrice1k, onChanged: (v) => _retailPrice1k = v,
+              keyboardType: TextInputType.number, suffix: '₴'),
+          _divider(),
+          _fieldRow(label: 'ОПТ 250G', value: _wholesalePrice250, onChanged: (v) => _wholesalePrice250 = v,
+              keyboardType: TextInputType.number, suffix: '₴'),
+          _divider(),
+          _fieldRow(label: 'ОПТ 1KG', value: _wholesalePrice1k, onChanged: (v) => _wholesalePrice1k = v,
+              keyboardType: TextInputType.number, suffix: '₴'),
+        ]),
+      ],
+    );
+  }
+
+  // ─── Tab 2: Coffee Info ───────────────────────────────────────────
+  Widget _buildCoffeeTab() {
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+      children: [
+        _sectionLabel('Кава та лот'),
+        _darkCard(children: [
+          _fieldRow(label: 'COFFEE NAME *', value: _coffeeName, onChanged: (v) => _coffeeName = v),
+          _divider(),
+          _fieldRow(label: 'LOT NUMBER', value: _lotNumber, onChanged: (v) => _lotNumber = v),
+          _divider(),
+          _fieldRow(label: 'SCA SCORE', value: _scaScore, onChanged: (v) => _scaScore = v,
+              keyboardType: TextInputType.number),
+        ]),
+        _sectionLabel('Походження'),
+        _darkCard(children: [
+          _fieldRow(label: 'COUNTRY *', value: _originCountry, onChanged: (v) => _originCountry = v),
+          _divider(),
+          _fieldRow(label: 'REGION', value: _region, onChanged: (v) => _region = v),
+          _divider(),
+          _fieldRow(label: 'ALTITUDE', value: _altitude, onChanged: (v) => _altitude = v,
+              keyboardType: TextInputType.number, suffix: 'm'),
+          _divider(),
+          _fieldRow(label: 'VARIETALS', value: _varieties, onChanged: (v) => _varieties = v),
+        ]),
+        _sectionLabel('Обробка та смакові ноти'),
+        _darkCard(children: [
+          _fieldRow(label: 'PROCESS', value: _process, onChanged: (v) => _process = v),
+          _divider(),
+          _fieldRow(label: 'FLAVOR NOTES', value: _flavorProfile, onChanged: (v) => _flavorProfile = v),
+        ]),
+      ],
+    );
+  }
+
+  // ─── Tab 3: Sensory ───────────────────────────────────────────────
+  Widget _buildSensoryTab() {
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+      children: [
+        _sectionLabel('Профіль смаку (1–5)'),
+        _darkCard(children: [
+          _sensorySlider('AROMA', _aroma, (v) => setState(() => _aroma = v)),
+          _divider(),
+          _sensorySlider('SWEETNESS', _sweetness, (v) => setState(() => _sweetness = v)),
+          _divider(),
+          _sensorySlider('ACIDITY', _acidity, (v) => setState(() => _acidity = v)),
+          _divider(),
+          _sensorySlider('BITTERNESS', _bitterness, (v) => setState(() => _bitterness = v)),
+          _divider(),
+          _sensorySlider('BODY', _body, (v) => setState(() => _body = v)),
+          _divider(),
+          _sensorySlider('INTENSITY', _intensity, (v) => setState(() => _intensity = v)),
+        ]),
+      ],
+    );
+  }
+
+  // ─── Shared Widgets ───────────────────────────────────────────────
+
+  Widget _sectionLabel(String text) => Padding(
+        padding: const EdgeInsets.fromLTRB(4, 20, 4, 10),
+        child: Text(
+          text,
+          style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+      );
+
+  Widget _darkCard({required List<Widget> children}) => Container(
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.04),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        clipBehavior: Clip.hardEdge,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: children),
+      );
+
+  Widget _divider() => Divider(height: 1, color: Colors.white.withValues(alpha: 0.06));
+
+  Widget _fieldRow({
+    required String label,
+    required String value,
+    required Function(String) onChanged,
+    TextInputType? keyboardType,
+    String? suffix,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: GoogleFonts.outfit(fontSize: 9, color: Colors.white38, fontWeight: FontWeight.bold, letterSpacing: 1.2),
+          ),
+          const SizedBox(height: 2),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: TextEditingController(text: value)
+                    ..selection = TextSelection.fromPosition(TextPosition(offset: value.length)),
+                  style: GoogleFonts.outfit(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
+                  keyboardType: keyboardType,
+                  decoration: const InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.symmetric(vertical: 6),
+                    border: InputBorder.none,
+                  ),
+                  onChanged: onChanged,
+                ),
+              ),
+              if (suffix != null)
+                Text(suffix, style: GoogleFonts.outfit(color: const Color(0xFFC8A96E), fontWeight: FontWeight.bold, fontSize: 13)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dateRow({
+    required String label,
+    DateTime? date,
+    String? placeholder,
+    required VoidCallback onTap,
+  }) {
+    final display = date != null
+        ? '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}'
+        : (placeholder ?? '—');
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label,
+                    style: GoogleFonts.outfit(fontSize: 9, color: Colors.white38, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+                const SizedBox(height: 4),
+                Text(display,
+                    style: GoogleFonts.outfit(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500)),
+              ],
+            ),
+            const Icon(Icons.calendar_today_rounded, color: Colors.white24, size: 16),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTopBar() {
+  Widget _toggleButton({required String label, required bool active, required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          color: active ? Colors.white.withValues(alpha: 0.06) : Colors.transparent,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: active ? const Color(0xFFC8A96E) : Colors.white.withValues(alpha: 0.1),
+          ),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          label,
+          style: GoogleFonts.outfit(
+            color: active ? const Color(0xFFC8A96E) : Colors.white38,
+            fontSize: 11,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.0,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _sensorySlider(String label, double value, Function(double) onChanged) {
     return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Row(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          PressableScale(
-            onTap: () => context.pop(),
-            child: const Icon(Icons.close_rounded, color: Colors.white70),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(label,
+                  style: GoogleFonts.outfit(fontSize: 10, color: Colors.white54, fontWeight: FontWeight.bold, letterSpacing: 1.0)),
+              Text(value.toInt().toString(),
+                  style: GoogleFonts.outfit(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold)),
+            ],
           ),
-          const SizedBox(width: 16),
-          Text(
-            widget.initialLot != null ? 'Редагувати лот' : 'Новий лот',
-            style: GoogleFonts.outfit(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFFC8A96E),
+          SliderTheme(
+            data: SliderTheme.of(context).copyWith(
+              activeTrackColor: const Color(0xFFC8A96E),
+              inactiveTrackColor: Colors.white.withValues(alpha: 0.1),
+              thumbColor: const Color(0xFFC8A96E),
+              overlayColor: const Color(0xFFC8A96E).withValues(alpha: 0.2),
+              trackHeight: 2,
+              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
+            ),
+            child: Slider(
+              value: value,
+              min: 1,
+              max: 5,
+              divisions: 4,
+              onChanged: (v) {
+                ref.read(settingsProvider.notifier).triggerSelectionVibrate();
+                onChanged(v);
+              },
             ),
           ),
-          const Spacer(),
-          if (_formStepController.index == 2)
-            TextButton(
-              onPressed: _saveLot,
-              child: Text(
-                'Готово',
-                style: GoogleFonts.outfit(color: const Color(0xFFC8A96E), fontWeight: FontWeight.bold),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-    return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      children: [
-        _buildSectionHeader('ОБСМАЖЧИК ТА КАВА'),
-        GlassContainer(
-          borderRadius: 24,
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              _buildModernTextField(
-                label: 'Назва обсмажчика',
-                initialValue: _roasteryName,
-                onChanged: (v) => _roasteryName = v,
-                icon: Icons.storefront,
-              ),
-              const SizedBox(height: 16),
-              _buildModernTextField(
-                label: 'Назва кави / Лоту',
-                initialValue: _coffeeName,
-                onChanged: (v) => _coffeeName = v,
-                icon: Icons.local_cafe,
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 24),
-        _buildSectionHeader('ПОХОДЖЕННЯ'),
-        GlassContainer(
-          borderRadius: 24,
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              _buildModernTextField(
-                label: 'Країна',
-                initialValue: _originCountry,
-                onChanged: (v) => _originCountry = v,
-                icon: Icons.public,
-              ),
-              const SizedBox(height: 16),
-              _buildModernTextField(
-                label: 'Регіон',
-                initialValue: _region,
-                onChanged: (v) => _region = v,
-                icon: Icons.map,
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildModernTextField(
-                      label: 'Висота (м)',
-                      initialValue: _altitude,
-                      onChanged: (v) => _altitude = v,
-                      keyboardType: TextInputType.number,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: _buildModernTextField(
-                      label: 'SCA Бал',
-                      initialValue: _scaScore,
-                      onChanged: (v) => _scaScore = v,
-                      keyboardType: TextInputType.number,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 100),
-      ],
-    );
-  }
-
-  Widget _buildSensoryStep() {
-    return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      children: [
-        _buildSectionHeader('ПРОФІЛЬ СМАКУ'),
-        GlassContainer(
-          borderRadius: 24,
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              _buildSensorySlider('АРОМАТ', _aroma, (v) => setState(() => _aroma = v)),
-              _buildSensorySlider('КИСЛОТНІСТЬ', _acidity, (v) => setState(() => _acidity = v)),
-              _buildSensorySlider('СОЛОДКІСТЬ', _sweetness, (v) => setState(() => _sweetness = v)),
-              _buildSensorySlider('ТІЛО', _body, (v) => setState(() => _body = v)),
-              _buildSensorySlider('ГІРКОТА', _bitterness, (v) => setState(() => _bitterness = v)),
-              _buildSensorySlider('ІНТЕНСИВНІСТЬ', _intensity, (v) => setState(() => _intensity = v)),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        _buildModernTextField(
-          label: 'Дескриптори (через кому)',
-          initialValue: _flavorProfile,
-          onChanged: (v) => _flavorProfile = v,
-          icon: Icons.auto_awesome,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPriceStep() {
-    return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      children: [
-        _buildSectionHeader('ЦІНОУТВОРЕННЯ'),
-        GlassContainer(
-          borderRadius: 24,
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              _buildModernTextField(
-                label: 'Роздріб (250г)',
-                initialValue: _price,
-                onChanged: (v) => _price = v,
-                keyboardType: TextInputType.number,
-                suffix: '₴',
-              ),
-              const SizedBox(height: 16),
-              _buildModernTextField(
-                label: 'Роздріб (1кг)',
-                initialValue: _retailPrice1k,
-                onChanged: (v) => _retailPrice1k = v,
-                keyboardType: TextInputType.number,
-                suffix: '₴',
-              ),
-              const SizedBox(height: 16),
-              _buildModernTextField(
-                label: 'Опт (1кг)',
-                initialValue: _wholesalePrice1k,
-                onChanged: (v) => _wholesalePrice1k = v,
-                keyboardType: TextInputType.number,
-                suffix: '₴',
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSectionHeader(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 4, bottom: 12),
-      child: Text(
-        title,
-        style: GoogleFonts.poppins(
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-          color: Colors.white38,
-          letterSpacing: 1.2,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildModernTextField({
-    required String label,
-    required String initialValue,
-    required Function(String) onChanged,
-    IconData? icon,
-    TextInputType? keyboardType,
-    String? suffix,
-  }) {
-    return TextField(
-      controller: TextEditingController(text: initialValue)
-        ..selection = TextSelection.fromPosition(TextPosition(offset: initialValue.length)),
-      style: GoogleFonts.outfit(color: Colors.white, fontSize: 16),
-      keyboardType: keyboardType,
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: const TextStyle(color: Colors.white24, fontSize: 13),
-        prefixIcon: icon != null ? Icon(icon, color: const Color(0xFFC8A96E), size: 20) : null,
-        suffixText: suffix,
-        suffixStyle: const TextStyle(color: Color(0xFFC8A96E), fontWeight: FontWeight.bold),
-        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.05))),
-        focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Color(0xFFC8A96E))),
-      ),
-      onChanged: onChanged,
-    );
-  }
-
-  Widget _buildSensorySlider(String label, double value, Function(double) onChanged) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 90,
-            child: Text(
-              label,
-              style: GoogleFonts.poppins(fontSize: 10, color: Colors.white54, fontWeight: FontWeight.w600),
-            ),
-          ),
-          Expanded(
-            child: SliderTheme(
-              data: SliderTheme.of(context).copyWith(
-                activeTrackColor: const Color(0xFFC8A96E),
-                inactiveTrackColor: Colors.white10,
-                thumbColor: Colors.white,
-                overlayColor: const Color(0xFFC8A96E).withValues(alpha: 0.2),
-                trackHeight: 2,
-              ),
-              child: Slider(
-                value: value,
-                min: 1,
-                max: 5,
-                divisions: 4,
-                onChanged: (v) {
-                  ref.read(settingsProvider.notifier).triggerSelectionVibrate();
-                  onChanged(v);
-                },
+          Padding(
+            padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: List.generate(
+                5,
+                (i) => Text('${i + 1}',
+                    style: GoogleFonts.outfit(fontSize: 8, color: Colors.white24, fontWeight: FontWeight.bold)),
               ),
             ),
           ),
-          Text(
-            value.toInt().toString(),
-            style: GoogleFonts.poppins(fontSize: 12, color: const Color(0xFFC8A96E), fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBottomNavigation() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
-      color: Colors.black,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _formStepController.index > 0
-              ? TextButton(
-                  onPressed: () {
-                    ref.read(settingsProvider.notifier).triggerSelectionVibrate();
-                    setState(() => _formStepController.animateTo(_formStepController.index - 1));
-                  },
-                  child: Text('НАЗАД', style: GoogleFonts.poppins(color: Colors.white38, fontSize: 12, fontWeight: FontWeight.bold)),
-                )
-              : const SizedBox.shrink(),
-          _formStepController.index < 2
-              ? PressableScale(
-                  onTap: () {
-                    ref.read(settingsProvider.notifier).triggerSelectionVibrate();
-                    setState(() => _formStepController.animateTo(_formStepController.index + 1));
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFC8A96E),
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Text(
-                      'ДАЛІ',
-                      style: GoogleFonts.poppins(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13),
-                    ),
-                  ),
-                )
-              : PressableScale(
-                  onTap: () {
-                    ref.read(settingsProvider.notifier).triggerSelectionVibrate();
-                    _saveLot();
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFC8A96E),
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Text(
-                      'ЗБЕРЕГТИ',
-                      style: GoogleFonts.poppins(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13),
-                    ),
-                  ),
-                ),
         ],
       ),
     );

@@ -9,7 +9,7 @@ import '../../../../core/database/app_database.dart';
 import '../../../../core/providers/settings_provider.dart';
 import '../../../../core/database/dtos.dart';
 import '../../discovery_filter_provider.dart';
-import '../lots_provider.dart';
+import '../lots_providers.dart';
 import 'lot_card_widgets.dart';
 import '../../widgets/discovery_action_bar.dart';
 
@@ -229,9 +229,44 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
-                      ref.read(userLotsProvider.notifier).undoDelete(lot);
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    onTap: () async {
+                      final db = ref.read(databaseProvider);
+                      // Re-insert the lot into database to "undo" deletion
+                      await db.upsertUserLot(CoffeeLotsCompanion(
+                        id: Value(lot.id),
+                        userId: Value(lot.userId ?? ''),
+                        roasteryName: Value(lot.roasteryName),
+                        roasteryCountry: Value(lot.roasteryCountry),
+                        coffeeName: Value(lot.coffeeName),
+                        originCountry: Value(lot.originCountry),
+                        region: Value(lot.region),
+                        altitude: Value(lot.altitude),
+                        process: Value(lot.process),
+                        roastLevel: Value(lot.roastLevel),
+                        roastDate: Value(lot.roastDate),
+                        openedAt: Value(lot.openedAt),
+                        weight: Value(lot.weight),
+                        lotNumber: Value(lot.lotNumber),
+                        isDecaf: Value(lot.isDecaf),
+                        farm: Value(lot.farm),
+                        washStation: Value(lot.washStation),
+                        farmer: Value(lot.farmer),
+                        varieties: Value(lot.varieties),
+                        flavorProfile: Value(lot.flavorProfile),
+                        scaScore: Value(lot.scaScore),
+                        isFavorite: Value(lot.isFavorite),
+                        isArchived: Value(lot.isArchived),
+                        isOpen: Value(lot.isOpen),
+                        isGround: Value(lot.isGround),
+                        sensoryJson: Value(lot.sensoryJson),
+                        priceJson: Value(lot.priceJson),
+                        createdAt: Value(lot.createdAt),
+                        updatedAt: Value(DateTime.now()),
+                      ));
+                      ref.invalidate(userLotsProvider);
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      }
                     },
                     child: Container(
                       height: 38,
@@ -330,7 +365,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
             child: _isSelectionMode
-                ? _buildSelectionBar()
+                ? _buildSelectionBar(lotsAsync)
                 : Align(
                     alignment: Alignment.bottomRight,
                     child: _buildFloatingAddButton(),
@@ -499,7 +534,9 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
               onDeleteSwipe: (lot) async {
                 final confirm = await _confirmDeleteDialog(lot);
                 if (confirm) {
-                  await ref.read(userLotsProvider.notifier).deleteLot(lot.id);
+                  final db = ref.read(databaseProvider);
+                  await db.deleteUserLot(lot.id);
+                  ref.invalidate(userLotsProvider);
                   if (context.mounted) {
                     _showPremiumUndo(lot, context, ref);
                   }
@@ -565,7 +602,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
     );
   }
 
-  Widget _buildSelectionBar() {
+  Widget _buildSelectionBar(AsyncValue<List<CoffeeLotDto>> lotsAsync) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       decoration: BoxDecoration(
@@ -615,19 +652,20 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
             Colors.redAccent,
             () async {
               final toDelete = _selectedLotIds.toList();
-              // Just use the first lot for the confirmation dialog title reference
-              final firstLot = userLots.data?.firstWhere((l) => l.id == toDelete.first);
-              if (firstLot == null) return;
+              final lotsReady = lotsAsync.asData?.value ?? [];
+              final firstLot = lotsReady.firstWhere((l) => l.id == toDelete.first, orElse: () => throw 'Lot not found');
               
               final confirmed = await _confirmDeleteDialog(firstLot);
-              if (confirmed) {
+              if (confirmed && mounted) {
+                final db = ref.read(databaseProvider);
                 for (var id in toDelete) {
-                  final lot = userLots.data?.firstWhere((l) => l.id == id);
-                  await ref.read(userLotsProvider.notifier).deleteLot(id);
-                  if (id == toDelete.last && lot != null) {
+                  final lot = lotsReady.firstWhere((l) => l.id == id, orElse: () => throw 'Lot not found');
+                  await db.deleteUserLot(id);
+                  if (id == toDelete.last && mounted) {
                     _showPremiumUndo(lot, context, ref);
                   }
                 }
+                ref.invalidate(userLotsProvider);
                 setState(() => _selectedLotIds.clear());
               }
             },

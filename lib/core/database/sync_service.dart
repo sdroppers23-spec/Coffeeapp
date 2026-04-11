@@ -1,41 +1,41 @@
+import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import '../database/app_database.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Service responsible for synchronizing user-managed coffee data.
-/// Static encyclopedia data is now handled via local JSON assets.
+/// Updated in v17 to support full cloud-to-local sync for Encyclopedia.
 class SyncService {
   final AppDatabase db;
   final SupabaseClient? supabase;
 
   SyncService(this.db, [this.supabase]);
 
-  /// Synchronizes all user-managed systems.
-  /// Decoupled from static Encyclopedia content for v17.
+  /// Synchronizes all systems.
   Future<void> syncAll({
     bool force = false,
     bool clearLocal = false,
     Function(String)? onProgress,
   }) async {
     try {
-      debugPrint('SYNC: Starting user data synchronization...');
-      onProgress?.call('Initializing sync...');
+      debugPrint('SYNC: Starting full synchronization...');
+      onProgress?.call('Connecting to cloud...');
 
-      // Static content (Encyclopedia, Brands, Articles) is loaded from local JSON.
-      // We no longer attempt to sync them from Supabase here to ensure premium stable performance.
-
-      if (clearLocal) {
-        onProgress?.call('Cleaning local cache...');
-        // Future: Implement targeted cleanup if needed
+      if (supabase == null) {
+        onProgress?.call('Supabase not available, skipping cloud sync.');
+        return;
       }
 
-      onProgress?.call('Synchronization focused on user data.');
+      // 1. Sync Encyclopedia (Origins/Beans)
+      onProgress?.call('Syncing Encyclopedia (Lots)...');
+      await syncEncyclopedia();
 
-      // Future: Implement background sync for CoffeeLots/CustomRecipes if cloud storage is used.
-      // For now, we ensure local transaction stability.
+      // 2. Future: Sync Brands, Farmers, etc.
+      // onProgress?.call('Syncing Brands & Farmers...');
+      // await syncMetadata();
 
-      debugPrint('SYNC: All user systems synchronized [STABLE]');
-      onProgress?.call('Sync completed successfully!');
+      onProgress?.call('Synchronization completed successfully!');
+      debugPrint('SYNC: All systems synchronized [STABLE]');
     } catch (e, st) {
       debugPrint('SYNC ERROR: $e');
       debugPrint('STACKTRACE: $st');
@@ -44,28 +44,90 @@ class SyncService {
     }
   }
 
+  /// Pulls encyclopedia data from Supabase and updates local storage.
+  Future<void> syncEncyclopedia() async {
+    if (supabase == null) return;
+
+    try {
+      debugPrint('SYNC: Pulling beans from Supabase...');
+      final data = await supabase!.from('localized_beans').select().order('id');
+
+      for (final item in data) {
+        final id = item['id'] as int;
+
+        // 1. Prepare Bean Companion
+        final priceData = item['price_json'] as Map<String, dynamic>? ?? {};
+        final retail1k = priceData['retail_1k']?.toString();
+        final wholesale1k = priceData['wholesale_1k']?.toString();
+
+        final bean = LocalizedBeansCompanion(
+          id: Value(id),
+          brandId: Value(item['brand_id'] as int?),
+          countryEmoji: Value(item['country_emoji'] as String?),
+          altitudeMin: Value(item['altitude_min'] as int?),
+          altitudeMax: Value(item['altitude_max'] as int?),
+          lotNumber: Value(item['lot_number'] as String? ?? ''),
+          scaScore: Value(item['sca_score'] as String? ?? '82-84'),
+          cupsScore: Value((item['cups_score'] as num?)?.toDouble() ?? 82.0),
+          sensoryJson: Value(item['sensory_json']?.toString() ?? '{}'),
+          priceJson: Value(item['price_json']?.toString() ?? '{}'),
+          harvestSeason: Value(item['harvest_season'] as String?),
+          retailPrice: Value(retail1k),
+          wholesalePrice: Value(wholesale1k),
+          isPremium: Value(item['is_premium'] as bool? ?? false),
+          isDecaf: Value(item['is_decaf'] as bool? ?? false),
+          url: Value(item['url'] as String? ?? ''),
+          createdAt: Value(
+            item['created_at'] != null
+                ? DateTime.tryParse(item['created_at'] as String)
+                : null,
+          ),
+        );
+
+        // 2. Prepare Translations
+        final List<LocalizedBeanTranslationsCompanion> translations = [];
+
+        for (final lang in ['uk', 'en']) {
+          translations.add(
+            LocalizedBeanTranslationsCompanion(
+              beanId: Value(id),
+              languageCode: Value(lang),
+              country: Value(item['country_$lang'] as String?),
+              region: Value(item['region_$lang'] as String?),
+              varieties: Value(item['variety_$lang'] as String?),
+              flavorNotes: Value(item['flavor_notes_$lang']?.toString() ?? '[]'),
+              processMethod: Value(item['process_method_$lang'] as String?),
+              description: Value(item['description_$lang'] as String?),
+              farmDescription: Value(item['farm_description_$lang'] as String?),
+              roastLevel: Value(item['roast_level_$lang'] as String?),
+            ),
+          );
+        }
+
+        // 3. Upsert into local DB
+        await db.smartUpsertBean(bean, translations);
+      }
+      debugPrint('SYNC: Encyclopedia synchronized (${data.length} records)');
+    } catch (e) {
+      debugPrint('SYNC ERROR (Encyclopedia): $e');
+      rethrow;
+    }
+  }
+
   /// Helper for manual lot synchronization if needed.
-  /// Made optional to support legacy 0-argument calls from UI.
   Future<void> syncLots([List<CoffeeLotsCompanion>? lots]) async {
     if (lots != null && lots.isNotEmpty) {
       await db.syncLotsInTx(lots);
-    } else {
-      debugPrint(
-        'SYNC: syncLots triggered with 0/null lots (no-op placeholder)',
-      );
     }
   }
 
   /// Placeholder for pushing local changes to cloud.
-  /// To be implemented when Supabase backend mapping is finalized for v17.
   Future<void> pushLocalToCloud({Function(String)? onProgress}) async {
-    debugPrint('SYNC: pushLocalToCloud placeholder triggered');
     await syncAll(onProgress: onProgress);
   }
 
-  /// Placeholder for pulling cloud changes to local.
+  /// Pull cloud changes to local.
   Future<void> pullFromCloud({Function(String)? onProgress}) async {
-    debugPrint('SYNC: pullFromCloud placeholder triggered');
     await syncAll(onProgress: onProgress);
   }
 }

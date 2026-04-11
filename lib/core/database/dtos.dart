@@ -7,6 +7,20 @@ import 'dart:convert';
 /// Data Transfer Objects for the Specialty Coffee app.
 /// Optimized for the v17 schema with full sensory and pricing support.
 
+enum EncyclopediaSortOption {
+  countryAsc,
+  countryDesc,
+  regionAsc,
+  regionDesc,
+  countryRegionAsc,
+  priceRetailAsc,
+  priceRetailDesc,
+  priceWholesaleAsc,
+  priceWholesaleDesc,
+  processAsc,
+  newestFirst,
+}
+
 class LocalizedBeanDto {
   final int id;
   final int? brandId;

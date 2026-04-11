@@ -13,13 +13,46 @@ import 'brand_details_screen.dart';
 import '../../core/database/dtos.dart';
 import 'discovery_providers.dart';
 
-class RoastersScreen extends ConsumerWidget {
-  const RoastersScreen({super.key});
+class RoastersBody extends ConsumerWidget {
+  const RoastersBody({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final brandsAsync = ref.watch(brandsProvider);
 
+    return brandsAsync.when(
+      loading: () => const Center(
+        child: CircularProgressIndicator(color: Color(0xFFC8A96E)),
+      ),
+      error: (e, _) => Center(
+        child: Text('Error: $e', style: const TextStyle(color: Colors.red)),
+      ),
+      data: (brands) {
+        if (brands.isEmpty) {
+          return Center(
+            child: Text(
+              ref.t('no_results'),
+              style: GoogleFonts.poppins(color: Colors.white38),
+            ),
+          );
+        }
+        return ListView.builder(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
+          itemCount: brands.length,
+          itemBuilder: (context, index) {
+            return _PremiumRoasterCard(brand: brands[index]);
+          },
+        );
+      },
+    );
+  }
+}
+
+class RoastersScreen extends ConsumerWidget {
+  const RoastersScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return PremiumBackground(
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -58,31 +91,7 @@ class RoastersScreen extends ConsumerWidget {
             ),
           ],
         ),
-        body: brandsAsync.when(
-          loading: () => const Center(
-            child: CircularProgressIndicator(color: Color(0xFFC8A96E)),
-          ),
-          error: (e, _) => Center(
-            child: Text('Error: $e', style: const TextStyle(color: Colors.red)),
-          ),
-          data: (brands) {
-            if (brands.isEmpty) {
-              return Center(
-                child: Text(
-                  ref.t('no_results'),
-                  style: GoogleFonts.poppins(color: Colors.white38),
-                ),
-              );
-            }
-            return ListView.builder(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
-              itemCount: brands.length,
-              itemBuilder: (context, index) {
-                return _PremiumRoasterCard(brand: brands[index]);
-              },
-            );
-          },
-        ),
+        body: const RoastersBody(),
       ),
     );
   }

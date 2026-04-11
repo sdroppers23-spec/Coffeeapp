@@ -5,6 +5,10 @@ import '../../shared/widgets/user_profile_avatar.dart';
 import '../../core/providers/settings_provider.dart';
 import 'lots/widgets/my_lots_content.dart';
 import './discovery_tab_order.dart';
+import '../encyclopedia/encyclopedia_screen.dart';
+import './farmers_screen.dart';
+import './roasters_screen.dart';
+import '../specialty/specialty_screen.dart';
 
 class DiscoverScreen extends ConsumerStatefulWidget {
   const DiscoverScreen({super.key});
@@ -45,7 +49,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
   @override
   Widget build(BuildContext context) {
     final tabOrder = ref.watch(discoveryTabOrderProvider);
-    
+
     // Ensure we have a valid selection
     if (!tabOrder.any((t) => t.name == _selectedTabId) && tabOrder.isNotEmpty) {
       _selectedTabId = tabOrder.first.name;
@@ -76,7 +80,10 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                       ),
                       const SizedBox(width: 12),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: Colors.greenAccent.withValues(alpha: 0.3),
@@ -88,7 +95,11 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.cloud_done_outlined, color: Colors.greenAccent, size: 14),
+                            const Icon(
+                              Icons.cloud_done_outlined,
+                              color: Colors.greenAccent,
+                              size: 14,
+                            ),
                             const SizedBox(width: 6),
                             Text(
                               "Cloud Connected",
@@ -115,7 +126,9 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
             SizedBox(
               height: 54,
               child: Theme(
-                data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
+                data: Theme.of(
+                  context,
+                ).copyWith(canvasColor: Colors.transparent),
                 child: ReorderableListView.builder(
                   scrollController: _reorderController,
                   scrollDirection: Axis.horizontal,
@@ -125,7 +138,8 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                     return Material(color: Colors.transparent, child: child);
                   },
                   itemCount: tabOrder.length,
-                  onReorderStart: (_) => ref.read(settingsProvider.notifier).triggerVibrate(),
+                  onReorderStart: (_) =>
+                      ref.read(settingsProvider.notifier).triggerVibrate(),
                   onReorder: _onReorder,
                   itemBuilder: (context, index) {
                     final type = tabOrder[index];
@@ -166,22 +180,18 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
     );
   }
 
-
   Widget _buildTabContent(String tabId) {
     switch (tabId) {
       case 'myLots':
         return const MyLotsContent();
+      case 'encyclopedia':
+        return const EncyclopediaBody();
+      case 'farmers':
+        return const FarmersBody();
       case 'roasters':
-        return ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          children: const [
-            _RoasteryCard(
-              title: '3 Champs Roastery',
-              description: 'Українське обсмажування кави',
-              location: 'Київ, Україна',
-            ),
-          ],
-        );
+        return const RoastersBody();
+      case 'history':
+        return const SpecialtyEducationScreen();
       default:
         return Center(
           child: Text(
@@ -256,152 +266,4 @@ class _CapsuleTabState extends State<_CapsuleTab> {
   }
 }
 
-class _RoasteryCard extends StatelessWidget {
-  final String title;
-  final String description;
-  final String location;
-
-  const _RoasteryCard({
-    required this.title,
-    required this.description,
-    required this.location,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFF0F0A07),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Top Image Area
-          AspectRatio(
-            aspectRatio: 16 / 9,
-            child: Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-                color: Color(0xFF141414), // Almost black
-              ),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  // Large background ghost icon
-                  Icon(
-                    Icons.coffee_maker_rounded,
-                    color: Colors.white.withValues(alpha: 0.03),
-                    size: 120,
-                  ),
-                  // Centered Blue Icon Island
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20),
-                      child: Container(
-                        width: 64,
-                        height: 64,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF2C3E50), // Steel blue
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.4),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.coffee_maker_rounded,
-                            color: Colors.white,
-                            size: 32,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // Info Area
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      title,
-                      style: GoogleFonts.poppins(
-                        color: const Color(0xFFC8A96E),
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                      color: Colors.white38,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  description,
-                  style: GoogleFonts.poppins(
-                    color: Colors.white54,
-                    fontSize: 14,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.location_on_rounded,
-                          color: Colors.white24,
-                          size: 16,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          location,
-                          style: GoogleFonts.poppins(
-                            color: Colors.white24,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      'Дивіться лоти >',
-                      style: GoogleFonts.poppins(
-                        color: const Color(0xFFC8A96E),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 // Profile menu is handled by UserProfileAvatar
-
-
-// _UserAvatar removal

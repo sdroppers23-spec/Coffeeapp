@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -14,58 +13,46 @@ import 'encyclopedia_providers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
-class EncyclopediaScreen extends ConsumerStatefulWidget {
-  const EncyclopediaScreen({super.key});
+// ─── Body (Embedded Version) ──────────────────────────────────────────────────
+class EncyclopediaBody extends ConsumerStatefulWidget {
+  const EncyclopediaBody({super.key});
 
   @override
-  ConsumerState<EncyclopediaScreen> createState() => _EncyclopediaScreenState();
+  ConsumerState<EncyclopediaBody> createState() => _EncyclopediaBodyState();
 }
 
-class _EncyclopediaScreenState extends ConsumerState<EncyclopediaScreen> {
-  String _search = '';
+class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
   int? _expandedIndex;
 
   @override
   Widget build(BuildContext context) {
-    final originsAsync = ref.watch(supabaseEncyclopediaProvider);
-    final sortState = ref.watch(encyclopediaSortProvider);
+    final originsAsync = ref.watch(encyclopediaDataProvider);
 
     return DefaultTabController(
       length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Row(
-            children: [
-              Text(
-                ref.t('encyclopedia'),
-                style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(width: 12),
-              const _CloudStatusBadge(),
-            ],
-          ),
-          actions: [
-            _SortMenu(ref: ref),
-            const SizedBox(width: 8),
-          ],
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(100),
-            child: Column(
+      child: Column(
+        children: [
+          // ── Search & Filter Row ─────────────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+            child: Row(
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                Expanded(
                   child: TextField(
-                    onChanged: (v) => setState(() {
-                      _search = v.toLowerCase();
-                      _expandedIndex = null;
-                    }),
-                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                    onChanged: (v) => ref
+                        .read(encyclopediaSearchQueryProvider.notifier)
+                        .state = v,
+                    style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       hintText: ref.t('search_origins'),
-                      prefixIcon: const Icon(Icons.search, size: 20),
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        size: 20,
+                        color: Colors.white38,
+                      ),
                       contentPadding: const EdgeInsets.symmetric(vertical: 8),
                       filled: true,
-                      fillColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
+                      fillColor: Colors.white.withValues(alpha: 0.08),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
@@ -73,76 +60,107 @@ class _EncyclopediaScreenState extends ConsumerState<EncyclopediaScreen> {
                     ),
                   ),
                 ),
-                TabBar(
-                  indicatorColor: Theme.of(context).colorScheme.primary,
-                  labelColor: Theme.of(context).colorScheme.primary,
-                  unselectedLabelColor: Colors.white54,
-                  labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                  tabs: [
-                    Tab(text: ref.t('catalog')),
-                    Tab(text: ref.t('favorites')),
-                    Tab(text: ref.t('compare_tab')),
-                  ],
-                ),
+                const SizedBox(width: 8),
+                _SortMenu(ref: ref),
               ],
             ),
           ),
-        ),
-        body: TabBarView(
-          children: [
-            // ── Catalog Tab ──────────────────────────────────────────────────
-            _buildList(originsAsync, isFavoriteOnly: false),
-            // ── Favorites Tab ────────────────────────────────────────────────
-            _buildList(originsAsync, isFavoriteOnly: true),
-            // ── Comparison Tab ───────────────────────────────────────────────
-            const _ComparisonTab(),
-          ],
-        ),
+
+          // ── Secondary Tabs ──────────────────────────────────────────────────
+          TabBar(
+            indicatorColor: const Color(0xFFC8A96E),
+            labelColor: const Color(0xFFC8A96E),
+            unselectedLabelColor: Colors.white54,
+            labelStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+            ),
+            tabs: [
+              Tab(text: ref.t('catalog')),
+              Tab(text: ref.t('favorites')),
+              Tab(text: ref.t('compare_tab')),
+            ],
+          ),
+
+          // ── Content ─────────────────────────────────────────────────────────
+          Expanded(
+            child: TabBarView(
+              children: [
+                _buildList(originsAsync, isFavoriteOnly: false),
+                _buildList(originsAsync, isFavoriteOnly: true),
+                const _ComparisonTab(),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildList(AsyncValue<List<EncyclopediaEntry>> originsAsync, {required bool isFavoriteOnly}) {
+  Widget _buildList(
+    AsyncValue<List<LocalizedBeanDto>> originsAsync, {
+    required bool isFavoriteOnly,
+  }) {
     return originsAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(
+        child: CircularProgressIndicator(color: Color(0xFFC8A96E)),
+      ),
       error: (e, _) => Center(child: Text('Error: $e')),
       data: (entries) {
         var filtered = entries;
         if (isFavoriteOnly) {
           filtered = filtered.where((e) => e.isFavorite).toList();
         }
-        
-        if (_search.isNotEmpty) {
-          filtered = filtered.where((e) =>
-            e.country.toLowerCase().contains(_search) ||
-            e.region.toLowerCase().contains(_search) ||
-            e.flavorNotes.any((f) => f.toLowerCase().contains(_search))
-          ).toList();
-        }
 
         if (filtered.isEmpty) {
+          final search = ref.watch(encyclopediaSearchQueryProvider);
           return _EmptyState(
-            message: isFavoriteOnly && _search.isEmpty 
+            message: isFavoriteOnly && search.isEmpty
                 ? ref.t('no_favorites')
-                : '${ref.t('no_results')} "$_search"',
+                : '${ref.t('no_results')} "$search"',
           );
         }
 
         return ListView.separated(
           padding: const EdgeInsets.all(16),
           itemCount: filtered.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 12),
+          separatorBuilder: (context, index) => const SizedBox(height: 12),
           itemBuilder: (context, i) {
             final entry = filtered[i];
             final isExpanded = _expandedIndex == i;
             return _OriginCard(
               entry: entry,
               isExpanded: isExpanded,
-              onTap: () => setState(() => _expandedIndex = isExpanded ? null : i),
+              onTap: () =>
+                  setState(() => _expandedIndex = isExpanded ? null : i),
             );
           },
         );
       },
+    );
+  }
+}
+
+// ─── Screen ───────────────────────────────────────────────────────────────────
+class EncyclopediaScreen extends ConsumerWidget {
+  const EncyclopediaScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Text(
+              ref.t('encyclopedia'),
+              style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(width: 12),
+            const _CloudStatusBadge(),
+          ],
+        ),
+      ),
+      body: const EncyclopediaBody(),
     );
   }
 }
@@ -161,9 +179,23 @@ class _CloudStatusBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(width: 6, height: 6, decoration: const BoxDecoration(color: Colors.green, shape: BoxShape.circle)),
+          Container(
+            width: 6,
+            height: 6,
+            decoration: const BoxDecoration(
+              color: Colors.green,
+              shape: BoxShape.circle,
+            ),
+          ),
           const SizedBox(width: 4),
-          const Text('Live', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.green)),
+          const Text(
+            'Live',
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              color: Colors.green,
+            ),
+          ),
         ],
       ),
     );
@@ -195,44 +227,66 @@ class _SortMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(encyclopediaSortProvider);
-    
-    return PopupMenuButton<EncyclopediaSortState>(
+    return PopupMenuButton<EncyclopediaSortOption>(
       icon: const Icon(Icons.sort_rounded),
-      onSelected: (newState) => ref.read(encyclopediaSortProvider.notifier).state = newState,
+      onSelected: (option) =>
+          ref.read(encyclopediaSortProvider.notifier).update(option),
       itemBuilder: (context) => [
-        _buildItem(ref, EncyclopediaSortField.country, true, 'country_asc'),
-        _buildItem(ref, EncyclopediaSortField.country, false, 'country_desc'),
-        _buildItem(ref, EncyclopediaSortField.region, true, 'region_asc'),
-        _buildItem(ref, EncyclopediaSortField.region, false, 'region_desc'),
-        _buildItem(ref, EncyclopediaSortField.countryRegion, true, 'country_region_asc'),
-        _buildItem(ref, EncyclopediaSortField.price, false, 'price_desc'),
-        _buildItem(ref, EncyclopediaSortField.price, true, 'price_asc'),
-        _buildItem(ref, EncyclopediaSortField.process, true, 'process_asc'),
+        _buildItem(ref, EncyclopediaSortOption.countryAsc, 'sort_country_az'),
+        _buildItem(ref, EncyclopediaSortOption.countryDesc, 'sort_country_za'),
+        _buildItem(ref, EncyclopediaSortOption.regionAsc, 'sort_region_az'),
+        _buildItem(ref, EncyclopediaSortOption.regionDesc, 'sort_region_za'),
+        _buildItem(
+          ref,
+          EncyclopediaSortOption.countryRegionAsc,
+          'sort_country_region',
+        ),
+        _buildItem(
+          ref,
+          EncyclopediaSortOption.priceRetailDesc,
+          'sort_price_retail_high',
+        ),
+        _buildItem(
+          ref,
+          EncyclopediaSortOption.priceRetailAsc,
+          'sort_price_retail_low',
+        ),
+        _buildItem(
+          ref,
+          EncyclopediaSortOption.priceWholesaleDesc,
+          'sort_price_wholesale_high',
+        ),
+        _buildItem(ref, EncyclopediaSortOption.processAsc, 'sort_process'),
+        _buildItem(ref, EncyclopediaSortOption.newestFirst, 'sort_newest'),
       ],
     );
   }
 
-  PopupMenuItem<EncyclopediaSortState> _buildItem(
-    WidgetRef ref, 
-    EncyclopediaSortField field, 
-    bool asc, 
-    String labelKey
+  PopupMenuItem<EncyclopediaSortOption> _buildItem(
+    WidgetRef ref,
+    EncyclopediaSortOption option,
+    String labelKey,
   ) {
-    final current = ref.read(encyclopediaSortProvider);
-    final isSelected = current.field == field && current.ascending == asc;
-    
+    final current = ref.watch(encyclopediaSortProvider);
+    final isSelected = current == option;
+
     return PopupMenuItem(
-      value: EncyclopediaSortState(field: field, ascending: asc),
+      value: option,
       child: Row(
         children: [
-          Icon(isSelected ? Icons.radio_button_checked : Icons.radio_button_off, size: 18, 
-               color: isSelected ? const Color(0xFFC8A96E) : Colors.white38),
+          Icon(
+            isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
+            size: 18,
+            color: isSelected ? const Color(0xFFC8A96E) : Colors.white38,
+          ),
           const SizedBox(width: 12),
-          Text(ref.t(labelKey), style: TextStyle(
-            color: isSelected ? const Color(0xFFC8A96E) : Colors.white,
-            fontSize: 13,
-          )),
+          Text(
+            ref.t(labelKey),
+            style: TextStyle(
+              color: isSelected ? const Color(0xFFC8A96E) : Colors.white,
+              fontSize: 13,
+            ),
+          ),
         ],
       ),
     );
@@ -241,7 +295,7 @@ class _SortMenu extends StatelessWidget {
 
 // ─── Origin Card ─────────────────────────────────────────────────────────────
 class _OriginCard extends ConsumerWidget {
-  final EncyclopediaEntry entry;
+  final LocalizedBeanDto entry;
   final bool isExpanded;
   final VoidCallback onTap;
 
@@ -254,13 +308,15 @@ class _OriginCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scoreColor = _getScoreColor(entry.cupsScore);
-    
+
     return GestureDetector(
       onTap: onTap,
       child: GlassContainer(
         padding: const EdgeInsets.all(0),
         opacity: isExpanded ? 0.12 : 0.08,
-        borderColor: isExpanded ? const Color(0xFFC8A96E).withValues(alpha: 0.5) : null,
+        borderColor: isExpanded
+            ? const Color(0xFFC8A96E).withValues(alpha: 0.5)
+            : null,
         child: Column(
           children: [
             Padding(
@@ -273,8 +329,20 @@ class _OriginCard extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(entry.country, style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16)),
-                        Text(entry.region, style: const TextStyle(fontSize: 12, color: Colors.white54)),
+                        Text(
+                          entry.country,
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Text(
+                          entry.region,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.white54,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -282,12 +350,17 @@ class _OriginCard extends ConsumerWidget {
                   const SizedBox(width: 8),
                   IconButton(
                     icon: Icon(
-                      entry.isFavorite ? Icons.star_rounded : Icons.star_outline_rounded,
-                      color: entry.isFavorite ? const Color(0xFFC8A96E) : Colors.white24,
+                      entry.isFavorite
+                          ? Icons.star_rounded
+                          : Icons.star_outline_rounded,
+                      color: entry.isFavorite
+                          ? const Color(0xFFC8A96E)
+                          : Colors.white24,
                     ),
                     onPressed: () async {
-                      await ref.read(databaseProvider).toggleFavorite(entry.id, !entry.isFavorite);
-                      ref.invalidate(supabaseEncyclopediaProvider);
+                      await ref
+                          .read(databaseProvider)
+                          .toggleFavorite(entry.id, !entry.isFavorite);
                     },
                   ),
                 ],
@@ -299,7 +372,9 @@ class _OriginCard extends ConsumerWidget {
                 child: Wrap(
                   spacing: 6,
                   runSpacing: 6,
-                  children: entry.flavorNotes.map((f) => _FlavorChip(f)).toList(),
+                  children: entry.flavorNotes
+                      .map((f) => _FlavorChip(f))
+                      .toList(),
                 ),
               ),
             if (isExpanded) ...[
@@ -309,22 +384,35 @@ class _OriginCard extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(entry.description, style: const TextStyle(fontSize: 13, color: Colors.white70, height: 1.5)),
+                    Text(
+                      entry.description,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Colors.white70,
+                        height: 1.5,
+                      ),
+                    ),
                     const SizedBox(height: 16),
                     _DetailGrid(entry: entry),
                     const SizedBox(height: 16),
                     Center(
                       child: TextButton(
-                        onPressed: () => Navigator.push(context, MaterialPageRoute(
-                          builder: (_) => OriginDetailsScreen(entry: entry),
-                        )),
-                        child: Text(ref.t('read_more'), style: const TextStyle(color: Color(0xFFC8A96E))),
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => OriginDetailsScreen(entry: entry),
+                          ),
+                        ),
+                        child: Text(
+                          ref.t('read_more'),
+                          style: const TextStyle(color: Color(0xFFC8A96E)),
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-            ]
+            ],
           ],
         ),
       ),
@@ -347,13 +435,28 @@ class _OriginAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 44, height: 44,
-      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(10)),
+      width: 44,
+      height: 44,
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
-        child: url != null 
-          ? CachedNetworkImage(imageUrl: url!, fit: BoxFit.cover, errorWidget: (_,__,___) => Center(child: Text(emoji ?? '☕', style: const TextStyle(fontSize: 22))))
-          : Center(child: Text(emoji ?? '☕', style: const TextStyle(fontSize: 22))),
+        child: url != null
+            ? CachedNetworkImage(
+                imageUrl: url!,
+                fit: BoxFit.cover,
+                errorWidget: (context, url, error) => Center(
+                  child: Text(
+                    emoji ?? '☕',
+                    style: const TextStyle(fontSize: 22),
+                  ),
+                ),
+              )
+            : Center(
+                child: Text(emoji ?? '☕', style: const TextStyle(fontSize: 22)),
+              ),
       ),
     );
   }
@@ -368,8 +471,22 @@ class _ScaBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(score.toStringAsFixed(1), style: TextStyle(fontWeight: FontWeight.bold, color: color, fontSize: 14)),
-        const Text('SCA', style: TextStyle(fontSize: 8, color: Colors.white38, fontWeight: FontWeight.bold)),
+        Text(
+          score.toStringAsFixed(1),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: color,
+            fontSize: 14,
+          ),
+        ),
+        const Text(
+          'SCA',
+          style: TextStyle(
+            fontSize: 8,
+            color: Colors.white38,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ],
     );
   }
@@ -383,46 +500,57 @@ class _ComparisonTab extends ConsumerStatefulWidget {
 }
 
 class _ComparisonTabState extends ConsumerState<_ComparisonTab> {
-  EncyclopediaEntry? _coffeeA;
-  EncyclopediaEntry? _coffeeB;
+  LocalizedBeanDto? _coffeeA;
+  LocalizedBeanDto? _coffeeB;
 
   @override
   Widget build(BuildContext context) {
-    final originsAsync = ref.watch(supabaseEncyclopediaProvider);
+    final originsAsync = ref.watch(encyclopediaDataProvider);
 
     return originsAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => Center(child: Text('Error: $e')),
       data: (entries) {
-        if (entries.isEmpty) return const _EmptyState(message: 'No coffees available');
-        
+        if (entries.isEmpty) {
+          return const _EmptyState(message: 'No coffees available');
+        }
+
         return ListView(
           padding: const EdgeInsets.all(20),
           children: [
             Row(
               children: [
-                Expanded(child: _Selector(
-                  label: 'Coffee A',
-                  selected: _coffeeA,
-                  entries: entries,
-                  onChanged: (v) => setState(() => _coffeeA = v),
-                  exclude: _coffeeB,
-                )),
+                Expanded(
+                  child: _Selector(
+                    label: 'Coffee A',
+                    selected: _coffeeA,
+                    entries: entries,
+                    onChanged: (v) => setState(() => _coffeeA = v),
+                    exclude: _coffeeB,
+                  ),
+                ),
                 const SizedBox(width: 16),
-                Expanded(child: _Selector(
-                  label: 'Coffee B',
-                  selected: _coffeeB,
-                  entries: entries,
-                  onChanged: (v) => setState(() => _coffeeB = v),
-                  exclude: _coffeeA,
-                )),
+                Expanded(
+                  child: _Selector(
+                    label: 'Coffee B',
+                    selected: _coffeeB,
+                    entries: entries,
+                    onChanged: (v) => setState(() => _coffeeB = v),
+                    exclude: _coffeeA,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 32),
-            if (_coffeeA != null && _coffeeB != null) 
+            if (_coffeeA != null && _coffeeB != null)
               _ComparisonResult(a: _coffeeA!, b: _coffeeB!)
             else
-              const Center(child: Text('Select two coffees to compare', style: TextStyle(color: Colors.white24))),
+              const Center(
+                child: Text(
+                  'Select two coffees to compare',
+                  style: TextStyle(color: Colors.white24),
+                ),
+              ),
           ],
         );
       },
@@ -432,33 +560,58 @@ class _ComparisonTabState extends ConsumerState<_ComparisonTab> {
 
 class _Selector extends StatelessWidget {
   final String label;
-  final EncyclopediaEntry? selected;
-  final List<EncyclopediaEntry> entries;
-  final ValueChanged<EncyclopediaEntry?> onChanged;
-  final EncyclopediaEntry? exclude;
+  final LocalizedBeanDto? selected;
+  final List<LocalizedBeanDto> entries;
+  final ValueChanged<LocalizedBeanDto?> onChanged;
+  final LocalizedBeanDto? exclude;
 
-  const _Selector({required this.label, this.selected, required this.entries, required this.onChanged, this.exclude});
+  const _Selector({
+    required this.label,
+    this.selected,
+    required this.entries,
+    required this.onChanged,
+    this.exclude,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontSize: 10, color: Colors.white38, fontWeight: FontWeight.bold)),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 10,
+            color: Colors.white38,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.white12)),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.white12),
+          ),
           child: DropdownButtonHideUnderline(
-            child: DropdownButton<EncyclopediaEntry>(
+            child: DropdownButton<LocalizedBeanDto>(
               isExpanded: true,
               value: selected,
               hint: const Text('Select...', style: TextStyle(fontSize: 12)),
               dropdownColor: const Color(0xFF1A1A1A),
-              items: entries.where((e) => e != exclude).map((e) => DropdownMenuItem(
-                value: e,
-                child: Text('${e.countryEmoji} ${e.country}', style: const TextStyle(fontSize: 13)),
-              )).toList(),
+              items: entries
+                  .where((e) => e != exclude)
+                  .map(
+                    (e) => DropdownMenuItem(
+                      value: e,
+                      child: Text(
+                        '${e.countryEmoji} ${e.country}',
+                        style: const TextStyle(fontSize: 13),
+                      ),
+                    ),
+                  )
+                  .toList(),
               onChanged: onChanged,
             ),
           ),
@@ -469,8 +622,8 @@ class _Selector extends StatelessWidget {
 }
 
 class _ComparisonResult extends StatelessWidget {
-  final EncyclopediaEntry a;
-  final EncyclopediaEntry b;
+  final LocalizedBeanDto a;
+  final LocalizedBeanDto b;
   const _ComparisonResult({required this.a, required this.b});
 
   @override
@@ -479,7 +632,12 @@ class _ComparisonResult extends StatelessWidget {
       padding: const EdgeInsets.all(0),
       child: Column(
         children: [
-          _CompRow('SCA Score', a.cupsScore.toString(), b.cupsScore.toString(), highlightHigher: true),
+          _CompRow(
+            'SCA Score',
+            a.cupsScore.toString(),
+            b.cupsScore.toString(),
+            highlightHigher: true,
+          ),
           _CompRow('Country', a.country, b.country),
           _CompRow('Region', a.region, b.region),
           _CompRow('Processing', a.processMethod, b.processMethod),
@@ -494,27 +652,69 @@ class _ComparisonResult extends StatelessWidget {
 class _CompRow extends StatelessWidget {
   final String label, valA, valB;
   final bool highlightHigher;
-  const _CompRow(this.label, this.valA, this.valB, {this.highlightHigher = false});
+  const _CompRow(
+    this.label,
+    this.valA,
+    this.valB, {
+    this.highlightHigher = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     final numA = double.tryParse(valA) ?? 0;
     final numB = double.tryParse(valB) ?? 0;
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-      decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white05))),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: Colors.white.withValues(alpha: 0.05)),
+        ),
+      ),
       child: Row(
         children: [
-          Expanded(child: Text(valA, textAlign: TextAlign.center, style: TextStyle(
-            fontSize: 14, fontWeight: highlightHigher && numA > numB ? FontWeight.bold : FontWeight.normal,
-            color: highlightHigher && numA > numB ? const Color(0xFFC8A96E) : Colors.white70
-          ))),
-          SizedBox(width: 80, child: Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 10, color: Colors.white24, fontWeight: FontWeight.bold))),
-          Expanded(child: Text(valB, textAlign: TextAlign.center, style: TextStyle(
-            fontSize: 14, fontWeight: highlightHigher && numB > numA ? FontWeight.bold : FontWeight.normal,
-            color: highlightHigher && numB > numA ? const Color(0xFFC8A96E) : Colors.white70
-          ))),
+          Expanded(
+            child: Text(
+              valA,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: highlightHigher && numA > numB
+                    ? FontWeight.bold
+                    : FontWeight.normal,
+                color: highlightHigher && numA > numB
+                    ? const Color(0xFFC8A96E)
+                    : Colors.white70,
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 80,
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 10,
+                color: Colors.white24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              valB,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: highlightHigher && numB > numA
+                    ? FontWeight.bold
+                    : FontWeight.normal,
+                color: highlightHigher && numB > numA
+                    ? const Color(0xFFC8A96E)
+                    : Colors.white70,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -551,7 +751,7 @@ class _FlavorChip extends StatelessWidget {
 
 // ─── Detail Grid ─────────────────────────────────────────────────────────────
 class _DetailGrid extends ConsumerWidget {
-  final EncyclopediaEntry entry;
+  final LocalizedBeanDto entry;
   const _DetailGrid({required this.entry});
 
   @override
@@ -591,69 +791,9 @@ class _DetailGrid extends ConsumerWidget {
   }
 }
 
-// ─── Processing Methods List ─────────────────────────────────────────────────
-class _ProcessingMethodsList extends StatelessWidget {
-  final String jsonInfo;
-  const _ProcessingMethodsList({required this.jsonInfo});
-
-  @override
-  Widget build(BuildContext context) {
-    if (jsonInfo.isEmpty || jsonInfo == '[]') return const SizedBox();
-    try {
-      final List methods = jsonDecode(jsonInfo);
-      return Column(
-        children: methods.map((m) {
-          final map = m as Map<String, dynamic>;
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 2),
-                  child: Icon(
-                    Icons.water_drop,
-                    size: 16,
-                    color: Color(0xFFC8A96E),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        map['name']?.toString() ?? '',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        map['desc']?.toString() ?? '',
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 13,
-                          height: 1.4,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        }).toList(),
-      );
-    } catch (_) {
-      return const SizedBox();
-    }
-  }
-}
 
 class OriginDetailsScreen extends ConsumerWidget {
-  final EncyclopediaEntry entry;
+  final LocalizedBeanDto entry;
   const OriginDetailsScreen({super.key, required this.entry});
 
   @override
@@ -791,7 +931,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 }
 
 class _ProductTab extends ConsumerWidget {
-  final EncyclopediaEntry entry;
+  final LocalizedBeanDto entry;
   const _ProductTab({required this.entry});
 
   @override
@@ -844,7 +984,7 @@ class _ProductTab extends ConsumerWidget {
 }
 
 class _SourceTab extends ConsumerWidget {
-  final EncyclopediaEntry entry;
+  final LocalizedBeanDto entry;
   const _SourceTab({required this.entry});
 
   @override
@@ -911,7 +1051,7 @@ class _SourceTab extends ConsumerWidget {
     );
   }
 
-  String _getLocalizedDescription(EncyclopediaEntry entry, WidgetRef ref) {
+  String _getLocalizedDescription(LocalizedBeanDto entry, WidgetRef ref) {
     final country = entry.country.toLowerCase();
 
     // Mad Heads
@@ -1175,7 +1315,7 @@ class _RecommendedRecipeCard extends StatelessWidget {
 }
 
 class _SensoryVisualization extends StatelessWidget {
-  final EncyclopediaEntry entry;
+  final LocalizedBeanDto entry;
   const _SensoryVisualization({required this.entry});
 
   @override
@@ -1302,7 +1442,7 @@ class _ProfileLine extends StatelessWidget {
 
 void _showProcessDetailSheet(
   BuildContext context,
-  EncyclopediaEntry entry,
+  LocalizedBeanDto entry,
   WidgetRef ref,
 ) {
   showModalBottomSheet(
@@ -1385,7 +1525,7 @@ void _showProcessDetailSheet(
   );
 }
 
-String _translateDetailedDescription(EncyclopediaEntry entry, WidgetRef ref) {
+String _translateDetailedDescription(LocalizedBeanDto entry, WidgetRef ref) {
   final p = entry.processMethod.toLowerCase();
   if (p.contains('natural') || p.contains('натур')) {
     return ref.t('process_natural_desc');
@@ -1499,7 +1639,7 @@ bool _hasLocalizedDescription(String process, WidgetRef ref) {
 
 void _showLocalizedProcessSheet(
   BuildContext context,
-  EncyclopediaEntry entry,
+  LocalizedBeanDto entry,
   WidgetRef ref,
 ) {
   final description = _getLocalizedDetailedProcess(entry.processMethod, ref);

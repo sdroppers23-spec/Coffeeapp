@@ -242,6 +242,19 @@ class AppDatabase extends _$AppDatabase {
     return rows.map((row) => _mapBeanRow(row)).toList();
   }
 
+  Stream<List<LocalizedBeanDto>> watchAllEncyclopediaEntries(String lang) {
+    final query = select(localizedBeans).join([
+      innerJoin(
+        localizedBeanTranslations,
+        localizedBeanTranslations.beanId.equalsExp(localizedBeans.id),
+      ),
+    ])..where(localizedBeanTranslations.languageCode.equals(lang));
+
+    return query.watch().map(
+      (rows) => rows.map((row) => _mapBeanRow(row)).toList(),
+    );
+  }
+
   Future<List<LocalizedBeanDto>> getAllBeans(String lang) =>
       getAllOrigins(lang);
   Future<List<LocalizedBeanDto>> getAllEncyclopediaEntries(String lang) =>

@@ -17,6 +17,43 @@ final farmersProvider = FutureProvider<List<LocalizedFarmerDto>>((ref) async {
   return db.getAllFarmers(locale);
 });
 
+class FarmersBody extends ConsumerWidget {
+  const FarmersBody({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncFarms = ref.watch(farmersProvider);
+
+    return asyncFarms.when(
+      loading: () => const Center(
+        child: CircularProgressIndicator(color: Color(0xFFC8A96E)),
+      ),
+      error: (e, _) => Center(
+        child: Text('Error: $e', style: const TextStyle(color: Colors.red)),
+      ),
+      data: (farmers) {
+        if (farmers.isEmpty) {
+          return Center(
+            child: Text(
+              'No farmers found. Syncing...',
+              style: GoogleFonts.poppins(color: Colors.white38),
+            ),
+          );
+        }
+
+        return ListView.builder(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
+          itemCount: farmers.length,
+          itemBuilder: (context, index) {
+            final farmer = farmers[index];
+            return _PremiumFarmerCard(farmer: farmer);
+          },
+        );
+      },
+    );
+  }
+}
+
 class FarmersScreen extends ConsumerStatefulWidget {
   const FarmersScreen({super.key});
 
@@ -27,8 +64,6 @@ class FarmersScreen extends ConsumerStatefulWidget {
 class _FarmersScreenState extends ConsumerState<FarmersScreen> {
   @override
   Widget build(BuildContext context) {
-    final asyncFarms = ref.watch(farmersProvider);
-
     return PremiumBackground(
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -50,33 +85,7 @@ class _FarmersScreenState extends ConsumerState<FarmersScreen> {
             ),
           ],
         ),
-        body: asyncFarms.when(
-          loading: () => const Center(
-            child: CircularProgressIndicator(color: Color(0xFFC8A96E)),
-          ),
-          error: (e, _) => Center(
-            child: Text('Error: $e', style: const TextStyle(color: Colors.red)),
-          ),
-          data: (farmers) {
-            if (farmers.isEmpty) {
-              return Center(
-                child: Text(
-                  'No farmers found. Syncing...',
-                  style: GoogleFonts.poppins(color: Colors.white38),
-                ),
-              );
-            }
-
-            return ListView.builder(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
-              itemCount: farmers.length,
-              itemBuilder: (context, index) {
-                final farmer = farmers[index];
-                return _PremiumFarmerCard(farmer: farmer);
-              },
-            );
-          },
-        ),
+        body: const FarmersBody(),
       ),
     );
   }

@@ -254,77 +254,6 @@ class _EmptyState extends StatelessWidget {
 }
 
 // ─── Sorting Menu ─────────────────────────────────────────────────────────────
-class _SortMenu extends StatelessWidget {
-  final WidgetRef ref;
-  const _SortMenu({required this.ref});
-
-  @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton<EncyclopediaSortOption>(
-      icon: const Icon(Icons.sort_rounded),
-      onSelected: (option) =>
-          ref.read(encyclopediaSortProvider.notifier).update(option),
-      itemBuilder: (context) => [
-        _buildItem(ref, EncyclopediaSortOption.countryAsc, 'sort_country_az'),
-        _buildItem(ref, EncyclopediaSortOption.countryDesc, 'sort_country_za'),
-        _buildItem(ref, EncyclopediaSortOption.regionAsc, 'sort_region_az'),
-        _buildItem(ref, EncyclopediaSortOption.regionDesc, 'sort_region_za'),
-        _buildItem(
-          ref,
-          EncyclopediaSortOption.countryRegionAsc,
-          'sort_country_region',
-        ),
-        _buildItem(
-          ref,
-          EncyclopediaSortOption.priceRetailDesc,
-          'sort_price_retail_high',
-        ),
-        _buildItem(
-          ref,
-          EncyclopediaSortOption.priceRetailAsc,
-          'sort_price_retail_low',
-        ),
-        _buildItem(
-          ref,
-          EncyclopediaSortOption.priceWholesaleDesc,
-          'sort_price_wholesale_high',
-        ),
-        _buildItem(ref, EncyclopediaSortOption.processAsc, 'sort_process'),
-        _buildItem(ref, EncyclopediaSortOption.newestFirst, 'sort_newest'),
-      ],
-    );
-  }
-
-  PopupMenuItem<EncyclopediaSortOption> _buildItem(
-    WidgetRef ref,
-    EncyclopediaSortOption option,
-    String labelKey,
-  ) {
-    final current = ref.watch(encyclopediaSortProvider);
-    final isSelected = current == option;
-
-    return PopupMenuItem(
-      value: option,
-      child: Row(
-        children: [
-          Icon(
-            isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
-            size: 18,
-            color: isSelected ? const Color(0xFFC8A96E) : Colors.white38,
-          ),
-          const SizedBox(width: 12),
-          Text(
-            ref.t(labelKey),
-            style: TextStyle(
-              color: isSelected ? const Color(0xFFC8A96E) : Colors.white,
-              fontSize: 13,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 // ─── Origin Card ─────────────────────────────────────────────────────────────
 class _OriginCard extends ConsumerWidget {
@@ -445,12 +374,6 @@ class _OriginCard extends ConsumerWidget {
     );
   }
 
-  Color _getScoreColor(double score) {
-    if (score >= 90) return Colors.purpleAccent;
-    if (score >= 87) return Colors.amber;
-    if (score >= 85) return Colors.greenAccent;
-    return Colors.white70;
-  }
 }
 
 class _ActionButton extends StatelessWidget {
@@ -570,35 +493,6 @@ class _OriginAvatar extends StatelessWidget {
   }
 }
 
-class _ScaBadge extends StatelessWidget {
-  final double score;
-  final Color color;
-  const _ScaBadge({required this.score, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          score.toStringAsFixed(1),
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: color,
-            fontSize: 14,
-          ),
-        ),
-        const Text(
-          'SCA',
-          style: TextStyle(
-            fontSize: 8,
-            color: Colors.white38,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
-    );
-  }
-}
 
 // ─── Comparison Tab ───────────────────────────────────────────────────────────
 class _ComparisonTab extends ConsumerStatefulWidget {
@@ -829,33 +723,6 @@ class _CompRow extends StatelessWidget {
   }
 }
 
-// ─── Flavor Chip ─────────────────────────────────────────────────────────────
-class _FlavorChip extends StatelessWidget {
-  final String label;
-  const _FlavorChip(this.label);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
-        ),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 11,
-          color: Theme.of(context).colorScheme.primary,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
-}
 
 // ─── Detail Grid ─────────────────────────────────────────────────────────────
 class _DetailGrid extends ConsumerWidget {

@@ -619,7 +619,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               return Expanded(
                 child: GestureDetector(
                   onTap: () {
-                    ref.read(settingsProvider.notifier).triggerSelectionHaptic();
+                    ref.read(settingsProvider.notifier).triggerSelectionVibrate();
                     onChanged((i + 1).toDouble());
                   },
                   child: Container(

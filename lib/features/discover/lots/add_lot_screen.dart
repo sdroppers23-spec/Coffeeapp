@@ -135,7 +135,10 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     });
   }
 
-  bool get _canSave => _roasteryName.isNotEmpty && _coffeeName.isNotEmpty;
+  bool get _canSave => 
+      _roasteryName.trim().isNotEmpty && 
+      _coffeeName.trim().isNotEmpty && 
+      _originCountry.trim().isNotEmpty;
 
   Future<void> _saveLot() async {
     if (!_canSave) return;

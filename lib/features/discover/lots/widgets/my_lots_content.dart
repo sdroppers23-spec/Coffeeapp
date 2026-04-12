@@ -525,35 +525,45 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
           itemCount: filteredLots.length,
           itemBuilder: (context, index) {
             final lot = filteredLots[index];
-            return MyLotListCard(
-              lot: lot,
-              isSelected: _selectedLotIds.contains(lot.id),
-              isSelectionMode: _isSelectionMode,
-              onLongPress: (id) => _toggleLotSelection(id),
-              onTap: (id) => context.push('/edit_lot', extra: lot),
-              onFavoriteToggle: (lot) async {
-                ref.read(settingsProvider.notifier).triggerSelectionVibrate();
-                final db = ref.read(databaseProvider);
-                await db.toggleLotFavorite(lot.id, !lot.isFavorite);
-                ref.invalidate(userLotsProvider);
-              },
-              onEditSwipe: (lot) {
-                context.push('/edit_lot', extra: lot);
-              },
-              onDeleteSwipe: (lot) async {
-                final confirm = await _confirmDeleteDialog(lot);
-                if (confirm) {
+              return MyLotListCard(
+                lot: lot,
+                isSelected: _selectedLotIds.contains(lot.id),
+                isSelectionMode: _isSelectionMode,
+                onLongPress: (id) => _toggleLotSelection(id),
+                onTap: (id) => context.push('/edit_lot', extra: lot),
+                onFavoriteToggle: (lot) async {
+                  ref.read(settingsProvider.notifier).triggerSelectionVibrate();
                   final db = ref.read(databaseProvider);
-                  await db.deleteUserLot(lot.id);
+                  await db.toggleLotFavorite(lot.id, !lot.isFavorite);
                   ref.invalidate(userLotsProvider);
-                  if (context.mounted) {
-                    _showPremiumUndo(lot, context, ref);
+                },
+                onEditSwipe: activeTab == 2 ? null : (lot) {
+                  context.push('/edit_lot', extra: lot);
+                },
+                onRestoreSwipe: activeTab == 2 ? (lot) async {
+                  final db = ref.read(databaseProvider);
+                  await db.toggleLotArchive(lot.id, false);
+                  ref.invalidate(userLotsProvider);
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(isUk ? 'Лот повернуто з архіву' : 'Lot restored from archive')),
+                    );
                   }
-                  return true;
-                }
-                return false;
-              },
-            );
+                } : null,
+                onDeleteSwipe: (lot) async {
+                  final confirm = await _confirmDeleteDialog(lot);
+                  if (confirm) {
+                    final db = ref.read(databaseProvider);
+                    await db.deleteUserLot(lot.id);
+                    ref.invalidate(userLotsProvider);
+                    if (context.mounted) {
+                      _showPremiumUndo(lot, context, ref);
+                    }
+                    return true;
+                  }
+                  return false;
+                },
+              );
           },
         );
       },

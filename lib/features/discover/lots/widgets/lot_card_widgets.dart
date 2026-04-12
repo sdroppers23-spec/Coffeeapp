@@ -231,6 +231,7 @@ class MyLotListCard extends ConsumerWidget {
   final Function(String) onTap;
   final Function(CoffeeLotDto) onFavoriteToggle;
   final Function(CoffeeLotDto)? onEditSwipe;
+  final Function(CoffeeLotDto)? onRestoreSwipe;
   final Future<bool> Function(CoffeeLotDto)? onDeleteSwipe;
 
   const MyLotListCard({
@@ -242,6 +243,7 @@ class MyLotListCard extends ConsumerWidget {
     required this.onTap,
     required this.onFavoriteToggle,
     this.onEditSwipe,
+    this.onRestoreSwipe,
     this.onDeleteSwipe,
   });
 
@@ -384,7 +386,11 @@ class MyLotListCard extends ConsumerWidget {
               return await onDeleteSwipe!(lot);
             }
           } else if (direction == DismissDirection.startToEnd) {
-            // Edit
+            // Restore or Edit
+            if (onRestoreSwipe != null) {
+              onRestoreSwipe!(lot);
+              return false;
+            }
             if (onEditSwipe != null) {
               onEditSwipe!(lot);
             }
@@ -394,12 +400,18 @@ class MyLotListCard extends ConsumerWidget {
         },
         background: Container(
           decoration: BoxDecoration(
-            color: const Color(0xFF62D39F).withValues(alpha: 0.8),
+            color: onRestoreSwipe != null 
+              ? const Color(0xFFC8A96E).withValues(alpha: 0.8) 
+              : const Color(0xFF62D39F).withValues(alpha: 0.8),
             borderRadius: BorderRadius.circular(20),
           ),
           alignment: Alignment.centerLeft,
           padding: const EdgeInsets.only(left: 20),
-          child: const Icon(Icons.edit_rounded, color: Colors.black, size: 32),
+          child: Icon(
+            onRestoreSwipe != null ? Icons.unarchive_outlined : Icons.edit_rounded, 
+            color: Colors.black, 
+            size: 32
+          ),
         ),
         secondaryBackground: Container(
           decoration: BoxDecoration(
@@ -556,7 +568,15 @@ class _FreshnessProgressBar extends StatelessWidget {
     if (factor < 0.0) factor = 0.0;
     if (factor > 1.0) factor = 1.0;
 
-    final Color statusColor = isExpired ? Colors.redAccent : Colors.tealAccent;
+    // 4. Determine Dynamic Color
+    Color getDynamicColor(double f) {
+      if (f > 0.75) return const Color(0xFF2DD4BF); // Teal
+      if (f > 0.4) return const Color(0xFFFACC15);  // Yellow
+      if (f > 0.15) return const Color(0xFFFB923C); // Orange
+      return const Color(0xFFEF4444);              // Red
+    }
+
+    final Color statusColor = isExpired ? Colors.redAccent : getDynamicColor(factor);
     final String labelText;
     if (isExpired) {
       labelText = isUk ? 'ТЕРМІН ВИЙШОВ' : 'EXPIRED';
@@ -598,19 +618,12 @@ class _FreshnessProgressBar extends StatelessWidget {
             widthFactor: factor,
             child: Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    const Color(0xFF2DD4BF), // Fresh Teal
-                    const Color(0xFFFACC15), // Vibrant Gold
-                    const Color(0xFFEF4444), // Critical Red
-                  ],
-                  stops: const [0.0, 0.5, 1.0],
-                ),
+                color: statusColor,
                 borderRadius: BorderRadius.circular(2),
                 boxShadow: [
                   if (!isExpired)
                     BoxShadow(
-                      color: (factor > 0.5 ? const Color(0xFFFACC15) : const Color(0xFF2DD4BF)).withValues(alpha: 0.3),
+                      color: statusColor.withValues(alpha: 0.3),
                       blurRadius: 6,
                       spreadRadius: 0.5
                     )

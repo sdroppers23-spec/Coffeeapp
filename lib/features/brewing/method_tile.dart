@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/database/app_database.dart';
+import '../../core/database/coffee_data_seed.dart';
 import '../../shared/widgets/glass_container.dart';
 import 'brewing_detail_screen.dart';
 import 'method_recipes_screen.dart';
@@ -25,45 +27,52 @@ const _methodMeta = <String, _MethodMeta>{
   'v60': _MethodMeta(
     name: 'V60 Pour Over',
     nameUk: 'V60 Пур-овер',
-    assetPath: 'assets/images/methods/v60.png',
+    assetPath: '${CoffeeDataSeed.bucketUrl}/methods/v60.png',
     gradient: [Color(0xFFD4A574), Color(0xFF8B5E3C)],
   ),
   'chemex': _MethodMeta(
     name: 'Chemex',
     nameUk: 'Chemex',
-    assetPath: 'assets/images/methods/chemex.png',
+    assetPath: '${CoffeeDataSeed.bucketUrl}/methods/chemex.png',
     gradient: [Color(0xFFE8D5B7), Color(0xFF9C7048)],
   ),
   'aeropress': _MethodMeta(
     name: 'Aeropress',
     nameUk: 'Аеропрес',
-    assetPath: 'assets/images/methods/aeropress.png',
+    assetPath: '${CoffeeDataSeed.bucketUrl}/methods/aeropress.png',
     gradient: [Color(0xFFB8C4CC), Color(0xFF5A7A8A)],
   ),
   'french_press': _MethodMeta(
     name: 'French Press',
     nameUk: 'Французький прес',
-    assetPath: 'assets/images/methods/french_press.png',
+    assetPath: '${CoffeeDataSeed.bucketUrl}/methods/french_press.png',
     gradient: [Color(0xFFC8A96E), Color(0xFF7A5C2E)],
   ),
   'espresso': _MethodMeta(
     name: 'Espresso',
     nameUk: 'Еспресо',
-    assetPath: 'assets/images/methods/espresso.png',
+    assetPath: '${CoffeeDataSeed.bucketUrl}/methods/espresso.png',
     gradient: [Color(0xFF8B2635), Color(0xFF4A1520)],
   ),
   'clever': _MethodMeta(
     name: 'Clever Dripper',
     nameUk: 'Clever Dripper',
-    assetPath: 'assets/images/methods/clever_dripper.png', 
+    assetPath: '${CoffeeDataSeed.bucketUrl}/methods/clever_dripper.png', 
     gradient: [Color(0xFFB8860B), Color(0xFF556B2F)],
   ),
   'cold_brew': _MethodMeta(
     name: 'Cold Brew',
     nameUk: 'Холодна екстракція',
-    assetPath: 'assets/images/methods/cold_brew.png',
+    assetPath: '${CoffeeDataSeed.bucketUrl}/methods/cold_brew.png',
     gradient: [Color(0xFF4A90D9), Color(0xFF1A3A5C)],
     icon: Icons.ac_unit_outlined,
+  ),
+  'siphon': _MethodMeta(
+    name: 'Siphon',
+    nameUk: 'Сифон',
+    assetPath: '${CoffeeDataSeed.bucketUrl}/methods/siphon.png',
+    gradient: [Color(0xFF9370DB), Color(0xFF4B0082)],
+    icon: Icons.science_outlined,
   ),
 };
 
@@ -85,8 +94,8 @@ class MethodTile extends StatelessWidget {
     final meta = _methodMeta[key] ??
         _MethodMeta(
           name: key.toUpperCase(),
-          nameUk: key.replaceAll('_', ' '),
-          assetPath: 'assets/images/methods/v60.png',
+          nameUk: meta.nameUk,
+          assetPath: '${CoffeeDataSeed.bucketUrl}/methods/v60.png',
           gradient: const [Color(0xFFD4A574), Color(0xFF8B5E3C)],
         );
 
@@ -140,10 +149,10 @@ class _TileCard extends StatelessWidget {
           children: [
             // ── Background image with gradient fallback ──────────────────
             Positioned.fill(
-              child: Image.asset(
-                meta.assetPath,
+              child: CachedNetworkImage(
+                imageUrl: meta.assetPath,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
+                placeholder: (context, url) => Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: meta.gradient,
@@ -151,6 +160,19 @@ class _TileCard extends StatelessWidget {
                       end: Alignment.bottomRight,
                     ),
                   ),
+                  child: const Center(
+                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white24),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: meta.gradient,
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                  child: Icon(meta.icon, color: Colors.white24, size: 48),
                 ),
               ),
             ),

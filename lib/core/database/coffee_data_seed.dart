@@ -125,6 +125,7 @@ class CoffeeDataSeed {
     }
   }
 
+/*
   Future<void> _seedFarmers() async {
     final count = await (db.select(db.localizedFarmers)).get();
     if (count.isNotEmpty) return;
@@ -201,7 +202,9 @@ class CoffeeDataSeed {
       debugPrint('Error seeding farmers: $e');
     }
   }
+*/
 
+/*
   Future<void> _seedEncyclopedia() async {
     final count = await (db.select(db.specialtyArticles)).get();
     if (count.isNotEmpty) return;
@@ -276,6 +279,7 @@ class CoffeeDataSeed {
       debugPrint('Error seeding encyclopedia: $e');
     }
   }
+*/
 
   String _slugify(String text) {
     return text.toLowerCase()
@@ -289,6 +293,7 @@ class CoffeeDataSeed {
         .replaceAll('__', '_');
   }
 
+/*
   Future<void> _seedMadHeadsOrigins() async {
     final entries = [
       _Entry(
@@ -342,6 +347,7 @@ class CoffeeDataSeed {
       ],
     );
   }
+*/
 
   Future<void> _seedBrewingRecipes() async {
     // We clear current recipes to ensure we get exactly the 30 champion ones with unique IDs

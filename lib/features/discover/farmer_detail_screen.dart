@@ -202,26 +202,28 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                         ),
                       ),
                       const SizedBox(width: 10),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: gold.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: gold.withValues(alpha: 0.35),
+                      Flexible(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
                           ),
-                        ),
-                        child: Text(
-                          '${widget.farmer.country}, ${widget.farmer.region}'
-                              .toUpperCase(),
-                          style: GoogleFonts.poppins(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
-                            color: gold,
-                            letterSpacing: 1.2,
+                          decoration: BoxDecoration(
+                            color: gold.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: gold.withValues(alpha: 0.35),
+                            ),
+                          ),
+                          child: Text(
+                            '${widget.farmer.country}, ${widget.farmer.region}'
+                                .toUpperCase(),
+                            style: GoogleFonts.poppins(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              color: gold,
+                              letterSpacing: 1.2,
+                            ),
                           ),
                         ),
                       ),

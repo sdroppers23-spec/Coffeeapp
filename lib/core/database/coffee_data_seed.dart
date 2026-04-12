@@ -19,7 +19,7 @@ class CoffeeDataSeed {
     onProgress?.call('Initializing database sync...');
     debugPrint('DB SEEDING: STARTING (FORCE=$force)...');
 
-    if (force) {
+    if (force || await db.brandsIsEmpty()) {
       debugPrint('DB SEEDING: PERFORMING MANDATORY CLEANUP...');
       await db.transaction(() async {
         await db.delete(db.localizedBeans).go();
@@ -126,7 +126,9 @@ class CoffeeDataSeed {
   }
 
   Future<void> _seedFarmers() async {
-    // Always upsert to ensure data is updated
+    // Always clear before re-seeding to ensure no orphans/duplicates
+    await db.clearFarmers();
+    
     final farmers = [
       _FarmerEntry(
         id: 1,
@@ -144,7 +146,7 @@ class CoffeeDataSeed {
 *   **Термальний шок:** Використання різкої зміни температури води (гаряча 40°C / холодна 12°C) для миттєвого закриття пор зерна, що дозволяє "запечатати" унікальні ароматичні сполуки всередині.
 *   **Ферментація в біореакторах:** Використання сталевих резервуарів з повним контролем тиску та температури.
 *   **Озонова стерилізація:** Очищення ягід озоном перед обробкою для повного видалення небажаних дріжджів та бактерій.''',
-        imageUrl: 'assets/images/farmer_wilton_benitez_1775463688190.png',
+        imageUrl: 'assets/images/farmer_wilton_benitez.png',
       ),
       _FarmerEntry(
         id: 2,
@@ -313,7 +315,9 @@ class CoffeeDataSeed {
   }
 
   Future<void> _seedEncyclopedia() async {
-    // Always upsert to ensure data is updated
+    // Always clear before re-seeding to ensure no orphans/duplicates
+    await db.clearSpecialtyArticles();
+
     final articles = [
       _ArticleEntry(
         id: '1',

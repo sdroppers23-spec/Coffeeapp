@@ -161,6 +161,10 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       'wholesale_1k': _wholesalePrice1k,
     };
 
+    final effectiveOpenedAt = (_isOpen || _isGround) 
+        ? (_openedAt ?? _roastDate) 
+        : null;
+
     try {
       await db.insertUserLot(
         CoffeeLotsCompanion(
@@ -175,7 +179,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           process: Value(effectiveProcess),
           roastLevel: Value(_roastLevel),
           roastDate: Value(_roastDate),
-          openedAt: Value(_openedAt),
+          openedAt: Value(effectiveOpenedAt),
           weight: Value(_weight),
           lotNumber: Value(_lotNumber),
           isDecaf: Value(_isDecaf),
@@ -382,9 +386,45 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           children: [
             Expanded(child: _toggleButton(label: 'ЗАКРИТА', active: !_isOpen, onTap: () => setState(() => _isOpen = false))),
             const SizedBox(width: 8),
-            Expanded(child: _toggleButton(label: 'ВІДКРИТА', active: _isOpen, onTap: () => setState(() => _isOpen = true))),
+            Expanded(child: _toggleButton(label: 'ВІДКРИТА', active: _isOpen, onTap: () {
+              setState(() {
+                _isOpen = true;
+                if (_openedAt == null) {
+                  _openedAt = _roastDate;
+                }
+              });
+            })),
           ],
         ),
+        if (_isOpen) ...[
+          _sectionLabel('Тип помелу'),
+          _darkCard(children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<bool>(
+                  value: _isGround,
+                  isExpanded: true,
+                  dropdownColor: const Color(0xFF1A1714),
+                  icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFFC8A96E)),
+                  style: GoogleFonts.outfit(color: const Color(0xFFC8A96E), fontSize: 15, fontWeight: FontWeight.w500),
+                  items: [
+                    DropdownMenuItem(value: false, child: Text('В ЗЕРНАХ', style: GoogleFonts.outfit(color: Colors.white))),
+                    DropdownMenuItem(value: true, child: Text('ЗМЕЛЕНА', style: GoogleFonts.outfit(color: Colors.white))),
+                  ],
+                  onChanged: (v) {
+                    setState(() {
+                      _isGround = v ?? false;
+                      if (_isGround && _openedAt == null) {
+                        _openedAt = _roastDate;
+                      }
+                    });
+                  },
+                ),
+              ),
+            ),
+          ]),
+        ],
         _sectionLabel('Ціноутворення'),
         _darkCard(children: [
           _fieldRow(label: 'РОЗДРІБ 250G', value: _price, onChanged: (v) => _price = v,
@@ -445,17 +485,17 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       children: [
         _sectionLabel('Профіль смаку (1–5)'),
         _darkCard(children: [
-          _sensorySlider('AROMA', _aroma, (v) => setState(() => _aroma = v)),
+          _sensorySlider('AROMA', _aroma, (v) => setState(() => _aroma = v), theme: theme),
           _divider(),
-          _sensorySlider('SWEETNESS', _sweetness, (v) => setState(() => _sweetness = v)),
+          _sensorySlider('SWEETNESS', _sweetness, (v) => setState(() => _sweetness = v), theme: theme),
           _divider(),
-          _sensorySlider('ACIDITY', _acidity, (v) => setState(() => _acidity = v)),
+          _sensorySlider('ACIDITY', _acidity, (v) => setState(() => _acidity = v), theme: theme),
           _divider(),
-          _sensorySlider('BITTERNESS', _bitterness, (v) => setState(() => _bitterness = v)),
+          _sensorySlider('BITTERNESS', _bitterness, (v) => setState(() => _bitterness = v), theme: theme),
           _divider(),
-          _sensorySlider('BODY', _body, (v) => setState(() => _body = v)),
+          _sensorySlider('BODY', _body, (v) => setState(() => _body = v), theme: theme),
           _divider(),
-          _sensorySlider('INTENSITY', _intensity, (v) => setState(() => _intensity = v)),
+          _sensorySlider('INTENSITY', _intensity, (v) => setState(() => _intensity = v), theme: theme),
         ]),
       ],
     );
@@ -467,7 +507,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         padding: const EdgeInsets.fromLTRB(4, 20, 4, 10),
         child: Text(
           text,
-          style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.bold, color: const Color(0xFFC8A96E)),
+          style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
         ),
       );
 
@@ -496,7 +536,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         children: [
           Text(
             label,
-            style: GoogleFonts.outfit(fontSize: 9, color: const Color(0xFFC8A96E).withValues(alpha: 0.5), fontWeight: FontWeight.bold, letterSpacing: 1.2),
+            style: GoogleFonts.outfit(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 1.2),
           ),
           const SizedBox(height: 2),
           Row(
@@ -505,13 +545,10 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 child: TextField(
                   controller: TextEditingController(text: value)
                     ..selection = TextSelection.fromPosition(TextPosition(offset: value.length)),
-                  style: GoogleFonts.outfit(color: const Color(0xFFC8A96E), fontSize: 15, fontWeight: FontWeight.w500),
-                  keyboardType: keyboardType,
-                  decoration: const InputDecoration(
-                    isDense: true,
-                    contentPadding: EdgeInsets.symmetric(vertical: 6),
-                    border: InputBorder.none,
-                  ),
+                  style: GoogleFonts.outfit(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
+                  inputFormatters: keyboardType == TextInputType.number 
+                    ? [FilteringTextInputFormatter.digitsOnly]
+                    : [GlobalCoffeeInputFormatter()],
                   onChanged: onChanged,
                 ),
               ),
@@ -544,7 +581,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(label,
-                    style: GoogleFonts.outfit(fontSize: 9, color: const Color(0xFFC8A96E).withValues(alpha: 0.5), fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+                    style: GoogleFonts.outfit(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
                 const SizedBox(height: 4),
                 Text(display,
                     style: GoogleFonts.outfit(color: const Color(0xFFC8A96E), fontSize: 15, fontWeight: FontWeight.w500)),
@@ -584,7 +621,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     );
   }
 
-  Widget _sensorySlider(String label, double value, Function(double) onChanged) {
+  Widget _sensorySlider(String label, double value, Function(double) onChanged, {required ThemeData theme}) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
       child: Column(
@@ -594,17 +631,17 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(label,
-                  style: GoogleFonts.outfit(fontSize: 10, color: const Color(0xFFC8A96E).withValues(alpha: 0.54), fontWeight: FontWeight.bold, letterSpacing: 1.0)),
+                  style: GoogleFonts.outfit(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 1.0)),
               Text(value.toInt().toString(),
-                  style: GoogleFonts.outfit(fontSize: 13, color: const Color(0xFFC8A96E), fontWeight: FontWeight.bold)),
+                  style: GoogleFonts.outfit(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold)),
             ],
           ),
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
-              activeTrackColor: const Color(0xFFC8A96E),
+              activeTrackColor: Colors.white,
               inactiveTrackColor: Colors.white.withValues(alpha: 0.1),
-              thumbColor: const Color(0xFFC8A96E),
-              overlayColor: const Color(0xFFC8A96E).withValues(alpha: 0.2),
+              thumbColor: Colors.white,
+              overlayColor: Colors.white.withValues(alpha: 0.2),
               trackHeight: 2,
               thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
             ),
@@ -632,6 +669,92 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           ),
         ],
       ),
+    );
+  }
+}
+
+class GlobalCoffeeInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    String text = newValue.text;
+    if (text.isEmpty) return newValue;
+
+    // 1. Length limit 60
+    if (text.length > 60) {
+      text = text.substring(0, 60);
+    }
+
+    // 2. Double space -> dot
+    if (text.contains('  ')) {
+      text = text.replaceAll('  ', '.');
+    }
+
+    // 3. Allowed characters: Letters, Numbers, Space and .,-()
+    final allowedRe = RegExp(r'[^\p{L}\p{N}\s\.,\-\(\)]', unicode: true);
+    text = text.replaceAll(allowedRe, '');
+
+    // 4. Max 3 dots in a row
+    while (text.contains('....')) {
+      text = text.replaceAll('....', '...');
+    }
+
+    // 5. Build logic: sign control and capitalization
+    final sb = StringBuffer();
+    bool capitalizeNext = true; 
+    
+    // Pattern for dots (including tridots)
+    final dotPattern = RegExp(r'\.{1,3}');
+
+    for (int i = 0; i < text.length; i++) {
+      String char = text[i];
+      
+      // If we encounter a dot sequence
+      if (char == '.') {
+        int dotCount = 0;
+        while (i < text.length && text[i] == '.' && dotCount < 3) {
+          sb.write('.');
+          dotCount++;
+          i++;
+        }
+        i--; // Step back for main loop increment
+        capitalizeNext = true;
+        continue;
+      }
+
+      // Check for other signs
+      final isSign = RegExp(r'[\,\-\(\)]').hasMatch(char);
+      
+      // After dot/tridot, no other sign allowed
+      if (capitalizeNext && isSign) {
+        continue; // Skip sign
+      }
+
+      // If it's a letter, handle capitalization
+      if (RegExp(r'\p{L}', unicode: true).hasMatch(char)) {
+        if (capitalizeNext) {
+          sb.write(char.toUpperCase());
+          capitalizeNext = false;
+        } else {
+          sb.write(char);
+        }
+      } else if (char == ' ') {
+        // Space doesn't reset capitalization intent unless after dot
+        sb.write(char);
+      } else {
+        // Numbers or allowed signs (if not right after dot)
+        sb.write(char);
+        capitalizeNext = false; 
+      }
+    }
+    
+    String finalResult = sb.toString();
+
+    return TextEditingValue(
+      text: finalResult,
+      selection: TextSelection.collapsed(offset: finalResult.length),
     );
   }
 }

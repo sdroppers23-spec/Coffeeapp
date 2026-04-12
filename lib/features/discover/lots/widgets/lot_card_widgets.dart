@@ -531,22 +531,39 @@ class _FreshnessProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Determine age
-    int ageDays = 0;
-    if (lot.roastDate != null) {
-      ageDays = DateTime.now().difference(lot.roastDate!).inDays;
+    // 1. Determine Limit
+    final int limit;
+    if (lot.isGround) {
+      limit = 5;
+    } else if (lot.isOpen) {
+      limit = 7;
+    } else {
+      limit = 90;
     }
-    double factor = 1.0 - (ageDays / 90.0);
-    if (factor < 0.05) factor = 0.05;
+
+    // 2. Determine Reference Date & Age
+    final DateTime refDate = (lot.isOpen || lot.isGround) 
+        ? (lot.openedAt ?? lot.roastDate) 
+        : lot.roastDate;
+    
+    int ageDays = DateTime.now().difference(refDate).inDays;
+    if (ageDays < 0) ageDays = 0; // Safeguard against future dates
+
+    // 3. Calculate factor
+    double factor = 1.0 - (ageDays / limit.toDouble());
+    bool isExpired = ageDays >= limit;
+    
+    if (factor < 0.0) factor = 0.0;
     if (factor > 1.0) factor = 1.0;
 
-    // Use a greenish gradient for freshness
-    final gradient = LinearGradient(
-      colors: [
-        Colors.tealAccent.withValues(alpha: 0.5),
-        Colors.tealAccent,
-      ],
-    );
+    final Color statusColor = isExpired ? Colors.redAccent : Colors.tealAccent;
+    final String labelText;
+    if (isExpired) {
+      labelText = isUk ? 'ТЕРМІН ВИЙШОВ' : 'EXPIRED';
+    } else {
+      final int daysLeft = limit - ageDays;
+      labelText = '$daysLeft ${isUk ? 'дн. лишилось' : 'd. left'}';
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -554,8 +571,19 @@ class _FreshnessProgressBar extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(isUk ? 'Свіжість' : 'Freshness', style: GoogleFonts.outfit(fontSize: 10, color: const Color(0xFFC8A96E).withValues(alpha: 0.38))),
-            Text('$ageDays ${isUk ? 'дн.' : 'd.'}', style: GoogleFonts.outfit(fontSize: 10, color: Colors.tealAccent, fontWeight: FontWeight.bold)),
+            Text(isUk ? 'Свіжість' : 'Freshness', 
+              style: GoogleFonts.outfit(
+                fontSize: 10, 
+                color: const Color(0xFFC8A96E).withValues(alpha: 0.38)
+              )
+            ),
+            Text(labelText, 
+              style: GoogleFonts.outfit(
+                fontSize: 10, 
+                color: statusColor, 
+                fontWeight: FontWeight.bold
+              )
+            ),
           ],
         ),
         const SizedBox(height: 6),
@@ -571,10 +599,11 @@ class _FreshnessProgressBar extends StatelessWidget {
             widthFactor: factor,
             child: Container(
               decoration: BoxDecoration(
-                gradient: gradient,
+                color: statusColor,
                 borderRadius: BorderRadius.circular(2),
                 boxShadow: [
-                  BoxShadow(color: Colors.tealAccent.withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 0)),
+                  if (!isExpired)
+                    BoxShadow(color: statusColor.withValues(alpha: 0.3), blurRadius: 4, offset: const Offset(0, 0)),
                 ],
               ),
             ),

@@ -160,17 +160,15 @@ class _PremiumFarmerCard extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: 6),
-                        Row(
-                          children: [
-                            Text(
-                              '${farmer.region}, ${farmer.country}',
-                              style: GoogleFonts.outfit(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white.withValues(alpha: 0.6),
-                              ),
-                            ),
-                          ],
+                        Text(
+                          '${farmer.region}, ${farmer.country}',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.outfit(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white.withValues(alpha: 0.6),
+                          ),
                         ),
                         const SizedBox(height: 10),
                         // Mini specialization chips
@@ -192,7 +190,7 @@ class _PremiumFarmerCard extends ConsumerWidget {
               const SizedBox(height: 20),
               // Bio Snippet
               Text(
-                farmer.story,
+                _stripMarkdown(farmer.story),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.outfit(

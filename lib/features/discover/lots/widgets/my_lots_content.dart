@@ -230,10 +230,10 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                       ),
                     ),
                   ),
-                  GestureDetector(
+                  PressableScale(
                     onTap: () async {
-                      // Prevent multiple taps
                       if (!_isUndoVisible) return;
+                      setState(() => _isUndoVisible = false);
                       
                       final messenger = ScaffoldMessenger.of(context);
                       messenger.removeCurrentSnackBar(); // Trigger .closed immediately
@@ -272,30 +272,6 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                       ));
                       ref.invalidate(userLotsProvider);
                     },
-                    child: Container(
-                      height: 38,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFC8A96E), // Made opaque
-                        borderRadius: BorderRadius.circular(50),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
-                            blurRadius: 8,
-                          )
-                        ],
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        'СКАСУВАТИ',
-                        style: GoogleFonts.outfit(
-                          color: Colors.black, // Dark text on gold button
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.0,
-                        ),
-                      ),
-                    ),
                   ),
                   const SizedBox(width: 4),
                 ],
@@ -312,8 +288,6 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
         // Force show nav bar and ensure UI is in correct state
         ref.read(navBarVisibleProvider.notifier).show();
       }
-    }).catchError((_) {
-      if (mounted) setState(() => _isUndoVisible = false);
     });
   }
 

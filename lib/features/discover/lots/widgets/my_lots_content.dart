@@ -513,10 +513,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                 onFavoriteToggle: (lot) async {
                   ref.read(settingsProvider.notifier).triggerHaptic();
                   final db = ref.read(databaseProvider);
-                  await db.upsertUserLot(CoffeeLotsCompanion(
-                    id: Value(lot.id),
-                    isFavorite: Value(!lot.isFavorite),
-                  ));
+                  await db.toggleLotFavorite(lot.id, !lot.isFavorite);
                   ref.invalidate(userLotsProvider);
                 },
               );
@@ -537,10 +534,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
               onFavoriteToggle: (lot) async {
                 ref.read(settingsProvider.notifier).triggerSelectionVibrate();
                 final db = ref.read(databaseProvider);
-                await db.upsertUserLot(CoffeeLotsCompanion(
-                  id: Value(lot.id),
-                  isFavorite: Value(!lot.isFavorite),
-                ));
+                await db.toggleLotFavorite(lot.id, !lot.isFavorite);
                 ref.invalidate(userLotsProvider);
               },
               onEditSwipe: (lot) {
@@ -655,7 +649,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
             () async {
               final db = ref.read(databaseProvider);
               for (var id in _selectedLotIds) {
-                await db.upsertUserLot(CoffeeLotsCompanion(id: Value(id), isArchived: const Value(true)));
+                await db.toggleLotArchive(id, true);
               }
               setState(() => _selectedLotIds.clear());
               ref.invalidate(userLotsProvider);

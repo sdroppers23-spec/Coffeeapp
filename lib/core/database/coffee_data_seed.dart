@@ -37,20 +37,18 @@ class CoffeeDataSeed {
 
     onProgress?.call('Seeding Brands...');
     await _seedBrands();
-    onProgress?.call('Seeding Farmers from JSON...');
+    onProgress?.call('Seeding Farmers...');
     await _seedFarmers();
-    onProgress?.call('Seeding Encyclopedia from JSON...');
+    onProgress?.call('Seeding Encyclopedia...');
     await _seedEncyclopedia();
-    onProgress?.call('Seeding Catalog [STABLE]...');
+    onProgress?.call('Seeding Catalog...');
     await _seedMadHeadsOrigins();
     await _seed3ChampsOrigins();
     
-    // onProgress?.call('Seeding Specialty Articles...');
     try {
-      await _seedSpecialtyArticles();
       onProgress?.call('Seeding Recommended Recipes...');
       await _seedRecommendedRecipes();
-      onProgress?.call('Seeding 30 Champion Brewing Recipes...');
+      onProgress?.call('Seeding Professional Recipes...');
       await _seedBrewingRecipes();
 
       onProgress?.call('All systems synchronized [STABLE]');
@@ -126,7 +124,10 @@ class CoffeeDataSeed {
   }
 
   Future<void> _seedFarmers() async {
-    // Always clear before re-seeding to ensure no orphans/duplicates
+    final isEmpty = await db.farmersIsEmpty();
+    if (!isEmpty) return;
+    
+    // Clear anyway if we are here (e.g. force) to ensure clean state
     await db.clearFarmers();
     
     final farmers = [
@@ -315,6 +316,9 @@ class CoffeeDataSeed {
   }
 
   Future<void> _seedEncyclopedia() async {
+    final isEmpty = await db.encyclopediaIsEmpty();
+    if (!isEmpty) return;
+
     // Always clear before re-seeding to ensure no orphans/duplicates
     await db.clearSpecialtyArticles();
 
@@ -658,9 +662,6 @@ Specialty Coffee — це не просто кава, це система кон
     }
   }
 
-  Future<void> _seedSpecialtyArticles() async {
-    // Handled by _seedEncyclopedia
-  }
 }
 
 class _FarmerEntry {

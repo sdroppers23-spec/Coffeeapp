@@ -84,7 +84,10 @@ class AppDatabase extends _$AppDatabase {
   // ── Specialty Articles ───────────────────────────────────────────────────────
 
   Future<bool> encyclopediaIsEmpty() async =>
-      (await select(localizedBeans).get()).isEmpty;
+      (await select(specialtyArticles).get()).isEmpty;
+
+  Future<bool> farmersIsEmpty() async =>
+      (await select(localizedFarmers).get()).isEmpty;
 
   Future<bool> specialtyArticlesIsEmpty() async =>
       (await select(specialtyArticles).get()).isEmpty;
@@ -611,6 +614,18 @@ class AppDatabase extends _$AppDatabase {
 
   Future<int> insertUserLot(CoffeeLotsCompanion lot) =>
       into(coffeeLots).insertOnConflictUpdate(lot);
+
+  Future<void> toggleLotFavorite(String id, bool val) async {
+    await (update(coffeeLots)..where((t) => t.id.equals(id))).write(
+      CoffeeLotsCompanion(isFavorite: Value(val)),
+    );
+  }
+
+  Future<void> toggleLotArchive(String id, bool val) async {
+    await (update(coffeeLots)..where((t) => t.id.equals(id))).write(
+      CoffeeLotsCompanion(isArchived: Value(val)),
+    );
+  }
 
   Future<int> deleteUserLotsByBrand(int brandId) =>
       (delete(coffeeLots)..where((t) => t.brandId.equals(brandId))).go();

@@ -25,7 +25,7 @@ class BrewingGuideScreen extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          'Способи Заварювання',
+          'Brewing Methods',
           style: GoogleFonts.cormorantGaramond(
             fontSize: 28,
             fontWeight: FontWeight.bold,
@@ -45,7 +45,7 @@ class BrewingGuideScreen extends ConsumerWidget {
                   CircularProgressIndicator(color: Color(0xFFD4A574)),
                   SizedBox(height: 16),
                   Text(
-                    'Налаштування обладнання...',
+                    'Setting up equipment...',
                     style: TextStyle(color: Colors.white54),
                   ),
                 ],

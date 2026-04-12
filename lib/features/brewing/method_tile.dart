@@ -55,7 +55,7 @@ const _methodMeta = <String, _MethodMeta>{
   'clever': _MethodMeta(
     name: 'Clever Dripper',
     nameUk: 'Clever Dripper',
-    assetPath: 'assets/images/methods/french_press.png', 
+    assetPath: 'assets/images/methods/clever_dripper.png', 
     gradient: [Color(0xFFB8860B), Color(0xFF556B2F)],
   ),
   'cold_brew': _MethodMeta(
@@ -97,7 +97,7 @@ class MethodTile extends StatelessWidget {
             MaterialPageRoute(
               builder: (_) => MethodRecipesScreen(
                 methodKey: key,
-                methodNameUk: meta.nameUk,
+                methodNameUk: meta.name, // Use English name
                 recipes: methodRecipes,
               ),
             ),
@@ -204,7 +204,7 @@ class _TileCard extends StatelessWidget {
                   const Spacer(),
 
                   Text(
-                    meta.nameUk,
+                    meta.name,
                     style: GoogleFonts.cormorantGaramond(
                       fontSize: 22,
                       fontWeight: FontWeight.w700,

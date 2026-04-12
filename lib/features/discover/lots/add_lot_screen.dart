@@ -135,7 +135,11 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     });
   }
 
+  bool get _canSave => _roasteryName.isNotEmpty && _coffeeName.isNotEmpty;
+
   Future<void> _saveLot() async {
+    if (!_canSave) return;
+    
     final user = Supabase.instance.client.auth.currentUser;
     if (user == null) return;
 
@@ -316,18 +320,22 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           width: double.infinity,
           height: 54,
           decoration: BoxDecoration(
-            color: const Color(0xFF1A1714),
+            color: _canSave ? const Color(0xFF1A1714) : const Color(0xFF1A1714).withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(27),
-            border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.4)),
+            border: Border.all(
+              color: _canSave 
+                ? const Color(0xFFC8A96E).withValues(alpha: 0.4)
+                : const Color(0xFFC8A96E).withValues(alpha: 0.1)
+            ),
           ),
           child: Center(
             child: Text(
               'ЗБЕРЕГТИ ЛОТ',
               style: GoogleFonts.outfit(
-                color: const Color(0xFFC8A96E),
-                fontWeight: FontWeight.bold,
                 fontSize: 14,
-                letterSpacing: 2.0,
+                fontWeight: FontWeight.bold,
+                color: _canSave ? const Color(0xFFC8A96E) : const Color(0xFFC8A96E).withValues(alpha: 0.3),
+                letterSpacing: 1.2,
               ),
             ),
           ),
@@ -371,8 +379,12 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             placeholder: 'Не відкрито',
             onTap: () async {
               final picked = await showDatePicker(
-                context: context, initialDate: _openedAt ?? DateTime.now(),
-                firstDate: DateTime(2020), lastDate: DateTime.now(),
+                context: context, 
+                initialDate: (_openedAt != null && _openedAt!.isAfter(_roastDate ?? DateTime(2020))) 
+                    ? _openedAt! 
+                    : (_roastDate ?? DateTime.now()),
+                firstDate: _roastDate ?? DateTime(2020), 
+                lastDate: DateTime.now(),
                 builder: (ctx, child) => Theme(
                   data: ThemeData.dark().copyWith(colorScheme: const ColorScheme.dark(primary: Color(0xFFC8A96E))),
                   child: child!,

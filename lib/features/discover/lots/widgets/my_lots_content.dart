@@ -544,11 +544,13 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                   final db = ref.read(databaseProvider);
                   await db.toggleLotArchive(lot.id, false);
                   ref.invalidate(userLotsProvider);
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(isUk ? 'Лот повернуто з архіву' : 'Lot restored from archive')),
-                    );
-                  }
+                  
+                  if (!context.mounted) return;
+                  final isUk = Localizations.localeOf(context).languageCode == 'uk';
+                  
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(isUk ? 'Лот повернуто з архіву' : 'Lot restored from archive')),
+                  );
                 } : null,
                 onDeleteSwipe: (lot) async {
                   final confirm = await _confirmDeleteDialog(lot);

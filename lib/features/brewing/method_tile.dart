@@ -94,7 +94,7 @@ class MethodTile extends StatelessWidget {
     final meta = _methodMeta[key] ??
         _MethodMeta(
           name: key.toUpperCase(),
-          nameUk: meta.nameUk,
+          nameUk: key.replaceAll('_', ' '),
           assetPath: '${CoffeeDataSeed.bucketUrl}/methods/v60.png',
           gradient: const [Color(0xFFD4A574), Color(0xFF8B5E3C)],
         );

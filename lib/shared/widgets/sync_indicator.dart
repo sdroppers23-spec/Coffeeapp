@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import '../../core/network/connectivity_provider.dart';
 import '../../core/database/sync_service.dart';
 import '../../core/database/database_provider.dart';
+import '../../core/providers/settings_provider.dart';
 
 enum SyncState { idle, syncing, success, error, offline }
 
@@ -17,6 +18,19 @@ class SyncStatusNotifier extends Notifier<SyncState> {
     // Listen to connectivity changes
     final conn = ref.watch(connectivityProvider).value;
     final isOnline = ref.watch(isOnlineProvider);
+    final prefs = ref.watch(sharedPreferencesProvider);
+
+    // Version Guard (Cache Buster for v17 Stabilization)
+    const resyncKey = 'force_resync_v17_v2'; // unique key for this update
+    final hasResynced = prefs.getBool(resyncKey) ?? false;
+
+    if (isOnline && !hasResynced) {
+      Future.microtask(() async {
+        await syncEverything(force: true);
+        await prefs.setBool(resyncKey, true);
+        debugPrint('SYNC: Version Guard completed. Local cache wiped and re-synced.');
+      });
+    }
 
     if (_lastConnectivity != null &&
         _lastConnectivity!.contains(ConnectivityResult.none) &&
@@ -33,11 +47,12 @@ class SyncStatusNotifier extends Notifier<SyncState> {
 
   SyncService get _syncService => ref.read(syncServiceProvider);
 
-  Future<void> syncEverything() async {
+  Future<void> syncEverything({bool force = false}) async {
     lastError = null;
     state = SyncState.syncing;
     try {
       await _syncService.syncAll(
+        force: force,
         onProgress: (m) {
           state = SyncState.syncing;
           lastMessage = m;

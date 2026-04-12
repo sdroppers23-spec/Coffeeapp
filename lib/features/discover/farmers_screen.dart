@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/database/database_provider.dart';
@@ -173,11 +174,12 @@ class _PremiumFarmerCard extends ConsumerWidget {
                   ),
                   // Glass Sphere Flag
                   if (flagUrl != null)
-                    Image.network(
-                      flagUrl,
+                    CachedNetworkImage(
+                      imageUrl: flagUrl,
                       width: 48,
                       height: 48,
-                      errorBuilder: (_, _, _) => const SizedBox(width: 48),
+                      placeholder: (context, url) => const CircularProgressIndicator(strokeWidth: 2),
+                      errorWidget: (_, __, ___) => const SizedBox(width: 48),
                     ),
                 ],
               ),

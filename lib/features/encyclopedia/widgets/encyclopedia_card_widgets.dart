@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/database/dtos.dart';
@@ -52,12 +53,14 @@ class EncyclopediaLotGridCard extends ConsumerWidget {
                         ],
                       ),
                       child: ClipOval(
-                        child: Image.network(
-                          entry.effectiveFlagUrl,
+                        child: CachedNetworkImage(
+                          imageUrl: entry.effectiveFlagUrl,
                           width: 28,
                           height: 28,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stack) =>
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(strokeWidth: 2),
+                          errorWidget: (context, url, error) =>
                               const Icon(Icons.public, size: 28, color: Colors.white24),
                         ),
                       ),
@@ -253,12 +256,14 @@ class EncyclopediaLotListCard extends ConsumerWidget {
                       ],
                     ),
                     child: ClipOval(
-                      child: Image.network(
-                        entry.effectiveFlagUrl,
+                      child: CachedNetworkImage(
+                        imageUrl: entry.effectiveFlagUrl,
                         width: 48,
                         height: 48,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stack) =>
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(strokeWidth: 2),
+                        errorWidget: (context, url, error) =>
                             const Icon(Icons.public, size: 48, color: Colors.white24),
                       ),
                     ),

@@ -21,16 +21,33 @@ class DiscoverScreen extends ConsumerStatefulWidget {
 class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
   String _selectedTabId = 'encyclopedia'; // Default to Encyclopedia
   final ScrollController _reorderController = ScrollController();
+  late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
+    _pageController = PageController();
     // Ensure navigation bar is visible when entering Discover
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         ref.read(navBarVisibleProvider.notifier).show();
+        _snapToInitialTab();
       }
     });
+  }
+
+  void _snapToInitialTab() {
+    final tabOrder = ref.read(discoveryTabOrderProvider);
+    final index = tabOrder.indexWhere((t) => t.name == _selectedTabId);
+    if (index >= 0 && index < tabOrder.length && _pageController.hasClients) {
+      _pageController.jumpToPage(index);
+    }
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   String _getTabLabel(DiscoverTabType type) {
@@ -50,6 +67,14 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
 
   void _onReorder(int oldIndex, int newIndex) {
     ref.read(discoveryTabOrderProvider.notifier).reorder(oldIndex, newIndex);
+    // After reorder, try to keep the selected tab in view
+    Future.microtask(() {
+      final tabOrder = ref.read(discoveryTabOrderProvider);
+      final index = tabOrder.indexWhere((t) => t.name == _selectedTabId);
+      if (index >= 0 && _pageController.hasClients) {
+        _pageController.jumpToPage(index);
+      }
+    });
   }
 
   @override
@@ -160,9 +185,17 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                         isSelected: isSelected,
                         onTap: () {
                           ref.read(settingsProvider.notifier).triggerHaptic();
+                          ref.read(navBarVisibleProvider.notifier).show(); // FORCE SHOW NAVBAR
                           setState(() {
                             _selectedTabId = tabId;
                           });
+                          if (_pageController.hasClients) {
+                             _pageController.animateToPage(
+                               index,
+                               duration: const Duration(milliseconds: 300),
+                               curve: Curves.easeInOut,
+                             );
+                          }
                         },
                       ),
                     );
@@ -175,9 +208,21 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
 
             // Content Area
             Expanded(
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300),
-                child: _buildTabContent(_selectedTabId),
+              child: PageView.builder(
+                controller: _pageController,
+                onPageChanged: (index) {
+                   if (index >= 0 && index < tabOrder.length) {
+                      final newTabId = tabOrder[index].name;
+                      if (_selectedTabId != newTabId) {
+                         ref.read(navBarVisibleProvider.notifier).show(); // FORCE SHOW NAVBAR
+                         setState(() { _selectedTabId = newTabId; });
+                      }
+                   }
+                },
+                itemCount: tabOrder.length,
+                itemBuilder: (context, index) {
+                   return _buildTabContent(tabOrder[index].name);
+                },
               ),
             ),
           ],

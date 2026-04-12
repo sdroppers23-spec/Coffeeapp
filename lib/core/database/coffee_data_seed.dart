@@ -448,23 +448,21 @@ class CoffeeDataSeed {
   }
 
   void _addGenericRecipes(List<BrewingRecipesCompanion> list, String method, int count) {
-    for (int i = 0; i < count; i++) {
-      list.add(BrewingRecipesCompanion.insert(
-        methodKey: method,
-        name: '${method.toUpperCase()} Champion Var ${i + 1}',
-        description: 'Professional recipe for $method.',
-        ratioGramsPerMl: 1 / 15,
-        tempC: 94.0,
-        totalTimeSec: 180,
-        difficulty: 'Intermediate',
-        flavorProfile: 'Complex',
-        iconName: method,
-        stepsJson: jsonEncode([
-          {'title': 'Preparation', 'desc': 'Setup and bloom.', 'durationSec': 60},
-          {'title': 'Brewing', 'desc': 'Main extraction.', 'durationSec': 120},
-        ]),
-      ));
-    }
+    list.add(BrewingRecipesCompanion.insert(
+      methodKey: method,
+      name: '${method.toUpperCase()} Classic Recipe',
+      description: 'Standard starting recipe for $method.',
+      ratioGramsPerMl: 1 / 15,
+      tempC: 94.0,
+      totalTimeSec: 180,
+      difficulty: 'Intermediate',
+      flavorProfile: 'Balanced',
+      iconName: method,
+      stepsJson: jsonEncode([
+        {'title': 'Preparation', 'desc': 'Setup and bloom.', 'durationSec': 60},
+        {'title': 'Brewing', 'desc': 'Main extraction.', 'durationSec': 120},
+      ]),
+    ));
   }
 
   Future<void> _seedRecommendedRecipes() async {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../discovery_filter_provider.dart';
@@ -205,8 +206,8 @@ class FilterSortSheet extends ConsumerWidget {
           avatar: flagUrl != null
               ? ClipRRect(
                   borderRadius: BorderRadius.circular(2),
-                  child: Image.network(
-                    flagUrl,
+                  child: CachedNetworkImage(
+                    imageUrl: flagUrl,
                     width: 20,
                     height: 14,
                     fit: BoxFit.cover,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -306,10 +307,10 @@ class _BrandLogo extends StatelessWidget {
             const Center(child: CircularProgressIndicator(strokeWidth: 1)),
       );
     }
-    return Image.network(
-      url,
+    return CachedNetworkImage(
+      imageUrl: url,
       fit: BoxFit.contain,
-      errorBuilder: (_, _, _) =>
+      errorWidget: (_, __, ___) =>
           const Icon(Icons.coffee_rounded, color: Colors.white24),
     );
   }

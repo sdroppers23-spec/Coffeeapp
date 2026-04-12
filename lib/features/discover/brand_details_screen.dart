@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -241,10 +242,11 @@ class _BrandLogo extends StatelessWidget {
         ),
       );
     }
-    return Image.network(
-      url,
+    return CachedNetworkImage(
+      imageUrl: url,
       height: height,
-      errorBuilder: (_, _, _) => _FallbackIcon(height: height),
+      errorWidget: (_, __, ___) => _FallbackIcon(height: height),
+      placeholder: (context, url) => SizedBox(height: height, child: const Center(child: CircularProgressIndicator(strokeWidth: 2))),
     );
   }
 }

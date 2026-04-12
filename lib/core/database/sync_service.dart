@@ -258,6 +258,12 @@ class SyncService {
       debugPrint('SYNC: Pulling articles from specialty_articles...');
       final data = await supabase!.from('specialty_articles').select().order('id');
       
+      // Clear old articles locally
+      await db.transaction(() async {
+        await db.delete(db.specialtyArticles).go();
+        await db.delete(db.specialtyArticleTranslations).go();
+      });
+
       int successCount = 0;
       int errorCount = 0;
 

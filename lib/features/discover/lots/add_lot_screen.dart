@@ -380,10 +380,10 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             onTap: () async {
               final picked = await showDatePicker(
                 context: context, 
-                initialDate: (_openedAt != null && _openedAt!.isAfter(_roastDate ?? DateTime(2020))) 
+                initialDate: (_openedAt != null && _openedAt!.isAfter(_roastDate)) 
                     ? _openedAt! 
-                    : (_roastDate ?? DateTime.now()),
-                firstDate: _roastDate ?? DateTime(2020), 
+                    : _roastDate,
+                firstDate: _roastDate, 
                 lastDate: DateTime.now(),
                 builder: (ctx, child) => Theme(
                   data: ThemeData.dark().copyWith(colorScheme: const ColorScheme.dark(primary: Color(0xFFC8A96E))),

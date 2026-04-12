@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../core/database/dtos.dart';
 import 'encyclopedia_providers.dart';
 import '../discover/widgets/discovery_action_bar.dart';
@@ -8,7 +7,6 @@ import '../discover/discovery_filter_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import 'widgets/encyclopedia_card_widgets.dart';
 import 'coffee_lot_detail_screen.dart';
-import '../discover/farmers_screen.dart';
 import 'comparison_screen.dart'; 
 import '../../shared/widgets/premium_app_bar.dart';
 import '../../shared/widgets/profile_button.dart';

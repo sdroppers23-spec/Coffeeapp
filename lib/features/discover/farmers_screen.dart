@@ -6,7 +6,7 @@ import '../../core/database/dtos.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/config/flag_constants.dart';
 import '../../shared/widgets/glass_container.dart';
-import '../../shared/widgets/premium_background.dart';
+import '../../shared/widgets/premium_app_bar.dart';
 import '../../shared/widgets/pressable_scale.dart';
 import '../../core/providers/settings_provider.dart';
 import 'farmer_detail_screen.dart';
@@ -66,6 +66,7 @@ class _FarmersScreenState extends ConsumerState<FarmersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
       appBar: PremiumAppBar(
         title: ref.t('farmers'),
@@ -76,15 +77,10 @@ class _FarmersScreenState extends ConsumerState<FarmersScreen> {
           ),
         ],
       ),
-      body: Stack(
+      body: const Column(
         children: [
-          const PremiumBackground(),
-          const Column(
-            children: [
-              SizedBox(height: 110), // Space for PremiumAppBar
-              Expanded(child: FarmersBody()),
-            ],
-          ),
+          SizedBox(height: 110), // Space for PremiumAppBar
+          Expanded(child: FarmersBody()),
         ],
       ),
     );
@@ -97,9 +93,10 @@ class _PremiumFarmerCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final flagUrl =
-        FlagConstants.getFlag(farmer.country) ??
-        FlagConstants.getFlag(farmer.countryEmoji);
+    // If countryEmoji starts with http, it's a bucket URL.
+    final flagUrl = farmer.countryEmoji.startsWith('http') 
+        ? farmer.countryEmoji 
+        : (FlagConstants.getFlag(farmer.country) ?? FlagConstants.getFlag(farmer.countryEmoji));
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),

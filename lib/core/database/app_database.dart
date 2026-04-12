@@ -474,12 +474,17 @@ class AppDatabase extends _$AppDatabase {
       insertRecommendedRecipe(r);
 
   // ── Articles ────────────────────────────────────────────────────────────────
-  Future<int> insertArticle(SpecialtyArticlesCompanion a) =>
-      into(specialtyArticles).insertOnConflictUpdate(a);
-
-  Future<int> insertArticleTranslation(
-    SpecialtyArticleTranslationsCompanion t,
-  ) => into(specialtyArticleTranslations).insertOnConflictUpdate(t);
+  Future<void> smartUpsertArticle(
+    SpecialtyArticlesCompanion article,
+    List<SpecialtyArticleTranslationsCompanion> translations,
+  ) async {
+    await transaction(() async {
+      await into(specialtyArticles).insertOnConflictUpdate(article);
+      for (final t in translations) {
+        await into(specialtyArticleTranslations).insertOnConflictUpdate(t);
+      }
+    });
+  }
 
   Future<List<SpecialtyArticleDto>> getAllArticles(String lang) async {
     final query = select(specialtyArticles).join([

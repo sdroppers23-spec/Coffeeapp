@@ -33,125 +33,122 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
       appBar: PremiumAppBar(
         title: ref.t('compare_coffees'),
       ),
-      body: Stack(
-        children: [
-          const PremiumBackground(),
-          asyncOrigins.when(
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (e, _) => Center(child: Text('Error: $e')),
-            data: (origins) {
-              if (origins.isEmpty) {
-                return Center(
-                  child: Text(
-                    'No coffees available to compare.',
-                    style: GoogleFonts.outfit(color: Colors.white70),
-                  ),
-                );
-              }
-
-              // Default selections
-              _coffeeA ??= origins.isNotEmpty ? origins.first : null;
-              _coffeeB ??= origins.length > 1 ? origins[1] : (origins.isNotEmpty ? origins.first : null);
-
-              return SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(16, 120, 16, 110),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // --- Selectors ---
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _CoffeeSelector(
-                            value: _coffeeA,
-                            items: origins,
-                            onChanged: (val) => setState(() => _coffeeA = val),
-                            color: Colors.white.withValues(alpha: 0.1),
-                            borderColor: const Color(0xFFC8A96E).withValues(alpha: 0.5),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _CoffeeSelector(
-                            value: _coffeeB,
-                            items: origins,
-                            onChanged: (val) => setState(() => _coffeeB = val),
-                            color: Colors.white.withValues(alpha: 0.1),
-                            borderColor: const Color(0xFFC8A96E).withValues(alpha: 0.5),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-
-                    // --- Comparison Table ---
-                    if (_coffeeA != null && _coffeeB != null)
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.05),
-                          borderRadius: BorderRadius.circular(24),
-                          border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.1),
-                          ),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(24),
-                          child: Column(
-                            children: [
-                              _CompareRow(
-                                ref.t('score_sca'),
-                                '${_coffeeA!.cupsScore}',
-                                '${_coffeeB!.cupsScore}',
-                                highlightWinner: true,
-                              ),
-                              _CompareRow(
-                                ref.t('origin'),
-                                '${_coffeeA!.countryEmoji ?? ""} ${_coffeeA!.country}',
-                                '${_coffeeB!.countryEmoji ?? ""} ${_coffeeB!.country}',
-                              ),
-                              _CompareRow(
-                                ref.t('region'),
-                                _coffeeA!.region,
-                                _coffeeB!.region,
-                              ),
-                              _CompareRow(
-                                ref.t('altitude'),
-                                '${_coffeeA!.altitudeMin}-${_coffeeA!.altitudeMax}m',
-                                '${_coffeeB!.altitudeMin}-${_coffeeB!.altitudeMax}m',
-                              ),
-                              _CompareRow(
-                                ref.t('varieties'),
-                                _coffeeA!.varieties,
-                                _coffeeB!.varieties,
-                                isTextHeavy: true,
-                              ),
-                              _CompareRow(
-                                ref.t('process'),
-                                _coffeeA!.processMethod,
-                                _coffeeB!.processMethod,
-                              ),
-                              _CompareRow(
-                                ref.t('harvest'),
-                                _coffeeA!.harvestSeason ?? "N/A",
-                                _coffeeB!.harvestSeason ?? "N/A",
-                              ),
-                              _CompareRow(
-                                ref.t('flavor_notes'),
-                                _getFlavors(_coffeeA!),
-                                _getFlavors(_coffeeB!),
-                                isTextHeavy: true,
-                                isLast: true,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                  ],
+      body: PremiumBackground(
+        child: asyncOrigins.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(child: Text('Error: $e')),
+          data: (origins) {
+            if (origins.isEmpty) {
+              return Center(
+                child: Text(
+                  'No coffees available to compare.',
+                  style: GoogleFonts.outfit(color: Colors.white70),
                 ),
               );
-            },
-          ),
-        ],
+            }
+
+            // Default selections
+            _coffeeA ??= origins.isNotEmpty ? origins.first : null;
+            _coffeeB ??= origins.length > 1 ? origins[1] : (origins.isNotEmpty ? origins.first : null);
+
+            return SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(16, 120, 16, 110),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // --- Selectors ---
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _CoffeeSelector(
+                          value: _coffeeA,
+                          items: origins,
+                          onChanged: (val) => setState(() => _coffeeA = val),
+                          color: Colors.white.withValues(alpha: 0.1),
+                          borderColor: const Color(0xFFC8A96E).withValues(alpha: 0.5),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _CoffeeSelector(
+                          value: _coffeeB,
+                          items: origins,
+                          onChanged: (val) => setState(() => _coffeeB = val),
+                          color: Colors.white.withValues(alpha: 0.1),
+                          borderColor: const Color(0xFFC8A96E).withValues(alpha: 0.5),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+
+                  // --- Comparison Table ---
+                  if (_coffeeA != null && _coffeeB != null)
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.1),
+                        ),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(24),
+                        child: Column(
+                          children: [
+                            _CompareRow(
+                              ref.t('score_sca'),
+                              '${_coffeeA!.cupsScore}',
+                              '${_coffeeB!.cupsScore}',
+                              highlightWinner: true,
+                            ),
+                            _CompareRow(
+                              ref.t('origin'),
+                              '${_coffeeA!.countryEmoji ?? ""} ${_coffeeA!.country}',
+                              '${_coffeeB!.countryEmoji ?? ""} ${_coffeeB!.country}',
+                            ),
+                            _CompareRow(
+                              ref.t('region'),
+                              _coffeeA!.region,
+                              _coffeeB!.region,
+                            ),
+                            _CompareRow(
+                              ref.t('altitude'),
+                              '${_coffeeA!.altitudeMin}-${_coffeeA!.altitudeMax}m',
+                              '${_coffeeB!.altitudeMin}-${_coffeeB!.altitudeMax}m',
+                            ),
+                            _CompareRow(
+                              ref.t('varieties'),
+                              _coffeeA!.varieties,
+                              _coffeeB!.varieties,
+                              isTextHeavy: true,
+                            ),
+                            _CompareRow(
+                              ref.t('process'),
+                              _coffeeA!.processMethod,
+                              _coffeeB!.processMethod,
+                            ),
+                            _CompareRow(
+                              ref.t('harvest'),
+                              _coffeeA!.harvestSeason ?? "N/A",
+                              _coffeeB!.harvestSeason ?? "N/A",
+                            ),
+                            _CompareRow(
+                              ref.t('flavor_notes'),
+                              _getFlavors(_coffeeA!),
+                              _getFlavors(_coffeeB!),
+                              isTextHeavy: true,
+                              isLast: true,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

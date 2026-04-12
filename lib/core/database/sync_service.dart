@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import '../database/app_database.dart';
@@ -250,10 +249,7 @@ class SyncService {
             );
           }
 
-          await db.insertArticle(article);
-          for (final t in translations) {
-            await db.insertArticleTranslation(t);
-          }
+          await db.smartUpsertArticle(article, translations);
           successCount++;
         } catch (e) {
           debugPrint('SYNC ERROR for article ID ${item['id']}: $e');

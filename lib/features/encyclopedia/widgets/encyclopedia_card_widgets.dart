@@ -6,7 +6,6 @@ import '../../../core/database/database_provider.dart';
 import '../../../core/l10n/app_localizations.dart';
 import '../../../shared/widgets/glass_container.dart';
 import '../../../shared/widgets/pressable_scale.dart';
-import '../../../core/config/flag_constants.dart';
 import '../encyclopedia_providers.dart';
 
 // ─── Grid Card ────────────────────────────────────────────────────────────────

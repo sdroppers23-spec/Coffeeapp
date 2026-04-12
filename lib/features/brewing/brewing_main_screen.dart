@@ -1,4 +1,3 @@
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,7 +10,15 @@ import 'custom_recipe_list.dart';
 import 'method_tile.dart';
 import '../../shared/widgets/premium_app_bar.dart';
 
-final brewingViewModeProvider = StateProvider<bool>((ref) => true); // true = grid, false = list
+class BrewingViewModeNotifier extends Notifier<bool> {
+  @override
+  bool build() => true; // true = grid, false = list
+  
+  void toggle() => state = !state;
+  void setMode(bool isGrid) => state = isGrid;
+}
+
+final brewingViewModeProvider = NotifierProvider<BrewingViewModeNotifier, bool>(() => BrewingViewModeNotifier());
 
 class BrewingMainScreen extends ConsumerStatefulWidget {
   const BrewingMainScreen({super.key});
@@ -50,8 +57,7 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
                   : Icons.grid_view_rounded,
               color: const Color(0xFFC8A96E),
             ),
-            onPressed: () => ref.read(brewingViewModeProvider.notifier).state =
-                !ref.read(brewingViewModeProvider.notifier).state,
+            onPressed: () => ref.read(brewingViewModeProvider.notifier).toggle(),
           ),
           const ProfileButton(),
         ],

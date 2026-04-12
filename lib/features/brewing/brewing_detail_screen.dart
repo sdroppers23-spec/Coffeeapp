@@ -8,6 +8,7 @@ import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import 'custom_recipe_list.dart';
 import '../../shared/widgets/glass_container.dart';
+import '../../shared/widgets/premium_background.dart';
 
 // ─── Method metadata (shared with BrewingGuideScreen) ──────────────────────────
 const _methodMeta = {
@@ -109,114 +110,110 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen>
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerScrolled) => [
-          SliverAppBar(
-            expandedHeight: 240,
-            pinned: true,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                widget.recipe.name,
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  shadows: [
-                    const Shadow(blurRadius: 10, color: Colors.black45),
-                  ],
-                ),
-              ),
-              background: Container(
-                foregroundDecoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.black.withValues(alpha: 0.3),
-                      Colors.black.withValues(alpha: 0.8),
+      body: PremiumBackground(
+        child: NestedScrollView(
+          headerSliverBuilder: (context, innerScrolled) => [
+            SliverAppBar(
+              expandedHeight: 240,
+              pinned: true,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text(
+                  widget.recipe.name,
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    shadows: [
+                      const Shadow(blurRadius: 10, color: Colors.black45),
                     ],
                   ),
                 ),
-                child: Image.asset(assetPath, fit: BoxFit.cover),
-              ),
-            ),
-          ),
-        ],
-        body: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xFF121212), Color(0xFF000000)],
-            ),
-          ),
-          child: Column(
-            children: [
-              // ── Info Row ──────────────────────────────────────────────────────
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                child: GlassContainer(
-                  padding: const EdgeInsets.all(16),
-                  opacity: 0.1,
-                  blur: 10,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _InfoChip(
-                        icon: Icons.thermostat_outlined,
-                        label: '${widget.recipe.tempC.toInt()}°C',
-                      ),
-                      _InfoChip(
-                        icon: Icons.balance_outlined,
-                        label: _formattedRatio,
-                      ),
-                      _InfoChip(
-                        icon: Icons.timer_outlined,
-                        label: _formatTime(widget.recipe.totalTimeSec),
-                      ),
-                      _InfoChip(
-                        icon: Icons.signal_cellular_alt_outlined,
-                        label: widget.recipe.difficulty,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              // ── Tabs ──────────────────────────────────────────────────────────
-              TabBar(
-                controller: _tabController,
-                tabs: const [
-                  Tab(text: 'Recipe Steps'),
-                  Tab(text: 'Custom Versions'),
-                  Tab(text: 'Recommended'),
-                ],
-                indicatorColor: const Color(0xFFC8A96E),
-                indicatorWeight: 3,
-                labelColor: const Color(0xFFC8A96E),
-                unselectedLabelColor: Colors.white54,
-                labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-              ),
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    _StepsTab(
-                      steps: _steps,
-                      activeStep: _activeStep,
-                      remainingSec: _remainingSec,
-                      timerRunning: _timerRunning,
-                      progressController: _progressController,
-                      onStartTimer: _startTimer,
-                      onStopTimer: _stopTimer,
-                      formatTime: _formatTime,
+                background: Container(
+                  foregroundDecoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.black.withValues(alpha: 0.3),
+                        Colors.black.withValues(alpha: 0.8),
+                      ],
                     ),
-                    CustomRecipeListTab(methodKey: widget.recipe.methodKey),
-                    _RecommendedRecipesTab(methodKey: widget.recipe.methodKey),
-                  ],
+                  ),
+                  child: Image.asset(assetPath, fit: BoxFit.cover),
                 ),
               ),
-            ],
+            ),
+          ],
+          body: Container(
+            color: Colors.transparent,
+            child: Column(
+              children: [
+                // ── Info Row ──────────────────────────────────────────────────────
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                  child: GlassContainer(
+                    padding: const EdgeInsets.all(16),
+                    opacity: 0.1,
+                    blur: 10,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _InfoChip(
+                          icon: Icons.thermostat_outlined,
+                          label: '${widget.recipe.tempC.toInt()}°C',
+                        ),
+                        _InfoChip(
+                          icon: Icons.balance_outlined,
+                          label: _formattedRatio,
+                        ),
+                        _InfoChip(
+                          icon: Icons.timer_outlined,
+                          label: _formatTime(widget.recipe.totalTimeSec),
+                        ),
+                        _InfoChip(
+                          icon: Icons.signal_cellular_alt_outlined,
+                          label: widget.recipe.difficulty,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                // ── Tabs ──────────────────────────────────────────────────────────
+                TabBar(
+                  controller: _tabController,
+                  tabs: const [
+                    Tab(text: 'Recipe Steps'),
+                    Tab(text: 'Custom Versions'),
+                    Tab(text: 'Recommended'),
+                  ],
+                  indicatorColor: const Color(0xFFC8A96E),
+                  indicatorWeight: 3,
+                  labelColor: const Color(0xFFC8A96E),
+                  unselectedLabelColor: Colors.white54,
+                  labelStyle: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                ),
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _StepsTab(
+                        steps: _steps,
+                        activeStep: _activeStep,
+                        remainingSec: _remainingSec,
+                        timerRunning: _timerRunning,
+                        progressController: _progressController,
+                        onStartTimer: _startTimer,
+                        onStopTimer: _stopTimer,
+                        formatTime: _formatTime,
+                      ),
+                      CustomRecipeListTab(methodKey: widget.recipe.methodKey),
+                      _RecommendedRecipesTab(methodKey: widget.recipe.methodKey),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

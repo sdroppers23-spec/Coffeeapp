@@ -135,20 +135,45 @@ class CoffeeDataSeed {
       final List<dynamic> jsonData = jsonDecode(jsonString);
 
       for (var farmerJson in jsonData) {
-        final int idNum = int.tryParse((farmerJson['id'] as String).replaceFirst('f_', '')) ?? 0;
-        final String nameEn = farmerJson['farmer_name_en'] ?? '';
-        final String nameUk = farmerJson['farmer_name_uk'] ?? '';
-        final String countryEn = farmerJson['country_en'] ?? '';
-        final String countryUk = farmerJson['country_uk'] ?? '';
+        final String rawId = farmerJson['id']?.toString() ?? 'f_0';
+        final int idNum = int.tryParse(rawId.replaceFirst('f_', '')) ?? 0;
+        
+        // Language Fallbacks: If UK is missing, use EN. If EN is missing, use UK.
+        final String rawNameEn = farmerJson['farmer_name_en'] ?? '';
+        final String rawNameUk = farmerJson['farmer_name_uk'] ?? '';
+        final String nameEn = rawNameEn.isNotEmpty ? rawNameEn : rawNameUk;
+        final String nameUk = rawNameUk.isNotEmpty ? rawNameUk : rawNameEn;
+
+        final String rawCountryEn = farmerJson['country_en'] ?? '';
+        final String rawCountryUk = farmerJson['country_uk'] ?? '';
+        final String countryEn = rawCountryEn.isNotEmpty ? rawCountryEn : rawCountryUk;
+        final String countryUk = rawCountryUk.isNotEmpty ? rawCountryUk : rawCountryEn;
+
+        final String rawRegionEn = farmerJson['region_en'] ?? '';
+        final String rawRegionUk = farmerJson['region_uk'] ?? '';
+        final String regionEn = rawRegionEn.isNotEmpty ? rawRegionEn : rawRegionUk;
+        final String regionUk = rawRegionUk.isNotEmpty ? rawRegionUk : rawRegionEn;
+
+        final String rawStoryEn = farmerJson['biography_en'] ?? (farmerJson['cup_profile_en'] ?? '');
+        final String rawStoryUk = farmerJson['biography_uk'] ?? (farmerJson['cup_profile_uk'] ?? '');
+        final String storyEn = rawStoryEn.isNotEmpty ? rawStoryEn : rawStoryUk;
+        final String storyUk = rawStoryUk.isNotEmpty ? rawStoryUk : rawStoryEn;
+
+        final String rawDescEn = farmerJson['specialization_en'] ?? '';
+        final String rawDescUk = farmerJson['specialization_uk'] ?? '';
+        final String descEn = rawDescEn.isNotEmpty ? rawDescEn : rawDescUk;
+        final String descUk = rawDescUk.isNotEmpty ? rawDescUk : rawDescEn;
         
         final String slug = _slugify(nameEn);
         final String imageUrl = '$bucketUrl/farmers/$slug.png';
+        final String countrySlug = countryEn.toLowerCase().replaceAll(' ', '_');
+        final String flagUrl = '$bucketUrl/flags/$countrySlug.png';
 
         await db.smartUpsertFarmer(
           LocalizedFarmersCompanion.insert(
             id: Value(idNum),
             imageUrl: Value(imageUrl),
-            countryEmoji: Value(FlagConstants.getEmoji(countryEn)),
+            countryEmoji: Value(flagUrl), // Using bucket flag URL instead of emoji
             createdAt: Value(DateTime.now()),
           ),
           [
@@ -157,18 +182,18 @@ class CoffeeDataSeed {
               languageCode: 'en',
               name: Value(nameEn),
               country: Value(countryEn),
-              region: Value(farmerJson['region_en'] ?? ''),
-              description: Value(farmerJson['specialization_en'] ?? ''),
-              story: Value(farmerJson['biography_en'] ?? ''),
+              region: Value(regionEn),
+              description: Value(descEn),
+              story: Value(storyEn),
             ),
             LocalizedFarmerTranslationsCompanion.insert(
               farmerId: idNum,
               languageCode: 'uk',
               name: Value(nameUk),
               country: Value(countryUk),
-              region: Value(farmerJson['region_uk'] ?? ''),
-              description: Value(farmerJson['specialization_uk'] ?? ''),
-              story: Value(farmerJson['biography_uk'] ?? ''),
+              region: Value(regionUk),
+              description: Value(descUk),
+              story: Value(storyUk),
             ),
           ],
         );
@@ -210,9 +235,11 @@ class CoffeeDataSeed {
             for (var org in topic['organizations']) {
               sb.writeln('### ${org['name']}');
               sb.writeln('*${org['role']}*\n');
-              if (org['standards_set'] != null) {
-                for (var s in org['standards_set']) sb.writeln('- $s');
-              }
+          if (org['standards_set'] != null) {
+            for (var s in org['standards_set']) {
+              sb.writeln('- $s');
+            }
+          }
               if (org['certification_system'] != null) {
                 final cert = org['certification_system'];
                 sb.writeln('\n**Certification: ${cert['program_name']}**');
@@ -222,7 +249,7 @@ class CoffeeDataSeed {
           }
         }
 
-        await db.smartUpsertSpecialtyArticle(
+        await db.smartUpsertArticle(
           SpecialtyArticlesCompanion.insert(
             id: Value(articleId),
             imageUrl: '$bucketUrl/articles/${moduleId.toLowerCase()}.png',
@@ -292,7 +319,7 @@ class CoffeeDataSeed {
   }
 
   Future<void> _seedSpecialtyArticles() async {
-    await db.smartUpsertSpecialtyArticle(
+    await db.smartUpsertArticle(
       SpecialtyArticlesCompanion.insert(
         id: const Value(1),
         imageUrl: '$bucketUrl/articles/q_grading.png',
@@ -318,8 +345,8 @@ class CoffeeDataSeed {
   }
 
   Future<void> _seedBrewingRecipes() async {
-    final existingCount = await (db.select(db.brewingRecipes)).get();
-    if (existingCount.length >= 30) return;
+    // We clear current recipes to ensure we get exactly the 30 champion ones with unique IDs
+    await db.delete(db.brewingRecipes).go();
 
     final List<BrewingRecipesCompanion> recipes = [];
     _addV60Recipes(recipes);

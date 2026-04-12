@@ -9,13 +9,46 @@ class PremiumBackground extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
+        // 1. Base Color (Deep Black/Coffee)
         const DecoratedBox(
           decoration: BoxDecoration(
-            color: Color(0xFF36302E), // 7/10 darkness level (slightly lighter than 2A2422)
+            color: Color(0xFF0D0B0A), // Extremely dark coffee
           ),
         ),
 
-        // Content
+        // 2. Ambient Radial Gradient (Subtle depth)
+        Positioned.fill(
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: RadialGradient(
+                center: Alignment.topCenter,
+                radius: 1.5,
+                colors: [
+                  const Color(0xFFC8A96E).withValues(alpha: 0.04),
+                  Colors.transparent,
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        // 3. Subtle Linear Overlay
+        Positioned.fill(
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomRight,
+                end: Alignment.topLeft,
+                colors: [
+                  Colors.black.withValues(alpha: 0.6),
+                  Colors.transparent,
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        // 4. Content
         child,
       ],
     );

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
+// import 'package:flutter/services.dart';
 import 'app_database.dart';
 
 /// Seeds all static content into the local Drift database on first launch.
@@ -281,6 +281,7 @@ class CoffeeDataSeed {
   }
 */
 
+/*
   String _slugify(String text) {
     return text.toLowerCase()
         .replaceAll(' & ', '_')
@@ -292,6 +293,7 @@ class CoffeeDataSeed {
         .replaceAll(RegExp(r'[^a-zA-Z0-9_]'), '')
         .replaceAll('__', '_');
   }
+*/
 
 /*
   Future<void> _seedMadHeadsOrigins() async {
@@ -486,8 +488,10 @@ class CoffeeDataSeed {
   }
 }
 
+/*
 class _Entry {
   final LocalizedBeansCompanion main;
   final LocalizedBeanTranslationsCompanion trans;
   _Entry(this.main, this.trans);
 }
+*/

@@ -9,6 +9,7 @@ import 'brewing_guide_screen.dart';
 import 'custom_recipe_list.dart';
 import 'method_tile.dart';
 import '../../shared/widgets/premium_app_bar.dart';
+import '../../core/database/app_database.dart';
 
 class BrewingViewModeNotifier extends Notifier<bool> {
   @override
@@ -117,6 +118,13 @@ class _BrewingMethodsContent extends ConsumerWidget {
       data: (recipes) {
         final isGrid = ref.watch(brewingViewModeProvider);
 
+        // Group recipes by method for "Method-First" UI
+        final grouped = <String, List<BrewingRecipe>>{};
+        for (var r in recipes) {
+          grouped.putIfAbsent(r.methodKey, () => []).add(r);
+        }
+        final methods = grouped.keys.toList();
+
         if (isGrid) {
           return GridView.builder(
             padding: EdgeInsets.only(
@@ -129,10 +137,13 @@ class _BrewingMethodsContent extends ConsumerWidget {
               crossAxisCount: 2,
               mainAxisSpacing: 16,
               crossAxisSpacing: 16,
-              childAspectRatio: 0.78,
+              childAspectRatio: 0.82,
             ),
-            itemCount: recipes.length,
-            itemBuilder: (context, i) => MethodTile(recipe: recipes[i], isGrid: true),
+            itemCount: methods.length,
+            itemBuilder: (context, i) {
+              final methodKey = methods[i];
+              return MethodTile(methodRecipes: grouped[methodKey]!);
+            },
           );
         }
 
@@ -143,10 +154,13 @@ class _BrewingMethodsContent extends ConsumerWidget {
             top: 120,
             bottom: navHeight + 48,
           ),
-          itemCount: recipes.length,
+          itemCount: methods.length,
           itemBuilder: (context, i) => Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: MethodTile(recipe: recipes[i], isGrid: false),
+            padding: const EdgeInsets.only(bottom: 16),
+            child: SizedBox(
+              height: 180,
+              child: MethodTile(methodRecipes: grouped[methods[i]]!),
+            ),
           ),
         );
       },

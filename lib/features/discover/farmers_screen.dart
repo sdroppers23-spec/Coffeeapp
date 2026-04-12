@@ -99,8 +99,10 @@ class _PremiumFarmerCard extends ConsumerWidget {
         ? farmer.countryEmoji 
         : (FlagConstants.getFlag(farmer.country) ?? FlagConstants.getFlag(farmer.countryEmoji));
 
+    const gold = Color(0xFFC8A96E);
+
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.only(bottom: 24),
       child: PressableScale(
         onTap: () {
           ref.read(settingsProvider.notifier).triggerHaptic();
@@ -112,34 +114,37 @@ class _PremiumFarmerCard extends ConsumerWidget {
           );
         },
         child: GlassContainer(
-          borderRadius: 24,
+          borderRadius: 28,
           padding: const EdgeInsets.all(16),
-          blur: 20,
-          opacity: 0.1,
-          borderColor: Colors.white.withValues(alpha: 0.05),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Farmer Portrait with Glass Border
                   Container(
-                    width: 80,
-                    height: 80,
+                    width: 84,
+                    height: 84,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: const Color(0xFFC8A96E).withValues(alpha: 0.5),
-                        width: 1.5,
+                        color: gold.withValues(alpha: 0.4),
+                        width: 2,
                       ),
-                      image: DecorationImage(
-                        image: CachedNetworkImageProvider(farmer.effectiveImageUrl),
-                        fit: BoxFit.cover,
-                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: gold.withValues(alpha: 0.15),
+                          blurRadius: 12,
+                          spreadRadius: 2,
+                        ),
+                      ],
+                    ),
+                    child: ClipOval(
+                      child: _buildPortrait(farmer.effectiveImageUrl),
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 20),
                   // Name & Region
                   Expanded(
                     child: Column(
@@ -147,72 +152,74 @@ class _PremiumFarmerCard extends ConsumerWidget {
                       children: [
                         Text(
                           farmer.name,
-                          style: GoogleFonts.poppins(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFFC8A96E),
+                          style: GoogleFonts.cormorantGaramond(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                            color: gold,
+                            height: 1.1,
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${farmer.region}, ${farmer.country}',
-                          style: GoogleFonts.poppins(
-                            fontSize: 13,
-                            color: Colors.white54,
-                          ),
+                        const SizedBox(height: 6),
+                        Row(
+                          children: [
+                            Text(
+                              '${farmer.region}, ${farmer.country}',
+                              style: GoogleFonts.outfit(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white.withValues(alpha: 0.6),
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 10),
                         // Mini specialization chips
                         Wrap(
                           spacing: 8,
                           children: [
-                            _buildMiniChip(farmer.description.split(',').first),
+                             if (farmer.description.isNotEmpty)
+                               _buildMiniChip(farmer.description.split(',').first),
                           ],
                         ),
                       ],
                     ),
                   ),
-                  // Glass Sphere Flag
+                  // Country Flag
                   if (flagUrl != null)
-                    CachedNetworkImage(
-                      imageUrl: flagUrl,
-                      width: 48,
-                      height: 48,
-                      placeholder: (context, url) => const CircularProgressIndicator(strokeWidth: 2),
-                      errorWidget: (_, _, _) => const SizedBox(width: 48),
-                    ),
+                    _buildFlag(flagUrl),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
               // Bio Snippet
               Text(
                 farmer.story,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.outfit(
                   fontSize: 14,
-                  height: 1.4,
-                  color: Colors.white.withValues(alpha: 0.7),
+                  height: 1.5,
+                  color: Colors.white.withValues(alpha: 0.75),
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
               // Footer
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    'Explore Profile',
+                    'Докладно'.toUpperCase(),
                     style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFFC8A96E),
-                      letterSpacing: 0.5,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: gold,
+                      letterSpacing: 1.2,
                     ),
                   ),
+                  const SizedBox(width: 8),
                   const Icon(
-                    Icons.arrow_forward_ios_rounded,
+                    Icons.arrow_forward_rounded,
                     size: 14,
-                    color: Color(0xFFC8A96E),
+                    color: gold,
                   ),
                 ],
               ),
@@ -223,17 +230,63 @@ class _PremiumFarmerCard extends ConsumerWidget {
     );
   }
 
+  Widget _buildPortrait(String url) {
+    if (url.startsWith('assets/')) {
+      return Image.asset(url, fit: BoxFit.cover);
+    }
+    return CachedNetworkImage(
+      imageUrl: url,
+      fit: BoxFit.cover,
+      placeholder: (context, url) => Container(color: Colors.white10),
+      errorWidget: (context, url, error) => Container(
+        color: const Color(0xFF1C1C1E),
+        child: const Icon(Icons.person, color: Colors.white24),
+      ),
+    );
+  }
+
+  Widget _buildFlag(String url) {
+    return Container(
+      width: 42,
+      height: 42,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 8,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipOval(
+        child: url.startsWith('http')
+            ? CachedNetworkImage(
+                imageUrl: url,
+                fit: BoxFit.cover,
+                errorWidget: (context, url, error) => const SizedBox(),
+              )
+            : Image.asset(url, fit: BoxFit.cover),
+      ),
+    );
+  }
+
   Widget _buildMiniChip(String label) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.2)),
       ),
       child: Text(
         label.trim(),
-        style: GoogleFonts.poppins(fontSize: 10, color: Colors.white38),
+        style: GoogleFonts.outfit(
+          fontSize: 10,
+          fontWeight: FontWeight.w500,
+          color: const Color(0xFFC8A96E),
+        ),
       ),
     );
   }

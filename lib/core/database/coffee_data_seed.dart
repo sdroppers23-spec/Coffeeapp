@@ -37,17 +37,17 @@ class CoffeeDataSeed {
 
     onProgress?.call('Seeding Brands...');
     await _seedBrands();
-    // onProgress?.call('Seeding Farmers from JSON...');
-    // await _seedFarmers();
-    // onProgress?.call('Seeding Encyclopedia from JSON...');
-    // await _seedEncyclopedia();
-    // onProgress?.call('Seeding Catalog [STABLE]...');
-    // await _seedMadHeadsOrigins();
-    // await _seed3ChampsOrigins();
+    onProgress?.call('Seeding Farmers from JSON...');
+    await _seedFarmers();
+    onProgress?.call('Seeding Encyclopedia from JSON...');
+    await _seedEncyclopedia();
+    onProgress?.call('Seeding Catalog [STABLE]...');
+    await _seedMadHeadsOrigins();
+    await _seed3ChampsOrigins();
     
     // onProgress?.call('Seeding Specialty Articles...');
     try {
-      // await _seedSpecialtyArticles();
+      await _seedSpecialtyArticles();
       onProgress?.call('Seeding Recommended Recipes...');
       await _seedRecommendedRecipes();
       onProgress?.call('Seeding 30 Champion Brewing Recipes...');
@@ -125,231 +125,384 @@ class CoffeeDataSeed {
     }
   }
 
-/*
   Future<void> _seedFarmers() async {
-    final count = await (db.select(db.localizedFarmers)).get();
-    if (count.isNotEmpty) return;
+    // Always upsert to ensure data is updated
+    final farmers = [
+      _FarmerEntry(
+        id: 1,
+        nameEn: 'Wilton Benitez',
+        nameUk: 'Вілтон Бенітез',
+        farmName: 'Granja Paraíso 92',
+        countryEn: 'Colombia',
+        countryUk: 'Колумбія',
+        specializationEn: 'Thermal Shock, Bioreactor Fermentation',
+        specializationUk: 'Термальний шок, ферментація в біореакторах',
+        bioUk: '''### Хімік-технолог кавового світу
+Вілтон Бенітез перетворив свою ферму **Granja Paraíso 92** на справжню наукову лабораторію. Він не просто вирощує каву, він керує її хімічним складом на молекулярному рівні.
 
-    try {
-      final String jsonString = await rootBundle.loadString('assets/data/clean_farmers.json');
-      final List<dynamic> jsonData = jsonDecode(jsonString);
+#### Ключові технології:
+*   **Термальний шок:** Використання різкої зміни температури води (гаряча 40°C / холодна 12°C) для миттєвого закриття пор зерна, що дозволяє "запечатати" унікальні ароматичні сполуки всередині.
+*   **Ферментація в біореакторах:** Використання сталевих резервуарів з повним контролем тиску та температури.
+*   **Озонова стерилізація:** Очищення ягід озоном перед обробкою для повного видалення небажаних дріжджів та бактерій.''',
+        imageUrl: 'assets/images/farmer_wilton_benitez.png',
+      ),
+      _FarmerEntry(
+        id: 2,
+        nameEn: 'Oscar & Francisca Chacón',
+        nameUk: 'Оскар та Франциска Чакон',
+        farmName: 'Micromill Las Lajas',
+        countryEn: 'Costa Rica',
+        countryUk: 'Коста-Рика',
+        specializationEn: 'Black Diamond, Perla Negra, Honey Process',
+        specializationUk: 'Black Diamond, Perla Negra, Хані обробки',
+        bioUk: '''### Піонери натуральної обробки
+Родина Чакон та їхня станція **Las Lajas** стали легендами завдяки своїм експериментам з "сонячною" обробкою кави. Вони були одними з перших у Коста-Риці, хто почав виробляти спешелті-лоти за допомогою Honey та Natural методів.
 
-      for (var farmerJson in jsonData) {
-        final String rawId = farmerJson['id']?.toString() ?? 'f_0';
-        final int idNum = int.tryParse(rawId.replaceFirst('f_', '')) ?? 0;
-        
-        // Language Fallbacks: If UK is missing, use EN. If EN is missing, use UK.
-        final String rawNameEn = farmerJson['farmer_name_en'] ?? '';
-        final String rawNameUk = farmerJson['farmer_name_uk'] ?? '';
-        final String nameEn = rawNameEn.isNotEmpty ? rawNameEn : rawNameUk;
-        final String nameUk = rawNameUk.isNotEmpty ? rawNameUk : rawNameEn;
+#### Авторські профілі:
+*   **Perla Negra:** Метод, при якому ягоди сушаться на сонці, але на ніч накриваються плівкою для стимуляції внутрішньої ферментації.
+*   **Black Diamond:** Надповільне сушіння при низьких температурах, що надає каві екстремальну солодкість та лікерні ноти.''',
+        imageUrl: 'assets/images/farmer_oscar_francisca_chacon_1775463574148.png',
+      ),
+      _FarmerEntry(
+        id: 3,
+        nameEn: 'Diego Samuel Bermúdez',
+        nameUk: 'Дієго Самуель Бермудес',
+        farmName: 'Finca El Paraiso',
+        countryEn: 'Colombia',
+        countryUk: 'Колумбія',
+        specializationEn: 'Double Anaerobic Fermentation, Eco-Enigma Drying',
+        specializationUk: 'Подвійна анаеробна ферментація, Еко-Енігма сушіння',
+        bioUk: '''### Архітектор смаків
+Дієго Бермудес — один із найінноваційніших фермерів Колумбії. Його лоти, такі як знаменитий "Red Plum", змінили уявлення про те, на що здатна кава.
 
-        final String rawCountryEn = farmerJson['country_en'] ?? '';
-        final String rawCountryUk = farmerJson['country_uk'] ?? '';
-        final String countryEn = rawCountryEn.isNotEmpty ? rawCountryEn : rawCountryUk;
-        final String countryUk = rawCountryUk.isNotEmpty ? rawCountryUk : rawCountryEn;
+#### Інновації:
+*   **Двоетапна анаеробна ферментація:** Спочатку ферментація відбувається в цілій ягоді, потім — у клейковині після депульпації.
+*   **Eco-Enigma:** Спеціальна машина для сушіння в закритому циклі, яка видаляє вологу без впливу зовнішнього середовища.''',
+        imageUrl: 'assets/images/farmer_samuel_rony.png',
+      ),
+      _FarmerEntry(
+        id: 5,
+        nameEn: 'Carlos & Felipe Arcila',
+        nameUk: 'Карлос та Феліпе Арсіла',
+        farmName: 'Jardines del Eden',
+        countryEn: 'Colombia',
+        countryUk: 'Колумбія',
+        specializationEn: 'Fruit Co-fermentation, Ice Fermentation',
+        specializationUk: 'Фруктова ко-ферментація, крижана ферментація',
+        bioUk: '''### Майстри фруктових інфузій
+Брати Арсіла (Cofinet) — це ті, хто задає тренди у світі ко-ферментованої кави. Вони не бояться експериментувати з інгредієнтами, які раніше вважалися неприпустимими у спешелті.
 
-        final String rawRegionEn = farmerJson['region_en'] ?? '';
-        final String rawRegionUk = farmerJson['region_uk'] ?? '';
-        final String regionEn = rawRegionEn.isNotEmpty ? rawRegionEn : rawRegionUk;
-        final String regionUk = rawRegionUk.isNotEmpty ? rawRegionUk : rawRegionEn;
+#### Сміливі експерименти:
+*   **Fruit Co-fermentation:** Додавання свіжих фруктів (персиків, полуниці, маракуї) безпосередньо в танки під час ферментації.
+*   **Ice Fermentation:** Використання крижаної води для уповільнення процесів і досягнення максимальної чистоти чашки.''',
+        imageUrl: 'assets/images/farmer_carlos_felipe_arcila_1775463591773.png',
+      ),
+      _FarmerEntry(
+        id: 6,
+        nameEn: 'Aida Batlle',
+        nameUk: 'Аїда Батлл',
+        farmName: 'Finca Kilimanjaro',
+        countryEn: 'El Salvador',
+        countryUk: 'Сальвадор',
+        specializationEn: 'Cascara pioneer, Kenyan washed style',
+        specializationUk: 'Піонерка каскари, мита обробка в кенійському стилі',
+        bioUk: '''### Королева Сальвадору
+Аїда Батлл — одна з найвідоміших жінок у світі спешелті кави. Вона успадкувала сімейне господарство і перетворила його на еталон якості в Центральній Америці.
 
-        final String rawStoryEn = farmerJson['biography_en'] ?? (farmerJson['cup_profile_en'] ?? '');
-        final String rawStoryUk = farmerJson['biography_uk'] ?? (farmerJson['cup_profile_uk'] ?? '');
-        final String storyEn = rawStoryEn.isNotEmpty ? rawStoryEn : rawStoryUk;
-        final String storyUk = rawStoryUk.isNotEmpty ? rawStoryUk : rawStoryEn;
+#### Досягнення:
+*   **Кенійський метод:** Впровадила метод подвійної ферментації в Сальвадорі, що дозволило отримати лоти з надзвичайною чистотою та кислотністю.
+*   **Піонер Каскари:** Була однією з перших, хто почав професійно збирати та продавати каскару.''',
+        imageUrl: 'assets/images/farmer_aida_batlle_1775463622660.png',
+      ),
+      _FarmerEntry(
+        id: 7,
+        nameEn: 'Adam Overton & Rachel Samuel',
+        nameUk: 'Адам Овертон та Рейчел Семюел',
+        farmName: 'Gesha Village',
+        countryEn: 'Ethiopia',
+        countryUk: 'Ефіопія',
+        specializationEn: 'Gori Gesha preservation, Honey process',
+        specializationUk: 'Збереження сорту Gori Gesha, Хані обробка',
+        bioUk: '''### Повернення до витоків Гейші
+Адам та Рейчел відправилися в експедицію до лісів Горі Геша на південному заході Ефіопії, щоб знайти дике насіння прабатьків сорту Гейша.
 
-        final String rawDescEn = farmerJson['specialization_en'] ?? '';
-        final String rawDescUk = farmerJson['specialization_uk'] ?? '';
-        final String descEn = rawDescEn.isNotEmpty ? rawDescEn : rawDescUk;
-        final String descUk = rawDescUk.isNotEmpty ? rawDescUk : rawDescEn;
-        
-        final String slug = _slugify(nameEn);
-        final String imageUrl = '$bucketUrl/farmers/$slug.png';
-        final String countrySlug = countryEn.toLowerCase().replaceAll(' ', '_');
-        final String flagUrl = '$bucketUrl/flags/$countrySlug.png';
+#### Проєкт Gesha Village:
+*   **Збереження генетики:** Вони виділили кілька різних ефіопських диких сортів (Gori Gesha 2011, Gesha 1931).
+*   **Екосистема:** Ферма інтегрована в природний ландшафт.''',
+        imageUrl: 'assets/images/farmer_adam_rachel_overton_1775463606712.png',
+      ),
+      _FarmerEntry(
+        id: 8,
+        nameEn: 'Pepe Jijón',
+        nameUk: 'Пепе Хіхон',
+        farmName: 'Finca Soledad',
+        countryEn: 'Ecuador',
+        countryUk: 'Еквадор',
+        specializationEn: 'Wave Fermentation, Biodynamic farming',
+        specializationUk: 'Хвильова ферментація (Wave), біодинамічне землеробство',
+        bioUk: '''### Біодинаміка серед хмар
+Колишній професійний мандрівник та альпініст Пепе Хіхон знайшов свій спокій на високогір'ї Еквадору, створюючи одну з найбільш "етичних" ферм світу.
 
-        await db.smartUpsertFarmer(
-          LocalizedFarmersCompanion.insert(
-            id: Value(idNum),
-            imageUrl: Value(imageUrl),
-            countryEmoji: Value(flagUrl), // Using bucket flag URL instead of emoji
-            createdAt: Value(DateTime.now()),
+#### Філософія Wave:
+*   **Хвильова ферментація:** Метод, де температура ферментації змінюється циклічно.
+*   **Біодинаміка:** Повна відмова від хімікатів та робота з циклами природи.''',
+        imageUrl: 'assets/images/farmer_pepe_jijon_1775463639704.png',
+      ),
+      _FarmerEntry(
+        id: 9,
+        nameEn: 'Alejo Castro',
+        nameUk: 'Алехо Кастро',
+        farmName: 'Volcan Azul',
+        countryEn: 'Costa Rica',
+        countryUk: 'Коста-Рика',
+        specializationEn: 'Rare varietal preservation, Anaerobic Natural',
+        specializationUk: 'Збереження рідкісних сортів, Анаеробна натуральна',
+        bioUk: '''### Охоронець рідкісних різновидів
+Представник п'ятого покоління кавової династії, Алехо Кастро, керує фермою **Volcan Azul**, розташованою біля підніжжя вулкана Поас.
+
+#### Його місія:
+*   **Генетичне розмаїття:** На фермі вирощується понад 40 різних сортів.
+*   **Екологія:** Купівля та охорона гектарів дикого тропічного лісу навколо плантацій.''',
+        imageUrl: 'assets/images/farmer_alejo_castro_1775463657692.png',
+      ),
+      _FarmerEntry(
+        id: 10,
+        nameEn: 'Luis Norberto Pascoal',
+        nameUk: 'Луїс Норберто Паскоаль',
+        farmName: 'Daterra',
+        countryEn: 'Brazil',
+        countryUk: 'Бразилія',
+        specializationEn: 'Masterpieces (Aero, Anaerobic), B-Corp Sustainability',
+        specializationUk: 'Masterpieces (Аеро, Анаеробні), B-Corp екологічність',
+        bioUk: '''### Гігант інновацій
+Ферма **Daterra** в Бразилії — це перша кавова ферма у світі, яка отримала сертифікат B-Corp за найвищі стандарти соціальної відповідальності та екології.
+
+#### Masterpieces by Daterra:
+*   **Експериментальні лоти:** Кожного року випускає серію "Masterpieces" — результат найбільш сміливих експериментів лабораторії.''',
+        imageUrl: 'assets/images/farmer_luis_norberto_pascoal_1775463672082.png',
+      ),
+    ];
+
+    for (var f in farmers) {
+      await db.smartUpsertFarmer(
+        LocalizedFarmersCompanion.insert(
+          id: Value(f.id),
+          imageUrl: Value(f.imageUrl),
+          createdAt: Value(DateTime.now()),
+        ),
+        [
+          LocalizedFarmerTranslationsCompanion.insert(
+            farmerId: f.id,
+            languageCode: 'uk',
+            name: Value(f.nameUk),
+            country: Value(f.countryUk),
+            description: Value(f.specializationUk),
+            story: Value(f.bioUk),
           ),
-          [
-            LocalizedFarmerTranslationsCompanion.insert(
-              farmerId: idNum,
-              languageCode: 'en',
-              name: Value(nameEn),
-              country: Value(countryEn),
-              region: Value(regionEn),
-              description: Value(descEn),
-              story: Value(storyEn),
-            ),
-            LocalizedFarmerTranslationsCompanion.insert(
-              farmerId: idNum,
-              languageCode: 'uk',
-              name: Value(nameUk),
-              country: Value(countryUk),
-              region: Value(regionUk),
-              description: Value(descUk),
-              story: Value(storyUk),
-            ),
-          ],
-        );
-      }
-    } catch (e) {
-      debugPrint('Error seeding farmers: $e');
+          LocalizedFarmerTranslationsCompanion.insert(
+            farmerId: f.id,
+            languageCode: 'en',
+            name: Value(f.nameEn),
+            country: Value(f.countryEn),
+            description: Value(f.specializationEn),
+            story: const Value(''),
+          ),
+        ],
+      );
     }
   }
-*/
 
-/*
   Future<void> _seedEncyclopedia() async {
-    final count = await (db.select(db.specialtyArticles)).get();
-    if (count.isNotEmpty) return;
+    // Always upsert to ensure data is updated
+    final articles = [
+      _ArticleEntry(
+        id: '1',
+        titleEn: 'Standards & Ethics',
+        titleUk: 'Стандарти та Етика',
+        categoryEn: 'Education',
+        categoryUk: 'Освіта',
+        imageUrl: 'assets/images/encyclopedia_module_1_standards_1775401113100.png',
+        contentUk: '''### 1. Фундамент Specialty Coffee
+Specialty Coffee — це не просто кава, це система контролю якості від ферми до чашки.
 
-    try {
-      final String jsonString = await rootBundle.loadString('assets/data/clean_encyclopedia.json');
-      final List<dynamic> jsonData = jsonDecode(jsonString);
+#### Ключові атрибути:
+*   **Traceability:** Ми знаємо точні GPS-координати ділянки.
+*   **Сенсорна чистота:** Відсутність дефектів (Clean Cup).
 
-      int articleId = 1000;
-      for (var module in jsonData) {
-        articleId++;
-        final metadata = module['module_metadata'];
-        final String title = metadata['module_name'] ?? 'Encyclopedia Entry';
-        final String moduleId = metadata['module_id'] ?? 'SC-000';
-        
-        final StringBuffer sb = StringBuffer();
-        final List<dynamic> topics = module['content'] ?? [];
-        for (var topic in topics) {
-          sb.writeln('## ${topic['topic']}\n');
-          if (topic['definition'] != null) {
-            sb.writeln('**Definition:** ${topic['definition']}\n');
-          }
-          if (topic['fundamental_attributes'] != null) {
-            for (var attr in topic['fundamental_attributes']) {
-              sb.writeln('### ${attr['attribute']}');
-              sb.writeln('${attr['details']}\n');
-            }
-          }
-           if (topic['organizations'] != null) {
-            for (var org in topic['organizations']) {
-              sb.writeln('### ${org['name']}');
-              sb.writeln('*${org['role']}*\n');
-          if (org['standards_set'] != null) {
-            for (var s in org['standards_set']) {
-              sb.writeln('- $s');
-            }
-          }
-              if (org['certification_system'] != null) {
-                final cert = org['certification_system'];
-                sb.writeln('\n**Certification: ${cert['program_name']}**');
-                sb.writeln('${cert['description']}\n');
-              }
-            }
-          }
-        }
+#### SCA та CQI
+*   **SCA (Specialty Coffee Association):** Встановлює технічні стандарти води, збору та обробки.
+*   **CQI (Coffee Quality Institute):** Сертифікує **Q-Grader-ів** — спеціалістів, що виставляють бали каві.''',
+      ),
+      _ArticleEntry(
+        id: '2',
+        titleEn: 'Botany & Terroir',
+        titleUk: 'Ботаніка та Теруар',
+        categoryEn: 'Education',
+        categoryUk: 'Освіта',
+        imageUrl: 'assets/images/encyclopedia_module_2_botany_1775401234532.png',
+        contentUk: '''### Генетика та Середовище
+Смак кави закладається в зерні задовго до обсмажування.
 
-        await db.smartUpsertArticle(
-          SpecialtyArticlesCompanion.insert(
-            id: Value(articleId),
-            imageUrl: '$bucketUrl/articles/${moduleId.toLowerCase()}.png',
-            readTimeMin: 8,
+#### Теруар:
+*   **Висота:** Понад 1500м уповільнює метаболізм дерева, накопичуючи більше цукрів.
+*   **Грунт:** Вулканічний попіл надає іскристу кислотність.
+
+#### Різновиди:
+*   **Geisha:** Елітна панамська кава з квітковим профілем.
+*   **SL-28:** Кенійська легенда з нотами чорної смородини.''',
+      ),
+      _ArticleEntry(
+        id: '3',
+        titleEn: 'Harvesting & Sorting',
+        titleUk: 'Збір та Сортування',
+        categoryEn: 'Education',
+        categoryUk: 'Освіта',
+        imageUrl: 'assets/images/encyclopedia_module_3_agronomy_1775401618408.png',
+        contentUk: '''### Тільки стиглі ягоди
+У спешелті допускається лише **Hand Picking** — ручний збір.
+
+#### Чому це важливо?
+*   Недоспіла ягода (Quakers) дає в'яжучий смак арахісової пасти.
+*   Переспіла ягода може додати небажаної оцтової ферментації.
+
+#### Оптичне сортування:
+Сучасні ферми використовують лазери для видалення дефектних зерен за кольором та щільністю.''',
+      ),
+      _ArticleEntry(
+        id: '4',
+        titleEn: 'Processing & Fermentation',
+        titleUk: 'Обробка та Ферментація',
+        categoryEn: 'Education',
+        categoryUk: 'Освіта',
+        imageUrl: 'assets/images/encyclopedia_module_4_advanced_processing_1775401484863.png',
+        contentUk: '''### Магія перетворення
+Обробка — це процес видалення шарів кавової ягоди для вивільнення зерна.
+
+#### Основні методи:
+*   **Washed (Мита):** Наголос на чистоті та кислотності.
+*   **Natural (Натуральна):** Тільність, солодкість та фруктові ноти.
+*   **Honey:** Проміжний варіант, де залишається частина клейковини.
+
+#### Анаеробна ферментація:
+Кава ферментується без кисню в танках, що створює екзотичні дескриптори (алкогольні ноти, прянощі).''',
+      ),
+      _ArticleEntry(
+        id: '5',
+        titleEn: 'Quality Control',
+        titleUk: 'Контроль Якості (Green Coffee)',
+        categoryEn: 'Education',
+        categoryUk: 'Освіта',
+        imageUrl: 'assets/images/encyclopedia_module_5_milling_1775401521163.png',
+        contentUk: '''### Аналіз зеленого зерна
+Перед обсмажуванням кава проходить суворий контроль.
+
+#### Параметри оцінки:
+*   **Moisture Content:** Оптимально 10-12%.
+*   **Density:** Висока щільність означає багатший смак.
+*   **Defects:** Пошук "чорних" зерен, пошкоджень комахами та плісняви.
+
+Використання колориметрів та вологомірів є стандартом для Specialty лабораторій.''',
+      ),
+      _ArticleEntry(
+        id: '6',
+        titleEn: 'Roasting Science',
+        titleUk: 'Наука Обсмажування',
+        categoryEn: 'Education',
+        categoryUk: 'Освіта',
+        imageUrl: 'assets/images/encyclopedia_module_6_roasting_1775401540972.png',
+        contentUk: '''### Реакція Маяра та Карамелізація
+Обсмажування — це керована хімічна реакція.
+
+#### Етапи:
+1.  **Drying Phase:** Випаровування залишків вологи.
+2.  **Maillard Reaction:** Формування складних ароматичних сполук.
+3.  **First Crack:** Фізичне розширення зерна, початок розвитку.
+
+#### Мета:
+Підкреслити терруар, а не "смак смаженого".''',
+      ),
+      _ArticleEntry(
+        id: '7',
+        titleEn: 'Sensory & Water',
+        titleUk: 'Сенсорика та Хімія Води',
+        categoryEn: 'Education',
+        categoryUk: 'Освіта',
+        imageUrl: 'assets/images/encyclopedia_module_7_sensory_analysis_1775401560217.png',
+        contentUk: '''### Смак — це хімія
+Ми п'ємо розчин, де 98-99% — це вода.
+
+#### Роль води:
+*   **Магній (Mg2+):** Витягує складні фруктові та ягідні ноти.
+*   **Кальцій (Ca2+):** Допомагає розкрити тільність кави.
+*   **Буферність (Лужність):** Регулює інтенсивність кислотності.
+
+#### Сенсорний аналіз:
+Калібрування за протоколами SCA для об'єктивної оцінки смаку, а не просто "мені подобається".''',
+      ),
+      _ArticleEntry(
+        id: '8',
+        titleEn: 'Espresso Physics',
+        titleUk: 'Фізика та Хімія Еспресо',
+        categoryEn: 'Education',
+        categoryUk: 'Освіта',
+        imageUrl: 'assets/images/encyclopedia_module_8_espresso_physics_1775401579031.png',
+        contentUk: '''### Екстракція під тиском
+Еспресо — це найбільш концентрований спосіб заварювання кави.
+
+#### Параметри:
+*   **Тиск:** Традиційні 9 бар або профілювання тиску для Гейші.
+*   **Температура:** Впливає на швидкість розчинення речовин.
+*   **Brew Ratio:** Співвідношення меленої кави до ваги напою (класика 1:2).
+
+#### Каналізація (Channeling):
+Проблема нерівномірованного проходження води через кавову таблетку, що призводить до дисбалансу смаку.''',
+      ),
+      _ArticleEntry(
+        id: '9',
+        titleEn: 'Digital Traceability',
+        titleUk: 'Діджиталізація та Сталий розвиток',
+        categoryEn: 'Education',
+        categoryUk: 'Освіта',
+        imageUrl: 'assets/images/encyclopedia_module_9_digitalization_1775401596943.png',
+        contentUk: '''### Майбутнє індустрії
+Сучасні технології допомагають зробити ланцюжок постачання прозорим.
+
+#### Технології:
+*   **Blockchain:** Реєстрація кожної транзакції між фермером та обсмажкою.
+*   **Профілювання обсмажування:** Програмне забезпечення (Cropster, Artisan) для ідентичного повторення профілів.
+
+#### Sustainability:
+Боротьба зі змінами клімату та забезпечення гідної оплати праці збирачів кави.''',
+      ),
+    ];
+
+    for (var a in articles) {
+      final articleId = int.parse(a.id);
+      await db.smartUpsertArticle(
+        SpecialtyArticlesCompanion.insert(
+          id: Value(articleId),
+          imageUrl: a.imageUrl,
+          readTimeMin: 5,
+        ),
+        [
+          SpecialtyArticleTranslationsCompanion.insert(
+            articleId: articleId,
+            languageCode: 'uk',
+            title: a.titleUk,
+            subtitle: a.categoryUk,
+            contentHtml: a.contentUk,
           ),
-          [
-            SpecialtyArticleTranslationsCompanion.insert(
-              articleId: articleId,
-              languageCode: 'uk',
-              title: title,
-              subtitle: 'Advanced Knowledge Module',
-              contentHtml: sb.toString(),
-            ),
-            SpecialtyArticleTranslationsCompanion.insert(
-              articleId: articleId,
-              languageCode: 'en',
-              title: title,
-              subtitle: 'Advanced Knowledge Module',
-              contentHtml: sb.toString(),
-            ),
-          ],
-        );
-      }
-    } catch (e) {
-      debugPrint('Error seeding encyclopedia: $e');
+          SpecialtyArticleTranslationsCompanion.insert(
+            articleId: articleId,
+            languageCode: 'en',
+            title: a.titleEn,
+            subtitle: a.categoryEn,
+            contentHtml: 'Coming soon...',
+          ),
+        ],
+      );
     }
   }
-*/
-
-/*
-  String _slugify(String text) {
-    return text.toLowerCase()
-        .replaceAll(' & ', '_')
-        .replaceAll(' ', '_')
-        .replaceAll('á', 'a')
-        .replaceAll('ó', 'o')
-        .replaceAll('í', 'i')
-        .replaceAll('é', 'e')
-        .replaceAll(RegExp(r'[^a-zA-Z0-9_]'), '')
-        .replaceAll('__', '_');
-  }
-*/
-
-/*
-  Future<void> _seedMadHeadsOrigins() async {
-    final entries = [
-      _Entry(
-        LocalizedBeansCompanion.insert(id: const Value(101), brandId: const Value(1), countryEmoji: const Value('🇪🇹'), cupsScore: const Value(88.0)),
-        LocalizedBeanTranslationsCompanion.insert(beanId: 101, languageCode: 'uk', country: const Value('Ефіопія'), region: const Value('Guji'), varieties: const Value('Heirloom'), flavorNotes: Value(jsonEncode(['Peach', 'Jasmine'])), description: const Value('Класична мита Ефіопія.')),
-      ),
-      _Entry(
-        LocalizedBeansCompanion.insert(id: const Value(102), brandId: const Value(1), countryEmoji: const Value('🇨🇴'), cupsScore: const Value(87.5)),
-        LocalizedBeanTranslationsCompanion.insert(beanId: 102, languageCode: 'uk', country: const Value('Колумбія'), region: const Value('Huila'), varieties: const Value('Caturra'), flavorNotes: Value(jsonEncode(['Chocolate', 'Red Apple'])), description: const Value('Збалансована Колумбія.')),
-      ),
-    ];
-    for (var e in entries) {
-      await db.smartUpsertBean(e.main, [e.trans]);
-    }
-  }
-
-  Future<void> _seed3ChampsOrigins() async {
-    final entries = [
-      _Entry(
-        LocalizedBeansCompanion.insert(id: const Value(201), brandId: const Value(2), countryEmoji: const Value('🇰🇪'), cupsScore: const Value(89.0)),
-        LocalizedBeanTranslationsCompanion.insert(beanId: 201, languageCode: 'uk', country: const Value('Кенія'), region: const Value('Nyeri'), varieties: const Value('SL28'), flavorNotes: Value(jsonEncode(['Blackcurrant', 'Tomato'])), description: const Value('Яскрава Кенія.')),
-      ),
-    ];
-    for (var e in entries) {
-      await db.smartUpsertBean(e.main, [e.trans]);
-    }
-  }
-
-  Future<void> _seedSpecialtyArticles() async {
-    await db.smartUpsertArticle(
-      SpecialtyArticlesCompanion.insert(
-        id: const Value(1),
-        imageUrl: '$bucketUrl/articles/q_grading.png',
-        readTimeMin: 6,
-      ),
-      [
-        SpecialtyArticleTranslationsCompanion.insert(
-          articleId: 1,
-          languageCode: 'uk',
-          title: 'Як оцінюють зерно (Q-Grading)',
-          subtitle: 'SCA Протокол, 10 параметрів якості',
-          contentHtml: '### Процес Q-Grading\nКожен лот оцінюється за 100-бальною шкалою...',
-        ),
-        SpecialtyArticleTranslationsCompanion.insert(
-          articleId: 1,
-          languageCode: 'en',
-          title: 'How Beans are Evaluated (Q-Grading)',
-          subtitle: 'SCA Protocol, 10 Quality Parameters',
-          contentHtml: '### The Q-Grading Process\nEvery lot is evaluated on a 100-point scale...',
-        ),
-      ],
-    );
-  }
-*/
 
   Future<void> _seedBrewingRecipes() async {
     // We clear current recipes to ensure we get exactly the unique ones
@@ -409,9 +562,7 @@ class CoffeeDataSeed {
     ));
   }
 
-  void _addChemexRecipes(List<BrewingRecipesCompanion> list) {
-    _addGenericRecipes(list, 'chemex');
-  }
+  void _addChemexRecipes(List<BrewingRecipesCompanion> list) => _addGenericRecipes(list, 'chemex');
   void _addFrenchPressRecipes(List<BrewingRecipesCompanion> list) {
     list.add(BrewingRecipesCompanion.insert(
       methodKey: 'french_press',
@@ -431,18 +582,10 @@ class CoffeeDataSeed {
     ));
   }
 
-  void _addEspressoRecipes(List<BrewingRecipesCompanion> list) {
-    _addGenericRecipes(list, 'espresso');
-  }
-  void _addMokaRecipes(List<BrewingRecipesCompanion> list) {
-    _addGenericRecipes(list, 'moka_pot');
-  }
-  void _addCleverRecipes(List<BrewingRecipesCompanion> list) {
-    _addGenericRecipes(list, 'clever');
-  }
-  void _addColdBrewRecipes(List<BrewingRecipesCompanion> list) {
-    _addGenericRecipes(list, 'cold_brew');
-  }
+  void _addEspressoRecipes(List<BrewingRecipesCompanion> list) => _addGenericRecipes(list, 'espresso');
+  void _addMokaRecipes(List<BrewingRecipesCompanion> list) => _addGenericRecipes(list, 'moka_pot');
+  void _addCleverRecipes(List<BrewingRecipesCompanion> list) => _addGenericRecipes(list, 'clever');
+  void _addColdBrewRecipes(List<BrewingRecipesCompanion> list) => _addGenericRecipes(list, 'cold_brew');
 
   void _addGenericRecipes(List<BrewingRecipesCompanion> list, String method) {
     list.add(BrewingRecipesCompanion.insert(
@@ -463,9 +606,7 @@ class CoffeeDataSeed {
   }
 
   Future<void> _seedRecommendedRecipes() async {
-    // Delete existing recommended recipes to prevent constraint errors
     await db.delete(db.recommendedRecipes).go();
-
     final allLots = await db.select(db.localizedBeans).get();
     if (allLots.isEmpty) return;
     for (var lot in allLots) {
@@ -484,12 +625,90 @@ class CoffeeDataSeed {
       );
     }
   }
+
+  Future<void> _seedMadHeadsOrigins() async {
+    final entries = [
+      _Entry(
+        LocalizedBeansCompanion.insert(id: const Value(101), brandId: const Value(1), countryEmoji: const Value('🇪🇹'), cupsScore: const Value(88.0)),
+        LocalizedBeanTranslationsCompanion.insert(beanId: 101, languageCode: 'uk', country: const Value('Ефіопія'), region: const Value('Guji'), varieties: const Value('Heirloom'), flavorNotes: Value(jsonEncode(['Peach', 'Jasmine'])), description: const Value('Класична мита Ефіопія.')),
+      ),
+      _Entry(
+        LocalizedBeansCompanion.insert(id: const Value(102), brandId: const Value(1), countryEmoji: const Value('🇨🇴'), cupsScore: const Value(87.5)),
+        LocalizedBeanTranslationsCompanion.insert(beanId: 102, languageCode: 'uk', country: const Value('Колумбія'), region: const Value('Huila'), varieties: const Value('Caturra'), flavorNotes: Value(jsonEncode(['Chocolate', 'Red Apple'])), description: const Value('Збалансована Колумбія.')),
+      ),
+    ];
+    for (var e in entries) {
+      await db.smartUpsertBean(e.main, [e.trans]);
+    }
+  }
+
+  Future<void> _seed3ChampsOrigins() async {
+    final entries = [
+      _Entry(
+        LocalizedBeansCompanion.insert(id: const Value(201), brandId: const Value(2), countryEmoji: const Value('🇰🇪'), cupsScore: const Value(89.0)),
+        LocalizedBeanTranslationsCompanion.insert(beanId: 201, languageCode: 'uk', country: const Value('Кенія'), region: const Value('Nyeri'), varieties: const Value('SL28'), flavorNotes: Value(jsonEncode(['Blackcurrant', 'Tomato'])), description: const Value('Яскрава Кенія.')),
+      ),
+    ];
+    for (var e in entries) {
+      await db.smartUpsertBean(e.main, [e.trans]);
+    }
+  }
+
+  Future<void> _seedSpecialtyArticles() async {
+    // Handled by _seedEncyclopedia
+  }
 }
 
-/*
+class _FarmerEntry {
+  final int id;
+  final String nameEn;
+  final String nameUk;
+  final String farmName;
+  final String countryEn;
+  final String countryUk;
+  final String specializationEn;
+  final String specializationUk;
+  final String bioUk;
+  final String imageUrl;
+
+  _FarmerEntry({
+    required this.id,
+    required this.nameEn,
+    required this.nameUk,
+    required this.farmName,
+    required this.countryEn,
+    required this.countryUk,
+    required this.specializationEn,
+    required this.specializationUk,
+    required this.bioUk,
+    required this.imageUrl,
+  });
+}
+
+class _ArticleEntry {
+  final String id;
+  final String titleEn;
+  final String titleUk;
+  final String categoryEn;
+  final String categoryUk;
+  final String contentUk;
+  final String imageUrl;
+
+  _ArticleEntry({
+    required this.id,
+    required this.titleEn,
+    required this.titleUk,
+    required this.categoryEn,
+    required this.categoryUk,
+    required this.contentUk,
+    required this.imageUrl,
+  });
+}
+
 class _Entry {
   final LocalizedBeansCompanion main;
   final LocalizedBeanTranslationsCompanion trans;
   _Entry(this.main, this.trans);
 }
-*/
+
+

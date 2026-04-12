@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/database/app_database.dart';
 import '../../core/database/database_provider.dart';
-
 import 'method_tile.dart';
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
@@ -21,10 +20,17 @@ class BrewingGuideScreen extends ConsumerWidget {
     final recipesAsync = ref.watch(brewingRecipesProvider);
 
     return Scaffold(
+      backgroundColor: const Color(0xFF0F0F0F),
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         title: Text(
-          'Brewing Guide',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+          'Способи Заварювання',
+          style: GoogleFonts.cormorantGaramond(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
       ),
       body: recipesAsync.when(
@@ -36,26 +42,41 @@ class BrewingGuideScreen extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(),
+                  CircularProgressIndicator(color: Color(0xFFD4A574)),
                   SizedBox(height: 16),
                   Text(
-                    'Loading recipes…',
+                    'Налаштування обладнання...',
                     style: TextStyle(color: Colors.white54),
                   ),
                 ],
               ),
             );
           }
+
+          // Group recipes by method
+          final grouped = <String, List<BrewingRecipe>>{};
+          for (var r in recipes) {
+            grouped.putIfAbsent(r.methodKey, () => []).add(r);
+          }
+
+          final methods = grouped.keys.toList();
+
           return GridView.builder(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               mainAxisSpacing: 16,
               crossAxisSpacing: 16,
-              childAspectRatio: 0.85,
+              childAspectRatio: 0.82,
             ),
-            itemCount: recipes.length,
-            itemBuilder: (context, i) => MethodTile(recipe: recipes[i]),
+            itemCount: methods.length,
+            itemBuilder: (context, i) {
+              final methodKey = methods[i];
+              final methodRecipes = grouped[methodKey]!;
+              return MethodTile(
+                methodRecipes: methodRecipes,
+              );
+            },
           );
         },
       ),

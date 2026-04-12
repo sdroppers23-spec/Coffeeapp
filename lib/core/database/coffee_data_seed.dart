@@ -19,18 +19,28 @@ class CoffeeDataSeed {
     onProgress?.call('Initializing database sync...');
     debugPrint('DB SEEDING: STARTING (FORCE=$force)...');
 
+    // Self-healing: Detect pollution (e.g. 18 articles instead of 9)
+    if (!force) {
+      final farmersCount = await (db.select(db.localizedFarmers).get()).then((l) => l.length);
+      final articlesCount = await (db.select(db.specialtyArticles).get()).then((l) => l.length);
+      if ((farmersCount > 0 && farmersCount != 9) || (articlesCount > 0 && articlesCount != 9)) {
+        debugPrint('DB SEEDING: POLLUTION DETECTED (F:$farmersCount, A:$articlesCount). FORCING RESET.');
+        force = true;
+      }
+    }
+
     if (force || await db.brandsIsEmpty()) {
       debugPrint('DB SEEDING: PERFORMING MANDATORY CLEANUP...');
       await db.transaction(() async {
-        await db.delete(db.localizedBeans).go();
-        await db.delete(db.localizedBeanTranslations).go();
-        await db.delete(db.localizedBrands).go();
-        await db.delete(db.localizedBrandTranslations).go();
-        await db.delete(db.brewingRecipes).go();
-        await db.delete(db.specialtyArticles).go();
-        await db.delete(db.specialtyArticleTranslations).go();
-        await db.delete(db.localizedFarmers).go();
-        await db.delete(db.localizedFarmerTranslations).go();
+        await (db.delete(db.localizedBeans)).go();
+        await (db.delete(db.localizedBeanTranslations)).go();
+        await (db.delete(db.localizedBrands)).go();
+        await (db.delete(db.localizedBrandTranslations)).go();
+        await (db.delete(db.brewingRecipes)).go();
+        await (db.delete(db.specialtyArticles)).go();
+        await (db.delete(db.specialtyArticleTranslations)).go();
+        await (db.delete(db.localizedFarmers)).go();
+        await (db.delete(db.localizedFarmerTranslations)).go();
       });
       debugPrint('DB SEEDING: CLEANUP COMPLETE.');
     }
@@ -126,9 +136,6 @@ class CoffeeDataSeed {
   Future<void> _seedFarmers() async {
     final isEmpty = await db.farmersIsEmpty();
     if (!isEmpty) return;
-    
-    // Clear anyway if we are here (e.g. force) to ensure clean state
-    await db.clearFarmers();
     
     final farmers = [
       _FarmerEntry(

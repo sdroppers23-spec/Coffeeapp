@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class GlassContainer extends StatelessWidget {
   final Widget child;
@@ -67,7 +68,7 @@ class GlassContainer extends StatelessWidget {
               image: imageUrl != null
                   ? DecorationImage(
                       image: imageUrl!.startsWith('http')
-                          ? NetworkImage(imageUrl!) as ImageProvider
+                          ? CachedNetworkImageProvider(imageUrl!) as ImageProvider
                           : AssetImage(imageUrl!),
                       fit: BoxFit.cover,
                       colorFilter: ColorFilter.mode(

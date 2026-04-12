@@ -185,6 +185,13 @@ class SyncService {
 
     try {
       debugPrint('SYNC: Pulling farmers and translations from Supabase...');
+      
+      // Clear old farmers locally to prevent duplicate 'unknown' or stale IDs
+      await db.transaction(() async {
+        await db.delete(db.localizedFarmers).go();
+        await db.delete(db.localizedFarmerTranslations).go();
+      });
+
       // Fetch main farmer records
       final farmersData = await supabase!.from('localized_farmers').select().order('id');
       // Fetch all translations

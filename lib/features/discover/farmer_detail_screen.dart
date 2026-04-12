@@ -58,7 +58,10 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                   size: 18,
                 ),
               ),
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () {
+                ref.read(navBarVisibleProvider.notifier).show();
+                Navigator.of(context).pop();
+              },
             ),
             flexibleSpace: FlexibleSpaceBar(
               background: Stack(
@@ -200,17 +203,21 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
 
   String _formatText(String text) {
     if (text.isEmpty) return '';
-    // If it already has HTML tags, return as is
     if (text.contains('<p>') || text.contains('<br') || text.contains('<h')) {
       return text;
     }
 
-    // Convert double newlines to paragraphs
     return text
         .split('\n\n')
         .where((p) => p.trim().isNotEmpty)
-        .map((p) => '<p>${p.replaceAll('\n', '<br/>')}</p>')
-        .join();
+        .map((p) {
+      if (p.trim().startsWith('### ')) {
+        return '<h3>${p.trim().replaceFirst('### ', '')}</h3>';
+      } else if (p.trim().startsWith('## ')) {
+        return '<h2>${p.trim().replaceFirst('## ', '')}</h2>';
+      }
+      return '<p>${p.trim().replaceAll('\n', '<br/>')}</p>';
+    }).join();
   }
 }
 

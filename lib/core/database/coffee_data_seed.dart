@@ -352,7 +352,7 @@ class CoffeeDataSeed {
 */
 
   Future<void> _seedBrewingRecipes() async {
-    // We clear current recipes to ensure we get exactly the 30 champion ones with unique IDs
+    // We clear current recipes to ensure we get exactly the unique ones
     await db.delete(db.brewingRecipes).go();
 
     final List<BrewingRecipesCompanion> recipes = [];
@@ -389,7 +389,6 @@ class CoffeeDataSeed {
         {'title': 'Final Pour', 'desc': 'Pour 60g. Total 300g.', 'durationSec': 30},
       ]),
     ));
-    _addGenericRecipes(list, 'v60', 4);
   }
 
   void _addAeropressRecipes(List<BrewingRecipesCompanion> list) {
@@ -408,11 +407,10 @@ class CoffeeDataSeed {
         {'title': 'Flip & Press', 'desc': 'Flip and press for 30s.', 'durationSec': 60},
       ]),
     ));
-    _addGenericRecipes(list, 'aeropress', 4);
   }
 
   void _addChemexRecipes(List<BrewingRecipesCompanion> list) {
-    _addGenericRecipes(list, 'chemex', 5);
+    _addGenericRecipes(list, 'chemex');
   }
   void _addFrenchPressRecipes(List<BrewingRecipesCompanion> list) {
     list.add(BrewingRecipesCompanion.insert(
@@ -431,23 +429,22 @@ class CoffeeDataSeed {
         {'title': 'Wait', 'desc': 'Wait 5 more minutes.', 'durationSec': 300},
       ]),
     ));
-    _addGenericRecipes(list, 'french_press', 2);
   }
 
   void _addEspressoRecipes(List<BrewingRecipesCompanion> list) {
-    _addGenericRecipes(list, 'espresso', 5);
+    _addGenericRecipes(list, 'espresso');
   }
   void _addMokaRecipes(List<BrewingRecipesCompanion> list) {
-    _addGenericRecipes(list, 'moka_pot', 2);
+    _addGenericRecipes(list, 'moka_pot');
   }
   void _addCleverRecipes(List<BrewingRecipesCompanion> list) {
-    _addGenericRecipes(list, 'clever', 3);
+    _addGenericRecipes(list, 'clever');
   }
   void _addColdBrewRecipes(List<BrewingRecipesCompanion> list) {
-    _addGenericRecipes(list, 'cold_brew', 2);
+    _addGenericRecipes(list, 'cold_brew');
   }
 
-  void _addGenericRecipes(List<BrewingRecipesCompanion> list, String method, int count) {
+  void _addGenericRecipes(List<BrewingRecipesCompanion> list, String method) {
     list.add(BrewingRecipesCompanion.insert(
       methodKey: method,
       name: '${method.toUpperCase()} Classic Recipe',
@@ -466,6 +463,9 @@ class CoffeeDataSeed {
   }
 
   Future<void> _seedRecommendedRecipes() async {
+    // Delete existing recommended recipes to prevent constraint errors
+    await db.delete(db.recommendedRecipes).go();
+
     final allLots = await db.select(db.localizedBeans).get();
     if (allLots.isEmpty) return;
     for (var lot in allLots) {

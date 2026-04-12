@@ -586,39 +586,40 @@ class _FreshnessProgressBar extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 6),
         Container(
           height: 3,
           width: double.infinity,
-      decoration: BoxDecoration(
-        color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(2),
-      ),
-      child: FractionallySizedBox(
-        alignment: Alignment.centerLeft,
-        widthFactor: factor,
-        child: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                const Color(0xFF2DD4BF), // Fresh Teal
-                const Color(0xFFFACC15), // Vibrant Gold
-                const Color(0xFFEF4444), // Critical Red
-              ],
-              stops: const [0.0, 0.5, 1.0],
-            ),
+            color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(2),
-            boxShadow: [
-              if (!isExpired)
-                BoxShadow(
-                  color: (factor > 0.5 ? const Color(0xFFFACC15) : const Color(0xFF2DD4BF)).withValues(alpha: 0.3),
-                  blurRadius: 6,
-                  spreadRadius: 0.5
-                )
-            ],
+          ),
+          child: FractionallySizedBox(
+            alignment: Alignment.centerLeft,
+            widthFactor: factor,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    const Color(0xFF2DD4BF), // Fresh Teal
+                    const Color(0xFFFACC15), // Vibrant Gold
+                    const Color(0xFFEF4444), // Critical Red
+                  ],
+                  stops: const [0.0, 0.5, 1.0],
+                ),
+                borderRadius: BorderRadius.circular(2),
+                boxShadow: [
+                  if (!isExpired)
+                    BoxShadow(
+                      color: (factor > 0.5 ? const Color(0xFFFACC15) : const Color(0xFF2DD4BF)).withValues(alpha: 0.3),
+                      blurRadius: 6,
+                      spreadRadius: 0.5
+                    )
+                ],
+              ),
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 }

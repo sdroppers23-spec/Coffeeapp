@@ -91,6 +91,8 @@ flutter:
     - .env
     - assets/images/premium_bg.png
     - assets/images/methods/
+    - assets/data/clean_farmers.json
+    - assets/data/clean_encyclopedia.json
 
   # To add assets to your application, add an assets section, like this:
   # assets:

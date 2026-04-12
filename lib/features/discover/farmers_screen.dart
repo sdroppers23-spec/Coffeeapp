@@ -42,7 +42,8 @@ class FarmersBody extends ConsumerWidget {
         }
 
         return ListView.builder(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
+          padding: const EdgeInsets.fromLTRB(16, 20, 16, 150),
+          physics: const BouncingScrollPhysics(),
           itemCount: farmers.length,
           itemBuilder: (context, index) {
             final farmer = farmers[index];
@@ -64,28 +65,27 @@ class FarmersScreen extends ConsumerStatefulWidget {
 class _FarmersScreenState extends ConsumerState<FarmersScreen> {
   @override
   Widget build(BuildContext context) {
-    return PremiumBackground(
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          centerTitle: true,
-          title: Text(
-            'Specialty Farmers',
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFFC8A96E),
-            ),
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: PremiumAppBar(
+        title: ref.t('farmers'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh_rounded, color: Color(0xFFC8A96E)),
+            onPressed: () => ref.invalidate(farmersProvider),
           ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.refresh_rounded, color: Colors.white54),
-              onPressed: () => ref.invalidate(farmersProvider),
-            ),
-          ],
-        ),
-        body: const FarmersBody(),
+        ],
+      ),
+      body: Stack(
+        children: [
+          const PremiumBackground(),
+          const Column(
+            children: [
+              SizedBox(height: 110), // Space for PremiumAppBar
+              Expanded(child: FarmersBody()),
+            ],
+          ),
+        ],
       ),
     );
   }

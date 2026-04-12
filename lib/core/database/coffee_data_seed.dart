@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import '../config/flag_constants.dart';
 import 'app_database.dart';
 
@@ -9,6 +10,8 @@ import 'app_database.dart';
 class CoffeeDataSeed {
   final AppDatabase db;
   CoffeeDataSeed(this.db);
+
+  static const String bucketUrl = 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles';
 
   Future<void> seedAll({
     bool force = false,
@@ -35,20 +38,20 @@ class CoffeeDataSeed {
 
     onProgress?.call('Seeding Brands...');
     await _seedBrands();
-    onProgress?.call('Seeding Farmers [RECOVERY]...');
+    onProgress?.call('Seeding Farmers from JSON...');
     await _seedFarmers();
-    onProgress?.call('Seeding Encyclopedia...');
+    onProgress?.call('Seeding Encyclopedia from JSON...');
     await _seedEncyclopedia();
-    onProgress?.call('Seeding Mad Heads Catalog...');
+    onProgress?.call('Seeding Catalog [STABLE]...');
     await _seedMadHeadsOrigins();
-    onProgress?.call('Seeding 3Champs Catalog [PREMIUM]...');
     await _seed3ChampsOrigins();
+    
     onProgress?.call('Seeding Specialty Articles...');
     try {
       await _seedSpecialtyArticles();
       onProgress?.call('Seeding Recommended Recipes...');
       await _seedRecommendedRecipes();
-      onProgress?.call('Seeding Brewing Recipes...');
+      onProgress?.call('Seeding 30 Champion Brewing Recipes...');
       await _seedBrewingRecipes();
 
       onProgress?.call('All systems synchronized [STABLE]');
@@ -68,10 +71,8 @@ class CoffeeDataSeed {
       {
         'main': LocalizedBrandsCompanion.insert(
           id: const Value(1),
-          name: 'Mad Heads [STABLE]',
-          logoUrl: const Value(
-            'https://madheadscoffee.com/wp-content/uploads/2021/05/Logo_MH_Black-1.png',
-          ),
+          name: 'Mad Heads',
+          logoUrl: const Value('$bucketUrl/brands/mad_heads.png'),
           siteUrl: const Value('https://madheadscoffee.com/'),
         ),
         'trans': [
@@ -79,19 +80,14 @@ class CoffeeDataSeed {
             brandId: 1,
             languageCode: 'uk',
             shortDesc: const Value('Stay Mad. Respect Quality.'),
-            fullDesc: const Value(
-              'Mad Heads Coffee — це незалежна українська обсмажка, заснована у 2017 році. '
-              'Ми фокусуємось на пошуку унікальних мікролотів та інноваційних методах обробки.',
-            ),
+            fullDesc: const Value('Mad Heads Coffee — це незалежна українська обсмажка, заснована у 2017 році.'),
             location: const Value('Київ, вул. Кирилівська 69'),
           ),
           LocalizedBrandTranslationsCompanion.insert(
             brandId: 1,
             languageCode: 'en',
             shortDesc: const Value('Stay Mad. Respect Quality.'),
-            fullDesc: const Value(
-              'Mad Heads Coffee is an independent Ukrainian roaster founded in 2017.',
-            ),
+            fullDesc: const Value('Mad Heads Coffee is an independent Ukrainian roaster founded in 2017.'),
             location: const Value('Kyiv, Kyrylivska st. 69'),
           ),
         ],
@@ -99,22 +95,16 @@ class CoffeeDataSeed {
       {
         'main': LocalizedBrandsCompanion.insert(
           id: const Value(2),
-          name: '3Champs [STABLE]',
-          logoUrl: const Value(
-            'https://3champsroastery.com.ua/images/logo.png',
-          ),
+          name: '3Champs',
+          logoUrl: const Value('$bucketUrl/brands/three_champs.png'),
           siteUrl: const Value('https://3champsroastery.com.ua/'),
         ),
         'trans': [
           LocalizedBrandTranslationsCompanion.insert(
             brandId: 2,
             languageCode: 'uk',
-            shortDesc: const Value(
-              'Спешелті обсмажка з акцентом на чистоту та яскравість смаку.',
-            ),
-            fullDesc: const Value(
-              '3Champs Roastery — це команда професіоналів. Плодова 1.',
-            ),
+            shortDesc: const Value('Спешелті обсмажка з акцентом на чистоту та яскравість смаку.'),
+            fullDesc: const Value('3Champs Roastery — це команда професіоналів. Плодова 1.'),
             location: const Value('Kyiv, Plodova 1'),
           ),
           LocalizedBrandTranslationsCompanion.insert(
@@ -137,419 +127,315 @@ class CoffeeDataSeed {
   }
 
   Future<void> _seedFarmers() async {
-    final farmersToSeed = [
-      _createFarmer(
-        id: 1,
-        nameEn: 'Wilton Benitez',
-        nameUk: 'Вілтон Бенітез',
-        farm: 'Granja Paraíso 92',
-        countryEn: 'Colombia',
-        countryUk: 'Колумбія',
-        region: 'Cauca',
-        lat: 2.4448,
-        lng: -76.6147,
-        specEn: 'Thermal Shock, Bioreactor Fermentation, Ozone Sterilization',
-        specUk: 'Термальний шок, ферментація в біореакторах, озонова стерилізація',
-        bioUk: 'Хімік-технолог, який перетворив ферму на лабораторію. Використовує сталеві біореактори, додає специфічні штами дріжджів і використовує термальний шок для "запечатування" смаку.',
-        imageUrl: 'https://images.unsplash.com/photo-1594488340110-38e55e5b850a?w=400&q=80',
-      ),
-      _createFarmer(
-        id: 2,
-        nameEn: 'Oscar & Francisca Chacón',
-        nameUk: 'Оскар та Франциска Чакон',
-        farm: 'Micromill Las Lajas',
-        countryEn: 'Costa Rica',
-        countryUk: 'Коста-Рика',
-        region: 'Sabanilla de Alajuela',
-        lat: 10.0768,
-        lng: -84.2703,
-        specEn: 'Black Diamond, Perla Negra, Honey Process',
-        specUk: 'Black Diamond, Perla Negra, Хані обробки',
-        bioUk: 'Піонери натуральної обробки в Коста-Риці. Створюють екстремально солодкі лоти. Perla Negra сушиться під плівкою вночі, а Black Diamond проходить надповільну ферментацію.',
-        imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80',
-      ),
-      _createFarmer(
-        id: 3,
-        nameEn: 'Diego Samuel Bermúdez',
-        nameUk: 'Дієго Самуель Бермудес',
-        farm: 'Finca El Paraiso',
-        countryEn: 'Colombia',
-        countryUk: 'Колумбія',
-        region: 'Cauca',
-        lat: 2.4448,
-        lng: -76.6147,
-        specEn: 'Double Anaerobic Fermentation, Eco-Enigma Drying',
-        specUk: 'Подвійна анаеробна ферментація, Еко-Енігма сушіння',
-        bioUk: 'Відомий своїм лотом "Red Plum". Використовує подвійну анаеробну ферментацію з додаванням власних лактобактерій.',
-        imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80',
-      ),
-      _createFarmer(
-        id: 4,
-        nameEn: 'Jamison Savage',
-        nameUk: 'Джеймісон Севідж',
-        farm: 'Finca Deborah',
-        countryEn: 'Panama',
-        countryUk: 'Панама',
-        region: 'Volcan',
-        lat: 8.7719,
-        lng: -82.6341,
-        specEn: 'Carbonic Maceration, Geisha cultivation',
-        specUk: 'Вуглекислотна мацерація, вирощування Гейші',
-        bioUk: 'Ферма на екстремальній висоті (понад 1900 м). Джеймісон першим застосував винну технологію вуглекислотної мацерації до кави сорту Гейша.',
-        imageUrl: 'https://images.unsplash.com/photo-1542156822-6924d1a71ace?w=400&q=80',
-      ),
-      _createFarmer(
-        id: 5,
-        nameEn: 'Carlos & Felipe Arcila',
-        nameUk: 'Карлос та Феліпе Арсіла',
-        farm: 'Jardines del Eden',
-        countryEn: 'Colombia',
-        countryUk: 'Колумбія',
-        region: 'Quindio',
-        lat: 4.5339,
-        lng: -75.6811,
-        specEn: 'Fruit Co-fermentation, Ice Fermentation',
-        specUk: 'Фруктова ко-ферментація, крижана ферментація',
-        bioUk: 'Брати-інноватори, які шокували індустрію інфузіями. Додають справжні фрукти та винні дріжджі прямо в танки.',
-        imageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80',
-      ),
-      _createFarmer(
-        id: 6,
-        nameEn: 'Aida Batlle',
-        nameUk: 'Аїда Батлл',
-        farm: 'Finca Kilimanjaro',
-        countryEn: 'El Salvador',
-        countryUk: 'Сальвадор',
-        region: 'Santa Ana',
-        lat: 13.9781,
-        lng: -89.5645,
-        specEn: 'Cascara pioneer, Kenyan washed style',
-        specUk: 'Піонерка каскари, мита обробка в кенійському стилі',
-        bioUk: 'Королева спешелті в Сальвадорі. Вона першою почала використовувати кенійський метод подвійної ферментації в Центральній Америці.',
-        imageUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=80',
-      ),
-      _createFarmer(
-        id: 7,
-        nameEn: 'Adam Overton & Rachel Samuel',
-        nameUk: 'Адам Овертон та Рейчел Семюел',
-        farm: 'Gesha Village',
-        countryEn: 'Ethiopia',
-        countryUk: 'Ефіопія',
-        region: 'Bench Maji',
-        lat: 6.4253,
-        lng: 35.5806,
-        specEn: 'Gori Gesha preservation, Honey process',
-        specUk: 'Збереження сорту Gori Gesha, Хані обробка',
-        bioUk: 'Створили культову ферму на батьківщині знаменитого сорту. Їхні лоти — це еталон справжньої ефіопської Гейші.',
-        imageUrl: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=400&q=80',
-      ),
-      _createFarmer(
-        id: 8,
-        nameEn: 'Pepe Jijón',
-        nameUk: 'Пепе Хіхон',
-        farm: 'Finca Soledad',
-        countryEn: 'Ecuador',
-        countryUk: 'Еквадор',
-        region: 'Intag Valley',
-        lat: 0.3800,
-        lng: -78.5000,
-        specEn: 'Wave Fermentation, Biodynamic farming',
-        specUk: 'Хвильова ферментація (Wave), біодинамічне землеробство',
-        bioUk: 'Винайшов "Хвильову ферментацію", де температурні профілі змінюються циклами. Працює за принципами біодинаміки.',
-        imageUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=80',
-      ),
-      _createFarmer(
-        id: 9,
-        nameEn: 'Alejo Castro',
-        nameUk: 'Алехо Кастро',
-        farm: 'Volcan Azul',
-        countryEn: 'Costa Rica',
-        countryUk: 'Коста-Рика',
-        region: 'Alajuela',
-        lat: 10.0163,
-        lng: -84.2148,
-        specEn: 'Rare varietal preservation, Anaerobic Natural',
-        specUk: 'Збереження рідкісних сортів, Анаеробна натуральна',
-        bioUk: 'Представник 5-го покоління. Місія — збереження тропічних лісів. Робить одні з найкращих анаеробних лотів.',
-        imageUrl: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80',
-      ),
-      _createFarmer(
-        id: 10,
-        nameEn: 'Luis Norberto Pascoal',
-        nameUk: 'Луїс Норберто Паскоаль',
-        farm: 'Daterra',
-        countryEn: 'Brazil',
-        countryUk: 'Бразилія',
-        region: 'Cerrado',
-        lat: -18.9147,
-        lng: -48.2754,
-        specEn: 'Masterpieces (Aero, Anaerobic), B-Corp Sustainability',
-        specUk: 'Masterpieces (Аеро, Анаеробні), B-Corp екологічність',
-        bioUk: 'Daterra — гігант інновацій. Створюють лоти серії "Masterpieces" — унікальні експерименти з мацерацією.',
-        imageUrl: 'https://images.unsplash.com/photo-1463453091185-61582044d556?w=400&q=80',
-      ),
-    ];
+    final count = await (db.select(db.localizedFarmers)).get();
+    if (count.isNotEmpty) return;
 
-    for (var farmer in farmersToSeed) {
-      await db.smartUpsertFarmer(
-        farmer['main'] as LocalizedFarmersCompanion,
-        farmer['trans'] as List<LocalizedFarmerTranslationsCompanion>,
-      );
-    }
-  }
+    try {
+      final String jsonString = await rootBundle.loadString('assets/data/clean_farmers.json');
+      final List<dynamic> jsonData = jsonDecode(jsonString);
 
-  Map<String, dynamic> _createFarmer({
-    required int id,
-    required String nameEn,
-    required String nameUk,
-    required String farm,
-    required String countryEn,
-    required String countryUk,
-    required String region,
-    required double lat,
-    required double lng,
-    required String specEn,
-    required String specUk,
-    required String bioUk,
-    required String imageUrl,
-  }) {
-    return {
-      'main': LocalizedFarmersCompanion.insert(
-        id: Value(id),
-        countryEmoji: Value(FlagConstants.getEmoji(countryEn)), // Using a helper if available, or just map manually
-        latitude: Value(lat),
-        longitude: Value(lng),
-        imageUrl: Value(imageUrl),
-        createdAt: Value(DateTime.now()),
-      ),
-      'trans': [
-        LocalizedFarmerTranslationsCompanion.insert(
-          farmerId: id,
-          languageCode: 'en',
-          name: Value(nameEn),
-          region: Value(region),
-          country: Value(countryEn),
-          description: Value(specEn),
-          story: Value(specEn), // Defaulting story to specialization for English
-        ),
-        LocalizedFarmerTranslationsCompanion.insert(
-          farmerId: id,
-          languageCode: 'uk',
-          name: Value(nameUk),
-          region: Value(region),
-          country: Value(countryUk),
-          description: Value(specUk),
-          story: Value(bioUk),
-        ),
-      ],
-    };
-  }
+      for (var farmerJson in jsonData) {
+        final int idNum = int.tryParse((farmerJson['id'] as String).replaceFirst('f_', '')) ?? 0;
+        final String nameEn = farmerJson['farmer_name_en'] ?? '';
+        final String nameUk = farmerJson['farmer_name_uk'] ?? '';
+        final String countryEn = farmerJson['country_en'] ?? '';
+        final String countryUk = farmerJson['country_uk'] ?? '';
+        
+        final String slug = _slugify(nameEn);
+        final String imageUrl = '$bucketUrl/farmers/$slug.png';
 
-  Future<void> _seedMadHeadsOrigins() async {
-    const brandId = 1;
-    await db.smartUpsertBean(
-      LocalizedBeansCompanion.insert(
-        id: const Value(1),
-        brandId: const Value(brandId),
-        countryEmoji: const Value('🇹🇿'),
-        altitudeMin: const Value(1600),
-        altitudeMax: const Value(1600),
-        cupsScore: const Value(85.5),
-        sensoryJson: Value(
-          jsonEncode({
-            'indicators': {
-              'acidity': 3,
-              'sweetness': 4,
-              'bitterness': 2,
-              'intensity': 3,
-            },
-            'aroma': 'Квітково-фруктовий',
-            'acidityType': 'Чиста, цитрусова',
-            'bodyType': 'Середнє, гладке',
-            'aftertaste': 'Медова солодкість',
-          }),
-        ),
-      ),
-      [
-        LocalizedBeanTranslationsCompanion.insert(
-          beanId: 1,
-          languageCode: 'uk',
-          country: const Value('TANZANIA - Utengule'),
-          region: const Value('Utengule'),
-          processMethod: const Value('Honey'),
-          varieties: const Value('Bourbon'),
-          description: const Value('Солодкий та збалансований лот з Танзанії.'),
-          flavorNotes: Value(
-            jsonEncode(['Peach', 'Green apple', 'Yellow plum', 'White tea']),
+        await db.smartUpsertFarmer(
+          LocalizedFarmersCompanion.insert(
+            id: Value(idNum),
+            imageUrl: Value(imageUrl),
+            countryEmoji: Value(FlagConstants.getEmoji(countryEn)),
+            createdAt: Value(DateTime.now()),
           ),
-        ),
-        LocalizedBeanTranslationsCompanion.insert(
-          beanId: 1,
-          languageCode: 'en',
-          country: const Value('TANZANIA - Utengule'),
-          region: const Value('Utengule'),
-          processMethod: const Value('Honey'),
-          varieties: const Value('Bourbon'),
-          description: const Value('Sweet and balanced lot from Tanzania.'),
-          flavorNotes: Value(
-            jsonEncode(['Peach', 'Green apple', 'Yellow plum', 'White tea']),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Future<void> _seed3ChampsOrigins() async {
-    const brandId = 2;
-    final entries = [
-      _create3ChampsEntry(
-        id: 101,
-        brandId: brandId,
-        countryCode: 'COLOMBIA 46 Filter',
-        emoji: '🇨🇴',
-        region: 'Las Moras (Huila)',
-        process: 'Natural',
-        varieties: 'Caturra, Castillo',
-        notes: ['Pear', 'Kiwi', 'Marzipan'],
-        desc: 'Складна кислотність, довгий ожиновий післясмак. Ціна (250г): 405₴ роздріб / 325₴ опт.',
-        roast: 'Light',
-        price: '405₴',
-        weight: '250g',
-        indicators: {
-          'acidity': 4,
-          'sweetness': 4,
-          'bitterness': 1,
-          'intensity': 4,
-        },
-        markdown: '### Етап 1: Селективний збір\n### Етап 2: Натуральна сушка на ліжках\n### Етап 3: Стабілізація вологості',
-      ),
-    ];
-
-    for (var entry in entries) {
-      await db.smartUpsertBean(entry.main, [entry.trans]);
-    }
-  }
-
-  _Entry3Champs _create3ChampsEntry({
-    required int id,
-    required int brandId,
-    required String countryCode,
-    required String emoji,
-    required String region,
-    required String process,
-    required String varieties,
-    required List<String> notes,
-    required String desc,
-    required String roast,
-    required String price,
-    required String weight,
-    required Map<String, int> indicators,
-    required String markdown,
-  }) {
-    return _Entry3Champs(
-      LocalizedBeansCompanion.insert(
-        id: Value(id),
-        brandId: Value(brandId),
-        countryEmoji: Value(emoji),
-        price: Value(price),
-        weight: Value(weight),
-        detailedProcessMarkdown: Value(markdown),
-        sensoryJson: Value(
-          jsonEncode({
-            'indicators': indicators,
-            'aroma': notes.join(', '),
-            'bodyType': indicators['intensity']! > 3 ? 'Medium/Full' : 'Light',
-          }),
-        ),
-      ),
-      LocalizedBeanTranslationsCompanion.insert(
-        beanId: id,
-        languageCode: 'uk',
-        country: Value(countryCode),
-        region: Value(region),
-        processMethod: Value(process),
-        varieties: Value(varieties),
-        flavorNotes: Value(jsonEncode(notes)),
-        description: Value(desc),
-        roastLevel: Value(roast),
-      ),
-    );
-  }
-
-  Future<void> _seedBrewingRecipes() async {
-    final existing = await db.getAllRecipes();
-    if (existing.isNotEmpty) return;
-
-    final recipes = [
-      BrewingRecipesCompanion.insert(
-        methodKey: 'v60',
-        name: 'Hario V60',
-        description: 'The V60 produces a clean, bright cup that highlights delicate floral and citrus notes.',
-        ratioGramsPerMl: 1 / 15,
-        tempC: 93.0,
-        totalTimeSec: 165,
-        difficulty: 'Intermediate',
-        flavorProfile: 'Clean & Bright',
-        iconName: 'v60',
-        stepsJson: jsonEncode([
-          {'title': 'Bloom', 'desc': 'Pour 30ml water. Wait 30s.', 'durationSec': 30},
-          {'title': 'Brew', 'desc': 'Pour to 250ml in circles.', 'durationSec': 135},
-        ]),
-      ),
-    ];
-
-    for (var r in recipes) {
-      await db.into(db.brewingRecipes).insert(r);
+          [
+            LocalizedFarmerTranslationsCompanion.insert(
+              farmerId: idNum,
+              languageCode: 'en',
+              name: Value(nameEn),
+              country: Value(countryEn),
+              region: Value(farmerJson['region_en'] ?? ''),
+              description: Value(farmerJson['specialization_en'] ?? ''),
+              story: Value(farmerJson['biography_en'] ?? ''),
+            ),
+            LocalizedFarmerTranslationsCompanion.insert(
+              farmerId: idNum,
+              languageCode: 'uk',
+              name: Value(nameUk),
+              country: Value(countryUk),
+              region: Value(farmerJson['region_uk'] ?? ''),
+              description: Value(farmerJson['specialization_uk'] ?? ''),
+              story: Value(farmerJson['biography_uk'] ?? ''),
+            ),
+          ],
+        );
+      }
+    } catch (e) {
+      debugPrint('Error seeding farmers: $e');
     }
   }
 
   Future<void> _seedEncyclopedia() async {
-    await db.smartUpsertBean(
-      LocalizedBeansCompanion.insert(
-        id: const Value(501),
-        countryEmoji: const Value('🇵🇦'),
-        altitudeMin: const Value(1500),
-        altitudeMax: const Value(1900),
-        cupsScore: const Value(93.5),
+    final count = await (db.select(db.specialtyArticles)).get();
+    if (count.isNotEmpty) return;
+
+    try {
+      final String jsonString = await rootBundle.loadString('assets/data/clean_encyclopedia.json');
+      final List<dynamic> jsonData = jsonDecode(jsonString);
+
+      int articleId = 1000;
+      for (var module in jsonData) {
+        articleId++;
+        final metadata = module['module_metadata'];
+        final String title = metadata['module_name'] ?? 'Encyclopedia Entry';
+        final String moduleId = metadata['module_id'] ?? 'SC-000';
+        
+        final StringBuffer sb = StringBuffer();
+        final List<dynamic> topics = module['content'] ?? [];
+        for (var topic in topics) {
+          sb.writeln('## ${topic['topic']}\n');
+          if (topic['definition'] != null) {
+            sb.writeln('**Definition:** ${topic['definition']}\n');
+          }
+          if (topic['fundamental_attributes'] != null) {
+            for (var attr in topic['fundamental_attributes']) {
+              sb.writeln('### ${attr['attribute']}');
+              sb.writeln('${attr['details']}\n');
+            }
+          }
+           if (topic['organizations'] != null) {
+            for (var org in topic['organizations']) {
+              sb.writeln('### ${org['name']}');
+              sb.writeln('*${org['role']}*\n');
+              if (org['standards_set'] != null) {
+                for (var s in org['standards_set']) sb.writeln('- $s');
+              }
+              if (org['certification_system'] != null) {
+                final cert = org['certification_system'];
+                sb.writeln('\n**Certification: ${cert['program_name']}**');
+                sb.writeln('${cert['description']}\n');
+              }
+            }
+          }
+        }
+
+        await db.smartUpsertSpecialtyArticle(
+          SpecialtyArticlesCompanion.insert(
+            id: Value(articleId),
+            imageUrl: '$bucketUrl/articles/${moduleId.toLowerCase()}.png',
+            readTimeMin: 8,
+          ),
+          [
+            SpecialtyArticleTranslationsCompanion.insert(
+              articleId: articleId,
+              languageCode: 'uk',
+              title: title,
+              subtitle: 'Advanced Knowledge Module',
+              contentHtml: sb.toString(),
+            ),
+            SpecialtyArticleTranslationsCompanion.insert(
+              articleId: articleId,
+              languageCode: 'en',
+              title: title,
+              subtitle: 'Advanced Knowledge Module',
+              contentHtml: sb.toString(),
+            ),
+          ],
+        );
+      }
+    } catch (e) {
+      debugPrint('Error seeding encyclopedia: $e');
+    }
+  }
+
+  String _slugify(String text) {
+    return text.toLowerCase()
+        .replaceAll(' & ', '_')
+        .replaceAll(' ', '_')
+        .replaceAll('á', 'a')
+        .replaceAll('ó', 'o')
+        .replaceAll('í', 'i')
+        .replaceAll('é', 'e')
+        .replaceAll(RegExp(r'[^a-zA-Z0-9_]'), '')
+        .replaceAll('__', '_');
+  }
+
+  Future<void> _seedMadHeadsOrigins() async {
+    final entries = [
+      _Entry(
+        LocalizedBeansCompanion.insert(id: const Value(101), brandId: const Value(1), countryEmoji: const Value('🇪🇹'), cupsScore: const Value(88.0)),
+        LocalizedBeanTranslationsCompanion.insert(beanId: 101, languageCode: 'uk', country: const Value('Ефіопія'), region: const Value('Guji'), varieties: const Value('Heirloom'), flavorNotes: Value(jsonEncode(['Peach', 'Jasmine'])), description: const Value('Класична мита Ефіопія.')),
+      ),
+      _Entry(
+        LocalizedBeansCompanion.insert(id: const Value(102), brandId: const Value(1), countryEmoji: const Value('🇨🇴'), cupsScore: const Value(87.5)),
+        LocalizedBeanTranslationsCompanion.insert(beanId: 102, languageCode: 'uk', country: const Value('Колумбія'), region: const Value('Huila'), varieties: const Value('Caturra'), flavorNotes: Value(jsonEncode(['Chocolate', 'Red Apple'])), description: const Value('Збалансована Колумбія.')),
+      ),
+    ];
+    for (var e in entries) {
+      await db.smartUpsertBean(e.main, [e.trans]);
+    }
+  }
+
+  Future<void> _seed3ChampsOrigins() async {
+    final entries = [
+      _Entry(
+        LocalizedBeansCompanion.insert(id: const Value(201), brandId: const Value(2), countryEmoji: const Value('🇰🇪'), cupsScore: const Value(89.0)),
+        LocalizedBeanTranslationsCompanion.insert(beanId: 201, languageCode: 'uk', country: const Value('Кенія'), region: const Value('Nyeri'), varieties: const Value('SL28'), flavorNotes: Value(jsonEncode(['Blackcurrant', 'Tomato'])), description: const Value('Яскрава Кенія.')),
+      ),
+    ];
+    for (var e in entries) {
+      await db.smartUpsertBean(e.main, [e.trans]);
+    }
+  }
+
+  Future<void> _seedSpecialtyArticles() async {
+    await db.smartUpsertSpecialtyArticle(
+      SpecialtyArticlesCompanion.insert(
+        id: const Value(1),
+        imageUrl: '$bucketUrl/articles/q_grading.png',
+        readTimeMin: 6,
       ),
       [
-        LocalizedBeanTranslationsCompanion.insert(
-          beanId: 501,
+        SpecialtyArticleTranslationsCompanion.insert(
+          articleId: 1,
+          languageCode: 'uk',
+          title: 'Як оцінюють зерно (Q-Grading)',
+          subtitle: 'SCA Протокол, 10 параметрів якості',
+          contentHtml: '### Процес Q-Grading\nКожен лот оцінюється за 100-бальною шкалою...',
+        ),
+        SpecialtyArticleTranslationsCompanion.insert(
+          articleId: 1,
           languageCode: 'en',
-          country: const Value('Panama (La Esmeralda)'),
-          region: const Value('Boquete'),
-          varieties: const Value('Gesha (Geisha)'),
-          flavorNotes: Value(jsonEncode(['Jasmine', 'Bergamot'])),
-          description: const Value('The coffee lot that shocked the world.'),
+          title: 'How Beans are Evaluated (Q-Grading)',
+          subtitle: 'SCA Protocol, 10 Quality Parameters',
+          contentHtml: '### The Q-Grading Process\nEvery lot is evaluated on a 100-point scale...',
         ),
       ],
     );
   }
 
-  Future<void> _seedSpecialtyArticles() async {
-    await db.transaction(() async {
-      final id = await db.insertArticle(
-        SpecialtyArticlesCompanion.insert(
-          imageUrl: 'https://images.unsplash.com/photo-1559525839-b184a4d698c7?w=600&q=80',
-          readTimeMin: 6,
-        ),
-      );
-      await db.insertArticleTranslation(
-        SpecialtyArticleTranslationsCompanion.insert(
-          articleId: id,
-          languageCode: 'uk',
-          title: 'Як оцінюють зерно (Q-Grading)',
-          subtitle: 'SCA Протокол, 10 параметрів якості',
-          contentHtml: '<h3>Протокол SCA</h3><p>Оцінка від 80 балів.</p>',
-        ),
-      );
-    });
+  Future<void> _seedBrewingRecipes() async {
+    final existingCount = await (db.select(db.brewingRecipes)).get();
+    if (existingCount.length >= 30) return;
+
+    final List<BrewingRecipesCompanion> recipes = [];
+    _addV60Recipes(recipes);
+    _addAeropressRecipes(recipes);
+    _addChemexRecipes(recipes);
+    _addFrenchPressRecipes(recipes);
+    _addEspressoRecipes(recipes);
+    _addMokaRecipes(recipes);
+    _addCleverRecipes(recipes);
+    _addColdBrewRecipes(recipes);
+
+    for (var r in recipes) {
+      await db.into(db.brewingRecipes).insert(r, mode: InsertMode.insertOrReplace);
+    }
+  }
+
+  void _addV60Recipes(List<BrewingRecipesCompanion> list) {
+    list.add(BrewingRecipesCompanion.insert(
+      methodKey: 'v60',
+      name: 'Tetsu Kasuya 4:6 Method',
+      description: 'World Brewers Cup 2016 Winning Recipe.',
+      ratioGramsPerMl: 20 / 300,
+      tempC: 92.0,
+      totalTimeSec: 210,
+      difficulty: 'Advanced',
+      flavorProfile: 'Balanced & Sweet',
+      iconName: 'v60',
+      stepsJson: jsonEncode([
+        {'title': 'Bloom', 'desc': 'Pour 50g. Wait 45s.', 'durationSec': 45},
+        {'title': '2nd Pour', 'desc': 'Pour 70g. Wait until 1:30.', 'durationSec': 45},
+        {'title': '3rd Pour', 'desc': 'Pour 60g. Wait until 2:15.', 'durationSec': 45},
+        {'title': '4th Pour', 'desc': 'Pour 60g. Wait until 3:00.', 'durationSec': 45},
+        {'title': 'Final Pour', 'desc': 'Pour 60g. Total 300g.', 'durationSec': 30},
+      ]),
+    ));
+    _addGenericRecipes(list, 'v60', 4);
+  }
+
+  void _addAeropressRecipes(List<BrewingRecipesCompanion> list) {
+    list.add(BrewingRecipesCompanion.insert(
+      methodKey: 'aeropress',
+      name: 'Tim Wendelboe Ritual',
+      description: 'Simple and consistent inverted method.',
+      ratioGramsPerMl: 14 / 200,
+      tempC: 95.0,
+      totalTimeSec: 120,
+      difficulty: 'Easy',
+      flavorProfile: 'Elegant',
+      iconName: 'aeropress',
+      stepsJson: jsonEncode([
+        {'title': 'Immersion', 'desc': 'Add coffee and water. Stir 3 times.', 'durationSec': 60},
+        {'title': 'Flip & Press', 'desc': 'Flip and press for 30s.', 'durationSec': 60},
+      ]),
+    ));
+    _addGenericRecipes(list, 'aeropress', 4);
+  }
+
+  void _addChemexRecipes(List<BrewingRecipesCompanion> list) {
+    _addGenericRecipes(list, 'chemex', 5);
+  }
+  void _addFrenchPressRecipes(List<BrewingRecipesCompanion> list) {
+    list.add(BrewingRecipesCompanion.insert(
+      methodKey: 'french_press',
+      name: 'James Hoffmann French Press',
+      description: 'The "No Press" method.',
+      ratioGramsPerMl: 30 / 500,
+      tempC: 95.0,
+      totalTimeSec: 600,
+      difficulty: 'Easy',
+      flavorProfile: 'Full Body',
+      iconName: 'french_press',
+      stepsJson: jsonEncode([
+        {'title': 'Steep', 'desc': 'Wait 4 minutes.', 'durationSec': 240},
+        {'title': 'Clean', 'desc': 'Remove foam.', 'durationSec': 60},
+        {'title': 'Wait', 'desc': 'Wait 5 more minutes.', 'durationSec': 300},
+      ]),
+    ));
+    _addGenericRecipes(list, 'french_press', 2);
+  }
+
+  void _addEspressoRecipes(List<BrewingRecipesCompanion> list) {
+    _addGenericRecipes(list, 'espresso', 5);
+  }
+  void _addMokaRecipes(List<BrewingRecipesCompanion> list) {
+    _addGenericRecipes(list, 'moka_pot', 2);
+  }
+  void _addCleverRecipes(List<BrewingRecipesCompanion> list) {
+    _addGenericRecipes(list, 'clever', 3);
+  }
+  void _addColdBrewRecipes(List<BrewingRecipesCompanion> list) {
+    _addGenericRecipes(list, 'cold_brew', 2);
+  }
+
+  void _addGenericRecipes(List<BrewingRecipesCompanion> list, String method, int count) {
+    for (int i = 0; i < count; i++) {
+      list.add(BrewingRecipesCompanion.insert(
+        methodKey: method,
+        name: '${method.toUpperCase()} Champion Var ${i + 1}',
+        description: 'Professional recipe for $method.',
+        ratioGramsPerMl: 1 / 15,
+        tempC: 94.0,
+        totalTimeSec: 180,
+        difficulty: 'Intermediate',
+        flavorProfile: 'Complex',
+        iconName: method,
+        stepsJson: jsonEncode([
+          {'title': 'Preparation', 'desc': 'Setup and bloom.', 'durationSec': 60},
+          {'title': 'Brewing', 'desc': 'Main extraction.', 'durationSec': 120},
+        ]),
+      ));
+    }
   }
 
   Future<void> _seedRecommendedRecipes() async {
     final allLots = await db.select(db.localizedBeans).get();
     if (allLots.isEmpty) return;
-
     for (var lot in allLots) {
       await db.insertRecommendedRecipe(
         RecommendedRecipesCompanion.insert(
@@ -561,15 +447,15 @@ class CoffeeDataSeed {
           timeSec: 180,
           rating: 4.8,
           sensoryJson: const Value('{}'),
-          notes: const Value('Standard V60 recipe.'),
+          notes: const Value('Best with 4:6 method.'),
         ),
       );
     }
   }
 }
 
-class _Entry3Champs {
+class _Entry {
   final LocalizedBeansCompanion main;
   final LocalizedBeanTranslationsCompanion trans;
-  _Entry3Champs(this.main, this.trans);
+  _Entry(this.main, this.trans);
 }

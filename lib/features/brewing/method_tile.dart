@@ -40,7 +40,8 @@ class _MethodMeta {
 
 class MethodTile extends StatelessWidget {
   final BrewingRecipe recipe;
-  const MethodTile({super.key, required this.recipe});
+  final bool isGrid;
+  const MethodTile({super.key, required this.recipe, this.isGrid = true});
 
   String get _formattedTime {
     final s = recipe.totalTimeSec;
@@ -76,93 +77,82 @@ class MethodTile extends StatelessWidget {
       child: GlassContainer(
         padding: EdgeInsets.zero,
         borderRadius: 24,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: [
-            Expanded(
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(24),
-                      ),
-                      child: Image.asset(
-                        meta.assetPath,
-                        fit: BoxFit.cover,
-                        opacity: const AlwaysStoppedAnimation(0.6),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.transparent,
-                            Colors.black.withValues(alpha: 0.8),
-                          ],
-                        ),
+            // Background Image
+            Positioned.fill(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(24),
+                child: Image.asset(
+                  meta.assetPath,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: meta.gradient,
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
                     ),
                   ),
-                ],
+                ),
               ),
             ),
+            // Bottom Gradient Overlay
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(24),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: const [0.4, 0.95],
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withValues(alpha: 0.9),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            // Content
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const Spacer(),
                   Text(
                     recipe.name,
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
+                    style: GoogleFonts.outfit(
+                      fontSize: isGrid ? 18 : 22,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
+                      letterSpacing: -0.5,
                     ),
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 8),
                   Row(
                     children: [
-                      Icon(
-                        Icons.timer_outlined,
-                        size: 12,
-                        color: Colors.white.withValues(alpha: 0.6),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        _formattedTime,
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: Colors.white.withValues(alpha: 0.6),
-                        ),
+                      _CompactInfoChip(
+                        icon: Icons.timer_outlined,
+                        label: _formattedTime,
                       ),
                       const SizedBox(width: 8),
-                      Container(
-                        width: 4,
-                        height: 4,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _difficultyColor(recipe.difficulty),
-                        ),
+                      _CompactInfoChip(
+                        icon: Icons.signal_cellular_alt_rounded,
+                        label: recipe.difficulty,
+                        color: _difficultyColor(recipe.difficulty),
                       ),
-                      const SizedBox(width: 4),
-                      Text(
-                        recipe.difficulty,
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: Colors.white.withValues(alpha: 0.6),
+                      if (!isGrid) ...[
+                        const SizedBox(width: 8),
+                         _CompactInfoChip(
+                          icon: Icons.coffee_rounded,
+                          label: recipe.flavorProfile,
                         ),
-                      ),
+                      ],
                     ],
                   ),
                 ],
@@ -170,6 +160,48 @@ class MethodTile extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _CompactInfoChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color? color;
+
+  const _CompactInfoChip({
+    required this.icon,
+    required this.label,
+    this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.1),
+          width: 0.5,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 12, color: color ?? Colors.white70),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: GoogleFonts.outfit(
+              fontSize: 10,
+              fontWeight: FontWeight.w500,
+              color: Colors.white.withValues(alpha: 0.9),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -41,33 +41,27 @@ class EncyclopediaLotGridCard extends ConsumerWidget {
                 // Flag Badge row
                 Row(
                   children: [
-                    Builder(
-                      builder: (context) {
-                        final flagUrl = FlagConstants.getFlag(entry.country) ??
-                            FlagConstants.getFlag(entry.countryEmoji);
-                        if (flagUrl != null) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.2),
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Image.network(
-                              flagUrl,
-                              width: 28,
-                              height: 28,
-                              errorBuilder: (context, error, stack) =>
-                                  const SizedBox(width: 28, height: 28),
-                            ),
-                          );
-                        }
-                        return const SizedBox(width: 28, height: 28);
-                      },
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.2),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: ClipOval(
+                        child: Image.network(
+                          entry.effectiveFlagUrl,
+                          width: 28,
+                          height: 28,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stack) =>
+                              const Icon(Icons.public, size: 28, color: Colors.white24),
+                        ),
+                      ),
                     ),
                     // Space so heart button doesn't overlap content
                     const Spacer(),
@@ -248,33 +242,27 @@ class EncyclopediaLotListCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Flag Circle
-                  Builder(
-                    builder: (context) {
-                      final flagUrl = FlagConstants.getFlag(entry.country) ??
-                          FlagConstants.getFlag(entry.countryEmoji);
-                      if (flagUrl != null) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.2),
-                                blurRadius: 4,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Image.network(
-                            flagUrl,
-                            width: 48,
-                            height: 48,
-                            errorBuilder: (context, error, stack) =>
-                                const SizedBox(width: 48, height: 48),
-                          ),
-                        );
-                      }
-                      return const SizedBox(width: 48, height: 48);
-                    },
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.2),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: ClipOval(
+                      child: Image.network(
+                        entry.effectiveFlagUrl,
+                        width: 48,
+                        height: 48,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stack) =>
+                            const Icon(Icons.public, size: 48, color: Colors.white24),
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 16),
                   // Traits and Tags
@@ -321,13 +309,7 @@ class EncyclopediaLotListCard extends ConsumerWidget {
                           child: Row(
                             children: [
                               _TagChip(
-                                icon: Icons.star_border_rounded,
-                                text: '${entry.scaScore} SCA',
-                                theme: theme,
-                              ),
-                              const SizedBox(width: 8),
-                              _TagChip(
-                                icon: Icons.location_on_outlined,
+                                icon: Icons.public_rounded,
                                 text: entry.country,
                                 theme: theme,
                               ),

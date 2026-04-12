@@ -11,7 +11,7 @@ class PremiumBackground extends StatelessWidget {
       children: [
         const DecoratedBox(
           decoration: BoxDecoration(
-            color: Color(0xFF2A2422), // 7/10 darkness level of our Hearth & Bean palette
+            color: Color(0xFF36302E), // 7/10 darkness level (slightly lighter than 2A2422)
           ),
         ),
 

@@ -8,8 +8,10 @@ import '../discover/discovery_filter_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import 'widgets/encyclopedia_card_widgets.dart';
 import 'coffee_lot_detail_screen.dart';
-import '../discover/farmers_screen.dart'; // Додав імпорт FarmersBody
-import 'comparison_screen.dart'; // Новий екран порівняння!
+import '../discover/farmers_screen.dart';
+import 'comparison_screen.dart'; 
+import '../../shared/widgets/premium_app_bar.dart';
+import '../../shared/widgets/profile_button.dart';
 
 // ─── Body (Embedded Version) ──────────────────────────────────────────────────
 class EncyclopediaBody extends ConsumerStatefulWidget {
@@ -24,56 +26,31 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
   Widget build(BuildContext context) {
     final originsAsync = ref.watch(encyclopediaDataProvider);
 
-    return DefaultTabController(
-      // Зменшив кількість табів до 2 (Catalog та Farmers)
-      length: 2, 
-      child: Column(
-        children: [
-          // ── Premium Action Bar ─────────────────────────────────────────────
-          DiscoveryActionBar(
-            filterProvider: encyclopediaFilterProvider,
-            onCompareTap: () {
-              // Відкриваємо екран порівняння замість перемикання таба
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const ComparisonScreen()),
-              );
-            },
-            availableCountries: ref.watch(availableEncyclopediaCountriesProvider),
-            availableFlavors: ref.watch(availableEncyclopediaFlavorsProvider),
-            availableProcesses: ref.watch(availableEncyclopediaProcessesProvider),
-            showFavoritesButton: true,
-          ),
+    return Column(
+      children: [
+        // ── Premium Action Bar ─────────────────────────────────────────────
+        DiscoveryActionBar(
+          filterProvider: encyclopediaFilterProvider,
+          onCompareTap: () {
+            // Відкриваємо екран порівняння
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const ComparisonScreen()),
+            );
+          },
+          availableCountries: ref.watch(availableEncyclopediaCountriesProvider),
+          availableFlavors: ref.watch(availableEncyclopediaFlavorsProvider),
+          availableProcesses: ref.watch(availableEncyclopediaProcessesProvider),
+          showFavoritesButton: true,
+        ),
 
-          const SizedBox(height: 8),
+        const SizedBox(height: 8),
 
-          // ── Secondary Tabs ──────────────────────────────────────────────────
-          TabBar(
-            indicatorColor: const Color(0xFFC8A96E),
-            labelColor: const Color(0xFFC8A96E),
-            unselectedLabelColor: Colors.white54,
-            dividerColor: Colors.transparent,
-            labelStyle: GoogleFonts.outfit(
-              fontWeight: FontWeight.bold,
-              fontSize: 13,
-            ),
-            tabs: [
-              Tab(text: context.t('catalog')), // Catalog
-              const Tab(text: 'Farmers'),     // Farmers
-            ],
-          ),
-
-          // ── Content ─────────────────────────────────────────────────────────
-          Expanded(
-            child: TabBarView(
-              children: [
-                _buildList(originsAsync),
-                const FarmersBody(), // Вставлений екран фермерів
-              ],
-            ),
-          ),
-        ],
-      ),
+        // ── Content ─────────────────────────────────────────────────────────
+        Expanded(
+          child: _buildList(originsAsync),
+        ),
+      ],
     );
   }
 
@@ -157,19 +134,19 @@ class EncyclopediaScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Text(
-              ref.t('encyclopedia'),
-              style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(width: 12),
-            const _CloudStatusBadge(),
-          ],
-        ),
+      backgroundColor: Colors.transparent,
+      extendBodyBehindAppBar: true,
+      appBar: PremiumAppBar(
+        title: ref.t('encyclopedia'),
+        actions: const [
+          _CloudStatusBadge(),
+          ProfileButton(),
+        ],
       ),
-      body: const EncyclopediaBody(),
+      body: const Padding(
+        padding: EdgeInsets.only(top: kToolbarHeight + 40), // Offset for blurred bar
+        child: EncyclopediaBody(),
+      ),
     );
   }
 }

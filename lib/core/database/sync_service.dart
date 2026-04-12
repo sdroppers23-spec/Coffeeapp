@@ -10,6 +10,8 @@ class SyncService {
   final AppDatabase db;
   final SupabaseClient? supabase;
 
+  static const String bucketUrl = 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/';
+
   SyncService(this.db, [this.supabase]);
 
   /// Synchronizes all systems.
@@ -31,9 +33,13 @@ class SyncService {
       onProgress?.call('Syncing Farmers...');
       await syncFarmers();
 
-      // 3. Future: Sync Brands
-      // onProgress?.call('Syncing Brands...');
-      // await syncMetadata();
+      // 3. Sync Articles
+      onProgress?.call('Syncing Articles...');
+      await syncArticles();
+
+      // 4. Sync Encyclopedia (Lots)
+      onProgress?.call('Syncing Encyclopedia Lots...');
+      await syncEncyclopedia();
 
       onProgress?.call('Synchronization completed successfully!');
       debugPrint('SYNC: All systems synchronized [STABLE]');
@@ -46,12 +52,13 @@ class SyncService {
   }
 
   /// Pulls encyclopedia data from Supabase and updates local storage.
+  /// Fetches from 'encyclopedia_entries' as per latest requirement.
   Future<void> syncEncyclopedia() async {
     if (supabase == null) return;
 
     try {
-      debugPrint('SYNC: Pulling beans from Supabase...');
-      final data = await supabase!.from('localized_beans').select().order('id');
+      debugPrint('SYNC: Pulling beans from encyclopedia_entries...');
+      final data = await supabase!.from('encyclopedia_entries').select().order('id');
       
       int successCount = 0;
       int errorCount = 0;
@@ -61,10 +68,6 @@ class SyncService {
           final id = item['id'] as int;
 
           // 1. Prepare Bean Companion
-          final priceData = item['price_json'] as Map<String, dynamic>? ?? {};
-          final retail1k = priceData['retail_1k']?.toString();
-          final wholesale1k = priceData['wholesale_1k']?.toString();
-
           final bean = LocalizedBeansCompanion(
             id: Value(id),
             brandId: Value(item['brand_id'] as int?),
@@ -72,15 +75,14 @@ class SyncService {
             altitudeMin: Value(item['altitude_min'] as int?),
             altitudeMax: Value(item['altitude_max'] as int?),
             lotNumber: Value(item['lot_number'] as String? ?? ''),
-            scaScore: Value(item['sca_score'] as String? ?? '82-84'),
-            cupsScore: Value((item['cups_score'] as num?)?.toDouble() ?? 82.0),
-            sensoryJson: Value(jsonEncode(item['sensory_json'] ?? {})),
-            priceJson: Value(jsonEncode(item['price_json'] ?? {})),
+            scaScore: Value('82+'), // Placeholder since we move to flags
+            cupsScore: Value(double.tryParse(item['cups_score']?.toString() ?? '82.0') ?? 82.0),
+            sensoryJson: Value(item['sensory_json']?.toString() ?? '{}'),
+            priceJson: Value(item['price_json']?.toString() ?? '{}'),
             harvestSeason: Value(item['harvest_season'] as String?),
-            retailPrice: Value(retail1k),
-            wholesalePrice: Value(wholesale1k),
+            retailPrice: Value(item['price']?.toString()), // Mapping from 'price' column
             isPremium: Value(item['is_premium'] as bool? ?? false),
-            isDecaf: Value(item['is_decaf'] as bool? ?? false),
+            isDecaf: Value(false), // encyclopedia_entries doesn't have is_decaf usually
             url: Value(item['url'] as String? ?? ''),
             createdAt: Value(
               item['created_at'] != null
@@ -89,7 +91,7 @@ class SyncService {
             ),
           );
 
-          // 2. Prepare Translations
+          // 2. Prepare Translations (Map same data for all languages since encyclopedia_entries is singular)
           final List<LocalizedBeanTranslationsCompanion> translations = [];
 
           for (final lang in ['uk', 'en']) {
@@ -97,15 +99,14 @@ class SyncService {
               LocalizedBeanTranslationsCompanion(
                 beanId: Value(id),
                 languageCode: Value(lang),
-                country: Value(item['country_$lang'] as String?),
-                region: Value(item['region_$lang'] as String?),
-                // FIXED: Column name is 'varieties_uk' not 'variety_uk'
-                varieties: Value(item['varieties_$lang'] as String?),
-                flavorNotes: Value(jsonEncode(item['flavor_notes_$lang'] ?? [])),
-                processMethod: Value(item['process_method_$lang'] as String?),
-                description: Value(item['description_$lang'] as String?),
-                farmDescription: Value(item['farm_description_$lang'] as String?),
-                roastLevel: Value(item['roast_level_$lang'] as String?),
+                country: Value(item['country'] as String?),
+                region: Value(item['region'] as String?),
+                varieties: Value(item['varieties'] as String?),
+                flavorNotes: Value(item['flavor_notes']?.toString() ?? '[]'),
+                processMethod: Value(item['process_method'] as String?),
+                description: Value(item['description'] as String?),
+                farmDescription: Value(item['farm_description'] as String?),
+                roastLevel: Value(item['roast_level'] as String?),
               ),
             );
           }
@@ -131,10 +132,10 @@ class SyncService {
     
     debugPrint('SYNC: Subscribing to Encyclopedia real-time changes...');
     supabase!
-        .from('localized_beans')
+        .from('encyclopedia_entries')
         .stream(primaryKey: ['id'])
         .listen((data) {
-          debugPrint('SYNC: Beans cloud data changed, triggering re-sync...');
+          debugPrint('SYNC: Beans cloud data changed (encyclopedia_entries), triggering re-sync...');
           syncEncyclopedia().catchError((e) {
             debugPrint('SYNC ERROR after stream update (beans): $e');
           });
@@ -165,10 +166,17 @@ class SyncService {
       for (final item in data) {
         try {
           final id = item['id'] as int;
+          
+          // Image URL processing: if it contains 'specialty-articles', we keep it, 
+          // but we ensure it's absolute. If it's just a filename, prepend bucket URL.
+          String imageUrl = item['image_url'] as String? ?? '';
+          if (imageUrl.isNotEmpty && !imageUrl.startsWith('http')) {
+            imageUrl = '$bucketUrl$imageUrl';
+          }
 
           final farmer = LocalizedFarmersCompanion(
             id: Value(id),
-            imageUrl: Value(item['image_url'] as String?),
+            imageUrl: Value(imageUrl),
             countryEmoji: Value(item['country_emoji'] as String?),
             latitude: Value((item['latitude'] as num?)?.toDouble() ?? 0.0),
             longitude: Value((item['longitude'] as num?)?.toDouble() ?? 0.0),
@@ -199,6 +207,62 @@ class SyncService {
       debugPrint('SYNC: Farmers synchronized ($successCount success, $errorCount errors)');
     } catch (e) {
       debugPrint('SYNC ERROR (Farmers): $e');
+      rethrow;
+    }
+  }
+
+  /// Pulls specialty articles from Supabase.
+  Future<void> syncArticles() async {
+    if (supabase == null) return;
+
+    try {
+      debugPrint('SYNC: Pulling articles from specialty_articles...');
+      final data = await supabase!.from('specialty_articles').select().order('id');
+      
+      int successCount = 0;
+      int errorCount = 0;
+
+      for (final item in data) {
+        try {
+          final id = item['id'] as int;
+
+          String imageUrl = item['image_url'] as String? ?? '';
+          if (imageUrl.isNotEmpty && !imageUrl.startsWith('http')) {
+            imageUrl = '$bucketUrl$imageUrl';
+          }
+
+          final article = SpecialtyArticlesCompanion(
+            id: Value(id),
+            imageUrl: Value(imageUrl),
+            readTimeMin: Value(item['read_time_min'] as int? ?? 5),
+          );
+
+          final List<SpecialtyArticleTranslationsCompanion> translations = [];
+          for (final lang in ['uk', 'en']) {
+            translations.add(
+              SpecialtyArticleTranslationsCompanion(
+                articleId: Value(id),
+                languageCode: Value(lang),
+                title: Value(item['title_$lang'] as String? ?? ''),
+                subtitle: Value(item['subtitle_$lang'] as String? ?? ''),
+                contentHtml: Value(item['content_html_$lang'] as String? ?? ''),
+              ),
+            );
+          }
+
+          await db.insertArticle(article);
+          for (final t in translations) {
+            await db.insertArticleTranslation(t);
+          }
+          successCount++;
+        } catch (e) {
+          debugPrint('SYNC ERROR for article ID ${item['id']}: $e');
+          errorCount++;
+        }
+      }
+      debugPrint('SYNC: Articles synchronized ($successCount success, $errorCount errors)');
+    } catch (e) {
+      debugPrint('SYNC ERROR (Articles): $e');
       rethrow;
     }
   }

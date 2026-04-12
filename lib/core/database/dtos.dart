@@ -110,6 +110,13 @@ class LocalizedBeanDto {
   String get imageUrl =>
       farmPhotosUrlCover ??
       (plantationPhotos.isNotEmpty ? plantationPhotos.first : '');
+
+  String get effectiveFlagUrl {
+    // Standard format for flags in the bucket is: flags/filename.png
+    // We try to derive filename from country name if not provided
+    final fileName = '${country.toLowerCase().replaceAll(' ', '_')}.png';
+    return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/flags/$fileName';
+  }
 }
 
 class LocalizedBrandDto {
@@ -187,6 +194,15 @@ class SpecialtyArticleDto {
     required this.imageUrl,
     required this.readTimeMin,
   });
+
+  String get effectiveImageUrl {
+    if (imageUrl.isEmpty) return '';
+    if (imageUrl.startsWith('http')) return imageUrl;
+    if (imageUrl.startsWith('assets/')) return imageUrl;
+    
+    // Default to specialty-articles bucket
+    return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/$imageUrl';
+  }
 }
 
 class RecommendedRecipeDto {

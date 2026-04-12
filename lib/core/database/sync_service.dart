@@ -166,6 +166,16 @@ class SyncService {
             debugPrint('SYNC ERROR after stream update (farmers): $e');
           });
         });
+
+    supabase!
+        .from('specialty_articles')
+        .stream(primaryKey: ['id'])
+        .listen((data) {
+          debugPrint('SYNC: Articles cloud data changed, triggering re-sync...');
+          syncArticles().catchError((e) {
+            debugPrint('SYNC ERROR after stream update (articles): $e');
+          });
+        });
   }
 
   /// Pulls farmer data from Supabase and updates local storage.
@@ -188,8 +198,10 @@ class SyncService {
           final id = item['id'] as int;
           
           String imageUrl = item['image_url'] as String? ?? '';
-          if (imageUrl.isNotEmpty && !imageUrl.startsWith('http')) {
-            imageUrl = '$bucketUrl$imageUrl';
+          if (imageUrl.isNotEmpty && !imageUrl.startsWith('http') && !imageUrl.startsWith('assets/')) {
+            // Handle cloud prefixing for generic filenames
+            final fileName = imageUrl.split('/').last;
+            imageUrl = '$bucketUrl/farmers/$fileName';
           }
 
           final farmer = LocalizedFarmersCompanion(
@@ -254,8 +266,9 @@ class SyncService {
           final id = item['id'] as int;
 
           String imageUrl = item['image_url'] as String? ?? '';
-          if (imageUrl.isNotEmpty && !imageUrl.startsWith('http')) {
-            imageUrl = '$bucketUrl$imageUrl';
+          if (imageUrl.isNotEmpty && !imageUrl.startsWith('http') && !imageUrl.startsWith('assets/')) {
+             final fileName = imageUrl.split('/').last;
+             imageUrl = '$bucketUrl/$fileName';
           }
 
           final article = SpecialtyArticlesCompanion(

@@ -37,17 +37,17 @@ class CoffeeDataSeed {
 
     onProgress?.call('Seeding Brands...');
     await _seedBrands();
-    onProgress?.call('Seeding Farmers from JSON...');
-    await _seedFarmers();
-    onProgress?.call('Seeding Encyclopedia from JSON...');
-    await _seedEncyclopedia();
-    onProgress?.call('Seeding Catalog [STABLE]...');
-    await _seedMadHeadsOrigins();
-    await _seed3ChampsOrigins();
+    // onProgress?.call('Seeding Farmers from JSON...');
+    // await _seedFarmers();
+    // onProgress?.call('Seeding Encyclopedia from JSON...');
+    // await _seedEncyclopedia();
+    // onProgress?.call('Seeding Catalog [STABLE]...');
+    // await _seedMadHeadsOrigins();
+    // await _seed3ChampsOrigins();
     
-    onProgress?.call('Seeding Specialty Articles...');
+    // onProgress?.call('Seeding Specialty Articles...');
     try {
-      await _seedSpecialtyArticles();
+      // await _seedSpecialtyArticles();
       onProgress?.call('Seeding Recommended Recipes...');
       await _seedRecommendedRecipes();
       onProgress?.call('Seeding 30 Champion Brewing Recipes...');

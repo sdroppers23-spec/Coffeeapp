@@ -21,7 +21,7 @@ class SyncStatusNotifier extends Notifier<SyncState> {
     final prefs = ref.watch(sharedPreferencesProvider);
 
     // Version Guard (Cache Buster for v17 Stabilization)
-    const resyncKey = 'force_resync_v17_v2'; // unique key for this update
+    const resyncKey = 'force_resync_v17_v12_final'; // unique key for this update
     final hasResynced = prefs.getBool(resyncKey) ?? false;
 
     if (isOnline && !hasResynced) {

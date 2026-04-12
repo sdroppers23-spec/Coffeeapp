@@ -289,15 +289,9 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
 
   /// Combines description + story into one coherent Markdown document.
   String _buildBio(String description, String story) {
-    final parts = <String>[];
-
-    final d = description.trim();
-    if (d.isNotEmpty) parts.add(d);
-
-    final s = story.trim();
-    if (s.isNotEmpty && s != d) parts.add(s);
-
-    return parts.join('\n\n');
+    // We only return the story here because description is already displayed 
+    // as a subtitle above the divider in the build method.
+    return story.trim();
   }
 }
 

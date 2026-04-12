@@ -52,17 +52,10 @@ const _methodMeta = <String, _MethodMeta>{
     assetPath: 'assets/images/methods/espresso.png',
     gradient: [Color(0xFF8B2635), Color(0xFF4A1520)],
   ),
-  'moka_pot': _MethodMeta(
-    name: 'Moka Pot',
-    nameUk: 'Мока пот',
-    assetPath: 'assets/images/methods/espresso.png', // fallback
-    gradient: [Color(0xFF747474), Color(0xFF2C2C2C)],
-    icon: Icons.local_cafe_outlined,
-  ),
   'clever': _MethodMeta(
     name: 'Clever Dripper',
-    nameUk: 'Клевер',
-    assetPath: 'assets/images/methods/v60.png', // fallback
+    nameUk: 'Clever Dripper',
+    assetPath: 'assets/images/methods/french_press.png', 
     gradient: [Color(0xFFB8860B), Color(0xFF556B2F)],
   ),
   'cold_brew': _MethodMeta(

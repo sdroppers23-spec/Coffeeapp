@@ -514,7 +514,7 @@ Specialty Coffee — це не просто кава, це система кон
     _addChemexRecipes(recipes);
     _addFrenchPressRecipes(recipes);
     _addEspressoRecipes(recipes);
-    _addMokaRecipes(recipes);
+    // Moka Pot removed as per request
     _addCleverRecipes(recipes);
     _addColdBrewRecipes(recipes);
 
@@ -583,7 +583,7 @@ Specialty Coffee — це не просто кава, це система кон
   }
 
   void _addEspressoRecipes(List<BrewingRecipesCompanion> list) => _addGenericRecipes(list, 'espresso');
-  void _addMokaRecipes(List<BrewingRecipesCompanion> list) => _addGenericRecipes(list, 'moka_pot');
+  // Moka Pot logic removed
   void _addCleverRecipes(List<BrewingRecipesCompanion> list) => _addGenericRecipes(list, 'clever');
   void _addColdBrewRecipes(List<BrewingRecipesCompanion> list) => _addGenericRecipes(list, 'cold_brew');
 

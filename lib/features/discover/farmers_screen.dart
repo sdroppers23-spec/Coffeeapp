@@ -95,9 +95,9 @@ class _PremiumFarmerCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // If countryEmoji starts with http, it's a bucket URL.
-    final flagUrl = farmer.countryEmoji.startsWith('http') 
-        ? farmer.countryEmoji 
-        : (FlagConstants.getFlag(farmer.country) ?? FlagConstants.getFlag(farmer.countryEmoji));
+    final flagUrl = (farmer.country == 'Unknown' || farmer.country == '')
+        ? null
+        : FlagConstants.getFlag(farmer.country);
 
     const gold = Color(0xFFC8A96E);
 
@@ -240,7 +240,7 @@ class _PremiumFarmerCard extends ConsumerWidget {
       placeholder: (context, url) => Container(color: Colors.white10),
       errorWidget: (context, url, error) => Container(
         color: const Color(0xFF1C1C1E),
-        child: const Icon(Icons.person, color: Colors.white24),
+        child: const Icon(Icons.person_outline_rounded, color: Colors.white24, size: 32),
       ),
     );
   }
@@ -265,7 +265,11 @@ class _PremiumFarmerCard extends ConsumerWidget {
             ? CachedNetworkImage(
                 imageUrl: url,
                 fit: BoxFit.cover,
-                errorWidget: (context, url, error) => const SizedBox(),
+                errorWidget: (context, url, error) => const Icon(
+                  Icons.public_rounded,
+                  size: 18,
+                  color: Colors.white24,
+                ),
               )
             : Image.asset(url, fit: BoxFit.cover),
       ),

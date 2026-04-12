@@ -179,7 +179,7 @@ class _PremiumFarmerCard extends ConsumerWidget {
                       width: 48,
                       height: 48,
                       placeholder: (context, url) => const CircularProgressIndicator(strokeWidth: 2),
-                      errorWidget: (_, __, ___) => const SizedBox(width: 48),
+                      errorWidget: (_, _, _) => const SizedBox(width: 48),
                     ),
                 ],
               ),

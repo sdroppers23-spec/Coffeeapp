@@ -245,7 +245,7 @@ class _BrandLogo extends StatelessWidget {
     return CachedNetworkImage(
       imageUrl: url,
       height: height,
-      errorWidget: (_, __, ___) => _FallbackIcon(height: height),
+      errorWidget: (_, _, _) => _FallbackIcon(height: height),
       placeholder: (context, url) => SizedBox(height: height, child: const Center(child: CircularProgressIndicator(strokeWidth: 2))),
     );
   }

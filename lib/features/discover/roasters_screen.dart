@@ -310,7 +310,7 @@ class _BrandLogo extends StatelessWidget {
     return CachedNetworkImage(
       imageUrl: url,
       fit: BoxFit.contain,
-      errorWidget: (_, __, ___) =>
+      errorWidget: (_, _, _) =>
           const Icon(Icons.coffee_rounded, color: Colors.white24),
     );
   }

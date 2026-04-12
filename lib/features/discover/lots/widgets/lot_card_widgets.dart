@@ -543,8 +543,8 @@ class _FreshnessProgressBar extends StatelessWidget {
 
     // 2. Determine Reference Date & Age
     final DateTime refDate = (lot.isOpen || lot.isGround) 
-        ? (lot.openedAt ?? lot.roastDate) 
-        : lot.roastDate;
+        ? (lot.openedAt ?? lot.roastDate ?? DateTime.now()) 
+        : (lot.roastDate ?? DateTime.now());
     
     int ageDays = DateTime.now().difference(refDate).inDays;
     if (ageDays < 0) ageDays = 0; // Safeguard against future dates

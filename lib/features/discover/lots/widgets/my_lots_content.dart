@@ -13,6 +13,7 @@ import '../lots_providers.dart';
 import 'lot_card_widgets.dart';
 import '../../../navigation/main_scaffold.dart';
 import '../../widgets/discovery_action_bar.dart';
+import '../../../../shared/widgets/pressable_scale.dart';
 
 class MyLotsContent extends ConsumerStatefulWidget {
   const MyLotsContent({super.key});
@@ -272,6 +273,22 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                       ));
                       ref.invalidate(userLotsProvider);
                     },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        'СКАСУВАТИ',
+                        style: GoogleFonts.outfit(
+                          color: const Color(0xFFC8A96E),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 11,
+                          letterSpacing: 1.0,
+                        ),
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 4),
                 ],

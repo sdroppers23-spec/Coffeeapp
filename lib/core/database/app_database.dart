@@ -231,13 +231,17 @@ class AppDatabase extends _$AppDatabase {
 
   // Helper methods to clear data before reseeding (prevents duplicates)
   Future<void> clearFarmers() async {
-    await delete(localizedFarmerTranslations).go();
-    await delete(localizedFarmers).go();
+    await transaction(() async {
+      await delete(localizedFarmers).go();
+      await delete(localizedFarmerTranslations).go();
+    });
   }
 
   Future<void> clearSpecialtyArticles() async {
-    await delete(specialtyArticleTranslations).go();
-    await delete(specialtyArticles).go();
+    await transaction(() async {
+      await delete(specialtyArticles).go();
+      await delete(specialtyArticleTranslations).go();
+    });
   }
 
   // ── Origins / Beans ──────────────────────────────────────────────────────────
@@ -603,27 +607,6 @@ class AppDatabase extends _$AppDatabase {
         await into(coffeeLots).insertOnConflictUpdate(lot);
       }
     });
-  }
-
-  Future<void> clearFarmers() async {
-    await transaction(() async {
-      await delete(localizedFarmers).go();
-      await delete(localizedFarmerTranslations).go();
-    });
-  }
-
-  Future<void> clearSpecialtyArticles() async {
-    await transaction(() async {
-      await delete(specialtyArticles).go();
-      await delete(specialtyArticleTranslations).go();
-    });
-  }
-
-  Future<bool> brandsIsEmpty() async {
-    final countExp = localizedBrands.id.count();
-    final query = selectOnly(localizedBrands)..addColumns([countExp]);
-    final result = await query.map((row) => row.read(countExp)).getSingle();
-    return (result ?? 0) == 0;
   }
 
   Future<int> insertUserLot(CoffeeLotsCompanion lot) =>

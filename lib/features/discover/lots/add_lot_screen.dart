@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:drift/drift.dart' hide Column;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/services.dart';
 
 import '../../../core/database/database_provider.dart';
 import '../../../core/providers/settings_provider.dart';
@@ -389,9 +390,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             Expanded(child: _toggleButton(label: 'ВІДКРИТА', active: _isOpen, onTap: () {
               setState(() {
                 _isOpen = true;
-                if (_openedAt == null) {
-                  _openedAt = _roastDate;
-                }
+                _openedAt ??= _roastDate;
               });
             })),
           ],
@@ -415,9 +414,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                   onChanged: (v) {
                     setState(() {
                       _isGround = v ?? false;
-                      if (_isGround && _openedAt == null) {
-                        _openedAt = _roastDate;
-                      }
+                      if (_isGround) _openedAt ??= _roastDate;
                     });
                   },
                 ),
@@ -480,6 +477,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
 
   // ─── Tab 3: Sensory ───────────────────────────────────────────────
   Widget _buildSensoryTab() {
+    final theme = Theme.of(context);
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
       children: [
@@ -705,8 +703,6 @@ class GlobalCoffeeInputFormatter extends TextInputFormatter {
     final sb = StringBuffer();
     bool capitalizeNext = true; 
     
-    // Pattern for dots (including tridots)
-    final dotPattern = RegExp(r'\.{1,3}');
 
     for (int i = 0; i < text.length; i++) {
       String char = text[i];

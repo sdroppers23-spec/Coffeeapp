@@ -292,4 +292,14 @@ class _PremiumFarmerCard extends ConsumerWidget {
       ),
     );
   }
+
+  String _stripMarkdown(String text) {
+    // Basic stripping: remove #, *, _, [link text](url), etc.
+    return text
+        .replaceAll(RegExp(r'#+\s*'), '')
+        .replaceAll(RegExp(r'\*\*|\*|__|_'), '')
+        .replaceAll(RegExp(r'\[([^\]]+)\]\([^\)]+\)'), r'$1')
+        .replaceAll('\n', ' ')
+        .trim();
+  }
 }

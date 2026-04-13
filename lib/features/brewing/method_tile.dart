@@ -8,74 +8,6 @@ import 'brewing_detail_screen.dart';
 import 'method_recipes_screen.dart';
 
 // ─── Method metadata ─────────────────────────────────────────────────────────
-class _MethodMeta {
-  final String name;
-  final String nameUk;
-  final String assetPath;
-  final List<Color> gradient;
-  final IconData icon;
-  const _MethodMeta({
-    required this.name,
-    required this.nameUk,
-    required this.assetPath,
-    required this.gradient,
-    this.icon = Icons.coffee_outlined,
-  });
-}
-
-const _methodMeta = <String, _MethodMeta>{
-  'v60': _MethodMeta(
-    name: 'V60 Pour Over',
-    nameUk: 'V60 Пур-овер',
-    assetPath: '${CoffeeDataSeed.methodsBucket}v60.png',
-    gradient: [Color(0xFFD4A574), Color(0xFF8B5E3C)],
-  ),
-  'chemex': _MethodMeta(
-    name: 'Chemex',
-    nameUk: 'Chemex',
-    assetPath: '${CoffeeDataSeed.methodsBucket}chemex.png',
-    gradient: [Color(0xFFE8D5B7), Color(0xFF9C7048)],
-  ),
-  'aeropress': _MethodMeta(
-    name: 'Aeropress',
-    nameUk: 'Аеропрес',
-    assetPath: '${CoffeeDataSeed.methodsBucket}aeropress.png',
-    gradient: [Color(0xFFB8C4CC), Color(0xFF5A7A8A)],
-  ),
-  'french_press': _MethodMeta(
-    name: 'French Press',
-    nameUk: 'Французький прес',
-    assetPath: '${CoffeeDataSeed.methodsBucket}french_press.png',
-    gradient: [Color(0xFFC8A96E), Color(0xFF7A5C2E)],
-  ),
-  'espresso': _MethodMeta(
-    name: 'Espresso',
-    nameUk: 'Еспресо',
-    assetPath: '${CoffeeDataSeed.methodsBucket}espresso.png',
-    gradient: [Color(0xFF8B2635), Color(0xFF4A1520)],
-  ),
-  'clever': _MethodMeta(
-    name: 'Clever Dripper',
-    nameUk: 'Clever Dripper',
-    assetPath: '${CoffeeDataSeed.methodsBucket}clever_dripper.png', 
-    gradient: [Color(0xFFB8860B), Color(0xFF556B2F)],
-  ),
-  'cold_brew': _MethodMeta(
-    name: 'Cold Brew',
-    nameUk: 'Холодна екстракція',
-    assetPath: '${CoffeeDataSeed.methodsBucket}cold_brew.png',
-    gradient: [Color(0xFF4A90D9), Color(0xFF1A3A5C)],
-    icon: Icons.ac_unit_outlined,
-  ),
-  'siphon': _MethodMeta(
-    name: 'Siphon',
-    nameUk: 'Сифон',
-    assetPath: '${CoffeeDataSeed.methodsBucket}siphon.png',
-    gradient: [Color(0xFF9370DB), Color(0xFF4B0082)],
-    icon: Icons.science_outlined,
-  ),
-};
-
 // ─── MethodTile ───────────────────────────────────────────────────────────────
 class MethodTile extends StatelessWidget {
   final List<BrewingRecipe> methodRecipes;
@@ -88,16 +20,30 @@ class MethodTile extends StatelessWidget {
   BrewingRecipe get _firstRecipe => methodRecipes.first;
   int get _count => methodRecipes.length;
 
+  String _getEffectiveName(BuildContext context) {
+    final lang = Localizations.localeOf(context).languageCode;
+    if (lang == 'uk') return _firstRecipe.nameUk;
+    return _firstRecipe.nameEn ?? _firstRecipe.nameUk;
+  }
+
+  String _getEffectiveImageUrl() {
+    final raw = _firstRecipe.imageUrl;
+    if (raw.isEmpty) return '';
+    if (raw.startsWith('http')) return raw;
+    if (raw.startsWith('assets/')) return raw;
+    
+    // Resolved from 'Methods' bucket
+    return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/Methods/$raw';
+  }
+
   @override
   Widget build(BuildContext context) {
-    final key = _firstRecipe.methodKey;
-    final meta = _methodMeta[key] ??
-        _MethodMeta(
-          name: key.toUpperCase(),
-          nameUk: key.replaceAll('_', ' '),
-          assetPath: '${CoffeeDataSeed.methodsBucket}v60.png',
-          gradient: const [Color(0xFFD4A574), Color(0xFF8B5E3C)],
-        );
+    const gold = Color(0xFFC8A96E);
+    final name = _getEffectiveName(context);
+    final imageUrl = _getEffectiveImageUrl();
+    
+    // Default gradient based on key if available, else standard gold
+    final List<Color> gradient = _getGradient(_firstRecipe.methodKey);
 
     return GestureDetector(
       onTap: () {
@@ -119,62 +65,55 @@ class MethodTile extends StatelessWidget {
           );
         }
       },
-      child: _TileCard(meta: meta, count: _count, methodKey: key),
-    );
-  }
-}
-
-// ─── Card Visual ─────────────────────────────────────────────────────────────
-class _TileCard extends StatelessWidget {
-  final _MethodMeta meta;
-  final int count;
-  final String methodKey;
-
-  const _TileCard({
-    required this.meta,
-    required this.count,
-    required this.methodKey,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    const gold = Color(0xFFC8A96E);
-
-    return GlassContainer(
-      padding: EdgeInsets.zero,
-      borderRadius: 24,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
+      child: GlassContainer(
+        borderRadius: 20,
+        height: 190,
         child: Stack(
+          fit: StackFit.expand,
           children: [
-            // ── Background image with gradient fallback ──────────────────
-            Positioned.fill(
-              child: CachedNetworkImage(
-                imageUrl: meta.assetPath,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: meta.gradient,
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+            // ── Background Image ───────────────────────────────────────────
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: imageUrl.isNotEmpty
+                  ? CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: gradient,
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2, color: Colors.white24),
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: gradient,
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                        child: Icon(_getIcon(_firstRecipe.methodKey),
+                            color: Colors.white24, size: 48),
+                      ),
+                    )
+                  : Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: gradient,
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                      ),
+                      child: Icon(_getIcon(_firstRecipe.methodKey),
+                          color: Colors.white24, size: 48),
                     ),
-                  ),
-                  child: const Center(
-                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white24),
-                  ),
-                ),
-                errorWidget: (context, url, error) => Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: meta.gradient,
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                  ),
-                  child: Icon(meta.icon, color: Colors.white24, size: 48),
-                ),
-              ),
             ),
 
             // ── Dark gradient bottom overlay ─────────────────────────────
@@ -195,7 +134,7 @@ class _TileCard extends StatelessWidget {
             ),
 
             // ── Top-right recipe count badge ─────────────────────────────
-            if (count > 1)
+            if (_count > 1)
               Positioned(
                 top: 10,
                 right: 10,
@@ -207,7 +146,7 @@ class _TileCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    '$count',
+                    '$_count',
                     style: GoogleFonts.poppins(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
@@ -226,7 +165,7 @@ class _TileCard extends StatelessWidget {
                   const Spacer(),
 
                   Text(
-                    meta.name,
+                    name,
                     style: GoogleFonts.cormorantGaramond(
                       fontSize: 22,
                       fontWeight: FontWeight.w700,

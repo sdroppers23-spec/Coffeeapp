@@ -14,11 +14,9 @@ part 'app_database.g.dart';
     LocalizedBrands,
     LocalizedBrandTranslations,
     LocalizedFarmers,
-    LocalizedFarmerTranslations,
     SphereRegions,
     SphereRegionTranslations,
     SpecialtyArticles,
-    SpecialtyArticleTranslations,
     CoffeeLots,
     FermentationLogs,
     BrewingRecipes,
@@ -30,7 +28,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? e]) : super(e ?? openConnection());
 
   @override
-  int get schemaVersion => 26;
+  int get schemaVersion => 27;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -49,16 +47,15 @@ class AppDatabase extends _$AppDatabase {
             'specialty_article_translations',
           ];
 
-          for (final tableName in tablesToMigrate) {
-            await customStatement('DROP TABLE IF EXISTS $tableName;');
-          }
+          // Ensure old tables are removed
+          await customStatement('DROP TABLE IF EXISTS localized_farmer_translations;');
+          await customStatement('DROP TABLE IF EXISTS specialty_article_translations;');
 
-          // Recreate them with new schema
-          await m.createTable(localizedBeanTranslations);
-          await m.createTable(localizedBrandTranslations);
-          await m.createTable(localizedFarmerTranslations);
-          await m.createTable(sphereRegionTranslations);
-          await m.createTable(specialtyArticleTranslations);
+          // Recreate tables with new wide schema
+          await customStatement('DROP TABLE IF EXISTS localized_farmers;');
+          await customStatement('DROP TABLE IF EXISTS specialty_articles;');
+          await m.createTable(localizedFarmers);
+          await m.createTable(specialtyArticles);
 
           // Delete deprecated tables
           await customStatement('DROP TABLE IF EXISTS latte_art_patterns;');
@@ -93,40 +90,48 @@ class AppDatabase extends _$AppDatabase {
       (await select(specialtyArticles).get()).isEmpty;
 
   // ── Farmers ──────────────────────────────────────────────────────────────────
+  // ── Farmers (Wide Table) ───────────────────────────────────────────────────
   Future<List<LocalizedFarmerDto>> getAllFarmers(String lang) async {
-    final query = select(localizedFarmers).join([
-      innerJoin(
-        localizedFarmerTranslations,
-        localizedFarmerTranslations.farmerId.equalsExp(localizedFarmers.id),
-      ),
-    ])..where(localizedFarmerTranslations.languageCode.equals(lang));
-
+    final query = select(localizedFarmers);
     final rows = await query.get();
-    return rows.map((row) {
-      final farmer = row.readTable(localizedFarmers);
-      final translation = row.readTable(localizedFarmerTranslations);
+    
+    return rows.map((farmer) {
+      final isUk = lang == 'uk';
+      final isEn = lang == 'en';
+      
+      // Basic 2-lang logic for now, expandable to 13
+      String name = farmer.nameUk;
+      String desc = farmer.descriptionHtmlUk;
+      
+      if (isEn) {
+        name = farmer.nameEn ?? farmer.nameUk;
+        desc = farmer.descriptionHtmlEn ?? farmer.descriptionHtmlUk;
+      } else if (!isUk) {
+        // Fallback or other language logic here
+        name = farmer.nameEn ?? farmer.nameUk;
+        desc = farmer.descriptionHtmlEn ?? farmer.descriptionHtmlUk;
+      }
+      
       return LocalizedFarmerDto(
         id: farmer.id,
-        imageUrl: farmer.imageUrl ?? '',
-        countryEmoji: farmer.countryEmoji ?? '',
-        latitude: farmer.latitude ?? 0.0,
-        longitude: farmer.longitude ?? 0.0,
-        name: translation.name ?? '',
-        region: translation.region ?? '',
-        description: translation.description ?? '',
-        story: translation.story ?? '',
-        country: translation.country ?? '',
-        farmPhotosUrlCover: null, // Placeholder for future join if needed
+        imageUrl: farmer.imageUrl,
+        flagUrl: farmer.flagUrl,
+        name: name,
+        descriptionHtml: desc,
+        region: farmer.regionUk ?? '',
+        country: farmer.countryUk ?? '',
+        latitude: farmer.latitude,
+        longitude: farmer.longitude,
+        createdAt: farmer.createdAt,
       );
     }).toList();
   }
 
-  Future<int> upsertLocalizedFarmer(LocalizedFarmersCompanion f) =>
+  Future<int> smartUpsertFarmer(LocalizedFarmersCompanion f) =>
       into(localizedFarmers).insertOnConflictUpdate(f);
 
-  Future<int> upsertLocalizedFarmerTranslation(
-    LocalizedFarmerTranslationsCompanion t,
-  ) => into(localizedFarmerTranslations).insertOnConflictUpdate(t);
+  Future<int> upsertLocalizedFarmer(LocalizedFarmersCompanion f) =>
+      smartUpsertFarmer(f);
 
   // ── Brands ───────────────────────────────────────────────────────────────────
   Future<List<LocalizedBrandDto>> getAllBrands([String lang = 'uk']) async {
@@ -232,19 +237,13 @@ class AppDatabase extends _$AppDatabase {
   Future<int> deleteBrand(int id) =>
       (delete(localizedBrands)..where((t) => t.id.equals(id))).go();
 
-  // Helper methods to clear data before reseeding (prevents duplicates)
+  // Helper methods to clear data
   Future<void> clearFarmers() async {
-    await transaction(() async {
-      await delete(localizedFarmers).go();
-      await delete(localizedFarmerTranslations).go();
-    });
+    await delete(localizedFarmers).go();
   }
 
   Future<void> clearSpecialtyArticles() async {
-    await transaction(() async {
-      await delete(specialtyArticles).go();
-      await delete(specialtyArticleTranslations).go();
-    });
+    await delete(specialtyArticles).go();
   }
 
   // ── Origins / Beans ──────────────────────────────────────────────────────────
@@ -411,14 +410,8 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> smartUpsertFarmer(
     LocalizedFarmersCompanion farmer,
-    List<LocalizedFarmerTranslationsCompanion> translations,
   ) async {
-    await transaction(() async {
-      await into(localizedFarmers).insertOnConflictUpdate(farmer);
-      for (final t in translations) {
-        await into(localizedFarmerTranslations).insertOnConflictUpdate(t);
-      }
-    });
+    await into(localizedFarmers).insertOnConflictUpdate(farmer);
   }
 
   Future<void> smartUpsertBean(
@@ -492,37 +485,26 @@ class AppDatabase extends _$AppDatabase {
       insertRecommendedRecipe(r);
 
   // ── Articles ────────────────────────────────────────────────────────────────
+  // ── Articles (Wide Table) ──────────────────────────────────────────────────
   Future<void> smartUpsertArticle(
     SpecialtyArticlesCompanion article,
-    List<SpecialtyArticleTranslationsCompanion> translations,
   ) async {
-    await transaction(() async {
-      await into(specialtyArticles).insertOnConflictUpdate(article);
-      for (final t in translations) {
-        await into(specialtyArticleTranslations).insertOnConflictUpdate(t);
-      }
-    });
+    await into(specialtyArticles).insertOnConflictUpdate(article);
   }
 
   Future<List<SpecialtyArticleDto>> getAllArticles(String lang) async {
-    final query = select(specialtyArticles).join([
-      innerJoin(
-        specialtyArticleTranslations,
-        specialtyArticleTranslations.articleId.equalsExp(specialtyArticles.id),
-      ),
-    ])..where(specialtyArticleTranslations.languageCode.equals(lang));
-
+    final query = select(specialtyArticles);
     final rows = await query.get();
-    return rows.map((row) {
-      final article = row.readTable(specialtyArticles);
-      final translation = row.readTable(specialtyArticleTranslations);
+    
+    return rows.map((article) {
+      final isUk = lang == 'uk';
       return SpecialtyArticleDto(
         id: article.id,
+        title: isUk ? article.titleUk : (article.titleEn ?? article.titleUk),
         imageUrl: article.imageUrl,
+        flagUrl: article.flagUrl,
         readTimeMin: article.readTimeMin,
-        title: translation.title,
-        subtitle: translation.subtitle,
-        contentHtml: translation.contentHtml,
+        contentHtml: isUk ? article.contentHtmlUk : (article.contentHtmlEn ?? article.contentHtmlUk),
       );
     }).toList();
   }
@@ -726,8 +708,56 @@ class AppDatabase extends _$AppDatabase {
   Future<int> deleteCustomRecipe(String id) =>
       (delete(customRecipes)..where((t) => t.id.equals(id))).go();
 
-  // ── Brewing (Static) ────────────────────────────────────────────────────────
-  Future<List<BrewingRecipe>> getAllRecipes() => select(brewingRecipes).get();
+  // ── Brewing (Static Wide Table) ───────────────────────────────────────────
+  Future<List<BrewingRecipe>> getAllRecipes([String lang = 'en']) async {
+    final rows = await select(brewingRecipes).get();
+    return rows.map((r) {
+      final isUk = lang == 'uk';
+      final isEn = lang == 'en';
+
+      return BrewingRecipe(
+        id: r.id,
+        methodKey: r.methodKey,
+        nameUk: r.nameUk,
+        descriptionUk: r.descriptionUk,
+        imageUrl: r.imageUrl,
+        nameEn: r.nameEn,
+        descriptionEn: r.descriptionEn,
+        namePl: r.namePl,
+        descriptionPl: r.descriptionPl,
+        nameDe: r.nameDe,
+        descriptionDe: r.descriptionDe,
+        nameFr: r.nameFr,
+        descriptionFr: r.descriptionFr,
+        nameEs: r.nameEs,
+        descriptionEs: r.descriptionEs,
+        nameIt: r.nameIt,
+        descriptionIt: r.descriptionIt,
+        namePt: r.namePt,
+        descriptionPt: r.descriptionPt,
+        nameRo: r.nameRo,
+        descriptionRo: r.descriptionRo,
+        nameTr: r.nameTr,
+        descriptionTr: r.descriptionTr,
+        nameJa: r.nameJa,
+        descriptionJa: r.descriptionJa,
+        nameKo: r.nameKo,
+        descriptionKo: r.descriptionKo,
+        nameZh: r.nameZh,
+        descriptionZh: r.descriptionZh,
+        ratioGramsPerMl: r.ratioGramsPerMl,
+        tempC: r.tempC,
+        totalTimeSec: r.totalTimeSec,
+        difficulty: r.difficulty,
+        stepsJson: r.stepsJson,
+        flavorProfile: r.flavorProfile,
+        iconName: r.iconName,
+      );
+    }).toList();
+  }
+
+  Future<int> smartUpsertBrewingRecipe(BrewingRecipesCompanion r) =>
+      into(brewingRecipes).insertOnConflictUpdate(r);
 
   // ── Helpers ──────────────────────────────────────────────────────────────────
   Map<String, dynamic> _parseJson(String jsonStr) {

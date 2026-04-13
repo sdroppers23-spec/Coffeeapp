@@ -95,9 +95,7 @@ class _PremiumFarmerCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // If countryEmoji starts with http, it's a bucket URL.
-    final flagUrl = (farmer.country == 'Unknown' || farmer.country == '')
-        ? null
-        : FlagConstants.getFlag(farmer.country);
+    final flagUrl = farmer.effectiveFlagUrl;
 
     const gold = Color(0xFFC8A96E);
 

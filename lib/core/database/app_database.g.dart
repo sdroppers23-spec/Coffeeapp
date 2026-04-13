@@ -422,6 +422,16 @@ class $LocalizedFarmersTable extends LocalizedFarmers
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
+  static const VerificationMeta _nameUkMeta = const VerificationMeta('nameUk');
+  @override
+  late final GeneratedColumn<String> nameUk = GeneratedColumn<String>(
+    'name_uk',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('Тут має бути ім\'я'),
+  );
   static const VerificationMeta _imageUrlMeta = const VerificationMeta(
     'imageUrl',
   );
@@ -429,21 +439,310 @@ class $LocalizedFarmersTable extends LocalizedFarmers
   late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
     'image_url',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
+    defaultValue: const Constant('Тут має бути фото'),
   );
-  static const VerificationMeta _countryEmojiMeta = const VerificationMeta(
-    'countryEmoji',
+  static const VerificationMeta _flagUrlMeta = const VerificationMeta(
+    'flagUrl',
   );
   @override
-  late final GeneratedColumn<String> countryEmoji = GeneratedColumn<String>(
-    'country_emoji',
+  late final GeneratedColumn<String> flagUrl = GeneratedColumn<String>(
+    'flag_url',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('Тут має бути прапор'),
+  );
+  static const VerificationMeta _descriptionHtmlUkMeta = const VerificationMeta(
+    'descriptionHtmlUk',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionHtmlUk =
+      GeneratedColumn<String>(
+        'description_html_uk',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: const Constant('Тут має бути опис'),
+      );
+  static const VerificationMeta _regionUkMeta = const VerificationMeta(
+    'regionUk',
+  );
+  @override
+  late final GeneratedColumn<String> regionUk = GeneratedColumn<String>(
+    'region_uk',
     aliasedName,
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _countryUkMeta = const VerificationMeta(
+    'countryUk',
+  );
+  @override
+  late final GeneratedColumn<String> countryUk = GeneratedColumn<String>(
+    'country_uk',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nameEnMeta = const VerificationMeta('nameEn');
+  @override
+  late final GeneratedColumn<String> nameEn = GeneratedColumn<String>(
+    'name_en',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionHtmlEnMeta = const VerificationMeta(
+    'descriptionHtmlEn',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionHtmlEn =
+      GeneratedColumn<String>(
+        'description_html_en',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _namePlMeta = const VerificationMeta('namePl');
+  @override
+  late final GeneratedColumn<String> namePl = GeneratedColumn<String>(
+    'name_pl',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionHtmlPlMeta = const VerificationMeta(
+    'descriptionHtmlPl',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionHtmlPl =
+      GeneratedColumn<String>(
+        'description_html_pl',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _nameDeMeta = const VerificationMeta('nameDe');
+  @override
+  late final GeneratedColumn<String> nameDe = GeneratedColumn<String>(
+    'name_de',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionHtmlDeMeta = const VerificationMeta(
+    'descriptionHtmlDe',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionHtmlDe =
+      GeneratedColumn<String>(
+        'description_html_de',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _nameFrMeta = const VerificationMeta('nameFr');
+  @override
+  late final GeneratedColumn<String> nameFr = GeneratedColumn<String>(
+    'name_fr',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionHtmlFrMeta = const VerificationMeta(
+    'descriptionHtmlFr',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionHtmlFr =
+      GeneratedColumn<String>(
+        'description_html_fr',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _nameEsMeta = const VerificationMeta('nameEs');
+  @override
+  late final GeneratedColumn<String> nameEs = GeneratedColumn<String>(
+    'name_es',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionHtmlEsMeta = const VerificationMeta(
+    'descriptionHtmlEs',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionHtmlEs =
+      GeneratedColumn<String>(
+        'description_html_es',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _nameItMeta = const VerificationMeta('nameIt');
+  @override
+  late final GeneratedColumn<String> nameIt = GeneratedColumn<String>(
+    'name_it',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionHtmlItMeta = const VerificationMeta(
+    'descriptionHtmlIt',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionHtmlIt =
+      GeneratedColumn<String>(
+        'description_html_it',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _namePtMeta = const VerificationMeta('namePt');
+  @override
+  late final GeneratedColumn<String> namePt = GeneratedColumn<String>(
+    'name_pt',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionHtmlPtMeta = const VerificationMeta(
+    'descriptionHtmlPt',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionHtmlPt =
+      GeneratedColumn<String>(
+        'description_html_pt',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _nameRoMeta = const VerificationMeta('nameRo');
+  @override
+  late final GeneratedColumn<String> nameRo = GeneratedColumn<String>(
+    'name_ro',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionHtmlRoMeta = const VerificationMeta(
+    'descriptionHtmlRo',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionHtmlRo =
+      GeneratedColumn<String>(
+        'description_html_ro',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _nameTrMeta = const VerificationMeta('nameTr');
+  @override
+  late final GeneratedColumn<String> nameTr = GeneratedColumn<String>(
+    'name_tr',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionHtmlTrMeta = const VerificationMeta(
+    'descriptionHtmlTr',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionHtmlTr =
+      GeneratedColumn<String>(
+        'description_html_tr',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _nameJaMeta = const VerificationMeta('nameJa');
+  @override
+  late final GeneratedColumn<String> nameJa = GeneratedColumn<String>(
+    'name_ja',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionHtmlJaMeta = const VerificationMeta(
+    'descriptionHtmlJa',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionHtmlJa =
+      GeneratedColumn<String>(
+        'description_html_ja',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _nameKoMeta = const VerificationMeta('nameKo');
+  @override
+  late final GeneratedColumn<String> nameKo = GeneratedColumn<String>(
+    'name_ko',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionHtmlKoMeta = const VerificationMeta(
+    'descriptionHtmlKo',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionHtmlKo =
+      GeneratedColumn<String>(
+        'description_html_ko',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _nameZhMeta = const VerificationMeta('nameZh');
+  @override
+  late final GeneratedColumn<String> nameZh = GeneratedColumn<String>(
+    'name_zh',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionHtmlZhMeta = const VerificationMeta(
+    'descriptionHtmlZh',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionHtmlZh =
+      GeneratedColumn<String>(
+        'description_html_zh',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _latitudeMeta = const VerificationMeta(
     'latitude',
   );
@@ -480,8 +779,36 @@ class $LocalizedFarmersTable extends LocalizedFarmers
   @override
   List<GeneratedColumn> get $columns => [
     id,
+    nameUk,
     imageUrl,
-    countryEmoji,
+    flagUrl,
+    descriptionHtmlUk,
+    regionUk,
+    countryUk,
+    nameEn,
+    descriptionHtmlEn,
+    namePl,
+    descriptionHtmlPl,
+    nameDe,
+    descriptionHtmlDe,
+    nameFr,
+    descriptionHtmlFr,
+    nameEs,
+    descriptionHtmlEs,
+    nameIt,
+    descriptionHtmlIt,
+    namePt,
+    descriptionHtmlPt,
+    nameRo,
+    descriptionHtmlRo,
+    nameTr,
+    descriptionHtmlTr,
+    nameJa,
+    descriptionHtmlJa,
+    nameKo,
+    descriptionHtmlKo,
+    nameZh,
+    descriptionHtmlZh,
     latitude,
     longitude,
     createdAt,
@@ -501,18 +828,222 @@ class $LocalizedFarmersTable extends LocalizedFarmers
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
+    if (data.containsKey('name_uk')) {
+      context.handle(
+        _nameUkMeta,
+        nameUk.isAcceptableOrUnknown(data['name_uk']!, _nameUkMeta),
+      );
+    }
     if (data.containsKey('image_url')) {
       context.handle(
         _imageUrlMeta,
         imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
       );
     }
-    if (data.containsKey('country_emoji')) {
+    if (data.containsKey('flag_url')) {
       context.handle(
-        _countryEmojiMeta,
-        countryEmoji.isAcceptableOrUnknown(
-          data['country_emoji']!,
-          _countryEmojiMeta,
+        _flagUrlMeta,
+        flagUrl.isAcceptableOrUnknown(data['flag_url']!, _flagUrlMeta),
+      );
+    }
+    if (data.containsKey('description_html_uk')) {
+      context.handle(
+        _descriptionHtmlUkMeta,
+        descriptionHtmlUk.isAcceptableOrUnknown(
+          data['description_html_uk']!,
+          _descriptionHtmlUkMeta,
+        ),
+      );
+    }
+    if (data.containsKey('region_uk')) {
+      context.handle(
+        _regionUkMeta,
+        regionUk.isAcceptableOrUnknown(data['region_uk']!, _regionUkMeta),
+      );
+    }
+    if (data.containsKey('country_uk')) {
+      context.handle(
+        _countryUkMeta,
+        countryUk.isAcceptableOrUnknown(data['country_uk']!, _countryUkMeta),
+      );
+    }
+    if (data.containsKey('name_en')) {
+      context.handle(
+        _nameEnMeta,
+        nameEn.isAcceptableOrUnknown(data['name_en']!, _nameEnMeta),
+      );
+    }
+    if (data.containsKey('description_html_en')) {
+      context.handle(
+        _descriptionHtmlEnMeta,
+        descriptionHtmlEn.isAcceptableOrUnknown(
+          data['description_html_en']!,
+          _descriptionHtmlEnMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name_pl')) {
+      context.handle(
+        _namePlMeta,
+        namePl.isAcceptableOrUnknown(data['name_pl']!, _namePlMeta),
+      );
+    }
+    if (data.containsKey('description_html_pl')) {
+      context.handle(
+        _descriptionHtmlPlMeta,
+        descriptionHtmlPl.isAcceptableOrUnknown(
+          data['description_html_pl']!,
+          _descriptionHtmlPlMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name_de')) {
+      context.handle(
+        _nameDeMeta,
+        nameDe.isAcceptableOrUnknown(data['name_de']!, _nameDeMeta),
+      );
+    }
+    if (data.containsKey('description_html_de')) {
+      context.handle(
+        _descriptionHtmlDeMeta,
+        descriptionHtmlDe.isAcceptableOrUnknown(
+          data['description_html_de']!,
+          _descriptionHtmlDeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name_fr')) {
+      context.handle(
+        _nameFrMeta,
+        nameFr.isAcceptableOrUnknown(data['name_fr']!, _nameFrMeta),
+      );
+    }
+    if (data.containsKey('description_html_fr')) {
+      context.handle(
+        _descriptionHtmlFrMeta,
+        descriptionHtmlFr.isAcceptableOrUnknown(
+          data['description_html_fr']!,
+          _descriptionHtmlFrMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name_es')) {
+      context.handle(
+        _nameEsMeta,
+        nameEs.isAcceptableOrUnknown(data['name_es']!, _nameEsMeta),
+      );
+    }
+    if (data.containsKey('description_html_es')) {
+      context.handle(
+        _descriptionHtmlEsMeta,
+        descriptionHtmlEs.isAcceptableOrUnknown(
+          data['description_html_es']!,
+          _descriptionHtmlEsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name_it')) {
+      context.handle(
+        _nameItMeta,
+        nameIt.isAcceptableOrUnknown(data['name_it']!, _nameItMeta),
+      );
+    }
+    if (data.containsKey('description_html_it')) {
+      context.handle(
+        _descriptionHtmlItMeta,
+        descriptionHtmlIt.isAcceptableOrUnknown(
+          data['description_html_it']!,
+          _descriptionHtmlItMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name_pt')) {
+      context.handle(
+        _namePtMeta,
+        namePt.isAcceptableOrUnknown(data['name_pt']!, _namePtMeta),
+      );
+    }
+    if (data.containsKey('description_html_pt')) {
+      context.handle(
+        _descriptionHtmlPtMeta,
+        descriptionHtmlPt.isAcceptableOrUnknown(
+          data['description_html_pt']!,
+          _descriptionHtmlPtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name_ro')) {
+      context.handle(
+        _nameRoMeta,
+        nameRo.isAcceptableOrUnknown(data['name_ro']!, _nameRoMeta),
+      );
+    }
+    if (data.containsKey('description_html_ro')) {
+      context.handle(
+        _descriptionHtmlRoMeta,
+        descriptionHtmlRo.isAcceptableOrUnknown(
+          data['description_html_ro']!,
+          _descriptionHtmlRoMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name_tr')) {
+      context.handle(
+        _nameTrMeta,
+        nameTr.isAcceptableOrUnknown(data['name_tr']!, _nameTrMeta),
+      );
+    }
+    if (data.containsKey('description_html_tr')) {
+      context.handle(
+        _descriptionHtmlTrMeta,
+        descriptionHtmlTr.isAcceptableOrUnknown(
+          data['description_html_tr']!,
+          _descriptionHtmlTrMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name_ja')) {
+      context.handle(
+        _nameJaMeta,
+        nameJa.isAcceptableOrUnknown(data['name_ja']!, _nameJaMeta),
+      );
+    }
+    if (data.containsKey('description_html_ja')) {
+      context.handle(
+        _descriptionHtmlJaMeta,
+        descriptionHtmlJa.isAcceptableOrUnknown(
+          data['description_html_ja']!,
+          _descriptionHtmlJaMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name_ko')) {
+      context.handle(
+        _nameKoMeta,
+        nameKo.isAcceptableOrUnknown(data['name_ko']!, _nameKoMeta),
+      );
+    }
+    if (data.containsKey('description_html_ko')) {
+      context.handle(
+        _descriptionHtmlKoMeta,
+        descriptionHtmlKo.isAcceptableOrUnknown(
+          data['description_html_ko']!,
+          _descriptionHtmlKoMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name_zh')) {
+      context.handle(
+        _nameZhMeta,
+        nameZh.isAcceptableOrUnknown(data['name_zh']!, _nameZhMeta),
+      );
+    }
+    if (data.containsKey('description_html_zh')) {
+      context.handle(
+        _descriptionHtmlZhMeta,
+        descriptionHtmlZh.isAcceptableOrUnknown(
+          data['description_html_zh']!,
+          _descriptionHtmlZhMeta,
         ),
       );
     }
@@ -547,13 +1078,125 @@ class $LocalizedFarmersTable extends LocalizedFarmers
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
+      nameUk: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_uk'],
+      )!,
       imageUrl: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}image_url'],
-      ),
-      countryEmoji: attachedDatabase.typeMapping.read(
+      )!,
+      flagUrl: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}country_emoji'],
+        data['${effectivePrefix}flag_url'],
+      )!,
+      descriptionHtmlUk: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_html_uk'],
+      )!,
+      regionUk: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}region_uk'],
+      ),
+      countryUk: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}country_uk'],
+      ),
+      nameEn: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_en'],
+      ),
+      descriptionHtmlEn: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_html_en'],
+      ),
+      namePl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_pl'],
+      ),
+      descriptionHtmlPl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_html_pl'],
+      ),
+      nameDe: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_de'],
+      ),
+      descriptionHtmlDe: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_html_de'],
+      ),
+      nameFr: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_fr'],
+      ),
+      descriptionHtmlFr: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_html_fr'],
+      ),
+      nameEs: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_es'],
+      ),
+      descriptionHtmlEs: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_html_es'],
+      ),
+      nameIt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_it'],
+      ),
+      descriptionHtmlIt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_html_it'],
+      ),
+      namePt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_pt'],
+      ),
+      descriptionHtmlPt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_html_pt'],
+      ),
+      nameRo: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_ro'],
+      ),
+      descriptionHtmlRo: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_html_ro'],
+      ),
+      nameTr: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_tr'],
+      ),
+      descriptionHtmlTr: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_html_tr'],
+      ),
+      nameJa: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_ja'],
+      ),
+      descriptionHtmlJa: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_html_ja'],
+      ),
+      nameKo: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_ko'],
+      ),
+      descriptionHtmlKo: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_html_ko'],
+      ),
+      nameZh: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_zh'],
+      ),
+      descriptionHtmlZh: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_html_zh'],
       ),
       latitude: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
@@ -578,15 +1221,71 @@ class $LocalizedFarmersTable extends LocalizedFarmers
 
 class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
   final int id;
-  final String? imageUrl;
-  final String? countryEmoji;
+  final String nameUk;
+  final String imageUrl;
+  final String flagUrl;
+  final String descriptionHtmlUk;
+  final String? regionUk;
+  final String? countryUk;
+  final String? nameEn;
+  final String? descriptionHtmlEn;
+  final String? namePl;
+  final String? descriptionHtmlPl;
+  final String? nameDe;
+  final String? descriptionHtmlDe;
+  final String? nameFr;
+  final String? descriptionHtmlFr;
+  final String? nameEs;
+  final String? descriptionHtmlEs;
+  final String? nameIt;
+  final String? descriptionHtmlIt;
+  final String? namePt;
+  final String? descriptionHtmlPt;
+  final String? nameRo;
+  final String? descriptionHtmlRo;
+  final String? nameTr;
+  final String? descriptionHtmlTr;
+  final String? nameJa;
+  final String? descriptionHtmlJa;
+  final String? nameKo;
+  final String? descriptionHtmlKo;
+  final String? nameZh;
+  final String? descriptionHtmlZh;
   final double? latitude;
   final double? longitude;
   final DateTime? createdAt;
   const LocalizedFarmer({
     required this.id,
-    this.imageUrl,
-    this.countryEmoji,
+    required this.nameUk,
+    required this.imageUrl,
+    required this.flagUrl,
+    required this.descriptionHtmlUk,
+    this.regionUk,
+    this.countryUk,
+    this.nameEn,
+    this.descriptionHtmlEn,
+    this.namePl,
+    this.descriptionHtmlPl,
+    this.nameDe,
+    this.descriptionHtmlDe,
+    this.nameFr,
+    this.descriptionHtmlFr,
+    this.nameEs,
+    this.descriptionHtmlEs,
+    this.nameIt,
+    this.descriptionHtmlIt,
+    this.namePt,
+    this.descriptionHtmlPt,
+    this.nameRo,
+    this.descriptionHtmlRo,
+    this.nameTr,
+    this.descriptionHtmlTr,
+    this.nameJa,
+    this.descriptionHtmlJa,
+    this.nameKo,
+    this.descriptionHtmlKo,
+    this.nameZh,
+    this.descriptionHtmlZh,
     this.latitude,
     this.longitude,
     this.createdAt,
@@ -595,11 +1294,87 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    if (!nullToAbsent || imageUrl != null) {
-      map['image_url'] = Variable<String>(imageUrl);
+    map['name_uk'] = Variable<String>(nameUk);
+    map['image_url'] = Variable<String>(imageUrl);
+    map['flag_url'] = Variable<String>(flagUrl);
+    map['description_html_uk'] = Variable<String>(descriptionHtmlUk);
+    if (!nullToAbsent || regionUk != null) {
+      map['region_uk'] = Variable<String>(regionUk);
     }
-    if (!nullToAbsent || countryEmoji != null) {
-      map['country_emoji'] = Variable<String>(countryEmoji);
+    if (!nullToAbsent || countryUk != null) {
+      map['country_uk'] = Variable<String>(countryUk);
+    }
+    if (!nullToAbsent || nameEn != null) {
+      map['name_en'] = Variable<String>(nameEn);
+    }
+    if (!nullToAbsent || descriptionHtmlEn != null) {
+      map['description_html_en'] = Variable<String>(descriptionHtmlEn);
+    }
+    if (!nullToAbsent || namePl != null) {
+      map['name_pl'] = Variable<String>(namePl);
+    }
+    if (!nullToAbsent || descriptionHtmlPl != null) {
+      map['description_html_pl'] = Variable<String>(descriptionHtmlPl);
+    }
+    if (!nullToAbsent || nameDe != null) {
+      map['name_de'] = Variable<String>(nameDe);
+    }
+    if (!nullToAbsent || descriptionHtmlDe != null) {
+      map['description_html_de'] = Variable<String>(descriptionHtmlDe);
+    }
+    if (!nullToAbsent || nameFr != null) {
+      map['name_fr'] = Variable<String>(nameFr);
+    }
+    if (!nullToAbsent || descriptionHtmlFr != null) {
+      map['description_html_fr'] = Variable<String>(descriptionHtmlFr);
+    }
+    if (!nullToAbsent || nameEs != null) {
+      map['name_es'] = Variable<String>(nameEs);
+    }
+    if (!nullToAbsent || descriptionHtmlEs != null) {
+      map['description_html_es'] = Variable<String>(descriptionHtmlEs);
+    }
+    if (!nullToAbsent || nameIt != null) {
+      map['name_it'] = Variable<String>(nameIt);
+    }
+    if (!nullToAbsent || descriptionHtmlIt != null) {
+      map['description_html_it'] = Variable<String>(descriptionHtmlIt);
+    }
+    if (!nullToAbsent || namePt != null) {
+      map['name_pt'] = Variable<String>(namePt);
+    }
+    if (!nullToAbsent || descriptionHtmlPt != null) {
+      map['description_html_pt'] = Variable<String>(descriptionHtmlPt);
+    }
+    if (!nullToAbsent || nameRo != null) {
+      map['name_ro'] = Variable<String>(nameRo);
+    }
+    if (!nullToAbsent || descriptionHtmlRo != null) {
+      map['description_html_ro'] = Variable<String>(descriptionHtmlRo);
+    }
+    if (!nullToAbsent || nameTr != null) {
+      map['name_tr'] = Variable<String>(nameTr);
+    }
+    if (!nullToAbsent || descriptionHtmlTr != null) {
+      map['description_html_tr'] = Variable<String>(descriptionHtmlTr);
+    }
+    if (!nullToAbsent || nameJa != null) {
+      map['name_ja'] = Variable<String>(nameJa);
+    }
+    if (!nullToAbsent || descriptionHtmlJa != null) {
+      map['description_html_ja'] = Variable<String>(descriptionHtmlJa);
+    }
+    if (!nullToAbsent || nameKo != null) {
+      map['name_ko'] = Variable<String>(nameKo);
+    }
+    if (!nullToAbsent || descriptionHtmlKo != null) {
+      map['description_html_ko'] = Variable<String>(descriptionHtmlKo);
+    }
+    if (!nullToAbsent || nameZh != null) {
+      map['name_zh'] = Variable<String>(nameZh);
+    }
+    if (!nullToAbsent || descriptionHtmlZh != null) {
+      map['description_html_zh'] = Variable<String>(descriptionHtmlZh);
     }
     if (!nullToAbsent || latitude != null) {
       map['latitude'] = Variable<double>(latitude);
@@ -616,12 +1391,88 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
   LocalizedFarmersCompanion toCompanion(bool nullToAbsent) {
     return LocalizedFarmersCompanion(
       id: Value(id),
-      imageUrl: imageUrl == null && nullToAbsent
+      nameUk: Value(nameUk),
+      imageUrl: Value(imageUrl),
+      flagUrl: Value(flagUrl),
+      descriptionHtmlUk: Value(descriptionHtmlUk),
+      regionUk: regionUk == null && nullToAbsent
           ? const Value.absent()
-          : Value(imageUrl),
-      countryEmoji: countryEmoji == null && nullToAbsent
+          : Value(regionUk),
+      countryUk: countryUk == null && nullToAbsent
           ? const Value.absent()
-          : Value(countryEmoji),
+          : Value(countryUk),
+      nameEn: nameEn == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameEn),
+      descriptionHtmlEn: descriptionHtmlEn == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionHtmlEn),
+      namePl: namePl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(namePl),
+      descriptionHtmlPl: descriptionHtmlPl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionHtmlPl),
+      nameDe: nameDe == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameDe),
+      descriptionHtmlDe: descriptionHtmlDe == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionHtmlDe),
+      nameFr: nameFr == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameFr),
+      descriptionHtmlFr: descriptionHtmlFr == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionHtmlFr),
+      nameEs: nameEs == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameEs),
+      descriptionHtmlEs: descriptionHtmlEs == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionHtmlEs),
+      nameIt: nameIt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameIt),
+      descriptionHtmlIt: descriptionHtmlIt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionHtmlIt),
+      namePt: namePt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(namePt),
+      descriptionHtmlPt: descriptionHtmlPt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionHtmlPt),
+      nameRo: nameRo == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameRo),
+      descriptionHtmlRo: descriptionHtmlRo == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionHtmlRo),
+      nameTr: nameTr == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameTr),
+      descriptionHtmlTr: descriptionHtmlTr == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionHtmlTr),
+      nameJa: nameJa == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameJa),
+      descriptionHtmlJa: descriptionHtmlJa == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionHtmlJa),
+      nameKo: nameKo == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameKo),
+      descriptionHtmlKo: descriptionHtmlKo == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionHtmlKo),
+      nameZh: nameZh == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameZh),
+      descriptionHtmlZh: descriptionHtmlZh == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionHtmlZh),
       latitude: latitude == null && nullToAbsent
           ? const Value.absent()
           : Value(latitude),
@@ -641,8 +1492,60 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return LocalizedFarmer(
       id: serializer.fromJson<int>(json['id']),
-      imageUrl: serializer.fromJson<String?>(json['imageUrl']),
-      countryEmoji: serializer.fromJson<String?>(json['countryEmoji']),
+      nameUk: serializer.fromJson<String>(json['nameUk']),
+      imageUrl: serializer.fromJson<String>(json['imageUrl']),
+      flagUrl: serializer.fromJson<String>(json['flagUrl']),
+      descriptionHtmlUk: serializer.fromJson<String>(json['descriptionHtmlUk']),
+      regionUk: serializer.fromJson<String?>(json['regionUk']),
+      countryUk: serializer.fromJson<String?>(json['countryUk']),
+      nameEn: serializer.fromJson<String?>(json['nameEn']),
+      descriptionHtmlEn: serializer.fromJson<String?>(
+        json['descriptionHtmlEn'],
+      ),
+      namePl: serializer.fromJson<String?>(json['namePl']),
+      descriptionHtmlPl: serializer.fromJson<String?>(
+        json['descriptionHtmlPl'],
+      ),
+      nameDe: serializer.fromJson<String?>(json['nameDe']),
+      descriptionHtmlDe: serializer.fromJson<String?>(
+        json['descriptionHtmlDe'],
+      ),
+      nameFr: serializer.fromJson<String?>(json['nameFr']),
+      descriptionHtmlFr: serializer.fromJson<String?>(
+        json['descriptionHtmlFr'],
+      ),
+      nameEs: serializer.fromJson<String?>(json['nameEs']),
+      descriptionHtmlEs: serializer.fromJson<String?>(
+        json['descriptionHtmlEs'],
+      ),
+      nameIt: serializer.fromJson<String?>(json['nameIt']),
+      descriptionHtmlIt: serializer.fromJson<String?>(
+        json['descriptionHtmlIt'],
+      ),
+      namePt: serializer.fromJson<String?>(json['namePt']),
+      descriptionHtmlPt: serializer.fromJson<String?>(
+        json['descriptionHtmlPt'],
+      ),
+      nameRo: serializer.fromJson<String?>(json['nameRo']),
+      descriptionHtmlRo: serializer.fromJson<String?>(
+        json['descriptionHtmlRo'],
+      ),
+      nameTr: serializer.fromJson<String?>(json['nameTr']),
+      descriptionHtmlTr: serializer.fromJson<String?>(
+        json['descriptionHtmlTr'],
+      ),
+      nameJa: serializer.fromJson<String?>(json['nameJa']),
+      descriptionHtmlJa: serializer.fromJson<String?>(
+        json['descriptionHtmlJa'],
+      ),
+      nameKo: serializer.fromJson<String?>(json['nameKo']),
+      descriptionHtmlKo: serializer.fromJson<String?>(
+        json['descriptionHtmlKo'],
+      ),
+      nameZh: serializer.fromJson<String?>(json['nameZh']),
+      descriptionHtmlZh: serializer.fromJson<String?>(
+        json['descriptionHtmlZh'],
+      ),
       latitude: serializer.fromJson<double?>(json['latitude']),
       longitude: serializer.fromJson<double?>(json['longitude']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
@@ -653,8 +1556,36 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'imageUrl': serializer.toJson<String?>(imageUrl),
-      'countryEmoji': serializer.toJson<String?>(countryEmoji),
+      'nameUk': serializer.toJson<String>(nameUk),
+      'imageUrl': serializer.toJson<String>(imageUrl),
+      'flagUrl': serializer.toJson<String>(flagUrl),
+      'descriptionHtmlUk': serializer.toJson<String>(descriptionHtmlUk),
+      'regionUk': serializer.toJson<String?>(regionUk),
+      'countryUk': serializer.toJson<String?>(countryUk),
+      'nameEn': serializer.toJson<String?>(nameEn),
+      'descriptionHtmlEn': serializer.toJson<String?>(descriptionHtmlEn),
+      'namePl': serializer.toJson<String?>(namePl),
+      'descriptionHtmlPl': serializer.toJson<String?>(descriptionHtmlPl),
+      'nameDe': serializer.toJson<String?>(nameDe),
+      'descriptionHtmlDe': serializer.toJson<String?>(descriptionHtmlDe),
+      'nameFr': serializer.toJson<String?>(nameFr),
+      'descriptionHtmlFr': serializer.toJson<String?>(descriptionHtmlFr),
+      'nameEs': serializer.toJson<String?>(nameEs),
+      'descriptionHtmlEs': serializer.toJson<String?>(descriptionHtmlEs),
+      'nameIt': serializer.toJson<String?>(nameIt),
+      'descriptionHtmlIt': serializer.toJson<String?>(descriptionHtmlIt),
+      'namePt': serializer.toJson<String?>(namePt),
+      'descriptionHtmlPt': serializer.toJson<String?>(descriptionHtmlPt),
+      'nameRo': serializer.toJson<String?>(nameRo),
+      'descriptionHtmlRo': serializer.toJson<String?>(descriptionHtmlRo),
+      'nameTr': serializer.toJson<String?>(nameTr),
+      'descriptionHtmlTr': serializer.toJson<String?>(descriptionHtmlTr),
+      'nameJa': serializer.toJson<String?>(nameJa),
+      'descriptionHtmlJa': serializer.toJson<String?>(descriptionHtmlJa),
+      'nameKo': serializer.toJson<String?>(nameKo),
+      'descriptionHtmlKo': serializer.toJson<String?>(descriptionHtmlKo),
+      'nameZh': serializer.toJson<String?>(nameZh),
+      'descriptionHtmlZh': serializer.toJson<String?>(descriptionHtmlZh),
       'latitude': serializer.toJson<double?>(latitude),
       'longitude': serializer.toJson<double?>(longitude),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
@@ -663,15 +1594,95 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
 
   LocalizedFarmer copyWith({
     int? id,
-    Value<String?> imageUrl = const Value.absent(),
-    Value<String?> countryEmoji = const Value.absent(),
+    String? nameUk,
+    String? imageUrl,
+    String? flagUrl,
+    String? descriptionHtmlUk,
+    Value<String?> regionUk = const Value.absent(),
+    Value<String?> countryUk = const Value.absent(),
+    Value<String?> nameEn = const Value.absent(),
+    Value<String?> descriptionHtmlEn = const Value.absent(),
+    Value<String?> namePl = const Value.absent(),
+    Value<String?> descriptionHtmlPl = const Value.absent(),
+    Value<String?> nameDe = const Value.absent(),
+    Value<String?> descriptionHtmlDe = const Value.absent(),
+    Value<String?> nameFr = const Value.absent(),
+    Value<String?> descriptionHtmlFr = const Value.absent(),
+    Value<String?> nameEs = const Value.absent(),
+    Value<String?> descriptionHtmlEs = const Value.absent(),
+    Value<String?> nameIt = const Value.absent(),
+    Value<String?> descriptionHtmlIt = const Value.absent(),
+    Value<String?> namePt = const Value.absent(),
+    Value<String?> descriptionHtmlPt = const Value.absent(),
+    Value<String?> nameRo = const Value.absent(),
+    Value<String?> descriptionHtmlRo = const Value.absent(),
+    Value<String?> nameTr = const Value.absent(),
+    Value<String?> descriptionHtmlTr = const Value.absent(),
+    Value<String?> nameJa = const Value.absent(),
+    Value<String?> descriptionHtmlJa = const Value.absent(),
+    Value<String?> nameKo = const Value.absent(),
+    Value<String?> descriptionHtmlKo = const Value.absent(),
+    Value<String?> nameZh = const Value.absent(),
+    Value<String?> descriptionHtmlZh = const Value.absent(),
     Value<double?> latitude = const Value.absent(),
     Value<double?> longitude = const Value.absent(),
     Value<DateTime?> createdAt = const Value.absent(),
   }) => LocalizedFarmer(
     id: id ?? this.id,
-    imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
-    countryEmoji: countryEmoji.present ? countryEmoji.value : this.countryEmoji,
+    nameUk: nameUk ?? this.nameUk,
+    imageUrl: imageUrl ?? this.imageUrl,
+    flagUrl: flagUrl ?? this.flagUrl,
+    descriptionHtmlUk: descriptionHtmlUk ?? this.descriptionHtmlUk,
+    regionUk: regionUk.present ? regionUk.value : this.regionUk,
+    countryUk: countryUk.present ? countryUk.value : this.countryUk,
+    nameEn: nameEn.present ? nameEn.value : this.nameEn,
+    descriptionHtmlEn: descriptionHtmlEn.present
+        ? descriptionHtmlEn.value
+        : this.descriptionHtmlEn,
+    namePl: namePl.present ? namePl.value : this.namePl,
+    descriptionHtmlPl: descriptionHtmlPl.present
+        ? descriptionHtmlPl.value
+        : this.descriptionHtmlPl,
+    nameDe: nameDe.present ? nameDe.value : this.nameDe,
+    descriptionHtmlDe: descriptionHtmlDe.present
+        ? descriptionHtmlDe.value
+        : this.descriptionHtmlDe,
+    nameFr: nameFr.present ? nameFr.value : this.nameFr,
+    descriptionHtmlFr: descriptionHtmlFr.present
+        ? descriptionHtmlFr.value
+        : this.descriptionHtmlFr,
+    nameEs: nameEs.present ? nameEs.value : this.nameEs,
+    descriptionHtmlEs: descriptionHtmlEs.present
+        ? descriptionHtmlEs.value
+        : this.descriptionHtmlEs,
+    nameIt: nameIt.present ? nameIt.value : this.nameIt,
+    descriptionHtmlIt: descriptionHtmlIt.present
+        ? descriptionHtmlIt.value
+        : this.descriptionHtmlIt,
+    namePt: namePt.present ? namePt.value : this.namePt,
+    descriptionHtmlPt: descriptionHtmlPt.present
+        ? descriptionHtmlPt.value
+        : this.descriptionHtmlPt,
+    nameRo: nameRo.present ? nameRo.value : this.nameRo,
+    descriptionHtmlRo: descriptionHtmlRo.present
+        ? descriptionHtmlRo.value
+        : this.descriptionHtmlRo,
+    nameTr: nameTr.present ? nameTr.value : this.nameTr,
+    descriptionHtmlTr: descriptionHtmlTr.present
+        ? descriptionHtmlTr.value
+        : this.descriptionHtmlTr,
+    nameJa: nameJa.present ? nameJa.value : this.nameJa,
+    descriptionHtmlJa: descriptionHtmlJa.present
+        ? descriptionHtmlJa.value
+        : this.descriptionHtmlJa,
+    nameKo: nameKo.present ? nameKo.value : this.nameKo,
+    descriptionHtmlKo: descriptionHtmlKo.present
+        ? descriptionHtmlKo.value
+        : this.descriptionHtmlKo,
+    nameZh: nameZh.present ? nameZh.value : this.nameZh,
+    descriptionHtmlZh: descriptionHtmlZh.present
+        ? descriptionHtmlZh.value
+        : this.descriptionHtmlZh,
     latitude: latitude.present ? latitude.value : this.latitude,
     longitude: longitude.present ? longitude.value : this.longitude,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
@@ -679,10 +1690,62 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
   LocalizedFarmer copyWithCompanion(LocalizedFarmersCompanion data) {
     return LocalizedFarmer(
       id: data.id.present ? data.id.value : this.id,
+      nameUk: data.nameUk.present ? data.nameUk.value : this.nameUk,
       imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
-      countryEmoji: data.countryEmoji.present
-          ? data.countryEmoji.value
-          : this.countryEmoji,
+      flagUrl: data.flagUrl.present ? data.flagUrl.value : this.flagUrl,
+      descriptionHtmlUk: data.descriptionHtmlUk.present
+          ? data.descriptionHtmlUk.value
+          : this.descriptionHtmlUk,
+      regionUk: data.regionUk.present ? data.regionUk.value : this.regionUk,
+      countryUk: data.countryUk.present ? data.countryUk.value : this.countryUk,
+      nameEn: data.nameEn.present ? data.nameEn.value : this.nameEn,
+      descriptionHtmlEn: data.descriptionHtmlEn.present
+          ? data.descriptionHtmlEn.value
+          : this.descriptionHtmlEn,
+      namePl: data.namePl.present ? data.namePl.value : this.namePl,
+      descriptionHtmlPl: data.descriptionHtmlPl.present
+          ? data.descriptionHtmlPl.value
+          : this.descriptionHtmlPl,
+      nameDe: data.nameDe.present ? data.nameDe.value : this.nameDe,
+      descriptionHtmlDe: data.descriptionHtmlDe.present
+          ? data.descriptionHtmlDe.value
+          : this.descriptionHtmlDe,
+      nameFr: data.nameFr.present ? data.nameFr.value : this.nameFr,
+      descriptionHtmlFr: data.descriptionHtmlFr.present
+          ? data.descriptionHtmlFr.value
+          : this.descriptionHtmlFr,
+      nameEs: data.nameEs.present ? data.nameEs.value : this.nameEs,
+      descriptionHtmlEs: data.descriptionHtmlEs.present
+          ? data.descriptionHtmlEs.value
+          : this.descriptionHtmlEs,
+      nameIt: data.nameIt.present ? data.nameIt.value : this.nameIt,
+      descriptionHtmlIt: data.descriptionHtmlIt.present
+          ? data.descriptionHtmlIt.value
+          : this.descriptionHtmlIt,
+      namePt: data.namePt.present ? data.namePt.value : this.namePt,
+      descriptionHtmlPt: data.descriptionHtmlPt.present
+          ? data.descriptionHtmlPt.value
+          : this.descriptionHtmlPt,
+      nameRo: data.nameRo.present ? data.nameRo.value : this.nameRo,
+      descriptionHtmlRo: data.descriptionHtmlRo.present
+          ? data.descriptionHtmlRo.value
+          : this.descriptionHtmlRo,
+      nameTr: data.nameTr.present ? data.nameTr.value : this.nameTr,
+      descriptionHtmlTr: data.descriptionHtmlTr.present
+          ? data.descriptionHtmlTr.value
+          : this.descriptionHtmlTr,
+      nameJa: data.nameJa.present ? data.nameJa.value : this.nameJa,
+      descriptionHtmlJa: data.descriptionHtmlJa.present
+          ? data.descriptionHtmlJa.value
+          : this.descriptionHtmlJa,
+      nameKo: data.nameKo.present ? data.nameKo.value : this.nameKo,
+      descriptionHtmlKo: data.descriptionHtmlKo.present
+          ? data.descriptionHtmlKo.value
+          : this.descriptionHtmlKo,
+      nameZh: data.nameZh.present ? data.nameZh.value : this.nameZh,
+      descriptionHtmlZh: data.descriptionHtmlZh.present
+          ? data.descriptionHtmlZh.value
+          : this.descriptionHtmlZh,
       latitude: data.latitude.present ? data.latitude.value : this.latitude,
       longitude: data.longitude.present ? data.longitude.value : this.longitude,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
@@ -693,8 +1756,36 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
   String toString() {
     return (StringBuffer('LocalizedFarmer(')
           ..write('id: $id, ')
+          ..write('nameUk: $nameUk, ')
           ..write('imageUrl: $imageUrl, ')
-          ..write('countryEmoji: $countryEmoji, ')
+          ..write('flagUrl: $flagUrl, ')
+          ..write('descriptionHtmlUk: $descriptionHtmlUk, ')
+          ..write('regionUk: $regionUk, ')
+          ..write('countryUk: $countryUk, ')
+          ..write('nameEn: $nameEn, ')
+          ..write('descriptionHtmlEn: $descriptionHtmlEn, ')
+          ..write('namePl: $namePl, ')
+          ..write('descriptionHtmlPl: $descriptionHtmlPl, ')
+          ..write('nameDe: $nameDe, ')
+          ..write('descriptionHtmlDe: $descriptionHtmlDe, ')
+          ..write('nameFr: $nameFr, ')
+          ..write('descriptionHtmlFr: $descriptionHtmlFr, ')
+          ..write('nameEs: $nameEs, ')
+          ..write('descriptionHtmlEs: $descriptionHtmlEs, ')
+          ..write('nameIt: $nameIt, ')
+          ..write('descriptionHtmlIt: $descriptionHtmlIt, ')
+          ..write('namePt: $namePt, ')
+          ..write('descriptionHtmlPt: $descriptionHtmlPt, ')
+          ..write('nameRo: $nameRo, ')
+          ..write('descriptionHtmlRo: $descriptionHtmlRo, ')
+          ..write('nameTr: $nameTr, ')
+          ..write('descriptionHtmlTr: $descriptionHtmlTr, ')
+          ..write('nameJa: $nameJa, ')
+          ..write('descriptionHtmlJa: $descriptionHtmlJa, ')
+          ..write('nameKo: $nameKo, ')
+          ..write('descriptionHtmlKo: $descriptionHtmlKo, ')
+          ..write('nameZh: $nameZh, ')
+          ..write('descriptionHtmlZh: $descriptionHtmlZh, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
           ..write('createdAt: $createdAt')
@@ -703,15 +1794,77 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, imageUrl, countryEmoji, latitude, longitude, createdAt);
+  int get hashCode => Object.hashAll([
+    id,
+    nameUk,
+    imageUrl,
+    flagUrl,
+    descriptionHtmlUk,
+    regionUk,
+    countryUk,
+    nameEn,
+    descriptionHtmlEn,
+    namePl,
+    descriptionHtmlPl,
+    nameDe,
+    descriptionHtmlDe,
+    nameFr,
+    descriptionHtmlFr,
+    nameEs,
+    descriptionHtmlEs,
+    nameIt,
+    descriptionHtmlIt,
+    namePt,
+    descriptionHtmlPt,
+    nameRo,
+    descriptionHtmlRo,
+    nameTr,
+    descriptionHtmlTr,
+    nameJa,
+    descriptionHtmlJa,
+    nameKo,
+    descriptionHtmlKo,
+    nameZh,
+    descriptionHtmlZh,
+    latitude,
+    longitude,
+    createdAt,
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is LocalizedFarmer &&
           other.id == this.id &&
+          other.nameUk == this.nameUk &&
           other.imageUrl == this.imageUrl &&
-          other.countryEmoji == this.countryEmoji &&
+          other.flagUrl == this.flagUrl &&
+          other.descriptionHtmlUk == this.descriptionHtmlUk &&
+          other.regionUk == this.regionUk &&
+          other.countryUk == this.countryUk &&
+          other.nameEn == this.nameEn &&
+          other.descriptionHtmlEn == this.descriptionHtmlEn &&
+          other.namePl == this.namePl &&
+          other.descriptionHtmlPl == this.descriptionHtmlPl &&
+          other.nameDe == this.nameDe &&
+          other.descriptionHtmlDe == this.descriptionHtmlDe &&
+          other.nameFr == this.nameFr &&
+          other.descriptionHtmlFr == this.descriptionHtmlFr &&
+          other.nameEs == this.nameEs &&
+          other.descriptionHtmlEs == this.descriptionHtmlEs &&
+          other.nameIt == this.nameIt &&
+          other.descriptionHtmlIt == this.descriptionHtmlIt &&
+          other.namePt == this.namePt &&
+          other.descriptionHtmlPt == this.descriptionHtmlPt &&
+          other.nameRo == this.nameRo &&
+          other.descriptionHtmlRo == this.descriptionHtmlRo &&
+          other.nameTr == this.nameTr &&
+          other.descriptionHtmlTr == this.descriptionHtmlTr &&
+          other.nameJa == this.nameJa &&
+          other.descriptionHtmlJa == this.descriptionHtmlJa &&
+          other.nameKo == this.nameKo &&
+          other.descriptionHtmlKo == this.descriptionHtmlKo &&
+          other.nameZh == this.nameZh &&
+          other.descriptionHtmlZh == this.descriptionHtmlZh &&
           other.latitude == this.latitude &&
           other.longitude == this.longitude &&
           other.createdAt == this.createdAt);
@@ -719,39 +1872,179 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
 
 class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
   final Value<int> id;
-  final Value<String?> imageUrl;
-  final Value<String?> countryEmoji;
+  final Value<String> nameUk;
+  final Value<String> imageUrl;
+  final Value<String> flagUrl;
+  final Value<String> descriptionHtmlUk;
+  final Value<String?> regionUk;
+  final Value<String?> countryUk;
+  final Value<String?> nameEn;
+  final Value<String?> descriptionHtmlEn;
+  final Value<String?> namePl;
+  final Value<String?> descriptionHtmlPl;
+  final Value<String?> nameDe;
+  final Value<String?> descriptionHtmlDe;
+  final Value<String?> nameFr;
+  final Value<String?> descriptionHtmlFr;
+  final Value<String?> nameEs;
+  final Value<String?> descriptionHtmlEs;
+  final Value<String?> nameIt;
+  final Value<String?> descriptionHtmlIt;
+  final Value<String?> namePt;
+  final Value<String?> descriptionHtmlPt;
+  final Value<String?> nameRo;
+  final Value<String?> descriptionHtmlRo;
+  final Value<String?> nameTr;
+  final Value<String?> descriptionHtmlTr;
+  final Value<String?> nameJa;
+  final Value<String?> descriptionHtmlJa;
+  final Value<String?> nameKo;
+  final Value<String?> descriptionHtmlKo;
+  final Value<String?> nameZh;
+  final Value<String?> descriptionHtmlZh;
   final Value<double?> latitude;
   final Value<double?> longitude;
   final Value<DateTime?> createdAt;
   const LocalizedFarmersCompanion({
     this.id = const Value.absent(),
+    this.nameUk = const Value.absent(),
     this.imageUrl = const Value.absent(),
-    this.countryEmoji = const Value.absent(),
+    this.flagUrl = const Value.absent(),
+    this.descriptionHtmlUk = const Value.absent(),
+    this.regionUk = const Value.absent(),
+    this.countryUk = const Value.absent(),
+    this.nameEn = const Value.absent(),
+    this.descriptionHtmlEn = const Value.absent(),
+    this.namePl = const Value.absent(),
+    this.descriptionHtmlPl = const Value.absent(),
+    this.nameDe = const Value.absent(),
+    this.descriptionHtmlDe = const Value.absent(),
+    this.nameFr = const Value.absent(),
+    this.descriptionHtmlFr = const Value.absent(),
+    this.nameEs = const Value.absent(),
+    this.descriptionHtmlEs = const Value.absent(),
+    this.nameIt = const Value.absent(),
+    this.descriptionHtmlIt = const Value.absent(),
+    this.namePt = const Value.absent(),
+    this.descriptionHtmlPt = const Value.absent(),
+    this.nameRo = const Value.absent(),
+    this.descriptionHtmlRo = const Value.absent(),
+    this.nameTr = const Value.absent(),
+    this.descriptionHtmlTr = const Value.absent(),
+    this.nameJa = const Value.absent(),
+    this.descriptionHtmlJa = const Value.absent(),
+    this.nameKo = const Value.absent(),
+    this.descriptionHtmlKo = const Value.absent(),
+    this.nameZh = const Value.absent(),
+    this.descriptionHtmlZh = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   LocalizedFarmersCompanion.insert({
     this.id = const Value.absent(),
+    this.nameUk = const Value.absent(),
     this.imageUrl = const Value.absent(),
-    this.countryEmoji = const Value.absent(),
+    this.flagUrl = const Value.absent(),
+    this.descriptionHtmlUk = const Value.absent(),
+    this.regionUk = const Value.absent(),
+    this.countryUk = const Value.absent(),
+    this.nameEn = const Value.absent(),
+    this.descriptionHtmlEn = const Value.absent(),
+    this.namePl = const Value.absent(),
+    this.descriptionHtmlPl = const Value.absent(),
+    this.nameDe = const Value.absent(),
+    this.descriptionHtmlDe = const Value.absent(),
+    this.nameFr = const Value.absent(),
+    this.descriptionHtmlFr = const Value.absent(),
+    this.nameEs = const Value.absent(),
+    this.descriptionHtmlEs = const Value.absent(),
+    this.nameIt = const Value.absent(),
+    this.descriptionHtmlIt = const Value.absent(),
+    this.namePt = const Value.absent(),
+    this.descriptionHtmlPt = const Value.absent(),
+    this.nameRo = const Value.absent(),
+    this.descriptionHtmlRo = const Value.absent(),
+    this.nameTr = const Value.absent(),
+    this.descriptionHtmlTr = const Value.absent(),
+    this.nameJa = const Value.absent(),
+    this.descriptionHtmlJa = const Value.absent(),
+    this.nameKo = const Value.absent(),
+    this.descriptionHtmlKo = const Value.absent(),
+    this.nameZh = const Value.absent(),
+    this.descriptionHtmlZh = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   static Insertable<LocalizedFarmer> custom({
     Expression<int>? id,
+    Expression<String>? nameUk,
     Expression<String>? imageUrl,
-    Expression<String>? countryEmoji,
+    Expression<String>? flagUrl,
+    Expression<String>? descriptionHtmlUk,
+    Expression<String>? regionUk,
+    Expression<String>? countryUk,
+    Expression<String>? nameEn,
+    Expression<String>? descriptionHtmlEn,
+    Expression<String>? namePl,
+    Expression<String>? descriptionHtmlPl,
+    Expression<String>? nameDe,
+    Expression<String>? descriptionHtmlDe,
+    Expression<String>? nameFr,
+    Expression<String>? descriptionHtmlFr,
+    Expression<String>? nameEs,
+    Expression<String>? descriptionHtmlEs,
+    Expression<String>? nameIt,
+    Expression<String>? descriptionHtmlIt,
+    Expression<String>? namePt,
+    Expression<String>? descriptionHtmlPt,
+    Expression<String>? nameRo,
+    Expression<String>? descriptionHtmlRo,
+    Expression<String>? nameTr,
+    Expression<String>? descriptionHtmlTr,
+    Expression<String>? nameJa,
+    Expression<String>? descriptionHtmlJa,
+    Expression<String>? nameKo,
+    Expression<String>? descriptionHtmlKo,
+    Expression<String>? nameZh,
+    Expression<String>? descriptionHtmlZh,
     Expression<double>? latitude,
     Expression<double>? longitude,
     Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (nameUk != null) 'name_uk': nameUk,
       if (imageUrl != null) 'image_url': imageUrl,
-      if (countryEmoji != null) 'country_emoji': countryEmoji,
+      if (flagUrl != null) 'flag_url': flagUrl,
+      if (descriptionHtmlUk != null) 'description_html_uk': descriptionHtmlUk,
+      if (regionUk != null) 'region_uk': regionUk,
+      if (countryUk != null) 'country_uk': countryUk,
+      if (nameEn != null) 'name_en': nameEn,
+      if (descriptionHtmlEn != null) 'description_html_en': descriptionHtmlEn,
+      if (namePl != null) 'name_pl': namePl,
+      if (descriptionHtmlPl != null) 'description_html_pl': descriptionHtmlPl,
+      if (nameDe != null) 'name_de': nameDe,
+      if (descriptionHtmlDe != null) 'description_html_de': descriptionHtmlDe,
+      if (nameFr != null) 'name_fr': nameFr,
+      if (descriptionHtmlFr != null) 'description_html_fr': descriptionHtmlFr,
+      if (nameEs != null) 'name_es': nameEs,
+      if (descriptionHtmlEs != null) 'description_html_es': descriptionHtmlEs,
+      if (nameIt != null) 'name_it': nameIt,
+      if (descriptionHtmlIt != null) 'description_html_it': descriptionHtmlIt,
+      if (namePt != null) 'name_pt': namePt,
+      if (descriptionHtmlPt != null) 'description_html_pt': descriptionHtmlPt,
+      if (nameRo != null) 'name_ro': nameRo,
+      if (descriptionHtmlRo != null) 'description_html_ro': descriptionHtmlRo,
+      if (nameTr != null) 'name_tr': nameTr,
+      if (descriptionHtmlTr != null) 'description_html_tr': descriptionHtmlTr,
+      if (nameJa != null) 'name_ja': nameJa,
+      if (descriptionHtmlJa != null) 'description_html_ja': descriptionHtmlJa,
+      if (nameKo != null) 'name_ko': nameKo,
+      if (descriptionHtmlKo != null) 'description_html_ko': descriptionHtmlKo,
+      if (nameZh != null) 'name_zh': nameZh,
+      if (descriptionHtmlZh != null) 'description_html_zh': descriptionHtmlZh,
       if (latitude != null) 'latitude': latitude,
       if (longitude != null) 'longitude': longitude,
       if (createdAt != null) 'created_at': createdAt,
@@ -760,16 +2053,72 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
 
   LocalizedFarmersCompanion copyWith({
     Value<int>? id,
-    Value<String?>? imageUrl,
-    Value<String?>? countryEmoji,
+    Value<String>? nameUk,
+    Value<String>? imageUrl,
+    Value<String>? flagUrl,
+    Value<String>? descriptionHtmlUk,
+    Value<String?>? regionUk,
+    Value<String?>? countryUk,
+    Value<String?>? nameEn,
+    Value<String?>? descriptionHtmlEn,
+    Value<String?>? namePl,
+    Value<String?>? descriptionHtmlPl,
+    Value<String?>? nameDe,
+    Value<String?>? descriptionHtmlDe,
+    Value<String?>? nameFr,
+    Value<String?>? descriptionHtmlFr,
+    Value<String?>? nameEs,
+    Value<String?>? descriptionHtmlEs,
+    Value<String?>? nameIt,
+    Value<String?>? descriptionHtmlIt,
+    Value<String?>? namePt,
+    Value<String?>? descriptionHtmlPt,
+    Value<String?>? nameRo,
+    Value<String?>? descriptionHtmlRo,
+    Value<String?>? nameTr,
+    Value<String?>? descriptionHtmlTr,
+    Value<String?>? nameJa,
+    Value<String?>? descriptionHtmlJa,
+    Value<String?>? nameKo,
+    Value<String?>? descriptionHtmlKo,
+    Value<String?>? nameZh,
+    Value<String?>? descriptionHtmlZh,
     Value<double?>? latitude,
     Value<double?>? longitude,
     Value<DateTime?>? createdAt,
   }) {
     return LocalizedFarmersCompanion(
       id: id ?? this.id,
+      nameUk: nameUk ?? this.nameUk,
       imageUrl: imageUrl ?? this.imageUrl,
-      countryEmoji: countryEmoji ?? this.countryEmoji,
+      flagUrl: flagUrl ?? this.flagUrl,
+      descriptionHtmlUk: descriptionHtmlUk ?? this.descriptionHtmlUk,
+      regionUk: regionUk ?? this.regionUk,
+      countryUk: countryUk ?? this.countryUk,
+      nameEn: nameEn ?? this.nameEn,
+      descriptionHtmlEn: descriptionHtmlEn ?? this.descriptionHtmlEn,
+      namePl: namePl ?? this.namePl,
+      descriptionHtmlPl: descriptionHtmlPl ?? this.descriptionHtmlPl,
+      nameDe: nameDe ?? this.nameDe,
+      descriptionHtmlDe: descriptionHtmlDe ?? this.descriptionHtmlDe,
+      nameFr: nameFr ?? this.nameFr,
+      descriptionHtmlFr: descriptionHtmlFr ?? this.descriptionHtmlFr,
+      nameEs: nameEs ?? this.nameEs,
+      descriptionHtmlEs: descriptionHtmlEs ?? this.descriptionHtmlEs,
+      nameIt: nameIt ?? this.nameIt,
+      descriptionHtmlIt: descriptionHtmlIt ?? this.descriptionHtmlIt,
+      namePt: namePt ?? this.namePt,
+      descriptionHtmlPt: descriptionHtmlPt ?? this.descriptionHtmlPt,
+      nameRo: nameRo ?? this.nameRo,
+      descriptionHtmlRo: descriptionHtmlRo ?? this.descriptionHtmlRo,
+      nameTr: nameTr ?? this.nameTr,
+      descriptionHtmlTr: descriptionHtmlTr ?? this.descriptionHtmlTr,
+      nameJa: nameJa ?? this.nameJa,
+      descriptionHtmlJa: descriptionHtmlJa ?? this.descriptionHtmlJa,
+      nameKo: nameKo ?? this.nameKo,
+      descriptionHtmlKo: descriptionHtmlKo ?? this.descriptionHtmlKo,
+      nameZh: nameZh ?? this.nameZh,
+      descriptionHtmlZh: descriptionHtmlZh ?? this.descriptionHtmlZh,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       createdAt: createdAt ?? this.createdAt,
@@ -782,11 +2131,95 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
+    if (nameUk.present) {
+      map['name_uk'] = Variable<String>(nameUk.value);
+    }
     if (imageUrl.present) {
       map['image_url'] = Variable<String>(imageUrl.value);
     }
-    if (countryEmoji.present) {
-      map['country_emoji'] = Variable<String>(countryEmoji.value);
+    if (flagUrl.present) {
+      map['flag_url'] = Variable<String>(flagUrl.value);
+    }
+    if (descriptionHtmlUk.present) {
+      map['description_html_uk'] = Variable<String>(descriptionHtmlUk.value);
+    }
+    if (regionUk.present) {
+      map['region_uk'] = Variable<String>(regionUk.value);
+    }
+    if (countryUk.present) {
+      map['country_uk'] = Variable<String>(countryUk.value);
+    }
+    if (nameEn.present) {
+      map['name_en'] = Variable<String>(nameEn.value);
+    }
+    if (descriptionHtmlEn.present) {
+      map['description_html_en'] = Variable<String>(descriptionHtmlEn.value);
+    }
+    if (namePl.present) {
+      map['name_pl'] = Variable<String>(namePl.value);
+    }
+    if (descriptionHtmlPl.present) {
+      map['description_html_pl'] = Variable<String>(descriptionHtmlPl.value);
+    }
+    if (nameDe.present) {
+      map['name_de'] = Variable<String>(nameDe.value);
+    }
+    if (descriptionHtmlDe.present) {
+      map['description_html_de'] = Variable<String>(descriptionHtmlDe.value);
+    }
+    if (nameFr.present) {
+      map['name_fr'] = Variable<String>(nameFr.value);
+    }
+    if (descriptionHtmlFr.present) {
+      map['description_html_fr'] = Variable<String>(descriptionHtmlFr.value);
+    }
+    if (nameEs.present) {
+      map['name_es'] = Variable<String>(nameEs.value);
+    }
+    if (descriptionHtmlEs.present) {
+      map['description_html_es'] = Variable<String>(descriptionHtmlEs.value);
+    }
+    if (nameIt.present) {
+      map['name_it'] = Variable<String>(nameIt.value);
+    }
+    if (descriptionHtmlIt.present) {
+      map['description_html_it'] = Variable<String>(descriptionHtmlIt.value);
+    }
+    if (namePt.present) {
+      map['name_pt'] = Variable<String>(namePt.value);
+    }
+    if (descriptionHtmlPt.present) {
+      map['description_html_pt'] = Variable<String>(descriptionHtmlPt.value);
+    }
+    if (nameRo.present) {
+      map['name_ro'] = Variable<String>(nameRo.value);
+    }
+    if (descriptionHtmlRo.present) {
+      map['description_html_ro'] = Variable<String>(descriptionHtmlRo.value);
+    }
+    if (nameTr.present) {
+      map['name_tr'] = Variable<String>(nameTr.value);
+    }
+    if (descriptionHtmlTr.present) {
+      map['description_html_tr'] = Variable<String>(descriptionHtmlTr.value);
+    }
+    if (nameJa.present) {
+      map['name_ja'] = Variable<String>(nameJa.value);
+    }
+    if (descriptionHtmlJa.present) {
+      map['description_html_ja'] = Variable<String>(descriptionHtmlJa.value);
+    }
+    if (nameKo.present) {
+      map['name_ko'] = Variable<String>(nameKo.value);
+    }
+    if (descriptionHtmlKo.present) {
+      map['description_html_ko'] = Variable<String>(descriptionHtmlKo.value);
+    }
+    if (nameZh.present) {
+      map['name_zh'] = Variable<String>(nameZh.value);
+    }
+    if (descriptionHtmlZh.present) {
+      map['description_html_zh'] = Variable<String>(descriptionHtmlZh.value);
     }
     if (latitude.present) {
       map['latitude'] = Variable<double>(latitude.value);
@@ -804,8 +2237,36 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
   String toString() {
     return (StringBuffer('LocalizedFarmersCompanion(')
           ..write('id: $id, ')
+          ..write('nameUk: $nameUk, ')
           ..write('imageUrl: $imageUrl, ')
-          ..write('countryEmoji: $countryEmoji, ')
+          ..write('flagUrl: $flagUrl, ')
+          ..write('descriptionHtmlUk: $descriptionHtmlUk, ')
+          ..write('regionUk: $regionUk, ')
+          ..write('countryUk: $countryUk, ')
+          ..write('nameEn: $nameEn, ')
+          ..write('descriptionHtmlEn: $descriptionHtmlEn, ')
+          ..write('namePl: $namePl, ')
+          ..write('descriptionHtmlPl: $descriptionHtmlPl, ')
+          ..write('nameDe: $nameDe, ')
+          ..write('descriptionHtmlDe: $descriptionHtmlDe, ')
+          ..write('nameFr: $nameFr, ')
+          ..write('descriptionHtmlFr: $descriptionHtmlFr, ')
+          ..write('nameEs: $nameEs, ')
+          ..write('descriptionHtmlEs: $descriptionHtmlEs, ')
+          ..write('nameIt: $nameIt, ')
+          ..write('descriptionHtmlIt: $descriptionHtmlIt, ')
+          ..write('namePt: $namePt, ')
+          ..write('descriptionHtmlPt: $descriptionHtmlPt, ')
+          ..write('nameRo: $nameRo, ')
+          ..write('descriptionHtmlRo: $descriptionHtmlRo, ')
+          ..write('nameTr: $nameTr, ')
+          ..write('descriptionHtmlTr: $descriptionHtmlTr, ')
+          ..write('nameJa: $nameJa, ')
+          ..write('descriptionHtmlJa: $descriptionHtmlJa, ')
+          ..write('nameKo: $nameKo, ')
+          ..write('descriptionHtmlKo: $descriptionHtmlKo, ')
+          ..write('nameZh: $nameZh, ')
+          ..write('descriptionHtmlZh: $descriptionHtmlZh, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
           ..write('createdAt: $createdAt')
@@ -3408,496 +4869,6 @@ class LocalizedBrandTranslationsCompanion
   }
 }
 
-class $LocalizedFarmerTranslationsTable extends LocalizedFarmerTranslations
-    with
-        TableInfo<
-          $LocalizedFarmerTranslationsTable,
-          LocalizedFarmerTranslation
-        > {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $LocalizedFarmerTranslationsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _farmerIdMeta = const VerificationMeta(
-    'farmerId',
-  );
-  @override
-  late final GeneratedColumn<int> farmerId = GeneratedColumn<int>(
-    'farmer_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES localized_farmers (id)',
-    ),
-  );
-  static const VerificationMeta _languageCodeMeta = const VerificationMeta(
-    'languageCode',
-  );
-  @override
-  late final GeneratedColumn<String> languageCode = GeneratedColumn<String>(
-    'language_code',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-    'name',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _regionMeta = const VerificationMeta('region');
-  @override
-  late final GeneratedColumn<String> region = GeneratedColumn<String>(
-    'region',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _descriptionMeta = const VerificationMeta(
-    'description',
-  );
-  @override
-  late final GeneratedColumn<String> description = GeneratedColumn<String>(
-    'description',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _storyMeta = const VerificationMeta('story');
-  @override
-  late final GeneratedColumn<String> story = GeneratedColumn<String>(
-    'story',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _countryMeta = const VerificationMeta(
-    'country',
-  );
-  @override
-  late final GeneratedColumn<String> country = GeneratedColumn<String>(
-    'country',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    farmerId,
-    languageCode,
-    name,
-    region,
-    description,
-    story,
-    country,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'localized_farmer_translations';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<LocalizedFarmerTranslation> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('farmer_id')) {
-      context.handle(
-        _farmerIdMeta,
-        farmerId.isAcceptableOrUnknown(data['farmer_id']!, _farmerIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_farmerIdMeta);
-    }
-    if (data.containsKey('language_code')) {
-      context.handle(
-        _languageCodeMeta,
-        languageCode.isAcceptableOrUnknown(
-          data['language_code']!,
-          _languageCodeMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_languageCodeMeta);
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-        _nameMeta,
-        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
-      );
-    }
-    if (data.containsKey('region')) {
-      context.handle(
-        _regionMeta,
-        region.isAcceptableOrUnknown(data['region']!, _regionMeta),
-      );
-    }
-    if (data.containsKey('description')) {
-      context.handle(
-        _descriptionMeta,
-        description.isAcceptableOrUnknown(
-          data['description']!,
-          _descriptionMeta,
-        ),
-      );
-    }
-    if (data.containsKey('story')) {
-      context.handle(
-        _storyMeta,
-        story.isAcceptableOrUnknown(data['story']!, _storyMeta),
-      );
-    }
-    if (data.containsKey('country')) {
-      context.handle(
-        _countryMeta,
-        country.isAcceptableOrUnknown(data['country']!, _countryMeta),
-      );
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {farmerId, languageCode};
-  @override
-  LocalizedFarmerTranslation map(
-    Map<String, dynamic> data, {
-    String? tablePrefix,
-  }) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return LocalizedFarmerTranslation(
-      farmerId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}farmer_id'],
-      )!,
-      languageCode: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}language_code'],
-      )!,
-      name: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}name'],
-      ),
-      region: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}region'],
-      ),
-      description: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}description'],
-      ),
-      story: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}story'],
-      ),
-      country: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}country'],
-      ),
-    );
-  }
-
-  @override
-  $LocalizedFarmerTranslationsTable createAlias(String alias) {
-    return $LocalizedFarmerTranslationsTable(attachedDatabase, alias);
-  }
-}
-
-class LocalizedFarmerTranslation extends DataClass
-    implements Insertable<LocalizedFarmerTranslation> {
-  final int farmerId;
-  final String languageCode;
-  final String? name;
-  final String? region;
-  final String? description;
-  final String? story;
-  final String? country;
-  const LocalizedFarmerTranslation({
-    required this.farmerId,
-    required this.languageCode,
-    this.name,
-    this.region,
-    this.description,
-    this.story,
-    this.country,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['farmer_id'] = Variable<int>(farmerId);
-    map['language_code'] = Variable<String>(languageCode);
-    if (!nullToAbsent || name != null) {
-      map['name'] = Variable<String>(name);
-    }
-    if (!nullToAbsent || region != null) {
-      map['region'] = Variable<String>(region);
-    }
-    if (!nullToAbsent || description != null) {
-      map['description'] = Variable<String>(description);
-    }
-    if (!nullToAbsent || story != null) {
-      map['story'] = Variable<String>(story);
-    }
-    if (!nullToAbsent || country != null) {
-      map['country'] = Variable<String>(country);
-    }
-    return map;
-  }
-
-  LocalizedFarmerTranslationsCompanion toCompanion(bool nullToAbsent) {
-    return LocalizedFarmerTranslationsCompanion(
-      farmerId: Value(farmerId),
-      languageCode: Value(languageCode),
-      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
-      region: region == null && nullToAbsent
-          ? const Value.absent()
-          : Value(region),
-      description: description == null && nullToAbsent
-          ? const Value.absent()
-          : Value(description),
-      story: story == null && nullToAbsent
-          ? const Value.absent()
-          : Value(story),
-      country: country == null && nullToAbsent
-          ? const Value.absent()
-          : Value(country),
-    );
-  }
-
-  factory LocalizedFarmerTranslation.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return LocalizedFarmerTranslation(
-      farmerId: serializer.fromJson<int>(json['farmerId']),
-      languageCode: serializer.fromJson<String>(json['languageCode']),
-      name: serializer.fromJson<String?>(json['name']),
-      region: serializer.fromJson<String?>(json['region']),
-      description: serializer.fromJson<String?>(json['description']),
-      story: serializer.fromJson<String?>(json['story']),
-      country: serializer.fromJson<String?>(json['country']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'farmerId': serializer.toJson<int>(farmerId),
-      'languageCode': serializer.toJson<String>(languageCode),
-      'name': serializer.toJson<String?>(name),
-      'region': serializer.toJson<String?>(region),
-      'description': serializer.toJson<String?>(description),
-      'story': serializer.toJson<String?>(story),
-      'country': serializer.toJson<String?>(country),
-    };
-  }
-
-  LocalizedFarmerTranslation copyWith({
-    int? farmerId,
-    String? languageCode,
-    Value<String?> name = const Value.absent(),
-    Value<String?> region = const Value.absent(),
-    Value<String?> description = const Value.absent(),
-    Value<String?> story = const Value.absent(),
-    Value<String?> country = const Value.absent(),
-  }) => LocalizedFarmerTranslation(
-    farmerId: farmerId ?? this.farmerId,
-    languageCode: languageCode ?? this.languageCode,
-    name: name.present ? name.value : this.name,
-    region: region.present ? region.value : this.region,
-    description: description.present ? description.value : this.description,
-    story: story.present ? story.value : this.story,
-    country: country.present ? country.value : this.country,
-  );
-  LocalizedFarmerTranslation copyWithCompanion(
-    LocalizedFarmerTranslationsCompanion data,
-  ) {
-    return LocalizedFarmerTranslation(
-      farmerId: data.farmerId.present ? data.farmerId.value : this.farmerId,
-      languageCode: data.languageCode.present
-          ? data.languageCode.value
-          : this.languageCode,
-      name: data.name.present ? data.name.value : this.name,
-      region: data.region.present ? data.region.value : this.region,
-      description: data.description.present
-          ? data.description.value
-          : this.description,
-      story: data.story.present ? data.story.value : this.story,
-      country: data.country.present ? data.country.value : this.country,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('LocalizedFarmerTranslation(')
-          ..write('farmerId: $farmerId, ')
-          ..write('languageCode: $languageCode, ')
-          ..write('name: $name, ')
-          ..write('region: $region, ')
-          ..write('description: $description, ')
-          ..write('story: $story, ')
-          ..write('country: $country')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(
-    farmerId,
-    languageCode,
-    name,
-    region,
-    description,
-    story,
-    country,
-  );
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is LocalizedFarmerTranslation &&
-          other.farmerId == this.farmerId &&
-          other.languageCode == this.languageCode &&
-          other.name == this.name &&
-          other.region == this.region &&
-          other.description == this.description &&
-          other.story == this.story &&
-          other.country == this.country);
-}
-
-class LocalizedFarmerTranslationsCompanion
-    extends UpdateCompanion<LocalizedFarmerTranslation> {
-  final Value<int> farmerId;
-  final Value<String> languageCode;
-  final Value<String?> name;
-  final Value<String?> region;
-  final Value<String?> description;
-  final Value<String?> story;
-  final Value<String?> country;
-  final Value<int> rowid;
-  const LocalizedFarmerTranslationsCompanion({
-    this.farmerId = const Value.absent(),
-    this.languageCode = const Value.absent(),
-    this.name = const Value.absent(),
-    this.region = const Value.absent(),
-    this.description = const Value.absent(),
-    this.story = const Value.absent(),
-    this.country = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  LocalizedFarmerTranslationsCompanion.insert({
-    required int farmerId,
-    required String languageCode,
-    this.name = const Value.absent(),
-    this.region = const Value.absent(),
-    this.description = const Value.absent(),
-    this.story = const Value.absent(),
-    this.country = const Value.absent(),
-    this.rowid = const Value.absent(),
-  }) : farmerId = Value(farmerId),
-       languageCode = Value(languageCode);
-  static Insertable<LocalizedFarmerTranslation> custom({
-    Expression<int>? farmerId,
-    Expression<String>? languageCode,
-    Expression<String>? name,
-    Expression<String>? region,
-    Expression<String>? description,
-    Expression<String>? story,
-    Expression<String>? country,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (farmerId != null) 'farmer_id': farmerId,
-      if (languageCode != null) 'language_code': languageCode,
-      if (name != null) 'name': name,
-      if (region != null) 'region': region,
-      if (description != null) 'description': description,
-      if (story != null) 'story': story,
-      if (country != null) 'country': country,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  LocalizedFarmerTranslationsCompanion copyWith({
-    Value<int>? farmerId,
-    Value<String>? languageCode,
-    Value<String?>? name,
-    Value<String?>? region,
-    Value<String?>? description,
-    Value<String?>? story,
-    Value<String?>? country,
-    Value<int>? rowid,
-  }) {
-    return LocalizedFarmerTranslationsCompanion(
-      farmerId: farmerId ?? this.farmerId,
-      languageCode: languageCode ?? this.languageCode,
-      name: name ?? this.name,
-      region: region ?? this.region,
-      description: description ?? this.description,
-      story: story ?? this.story,
-      country: country ?? this.country,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (farmerId.present) {
-      map['farmer_id'] = Variable<int>(farmerId.value);
-    }
-    if (languageCode.present) {
-      map['language_code'] = Variable<String>(languageCode.value);
-    }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
-    }
-    if (region.present) {
-      map['region'] = Variable<String>(region.value);
-    }
-    if (description.present) {
-      map['description'] = Variable<String>(description.value);
-    }
-    if (story.present) {
-      map['story'] = Variable<String>(story.value);
-    }
-    if (country.present) {
-      map['country'] = Variable<String>(country.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('LocalizedFarmerTranslationsCompanion(')
-          ..write('farmerId: $farmerId, ')
-          ..write('languageCode: $languageCode, ')
-          ..write('name: $name, ')
-          ..write('region: $region, ')
-          ..write('description: $description, ')
-          ..write('story: $story, ')
-          ..write('country: $country, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $SphereRegionsTable extends SphereRegions
     with TableInfo<$SphereRegionsTable, SphereRegion> {
   @override
@@ -4775,6 +5746,18 @@ class $SpecialtyArticlesTable extends SpecialtyArticles
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
+  static const VerificationMeta _titleUkMeta = const VerificationMeta(
+    'titleUk',
+  );
+  @override
+  late final GeneratedColumn<String> titleUk = GeneratedColumn<String>(
+    'title_uk',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('Тут має бути заголовок'),
+  );
   static const VerificationMeta _imageUrlMeta = const VerificationMeta(
     'imageUrl',
   );
@@ -4784,7 +5767,32 @@ class $SpecialtyArticlesTable extends SpecialtyArticles
     aliasedName,
     false,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('Тут має бути лінк на бакет'),
+  );
+  static const VerificationMeta _flagUrlMeta = const VerificationMeta(
+    'flagUrl',
+  );
+  @override
+  late final GeneratedColumn<String> flagUrl = GeneratedColumn<String>(
+    'flag_url',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('Тут має бути лінк на прапор'),
+  );
+  static const VerificationMeta _contentHtmlUkMeta = const VerificationMeta(
+    'contentHtmlUk',
+  );
+  @override
+  late final GeneratedColumn<String> contentHtmlUk = GeneratedColumn<String>(
+    'content_html_uk',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('Тут має бути текст статті'),
   );
   static const VerificationMeta _readTimeMinMeta = const VerificationMeta(
     'readTimeMin',
@@ -4795,10 +5803,306 @@ class $SpecialtyArticlesTable extends SpecialtyArticles
     aliasedName,
     false,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(5),
+  );
+  static const VerificationMeta _titleEnMeta = const VerificationMeta(
+    'titleEn',
   );
   @override
-  List<GeneratedColumn> get $columns => [id, imageUrl, readTimeMin];
+  late final GeneratedColumn<String> titleEn = GeneratedColumn<String>(
+    'title_en',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _contentHtmlEnMeta = const VerificationMeta(
+    'contentHtmlEn',
+  );
+  @override
+  late final GeneratedColumn<String> contentHtmlEn = GeneratedColumn<String>(
+    'content_html_en',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _titlePlMeta = const VerificationMeta(
+    'titlePl',
+  );
+  @override
+  late final GeneratedColumn<String> titlePl = GeneratedColumn<String>(
+    'title_pl',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _contentHtmlPlMeta = const VerificationMeta(
+    'contentHtmlPl',
+  );
+  @override
+  late final GeneratedColumn<String> contentHtmlPl = GeneratedColumn<String>(
+    'content_html_pl',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _titleDeMeta = const VerificationMeta(
+    'titleDe',
+  );
+  @override
+  late final GeneratedColumn<String> titleDe = GeneratedColumn<String>(
+    'title_de',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _contentHtmlDeMeta = const VerificationMeta(
+    'contentHtmlDe',
+  );
+  @override
+  late final GeneratedColumn<String> contentHtmlDe = GeneratedColumn<String>(
+    'content_html_de',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _titleFrMeta = const VerificationMeta(
+    'titleFr',
+  );
+  @override
+  late final GeneratedColumn<String> titleFr = GeneratedColumn<String>(
+    'title_fr',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _contentHtmlFrMeta = const VerificationMeta(
+    'contentHtmlFr',
+  );
+  @override
+  late final GeneratedColumn<String> contentHtmlFr = GeneratedColumn<String>(
+    'content_html_fr',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _titleEsMeta = const VerificationMeta(
+    'titleEs',
+  );
+  @override
+  late final GeneratedColumn<String> titleEs = GeneratedColumn<String>(
+    'title_es',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _contentHtmlEsMeta = const VerificationMeta(
+    'contentHtmlEs',
+  );
+  @override
+  late final GeneratedColumn<String> contentHtmlEs = GeneratedColumn<String>(
+    'content_html_es',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _titleItMeta = const VerificationMeta(
+    'titleIt',
+  );
+  @override
+  late final GeneratedColumn<String> titleIt = GeneratedColumn<String>(
+    'title_it',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _contentHtmlItMeta = const VerificationMeta(
+    'contentHtmlIt',
+  );
+  @override
+  late final GeneratedColumn<String> contentHtmlIt = GeneratedColumn<String>(
+    'content_html_it',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _titlePtMeta = const VerificationMeta(
+    'titlePt',
+  );
+  @override
+  late final GeneratedColumn<String> titlePt = GeneratedColumn<String>(
+    'title_pt',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _contentHtmlPtMeta = const VerificationMeta(
+    'contentHtmlPt',
+  );
+  @override
+  late final GeneratedColumn<String> contentHtmlPt = GeneratedColumn<String>(
+    'content_html_pt',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _titleRoMeta = const VerificationMeta(
+    'titleRo',
+  );
+  @override
+  late final GeneratedColumn<String> titleRo = GeneratedColumn<String>(
+    'title_ro',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _contentHtmlRoMeta = const VerificationMeta(
+    'contentHtmlRo',
+  );
+  @override
+  late final GeneratedColumn<String> contentHtmlRo = GeneratedColumn<String>(
+    'content_html_ro',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _titleTrMeta = const VerificationMeta(
+    'titleTr',
+  );
+  @override
+  late final GeneratedColumn<String> titleTr = GeneratedColumn<String>(
+    'title_tr',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _contentHtmlTrMeta = const VerificationMeta(
+    'contentHtmlTr',
+  );
+  @override
+  late final GeneratedColumn<String> contentHtmlTr = GeneratedColumn<String>(
+    'content_html_tr',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _titleJaMeta = const VerificationMeta(
+    'titleJa',
+  );
+  @override
+  late final GeneratedColumn<String> titleJa = GeneratedColumn<String>(
+    'title_ja',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _contentHtmlJaMeta = const VerificationMeta(
+    'contentHtmlJa',
+  );
+  @override
+  late final GeneratedColumn<String> contentHtmlJa = GeneratedColumn<String>(
+    'content_html_ja',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _titleKoMeta = const VerificationMeta(
+    'titleKo',
+  );
+  @override
+  late final GeneratedColumn<String> titleKo = GeneratedColumn<String>(
+    'title_ko',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _contentHtmlKoMeta = const VerificationMeta(
+    'contentHtmlKo',
+  );
+  @override
+  late final GeneratedColumn<String> contentHtmlKo = GeneratedColumn<String>(
+    'content_html_ko',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _titleZhMeta = const VerificationMeta(
+    'titleZh',
+  );
+  @override
+  late final GeneratedColumn<String> titleZh = GeneratedColumn<String>(
+    'title_zh',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _contentHtmlZhMeta = const VerificationMeta(
+    'contentHtmlZh',
+  );
+  @override
+  late final GeneratedColumn<String> contentHtmlZh = GeneratedColumn<String>(
+    'content_html_zh',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    titleUk,
+    imageUrl,
+    flagUrl,
+    contentHtmlUk,
+    readTimeMin,
+    titleEn,
+    contentHtmlEn,
+    titlePl,
+    contentHtmlPl,
+    titleDe,
+    contentHtmlDe,
+    titleFr,
+    contentHtmlFr,
+    titleEs,
+    contentHtmlEs,
+    titleIt,
+    contentHtmlIt,
+    titlePt,
+    contentHtmlPt,
+    titleRo,
+    contentHtmlRo,
+    titleTr,
+    contentHtmlTr,
+    titleJa,
+    contentHtmlJa,
+    titleKo,
+    contentHtmlKo,
+    titleZh,
+    contentHtmlZh,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -4814,13 +6118,32 @@ class $SpecialtyArticlesTable extends SpecialtyArticles
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
+    if (data.containsKey('title_uk')) {
+      context.handle(
+        _titleUkMeta,
+        titleUk.isAcceptableOrUnknown(data['title_uk']!, _titleUkMeta),
+      );
+    }
     if (data.containsKey('image_url')) {
       context.handle(
         _imageUrlMeta,
         imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
       );
-    } else if (isInserting) {
-      context.missing(_imageUrlMeta);
+    }
+    if (data.containsKey('flag_url')) {
+      context.handle(
+        _flagUrlMeta,
+        flagUrl.isAcceptableOrUnknown(data['flag_url']!, _flagUrlMeta),
+      );
+    }
+    if (data.containsKey('content_html_uk')) {
+      context.handle(
+        _contentHtmlUkMeta,
+        contentHtmlUk.isAcceptableOrUnknown(
+          data['content_html_uk']!,
+          _contentHtmlUkMeta,
+        ),
+      );
     }
     if (data.containsKey('read_time_min')) {
       context.handle(
@@ -4830,8 +6153,186 @@ class $SpecialtyArticlesTable extends SpecialtyArticles
           _readTimeMinMeta,
         ),
       );
-    } else if (isInserting) {
-      context.missing(_readTimeMinMeta);
+    }
+    if (data.containsKey('title_en')) {
+      context.handle(
+        _titleEnMeta,
+        titleEn.isAcceptableOrUnknown(data['title_en']!, _titleEnMeta),
+      );
+    }
+    if (data.containsKey('content_html_en')) {
+      context.handle(
+        _contentHtmlEnMeta,
+        contentHtmlEn.isAcceptableOrUnknown(
+          data['content_html_en']!,
+          _contentHtmlEnMeta,
+        ),
+      );
+    }
+    if (data.containsKey('title_pl')) {
+      context.handle(
+        _titlePlMeta,
+        titlePl.isAcceptableOrUnknown(data['title_pl']!, _titlePlMeta),
+      );
+    }
+    if (data.containsKey('content_html_pl')) {
+      context.handle(
+        _contentHtmlPlMeta,
+        contentHtmlPl.isAcceptableOrUnknown(
+          data['content_html_pl']!,
+          _contentHtmlPlMeta,
+        ),
+      );
+    }
+    if (data.containsKey('title_de')) {
+      context.handle(
+        _titleDeMeta,
+        titleDe.isAcceptableOrUnknown(data['title_de']!, _titleDeMeta),
+      );
+    }
+    if (data.containsKey('content_html_de')) {
+      context.handle(
+        _contentHtmlDeMeta,
+        contentHtmlDe.isAcceptableOrUnknown(
+          data['content_html_de']!,
+          _contentHtmlDeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('title_fr')) {
+      context.handle(
+        _titleFrMeta,
+        titleFr.isAcceptableOrUnknown(data['title_fr']!, _titleFrMeta),
+      );
+    }
+    if (data.containsKey('content_html_fr')) {
+      context.handle(
+        _contentHtmlFrMeta,
+        contentHtmlFr.isAcceptableOrUnknown(
+          data['content_html_fr']!,
+          _contentHtmlFrMeta,
+        ),
+      );
+    }
+    if (data.containsKey('title_es')) {
+      context.handle(
+        _titleEsMeta,
+        titleEs.isAcceptableOrUnknown(data['title_es']!, _titleEsMeta),
+      );
+    }
+    if (data.containsKey('content_html_es')) {
+      context.handle(
+        _contentHtmlEsMeta,
+        contentHtmlEs.isAcceptableOrUnknown(
+          data['content_html_es']!,
+          _contentHtmlEsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('title_it')) {
+      context.handle(
+        _titleItMeta,
+        titleIt.isAcceptableOrUnknown(data['title_it']!, _titleItMeta),
+      );
+    }
+    if (data.containsKey('content_html_it')) {
+      context.handle(
+        _contentHtmlItMeta,
+        contentHtmlIt.isAcceptableOrUnknown(
+          data['content_html_it']!,
+          _contentHtmlItMeta,
+        ),
+      );
+    }
+    if (data.containsKey('title_pt')) {
+      context.handle(
+        _titlePtMeta,
+        titlePt.isAcceptableOrUnknown(data['title_pt']!, _titlePtMeta),
+      );
+    }
+    if (data.containsKey('content_html_pt')) {
+      context.handle(
+        _contentHtmlPtMeta,
+        contentHtmlPt.isAcceptableOrUnknown(
+          data['content_html_pt']!,
+          _contentHtmlPtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('title_ro')) {
+      context.handle(
+        _titleRoMeta,
+        titleRo.isAcceptableOrUnknown(data['title_ro']!, _titleRoMeta),
+      );
+    }
+    if (data.containsKey('content_html_ro')) {
+      context.handle(
+        _contentHtmlRoMeta,
+        contentHtmlRo.isAcceptableOrUnknown(
+          data['content_html_ro']!,
+          _contentHtmlRoMeta,
+        ),
+      );
+    }
+    if (data.containsKey('title_tr')) {
+      context.handle(
+        _titleTrMeta,
+        titleTr.isAcceptableOrUnknown(data['title_tr']!, _titleTrMeta),
+      );
+    }
+    if (data.containsKey('content_html_tr')) {
+      context.handle(
+        _contentHtmlTrMeta,
+        contentHtmlTr.isAcceptableOrUnknown(
+          data['content_html_tr']!,
+          _contentHtmlTrMeta,
+        ),
+      );
+    }
+    if (data.containsKey('title_ja')) {
+      context.handle(
+        _titleJaMeta,
+        titleJa.isAcceptableOrUnknown(data['title_ja']!, _titleJaMeta),
+      );
+    }
+    if (data.containsKey('content_html_ja')) {
+      context.handle(
+        _contentHtmlJaMeta,
+        contentHtmlJa.isAcceptableOrUnknown(
+          data['content_html_ja']!,
+          _contentHtmlJaMeta,
+        ),
+      );
+    }
+    if (data.containsKey('title_ko')) {
+      context.handle(
+        _titleKoMeta,
+        titleKo.isAcceptableOrUnknown(data['title_ko']!, _titleKoMeta),
+      );
+    }
+    if (data.containsKey('content_html_ko')) {
+      context.handle(
+        _contentHtmlKoMeta,
+        contentHtmlKo.isAcceptableOrUnknown(
+          data['content_html_ko']!,
+          _contentHtmlKoMeta,
+        ),
+      );
+    }
+    if (data.containsKey('title_zh')) {
+      context.handle(
+        _titleZhMeta,
+        titleZh.isAcceptableOrUnknown(data['title_zh']!, _titleZhMeta),
+      );
+    }
+    if (data.containsKey('content_html_zh')) {
+      context.handle(
+        _contentHtmlZhMeta,
+        contentHtmlZh.isAcceptableOrUnknown(
+          data['content_html_zh']!,
+          _contentHtmlZhMeta,
+        ),
+      );
     }
     return context;
   }
@@ -4846,14 +6347,122 @@ class $SpecialtyArticlesTable extends SpecialtyArticles
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
+      titleUk: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title_uk'],
+      )!,
       imageUrl: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}image_url'],
+      )!,
+      flagUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}flag_url'],
+      )!,
+      contentHtmlUk: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content_html_uk'],
       )!,
       readTimeMin: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}read_time_min'],
       )!,
+      titleEn: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title_en'],
+      ),
+      contentHtmlEn: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content_html_en'],
+      ),
+      titlePl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title_pl'],
+      ),
+      contentHtmlPl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content_html_pl'],
+      ),
+      titleDe: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title_de'],
+      ),
+      contentHtmlDe: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content_html_de'],
+      ),
+      titleFr: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title_fr'],
+      ),
+      contentHtmlFr: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content_html_fr'],
+      ),
+      titleEs: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title_es'],
+      ),
+      contentHtmlEs: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content_html_es'],
+      ),
+      titleIt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title_it'],
+      ),
+      contentHtmlIt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content_html_it'],
+      ),
+      titlePt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title_pt'],
+      ),
+      contentHtmlPt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content_html_pt'],
+      ),
+      titleRo: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title_ro'],
+      ),
+      contentHtmlRo: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content_html_ro'],
+      ),
+      titleTr: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title_tr'],
+      ),
+      contentHtmlTr: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content_html_tr'],
+      ),
+      titleJa: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title_ja'],
+      ),
+      contentHtmlJa: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content_html_ja'],
+      ),
+      titleKo: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title_ko'],
+      ),
+      contentHtmlKo: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content_html_ko'],
+      ),
+      titleZh: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title_zh'],
+      ),
+      contentHtmlZh: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content_html_zh'],
+      ),
     );
   }
 
@@ -4866,27 +6475,231 @@ class $SpecialtyArticlesTable extends SpecialtyArticles
 class SpecialtyArticle extends DataClass
     implements Insertable<SpecialtyArticle> {
   final int id;
+  final String titleUk;
   final String imageUrl;
+  final String flagUrl;
+  final String contentHtmlUk;
   final int readTimeMin;
+  final String? titleEn;
+  final String? contentHtmlEn;
+  final String? titlePl;
+  final String? contentHtmlPl;
+  final String? titleDe;
+  final String? contentHtmlDe;
+  final String? titleFr;
+  final String? contentHtmlFr;
+  final String? titleEs;
+  final String? contentHtmlEs;
+  final String? titleIt;
+  final String? contentHtmlIt;
+  final String? titlePt;
+  final String? contentHtmlPt;
+  final String? titleRo;
+  final String? contentHtmlRo;
+  final String? titleTr;
+  final String? contentHtmlTr;
+  final String? titleJa;
+  final String? contentHtmlJa;
+  final String? titleKo;
+  final String? contentHtmlKo;
+  final String? titleZh;
+  final String? contentHtmlZh;
   const SpecialtyArticle({
     required this.id,
+    required this.titleUk,
     required this.imageUrl,
+    required this.flagUrl,
+    required this.contentHtmlUk,
     required this.readTimeMin,
+    this.titleEn,
+    this.contentHtmlEn,
+    this.titlePl,
+    this.contentHtmlPl,
+    this.titleDe,
+    this.contentHtmlDe,
+    this.titleFr,
+    this.contentHtmlFr,
+    this.titleEs,
+    this.contentHtmlEs,
+    this.titleIt,
+    this.contentHtmlIt,
+    this.titlePt,
+    this.contentHtmlPt,
+    this.titleRo,
+    this.contentHtmlRo,
+    this.titleTr,
+    this.contentHtmlTr,
+    this.titleJa,
+    this.contentHtmlJa,
+    this.titleKo,
+    this.contentHtmlKo,
+    this.titleZh,
+    this.contentHtmlZh,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
+    map['title_uk'] = Variable<String>(titleUk);
     map['image_url'] = Variable<String>(imageUrl);
+    map['flag_url'] = Variable<String>(flagUrl);
+    map['content_html_uk'] = Variable<String>(contentHtmlUk);
     map['read_time_min'] = Variable<int>(readTimeMin);
+    if (!nullToAbsent || titleEn != null) {
+      map['title_en'] = Variable<String>(titleEn);
+    }
+    if (!nullToAbsent || contentHtmlEn != null) {
+      map['content_html_en'] = Variable<String>(contentHtmlEn);
+    }
+    if (!nullToAbsent || titlePl != null) {
+      map['title_pl'] = Variable<String>(titlePl);
+    }
+    if (!nullToAbsent || contentHtmlPl != null) {
+      map['content_html_pl'] = Variable<String>(contentHtmlPl);
+    }
+    if (!nullToAbsent || titleDe != null) {
+      map['title_de'] = Variable<String>(titleDe);
+    }
+    if (!nullToAbsent || contentHtmlDe != null) {
+      map['content_html_de'] = Variable<String>(contentHtmlDe);
+    }
+    if (!nullToAbsent || titleFr != null) {
+      map['title_fr'] = Variable<String>(titleFr);
+    }
+    if (!nullToAbsent || contentHtmlFr != null) {
+      map['content_html_fr'] = Variable<String>(contentHtmlFr);
+    }
+    if (!nullToAbsent || titleEs != null) {
+      map['title_es'] = Variable<String>(titleEs);
+    }
+    if (!nullToAbsent || contentHtmlEs != null) {
+      map['content_html_es'] = Variable<String>(contentHtmlEs);
+    }
+    if (!nullToAbsent || titleIt != null) {
+      map['title_it'] = Variable<String>(titleIt);
+    }
+    if (!nullToAbsent || contentHtmlIt != null) {
+      map['content_html_it'] = Variable<String>(contentHtmlIt);
+    }
+    if (!nullToAbsent || titlePt != null) {
+      map['title_pt'] = Variable<String>(titlePt);
+    }
+    if (!nullToAbsent || contentHtmlPt != null) {
+      map['content_html_pt'] = Variable<String>(contentHtmlPt);
+    }
+    if (!nullToAbsent || titleRo != null) {
+      map['title_ro'] = Variable<String>(titleRo);
+    }
+    if (!nullToAbsent || contentHtmlRo != null) {
+      map['content_html_ro'] = Variable<String>(contentHtmlRo);
+    }
+    if (!nullToAbsent || titleTr != null) {
+      map['title_tr'] = Variable<String>(titleTr);
+    }
+    if (!nullToAbsent || contentHtmlTr != null) {
+      map['content_html_tr'] = Variable<String>(contentHtmlTr);
+    }
+    if (!nullToAbsent || titleJa != null) {
+      map['title_ja'] = Variable<String>(titleJa);
+    }
+    if (!nullToAbsent || contentHtmlJa != null) {
+      map['content_html_ja'] = Variable<String>(contentHtmlJa);
+    }
+    if (!nullToAbsent || titleKo != null) {
+      map['title_ko'] = Variable<String>(titleKo);
+    }
+    if (!nullToAbsent || contentHtmlKo != null) {
+      map['content_html_ko'] = Variable<String>(contentHtmlKo);
+    }
+    if (!nullToAbsent || titleZh != null) {
+      map['title_zh'] = Variable<String>(titleZh);
+    }
+    if (!nullToAbsent || contentHtmlZh != null) {
+      map['content_html_zh'] = Variable<String>(contentHtmlZh);
+    }
     return map;
   }
 
   SpecialtyArticlesCompanion toCompanion(bool nullToAbsent) {
     return SpecialtyArticlesCompanion(
       id: Value(id),
+      titleUk: Value(titleUk),
       imageUrl: Value(imageUrl),
+      flagUrl: Value(flagUrl),
+      contentHtmlUk: Value(contentHtmlUk),
       readTimeMin: Value(readTimeMin),
+      titleEn: titleEn == null && nullToAbsent
+          ? const Value.absent()
+          : Value(titleEn),
+      contentHtmlEn: contentHtmlEn == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contentHtmlEn),
+      titlePl: titlePl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(titlePl),
+      contentHtmlPl: contentHtmlPl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contentHtmlPl),
+      titleDe: titleDe == null && nullToAbsent
+          ? const Value.absent()
+          : Value(titleDe),
+      contentHtmlDe: contentHtmlDe == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contentHtmlDe),
+      titleFr: titleFr == null && nullToAbsent
+          ? const Value.absent()
+          : Value(titleFr),
+      contentHtmlFr: contentHtmlFr == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contentHtmlFr),
+      titleEs: titleEs == null && nullToAbsent
+          ? const Value.absent()
+          : Value(titleEs),
+      contentHtmlEs: contentHtmlEs == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contentHtmlEs),
+      titleIt: titleIt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(titleIt),
+      contentHtmlIt: contentHtmlIt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contentHtmlIt),
+      titlePt: titlePt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(titlePt),
+      contentHtmlPt: contentHtmlPt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contentHtmlPt),
+      titleRo: titleRo == null && nullToAbsent
+          ? const Value.absent()
+          : Value(titleRo),
+      contentHtmlRo: contentHtmlRo == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contentHtmlRo),
+      titleTr: titleTr == null && nullToAbsent
+          ? const Value.absent()
+          : Value(titleTr),
+      contentHtmlTr: contentHtmlTr == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contentHtmlTr),
+      titleJa: titleJa == null && nullToAbsent
+          ? const Value.absent()
+          : Value(titleJa),
+      contentHtmlJa: contentHtmlJa == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contentHtmlJa),
+      titleKo: titleKo == null && nullToAbsent
+          ? const Value.absent()
+          : Value(titleKo),
+      contentHtmlKo: contentHtmlKo == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contentHtmlKo),
+      titleZh: titleZh == null && nullToAbsent
+          ? const Value.absent()
+          : Value(titleZh),
+      contentHtmlZh: contentHtmlZh == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contentHtmlZh),
     );
   }
 
@@ -4897,8 +6710,35 @@ class SpecialtyArticle extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return SpecialtyArticle(
       id: serializer.fromJson<int>(json['id']),
+      titleUk: serializer.fromJson<String>(json['titleUk']),
       imageUrl: serializer.fromJson<String>(json['imageUrl']),
+      flagUrl: serializer.fromJson<String>(json['flagUrl']),
+      contentHtmlUk: serializer.fromJson<String>(json['contentHtmlUk']),
       readTimeMin: serializer.fromJson<int>(json['readTimeMin']),
+      titleEn: serializer.fromJson<String?>(json['titleEn']),
+      contentHtmlEn: serializer.fromJson<String?>(json['contentHtmlEn']),
+      titlePl: serializer.fromJson<String?>(json['titlePl']),
+      contentHtmlPl: serializer.fromJson<String?>(json['contentHtmlPl']),
+      titleDe: serializer.fromJson<String?>(json['titleDe']),
+      contentHtmlDe: serializer.fromJson<String?>(json['contentHtmlDe']),
+      titleFr: serializer.fromJson<String?>(json['titleFr']),
+      contentHtmlFr: serializer.fromJson<String?>(json['contentHtmlFr']),
+      titleEs: serializer.fromJson<String?>(json['titleEs']),
+      contentHtmlEs: serializer.fromJson<String?>(json['contentHtmlEs']),
+      titleIt: serializer.fromJson<String?>(json['titleIt']),
+      contentHtmlIt: serializer.fromJson<String?>(json['contentHtmlIt']),
+      titlePt: serializer.fromJson<String?>(json['titlePt']),
+      contentHtmlPt: serializer.fromJson<String?>(json['contentHtmlPt']),
+      titleRo: serializer.fromJson<String?>(json['titleRo']),
+      contentHtmlRo: serializer.fromJson<String?>(json['contentHtmlRo']),
+      titleTr: serializer.fromJson<String?>(json['titleTr']),
+      contentHtmlTr: serializer.fromJson<String?>(json['contentHtmlTr']),
+      titleJa: serializer.fromJson<String?>(json['titleJa']),
+      contentHtmlJa: serializer.fromJson<String?>(json['contentHtmlJa']),
+      titleKo: serializer.fromJson<String?>(json['titleKo']),
+      contentHtmlKo: serializer.fromJson<String?>(json['contentHtmlKo']),
+      titleZh: serializer.fromJson<String?>(json['titleZh']),
+      contentHtmlZh: serializer.fromJson<String?>(json['contentHtmlZh']),
     );
   }
   @override
@@ -4906,24 +6746,185 @@ class SpecialtyArticle extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
+      'titleUk': serializer.toJson<String>(titleUk),
       'imageUrl': serializer.toJson<String>(imageUrl),
+      'flagUrl': serializer.toJson<String>(flagUrl),
+      'contentHtmlUk': serializer.toJson<String>(contentHtmlUk),
       'readTimeMin': serializer.toJson<int>(readTimeMin),
+      'titleEn': serializer.toJson<String?>(titleEn),
+      'contentHtmlEn': serializer.toJson<String?>(contentHtmlEn),
+      'titlePl': serializer.toJson<String?>(titlePl),
+      'contentHtmlPl': serializer.toJson<String?>(contentHtmlPl),
+      'titleDe': serializer.toJson<String?>(titleDe),
+      'contentHtmlDe': serializer.toJson<String?>(contentHtmlDe),
+      'titleFr': serializer.toJson<String?>(titleFr),
+      'contentHtmlFr': serializer.toJson<String?>(contentHtmlFr),
+      'titleEs': serializer.toJson<String?>(titleEs),
+      'contentHtmlEs': serializer.toJson<String?>(contentHtmlEs),
+      'titleIt': serializer.toJson<String?>(titleIt),
+      'contentHtmlIt': serializer.toJson<String?>(contentHtmlIt),
+      'titlePt': serializer.toJson<String?>(titlePt),
+      'contentHtmlPt': serializer.toJson<String?>(contentHtmlPt),
+      'titleRo': serializer.toJson<String?>(titleRo),
+      'contentHtmlRo': serializer.toJson<String?>(contentHtmlRo),
+      'titleTr': serializer.toJson<String?>(titleTr),
+      'contentHtmlTr': serializer.toJson<String?>(contentHtmlTr),
+      'titleJa': serializer.toJson<String?>(titleJa),
+      'contentHtmlJa': serializer.toJson<String?>(contentHtmlJa),
+      'titleKo': serializer.toJson<String?>(titleKo),
+      'contentHtmlKo': serializer.toJson<String?>(contentHtmlKo),
+      'titleZh': serializer.toJson<String?>(titleZh),
+      'contentHtmlZh': serializer.toJson<String?>(contentHtmlZh),
     };
   }
 
-  SpecialtyArticle copyWith({int? id, String? imageUrl, int? readTimeMin}) =>
-      SpecialtyArticle(
-        id: id ?? this.id,
-        imageUrl: imageUrl ?? this.imageUrl,
-        readTimeMin: readTimeMin ?? this.readTimeMin,
-      );
+  SpecialtyArticle copyWith({
+    int? id,
+    String? titleUk,
+    String? imageUrl,
+    String? flagUrl,
+    String? contentHtmlUk,
+    int? readTimeMin,
+    Value<String?> titleEn = const Value.absent(),
+    Value<String?> contentHtmlEn = const Value.absent(),
+    Value<String?> titlePl = const Value.absent(),
+    Value<String?> contentHtmlPl = const Value.absent(),
+    Value<String?> titleDe = const Value.absent(),
+    Value<String?> contentHtmlDe = const Value.absent(),
+    Value<String?> titleFr = const Value.absent(),
+    Value<String?> contentHtmlFr = const Value.absent(),
+    Value<String?> titleEs = const Value.absent(),
+    Value<String?> contentHtmlEs = const Value.absent(),
+    Value<String?> titleIt = const Value.absent(),
+    Value<String?> contentHtmlIt = const Value.absent(),
+    Value<String?> titlePt = const Value.absent(),
+    Value<String?> contentHtmlPt = const Value.absent(),
+    Value<String?> titleRo = const Value.absent(),
+    Value<String?> contentHtmlRo = const Value.absent(),
+    Value<String?> titleTr = const Value.absent(),
+    Value<String?> contentHtmlTr = const Value.absent(),
+    Value<String?> titleJa = const Value.absent(),
+    Value<String?> contentHtmlJa = const Value.absent(),
+    Value<String?> titleKo = const Value.absent(),
+    Value<String?> contentHtmlKo = const Value.absent(),
+    Value<String?> titleZh = const Value.absent(),
+    Value<String?> contentHtmlZh = const Value.absent(),
+  }) => SpecialtyArticle(
+    id: id ?? this.id,
+    titleUk: titleUk ?? this.titleUk,
+    imageUrl: imageUrl ?? this.imageUrl,
+    flagUrl: flagUrl ?? this.flagUrl,
+    contentHtmlUk: contentHtmlUk ?? this.contentHtmlUk,
+    readTimeMin: readTimeMin ?? this.readTimeMin,
+    titleEn: titleEn.present ? titleEn.value : this.titleEn,
+    contentHtmlEn: contentHtmlEn.present
+        ? contentHtmlEn.value
+        : this.contentHtmlEn,
+    titlePl: titlePl.present ? titlePl.value : this.titlePl,
+    contentHtmlPl: contentHtmlPl.present
+        ? contentHtmlPl.value
+        : this.contentHtmlPl,
+    titleDe: titleDe.present ? titleDe.value : this.titleDe,
+    contentHtmlDe: contentHtmlDe.present
+        ? contentHtmlDe.value
+        : this.contentHtmlDe,
+    titleFr: titleFr.present ? titleFr.value : this.titleFr,
+    contentHtmlFr: contentHtmlFr.present
+        ? contentHtmlFr.value
+        : this.contentHtmlFr,
+    titleEs: titleEs.present ? titleEs.value : this.titleEs,
+    contentHtmlEs: contentHtmlEs.present
+        ? contentHtmlEs.value
+        : this.contentHtmlEs,
+    titleIt: titleIt.present ? titleIt.value : this.titleIt,
+    contentHtmlIt: contentHtmlIt.present
+        ? contentHtmlIt.value
+        : this.contentHtmlIt,
+    titlePt: titlePt.present ? titlePt.value : this.titlePt,
+    contentHtmlPt: contentHtmlPt.present
+        ? contentHtmlPt.value
+        : this.contentHtmlPt,
+    titleRo: titleRo.present ? titleRo.value : this.titleRo,
+    contentHtmlRo: contentHtmlRo.present
+        ? contentHtmlRo.value
+        : this.contentHtmlRo,
+    titleTr: titleTr.present ? titleTr.value : this.titleTr,
+    contentHtmlTr: contentHtmlTr.present
+        ? contentHtmlTr.value
+        : this.contentHtmlTr,
+    titleJa: titleJa.present ? titleJa.value : this.titleJa,
+    contentHtmlJa: contentHtmlJa.present
+        ? contentHtmlJa.value
+        : this.contentHtmlJa,
+    titleKo: titleKo.present ? titleKo.value : this.titleKo,
+    contentHtmlKo: contentHtmlKo.present
+        ? contentHtmlKo.value
+        : this.contentHtmlKo,
+    titleZh: titleZh.present ? titleZh.value : this.titleZh,
+    contentHtmlZh: contentHtmlZh.present
+        ? contentHtmlZh.value
+        : this.contentHtmlZh,
+  );
   SpecialtyArticle copyWithCompanion(SpecialtyArticlesCompanion data) {
     return SpecialtyArticle(
       id: data.id.present ? data.id.value : this.id,
+      titleUk: data.titleUk.present ? data.titleUk.value : this.titleUk,
       imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      flagUrl: data.flagUrl.present ? data.flagUrl.value : this.flagUrl,
+      contentHtmlUk: data.contentHtmlUk.present
+          ? data.contentHtmlUk.value
+          : this.contentHtmlUk,
       readTimeMin: data.readTimeMin.present
           ? data.readTimeMin.value
           : this.readTimeMin,
+      titleEn: data.titleEn.present ? data.titleEn.value : this.titleEn,
+      contentHtmlEn: data.contentHtmlEn.present
+          ? data.contentHtmlEn.value
+          : this.contentHtmlEn,
+      titlePl: data.titlePl.present ? data.titlePl.value : this.titlePl,
+      contentHtmlPl: data.contentHtmlPl.present
+          ? data.contentHtmlPl.value
+          : this.contentHtmlPl,
+      titleDe: data.titleDe.present ? data.titleDe.value : this.titleDe,
+      contentHtmlDe: data.contentHtmlDe.present
+          ? data.contentHtmlDe.value
+          : this.contentHtmlDe,
+      titleFr: data.titleFr.present ? data.titleFr.value : this.titleFr,
+      contentHtmlFr: data.contentHtmlFr.present
+          ? data.contentHtmlFr.value
+          : this.contentHtmlFr,
+      titleEs: data.titleEs.present ? data.titleEs.value : this.titleEs,
+      contentHtmlEs: data.contentHtmlEs.present
+          ? data.contentHtmlEs.value
+          : this.contentHtmlEs,
+      titleIt: data.titleIt.present ? data.titleIt.value : this.titleIt,
+      contentHtmlIt: data.contentHtmlIt.present
+          ? data.contentHtmlIt.value
+          : this.contentHtmlIt,
+      titlePt: data.titlePt.present ? data.titlePt.value : this.titlePt,
+      contentHtmlPt: data.contentHtmlPt.present
+          ? data.contentHtmlPt.value
+          : this.contentHtmlPt,
+      titleRo: data.titleRo.present ? data.titleRo.value : this.titleRo,
+      contentHtmlRo: data.contentHtmlRo.present
+          ? data.contentHtmlRo.value
+          : this.contentHtmlRo,
+      titleTr: data.titleTr.present ? data.titleTr.value : this.titleTr,
+      contentHtmlTr: data.contentHtmlTr.present
+          ? data.contentHtmlTr.value
+          : this.contentHtmlTr,
+      titleJa: data.titleJa.present ? data.titleJa.value : this.titleJa,
+      contentHtmlJa: data.contentHtmlJa.present
+          ? data.contentHtmlJa.value
+          : this.contentHtmlJa,
+      titleKo: data.titleKo.present ? data.titleKo.value : this.titleKo,
+      contentHtmlKo: data.contentHtmlKo.present
+          ? data.contentHtmlKo.value
+          : this.contentHtmlKo,
+      titleZh: data.titleZh.present ? data.titleZh.value : this.titleZh,
+      contentHtmlZh: data.contentHtmlZh.present
+          ? data.contentHtmlZh.value
+          : this.contentHtmlZh,
     );
   }
 
@@ -4931,59 +6932,332 @@ class SpecialtyArticle extends DataClass
   String toString() {
     return (StringBuffer('SpecialtyArticle(')
           ..write('id: $id, ')
+          ..write('titleUk: $titleUk, ')
           ..write('imageUrl: $imageUrl, ')
-          ..write('readTimeMin: $readTimeMin')
+          ..write('flagUrl: $flagUrl, ')
+          ..write('contentHtmlUk: $contentHtmlUk, ')
+          ..write('readTimeMin: $readTimeMin, ')
+          ..write('titleEn: $titleEn, ')
+          ..write('contentHtmlEn: $contentHtmlEn, ')
+          ..write('titlePl: $titlePl, ')
+          ..write('contentHtmlPl: $contentHtmlPl, ')
+          ..write('titleDe: $titleDe, ')
+          ..write('contentHtmlDe: $contentHtmlDe, ')
+          ..write('titleFr: $titleFr, ')
+          ..write('contentHtmlFr: $contentHtmlFr, ')
+          ..write('titleEs: $titleEs, ')
+          ..write('contentHtmlEs: $contentHtmlEs, ')
+          ..write('titleIt: $titleIt, ')
+          ..write('contentHtmlIt: $contentHtmlIt, ')
+          ..write('titlePt: $titlePt, ')
+          ..write('contentHtmlPt: $contentHtmlPt, ')
+          ..write('titleRo: $titleRo, ')
+          ..write('contentHtmlRo: $contentHtmlRo, ')
+          ..write('titleTr: $titleTr, ')
+          ..write('contentHtmlTr: $contentHtmlTr, ')
+          ..write('titleJa: $titleJa, ')
+          ..write('contentHtmlJa: $contentHtmlJa, ')
+          ..write('titleKo: $titleKo, ')
+          ..write('contentHtmlKo: $contentHtmlKo, ')
+          ..write('titleZh: $titleZh, ')
+          ..write('contentHtmlZh: $contentHtmlZh')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, imageUrl, readTimeMin);
+  int get hashCode => Object.hashAll([
+    id,
+    titleUk,
+    imageUrl,
+    flagUrl,
+    contentHtmlUk,
+    readTimeMin,
+    titleEn,
+    contentHtmlEn,
+    titlePl,
+    contentHtmlPl,
+    titleDe,
+    contentHtmlDe,
+    titleFr,
+    contentHtmlFr,
+    titleEs,
+    contentHtmlEs,
+    titleIt,
+    contentHtmlIt,
+    titlePt,
+    contentHtmlPt,
+    titleRo,
+    contentHtmlRo,
+    titleTr,
+    contentHtmlTr,
+    titleJa,
+    contentHtmlJa,
+    titleKo,
+    contentHtmlKo,
+    titleZh,
+    contentHtmlZh,
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is SpecialtyArticle &&
           other.id == this.id &&
+          other.titleUk == this.titleUk &&
           other.imageUrl == this.imageUrl &&
-          other.readTimeMin == this.readTimeMin);
+          other.flagUrl == this.flagUrl &&
+          other.contentHtmlUk == this.contentHtmlUk &&
+          other.readTimeMin == this.readTimeMin &&
+          other.titleEn == this.titleEn &&
+          other.contentHtmlEn == this.contentHtmlEn &&
+          other.titlePl == this.titlePl &&
+          other.contentHtmlPl == this.contentHtmlPl &&
+          other.titleDe == this.titleDe &&
+          other.contentHtmlDe == this.contentHtmlDe &&
+          other.titleFr == this.titleFr &&
+          other.contentHtmlFr == this.contentHtmlFr &&
+          other.titleEs == this.titleEs &&
+          other.contentHtmlEs == this.contentHtmlEs &&
+          other.titleIt == this.titleIt &&
+          other.contentHtmlIt == this.contentHtmlIt &&
+          other.titlePt == this.titlePt &&
+          other.contentHtmlPt == this.contentHtmlPt &&
+          other.titleRo == this.titleRo &&
+          other.contentHtmlRo == this.contentHtmlRo &&
+          other.titleTr == this.titleTr &&
+          other.contentHtmlTr == this.contentHtmlTr &&
+          other.titleJa == this.titleJa &&
+          other.contentHtmlJa == this.contentHtmlJa &&
+          other.titleKo == this.titleKo &&
+          other.contentHtmlKo == this.contentHtmlKo &&
+          other.titleZh == this.titleZh &&
+          other.contentHtmlZh == this.contentHtmlZh);
 }
 
 class SpecialtyArticlesCompanion extends UpdateCompanion<SpecialtyArticle> {
   final Value<int> id;
+  final Value<String> titleUk;
   final Value<String> imageUrl;
+  final Value<String> flagUrl;
+  final Value<String> contentHtmlUk;
   final Value<int> readTimeMin;
+  final Value<String?> titleEn;
+  final Value<String?> contentHtmlEn;
+  final Value<String?> titlePl;
+  final Value<String?> contentHtmlPl;
+  final Value<String?> titleDe;
+  final Value<String?> contentHtmlDe;
+  final Value<String?> titleFr;
+  final Value<String?> contentHtmlFr;
+  final Value<String?> titleEs;
+  final Value<String?> contentHtmlEs;
+  final Value<String?> titleIt;
+  final Value<String?> contentHtmlIt;
+  final Value<String?> titlePt;
+  final Value<String?> contentHtmlPt;
+  final Value<String?> titleRo;
+  final Value<String?> contentHtmlRo;
+  final Value<String?> titleTr;
+  final Value<String?> contentHtmlTr;
+  final Value<String?> titleJa;
+  final Value<String?> contentHtmlJa;
+  final Value<String?> titleKo;
+  final Value<String?> contentHtmlKo;
+  final Value<String?> titleZh;
+  final Value<String?> contentHtmlZh;
   const SpecialtyArticlesCompanion({
     this.id = const Value.absent(),
+    this.titleUk = const Value.absent(),
     this.imageUrl = const Value.absent(),
+    this.flagUrl = const Value.absent(),
+    this.contentHtmlUk = const Value.absent(),
     this.readTimeMin = const Value.absent(),
+    this.titleEn = const Value.absent(),
+    this.contentHtmlEn = const Value.absent(),
+    this.titlePl = const Value.absent(),
+    this.contentHtmlPl = const Value.absent(),
+    this.titleDe = const Value.absent(),
+    this.contentHtmlDe = const Value.absent(),
+    this.titleFr = const Value.absent(),
+    this.contentHtmlFr = const Value.absent(),
+    this.titleEs = const Value.absent(),
+    this.contentHtmlEs = const Value.absent(),
+    this.titleIt = const Value.absent(),
+    this.contentHtmlIt = const Value.absent(),
+    this.titlePt = const Value.absent(),
+    this.contentHtmlPt = const Value.absent(),
+    this.titleRo = const Value.absent(),
+    this.contentHtmlRo = const Value.absent(),
+    this.titleTr = const Value.absent(),
+    this.contentHtmlTr = const Value.absent(),
+    this.titleJa = const Value.absent(),
+    this.contentHtmlJa = const Value.absent(),
+    this.titleKo = const Value.absent(),
+    this.contentHtmlKo = const Value.absent(),
+    this.titleZh = const Value.absent(),
+    this.contentHtmlZh = const Value.absent(),
   });
   SpecialtyArticlesCompanion.insert({
     this.id = const Value.absent(),
-    required String imageUrl,
-    required int readTimeMin,
-  }) : imageUrl = Value(imageUrl),
-       readTimeMin = Value(readTimeMin);
+    this.titleUk = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.flagUrl = const Value.absent(),
+    this.contentHtmlUk = const Value.absent(),
+    this.readTimeMin = const Value.absent(),
+    this.titleEn = const Value.absent(),
+    this.contentHtmlEn = const Value.absent(),
+    this.titlePl = const Value.absent(),
+    this.contentHtmlPl = const Value.absent(),
+    this.titleDe = const Value.absent(),
+    this.contentHtmlDe = const Value.absent(),
+    this.titleFr = const Value.absent(),
+    this.contentHtmlFr = const Value.absent(),
+    this.titleEs = const Value.absent(),
+    this.contentHtmlEs = const Value.absent(),
+    this.titleIt = const Value.absent(),
+    this.contentHtmlIt = const Value.absent(),
+    this.titlePt = const Value.absent(),
+    this.contentHtmlPt = const Value.absent(),
+    this.titleRo = const Value.absent(),
+    this.contentHtmlRo = const Value.absent(),
+    this.titleTr = const Value.absent(),
+    this.contentHtmlTr = const Value.absent(),
+    this.titleJa = const Value.absent(),
+    this.contentHtmlJa = const Value.absent(),
+    this.titleKo = const Value.absent(),
+    this.contentHtmlKo = const Value.absent(),
+    this.titleZh = const Value.absent(),
+    this.contentHtmlZh = const Value.absent(),
+  });
   static Insertable<SpecialtyArticle> custom({
     Expression<int>? id,
+    Expression<String>? titleUk,
     Expression<String>? imageUrl,
+    Expression<String>? flagUrl,
+    Expression<String>? contentHtmlUk,
     Expression<int>? readTimeMin,
+    Expression<String>? titleEn,
+    Expression<String>? contentHtmlEn,
+    Expression<String>? titlePl,
+    Expression<String>? contentHtmlPl,
+    Expression<String>? titleDe,
+    Expression<String>? contentHtmlDe,
+    Expression<String>? titleFr,
+    Expression<String>? contentHtmlFr,
+    Expression<String>? titleEs,
+    Expression<String>? contentHtmlEs,
+    Expression<String>? titleIt,
+    Expression<String>? contentHtmlIt,
+    Expression<String>? titlePt,
+    Expression<String>? contentHtmlPt,
+    Expression<String>? titleRo,
+    Expression<String>? contentHtmlRo,
+    Expression<String>? titleTr,
+    Expression<String>? contentHtmlTr,
+    Expression<String>? titleJa,
+    Expression<String>? contentHtmlJa,
+    Expression<String>? titleKo,
+    Expression<String>? contentHtmlKo,
+    Expression<String>? titleZh,
+    Expression<String>? contentHtmlZh,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (titleUk != null) 'title_uk': titleUk,
       if (imageUrl != null) 'image_url': imageUrl,
+      if (flagUrl != null) 'flag_url': flagUrl,
+      if (contentHtmlUk != null) 'content_html_uk': contentHtmlUk,
       if (readTimeMin != null) 'read_time_min': readTimeMin,
+      if (titleEn != null) 'title_en': titleEn,
+      if (contentHtmlEn != null) 'content_html_en': contentHtmlEn,
+      if (titlePl != null) 'title_pl': titlePl,
+      if (contentHtmlPl != null) 'content_html_pl': contentHtmlPl,
+      if (titleDe != null) 'title_de': titleDe,
+      if (contentHtmlDe != null) 'content_html_de': contentHtmlDe,
+      if (titleFr != null) 'title_fr': titleFr,
+      if (contentHtmlFr != null) 'content_html_fr': contentHtmlFr,
+      if (titleEs != null) 'title_es': titleEs,
+      if (contentHtmlEs != null) 'content_html_es': contentHtmlEs,
+      if (titleIt != null) 'title_it': titleIt,
+      if (contentHtmlIt != null) 'content_html_it': contentHtmlIt,
+      if (titlePt != null) 'title_pt': titlePt,
+      if (contentHtmlPt != null) 'content_html_pt': contentHtmlPt,
+      if (titleRo != null) 'title_ro': titleRo,
+      if (contentHtmlRo != null) 'content_html_ro': contentHtmlRo,
+      if (titleTr != null) 'title_tr': titleTr,
+      if (contentHtmlTr != null) 'content_html_tr': contentHtmlTr,
+      if (titleJa != null) 'title_ja': titleJa,
+      if (contentHtmlJa != null) 'content_html_ja': contentHtmlJa,
+      if (titleKo != null) 'title_ko': titleKo,
+      if (contentHtmlKo != null) 'content_html_ko': contentHtmlKo,
+      if (titleZh != null) 'title_zh': titleZh,
+      if (contentHtmlZh != null) 'content_html_zh': contentHtmlZh,
     });
   }
 
   SpecialtyArticlesCompanion copyWith({
     Value<int>? id,
+    Value<String>? titleUk,
     Value<String>? imageUrl,
+    Value<String>? flagUrl,
+    Value<String>? contentHtmlUk,
     Value<int>? readTimeMin,
+    Value<String?>? titleEn,
+    Value<String?>? contentHtmlEn,
+    Value<String?>? titlePl,
+    Value<String?>? contentHtmlPl,
+    Value<String?>? titleDe,
+    Value<String?>? contentHtmlDe,
+    Value<String?>? titleFr,
+    Value<String?>? contentHtmlFr,
+    Value<String?>? titleEs,
+    Value<String?>? contentHtmlEs,
+    Value<String?>? titleIt,
+    Value<String?>? contentHtmlIt,
+    Value<String?>? titlePt,
+    Value<String?>? contentHtmlPt,
+    Value<String?>? titleRo,
+    Value<String?>? contentHtmlRo,
+    Value<String?>? titleTr,
+    Value<String?>? contentHtmlTr,
+    Value<String?>? titleJa,
+    Value<String?>? contentHtmlJa,
+    Value<String?>? titleKo,
+    Value<String?>? contentHtmlKo,
+    Value<String?>? titleZh,
+    Value<String?>? contentHtmlZh,
   }) {
     return SpecialtyArticlesCompanion(
       id: id ?? this.id,
+      titleUk: titleUk ?? this.titleUk,
       imageUrl: imageUrl ?? this.imageUrl,
+      flagUrl: flagUrl ?? this.flagUrl,
+      contentHtmlUk: contentHtmlUk ?? this.contentHtmlUk,
       readTimeMin: readTimeMin ?? this.readTimeMin,
+      titleEn: titleEn ?? this.titleEn,
+      contentHtmlEn: contentHtmlEn ?? this.contentHtmlEn,
+      titlePl: titlePl ?? this.titlePl,
+      contentHtmlPl: contentHtmlPl ?? this.contentHtmlPl,
+      titleDe: titleDe ?? this.titleDe,
+      contentHtmlDe: contentHtmlDe ?? this.contentHtmlDe,
+      titleFr: titleFr ?? this.titleFr,
+      contentHtmlFr: contentHtmlFr ?? this.contentHtmlFr,
+      titleEs: titleEs ?? this.titleEs,
+      contentHtmlEs: contentHtmlEs ?? this.contentHtmlEs,
+      titleIt: titleIt ?? this.titleIt,
+      contentHtmlIt: contentHtmlIt ?? this.contentHtmlIt,
+      titlePt: titlePt ?? this.titlePt,
+      contentHtmlPt: contentHtmlPt ?? this.contentHtmlPt,
+      titleRo: titleRo ?? this.titleRo,
+      contentHtmlRo: contentHtmlRo ?? this.contentHtmlRo,
+      titleTr: titleTr ?? this.titleTr,
+      contentHtmlTr: contentHtmlTr ?? this.contentHtmlTr,
+      titleJa: titleJa ?? this.titleJa,
+      contentHtmlJa: contentHtmlJa ?? this.contentHtmlJa,
+      titleKo: titleKo ?? this.titleKo,
+      contentHtmlKo: contentHtmlKo ?? this.contentHtmlKo,
+      titleZh: titleZh ?? this.titleZh,
+      contentHtmlZh: contentHtmlZh ?? this.contentHtmlZh,
     );
   }
 
@@ -4993,11 +7267,92 @@ class SpecialtyArticlesCompanion extends UpdateCompanion<SpecialtyArticle> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
+    if (titleUk.present) {
+      map['title_uk'] = Variable<String>(titleUk.value);
+    }
     if (imageUrl.present) {
       map['image_url'] = Variable<String>(imageUrl.value);
     }
+    if (flagUrl.present) {
+      map['flag_url'] = Variable<String>(flagUrl.value);
+    }
+    if (contentHtmlUk.present) {
+      map['content_html_uk'] = Variable<String>(contentHtmlUk.value);
+    }
     if (readTimeMin.present) {
       map['read_time_min'] = Variable<int>(readTimeMin.value);
+    }
+    if (titleEn.present) {
+      map['title_en'] = Variable<String>(titleEn.value);
+    }
+    if (contentHtmlEn.present) {
+      map['content_html_en'] = Variable<String>(contentHtmlEn.value);
+    }
+    if (titlePl.present) {
+      map['title_pl'] = Variable<String>(titlePl.value);
+    }
+    if (contentHtmlPl.present) {
+      map['content_html_pl'] = Variable<String>(contentHtmlPl.value);
+    }
+    if (titleDe.present) {
+      map['title_de'] = Variable<String>(titleDe.value);
+    }
+    if (contentHtmlDe.present) {
+      map['content_html_de'] = Variable<String>(contentHtmlDe.value);
+    }
+    if (titleFr.present) {
+      map['title_fr'] = Variable<String>(titleFr.value);
+    }
+    if (contentHtmlFr.present) {
+      map['content_html_fr'] = Variable<String>(contentHtmlFr.value);
+    }
+    if (titleEs.present) {
+      map['title_es'] = Variable<String>(titleEs.value);
+    }
+    if (contentHtmlEs.present) {
+      map['content_html_es'] = Variable<String>(contentHtmlEs.value);
+    }
+    if (titleIt.present) {
+      map['title_it'] = Variable<String>(titleIt.value);
+    }
+    if (contentHtmlIt.present) {
+      map['content_html_it'] = Variable<String>(contentHtmlIt.value);
+    }
+    if (titlePt.present) {
+      map['title_pt'] = Variable<String>(titlePt.value);
+    }
+    if (contentHtmlPt.present) {
+      map['content_html_pt'] = Variable<String>(contentHtmlPt.value);
+    }
+    if (titleRo.present) {
+      map['title_ro'] = Variable<String>(titleRo.value);
+    }
+    if (contentHtmlRo.present) {
+      map['content_html_ro'] = Variable<String>(contentHtmlRo.value);
+    }
+    if (titleTr.present) {
+      map['title_tr'] = Variable<String>(titleTr.value);
+    }
+    if (contentHtmlTr.present) {
+      map['content_html_tr'] = Variable<String>(contentHtmlTr.value);
+    }
+    if (titleJa.present) {
+      map['title_ja'] = Variable<String>(titleJa.value);
+    }
+    if (contentHtmlJa.present) {
+      map['content_html_ja'] = Variable<String>(contentHtmlJa.value);
+    }
+    if (titleKo.present) {
+      map['title_ko'] = Variable<String>(titleKo.value);
+    }
+    if (contentHtmlKo.present) {
+      map['content_html_ko'] = Variable<String>(contentHtmlKo.value);
+    }
+    if (titleZh.present) {
+      map['title_zh'] = Variable<String>(titleZh.value);
+    }
+    if (contentHtmlZh.present) {
+      map['content_html_zh'] = Variable<String>(contentHtmlZh.value);
     }
     return map;
   }
@@ -5006,398 +7361,35 @@ class SpecialtyArticlesCompanion extends UpdateCompanion<SpecialtyArticle> {
   String toString() {
     return (StringBuffer('SpecialtyArticlesCompanion(')
           ..write('id: $id, ')
+          ..write('titleUk: $titleUk, ')
           ..write('imageUrl: $imageUrl, ')
-          ..write('readTimeMin: $readTimeMin')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $SpecialtyArticleTranslationsTable extends SpecialtyArticleTranslations
-    with
-        TableInfo<
-          $SpecialtyArticleTranslationsTable,
-          SpecialtyArticleTranslation
-        > {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $SpecialtyArticleTranslationsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _articleIdMeta = const VerificationMeta(
-    'articleId',
-  );
-  @override
-  late final GeneratedColumn<int> articleId = GeneratedColumn<int>(
-    'article_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES specialty_articles (id)',
-    ),
-  );
-  static const VerificationMeta _languageCodeMeta = const VerificationMeta(
-    'languageCode',
-  );
-  @override
-  late final GeneratedColumn<String> languageCode = GeneratedColumn<String>(
-    'language_code',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _titleMeta = const VerificationMeta('title');
-  @override
-  late final GeneratedColumn<String> title = GeneratedColumn<String>(
-    'title',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _subtitleMeta = const VerificationMeta(
-    'subtitle',
-  );
-  @override
-  late final GeneratedColumn<String> subtitle = GeneratedColumn<String>(
-    'subtitle',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _contentHtmlMeta = const VerificationMeta(
-    'contentHtml',
-  );
-  @override
-  late final GeneratedColumn<String> contentHtml = GeneratedColumn<String>(
-    'content_html',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    articleId,
-    languageCode,
-    title,
-    subtitle,
-    contentHtml,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'specialty_article_translations';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<SpecialtyArticleTranslation> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('article_id')) {
-      context.handle(
-        _articleIdMeta,
-        articleId.isAcceptableOrUnknown(data['article_id']!, _articleIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_articleIdMeta);
-    }
-    if (data.containsKey('language_code')) {
-      context.handle(
-        _languageCodeMeta,
-        languageCode.isAcceptableOrUnknown(
-          data['language_code']!,
-          _languageCodeMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_languageCodeMeta);
-    }
-    if (data.containsKey('title')) {
-      context.handle(
-        _titleMeta,
-        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_titleMeta);
-    }
-    if (data.containsKey('subtitle')) {
-      context.handle(
-        _subtitleMeta,
-        subtitle.isAcceptableOrUnknown(data['subtitle']!, _subtitleMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_subtitleMeta);
-    }
-    if (data.containsKey('content_html')) {
-      context.handle(
-        _contentHtmlMeta,
-        contentHtml.isAcceptableOrUnknown(
-          data['content_html']!,
-          _contentHtmlMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_contentHtmlMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {articleId, languageCode};
-  @override
-  SpecialtyArticleTranslation map(
-    Map<String, dynamic> data, {
-    String? tablePrefix,
-  }) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return SpecialtyArticleTranslation(
-      articleId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}article_id'],
-      )!,
-      languageCode: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}language_code'],
-      )!,
-      title: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}title'],
-      )!,
-      subtitle: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}subtitle'],
-      )!,
-      contentHtml: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}content_html'],
-      )!,
-    );
-  }
-
-  @override
-  $SpecialtyArticleTranslationsTable createAlias(String alias) {
-    return $SpecialtyArticleTranslationsTable(attachedDatabase, alias);
-  }
-}
-
-class SpecialtyArticleTranslation extends DataClass
-    implements Insertable<SpecialtyArticleTranslation> {
-  final int articleId;
-  final String languageCode;
-  final String title;
-  final String subtitle;
-  final String contentHtml;
-  const SpecialtyArticleTranslation({
-    required this.articleId,
-    required this.languageCode,
-    required this.title,
-    required this.subtitle,
-    required this.contentHtml,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['article_id'] = Variable<int>(articleId);
-    map['language_code'] = Variable<String>(languageCode);
-    map['title'] = Variable<String>(title);
-    map['subtitle'] = Variable<String>(subtitle);
-    map['content_html'] = Variable<String>(contentHtml);
-    return map;
-  }
-
-  SpecialtyArticleTranslationsCompanion toCompanion(bool nullToAbsent) {
-    return SpecialtyArticleTranslationsCompanion(
-      articleId: Value(articleId),
-      languageCode: Value(languageCode),
-      title: Value(title),
-      subtitle: Value(subtitle),
-      contentHtml: Value(contentHtml),
-    );
-  }
-
-  factory SpecialtyArticleTranslation.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return SpecialtyArticleTranslation(
-      articleId: serializer.fromJson<int>(json['articleId']),
-      languageCode: serializer.fromJson<String>(json['languageCode']),
-      title: serializer.fromJson<String>(json['title']),
-      subtitle: serializer.fromJson<String>(json['subtitle']),
-      contentHtml: serializer.fromJson<String>(json['contentHtml']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'articleId': serializer.toJson<int>(articleId),
-      'languageCode': serializer.toJson<String>(languageCode),
-      'title': serializer.toJson<String>(title),
-      'subtitle': serializer.toJson<String>(subtitle),
-      'contentHtml': serializer.toJson<String>(contentHtml),
-    };
-  }
-
-  SpecialtyArticleTranslation copyWith({
-    int? articleId,
-    String? languageCode,
-    String? title,
-    String? subtitle,
-    String? contentHtml,
-  }) => SpecialtyArticleTranslation(
-    articleId: articleId ?? this.articleId,
-    languageCode: languageCode ?? this.languageCode,
-    title: title ?? this.title,
-    subtitle: subtitle ?? this.subtitle,
-    contentHtml: contentHtml ?? this.contentHtml,
-  );
-  SpecialtyArticleTranslation copyWithCompanion(
-    SpecialtyArticleTranslationsCompanion data,
-  ) {
-    return SpecialtyArticleTranslation(
-      articleId: data.articleId.present ? data.articleId.value : this.articleId,
-      languageCode: data.languageCode.present
-          ? data.languageCode.value
-          : this.languageCode,
-      title: data.title.present ? data.title.value : this.title,
-      subtitle: data.subtitle.present ? data.subtitle.value : this.subtitle,
-      contentHtml: data.contentHtml.present
-          ? data.contentHtml.value
-          : this.contentHtml,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('SpecialtyArticleTranslation(')
-          ..write('articleId: $articleId, ')
-          ..write('languageCode: $languageCode, ')
-          ..write('title: $title, ')
-          ..write('subtitle: $subtitle, ')
-          ..write('contentHtml: $contentHtml')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(articleId, languageCode, title, subtitle, contentHtml);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is SpecialtyArticleTranslation &&
-          other.articleId == this.articleId &&
-          other.languageCode == this.languageCode &&
-          other.title == this.title &&
-          other.subtitle == this.subtitle &&
-          other.contentHtml == this.contentHtml);
-}
-
-class SpecialtyArticleTranslationsCompanion
-    extends UpdateCompanion<SpecialtyArticleTranslation> {
-  final Value<int> articleId;
-  final Value<String> languageCode;
-  final Value<String> title;
-  final Value<String> subtitle;
-  final Value<String> contentHtml;
-  final Value<int> rowid;
-  const SpecialtyArticleTranslationsCompanion({
-    this.articleId = const Value.absent(),
-    this.languageCode = const Value.absent(),
-    this.title = const Value.absent(),
-    this.subtitle = const Value.absent(),
-    this.contentHtml = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  SpecialtyArticleTranslationsCompanion.insert({
-    required int articleId,
-    required String languageCode,
-    required String title,
-    required String subtitle,
-    required String contentHtml,
-    this.rowid = const Value.absent(),
-  }) : articleId = Value(articleId),
-       languageCode = Value(languageCode),
-       title = Value(title),
-       subtitle = Value(subtitle),
-       contentHtml = Value(contentHtml);
-  static Insertable<SpecialtyArticleTranslation> custom({
-    Expression<int>? articleId,
-    Expression<String>? languageCode,
-    Expression<String>? title,
-    Expression<String>? subtitle,
-    Expression<String>? contentHtml,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (articleId != null) 'article_id': articleId,
-      if (languageCode != null) 'language_code': languageCode,
-      if (title != null) 'title': title,
-      if (subtitle != null) 'subtitle': subtitle,
-      if (contentHtml != null) 'content_html': contentHtml,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  SpecialtyArticleTranslationsCompanion copyWith({
-    Value<int>? articleId,
-    Value<String>? languageCode,
-    Value<String>? title,
-    Value<String>? subtitle,
-    Value<String>? contentHtml,
-    Value<int>? rowid,
-  }) {
-    return SpecialtyArticleTranslationsCompanion(
-      articleId: articleId ?? this.articleId,
-      languageCode: languageCode ?? this.languageCode,
-      title: title ?? this.title,
-      subtitle: subtitle ?? this.subtitle,
-      contentHtml: contentHtml ?? this.contentHtml,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (articleId.present) {
-      map['article_id'] = Variable<int>(articleId.value);
-    }
-    if (languageCode.present) {
-      map['language_code'] = Variable<String>(languageCode.value);
-    }
-    if (title.present) {
-      map['title'] = Variable<String>(title.value);
-    }
-    if (subtitle.present) {
-      map['subtitle'] = Variable<String>(subtitle.value);
-    }
-    if (contentHtml.present) {
-      map['content_html'] = Variable<String>(contentHtml.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('SpecialtyArticleTranslationsCompanion(')
-          ..write('articleId: $articleId, ')
-          ..write('languageCode: $languageCode, ')
-          ..write('title: $title, ')
-          ..write('subtitle: $subtitle, ')
-          ..write('contentHtml: $contentHtml, ')
-          ..write('rowid: $rowid')
+          ..write('flagUrl: $flagUrl, ')
+          ..write('contentHtmlUk: $contentHtmlUk, ')
+          ..write('readTimeMin: $readTimeMin, ')
+          ..write('titleEn: $titleEn, ')
+          ..write('contentHtmlEn: $contentHtmlEn, ')
+          ..write('titlePl: $titlePl, ')
+          ..write('contentHtmlPl: $contentHtmlPl, ')
+          ..write('titleDe: $titleDe, ')
+          ..write('contentHtmlDe: $contentHtmlDe, ')
+          ..write('titleFr: $titleFr, ')
+          ..write('contentHtmlFr: $contentHtmlFr, ')
+          ..write('titleEs: $titleEs, ')
+          ..write('contentHtmlEs: $contentHtmlEs, ')
+          ..write('titleIt: $titleIt, ')
+          ..write('contentHtmlIt: $contentHtmlIt, ')
+          ..write('titlePt: $titlePt, ')
+          ..write('contentHtmlPt: $contentHtmlPt, ')
+          ..write('titleRo: $titleRo, ')
+          ..write('contentHtmlRo: $contentHtmlRo, ')
+          ..write('titleTr: $titleTr, ')
+          ..write('contentHtmlTr: $contentHtmlTr, ')
+          ..write('titleJa: $titleJa, ')
+          ..write('contentHtmlJa: $contentHtmlJa, ')
+          ..write('titleKo: $titleKo, ')
+          ..write('contentHtmlKo: $contentHtmlKo, ')
+          ..write('titleZh: $titleZh, ')
+          ..write('contentHtmlZh: $contentHtmlZh')
           ..write(')'))
         .toString();
   }
@@ -7659,26 +9651,281 @@ class $BrewingRecipesTable extends BrewingRecipes
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  static const VerificationMeta _nameUkMeta = const VerificationMeta('nameUk');
   @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-    'name',
+  late final GeneratedColumn<String> nameUk = GeneratedColumn<String>(
+    'name_uk',
     aliasedName,
     false,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('Тут має бути назва'),
   );
-  static const VerificationMeta _descriptionMeta = const VerificationMeta(
-    'description',
+  static const VerificationMeta _descriptionUkMeta = const VerificationMeta(
+    'descriptionUk',
   );
   @override
-  late final GeneratedColumn<String> description = GeneratedColumn<String>(
-    'description',
+  late final GeneratedColumn<String> descriptionUk = GeneratedColumn<String>(
+    'description_uk',
     aliasedName,
     false,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('Тут має бути опис'),
+  );
+  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
+    'imageUrl',
+  );
+  @override
+  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
+    'image_url',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('Тут має бути лінк на фото'),
+  );
+  static const VerificationMeta _nameEnMeta = const VerificationMeta('nameEn');
+  @override
+  late final GeneratedColumn<String> nameEn = GeneratedColumn<String>(
+    'name_en',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionEnMeta = const VerificationMeta(
+    'descriptionEn',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionEn = GeneratedColumn<String>(
+    'description_en',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _namePlMeta = const VerificationMeta('namePl');
+  @override
+  late final GeneratedColumn<String> namePl = GeneratedColumn<String>(
+    'name_pl',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionPlMeta = const VerificationMeta(
+    'descriptionPl',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionPl = GeneratedColumn<String>(
+    'description_pl',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nameDeMeta = const VerificationMeta('nameDe');
+  @override
+  late final GeneratedColumn<String> nameDe = GeneratedColumn<String>(
+    'name_de',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionDeMeta = const VerificationMeta(
+    'descriptionDe',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionDe = GeneratedColumn<String>(
+    'description_de',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nameFrMeta = const VerificationMeta('nameFr');
+  @override
+  late final GeneratedColumn<String> nameFr = GeneratedColumn<String>(
+    'name_fr',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionFrMeta = const VerificationMeta(
+    'descriptionFr',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionFr = GeneratedColumn<String>(
+    'description_fr',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nameEsMeta = const VerificationMeta('nameEs');
+  @override
+  late final GeneratedColumn<String> nameEs = GeneratedColumn<String>(
+    'name_es',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionEsMeta = const VerificationMeta(
+    'descriptionEs',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionEs = GeneratedColumn<String>(
+    'description_es',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nameItMeta = const VerificationMeta('nameIt');
+  @override
+  late final GeneratedColumn<String> nameIt = GeneratedColumn<String>(
+    'name_it',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionItMeta = const VerificationMeta(
+    'descriptionIt',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionIt = GeneratedColumn<String>(
+    'description_it',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _namePtMeta = const VerificationMeta('namePt');
+  @override
+  late final GeneratedColumn<String> namePt = GeneratedColumn<String>(
+    'name_pt',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionPtMeta = const VerificationMeta(
+    'descriptionPt',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionPt = GeneratedColumn<String>(
+    'description_pt',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nameRoMeta = const VerificationMeta('nameRo');
+  @override
+  late final GeneratedColumn<String> nameRo = GeneratedColumn<String>(
+    'name_ro',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionRoMeta = const VerificationMeta(
+    'descriptionRo',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionRo = GeneratedColumn<String>(
+    'description_ro',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nameTrMeta = const VerificationMeta('nameTr');
+  @override
+  late final GeneratedColumn<String> nameTr = GeneratedColumn<String>(
+    'name_tr',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionTrMeta = const VerificationMeta(
+    'descriptionTr',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionTr = GeneratedColumn<String>(
+    'description_tr',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nameJaMeta = const VerificationMeta('nameJa');
+  @override
+  late final GeneratedColumn<String> nameJa = GeneratedColumn<String>(
+    'name_ja',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionJaMeta = const VerificationMeta(
+    'descriptionJa',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionJa = GeneratedColumn<String>(
+    'description_ja',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nameKoMeta = const VerificationMeta('nameKo');
+  @override
+  late final GeneratedColumn<String> nameKo = GeneratedColumn<String>(
+    'name_ko',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionKoMeta = const VerificationMeta(
+    'descriptionKo',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionKo = GeneratedColumn<String>(
+    'description_ko',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nameZhMeta = const VerificationMeta('nameZh');
+  @override
+  late final GeneratedColumn<String> nameZh = GeneratedColumn<String>(
+    'name_zh',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionZhMeta = const VerificationMeta(
+    'descriptionZh',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionZh = GeneratedColumn<String>(
+    'description_zh',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _ratioGramsPerMlMeta = const VerificationMeta(
     'ratioGramsPerMl',
@@ -7689,7 +9936,8 @@ class $BrewingRecipesTable extends BrewingRecipes
     aliasedName,
     false,
     type: DriftSqlType.double,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0.066),
   );
   static const VerificationMeta _tempCMeta = const VerificationMeta('tempC');
   @override
@@ -7698,7 +9946,8 @@ class $BrewingRecipesTable extends BrewingRecipes
     aliasedName,
     false,
     type: DriftSqlType.double,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(93.0),
   );
   static const VerificationMeta _totalTimeSecMeta = const VerificationMeta(
     'totalTimeSec',
@@ -7709,7 +9958,8 @@ class $BrewingRecipesTable extends BrewingRecipes
     aliasedName,
     false,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(180),
   );
   static const VerificationMeta _difficultyMeta = const VerificationMeta(
     'difficulty',
@@ -7720,7 +9970,8 @@ class $BrewingRecipesTable extends BrewingRecipes
     aliasedName,
     false,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('Intermediate'),
   );
   static const VerificationMeta _stepsJsonMeta = const VerificationMeta(
     'stepsJson',
@@ -7731,7 +9982,8 @@ class $BrewingRecipesTable extends BrewingRecipes
     aliasedName,
     false,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('[]'),
   );
   static const VerificationMeta _flavorProfileMeta = const VerificationMeta(
     'flavorProfile',
@@ -7742,7 +9994,8 @@ class $BrewingRecipesTable extends BrewingRecipes
     aliasedName,
     false,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('Balanced'),
   );
   static const VerificationMeta _iconNameMeta = const VerificationMeta(
     'iconName',
@@ -7751,16 +10004,41 @@ class $BrewingRecipesTable extends BrewingRecipes
   late final GeneratedColumn<String> iconName = GeneratedColumn<String>(
     'icon_name',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     methodKey,
-    name,
-    description,
+    nameUk,
+    descriptionUk,
+    imageUrl,
+    nameEn,
+    descriptionEn,
+    namePl,
+    descriptionPl,
+    nameDe,
+    descriptionDe,
+    nameFr,
+    descriptionFr,
+    nameEs,
+    descriptionEs,
+    nameIt,
+    descriptionIt,
+    namePt,
+    descriptionPt,
+    nameRo,
+    descriptionRo,
+    nameTr,
+    descriptionTr,
+    nameJa,
+    descriptionJa,
+    nameKo,
+    descriptionKo,
+    nameZh,
+    descriptionZh,
     ratioGramsPerMl,
     tempC,
     totalTimeSec,
@@ -7792,24 +10070,206 @@ class $BrewingRecipesTable extends BrewingRecipes
     } else if (isInserting) {
       context.missing(_methodKeyMeta);
     }
-    if (data.containsKey('name')) {
+    if (data.containsKey('name_uk')) {
       context.handle(
-        _nameMeta,
-        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+        _nameUkMeta,
+        nameUk.isAcceptableOrUnknown(data['name_uk']!, _nameUkMeta),
       );
-    } else if (isInserting) {
-      context.missing(_nameMeta);
     }
-    if (data.containsKey('description')) {
+    if (data.containsKey('description_uk')) {
       context.handle(
-        _descriptionMeta,
-        description.isAcceptableOrUnknown(
-          data['description']!,
-          _descriptionMeta,
+        _descriptionUkMeta,
+        descriptionUk.isAcceptableOrUnknown(
+          data['description_uk']!,
+          _descriptionUkMeta,
         ),
       );
-    } else if (isInserting) {
-      context.missing(_descriptionMeta);
+    }
+    if (data.containsKey('image_url')) {
+      context.handle(
+        _imageUrlMeta,
+        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
+      );
+    }
+    if (data.containsKey('name_en')) {
+      context.handle(
+        _nameEnMeta,
+        nameEn.isAcceptableOrUnknown(data['name_en']!, _nameEnMeta),
+      );
+    }
+    if (data.containsKey('description_en')) {
+      context.handle(
+        _descriptionEnMeta,
+        descriptionEn.isAcceptableOrUnknown(
+          data['description_en']!,
+          _descriptionEnMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name_pl')) {
+      context.handle(
+        _namePlMeta,
+        namePl.isAcceptableOrUnknown(data['name_pl']!, _namePlMeta),
+      );
+    }
+    if (data.containsKey('description_pl')) {
+      context.handle(
+        _descriptionPlMeta,
+        descriptionPl.isAcceptableOrUnknown(
+          data['description_pl']!,
+          _descriptionPlMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name_de')) {
+      context.handle(
+        _nameDeMeta,
+        nameDe.isAcceptableOrUnknown(data['name_de']!, _nameDeMeta),
+      );
+    }
+    if (data.containsKey('description_de')) {
+      context.handle(
+        _descriptionDeMeta,
+        descriptionDe.isAcceptableOrUnknown(
+          data['description_de']!,
+          _descriptionDeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name_fr')) {
+      context.handle(
+        _nameFrMeta,
+        nameFr.isAcceptableOrUnknown(data['name_fr']!, _nameFrMeta),
+      );
+    }
+    if (data.containsKey('description_fr')) {
+      context.handle(
+        _descriptionFrMeta,
+        descriptionFr.isAcceptableOrUnknown(
+          data['description_fr']!,
+          _descriptionFrMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name_es')) {
+      context.handle(
+        _nameEsMeta,
+        nameEs.isAcceptableOrUnknown(data['name_es']!, _nameEsMeta),
+      );
+    }
+    if (data.containsKey('description_es')) {
+      context.handle(
+        _descriptionEsMeta,
+        descriptionEs.isAcceptableOrUnknown(
+          data['description_es']!,
+          _descriptionEsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name_it')) {
+      context.handle(
+        _nameItMeta,
+        nameIt.isAcceptableOrUnknown(data['name_it']!, _nameItMeta),
+      );
+    }
+    if (data.containsKey('description_it')) {
+      context.handle(
+        _descriptionItMeta,
+        descriptionIt.isAcceptableOrUnknown(
+          data['description_it']!,
+          _descriptionItMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name_pt')) {
+      context.handle(
+        _namePtMeta,
+        namePt.isAcceptableOrUnknown(data['name_pt']!, _namePtMeta),
+      );
+    }
+    if (data.containsKey('description_pt')) {
+      context.handle(
+        _descriptionPtMeta,
+        descriptionPt.isAcceptableOrUnknown(
+          data['description_pt']!,
+          _descriptionPtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name_ro')) {
+      context.handle(
+        _nameRoMeta,
+        nameRo.isAcceptableOrUnknown(data['name_ro']!, _nameRoMeta),
+      );
+    }
+    if (data.containsKey('description_ro')) {
+      context.handle(
+        _descriptionRoMeta,
+        descriptionRo.isAcceptableOrUnknown(
+          data['description_ro']!,
+          _descriptionRoMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name_tr')) {
+      context.handle(
+        _nameTrMeta,
+        nameTr.isAcceptableOrUnknown(data['name_tr']!, _nameTrMeta),
+      );
+    }
+    if (data.containsKey('description_tr')) {
+      context.handle(
+        _descriptionTrMeta,
+        descriptionTr.isAcceptableOrUnknown(
+          data['description_tr']!,
+          _descriptionTrMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name_ja')) {
+      context.handle(
+        _nameJaMeta,
+        nameJa.isAcceptableOrUnknown(data['name_ja']!, _nameJaMeta),
+      );
+    }
+    if (data.containsKey('description_ja')) {
+      context.handle(
+        _descriptionJaMeta,
+        descriptionJa.isAcceptableOrUnknown(
+          data['description_ja']!,
+          _descriptionJaMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name_ko')) {
+      context.handle(
+        _nameKoMeta,
+        nameKo.isAcceptableOrUnknown(data['name_ko']!, _nameKoMeta),
+      );
+    }
+    if (data.containsKey('description_ko')) {
+      context.handle(
+        _descriptionKoMeta,
+        descriptionKo.isAcceptableOrUnknown(
+          data['description_ko']!,
+          _descriptionKoMeta,
+        ),
+      );
+    }
+    if (data.containsKey('name_zh')) {
+      context.handle(
+        _nameZhMeta,
+        nameZh.isAcceptableOrUnknown(data['name_zh']!, _nameZhMeta),
+      );
+    }
+    if (data.containsKey('description_zh')) {
+      context.handle(
+        _descriptionZhMeta,
+        descriptionZh.isAcceptableOrUnknown(
+          data['description_zh']!,
+          _descriptionZhMeta,
+        ),
+      );
     }
     if (data.containsKey('ratio_grams_per_ml')) {
       context.handle(
@@ -7819,16 +10279,12 @@ class $BrewingRecipesTable extends BrewingRecipes
           _ratioGramsPerMlMeta,
         ),
       );
-    } else if (isInserting) {
-      context.missing(_ratioGramsPerMlMeta);
     }
     if (data.containsKey('temp_c')) {
       context.handle(
         _tempCMeta,
         tempC.isAcceptableOrUnknown(data['temp_c']!, _tempCMeta),
       );
-    } else if (isInserting) {
-      context.missing(_tempCMeta);
     }
     if (data.containsKey('total_time_sec')) {
       context.handle(
@@ -7838,24 +10294,18 @@ class $BrewingRecipesTable extends BrewingRecipes
           _totalTimeSecMeta,
         ),
       );
-    } else if (isInserting) {
-      context.missing(_totalTimeSecMeta);
     }
     if (data.containsKey('difficulty')) {
       context.handle(
         _difficultyMeta,
         difficulty.isAcceptableOrUnknown(data['difficulty']!, _difficultyMeta),
       );
-    } else if (isInserting) {
-      context.missing(_difficultyMeta);
     }
     if (data.containsKey('steps_json')) {
       context.handle(
         _stepsJsonMeta,
         stepsJson.isAcceptableOrUnknown(data['steps_json']!, _stepsJsonMeta),
       );
-    } else if (isInserting) {
-      context.missing(_stepsJsonMeta);
     }
     if (data.containsKey('flavor_profile')) {
       context.handle(
@@ -7865,16 +10315,12 @@ class $BrewingRecipesTable extends BrewingRecipes
           _flavorProfileMeta,
         ),
       );
-    } else if (isInserting) {
-      context.missing(_flavorProfileMeta);
     }
     if (data.containsKey('icon_name')) {
       context.handle(
         _iconNameMeta,
         iconName.isAcceptableOrUnknown(data['icon_name']!, _iconNameMeta),
       );
-    } else if (isInserting) {
-      context.missing(_iconNameMeta);
     }
     return context;
   }
@@ -7893,14 +10339,114 @@ class $BrewingRecipesTable extends BrewingRecipes
         DriftSqlType.string,
         data['${effectivePrefix}method_key'],
       )!,
-      name: attachedDatabase.typeMapping.read(
+      nameUk: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}name'],
+        data['${effectivePrefix}name_uk'],
       )!,
-      description: attachedDatabase.typeMapping.read(
+      descriptionUk: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}description'],
+        data['${effectivePrefix}description_uk'],
       )!,
+      imageUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_url'],
+      )!,
+      nameEn: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_en'],
+      ),
+      descriptionEn: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_en'],
+      ),
+      namePl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_pl'],
+      ),
+      descriptionPl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_pl'],
+      ),
+      nameDe: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_de'],
+      ),
+      descriptionDe: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_de'],
+      ),
+      nameFr: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_fr'],
+      ),
+      descriptionFr: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_fr'],
+      ),
+      nameEs: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_es'],
+      ),
+      descriptionEs: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_es'],
+      ),
+      nameIt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_it'],
+      ),
+      descriptionIt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_it'],
+      ),
+      namePt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_pt'],
+      ),
+      descriptionPt: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_pt'],
+      ),
+      nameRo: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_ro'],
+      ),
+      descriptionRo: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_ro'],
+      ),
+      nameTr: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_tr'],
+      ),
+      descriptionTr: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_tr'],
+      ),
+      nameJa: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_ja'],
+      ),
+      descriptionJa: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_ja'],
+      ),
+      nameKo: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_ko'],
+      ),
+      descriptionKo: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_ko'],
+      ),
+      nameZh: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_zh'],
+      ),
+      descriptionZh: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_zh'],
+      ),
       ratioGramsPerMl: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}ratio_grams_per_ml'],
@@ -7928,7 +10474,7 @@ class $BrewingRecipesTable extends BrewingRecipes
       iconName: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}icon_name'],
-      )!,
+      ),
     );
   }
 
@@ -7941,42 +10487,167 @@ class $BrewingRecipesTable extends BrewingRecipes
 class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
   final int id;
   final String methodKey;
-  final String name;
-  final String description;
+  final String nameUk;
+  final String descriptionUk;
+  final String imageUrl;
+  final String? nameEn;
+  final String? descriptionEn;
+  final String? namePl;
+  final String? descriptionPl;
+  final String? nameDe;
+  final String? descriptionDe;
+  final String? nameFr;
+  final String? descriptionFr;
+  final String? nameEs;
+  final String? descriptionEs;
+  final String? nameIt;
+  final String? descriptionIt;
+  final String? namePt;
+  final String? descriptionPt;
+  final String? nameRo;
+  final String? descriptionRo;
+  final String? nameTr;
+  final String? descriptionTr;
+  final String? nameJa;
+  final String? descriptionJa;
+  final String? nameKo;
+  final String? descriptionKo;
+  final String? nameZh;
+  final String? descriptionZh;
   final double ratioGramsPerMl;
   final double tempC;
   final int totalTimeSec;
   final String difficulty;
   final String stepsJson;
   final String flavorProfile;
-  final String iconName;
+  final String? iconName;
   const BrewingRecipe({
     required this.id,
     required this.methodKey,
-    required this.name,
-    required this.description,
+    required this.nameUk,
+    required this.descriptionUk,
+    required this.imageUrl,
+    this.nameEn,
+    this.descriptionEn,
+    this.namePl,
+    this.descriptionPl,
+    this.nameDe,
+    this.descriptionDe,
+    this.nameFr,
+    this.descriptionFr,
+    this.nameEs,
+    this.descriptionEs,
+    this.nameIt,
+    this.descriptionIt,
+    this.namePt,
+    this.descriptionPt,
+    this.nameRo,
+    this.descriptionRo,
+    this.nameTr,
+    this.descriptionTr,
+    this.nameJa,
+    this.descriptionJa,
+    this.nameKo,
+    this.descriptionKo,
+    this.nameZh,
+    this.descriptionZh,
     required this.ratioGramsPerMl,
     required this.tempC,
     required this.totalTimeSec,
     required this.difficulty,
     required this.stepsJson,
     required this.flavorProfile,
-    required this.iconName,
+    this.iconName,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['method_key'] = Variable<String>(methodKey);
-    map['name'] = Variable<String>(name);
-    map['description'] = Variable<String>(description);
+    map['name_uk'] = Variable<String>(nameUk);
+    map['description_uk'] = Variable<String>(descriptionUk);
+    map['image_url'] = Variable<String>(imageUrl);
+    if (!nullToAbsent || nameEn != null) {
+      map['name_en'] = Variable<String>(nameEn);
+    }
+    if (!nullToAbsent || descriptionEn != null) {
+      map['description_en'] = Variable<String>(descriptionEn);
+    }
+    if (!nullToAbsent || namePl != null) {
+      map['name_pl'] = Variable<String>(namePl);
+    }
+    if (!nullToAbsent || descriptionPl != null) {
+      map['description_pl'] = Variable<String>(descriptionPl);
+    }
+    if (!nullToAbsent || nameDe != null) {
+      map['name_de'] = Variable<String>(nameDe);
+    }
+    if (!nullToAbsent || descriptionDe != null) {
+      map['description_de'] = Variable<String>(descriptionDe);
+    }
+    if (!nullToAbsent || nameFr != null) {
+      map['name_fr'] = Variable<String>(nameFr);
+    }
+    if (!nullToAbsent || descriptionFr != null) {
+      map['description_fr'] = Variable<String>(descriptionFr);
+    }
+    if (!nullToAbsent || nameEs != null) {
+      map['name_es'] = Variable<String>(nameEs);
+    }
+    if (!nullToAbsent || descriptionEs != null) {
+      map['description_es'] = Variable<String>(descriptionEs);
+    }
+    if (!nullToAbsent || nameIt != null) {
+      map['name_it'] = Variable<String>(nameIt);
+    }
+    if (!nullToAbsent || descriptionIt != null) {
+      map['description_it'] = Variable<String>(descriptionIt);
+    }
+    if (!nullToAbsent || namePt != null) {
+      map['name_pt'] = Variable<String>(namePt);
+    }
+    if (!nullToAbsent || descriptionPt != null) {
+      map['description_pt'] = Variable<String>(descriptionPt);
+    }
+    if (!nullToAbsent || nameRo != null) {
+      map['name_ro'] = Variable<String>(nameRo);
+    }
+    if (!nullToAbsent || descriptionRo != null) {
+      map['description_ro'] = Variable<String>(descriptionRo);
+    }
+    if (!nullToAbsent || nameTr != null) {
+      map['name_tr'] = Variable<String>(nameTr);
+    }
+    if (!nullToAbsent || descriptionTr != null) {
+      map['description_tr'] = Variable<String>(descriptionTr);
+    }
+    if (!nullToAbsent || nameJa != null) {
+      map['name_ja'] = Variable<String>(nameJa);
+    }
+    if (!nullToAbsent || descriptionJa != null) {
+      map['description_ja'] = Variable<String>(descriptionJa);
+    }
+    if (!nullToAbsent || nameKo != null) {
+      map['name_ko'] = Variable<String>(nameKo);
+    }
+    if (!nullToAbsent || descriptionKo != null) {
+      map['description_ko'] = Variable<String>(descriptionKo);
+    }
+    if (!nullToAbsent || nameZh != null) {
+      map['name_zh'] = Variable<String>(nameZh);
+    }
+    if (!nullToAbsent || descriptionZh != null) {
+      map['description_zh'] = Variable<String>(descriptionZh);
+    }
     map['ratio_grams_per_ml'] = Variable<double>(ratioGramsPerMl);
     map['temp_c'] = Variable<double>(tempC);
     map['total_time_sec'] = Variable<int>(totalTimeSec);
     map['difficulty'] = Variable<String>(difficulty);
     map['steps_json'] = Variable<String>(stepsJson);
     map['flavor_profile'] = Variable<String>(flavorProfile);
-    map['icon_name'] = Variable<String>(iconName);
+    if (!nullToAbsent || iconName != null) {
+      map['icon_name'] = Variable<String>(iconName);
+    }
     return map;
   }
 
@@ -7984,15 +10655,90 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
     return BrewingRecipesCompanion(
       id: Value(id),
       methodKey: Value(methodKey),
-      name: Value(name),
-      description: Value(description),
+      nameUk: Value(nameUk),
+      descriptionUk: Value(descriptionUk),
+      imageUrl: Value(imageUrl),
+      nameEn: nameEn == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameEn),
+      descriptionEn: descriptionEn == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionEn),
+      namePl: namePl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(namePl),
+      descriptionPl: descriptionPl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionPl),
+      nameDe: nameDe == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameDe),
+      descriptionDe: descriptionDe == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionDe),
+      nameFr: nameFr == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameFr),
+      descriptionFr: descriptionFr == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionFr),
+      nameEs: nameEs == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameEs),
+      descriptionEs: descriptionEs == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionEs),
+      nameIt: nameIt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameIt),
+      descriptionIt: descriptionIt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionIt),
+      namePt: namePt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(namePt),
+      descriptionPt: descriptionPt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionPt),
+      nameRo: nameRo == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameRo),
+      descriptionRo: descriptionRo == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionRo),
+      nameTr: nameTr == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameTr),
+      descriptionTr: descriptionTr == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionTr),
+      nameJa: nameJa == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameJa),
+      descriptionJa: descriptionJa == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionJa),
+      nameKo: nameKo == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameKo),
+      descriptionKo: descriptionKo == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionKo),
+      nameZh: nameZh == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameZh),
+      descriptionZh: descriptionZh == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionZh),
       ratioGramsPerMl: Value(ratioGramsPerMl),
       tempC: Value(tempC),
       totalTimeSec: Value(totalTimeSec),
       difficulty: Value(difficulty),
       stepsJson: Value(stepsJson),
       flavorProfile: Value(flavorProfile),
-      iconName: Value(iconName),
+      iconName: iconName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(iconName),
     );
   }
 
@@ -8004,15 +10750,40 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
     return BrewingRecipe(
       id: serializer.fromJson<int>(json['id']),
       methodKey: serializer.fromJson<String>(json['methodKey']),
-      name: serializer.fromJson<String>(json['name']),
-      description: serializer.fromJson<String>(json['description']),
+      nameUk: serializer.fromJson<String>(json['nameUk']),
+      descriptionUk: serializer.fromJson<String>(json['descriptionUk']),
+      imageUrl: serializer.fromJson<String>(json['imageUrl']),
+      nameEn: serializer.fromJson<String?>(json['nameEn']),
+      descriptionEn: serializer.fromJson<String?>(json['descriptionEn']),
+      namePl: serializer.fromJson<String?>(json['namePl']),
+      descriptionPl: serializer.fromJson<String?>(json['descriptionPl']),
+      nameDe: serializer.fromJson<String?>(json['nameDe']),
+      descriptionDe: serializer.fromJson<String?>(json['descriptionDe']),
+      nameFr: serializer.fromJson<String?>(json['nameFr']),
+      descriptionFr: serializer.fromJson<String?>(json['descriptionFr']),
+      nameEs: serializer.fromJson<String?>(json['nameEs']),
+      descriptionEs: serializer.fromJson<String?>(json['descriptionEs']),
+      nameIt: serializer.fromJson<String?>(json['nameIt']),
+      descriptionIt: serializer.fromJson<String?>(json['descriptionIt']),
+      namePt: serializer.fromJson<String?>(json['namePt']),
+      descriptionPt: serializer.fromJson<String?>(json['descriptionPt']),
+      nameRo: serializer.fromJson<String?>(json['nameRo']),
+      descriptionRo: serializer.fromJson<String?>(json['descriptionRo']),
+      nameTr: serializer.fromJson<String?>(json['nameTr']),
+      descriptionTr: serializer.fromJson<String?>(json['descriptionTr']),
+      nameJa: serializer.fromJson<String?>(json['nameJa']),
+      descriptionJa: serializer.fromJson<String?>(json['descriptionJa']),
+      nameKo: serializer.fromJson<String?>(json['nameKo']),
+      descriptionKo: serializer.fromJson<String?>(json['descriptionKo']),
+      nameZh: serializer.fromJson<String?>(json['nameZh']),
+      descriptionZh: serializer.fromJson<String?>(json['descriptionZh']),
       ratioGramsPerMl: serializer.fromJson<double>(json['ratioGramsPerMl']),
       tempC: serializer.fromJson<double>(json['tempC']),
       totalTimeSec: serializer.fromJson<int>(json['totalTimeSec']),
       difficulty: serializer.fromJson<String>(json['difficulty']),
       stepsJson: serializer.fromJson<String>(json['stepsJson']),
       flavorProfile: serializer.fromJson<String>(json['flavorProfile']),
-      iconName: serializer.fromJson<String>(json['iconName']),
+      iconName: serializer.fromJson<String?>(json['iconName']),
     );
   }
   @override
@@ -8021,51 +10792,199 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'methodKey': serializer.toJson<String>(methodKey),
-      'name': serializer.toJson<String>(name),
-      'description': serializer.toJson<String>(description),
+      'nameUk': serializer.toJson<String>(nameUk),
+      'descriptionUk': serializer.toJson<String>(descriptionUk),
+      'imageUrl': serializer.toJson<String>(imageUrl),
+      'nameEn': serializer.toJson<String?>(nameEn),
+      'descriptionEn': serializer.toJson<String?>(descriptionEn),
+      'namePl': serializer.toJson<String?>(namePl),
+      'descriptionPl': serializer.toJson<String?>(descriptionPl),
+      'nameDe': serializer.toJson<String?>(nameDe),
+      'descriptionDe': serializer.toJson<String?>(descriptionDe),
+      'nameFr': serializer.toJson<String?>(nameFr),
+      'descriptionFr': serializer.toJson<String?>(descriptionFr),
+      'nameEs': serializer.toJson<String?>(nameEs),
+      'descriptionEs': serializer.toJson<String?>(descriptionEs),
+      'nameIt': serializer.toJson<String?>(nameIt),
+      'descriptionIt': serializer.toJson<String?>(descriptionIt),
+      'namePt': serializer.toJson<String?>(namePt),
+      'descriptionPt': serializer.toJson<String?>(descriptionPt),
+      'nameRo': serializer.toJson<String?>(nameRo),
+      'descriptionRo': serializer.toJson<String?>(descriptionRo),
+      'nameTr': serializer.toJson<String?>(nameTr),
+      'descriptionTr': serializer.toJson<String?>(descriptionTr),
+      'nameJa': serializer.toJson<String?>(nameJa),
+      'descriptionJa': serializer.toJson<String?>(descriptionJa),
+      'nameKo': serializer.toJson<String?>(nameKo),
+      'descriptionKo': serializer.toJson<String?>(descriptionKo),
+      'nameZh': serializer.toJson<String?>(nameZh),
+      'descriptionZh': serializer.toJson<String?>(descriptionZh),
       'ratioGramsPerMl': serializer.toJson<double>(ratioGramsPerMl),
       'tempC': serializer.toJson<double>(tempC),
       'totalTimeSec': serializer.toJson<int>(totalTimeSec),
       'difficulty': serializer.toJson<String>(difficulty),
       'stepsJson': serializer.toJson<String>(stepsJson),
       'flavorProfile': serializer.toJson<String>(flavorProfile),
-      'iconName': serializer.toJson<String>(iconName),
+      'iconName': serializer.toJson<String?>(iconName),
     };
   }
 
   BrewingRecipe copyWith({
     int? id,
     String? methodKey,
-    String? name,
-    String? description,
+    String? nameUk,
+    String? descriptionUk,
+    String? imageUrl,
+    Value<String?> nameEn = const Value.absent(),
+    Value<String?> descriptionEn = const Value.absent(),
+    Value<String?> namePl = const Value.absent(),
+    Value<String?> descriptionPl = const Value.absent(),
+    Value<String?> nameDe = const Value.absent(),
+    Value<String?> descriptionDe = const Value.absent(),
+    Value<String?> nameFr = const Value.absent(),
+    Value<String?> descriptionFr = const Value.absent(),
+    Value<String?> nameEs = const Value.absent(),
+    Value<String?> descriptionEs = const Value.absent(),
+    Value<String?> nameIt = const Value.absent(),
+    Value<String?> descriptionIt = const Value.absent(),
+    Value<String?> namePt = const Value.absent(),
+    Value<String?> descriptionPt = const Value.absent(),
+    Value<String?> nameRo = const Value.absent(),
+    Value<String?> descriptionRo = const Value.absent(),
+    Value<String?> nameTr = const Value.absent(),
+    Value<String?> descriptionTr = const Value.absent(),
+    Value<String?> nameJa = const Value.absent(),
+    Value<String?> descriptionJa = const Value.absent(),
+    Value<String?> nameKo = const Value.absent(),
+    Value<String?> descriptionKo = const Value.absent(),
+    Value<String?> nameZh = const Value.absent(),
+    Value<String?> descriptionZh = const Value.absent(),
     double? ratioGramsPerMl,
     double? tempC,
     int? totalTimeSec,
     String? difficulty,
     String? stepsJson,
     String? flavorProfile,
-    String? iconName,
+    Value<String?> iconName = const Value.absent(),
   }) => BrewingRecipe(
     id: id ?? this.id,
     methodKey: methodKey ?? this.methodKey,
-    name: name ?? this.name,
-    description: description ?? this.description,
+    nameUk: nameUk ?? this.nameUk,
+    descriptionUk: descriptionUk ?? this.descriptionUk,
+    imageUrl: imageUrl ?? this.imageUrl,
+    nameEn: nameEn.present ? nameEn.value : this.nameEn,
+    descriptionEn: descriptionEn.present
+        ? descriptionEn.value
+        : this.descriptionEn,
+    namePl: namePl.present ? namePl.value : this.namePl,
+    descriptionPl: descriptionPl.present
+        ? descriptionPl.value
+        : this.descriptionPl,
+    nameDe: nameDe.present ? nameDe.value : this.nameDe,
+    descriptionDe: descriptionDe.present
+        ? descriptionDe.value
+        : this.descriptionDe,
+    nameFr: nameFr.present ? nameFr.value : this.nameFr,
+    descriptionFr: descriptionFr.present
+        ? descriptionFr.value
+        : this.descriptionFr,
+    nameEs: nameEs.present ? nameEs.value : this.nameEs,
+    descriptionEs: descriptionEs.present
+        ? descriptionEs.value
+        : this.descriptionEs,
+    nameIt: nameIt.present ? nameIt.value : this.nameIt,
+    descriptionIt: descriptionIt.present
+        ? descriptionIt.value
+        : this.descriptionIt,
+    namePt: namePt.present ? namePt.value : this.namePt,
+    descriptionPt: descriptionPt.present
+        ? descriptionPt.value
+        : this.descriptionPt,
+    nameRo: nameRo.present ? nameRo.value : this.nameRo,
+    descriptionRo: descriptionRo.present
+        ? descriptionRo.value
+        : this.descriptionRo,
+    nameTr: nameTr.present ? nameTr.value : this.nameTr,
+    descriptionTr: descriptionTr.present
+        ? descriptionTr.value
+        : this.descriptionTr,
+    nameJa: nameJa.present ? nameJa.value : this.nameJa,
+    descriptionJa: descriptionJa.present
+        ? descriptionJa.value
+        : this.descriptionJa,
+    nameKo: nameKo.present ? nameKo.value : this.nameKo,
+    descriptionKo: descriptionKo.present
+        ? descriptionKo.value
+        : this.descriptionKo,
+    nameZh: nameZh.present ? nameZh.value : this.nameZh,
+    descriptionZh: descriptionZh.present
+        ? descriptionZh.value
+        : this.descriptionZh,
     ratioGramsPerMl: ratioGramsPerMl ?? this.ratioGramsPerMl,
     tempC: tempC ?? this.tempC,
     totalTimeSec: totalTimeSec ?? this.totalTimeSec,
     difficulty: difficulty ?? this.difficulty,
     stepsJson: stepsJson ?? this.stepsJson,
     flavorProfile: flavorProfile ?? this.flavorProfile,
-    iconName: iconName ?? this.iconName,
+    iconName: iconName.present ? iconName.value : this.iconName,
   );
   BrewingRecipe copyWithCompanion(BrewingRecipesCompanion data) {
     return BrewingRecipe(
       id: data.id.present ? data.id.value : this.id,
       methodKey: data.methodKey.present ? data.methodKey.value : this.methodKey,
-      name: data.name.present ? data.name.value : this.name,
-      description: data.description.present
-          ? data.description.value
-          : this.description,
+      nameUk: data.nameUk.present ? data.nameUk.value : this.nameUk,
+      descriptionUk: data.descriptionUk.present
+          ? data.descriptionUk.value
+          : this.descriptionUk,
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      nameEn: data.nameEn.present ? data.nameEn.value : this.nameEn,
+      descriptionEn: data.descriptionEn.present
+          ? data.descriptionEn.value
+          : this.descriptionEn,
+      namePl: data.namePl.present ? data.namePl.value : this.namePl,
+      descriptionPl: data.descriptionPl.present
+          ? data.descriptionPl.value
+          : this.descriptionPl,
+      nameDe: data.nameDe.present ? data.nameDe.value : this.nameDe,
+      descriptionDe: data.descriptionDe.present
+          ? data.descriptionDe.value
+          : this.descriptionDe,
+      nameFr: data.nameFr.present ? data.nameFr.value : this.nameFr,
+      descriptionFr: data.descriptionFr.present
+          ? data.descriptionFr.value
+          : this.descriptionFr,
+      nameEs: data.nameEs.present ? data.nameEs.value : this.nameEs,
+      descriptionEs: data.descriptionEs.present
+          ? data.descriptionEs.value
+          : this.descriptionEs,
+      nameIt: data.nameIt.present ? data.nameIt.value : this.nameIt,
+      descriptionIt: data.descriptionIt.present
+          ? data.descriptionIt.value
+          : this.descriptionIt,
+      namePt: data.namePt.present ? data.namePt.value : this.namePt,
+      descriptionPt: data.descriptionPt.present
+          ? data.descriptionPt.value
+          : this.descriptionPt,
+      nameRo: data.nameRo.present ? data.nameRo.value : this.nameRo,
+      descriptionRo: data.descriptionRo.present
+          ? data.descriptionRo.value
+          : this.descriptionRo,
+      nameTr: data.nameTr.present ? data.nameTr.value : this.nameTr,
+      descriptionTr: data.descriptionTr.present
+          ? data.descriptionTr.value
+          : this.descriptionTr,
+      nameJa: data.nameJa.present ? data.nameJa.value : this.nameJa,
+      descriptionJa: data.descriptionJa.present
+          ? data.descriptionJa.value
+          : this.descriptionJa,
+      nameKo: data.nameKo.present ? data.nameKo.value : this.nameKo,
+      descriptionKo: data.descriptionKo.present
+          ? data.descriptionKo.value
+          : this.descriptionKo,
+      nameZh: data.nameZh.present ? data.nameZh.value : this.nameZh,
+      descriptionZh: data.descriptionZh.present
+          ? data.descriptionZh.value
+          : this.descriptionZh,
       ratioGramsPerMl: data.ratioGramsPerMl.present
           ? data.ratioGramsPerMl.value
           : this.ratioGramsPerMl,
@@ -8089,8 +11008,33 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
     return (StringBuffer('BrewingRecipe(')
           ..write('id: $id, ')
           ..write('methodKey: $methodKey, ')
-          ..write('name: $name, ')
-          ..write('description: $description, ')
+          ..write('nameUk: $nameUk, ')
+          ..write('descriptionUk: $descriptionUk, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('nameEn: $nameEn, ')
+          ..write('descriptionEn: $descriptionEn, ')
+          ..write('namePl: $namePl, ')
+          ..write('descriptionPl: $descriptionPl, ')
+          ..write('nameDe: $nameDe, ')
+          ..write('descriptionDe: $descriptionDe, ')
+          ..write('nameFr: $nameFr, ')
+          ..write('descriptionFr: $descriptionFr, ')
+          ..write('nameEs: $nameEs, ')
+          ..write('descriptionEs: $descriptionEs, ')
+          ..write('nameIt: $nameIt, ')
+          ..write('descriptionIt: $descriptionIt, ')
+          ..write('namePt: $namePt, ')
+          ..write('descriptionPt: $descriptionPt, ')
+          ..write('nameRo: $nameRo, ')
+          ..write('descriptionRo: $descriptionRo, ')
+          ..write('nameTr: $nameTr, ')
+          ..write('descriptionTr: $descriptionTr, ')
+          ..write('nameJa: $nameJa, ')
+          ..write('descriptionJa: $descriptionJa, ')
+          ..write('nameKo: $nameKo, ')
+          ..write('descriptionKo: $descriptionKo, ')
+          ..write('nameZh: $nameZh, ')
+          ..write('descriptionZh: $descriptionZh, ')
           ..write('ratioGramsPerMl: $ratioGramsPerMl, ')
           ..write('tempC: $tempC, ')
           ..write('totalTimeSec: $totalTimeSec, ')
@@ -8103,11 +11047,36 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
     methodKey,
-    name,
-    description,
+    nameUk,
+    descriptionUk,
+    imageUrl,
+    nameEn,
+    descriptionEn,
+    namePl,
+    descriptionPl,
+    nameDe,
+    descriptionDe,
+    nameFr,
+    descriptionFr,
+    nameEs,
+    descriptionEs,
+    nameIt,
+    descriptionIt,
+    namePt,
+    descriptionPt,
+    nameRo,
+    descriptionRo,
+    nameTr,
+    descriptionTr,
+    nameJa,
+    descriptionJa,
+    nameKo,
+    descriptionKo,
+    nameZh,
+    descriptionZh,
     ratioGramsPerMl,
     tempC,
     totalTimeSec,
@@ -8115,15 +11084,40 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
     stepsJson,
     flavorProfile,
     iconName,
-  );
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is BrewingRecipe &&
           other.id == this.id &&
           other.methodKey == this.methodKey &&
-          other.name == this.name &&
-          other.description == this.description &&
+          other.nameUk == this.nameUk &&
+          other.descriptionUk == this.descriptionUk &&
+          other.imageUrl == this.imageUrl &&
+          other.nameEn == this.nameEn &&
+          other.descriptionEn == this.descriptionEn &&
+          other.namePl == this.namePl &&
+          other.descriptionPl == this.descriptionPl &&
+          other.nameDe == this.nameDe &&
+          other.descriptionDe == this.descriptionDe &&
+          other.nameFr == this.nameFr &&
+          other.descriptionFr == this.descriptionFr &&
+          other.nameEs == this.nameEs &&
+          other.descriptionEs == this.descriptionEs &&
+          other.nameIt == this.nameIt &&
+          other.descriptionIt == this.descriptionIt &&
+          other.namePt == this.namePt &&
+          other.descriptionPt == this.descriptionPt &&
+          other.nameRo == this.nameRo &&
+          other.descriptionRo == this.descriptionRo &&
+          other.nameTr == this.nameTr &&
+          other.descriptionTr == this.descriptionTr &&
+          other.nameJa == this.nameJa &&
+          other.descriptionJa == this.descriptionJa &&
+          other.nameKo == this.nameKo &&
+          other.descriptionKo == this.descriptionKo &&
+          other.nameZh == this.nameZh &&
+          other.descriptionZh == this.descriptionZh &&
           other.ratioGramsPerMl == this.ratioGramsPerMl &&
           other.tempC == this.tempC &&
           other.totalTimeSec == this.totalTimeSec &&
@@ -8136,20 +11130,70 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
 class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
   final Value<int> id;
   final Value<String> methodKey;
-  final Value<String> name;
-  final Value<String> description;
+  final Value<String> nameUk;
+  final Value<String> descriptionUk;
+  final Value<String> imageUrl;
+  final Value<String?> nameEn;
+  final Value<String?> descriptionEn;
+  final Value<String?> namePl;
+  final Value<String?> descriptionPl;
+  final Value<String?> nameDe;
+  final Value<String?> descriptionDe;
+  final Value<String?> nameFr;
+  final Value<String?> descriptionFr;
+  final Value<String?> nameEs;
+  final Value<String?> descriptionEs;
+  final Value<String?> nameIt;
+  final Value<String?> descriptionIt;
+  final Value<String?> namePt;
+  final Value<String?> descriptionPt;
+  final Value<String?> nameRo;
+  final Value<String?> descriptionRo;
+  final Value<String?> nameTr;
+  final Value<String?> descriptionTr;
+  final Value<String?> nameJa;
+  final Value<String?> descriptionJa;
+  final Value<String?> nameKo;
+  final Value<String?> descriptionKo;
+  final Value<String?> nameZh;
+  final Value<String?> descriptionZh;
   final Value<double> ratioGramsPerMl;
   final Value<double> tempC;
   final Value<int> totalTimeSec;
   final Value<String> difficulty;
   final Value<String> stepsJson;
   final Value<String> flavorProfile;
-  final Value<String> iconName;
+  final Value<String?> iconName;
   const BrewingRecipesCompanion({
     this.id = const Value.absent(),
     this.methodKey = const Value.absent(),
-    this.name = const Value.absent(),
-    this.description = const Value.absent(),
+    this.nameUk = const Value.absent(),
+    this.descriptionUk = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.nameEn = const Value.absent(),
+    this.descriptionEn = const Value.absent(),
+    this.namePl = const Value.absent(),
+    this.descriptionPl = const Value.absent(),
+    this.nameDe = const Value.absent(),
+    this.descriptionDe = const Value.absent(),
+    this.nameFr = const Value.absent(),
+    this.descriptionFr = const Value.absent(),
+    this.nameEs = const Value.absent(),
+    this.descriptionEs = const Value.absent(),
+    this.nameIt = const Value.absent(),
+    this.descriptionIt = const Value.absent(),
+    this.namePt = const Value.absent(),
+    this.descriptionPt = const Value.absent(),
+    this.nameRo = const Value.absent(),
+    this.descriptionRo = const Value.absent(),
+    this.nameTr = const Value.absent(),
+    this.descriptionTr = const Value.absent(),
+    this.nameJa = const Value.absent(),
+    this.descriptionJa = const Value.absent(),
+    this.nameKo = const Value.absent(),
+    this.descriptionKo = const Value.absent(),
+    this.nameZh = const Value.absent(),
+    this.descriptionZh = const Value.absent(),
     this.ratioGramsPerMl = const Value.absent(),
     this.tempC = const Value.absent(),
     this.totalTimeSec = const Value.absent(),
@@ -8161,30 +11205,71 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
   BrewingRecipesCompanion.insert({
     this.id = const Value.absent(),
     required String methodKey,
-    required String name,
-    required String description,
-    required double ratioGramsPerMl,
-    required double tempC,
-    required int totalTimeSec,
-    required String difficulty,
-    required String stepsJson,
-    required String flavorProfile,
-    required String iconName,
-  }) : methodKey = Value(methodKey),
-       name = Value(name),
-       description = Value(description),
-       ratioGramsPerMl = Value(ratioGramsPerMl),
-       tempC = Value(tempC),
-       totalTimeSec = Value(totalTimeSec),
-       difficulty = Value(difficulty),
-       stepsJson = Value(stepsJson),
-       flavorProfile = Value(flavorProfile),
-       iconName = Value(iconName);
+    this.nameUk = const Value.absent(),
+    this.descriptionUk = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.nameEn = const Value.absent(),
+    this.descriptionEn = const Value.absent(),
+    this.namePl = const Value.absent(),
+    this.descriptionPl = const Value.absent(),
+    this.nameDe = const Value.absent(),
+    this.descriptionDe = const Value.absent(),
+    this.nameFr = const Value.absent(),
+    this.descriptionFr = const Value.absent(),
+    this.nameEs = const Value.absent(),
+    this.descriptionEs = const Value.absent(),
+    this.nameIt = const Value.absent(),
+    this.descriptionIt = const Value.absent(),
+    this.namePt = const Value.absent(),
+    this.descriptionPt = const Value.absent(),
+    this.nameRo = const Value.absent(),
+    this.descriptionRo = const Value.absent(),
+    this.nameTr = const Value.absent(),
+    this.descriptionTr = const Value.absent(),
+    this.nameJa = const Value.absent(),
+    this.descriptionJa = const Value.absent(),
+    this.nameKo = const Value.absent(),
+    this.descriptionKo = const Value.absent(),
+    this.nameZh = const Value.absent(),
+    this.descriptionZh = const Value.absent(),
+    this.ratioGramsPerMl = const Value.absent(),
+    this.tempC = const Value.absent(),
+    this.totalTimeSec = const Value.absent(),
+    this.difficulty = const Value.absent(),
+    this.stepsJson = const Value.absent(),
+    this.flavorProfile = const Value.absent(),
+    this.iconName = const Value.absent(),
+  }) : methodKey = Value(methodKey);
   static Insertable<BrewingRecipe> custom({
     Expression<int>? id,
     Expression<String>? methodKey,
-    Expression<String>? name,
-    Expression<String>? description,
+    Expression<String>? nameUk,
+    Expression<String>? descriptionUk,
+    Expression<String>? imageUrl,
+    Expression<String>? nameEn,
+    Expression<String>? descriptionEn,
+    Expression<String>? namePl,
+    Expression<String>? descriptionPl,
+    Expression<String>? nameDe,
+    Expression<String>? descriptionDe,
+    Expression<String>? nameFr,
+    Expression<String>? descriptionFr,
+    Expression<String>? nameEs,
+    Expression<String>? descriptionEs,
+    Expression<String>? nameIt,
+    Expression<String>? descriptionIt,
+    Expression<String>? namePt,
+    Expression<String>? descriptionPt,
+    Expression<String>? nameRo,
+    Expression<String>? descriptionRo,
+    Expression<String>? nameTr,
+    Expression<String>? descriptionTr,
+    Expression<String>? nameJa,
+    Expression<String>? descriptionJa,
+    Expression<String>? nameKo,
+    Expression<String>? descriptionKo,
+    Expression<String>? nameZh,
+    Expression<String>? descriptionZh,
     Expression<double>? ratioGramsPerMl,
     Expression<double>? tempC,
     Expression<int>? totalTimeSec,
@@ -8196,8 +11281,33 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (methodKey != null) 'method_key': methodKey,
-      if (name != null) 'name': name,
-      if (description != null) 'description': description,
+      if (nameUk != null) 'name_uk': nameUk,
+      if (descriptionUk != null) 'description_uk': descriptionUk,
+      if (imageUrl != null) 'image_url': imageUrl,
+      if (nameEn != null) 'name_en': nameEn,
+      if (descriptionEn != null) 'description_en': descriptionEn,
+      if (namePl != null) 'name_pl': namePl,
+      if (descriptionPl != null) 'description_pl': descriptionPl,
+      if (nameDe != null) 'name_de': nameDe,
+      if (descriptionDe != null) 'description_de': descriptionDe,
+      if (nameFr != null) 'name_fr': nameFr,
+      if (descriptionFr != null) 'description_fr': descriptionFr,
+      if (nameEs != null) 'name_es': nameEs,
+      if (descriptionEs != null) 'description_es': descriptionEs,
+      if (nameIt != null) 'name_it': nameIt,
+      if (descriptionIt != null) 'description_it': descriptionIt,
+      if (namePt != null) 'name_pt': namePt,
+      if (descriptionPt != null) 'description_pt': descriptionPt,
+      if (nameRo != null) 'name_ro': nameRo,
+      if (descriptionRo != null) 'description_ro': descriptionRo,
+      if (nameTr != null) 'name_tr': nameTr,
+      if (descriptionTr != null) 'description_tr': descriptionTr,
+      if (nameJa != null) 'name_ja': nameJa,
+      if (descriptionJa != null) 'description_ja': descriptionJa,
+      if (nameKo != null) 'name_ko': nameKo,
+      if (descriptionKo != null) 'description_ko': descriptionKo,
+      if (nameZh != null) 'name_zh': nameZh,
+      if (descriptionZh != null) 'description_zh': descriptionZh,
       if (ratioGramsPerMl != null) 'ratio_grams_per_ml': ratioGramsPerMl,
       if (tempC != null) 'temp_c': tempC,
       if (totalTimeSec != null) 'total_time_sec': totalTimeSec,
@@ -8211,21 +11321,71 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
   BrewingRecipesCompanion copyWith({
     Value<int>? id,
     Value<String>? methodKey,
-    Value<String>? name,
-    Value<String>? description,
+    Value<String>? nameUk,
+    Value<String>? descriptionUk,
+    Value<String>? imageUrl,
+    Value<String?>? nameEn,
+    Value<String?>? descriptionEn,
+    Value<String?>? namePl,
+    Value<String?>? descriptionPl,
+    Value<String?>? nameDe,
+    Value<String?>? descriptionDe,
+    Value<String?>? nameFr,
+    Value<String?>? descriptionFr,
+    Value<String?>? nameEs,
+    Value<String?>? descriptionEs,
+    Value<String?>? nameIt,
+    Value<String?>? descriptionIt,
+    Value<String?>? namePt,
+    Value<String?>? descriptionPt,
+    Value<String?>? nameRo,
+    Value<String?>? descriptionRo,
+    Value<String?>? nameTr,
+    Value<String?>? descriptionTr,
+    Value<String?>? nameJa,
+    Value<String?>? descriptionJa,
+    Value<String?>? nameKo,
+    Value<String?>? descriptionKo,
+    Value<String?>? nameZh,
+    Value<String?>? descriptionZh,
     Value<double>? ratioGramsPerMl,
     Value<double>? tempC,
     Value<int>? totalTimeSec,
     Value<String>? difficulty,
     Value<String>? stepsJson,
     Value<String>? flavorProfile,
-    Value<String>? iconName,
+    Value<String?>? iconName,
   }) {
     return BrewingRecipesCompanion(
       id: id ?? this.id,
       methodKey: methodKey ?? this.methodKey,
-      name: name ?? this.name,
-      description: description ?? this.description,
+      nameUk: nameUk ?? this.nameUk,
+      descriptionUk: descriptionUk ?? this.descriptionUk,
+      imageUrl: imageUrl ?? this.imageUrl,
+      nameEn: nameEn ?? this.nameEn,
+      descriptionEn: descriptionEn ?? this.descriptionEn,
+      namePl: namePl ?? this.namePl,
+      descriptionPl: descriptionPl ?? this.descriptionPl,
+      nameDe: nameDe ?? this.nameDe,
+      descriptionDe: descriptionDe ?? this.descriptionDe,
+      nameFr: nameFr ?? this.nameFr,
+      descriptionFr: descriptionFr ?? this.descriptionFr,
+      nameEs: nameEs ?? this.nameEs,
+      descriptionEs: descriptionEs ?? this.descriptionEs,
+      nameIt: nameIt ?? this.nameIt,
+      descriptionIt: descriptionIt ?? this.descriptionIt,
+      namePt: namePt ?? this.namePt,
+      descriptionPt: descriptionPt ?? this.descriptionPt,
+      nameRo: nameRo ?? this.nameRo,
+      descriptionRo: descriptionRo ?? this.descriptionRo,
+      nameTr: nameTr ?? this.nameTr,
+      descriptionTr: descriptionTr ?? this.descriptionTr,
+      nameJa: nameJa ?? this.nameJa,
+      descriptionJa: descriptionJa ?? this.descriptionJa,
+      nameKo: nameKo ?? this.nameKo,
+      descriptionKo: descriptionKo ?? this.descriptionKo,
+      nameZh: nameZh ?? this.nameZh,
+      descriptionZh: descriptionZh ?? this.descriptionZh,
       ratioGramsPerMl: ratioGramsPerMl ?? this.ratioGramsPerMl,
       tempC: tempC ?? this.tempC,
       totalTimeSec: totalTimeSec ?? this.totalTimeSec,
@@ -8245,11 +11405,86 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
     if (methodKey.present) {
       map['method_key'] = Variable<String>(methodKey.value);
     }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
+    if (nameUk.present) {
+      map['name_uk'] = Variable<String>(nameUk.value);
     }
-    if (description.present) {
-      map['description'] = Variable<String>(description.value);
+    if (descriptionUk.present) {
+      map['description_uk'] = Variable<String>(descriptionUk.value);
+    }
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
+    if (nameEn.present) {
+      map['name_en'] = Variable<String>(nameEn.value);
+    }
+    if (descriptionEn.present) {
+      map['description_en'] = Variable<String>(descriptionEn.value);
+    }
+    if (namePl.present) {
+      map['name_pl'] = Variable<String>(namePl.value);
+    }
+    if (descriptionPl.present) {
+      map['description_pl'] = Variable<String>(descriptionPl.value);
+    }
+    if (nameDe.present) {
+      map['name_de'] = Variable<String>(nameDe.value);
+    }
+    if (descriptionDe.present) {
+      map['description_de'] = Variable<String>(descriptionDe.value);
+    }
+    if (nameFr.present) {
+      map['name_fr'] = Variable<String>(nameFr.value);
+    }
+    if (descriptionFr.present) {
+      map['description_fr'] = Variable<String>(descriptionFr.value);
+    }
+    if (nameEs.present) {
+      map['name_es'] = Variable<String>(nameEs.value);
+    }
+    if (descriptionEs.present) {
+      map['description_es'] = Variable<String>(descriptionEs.value);
+    }
+    if (nameIt.present) {
+      map['name_it'] = Variable<String>(nameIt.value);
+    }
+    if (descriptionIt.present) {
+      map['description_it'] = Variable<String>(descriptionIt.value);
+    }
+    if (namePt.present) {
+      map['name_pt'] = Variable<String>(namePt.value);
+    }
+    if (descriptionPt.present) {
+      map['description_pt'] = Variable<String>(descriptionPt.value);
+    }
+    if (nameRo.present) {
+      map['name_ro'] = Variable<String>(nameRo.value);
+    }
+    if (descriptionRo.present) {
+      map['description_ro'] = Variable<String>(descriptionRo.value);
+    }
+    if (nameTr.present) {
+      map['name_tr'] = Variable<String>(nameTr.value);
+    }
+    if (descriptionTr.present) {
+      map['description_tr'] = Variable<String>(descriptionTr.value);
+    }
+    if (nameJa.present) {
+      map['name_ja'] = Variable<String>(nameJa.value);
+    }
+    if (descriptionJa.present) {
+      map['description_ja'] = Variable<String>(descriptionJa.value);
+    }
+    if (nameKo.present) {
+      map['name_ko'] = Variable<String>(nameKo.value);
+    }
+    if (descriptionKo.present) {
+      map['description_ko'] = Variable<String>(descriptionKo.value);
+    }
+    if (nameZh.present) {
+      map['name_zh'] = Variable<String>(nameZh.value);
+    }
+    if (descriptionZh.present) {
+      map['description_zh'] = Variable<String>(descriptionZh.value);
     }
     if (ratioGramsPerMl.present) {
       map['ratio_grams_per_ml'] = Variable<double>(ratioGramsPerMl.value);
@@ -8280,8 +11515,33 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
     return (StringBuffer('BrewingRecipesCompanion(')
           ..write('id: $id, ')
           ..write('methodKey: $methodKey, ')
-          ..write('name: $name, ')
-          ..write('description: $description, ')
+          ..write('nameUk: $nameUk, ')
+          ..write('descriptionUk: $descriptionUk, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('nameEn: $nameEn, ')
+          ..write('descriptionEn: $descriptionEn, ')
+          ..write('namePl: $namePl, ')
+          ..write('descriptionPl: $descriptionPl, ')
+          ..write('nameDe: $nameDe, ')
+          ..write('descriptionDe: $descriptionDe, ')
+          ..write('nameFr: $nameFr, ')
+          ..write('descriptionFr: $descriptionFr, ')
+          ..write('nameEs: $nameEs, ')
+          ..write('descriptionEs: $descriptionEs, ')
+          ..write('nameIt: $nameIt, ')
+          ..write('descriptionIt: $descriptionIt, ')
+          ..write('namePt: $namePt, ')
+          ..write('descriptionPt: $descriptionPt, ')
+          ..write('nameRo: $nameRo, ')
+          ..write('descriptionRo: $descriptionRo, ')
+          ..write('nameTr: $nameTr, ')
+          ..write('descriptionTr: $descriptionTr, ')
+          ..write('nameJa: $nameJa, ')
+          ..write('descriptionJa: $descriptionJa, ')
+          ..write('nameKo: $nameKo, ')
+          ..write('descriptionKo: $descriptionKo, ')
+          ..write('nameZh: $nameZh, ')
+          ..write('descriptionZh: $descriptionZh, ')
           ..write('ratioGramsPerMl: $ratioGramsPerMl, ')
           ..write('tempC: $tempC, ')
           ..write('totalTimeSec: $totalTimeSec, ')
@@ -9964,15 +13224,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $LocalizedBeanTranslationsTable(this);
   late final $LocalizedBrandTranslationsTable localizedBrandTranslations =
       $LocalizedBrandTranslationsTable(this);
-  late final $LocalizedFarmerTranslationsTable localizedFarmerTranslations =
-      $LocalizedFarmerTranslationsTable(this);
   late final $SphereRegionsTable sphereRegions = $SphereRegionsTable(this);
   late final $SphereRegionTranslationsTable sphereRegionTranslations =
       $SphereRegionTranslationsTable(this);
   late final $SpecialtyArticlesTable specialtyArticles =
       $SpecialtyArticlesTable(this);
-  late final $SpecialtyArticleTranslationsTable specialtyArticleTranslations =
-      $SpecialtyArticleTranslationsTable(this);
   late final $CoffeeLotsTable coffeeLots = $CoffeeLotsTable(this);
   late final $FermentationLogsTable fermentationLogs = $FermentationLogsTable(
     this,
@@ -9991,11 +13247,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     localizedBeans,
     localizedBeanTranslations,
     localizedBrandTranslations,
-    localizedFarmerTranslations,
     sphereRegions,
     sphereRegionTranslations,
     specialtyArticles,
-    specialtyArticleTranslations,
     coffeeLots,
     fermentationLogs,
     brewingRecipes,
@@ -10548,8 +13802,36 @@ typedef $$LocalizedBrandsTableProcessedTableManager =
 typedef $$LocalizedFarmersTableCreateCompanionBuilder =
     LocalizedFarmersCompanion Function({
       Value<int> id,
-      Value<String?> imageUrl,
-      Value<String?> countryEmoji,
+      Value<String> nameUk,
+      Value<String> imageUrl,
+      Value<String> flagUrl,
+      Value<String> descriptionHtmlUk,
+      Value<String?> regionUk,
+      Value<String?> countryUk,
+      Value<String?> nameEn,
+      Value<String?> descriptionHtmlEn,
+      Value<String?> namePl,
+      Value<String?> descriptionHtmlPl,
+      Value<String?> nameDe,
+      Value<String?> descriptionHtmlDe,
+      Value<String?> nameFr,
+      Value<String?> descriptionHtmlFr,
+      Value<String?> nameEs,
+      Value<String?> descriptionHtmlEs,
+      Value<String?> nameIt,
+      Value<String?> descriptionHtmlIt,
+      Value<String?> namePt,
+      Value<String?> descriptionHtmlPt,
+      Value<String?> nameRo,
+      Value<String?> descriptionHtmlRo,
+      Value<String?> nameTr,
+      Value<String?> descriptionHtmlTr,
+      Value<String?> nameJa,
+      Value<String?> descriptionHtmlJa,
+      Value<String?> nameKo,
+      Value<String?> descriptionHtmlKo,
+      Value<String?> nameZh,
+      Value<String?> descriptionHtmlZh,
       Value<double?> latitude,
       Value<double?> longitude,
       Value<DateTime?> createdAt,
@@ -10557,8 +13839,36 @@ typedef $$LocalizedFarmersTableCreateCompanionBuilder =
 typedef $$LocalizedFarmersTableUpdateCompanionBuilder =
     LocalizedFarmersCompanion Function({
       Value<int> id,
-      Value<String?> imageUrl,
-      Value<String?> countryEmoji,
+      Value<String> nameUk,
+      Value<String> imageUrl,
+      Value<String> flagUrl,
+      Value<String> descriptionHtmlUk,
+      Value<String?> regionUk,
+      Value<String?> countryUk,
+      Value<String?> nameEn,
+      Value<String?> descriptionHtmlEn,
+      Value<String?> namePl,
+      Value<String?> descriptionHtmlPl,
+      Value<String?> nameDe,
+      Value<String?> descriptionHtmlDe,
+      Value<String?> nameFr,
+      Value<String?> descriptionHtmlFr,
+      Value<String?> nameEs,
+      Value<String?> descriptionHtmlEs,
+      Value<String?> nameIt,
+      Value<String?> descriptionHtmlIt,
+      Value<String?> namePt,
+      Value<String?> descriptionHtmlPt,
+      Value<String?> nameRo,
+      Value<String?> descriptionHtmlRo,
+      Value<String?> nameTr,
+      Value<String?> descriptionHtmlTr,
+      Value<String?> nameJa,
+      Value<String?> descriptionHtmlJa,
+      Value<String?> nameKo,
+      Value<String?> descriptionHtmlKo,
+      Value<String?> nameZh,
+      Value<String?> descriptionHtmlZh,
       Value<double?> latitude,
       Value<double?> longitude,
       Value<DateTime?> createdAt,
@@ -10593,34 +13903,6 @@ final class $$LocalizedFarmersTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
-
-  static MultiTypedResultKey<
-    $LocalizedFarmerTranslationsTable,
-    List<LocalizedFarmerTranslation>
-  >
-  _localizedFarmerTranslationsRefsTable(_$AppDatabase db) =>
-      MultiTypedResultKey.fromTable(
-        db.localizedFarmerTranslations,
-        aliasName: $_aliasNameGenerator(
-          db.localizedFarmers.id,
-          db.localizedFarmerTranslations.farmerId,
-        ),
-      );
-
-  $$LocalizedFarmerTranslationsTableProcessedTableManager
-  get localizedFarmerTranslationsRefs {
-    final manager = $$LocalizedFarmerTranslationsTableTableManager(
-      $_db,
-      $_db.localizedFarmerTranslations,
-    ).filter((f) => f.farmerId.id.sqlEquals($_itemColumn<int>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(
-      _localizedFarmerTranslationsRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
 }
 
 class $$LocalizedFarmersTableFilterComposer
@@ -10637,13 +13919,153 @@ class $$LocalizedFarmersTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get nameUk => $composableBuilder(
+    column: $table.nameUk,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get imageUrl => $composableBuilder(
     column: $table.imageUrl,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get countryEmoji => $composableBuilder(
-    column: $table.countryEmoji,
+  ColumnFilters<String> get flagUrl => $composableBuilder(
+    column: $table.flagUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionHtmlUk => $composableBuilder(
+    column: $table.descriptionHtmlUk,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get regionUk => $composableBuilder(
+    column: $table.regionUk,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get countryUk => $composableBuilder(
+    column: $table.countryUk,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameEn => $composableBuilder(
+    column: $table.nameEn,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionHtmlEn => $composableBuilder(
+    column: $table.descriptionHtmlEn,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get namePl => $composableBuilder(
+    column: $table.namePl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionHtmlPl => $composableBuilder(
+    column: $table.descriptionHtmlPl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameDe => $composableBuilder(
+    column: $table.nameDe,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionHtmlDe => $composableBuilder(
+    column: $table.descriptionHtmlDe,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameFr => $composableBuilder(
+    column: $table.nameFr,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionHtmlFr => $composableBuilder(
+    column: $table.descriptionHtmlFr,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameEs => $composableBuilder(
+    column: $table.nameEs,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionHtmlEs => $composableBuilder(
+    column: $table.descriptionHtmlEs,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameIt => $composableBuilder(
+    column: $table.nameIt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionHtmlIt => $composableBuilder(
+    column: $table.descriptionHtmlIt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get namePt => $composableBuilder(
+    column: $table.namePt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionHtmlPt => $composableBuilder(
+    column: $table.descriptionHtmlPt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameRo => $composableBuilder(
+    column: $table.nameRo,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionHtmlRo => $composableBuilder(
+    column: $table.descriptionHtmlRo,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameTr => $composableBuilder(
+    column: $table.nameTr,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionHtmlTr => $composableBuilder(
+    column: $table.descriptionHtmlTr,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameJa => $composableBuilder(
+    column: $table.nameJa,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionHtmlJa => $composableBuilder(
+    column: $table.descriptionHtmlJa,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameKo => $composableBuilder(
+    column: $table.nameKo,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionHtmlKo => $composableBuilder(
+    column: $table.descriptionHtmlKo,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameZh => $composableBuilder(
+    column: $table.nameZh,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionHtmlZh => $composableBuilder(
+    column: $table.descriptionHtmlZh,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -10686,35 +14108,6 @@ class $$LocalizedFarmersTableFilterComposer
     );
     return f(composer);
   }
-
-  Expression<bool> localizedFarmerTranslationsRefs(
-    Expression<bool> Function(
-      $$LocalizedFarmerTranslationsTableFilterComposer f,
-    )
-    f,
-  ) {
-    final $$LocalizedFarmerTranslationsTableFilterComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.localizedFarmerTranslations,
-          getReferencedColumn: (t) => t.farmerId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$LocalizedFarmerTranslationsTableFilterComposer(
-                $db: $db,
-                $table: $db.localizedFarmerTranslations,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
 }
 
 class $$LocalizedFarmersTableOrderingComposer
@@ -10731,13 +14124,153 @@ class $$LocalizedFarmersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get nameUk => $composableBuilder(
+    column: $table.nameUk,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get imageUrl => $composableBuilder(
     column: $table.imageUrl,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get countryEmoji => $composableBuilder(
-    column: $table.countryEmoji,
+  ColumnOrderings<String> get flagUrl => $composableBuilder(
+    column: $table.flagUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionHtmlUk => $composableBuilder(
+    column: $table.descriptionHtmlUk,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get regionUk => $composableBuilder(
+    column: $table.regionUk,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get countryUk => $composableBuilder(
+    column: $table.countryUk,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameEn => $composableBuilder(
+    column: $table.nameEn,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionHtmlEn => $composableBuilder(
+    column: $table.descriptionHtmlEn,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get namePl => $composableBuilder(
+    column: $table.namePl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionHtmlPl => $composableBuilder(
+    column: $table.descriptionHtmlPl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameDe => $composableBuilder(
+    column: $table.nameDe,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionHtmlDe => $composableBuilder(
+    column: $table.descriptionHtmlDe,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameFr => $composableBuilder(
+    column: $table.nameFr,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionHtmlFr => $composableBuilder(
+    column: $table.descriptionHtmlFr,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameEs => $composableBuilder(
+    column: $table.nameEs,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionHtmlEs => $composableBuilder(
+    column: $table.descriptionHtmlEs,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameIt => $composableBuilder(
+    column: $table.nameIt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionHtmlIt => $composableBuilder(
+    column: $table.descriptionHtmlIt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get namePt => $composableBuilder(
+    column: $table.namePt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionHtmlPt => $composableBuilder(
+    column: $table.descriptionHtmlPt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameRo => $composableBuilder(
+    column: $table.nameRo,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionHtmlRo => $composableBuilder(
+    column: $table.descriptionHtmlRo,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameTr => $composableBuilder(
+    column: $table.nameTr,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionHtmlTr => $composableBuilder(
+    column: $table.descriptionHtmlTr,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameJa => $composableBuilder(
+    column: $table.nameJa,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionHtmlJa => $composableBuilder(
+    column: $table.descriptionHtmlJa,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameKo => $composableBuilder(
+    column: $table.nameKo,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionHtmlKo => $composableBuilder(
+    column: $table.descriptionHtmlKo,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameZh => $composableBuilder(
+    column: $table.nameZh,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionHtmlZh => $composableBuilder(
+    column: $table.descriptionHtmlZh,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -10769,11 +14302,119 @@ class $$LocalizedFarmersTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
+  GeneratedColumn<String> get nameUk =>
+      $composableBuilder(column: $table.nameUk, builder: (column) => column);
+
   GeneratedColumn<String> get imageUrl =>
       $composableBuilder(column: $table.imageUrl, builder: (column) => column);
 
-  GeneratedColumn<String> get countryEmoji => $composableBuilder(
-    column: $table.countryEmoji,
+  GeneratedColumn<String> get flagUrl =>
+      $composableBuilder(column: $table.flagUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionHtmlUk => $composableBuilder(
+    column: $table.descriptionHtmlUk,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get regionUk =>
+      $composableBuilder(column: $table.regionUk, builder: (column) => column);
+
+  GeneratedColumn<String> get countryUk =>
+      $composableBuilder(column: $table.countryUk, builder: (column) => column);
+
+  GeneratedColumn<String> get nameEn =>
+      $composableBuilder(column: $table.nameEn, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionHtmlEn => $composableBuilder(
+    column: $table.descriptionHtmlEn,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get namePl =>
+      $composableBuilder(column: $table.namePl, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionHtmlPl => $composableBuilder(
+    column: $table.descriptionHtmlPl,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nameDe =>
+      $composableBuilder(column: $table.nameDe, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionHtmlDe => $composableBuilder(
+    column: $table.descriptionHtmlDe,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nameFr =>
+      $composableBuilder(column: $table.nameFr, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionHtmlFr => $composableBuilder(
+    column: $table.descriptionHtmlFr,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nameEs =>
+      $composableBuilder(column: $table.nameEs, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionHtmlEs => $composableBuilder(
+    column: $table.descriptionHtmlEs,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nameIt =>
+      $composableBuilder(column: $table.nameIt, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionHtmlIt => $composableBuilder(
+    column: $table.descriptionHtmlIt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get namePt =>
+      $composableBuilder(column: $table.namePt, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionHtmlPt => $composableBuilder(
+    column: $table.descriptionHtmlPt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nameRo =>
+      $composableBuilder(column: $table.nameRo, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionHtmlRo => $composableBuilder(
+    column: $table.descriptionHtmlRo,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nameTr =>
+      $composableBuilder(column: $table.nameTr, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionHtmlTr => $composableBuilder(
+    column: $table.descriptionHtmlTr,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nameJa =>
+      $composableBuilder(column: $table.nameJa, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionHtmlJa => $composableBuilder(
+    column: $table.descriptionHtmlJa,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nameKo =>
+      $composableBuilder(column: $table.nameKo, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionHtmlKo => $composableBuilder(
+    column: $table.descriptionHtmlKo,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nameZh =>
+      $composableBuilder(column: $table.nameZh, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionHtmlZh => $composableBuilder(
+    column: $table.descriptionHtmlZh,
     builder: (column) => column,
   );
 
@@ -10810,35 +14451,6 @@ class $$LocalizedFarmersTableAnnotationComposer
     );
     return f(composer);
   }
-
-  Expression<T> localizedFarmerTranslationsRefs<T extends Object>(
-    Expression<T> Function(
-      $$LocalizedFarmerTranslationsTableAnnotationComposer a,
-    )
-    f,
-  ) {
-    final $$LocalizedFarmerTranslationsTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.localizedFarmerTranslations,
-          getReferencedColumn: (t) => t.farmerId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$LocalizedFarmerTranslationsTableAnnotationComposer(
-                $db: $db,
-                $table: $db.localizedFarmerTranslations,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
 }
 
 class $$LocalizedFarmersTableTableManager
@@ -10854,10 +14466,7 @@ class $$LocalizedFarmersTableTableManager
           $$LocalizedFarmersTableUpdateCompanionBuilder,
           (LocalizedFarmer, $$LocalizedFarmersTableReferences),
           LocalizedFarmer,
-          PrefetchHooks Function({
-            bool localizedBeansRefs,
-            bool localizedFarmerTranslationsRefs,
-          })
+          PrefetchHooks Function({bool localizedBeansRefs})
         > {
   $$LocalizedFarmersTableTableManager(
     _$AppDatabase db,
@@ -10875,15 +14484,71 @@ class $$LocalizedFarmersTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                Value<String?> imageUrl = const Value.absent(),
-                Value<String?> countryEmoji = const Value.absent(),
+                Value<String> nameUk = const Value.absent(),
+                Value<String> imageUrl = const Value.absent(),
+                Value<String> flagUrl = const Value.absent(),
+                Value<String> descriptionHtmlUk = const Value.absent(),
+                Value<String?> regionUk = const Value.absent(),
+                Value<String?> countryUk = const Value.absent(),
+                Value<String?> nameEn = const Value.absent(),
+                Value<String?> descriptionHtmlEn = const Value.absent(),
+                Value<String?> namePl = const Value.absent(),
+                Value<String?> descriptionHtmlPl = const Value.absent(),
+                Value<String?> nameDe = const Value.absent(),
+                Value<String?> descriptionHtmlDe = const Value.absent(),
+                Value<String?> nameFr = const Value.absent(),
+                Value<String?> descriptionHtmlFr = const Value.absent(),
+                Value<String?> nameEs = const Value.absent(),
+                Value<String?> descriptionHtmlEs = const Value.absent(),
+                Value<String?> nameIt = const Value.absent(),
+                Value<String?> descriptionHtmlIt = const Value.absent(),
+                Value<String?> namePt = const Value.absent(),
+                Value<String?> descriptionHtmlPt = const Value.absent(),
+                Value<String?> nameRo = const Value.absent(),
+                Value<String?> descriptionHtmlRo = const Value.absent(),
+                Value<String?> nameTr = const Value.absent(),
+                Value<String?> descriptionHtmlTr = const Value.absent(),
+                Value<String?> nameJa = const Value.absent(),
+                Value<String?> descriptionHtmlJa = const Value.absent(),
+                Value<String?> nameKo = const Value.absent(),
+                Value<String?> descriptionHtmlKo = const Value.absent(),
+                Value<String?> nameZh = const Value.absent(),
+                Value<String?> descriptionHtmlZh = const Value.absent(),
                 Value<double?> latitude = const Value.absent(),
                 Value<double?> longitude = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
               }) => LocalizedFarmersCompanion(
                 id: id,
+                nameUk: nameUk,
                 imageUrl: imageUrl,
-                countryEmoji: countryEmoji,
+                flagUrl: flagUrl,
+                descriptionHtmlUk: descriptionHtmlUk,
+                regionUk: regionUk,
+                countryUk: countryUk,
+                nameEn: nameEn,
+                descriptionHtmlEn: descriptionHtmlEn,
+                namePl: namePl,
+                descriptionHtmlPl: descriptionHtmlPl,
+                nameDe: nameDe,
+                descriptionHtmlDe: descriptionHtmlDe,
+                nameFr: nameFr,
+                descriptionHtmlFr: descriptionHtmlFr,
+                nameEs: nameEs,
+                descriptionHtmlEs: descriptionHtmlEs,
+                nameIt: nameIt,
+                descriptionHtmlIt: descriptionHtmlIt,
+                namePt: namePt,
+                descriptionHtmlPt: descriptionHtmlPt,
+                nameRo: nameRo,
+                descriptionHtmlRo: descriptionHtmlRo,
+                nameTr: nameTr,
+                descriptionHtmlTr: descriptionHtmlTr,
+                nameJa: nameJa,
+                descriptionHtmlJa: descriptionHtmlJa,
+                nameKo: nameKo,
+                descriptionHtmlKo: descriptionHtmlKo,
+                nameZh: nameZh,
+                descriptionHtmlZh: descriptionHtmlZh,
                 latitude: latitude,
                 longitude: longitude,
                 createdAt: createdAt,
@@ -10891,15 +14556,71 @@ class $$LocalizedFarmersTableTableManager
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                Value<String?> imageUrl = const Value.absent(),
-                Value<String?> countryEmoji = const Value.absent(),
+                Value<String> nameUk = const Value.absent(),
+                Value<String> imageUrl = const Value.absent(),
+                Value<String> flagUrl = const Value.absent(),
+                Value<String> descriptionHtmlUk = const Value.absent(),
+                Value<String?> regionUk = const Value.absent(),
+                Value<String?> countryUk = const Value.absent(),
+                Value<String?> nameEn = const Value.absent(),
+                Value<String?> descriptionHtmlEn = const Value.absent(),
+                Value<String?> namePl = const Value.absent(),
+                Value<String?> descriptionHtmlPl = const Value.absent(),
+                Value<String?> nameDe = const Value.absent(),
+                Value<String?> descriptionHtmlDe = const Value.absent(),
+                Value<String?> nameFr = const Value.absent(),
+                Value<String?> descriptionHtmlFr = const Value.absent(),
+                Value<String?> nameEs = const Value.absent(),
+                Value<String?> descriptionHtmlEs = const Value.absent(),
+                Value<String?> nameIt = const Value.absent(),
+                Value<String?> descriptionHtmlIt = const Value.absent(),
+                Value<String?> namePt = const Value.absent(),
+                Value<String?> descriptionHtmlPt = const Value.absent(),
+                Value<String?> nameRo = const Value.absent(),
+                Value<String?> descriptionHtmlRo = const Value.absent(),
+                Value<String?> nameTr = const Value.absent(),
+                Value<String?> descriptionHtmlTr = const Value.absent(),
+                Value<String?> nameJa = const Value.absent(),
+                Value<String?> descriptionHtmlJa = const Value.absent(),
+                Value<String?> nameKo = const Value.absent(),
+                Value<String?> descriptionHtmlKo = const Value.absent(),
+                Value<String?> nameZh = const Value.absent(),
+                Value<String?> descriptionHtmlZh = const Value.absent(),
                 Value<double?> latitude = const Value.absent(),
                 Value<double?> longitude = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
               }) => LocalizedFarmersCompanion.insert(
                 id: id,
+                nameUk: nameUk,
                 imageUrl: imageUrl,
-                countryEmoji: countryEmoji,
+                flagUrl: flagUrl,
+                descriptionHtmlUk: descriptionHtmlUk,
+                regionUk: regionUk,
+                countryUk: countryUk,
+                nameEn: nameEn,
+                descriptionHtmlEn: descriptionHtmlEn,
+                namePl: namePl,
+                descriptionHtmlPl: descriptionHtmlPl,
+                nameDe: nameDe,
+                descriptionHtmlDe: descriptionHtmlDe,
+                nameFr: nameFr,
+                descriptionHtmlFr: descriptionHtmlFr,
+                nameEs: nameEs,
+                descriptionHtmlEs: descriptionHtmlEs,
+                nameIt: nameIt,
+                descriptionHtmlIt: descriptionHtmlIt,
+                namePt: namePt,
+                descriptionHtmlPt: descriptionHtmlPt,
+                nameRo: nameRo,
+                descriptionHtmlRo: descriptionHtmlRo,
+                nameTr: nameTr,
+                descriptionHtmlTr: descriptionHtmlTr,
+                nameJa: nameJa,
+                descriptionHtmlJa: descriptionHtmlJa,
+                nameKo: nameKo,
+                descriptionHtmlKo: descriptionHtmlKo,
+                nameZh: nameZh,
+                descriptionHtmlZh: descriptionHtmlZh,
                 latitude: latitude,
                 longitude: longitude,
                 createdAt: createdAt,
@@ -10912,67 +14633,38 @@ class $$LocalizedFarmersTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback:
-              ({
-                localizedBeansRefs = false,
-                localizedFarmerTranslationsRefs = false,
-              }) {
-                return PrefetchHooks(
-                  db: db,
-                  explicitlyWatchedTables: [
-                    if (localizedBeansRefs) db.localizedBeans,
-                    if (localizedFarmerTranslationsRefs)
-                      db.localizedFarmerTranslations,
-                  ],
-                  addJoins: null,
-                  getPrefetchedDataCallback: (items) async {
-                    return [
-                      if (localizedBeansRefs)
-                        await $_getPrefetchedData<
-                          LocalizedFarmer,
-                          $LocalizedFarmersTable,
-                          LocalizedBean
-                        >(
-                          currentTable: table,
-                          referencedTable: $$LocalizedFarmersTableReferences
-                              ._localizedBeansRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$LocalizedFarmersTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).localizedBeansRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.farmerId == item.id,
-                              ),
-                          typedResults: items,
-                        ),
-                      if (localizedFarmerTranslationsRefs)
-                        await $_getPrefetchedData<
-                          LocalizedFarmer,
-                          $LocalizedFarmersTable,
-                          LocalizedFarmerTranslation
-                        >(
-                          currentTable: table,
-                          referencedTable: $$LocalizedFarmersTableReferences
-                              ._localizedFarmerTranslationsRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$LocalizedFarmersTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).localizedFarmerTranslationsRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.farmerId == item.id,
-                              ),
-                          typedResults: items,
-                        ),
-                    ];
-                  },
-                );
+          prefetchHooksCallback: ({localizedBeansRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (localizedBeansRefs) db.localizedBeans,
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (localizedBeansRefs)
+                    await $_getPrefetchedData<
+                      LocalizedFarmer,
+                      $LocalizedFarmersTable,
+                      LocalizedBean
+                    >(
+                      currentTable: table,
+                      referencedTable: $$LocalizedFarmersTableReferences
+                          ._localizedBeansRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$LocalizedFarmersTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).localizedBeansRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.farmerId == item.id),
+                      typedResults: items,
+                    ),
+                ];
               },
+            );
+          },
         ),
       );
 }
@@ -10989,10 +14681,7 @@ typedef $$LocalizedFarmersTableProcessedTableManager =
       $$LocalizedFarmersTableUpdateCompanionBuilder,
       (LocalizedFarmer, $$LocalizedFarmersTableReferences),
       LocalizedFarmer,
-      PrefetchHooks Function({
-        bool localizedBeansRefs,
-        bool localizedFarmerTranslationsRefs,
-      })
+      PrefetchHooks Function({bool localizedBeansRefs})
     >;
 typedef $$LocalizedBeansTableCreateCompanionBuilder =
     LocalizedBeansCompanion Function({
@@ -12894,398 +16583,6 @@ typedef $$LocalizedBrandTranslationsTableProcessedTableManager =
       LocalizedBrandTranslation,
       PrefetchHooks Function({bool brandId})
     >;
-typedef $$LocalizedFarmerTranslationsTableCreateCompanionBuilder =
-    LocalizedFarmerTranslationsCompanion Function({
-      required int farmerId,
-      required String languageCode,
-      Value<String?> name,
-      Value<String?> region,
-      Value<String?> description,
-      Value<String?> story,
-      Value<String?> country,
-      Value<int> rowid,
-    });
-typedef $$LocalizedFarmerTranslationsTableUpdateCompanionBuilder =
-    LocalizedFarmerTranslationsCompanion Function({
-      Value<int> farmerId,
-      Value<String> languageCode,
-      Value<String?> name,
-      Value<String?> region,
-      Value<String?> description,
-      Value<String?> story,
-      Value<String?> country,
-      Value<int> rowid,
-    });
-
-final class $$LocalizedFarmerTranslationsTableReferences
-    extends
-        BaseReferences<
-          _$AppDatabase,
-          $LocalizedFarmerTranslationsTable,
-          LocalizedFarmerTranslation
-        > {
-  $$LocalizedFarmerTranslationsTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static $LocalizedFarmersTable _farmerIdTable(_$AppDatabase db) =>
-      db.localizedFarmers.createAlias(
-        $_aliasNameGenerator(
-          db.localizedFarmerTranslations.farmerId,
-          db.localizedFarmers.id,
-        ),
-      );
-
-  $$LocalizedFarmersTableProcessedTableManager get farmerId {
-    final $_column = $_itemColumn<int>('farmer_id')!;
-
-    final manager = $$LocalizedFarmersTableTableManager(
-      $_db,
-      $_db.localizedFarmers,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_farmerIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
-
-class $$LocalizedFarmerTranslationsTableFilterComposer
-    extends Composer<_$AppDatabase, $LocalizedFarmerTranslationsTable> {
-  $$LocalizedFarmerTranslationsTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<String> get languageCode => $composableBuilder(
-    column: $table.languageCode,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get region => $composableBuilder(
-    column: $table.region,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get description => $composableBuilder(
-    column: $table.description,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get story => $composableBuilder(
-    column: $table.story,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get country => $composableBuilder(
-    column: $table.country,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  $$LocalizedFarmersTableFilterComposer get farmerId {
-    final $$LocalizedFarmersTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.farmerId,
-      referencedTable: $db.localizedFarmers,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$LocalizedFarmersTableFilterComposer(
-            $db: $db,
-            $table: $db.localizedFarmers,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$LocalizedFarmerTranslationsTableOrderingComposer
-    extends Composer<_$AppDatabase, $LocalizedFarmerTranslationsTable> {
-  $$LocalizedFarmerTranslationsTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<String> get languageCode => $composableBuilder(
-    column: $table.languageCode,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get region => $composableBuilder(
-    column: $table.region,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get description => $composableBuilder(
-    column: $table.description,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get story => $composableBuilder(
-    column: $table.story,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get country => $composableBuilder(
-    column: $table.country,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  $$LocalizedFarmersTableOrderingComposer get farmerId {
-    final $$LocalizedFarmersTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.farmerId,
-      referencedTable: $db.localizedFarmers,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$LocalizedFarmersTableOrderingComposer(
-            $db: $db,
-            $table: $db.localizedFarmers,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$LocalizedFarmerTranslationsTableAnnotationComposer
-    extends Composer<_$AppDatabase, $LocalizedFarmerTranslationsTable> {
-  $$LocalizedFarmerTranslationsTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<String> get languageCode => $composableBuilder(
-    column: $table.languageCode,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => column);
-
-  GeneratedColumn<String> get region =>
-      $composableBuilder(column: $table.region, builder: (column) => column);
-
-  GeneratedColumn<String> get description => $composableBuilder(
-    column: $table.description,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get story =>
-      $composableBuilder(column: $table.story, builder: (column) => column);
-
-  GeneratedColumn<String> get country =>
-      $composableBuilder(column: $table.country, builder: (column) => column);
-
-  $$LocalizedFarmersTableAnnotationComposer get farmerId {
-    final $$LocalizedFarmersTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.farmerId,
-      referencedTable: $db.localizedFarmers,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$LocalizedFarmersTableAnnotationComposer(
-            $db: $db,
-            $table: $db.localizedFarmers,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$LocalizedFarmerTranslationsTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $LocalizedFarmerTranslationsTable,
-          LocalizedFarmerTranslation,
-          $$LocalizedFarmerTranslationsTableFilterComposer,
-          $$LocalizedFarmerTranslationsTableOrderingComposer,
-          $$LocalizedFarmerTranslationsTableAnnotationComposer,
-          $$LocalizedFarmerTranslationsTableCreateCompanionBuilder,
-          $$LocalizedFarmerTranslationsTableUpdateCompanionBuilder,
-          (
-            LocalizedFarmerTranslation,
-            $$LocalizedFarmerTranslationsTableReferences,
-          ),
-          LocalizedFarmerTranslation,
-          PrefetchHooks Function({bool farmerId})
-        > {
-  $$LocalizedFarmerTranslationsTableTableManager(
-    _$AppDatabase db,
-    $LocalizedFarmerTranslationsTable table,
-  ) : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$LocalizedFarmerTranslationsTableFilterComposer(
-                $db: db,
-                $table: table,
-              ),
-          createOrderingComposer: () =>
-              $$LocalizedFarmerTranslationsTableOrderingComposer(
-                $db: db,
-                $table: table,
-              ),
-          createComputedFieldComposer: () =>
-              $$LocalizedFarmerTranslationsTableAnnotationComposer(
-                $db: db,
-                $table: table,
-              ),
-          updateCompanionCallback:
-              ({
-                Value<int> farmerId = const Value.absent(),
-                Value<String> languageCode = const Value.absent(),
-                Value<String?> name = const Value.absent(),
-                Value<String?> region = const Value.absent(),
-                Value<String?> description = const Value.absent(),
-                Value<String?> story = const Value.absent(),
-                Value<String?> country = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => LocalizedFarmerTranslationsCompanion(
-                farmerId: farmerId,
-                languageCode: languageCode,
-                name: name,
-                region: region,
-                description: description,
-                story: story,
-                country: country,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required int farmerId,
-                required String languageCode,
-                Value<String?> name = const Value.absent(),
-                Value<String?> region = const Value.absent(),
-                Value<String?> description = const Value.absent(),
-                Value<String?> story = const Value.absent(),
-                Value<String?> country = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => LocalizedFarmerTranslationsCompanion.insert(
-                farmerId: farmerId,
-                languageCode: languageCode,
-                name: name,
-                region: region,
-                description: description,
-                story: story,
-                country: country,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$LocalizedFarmerTranslationsTableReferences(db, table, e),
-                ),
-              )
-              .toList(),
-          prefetchHooksCallback: ({farmerId = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (farmerId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.farmerId,
-                                referencedTable:
-                                    $$LocalizedFarmerTranslationsTableReferences
-                                        ._farmerIdTable(db),
-                                referencedColumn:
-                                    $$LocalizedFarmerTranslationsTableReferences
-                                        ._farmerIdTable(db)
-                                        .id,
-                              )
-                              as T;
-                    }
-
-                    return state;
-                  },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
-        ),
-      );
-}
-
-typedef $$LocalizedFarmerTranslationsTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $LocalizedFarmerTranslationsTable,
-      LocalizedFarmerTranslation,
-      $$LocalizedFarmerTranslationsTableFilterComposer,
-      $$LocalizedFarmerTranslationsTableOrderingComposer,
-      $$LocalizedFarmerTranslationsTableAnnotationComposer,
-      $$LocalizedFarmerTranslationsTableCreateCompanionBuilder,
-      $$LocalizedFarmerTranslationsTableUpdateCompanionBuilder,
-      (
-        LocalizedFarmerTranslation,
-        $$LocalizedFarmerTranslationsTableReferences,
-      ),
-      LocalizedFarmerTranslation,
-      PrefetchHooks Function({bool farmerId})
-    >;
 typedef $$SphereRegionsTableCreateCompanionBuilder =
     SphereRegionsCompanion Function({
       required String id,
@@ -14000,57 +17297,69 @@ typedef $$SphereRegionTranslationsTableProcessedTableManager =
 typedef $$SpecialtyArticlesTableCreateCompanionBuilder =
     SpecialtyArticlesCompanion Function({
       Value<int> id,
-      required String imageUrl,
-      required int readTimeMin,
+      Value<String> titleUk,
+      Value<String> imageUrl,
+      Value<String> flagUrl,
+      Value<String> contentHtmlUk,
+      Value<int> readTimeMin,
+      Value<String?> titleEn,
+      Value<String?> contentHtmlEn,
+      Value<String?> titlePl,
+      Value<String?> contentHtmlPl,
+      Value<String?> titleDe,
+      Value<String?> contentHtmlDe,
+      Value<String?> titleFr,
+      Value<String?> contentHtmlFr,
+      Value<String?> titleEs,
+      Value<String?> contentHtmlEs,
+      Value<String?> titleIt,
+      Value<String?> contentHtmlIt,
+      Value<String?> titlePt,
+      Value<String?> contentHtmlPt,
+      Value<String?> titleRo,
+      Value<String?> contentHtmlRo,
+      Value<String?> titleTr,
+      Value<String?> contentHtmlTr,
+      Value<String?> titleJa,
+      Value<String?> contentHtmlJa,
+      Value<String?> titleKo,
+      Value<String?> contentHtmlKo,
+      Value<String?> titleZh,
+      Value<String?> contentHtmlZh,
     });
 typedef $$SpecialtyArticlesTableUpdateCompanionBuilder =
     SpecialtyArticlesCompanion Function({
       Value<int> id,
+      Value<String> titleUk,
       Value<String> imageUrl,
+      Value<String> flagUrl,
+      Value<String> contentHtmlUk,
       Value<int> readTimeMin,
+      Value<String?> titleEn,
+      Value<String?> contentHtmlEn,
+      Value<String?> titlePl,
+      Value<String?> contentHtmlPl,
+      Value<String?> titleDe,
+      Value<String?> contentHtmlDe,
+      Value<String?> titleFr,
+      Value<String?> contentHtmlFr,
+      Value<String?> titleEs,
+      Value<String?> contentHtmlEs,
+      Value<String?> titleIt,
+      Value<String?> contentHtmlIt,
+      Value<String?> titlePt,
+      Value<String?> contentHtmlPt,
+      Value<String?> titleRo,
+      Value<String?> contentHtmlRo,
+      Value<String?> titleTr,
+      Value<String?> contentHtmlTr,
+      Value<String?> titleJa,
+      Value<String?> contentHtmlJa,
+      Value<String?> titleKo,
+      Value<String?> contentHtmlKo,
+      Value<String?> titleZh,
+      Value<String?> contentHtmlZh,
     });
-
-final class $$SpecialtyArticlesTableReferences
-    extends
-        BaseReferences<
-          _$AppDatabase,
-          $SpecialtyArticlesTable,
-          SpecialtyArticle
-        > {
-  $$SpecialtyArticlesTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static MultiTypedResultKey<
-    $SpecialtyArticleTranslationsTable,
-    List<SpecialtyArticleTranslation>
-  >
-  _specialtyArticleTranslationsRefsTable(_$AppDatabase db) =>
-      MultiTypedResultKey.fromTable(
-        db.specialtyArticleTranslations,
-        aliasName: $_aliasNameGenerator(
-          db.specialtyArticles.id,
-          db.specialtyArticleTranslations.articleId,
-        ),
-      );
-
-  $$SpecialtyArticleTranslationsTableProcessedTableManager
-  get specialtyArticleTranslationsRefs {
-    final manager = $$SpecialtyArticleTranslationsTableTableManager(
-      $_db,
-      $_db.specialtyArticleTranslations,
-    ).filter((f) => f.articleId.id.sqlEquals($_itemColumn<int>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(
-      _specialtyArticleTranslationsRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
 
 class $$SpecialtyArticlesTableFilterComposer
     extends Composer<_$AppDatabase, $SpecialtyArticlesTable> {
@@ -14066,8 +17375,23 @@ class $$SpecialtyArticlesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get titleUk => $composableBuilder(
+    column: $table.titleUk,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get imageUrl => $composableBuilder(
     column: $table.imageUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get flagUrl => $composableBuilder(
+    column: $table.flagUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get contentHtmlUk => $composableBuilder(
+    column: $table.contentHtmlUk,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -14076,34 +17400,125 @@ class $$SpecialtyArticlesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> specialtyArticleTranslationsRefs(
-    Expression<bool> Function(
-      $$SpecialtyArticleTranslationsTableFilterComposer f,
-    )
-    f,
-  ) {
-    final $$SpecialtyArticleTranslationsTableFilterComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.specialtyArticleTranslations,
-          getReferencedColumn: (t) => t.articleId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$SpecialtyArticleTranslationsTableFilterComposer(
-                $db: $db,
-                $table: $db.specialtyArticleTranslations,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
+  ColumnFilters<String> get titleEn => $composableBuilder(
+    column: $table.titleEn,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get contentHtmlEn => $composableBuilder(
+    column: $table.contentHtmlEn,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get titlePl => $composableBuilder(
+    column: $table.titlePl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get contentHtmlPl => $composableBuilder(
+    column: $table.contentHtmlPl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get titleDe => $composableBuilder(
+    column: $table.titleDe,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get contentHtmlDe => $composableBuilder(
+    column: $table.contentHtmlDe,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get titleFr => $composableBuilder(
+    column: $table.titleFr,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get contentHtmlFr => $composableBuilder(
+    column: $table.contentHtmlFr,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get titleEs => $composableBuilder(
+    column: $table.titleEs,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get contentHtmlEs => $composableBuilder(
+    column: $table.contentHtmlEs,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get titleIt => $composableBuilder(
+    column: $table.titleIt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get contentHtmlIt => $composableBuilder(
+    column: $table.contentHtmlIt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get titlePt => $composableBuilder(
+    column: $table.titlePt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get contentHtmlPt => $composableBuilder(
+    column: $table.contentHtmlPt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get titleRo => $composableBuilder(
+    column: $table.titleRo,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get contentHtmlRo => $composableBuilder(
+    column: $table.contentHtmlRo,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get titleTr => $composableBuilder(
+    column: $table.titleTr,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get contentHtmlTr => $composableBuilder(
+    column: $table.contentHtmlTr,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get titleJa => $composableBuilder(
+    column: $table.titleJa,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get contentHtmlJa => $composableBuilder(
+    column: $table.contentHtmlJa,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get titleKo => $composableBuilder(
+    column: $table.titleKo,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get contentHtmlKo => $composableBuilder(
+    column: $table.contentHtmlKo,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get titleZh => $composableBuilder(
+    column: $table.titleZh,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get contentHtmlZh => $composableBuilder(
+    column: $table.contentHtmlZh,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$SpecialtyArticlesTableOrderingComposer
@@ -14120,13 +17535,148 @@ class $$SpecialtyArticlesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get titleUk => $composableBuilder(
+    column: $table.titleUk,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get imageUrl => $composableBuilder(
     column: $table.imageUrl,
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get flagUrl => $composableBuilder(
+    column: $table.flagUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get contentHtmlUk => $composableBuilder(
+    column: $table.contentHtmlUk,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get readTimeMin => $composableBuilder(
     column: $table.readTimeMin,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get titleEn => $composableBuilder(
+    column: $table.titleEn,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get contentHtmlEn => $composableBuilder(
+    column: $table.contentHtmlEn,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get titlePl => $composableBuilder(
+    column: $table.titlePl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get contentHtmlPl => $composableBuilder(
+    column: $table.contentHtmlPl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get titleDe => $composableBuilder(
+    column: $table.titleDe,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get contentHtmlDe => $composableBuilder(
+    column: $table.contentHtmlDe,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get titleFr => $composableBuilder(
+    column: $table.titleFr,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get contentHtmlFr => $composableBuilder(
+    column: $table.contentHtmlFr,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get titleEs => $composableBuilder(
+    column: $table.titleEs,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get contentHtmlEs => $composableBuilder(
+    column: $table.contentHtmlEs,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get titleIt => $composableBuilder(
+    column: $table.titleIt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get contentHtmlIt => $composableBuilder(
+    column: $table.contentHtmlIt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get titlePt => $composableBuilder(
+    column: $table.titlePt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get contentHtmlPt => $composableBuilder(
+    column: $table.contentHtmlPt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get titleRo => $composableBuilder(
+    column: $table.titleRo,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get contentHtmlRo => $composableBuilder(
+    column: $table.contentHtmlRo,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get titleTr => $composableBuilder(
+    column: $table.titleTr,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get contentHtmlTr => $composableBuilder(
+    column: $table.contentHtmlTr,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get titleJa => $composableBuilder(
+    column: $table.titleJa,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get contentHtmlJa => $composableBuilder(
+    column: $table.contentHtmlJa,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get titleKo => $composableBuilder(
+    column: $table.titleKo,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get contentHtmlKo => $composableBuilder(
+    column: $table.contentHtmlKo,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get titleZh => $composableBuilder(
+    column: $table.titleZh,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get contentHtmlZh => $composableBuilder(
+    column: $table.contentHtmlZh,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -14143,42 +17693,120 @@ class $$SpecialtyArticlesTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
+  GeneratedColumn<String> get titleUk =>
+      $composableBuilder(column: $table.titleUk, builder: (column) => column);
+
   GeneratedColumn<String> get imageUrl =>
       $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get flagUrl =>
+      $composableBuilder(column: $table.flagUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get contentHtmlUk => $composableBuilder(
+    column: $table.contentHtmlUk,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<int> get readTimeMin => $composableBuilder(
     column: $table.readTimeMin,
     builder: (column) => column,
   );
 
-  Expression<T> specialtyArticleTranslationsRefs<T extends Object>(
-    Expression<T> Function(
-      $$SpecialtyArticleTranslationsTableAnnotationComposer a,
-    )
-    f,
-  ) {
-    final $$SpecialtyArticleTranslationsTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.specialtyArticleTranslations,
-          getReferencedColumn: (t) => t.articleId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$SpecialtyArticleTranslationsTableAnnotationComposer(
-                $db: $db,
-                $table: $db.specialtyArticleTranslations,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
+  GeneratedColumn<String> get titleEn =>
+      $composableBuilder(column: $table.titleEn, builder: (column) => column);
+
+  GeneratedColumn<String> get contentHtmlEn => $composableBuilder(
+    column: $table.contentHtmlEn,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get titlePl =>
+      $composableBuilder(column: $table.titlePl, builder: (column) => column);
+
+  GeneratedColumn<String> get contentHtmlPl => $composableBuilder(
+    column: $table.contentHtmlPl,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get titleDe =>
+      $composableBuilder(column: $table.titleDe, builder: (column) => column);
+
+  GeneratedColumn<String> get contentHtmlDe => $composableBuilder(
+    column: $table.contentHtmlDe,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get titleFr =>
+      $composableBuilder(column: $table.titleFr, builder: (column) => column);
+
+  GeneratedColumn<String> get contentHtmlFr => $composableBuilder(
+    column: $table.contentHtmlFr,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get titleEs =>
+      $composableBuilder(column: $table.titleEs, builder: (column) => column);
+
+  GeneratedColumn<String> get contentHtmlEs => $composableBuilder(
+    column: $table.contentHtmlEs,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get titleIt =>
+      $composableBuilder(column: $table.titleIt, builder: (column) => column);
+
+  GeneratedColumn<String> get contentHtmlIt => $composableBuilder(
+    column: $table.contentHtmlIt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get titlePt =>
+      $composableBuilder(column: $table.titlePt, builder: (column) => column);
+
+  GeneratedColumn<String> get contentHtmlPt => $composableBuilder(
+    column: $table.contentHtmlPt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get titleRo =>
+      $composableBuilder(column: $table.titleRo, builder: (column) => column);
+
+  GeneratedColumn<String> get contentHtmlRo => $composableBuilder(
+    column: $table.contentHtmlRo,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get titleTr =>
+      $composableBuilder(column: $table.titleTr, builder: (column) => column);
+
+  GeneratedColumn<String> get contentHtmlTr => $composableBuilder(
+    column: $table.contentHtmlTr,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get titleJa =>
+      $composableBuilder(column: $table.titleJa, builder: (column) => column);
+
+  GeneratedColumn<String> get contentHtmlJa => $composableBuilder(
+    column: $table.contentHtmlJa,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get titleKo =>
+      $composableBuilder(column: $table.titleKo, builder: (column) => column);
+
+  GeneratedColumn<String> get contentHtmlKo => $composableBuilder(
+    column: $table.contentHtmlKo,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get titleZh =>
+      $composableBuilder(column: $table.titleZh, builder: (column) => column);
+
+  GeneratedColumn<String> get contentHtmlZh => $composableBuilder(
+    column: $table.contentHtmlZh,
+    builder: (column) => column,
+  );
 }
 
 class $$SpecialtyArticlesTableTableManager
@@ -14192,9 +17820,16 @@ class $$SpecialtyArticlesTableTableManager
           $$SpecialtyArticlesTableAnnotationComposer,
           $$SpecialtyArticlesTableCreateCompanionBuilder,
           $$SpecialtyArticlesTableUpdateCompanionBuilder,
-          (SpecialtyArticle, $$SpecialtyArticlesTableReferences),
+          (
+            SpecialtyArticle,
+            BaseReferences<
+              _$AppDatabase,
+              $SpecialtyArticlesTable,
+              SpecialtyArticle
+            >,
+          ),
           SpecialtyArticle,
-          PrefetchHooks Function({bool specialtyArticleTranslationsRefs})
+          PrefetchHooks Function()
         > {
   $$SpecialtyArticlesTableTableManager(
     _$AppDatabase db,
@@ -14215,64 +17850,135 @@ class $$SpecialtyArticlesTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                Value<String> titleUk = const Value.absent(),
                 Value<String> imageUrl = const Value.absent(),
+                Value<String> flagUrl = const Value.absent(),
+                Value<String> contentHtmlUk = const Value.absent(),
                 Value<int> readTimeMin = const Value.absent(),
+                Value<String?> titleEn = const Value.absent(),
+                Value<String?> contentHtmlEn = const Value.absent(),
+                Value<String?> titlePl = const Value.absent(),
+                Value<String?> contentHtmlPl = const Value.absent(),
+                Value<String?> titleDe = const Value.absent(),
+                Value<String?> contentHtmlDe = const Value.absent(),
+                Value<String?> titleFr = const Value.absent(),
+                Value<String?> contentHtmlFr = const Value.absent(),
+                Value<String?> titleEs = const Value.absent(),
+                Value<String?> contentHtmlEs = const Value.absent(),
+                Value<String?> titleIt = const Value.absent(),
+                Value<String?> contentHtmlIt = const Value.absent(),
+                Value<String?> titlePt = const Value.absent(),
+                Value<String?> contentHtmlPt = const Value.absent(),
+                Value<String?> titleRo = const Value.absent(),
+                Value<String?> contentHtmlRo = const Value.absent(),
+                Value<String?> titleTr = const Value.absent(),
+                Value<String?> contentHtmlTr = const Value.absent(),
+                Value<String?> titleJa = const Value.absent(),
+                Value<String?> contentHtmlJa = const Value.absent(),
+                Value<String?> titleKo = const Value.absent(),
+                Value<String?> contentHtmlKo = const Value.absent(),
+                Value<String?> titleZh = const Value.absent(),
+                Value<String?> contentHtmlZh = const Value.absent(),
               }) => SpecialtyArticlesCompanion(
                 id: id,
+                titleUk: titleUk,
                 imageUrl: imageUrl,
+                flagUrl: flagUrl,
+                contentHtmlUk: contentHtmlUk,
                 readTimeMin: readTimeMin,
+                titleEn: titleEn,
+                contentHtmlEn: contentHtmlEn,
+                titlePl: titlePl,
+                contentHtmlPl: contentHtmlPl,
+                titleDe: titleDe,
+                contentHtmlDe: contentHtmlDe,
+                titleFr: titleFr,
+                contentHtmlFr: contentHtmlFr,
+                titleEs: titleEs,
+                contentHtmlEs: contentHtmlEs,
+                titleIt: titleIt,
+                contentHtmlIt: contentHtmlIt,
+                titlePt: titlePt,
+                contentHtmlPt: contentHtmlPt,
+                titleRo: titleRo,
+                contentHtmlRo: contentHtmlRo,
+                titleTr: titleTr,
+                contentHtmlTr: contentHtmlTr,
+                titleJa: titleJa,
+                contentHtmlJa: contentHtmlJa,
+                titleKo: titleKo,
+                contentHtmlKo: contentHtmlKo,
+                titleZh: titleZh,
+                contentHtmlZh: contentHtmlZh,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                required String imageUrl,
-                required int readTimeMin,
+                Value<String> titleUk = const Value.absent(),
+                Value<String> imageUrl = const Value.absent(),
+                Value<String> flagUrl = const Value.absent(),
+                Value<String> contentHtmlUk = const Value.absent(),
+                Value<int> readTimeMin = const Value.absent(),
+                Value<String?> titleEn = const Value.absent(),
+                Value<String?> contentHtmlEn = const Value.absent(),
+                Value<String?> titlePl = const Value.absent(),
+                Value<String?> contentHtmlPl = const Value.absent(),
+                Value<String?> titleDe = const Value.absent(),
+                Value<String?> contentHtmlDe = const Value.absent(),
+                Value<String?> titleFr = const Value.absent(),
+                Value<String?> contentHtmlFr = const Value.absent(),
+                Value<String?> titleEs = const Value.absent(),
+                Value<String?> contentHtmlEs = const Value.absent(),
+                Value<String?> titleIt = const Value.absent(),
+                Value<String?> contentHtmlIt = const Value.absent(),
+                Value<String?> titlePt = const Value.absent(),
+                Value<String?> contentHtmlPt = const Value.absent(),
+                Value<String?> titleRo = const Value.absent(),
+                Value<String?> contentHtmlRo = const Value.absent(),
+                Value<String?> titleTr = const Value.absent(),
+                Value<String?> contentHtmlTr = const Value.absent(),
+                Value<String?> titleJa = const Value.absent(),
+                Value<String?> contentHtmlJa = const Value.absent(),
+                Value<String?> titleKo = const Value.absent(),
+                Value<String?> contentHtmlKo = const Value.absent(),
+                Value<String?> titleZh = const Value.absent(),
+                Value<String?> contentHtmlZh = const Value.absent(),
               }) => SpecialtyArticlesCompanion.insert(
                 id: id,
+                titleUk: titleUk,
                 imageUrl: imageUrl,
+                flagUrl: flagUrl,
+                contentHtmlUk: contentHtmlUk,
                 readTimeMin: readTimeMin,
+                titleEn: titleEn,
+                contentHtmlEn: contentHtmlEn,
+                titlePl: titlePl,
+                contentHtmlPl: contentHtmlPl,
+                titleDe: titleDe,
+                contentHtmlDe: contentHtmlDe,
+                titleFr: titleFr,
+                contentHtmlFr: contentHtmlFr,
+                titleEs: titleEs,
+                contentHtmlEs: contentHtmlEs,
+                titleIt: titleIt,
+                contentHtmlIt: contentHtmlIt,
+                titlePt: titlePt,
+                contentHtmlPt: contentHtmlPt,
+                titleRo: titleRo,
+                contentHtmlRo: contentHtmlRo,
+                titleTr: titleTr,
+                contentHtmlTr: contentHtmlTr,
+                titleJa: titleJa,
+                contentHtmlJa: contentHtmlJa,
+                titleKo: titleKo,
+                contentHtmlKo: contentHtmlKo,
+                titleZh: titleZh,
+                contentHtmlZh: contentHtmlZh,
               ),
           withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$SpecialtyArticlesTableReferences(db, table, e),
-                ),
-              )
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({specialtyArticleTranslationsRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (specialtyArticleTranslationsRefs)
-                  db.specialtyArticleTranslations,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (specialtyArticleTranslationsRefs)
-                    await $_getPrefetchedData<
-                      SpecialtyArticle,
-                      $SpecialtyArticlesTable,
-                      SpecialtyArticleTranslation
-                    >(
-                      currentTable: table,
-                      referencedTable: $$SpecialtyArticlesTableReferences
-                          ._specialtyArticleTranslationsRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$SpecialtyArticlesTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).specialtyArticleTranslationsRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.articleId == item.id),
-                      typedResults: items,
-                    ),
-                ];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -14287,364 +17993,16 @@ typedef $$SpecialtyArticlesTableProcessedTableManager =
       $$SpecialtyArticlesTableAnnotationComposer,
       $$SpecialtyArticlesTableCreateCompanionBuilder,
       $$SpecialtyArticlesTableUpdateCompanionBuilder,
-      (SpecialtyArticle, $$SpecialtyArticlesTableReferences),
-      SpecialtyArticle,
-      PrefetchHooks Function({bool specialtyArticleTranslationsRefs})
-    >;
-typedef $$SpecialtyArticleTranslationsTableCreateCompanionBuilder =
-    SpecialtyArticleTranslationsCompanion Function({
-      required int articleId,
-      required String languageCode,
-      required String title,
-      required String subtitle,
-      required String contentHtml,
-      Value<int> rowid,
-    });
-typedef $$SpecialtyArticleTranslationsTableUpdateCompanionBuilder =
-    SpecialtyArticleTranslationsCompanion Function({
-      Value<int> articleId,
-      Value<String> languageCode,
-      Value<String> title,
-      Value<String> subtitle,
-      Value<String> contentHtml,
-      Value<int> rowid,
-    });
-
-final class $$SpecialtyArticleTranslationsTableReferences
-    extends
+      (
+        SpecialtyArticle,
         BaseReferences<
           _$AppDatabase,
-          $SpecialtyArticleTranslationsTable,
-          SpecialtyArticleTranslation
-        > {
-  $$SpecialtyArticleTranslationsTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static $SpecialtyArticlesTable _articleIdTable(_$AppDatabase db) =>
-      db.specialtyArticles.createAlias(
-        $_aliasNameGenerator(
-          db.specialtyArticleTranslations.articleId,
-          db.specialtyArticles.id,
-        ),
-      );
-
-  $$SpecialtyArticlesTableProcessedTableManager get articleId {
-    final $_column = $_itemColumn<int>('article_id')!;
-
-    final manager = $$SpecialtyArticlesTableTableManager(
-      $_db,
-      $_db.specialtyArticles,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_articleIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
-
-class $$SpecialtyArticleTranslationsTableFilterComposer
-    extends Composer<_$AppDatabase, $SpecialtyArticleTranslationsTable> {
-  $$SpecialtyArticleTranslationsTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<String> get languageCode => $composableBuilder(
-    column: $table.languageCode,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get title => $composableBuilder(
-    column: $table.title,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get subtitle => $composableBuilder(
-    column: $table.subtitle,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get contentHtml => $composableBuilder(
-    column: $table.contentHtml,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  $$SpecialtyArticlesTableFilterComposer get articleId {
-    final $$SpecialtyArticlesTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.articleId,
-      referencedTable: $db.specialtyArticles,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$SpecialtyArticlesTableFilterComposer(
-            $db: $db,
-            $table: $db.specialtyArticles,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$SpecialtyArticleTranslationsTableOrderingComposer
-    extends Composer<_$AppDatabase, $SpecialtyArticleTranslationsTable> {
-  $$SpecialtyArticleTranslationsTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<String> get languageCode => $composableBuilder(
-    column: $table.languageCode,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get title => $composableBuilder(
-    column: $table.title,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get subtitle => $composableBuilder(
-    column: $table.subtitle,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get contentHtml => $composableBuilder(
-    column: $table.contentHtml,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  $$SpecialtyArticlesTableOrderingComposer get articleId {
-    final $$SpecialtyArticlesTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.articleId,
-      referencedTable: $db.specialtyArticles,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$SpecialtyArticlesTableOrderingComposer(
-            $db: $db,
-            $table: $db.specialtyArticles,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$SpecialtyArticleTranslationsTableAnnotationComposer
-    extends Composer<_$AppDatabase, $SpecialtyArticleTranslationsTable> {
-  $$SpecialtyArticleTranslationsTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<String> get languageCode => $composableBuilder(
-    column: $table.languageCode,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get title =>
-      $composableBuilder(column: $table.title, builder: (column) => column);
-
-  GeneratedColumn<String> get subtitle =>
-      $composableBuilder(column: $table.subtitle, builder: (column) => column);
-
-  GeneratedColumn<String> get contentHtml => $composableBuilder(
-    column: $table.contentHtml,
-    builder: (column) => column,
-  );
-
-  $$SpecialtyArticlesTableAnnotationComposer get articleId {
-    final $$SpecialtyArticlesTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.articleId,
-          referencedTable: $db.specialtyArticles,
-          getReferencedColumn: (t) => t.id,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$SpecialtyArticlesTableAnnotationComposer(
-                $db: $db,
-                $table: $db.specialtyArticles,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return composer;
-  }
-}
-
-class $$SpecialtyArticleTranslationsTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $SpecialtyArticleTranslationsTable,
-          SpecialtyArticleTranslation,
-          $$SpecialtyArticleTranslationsTableFilterComposer,
-          $$SpecialtyArticleTranslationsTableOrderingComposer,
-          $$SpecialtyArticleTranslationsTableAnnotationComposer,
-          $$SpecialtyArticleTranslationsTableCreateCompanionBuilder,
-          $$SpecialtyArticleTranslationsTableUpdateCompanionBuilder,
-          (
-            SpecialtyArticleTranslation,
-            $$SpecialtyArticleTranslationsTableReferences,
-          ),
-          SpecialtyArticleTranslation,
-          PrefetchHooks Function({bool articleId})
-        > {
-  $$SpecialtyArticleTranslationsTableTableManager(
-    _$AppDatabase db,
-    $SpecialtyArticleTranslationsTable table,
-  ) : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$SpecialtyArticleTranslationsTableFilterComposer(
-                $db: db,
-                $table: table,
-              ),
-          createOrderingComposer: () =>
-              $$SpecialtyArticleTranslationsTableOrderingComposer(
-                $db: db,
-                $table: table,
-              ),
-          createComputedFieldComposer: () =>
-              $$SpecialtyArticleTranslationsTableAnnotationComposer(
-                $db: db,
-                $table: table,
-              ),
-          updateCompanionCallback:
-              ({
-                Value<int> articleId = const Value.absent(),
-                Value<String> languageCode = const Value.absent(),
-                Value<String> title = const Value.absent(),
-                Value<String> subtitle = const Value.absent(),
-                Value<String> contentHtml = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => SpecialtyArticleTranslationsCompanion(
-                articleId: articleId,
-                languageCode: languageCode,
-                title: title,
-                subtitle: subtitle,
-                contentHtml: contentHtml,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required int articleId,
-                required String languageCode,
-                required String title,
-                required String subtitle,
-                required String contentHtml,
-                Value<int> rowid = const Value.absent(),
-              }) => SpecialtyArticleTranslationsCompanion.insert(
-                articleId: articleId,
-                languageCode: languageCode,
-                title: title,
-                subtitle: subtitle,
-                contentHtml: contentHtml,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$SpecialtyArticleTranslationsTableReferences(db, table, e),
-                ),
-              )
-              .toList(),
-          prefetchHooksCallback: ({articleId = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (articleId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.articleId,
-                                referencedTable:
-                                    $$SpecialtyArticleTranslationsTableReferences
-                                        ._articleIdTable(db),
-                                referencedColumn:
-                                    $$SpecialtyArticleTranslationsTableReferences
-                                        ._articleIdTable(db)
-                                        .id,
-                              )
-                              as T;
-                    }
-
-                    return state;
-                  },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
-        ),
-      );
-}
-
-typedef $$SpecialtyArticleTranslationsTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $SpecialtyArticleTranslationsTable,
-      SpecialtyArticleTranslation,
-      $$SpecialtyArticleTranslationsTableFilterComposer,
-      $$SpecialtyArticleTranslationsTableOrderingComposer,
-      $$SpecialtyArticleTranslationsTableAnnotationComposer,
-      $$SpecialtyArticleTranslationsTableCreateCompanionBuilder,
-      $$SpecialtyArticleTranslationsTableUpdateCompanionBuilder,
-      (
-        SpecialtyArticleTranslation,
-        $$SpecialtyArticleTranslationsTableReferences,
+          $SpecialtyArticlesTable,
+          SpecialtyArticle
+        >,
       ),
-      SpecialtyArticleTranslation,
-      PrefetchHooks Function({bool articleId})
+      SpecialtyArticle,
+      PrefetchHooks Function()
     >;
 typedef $$CoffeeLotsTableCreateCompanionBuilder =
     CoffeeLotsCompanion Function({
@@ -15771,29 +19129,79 @@ typedef $$BrewingRecipesTableCreateCompanionBuilder =
     BrewingRecipesCompanion Function({
       Value<int> id,
       required String methodKey,
-      required String name,
-      required String description,
-      required double ratioGramsPerMl,
-      required double tempC,
-      required int totalTimeSec,
-      required String difficulty,
-      required String stepsJson,
-      required String flavorProfile,
-      required String iconName,
-    });
-typedef $$BrewingRecipesTableUpdateCompanionBuilder =
-    BrewingRecipesCompanion Function({
-      Value<int> id,
-      Value<String> methodKey,
-      Value<String> name,
-      Value<String> description,
+      Value<String> nameUk,
+      Value<String> descriptionUk,
+      Value<String> imageUrl,
+      Value<String?> nameEn,
+      Value<String?> descriptionEn,
+      Value<String?> namePl,
+      Value<String?> descriptionPl,
+      Value<String?> nameDe,
+      Value<String?> descriptionDe,
+      Value<String?> nameFr,
+      Value<String?> descriptionFr,
+      Value<String?> nameEs,
+      Value<String?> descriptionEs,
+      Value<String?> nameIt,
+      Value<String?> descriptionIt,
+      Value<String?> namePt,
+      Value<String?> descriptionPt,
+      Value<String?> nameRo,
+      Value<String?> descriptionRo,
+      Value<String?> nameTr,
+      Value<String?> descriptionTr,
+      Value<String?> nameJa,
+      Value<String?> descriptionJa,
+      Value<String?> nameKo,
+      Value<String?> descriptionKo,
+      Value<String?> nameZh,
+      Value<String?> descriptionZh,
       Value<double> ratioGramsPerMl,
       Value<double> tempC,
       Value<int> totalTimeSec,
       Value<String> difficulty,
       Value<String> stepsJson,
       Value<String> flavorProfile,
-      Value<String> iconName,
+      Value<String?> iconName,
+    });
+typedef $$BrewingRecipesTableUpdateCompanionBuilder =
+    BrewingRecipesCompanion Function({
+      Value<int> id,
+      Value<String> methodKey,
+      Value<String> nameUk,
+      Value<String> descriptionUk,
+      Value<String> imageUrl,
+      Value<String?> nameEn,
+      Value<String?> descriptionEn,
+      Value<String?> namePl,
+      Value<String?> descriptionPl,
+      Value<String?> nameDe,
+      Value<String?> descriptionDe,
+      Value<String?> nameFr,
+      Value<String?> descriptionFr,
+      Value<String?> nameEs,
+      Value<String?> descriptionEs,
+      Value<String?> nameIt,
+      Value<String?> descriptionIt,
+      Value<String?> namePt,
+      Value<String?> descriptionPt,
+      Value<String?> nameRo,
+      Value<String?> descriptionRo,
+      Value<String?> nameTr,
+      Value<String?> descriptionTr,
+      Value<String?> nameJa,
+      Value<String?> descriptionJa,
+      Value<String?> nameKo,
+      Value<String?> descriptionKo,
+      Value<String?> nameZh,
+      Value<String?> descriptionZh,
+      Value<double> ratioGramsPerMl,
+      Value<double> tempC,
+      Value<int> totalTimeSec,
+      Value<String> difficulty,
+      Value<String> stepsJson,
+      Value<String> flavorProfile,
+      Value<String?> iconName,
     });
 
 class $$BrewingRecipesTableFilterComposer
@@ -15815,13 +19223,138 @@ class $$BrewingRecipesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get name => $composableBuilder(
-    column: $table.name,
+  ColumnFilters<String> get nameUk => $composableBuilder(
+    column: $table.nameUk,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get description => $composableBuilder(
-    column: $table.description,
+  ColumnFilters<String> get descriptionUk => $composableBuilder(
+    column: $table.descriptionUk,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameEn => $composableBuilder(
+    column: $table.nameEn,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionEn => $composableBuilder(
+    column: $table.descriptionEn,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get namePl => $composableBuilder(
+    column: $table.namePl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionPl => $composableBuilder(
+    column: $table.descriptionPl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameDe => $composableBuilder(
+    column: $table.nameDe,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionDe => $composableBuilder(
+    column: $table.descriptionDe,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameFr => $composableBuilder(
+    column: $table.nameFr,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionFr => $composableBuilder(
+    column: $table.descriptionFr,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameEs => $composableBuilder(
+    column: $table.nameEs,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionEs => $composableBuilder(
+    column: $table.descriptionEs,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameIt => $composableBuilder(
+    column: $table.nameIt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionIt => $composableBuilder(
+    column: $table.descriptionIt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get namePt => $composableBuilder(
+    column: $table.namePt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionPt => $composableBuilder(
+    column: $table.descriptionPt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameRo => $composableBuilder(
+    column: $table.nameRo,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionRo => $composableBuilder(
+    column: $table.descriptionRo,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameTr => $composableBuilder(
+    column: $table.nameTr,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionTr => $composableBuilder(
+    column: $table.descriptionTr,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameJa => $composableBuilder(
+    column: $table.nameJa,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionJa => $composableBuilder(
+    column: $table.descriptionJa,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameKo => $composableBuilder(
+    column: $table.nameKo,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionKo => $composableBuilder(
+    column: $table.descriptionKo,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nameZh => $composableBuilder(
+    column: $table.nameZh,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionZh => $composableBuilder(
+    column: $table.descriptionZh,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -15880,13 +19413,138 @@ class $$BrewingRecipesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get name => $composableBuilder(
-    column: $table.name,
+  ColumnOrderings<String> get nameUk => $composableBuilder(
+    column: $table.nameUk,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get description => $composableBuilder(
-    column: $table.description,
+  ColumnOrderings<String> get descriptionUk => $composableBuilder(
+    column: $table.descriptionUk,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameEn => $composableBuilder(
+    column: $table.nameEn,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionEn => $composableBuilder(
+    column: $table.descriptionEn,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get namePl => $composableBuilder(
+    column: $table.namePl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionPl => $composableBuilder(
+    column: $table.descriptionPl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameDe => $composableBuilder(
+    column: $table.nameDe,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionDe => $composableBuilder(
+    column: $table.descriptionDe,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameFr => $composableBuilder(
+    column: $table.nameFr,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionFr => $composableBuilder(
+    column: $table.descriptionFr,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameEs => $composableBuilder(
+    column: $table.nameEs,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionEs => $composableBuilder(
+    column: $table.descriptionEs,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameIt => $composableBuilder(
+    column: $table.nameIt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionIt => $composableBuilder(
+    column: $table.descriptionIt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get namePt => $composableBuilder(
+    column: $table.namePt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionPt => $composableBuilder(
+    column: $table.descriptionPt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameRo => $composableBuilder(
+    column: $table.nameRo,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionRo => $composableBuilder(
+    column: $table.descriptionRo,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameTr => $composableBuilder(
+    column: $table.nameTr,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionTr => $composableBuilder(
+    column: $table.descriptionTr,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameJa => $composableBuilder(
+    column: $table.nameJa,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionJa => $composableBuilder(
+    column: $table.descriptionJa,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameKo => $composableBuilder(
+    column: $table.nameKo,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionKo => $composableBuilder(
+    column: $table.descriptionKo,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nameZh => $composableBuilder(
+    column: $table.nameZh,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionZh => $composableBuilder(
+    column: $table.descriptionZh,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -15941,11 +19599,110 @@ class $$BrewingRecipesTableAnnotationComposer
   GeneratedColumn<String> get methodKey =>
       $composableBuilder(column: $table.methodKey, builder: (column) => column);
 
-  GeneratedColumn<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => column);
+  GeneratedColumn<String> get nameUk =>
+      $composableBuilder(column: $table.nameUk, builder: (column) => column);
 
-  GeneratedColumn<String> get description => $composableBuilder(
-    column: $table.description,
+  GeneratedColumn<String> get descriptionUk => $composableBuilder(
+    column: $table.descriptionUk,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get imageUrl =>
+      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get nameEn =>
+      $composableBuilder(column: $table.nameEn, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionEn => $composableBuilder(
+    column: $table.descriptionEn,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get namePl =>
+      $composableBuilder(column: $table.namePl, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionPl => $composableBuilder(
+    column: $table.descriptionPl,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nameDe =>
+      $composableBuilder(column: $table.nameDe, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionDe => $composableBuilder(
+    column: $table.descriptionDe,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nameFr =>
+      $composableBuilder(column: $table.nameFr, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionFr => $composableBuilder(
+    column: $table.descriptionFr,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nameEs =>
+      $composableBuilder(column: $table.nameEs, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionEs => $composableBuilder(
+    column: $table.descriptionEs,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nameIt =>
+      $composableBuilder(column: $table.nameIt, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionIt => $composableBuilder(
+    column: $table.descriptionIt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get namePt =>
+      $composableBuilder(column: $table.namePt, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionPt => $composableBuilder(
+    column: $table.descriptionPt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nameRo =>
+      $composableBuilder(column: $table.nameRo, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionRo => $composableBuilder(
+    column: $table.descriptionRo,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nameTr =>
+      $composableBuilder(column: $table.nameTr, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionTr => $composableBuilder(
+    column: $table.descriptionTr,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nameJa =>
+      $composableBuilder(column: $table.nameJa, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionJa => $composableBuilder(
+    column: $table.descriptionJa,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nameKo =>
+      $composableBuilder(column: $table.nameKo, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionKo => $composableBuilder(
+    column: $table.descriptionKo,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nameZh =>
+      $composableBuilder(column: $table.nameZh, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionZh => $composableBuilder(
+    column: $table.descriptionZh,
     builder: (column) => column,
   );
 
@@ -16014,20 +19771,70 @@ class $$BrewingRecipesTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> methodKey = const Value.absent(),
-                Value<String> name = const Value.absent(),
-                Value<String> description = const Value.absent(),
+                Value<String> nameUk = const Value.absent(),
+                Value<String> descriptionUk = const Value.absent(),
+                Value<String> imageUrl = const Value.absent(),
+                Value<String?> nameEn = const Value.absent(),
+                Value<String?> descriptionEn = const Value.absent(),
+                Value<String?> namePl = const Value.absent(),
+                Value<String?> descriptionPl = const Value.absent(),
+                Value<String?> nameDe = const Value.absent(),
+                Value<String?> descriptionDe = const Value.absent(),
+                Value<String?> nameFr = const Value.absent(),
+                Value<String?> descriptionFr = const Value.absent(),
+                Value<String?> nameEs = const Value.absent(),
+                Value<String?> descriptionEs = const Value.absent(),
+                Value<String?> nameIt = const Value.absent(),
+                Value<String?> descriptionIt = const Value.absent(),
+                Value<String?> namePt = const Value.absent(),
+                Value<String?> descriptionPt = const Value.absent(),
+                Value<String?> nameRo = const Value.absent(),
+                Value<String?> descriptionRo = const Value.absent(),
+                Value<String?> nameTr = const Value.absent(),
+                Value<String?> descriptionTr = const Value.absent(),
+                Value<String?> nameJa = const Value.absent(),
+                Value<String?> descriptionJa = const Value.absent(),
+                Value<String?> nameKo = const Value.absent(),
+                Value<String?> descriptionKo = const Value.absent(),
+                Value<String?> nameZh = const Value.absent(),
+                Value<String?> descriptionZh = const Value.absent(),
                 Value<double> ratioGramsPerMl = const Value.absent(),
                 Value<double> tempC = const Value.absent(),
                 Value<int> totalTimeSec = const Value.absent(),
                 Value<String> difficulty = const Value.absent(),
                 Value<String> stepsJson = const Value.absent(),
                 Value<String> flavorProfile = const Value.absent(),
-                Value<String> iconName = const Value.absent(),
+                Value<String?> iconName = const Value.absent(),
               }) => BrewingRecipesCompanion(
                 id: id,
                 methodKey: methodKey,
-                name: name,
-                description: description,
+                nameUk: nameUk,
+                descriptionUk: descriptionUk,
+                imageUrl: imageUrl,
+                nameEn: nameEn,
+                descriptionEn: descriptionEn,
+                namePl: namePl,
+                descriptionPl: descriptionPl,
+                nameDe: nameDe,
+                descriptionDe: descriptionDe,
+                nameFr: nameFr,
+                descriptionFr: descriptionFr,
+                nameEs: nameEs,
+                descriptionEs: descriptionEs,
+                nameIt: nameIt,
+                descriptionIt: descriptionIt,
+                namePt: namePt,
+                descriptionPt: descriptionPt,
+                nameRo: nameRo,
+                descriptionRo: descriptionRo,
+                nameTr: nameTr,
+                descriptionTr: descriptionTr,
+                nameJa: nameJa,
+                descriptionJa: descriptionJa,
+                nameKo: nameKo,
+                descriptionKo: descriptionKo,
+                nameZh: nameZh,
+                descriptionZh: descriptionZh,
                 ratioGramsPerMl: ratioGramsPerMl,
                 tempC: tempC,
                 totalTimeSec: totalTimeSec,
@@ -16040,20 +19847,70 @@ class $$BrewingRecipesTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 required String methodKey,
-                required String name,
-                required String description,
-                required double ratioGramsPerMl,
-                required double tempC,
-                required int totalTimeSec,
-                required String difficulty,
-                required String stepsJson,
-                required String flavorProfile,
-                required String iconName,
+                Value<String> nameUk = const Value.absent(),
+                Value<String> descriptionUk = const Value.absent(),
+                Value<String> imageUrl = const Value.absent(),
+                Value<String?> nameEn = const Value.absent(),
+                Value<String?> descriptionEn = const Value.absent(),
+                Value<String?> namePl = const Value.absent(),
+                Value<String?> descriptionPl = const Value.absent(),
+                Value<String?> nameDe = const Value.absent(),
+                Value<String?> descriptionDe = const Value.absent(),
+                Value<String?> nameFr = const Value.absent(),
+                Value<String?> descriptionFr = const Value.absent(),
+                Value<String?> nameEs = const Value.absent(),
+                Value<String?> descriptionEs = const Value.absent(),
+                Value<String?> nameIt = const Value.absent(),
+                Value<String?> descriptionIt = const Value.absent(),
+                Value<String?> namePt = const Value.absent(),
+                Value<String?> descriptionPt = const Value.absent(),
+                Value<String?> nameRo = const Value.absent(),
+                Value<String?> descriptionRo = const Value.absent(),
+                Value<String?> nameTr = const Value.absent(),
+                Value<String?> descriptionTr = const Value.absent(),
+                Value<String?> nameJa = const Value.absent(),
+                Value<String?> descriptionJa = const Value.absent(),
+                Value<String?> nameKo = const Value.absent(),
+                Value<String?> descriptionKo = const Value.absent(),
+                Value<String?> nameZh = const Value.absent(),
+                Value<String?> descriptionZh = const Value.absent(),
+                Value<double> ratioGramsPerMl = const Value.absent(),
+                Value<double> tempC = const Value.absent(),
+                Value<int> totalTimeSec = const Value.absent(),
+                Value<String> difficulty = const Value.absent(),
+                Value<String> stepsJson = const Value.absent(),
+                Value<String> flavorProfile = const Value.absent(),
+                Value<String?> iconName = const Value.absent(),
               }) => BrewingRecipesCompanion.insert(
                 id: id,
                 methodKey: methodKey,
-                name: name,
-                description: description,
+                nameUk: nameUk,
+                descriptionUk: descriptionUk,
+                imageUrl: imageUrl,
+                nameEn: nameEn,
+                descriptionEn: descriptionEn,
+                namePl: namePl,
+                descriptionPl: descriptionPl,
+                nameDe: nameDe,
+                descriptionDe: descriptionDe,
+                nameFr: nameFr,
+                descriptionFr: descriptionFr,
+                nameEs: nameEs,
+                descriptionEs: descriptionEs,
+                nameIt: nameIt,
+                descriptionIt: descriptionIt,
+                namePt: namePt,
+                descriptionPt: descriptionPt,
+                nameRo: nameRo,
+                descriptionRo: descriptionRo,
+                nameTr: nameTr,
+                descriptionTr: descriptionTr,
+                nameJa: nameJa,
+                descriptionJa: descriptionJa,
+                nameKo: nameKo,
+                descriptionKo: descriptionKo,
+                nameZh: nameZh,
+                descriptionZh: descriptionZh,
                 ratioGramsPerMl: ratioGramsPerMl,
                 tempC: tempC,
                 totalTimeSec: totalTimeSec,
@@ -17020,12 +20877,6 @@ class $AppDatabaseManager {
         _db,
         _db.localizedBrandTranslations,
       );
-  $$LocalizedFarmerTranslationsTableTableManager
-  get localizedFarmerTranslations =>
-      $$LocalizedFarmerTranslationsTableTableManager(
-        _db,
-        _db.localizedFarmerTranslations,
-      );
   $$SphereRegionsTableTableManager get sphereRegions =>
       $$SphereRegionsTableTableManager(_db, _db.sphereRegions);
   $$SphereRegionTranslationsTableTableManager get sphereRegionTranslations =>
@@ -17035,12 +20886,6 @@ class $AppDatabaseManager {
       );
   $$SpecialtyArticlesTableTableManager get specialtyArticles =>
       $$SpecialtyArticlesTableTableManager(_db, _db.specialtyArticles);
-  $$SpecialtyArticleTranslationsTableTableManager
-  get specialtyArticleTranslations =>
-      $$SpecialtyArticleTranslationsTableTableManager(
-        _db,
-        _db.specialtyArticleTranslations,
-      );
   $$CoffeeLotsTableTableManager get coffeeLots =>
       $$CoffeeLotsTableTableManager(_db, _db.coffeeLots);
   $$FermentationLogsTableTableManager get fermentationLogs =>

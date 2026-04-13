@@ -112,14 +112,9 @@ class LocalizedBeanDto {
       (plantationPhotos.isNotEmpty ? plantationPhotos.first : '');
 
   String get effectiveFlagUrl {
-    // Using English country name for reliable bucket mapping
-    final countryEn = translate('en').country;
-    final fileName = countryEn.toLowerCase()
-        .replaceAll(' ', '_')
-        .replaceAll('-', '_')
-        .replaceAll('(', '')
-        .replaceAll(')', '');
-    return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/Flags/$fileName.png';
+    // Corrected to use the specific 'Flags' bucket as per user feedback
+    final fileName = '${country.toLowerCase().replaceAll(' ', '_')}.png';
+    return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/Flags/$fileName';
   }
 }
 
@@ -146,55 +141,65 @@ class LocalizedBrandDto {
 class LocalizedFarmerDto {
   final int id;
   final String imageUrl;
-  final String countryEmoji;
-  final double latitude;
-  final double longitude;
+  final String flagUrl;
   final String name;
   final String region;
-  final String description;
-  final String story;
   final String country;
-  final String? farmPhotosUrlCover;
+  final String descriptionHtml;
+  final double? latitude;
+  final double? longitude;
+  final DateTime? createdAt;
 
   LocalizedFarmerDto({
     required this.id,
     required this.imageUrl,
-    required this.countryEmoji,
-    required this.latitude,
-    required this.longitude,
+    required this.flagUrl,
     required this.name,
     required this.region,
-    required this.description,
-    required this.story,
     required this.country,
-    this.farmPhotosUrlCover,
+    required this.descriptionHtml,
+    this.latitude,
+    this.longitude,
+    this.createdAt,
   });
 
   String get effectiveImageUrl {
-    final raw = farmPhotosUrlCover ?? imageUrl;
-    if (raw.isEmpty) return '';
-    if (raw.startsWith('http')) return raw;
-    if (raw.startsWith('assets/')) return raw;
+    if (imageUrl.isEmpty) return '';
+    if (imageUrl.startsWith('http')) return imageUrl;
+    if (imageUrl.startsWith('assets/')) return imageUrl;
     
-    // Standardizing on 'Farmers' bucket (Capitalized)
-    return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/Farmers/$raw';
+    // Corrected to use the specific 'Farmers' bucket
+    return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/Farmers/$imageUrl';
   }
+
+  String get effectiveFlagUrl {
+    if (flagUrl.isEmpty) return '';
+    if (flagUrl.startsWith('http')) return flagUrl;
+    if (flagUrl.startsWith('assets/')) return flagUrl;
+
+    // Use Flags bucket
+    return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/Flags/$flagUrl';
+  }
+
+  // UI Backwards Compatibility
+  String get story => descriptionHtml;
+  String get description => descriptionHtml;
 }
 
 class SpecialtyArticleDto {
   final int id;
   final String title;
-  final String subtitle;
-  final String contentHtml;
   final String imageUrl;
+  final String flagUrl;
+  final String contentHtml;
   final int readTimeMin;
 
   SpecialtyArticleDto({
     required this.id,
     required this.title,
-    required this.subtitle,
-    required this.contentHtml,
     required this.imageUrl,
+    required this.flagUrl,
+    required this.contentHtml,
     required this.readTimeMin,
   });
 
@@ -203,8 +208,17 @@ class SpecialtyArticleDto {
     if (imageUrl.startsWith('http')) return imageUrl;
     if (imageUrl.startsWith('assets/')) return imageUrl;
     
-    // Standardizing on 'specialty-articles' bucket (lowercase)
+    // Corrected to use 'specialty-articles' bucket directly
     return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/$imageUrl';
+  }
+
+  String get effectiveFlagUrl {
+    if (flagUrl.isEmpty) return '';
+    if (flagUrl.startsWith('http')) return flagUrl;
+    if (flagUrl.startsWith('assets/')) return flagUrl;
+
+    // Use Flags bucket
+    return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/Flags/$flagUrl';
   }
 }
 

@@ -43,7 +43,6 @@ class _SpecialtyArticleDetailScreenState
   @override
   Widget build(BuildContext context) {
     final title = widget.article.title;
-    final subtitle = widget.article.subtitle;
     final content = widget.article.contentHtml;
     final imageUrl = widget.article.effectiveImageUrl;
     const gold = Color(0xFFC8A96E);
@@ -51,82 +50,83 @@ class _SpecialtyArticleDetailScreenState
 
     final markdownStyle = MarkdownStyleSheet(
       p: GoogleFonts.outfit(
-        fontSize: 16.5,
-        height: 1.75,
-        color: Colors.white.withValues(alpha: 0.88),
+        fontSize: 17,
+        height: 1.8,
+        color: Colors.white.withValues(alpha: 0.9),
       ),
       h1: GoogleFonts.cormorantGaramond(
-        fontSize: 32,
+        fontSize: 36,
+        fontWeight: FontWeight.w700,
+        color: Colors.white,
+        height: 1.1,
+      ),
+      h2: GoogleFonts.cormorantGaramond(
+        fontSize: 28,
         fontWeight: FontWeight.w700,
         color: Colors.white,
         height: 1.2,
       ),
-      h2: GoogleFonts.cormorantGaramond(
-        fontSize: 26,
-        fontWeight: FontWeight.w700,
-        color: Colors.white,
-        height: 1.25,
-      ),
       h3: GoogleFonts.poppins(
-        fontSize: 15,
+        fontSize: 16,
         fontWeight: FontWeight.w700,
         color: gold,
-        letterSpacing: 0.8,
+        letterSpacing: 1.0,
         height: 1.4,
       ),
       h4: GoogleFonts.poppins(
-        fontSize: 13,
+        fontSize: 14,
         fontWeight: FontWeight.w600,
-        color: gold.withValues(alpha: 0.85),
+        color: gold.withOpacity(0.8),
         letterSpacing: 0.5,
       ),
       strong: GoogleFonts.outfit(
-        fontSize: 16.5,
+        fontSize: 17,
         fontWeight: FontWeight.w700,
         color: gold,
       ),
       em: GoogleFonts.outfit(
-        fontSize: 16,
+        fontSize: 17,
         fontStyle: FontStyle.italic,
-        color: Colors.white.withValues(alpha: 0.75),
+        color: Colors.white.withValues(alpha: 0.8),
       ),
       listBullet: GoogleFonts.outfit(
-        fontSize: 16.5,
+        fontSize: 17,
         color: gold,
       ),
       blockquoteDecoration: BoxDecoration(
         color: gold.withValues(alpha: 0.08),
         border: Border(
-          left: BorderSide(color: gold.withValues(alpha: 0.5), width: 3),
+          left: BorderSide(color: gold.withValues(alpha: 0.5), width: 4),
         ),
+        borderRadius: BorderRadius.circular(4),
       ),
       blockquote: GoogleFonts.outfit(
-        fontSize: 15.5,
+        fontSize: 16,
         fontStyle: FontStyle.italic,
-        color: Colors.white.withValues(alpha: 0.75),
-        height: 1.65,
+        color: Colors.white.withValues(alpha: 0.8),
+        height: 1.7,
       ),
       code: GoogleFonts.firaCode(
-        fontSize: 13,
+        fontSize: 14,
         color: gold,
-        backgroundColor: Colors.white.withValues(alpha: 0.06),
+        backgroundColor: Colors.white.withValues(alpha: 0.08),
       ),
       codeblockDecoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+        color: Colors.white.withValues(alpha: 0.04),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
       horizontalRuleDecoration: BoxDecoration(
         border: Border(
-          top: BorderSide(color: gold.withValues(alpha: 0.25), width: 1),
+          top: BorderSide(color: gold.withValues(alpha: 0.2), width: 1),
         ),
       ),
-      h1Padding: const EdgeInsets.only(top: 28, bottom: 8),
-      h2Padding: const EdgeInsets.only(top: 24, bottom: 8),
-      h3Padding: const EdgeInsets.only(top: 20, bottom: 6),
-      pPadding: const EdgeInsets.only(bottom: 12),
-      listIndent: 20,
-      blockquotePadding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+      h1Padding: const EdgeInsets.only(top: 32, bottom: 12),
+      h2Padding: const EdgeInsets.only(top: 28, bottom: 10),
+      h3Padding: const EdgeInsets.only(top: 24, bottom: 8),
+      pPadding: const EdgeInsets.only(bottom: 16),
+      listIndent: 24,
+      blockquotePadding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
     );
 
     return Scaffold(
@@ -136,7 +136,7 @@ class _SpecialtyArticleDetailScreenState
         slivers: [
           // ── Hero Image AppBar ──────────────────────────────────────────────
           SliverAppBar(
-            expandedHeight: 360,
+            expandedHeight: 400,
             backgroundColor: Colors.black,
             elevation: 0,
             pinned: true,
@@ -179,7 +179,7 @@ class _SpecialtyArticleDetailScreenState
                           Colors.transparent,
                           Color(0xFF0A0908),
                         ],
-                        stops: [0.0, 0.2, 0.6, 1.0],
+                        stops: [0.0, 0.2, 0.7, 1.0],
                       ),
                     ),
                   ),
@@ -195,71 +195,77 @@ class _SpecialtyArticleDetailScreenState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 24),
 
                   // Module chip
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
+                      horizontal: 14,
+                      vertical: 8,
                     ),
                     decoration: BoxDecoration(
-                      color: gold.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: gold.withValues(alpha: 0.35)),
+                      color: gold.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(100),
+                      border: Border.all(color: gold.withValues(alpha: 0.3)),
                     ),
                     child: Text(
                       widget.moduleName.toUpperCase(),
                       style: GoogleFonts.poppins(
-                        fontSize: 10,
+                        fontSize: 11,
                         fontWeight: FontWeight.w700,
                         color: gold,
-                        letterSpacing: 1.5,
+                        letterSpacing: 2.0,
                       ),
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 24),
 
                   // Title
                   Text(
                     title,
                     style: GoogleFonts.cormorantGaramond(
-                      fontSize: 44,
+                      fontSize: 48,
                       fontWeight: FontWeight.w700,
                       color: Colors.white,
                       height: 1.0,
                     ),
                   ),
 
-                  if (subtitle.isNotEmpty) ...[
-                    const SizedBox(height: 10),
-                    Text(
-                      subtitle,
-                      style: GoogleFonts.outfit(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w400,
-                        color: gold.withValues(alpha: 0.85),
-                        letterSpacing: 0.2,
-                      ),
-                    ),
-                  ],
+                  const SizedBox(height: 12),
 
-                  const SizedBox(height: 8),
+                  // Read time & Share row
+                  Row(
+                    children: [
+                      Icon(Icons.access_time, size: 14, color: gold.withOpacity(0.7)),
+                      const SizedBox(width: 6),
+                      Text(
+                        '${widget.article.readTimeMin} хв читання',
+                        style: GoogleFonts.outfit(
+                          fontSize: 14,
+                          color: Colors.white.withOpacity(0.6),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 32),
 
                   // Divider
                   Container(
                     height: 1,
-                    margin: const EdgeInsets.symmetric(vertical: 20),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          gold.withValues(alpha: 0.5),
-                          gold.withValues(alpha: 0.0),
+                          gold.withOpacity(0.35),
+                          gold.withOpacity(0.0),
                         ],
                       ),
                     ),
                   ),
+
+                  const SizedBox(height: 32),
 
                   // Content: prefer Markdown, fall back to plain text
                   MarkdownBody(

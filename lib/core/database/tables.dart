@@ -91,28 +91,59 @@ class LocalizedBrandTranslations extends Table {
   Set<Column> get primaryKey => {brandId, languageCode};
 }
 
-// ─── LocalizedFarmers ────────────────────────────────────────────────────────
+// ─── LocalizedFarmers (Wide Table for 13 Languages) ──────────────────────────
 class LocalizedFarmers extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get imageUrl => text().nullable()();
-  TextColumn get countryEmoji => text().nullable()();
+  
+  // PRIMARY (Ukrainian)
+  TextColumn get nameUk => text().withDefault(const Constant('Тут має бути ім\'я'))();
+  TextColumn get imageUrl => text().withDefault(const Constant('Тут має бути фото'))();
+  TextColumn get flagUrl => text().withDefault(const Constant('Тут має бути прапор'))();
+  TextColumn get descriptionHtmlUk => text().withDefault(const Constant('Тут має бути опис'))();
+  TextColumn get regionUk => text().nullable()();
+  TextColumn get countryUk => text().nullable()();
+
+  // OTHER LANGUAGES (12)
+  TextColumn get nameEn => text().nullable()();
+  TextColumn get descriptionHtmlEn => text().nullable()();
+
+  TextColumn get namePl => text().nullable()();
+  TextColumn get descriptionHtmlPl => text().nullable()();
+
+  TextColumn get nameDe => text().nullable()();
+  TextColumn get descriptionHtmlDe => text().nullable()();
+
+  TextColumn get nameFr => text().nullable()();
+  TextColumn get descriptionHtmlFr => text().nullable()();
+
+  TextColumn get nameEs => text().nullable()();
+  TextColumn get descriptionHtmlEs => text().nullable()();
+
+  TextColumn get nameIt => text().nullable()();
+  TextColumn get descriptionHtmlIt => text().nullable()();
+
+  TextColumn get namePt => text().nullable()();
+  TextColumn get descriptionHtmlPt => text().nullable()();
+
+  TextColumn get nameRo => text().nullable()();
+  TextColumn get descriptionHtmlRo => text().nullable()();
+
+  TextColumn get nameTr => text().nullable()();
+  TextColumn get descriptionHtmlTr => text().nullable()();
+
+  TextColumn get nameJa => text().nullable()();
+  TextColumn get descriptionHtmlJa => text().nullable()();
+
+  TextColumn get nameKo => text().nullable()();
+  TextColumn get descriptionHtmlKo => text().nullable()();
+
+  TextColumn get nameZh => text().nullable()();
+  TextColumn get descriptionHtmlZh => text().nullable()();
+
+  // Coordinates & Metadata
   RealColumn get latitude => real().nullable()();
   RealColumn get longitude => real().nullable()();
   DateTimeColumn get createdAt => dateTime().nullable()();
-}
-
-class LocalizedFarmerTranslations extends Table {
-  IntColumn get farmerId => integer().references(LocalizedFarmers, #id)();
-  TextColumn get languageCode => text()();
-
-  TextColumn get name => text().nullable()();
-  TextColumn get region => text().nullable()();
-  TextColumn get description => text().nullable()();
-  TextColumn get story => text().nullable()();
-  TextColumn get country => text().nullable()();
-
-  @override
-  Set<Column> get primaryKey => {farmerId, languageCode};
 }
 
 // ─── SphereRegions ───────────────────────────────────────────────────────────
@@ -142,23 +173,53 @@ class SphereRegionTranslations extends Table {
   Set<Column> get primaryKey => {regionId, languageCode};
 }
 
-// ─── SpecialtyArticles ───────────────────────────────────────────────────────
+// ─── SpecialtyArticles (Wide Table for 13 Languages) ─────────────────────────
 class SpecialtyArticles extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get imageUrl => text()();
-  IntColumn get readTimeMin => integer()();
-}
+  
+  // PRIMARY (Ukrainian)
+  TextColumn get titleUk => text().withDefault(const Constant('Тут має бути заголовок'))();
+  TextColumn get imageUrl => text().withDefault(const Constant('Тут має бути лінк на бакет'))();
+  TextColumn get flagUrl => text().withDefault(const Constant('Тут має бути лінк на прапор'))();
+  TextColumn get contentHtmlUk => text().withDefault(const Constant('Тут має бути текст статті'))();
+  IntColumn get readTimeMin => integer().withDefault(const Constant(5))();
 
-class SpecialtyArticleTranslations extends Table {
-  IntColumn get articleId => integer().references(SpecialtyArticles, #id)();
-  TextColumn get languageCode => text()();
+  // OTHER LANGUAGES (12)
+  TextColumn get titleEn => text().nullable()();
+  TextColumn get contentHtmlEn => text().nullable()();
 
-  TextColumn get title => text()();
-  TextColumn get subtitle => text()();
-  TextColumn get contentHtml => text()();
+  TextColumn get titlePl => text().nullable()();
+  TextColumn get contentHtmlPl => text().nullable()();
 
-  @override
-  Set<Column> get primaryKey => {articleId, languageCode};
+  TextColumn get titleDe => text().nullable()();
+  TextColumn get contentHtmlDe => text().nullable()();
+
+  TextColumn get titleFr => text().nullable()();
+  TextColumn get contentHtmlFr => text().nullable()();
+
+  TextColumn get titleEs => text().nullable()();
+  TextColumn get contentHtmlEs => text().nullable()();
+
+  TextColumn get titleIt => text().nullable()();
+  TextColumn get contentHtmlIt => text().nullable()();
+
+  TextColumn get titlePt => text().nullable()();
+  TextColumn get contentHtmlPt => text().nullable()();
+
+  TextColumn get titleRo => text().nullable()();
+  TextColumn get contentHtmlRo => text().nullable()();
+
+  TextColumn get titleTr => text().nullable()();
+  TextColumn get contentHtmlTr => text().nullable()();
+
+  TextColumn get titleJa => text().nullable()();
+  TextColumn get contentHtmlJa => text().nullable()();
+
+  TextColumn get titleKo => text().nullable()();
+  TextColumn get contentHtmlKo => text().nullable()();
+
+  TextColumn get titleZh => text().nullable()();
+  TextColumn get contentHtmlZh => text().nullable()();
 }
 
 // ─── CoffeeLots (User's Private) ─────────────────────────────────────────────
@@ -227,19 +288,61 @@ class FermentationLogs extends Table {
   Set<Column> get primaryKey => {id};
 }
 
-// ─── BrewingRecipes ──────────────────────────────────────────────────────────
+// ─── BrewingRecipes (Wide Table for 13 Languages) ──────────────────────────
 class BrewingRecipes extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get methodKey => text()();
-  TextColumn get name => text()();
-  TextColumn get description => text()();
-  RealColumn get ratioGramsPerMl => real()();
-  RealColumn get tempC => real()();
-  IntColumn get totalTimeSec => integer()();
-  TextColumn get difficulty => text()();
-  TextColumn get stepsJson => text()();
-  TextColumn get flavorProfile => text()();
-  TextColumn get iconName => text()();
+  TextColumn get methodKey => text().unique()();
+  
+  // PRIMARY (Ukrainian)
+  TextColumn get nameUk => text().withDefault(const Constant('Тут має бути назва'))();
+  TextColumn get descriptionUk => text().withDefault(const Constant('Тут має бути опис'))();
+  TextColumn get imageUrl => text().withDefault(const Constant('Тут має бути лінк на фото'))();
+
+  // OTHER LANGUAGES (12)
+  TextColumn get nameEn => text().nullable()();
+  TextColumn get descriptionEn => text().nullable()();
+
+  TextColumn get namePl => text().nullable()();
+  TextColumn get descriptionPl => text().nullable()();
+
+  TextColumn get nameDe => text().nullable()();
+  TextColumn get descriptionDe => text().nullable()();
+
+  TextColumn get nameFr => text().nullable()();
+  TextColumn get descriptionFr => text().nullable()();
+
+  TextColumn get nameEs => text().nullable()();
+  TextColumn get descriptionEs => text().nullable()();
+
+  TextColumn get nameIt => text().nullable()();
+  TextColumn get descriptionIt => text().nullable()();
+
+  TextColumn get namePt => text().nullable()();
+  TextColumn get descriptionPt => text().nullable()();
+
+  TextColumn get nameRo => text().nullable()();
+  TextColumn get descriptionRo => text().nullable()();
+
+  TextColumn get nameTr => text().nullable()();
+  TextColumn get descriptionTr => text().nullable()();
+
+  TextColumn get nameJa => text().nullable()();
+  TextColumn get descriptionJa => text().nullable()();
+
+  TextColumn get nameKo => text().nullable()();
+  TextColumn get descriptionKo => text().nullable()();
+
+  TextColumn get nameZh => text().nullable()();
+  TextColumn get descriptionZh => text().nullable()();
+
+  // Settings
+  RealColumn get ratioGramsPerMl => real().withDefault(const Constant(0.066))();
+  RealColumn get tempC => real().withDefault(const Constant(93.0))();
+  IntColumn get totalTimeSec => integer().withDefault(const Constant(180))();
+  TextColumn get difficulty => text().withDefault(const Constant('Intermediate'))();
+  TextColumn get stepsJson => text().withDefault(const Constant('[]'))();
+  TextColumn get flavorProfile => text().withDefault(const Constant('Balanced'))();
+  TextColumn get iconName => text().nullable()();
 }
 
 // ─── RecommendedRecipes ──────────────────────────────────────────────────────

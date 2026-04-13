@@ -187,8 +187,7 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(4),
                         child: CachedNetworkImage(
-                          imageUrl:
-                              FlagConstants.getFlag(widget.farmer.country) ?? '',
+                          imageUrl: widget.farmer.effectiveFlagUrl,
                           width: 30,
                           height: 20,
                           fit: BoxFit.cover,

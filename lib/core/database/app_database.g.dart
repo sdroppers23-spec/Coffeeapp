@@ -656,6 +656,17 @@ class $LocalizedFarmersTable extends LocalizedFarmers
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _storyUkMeta = const VerificationMeta(
+    'storyUk',
+  );
+  @override
+  late final GeneratedColumn<String> storyUk = GeneratedColumn<String>(
+    'story_uk',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _latitudeMeta = const VerificationMeta(
     'latitude',
   );
@@ -698,6 +709,7 @@ class $LocalizedFarmersTable extends LocalizedFarmers
     descriptionHtmlUk,
     regionUk,
     countryUk,
+    storyUk,
     latitude,
     longitude,
     createdAt,
@@ -756,6 +768,12 @@ class $LocalizedFarmersTable extends LocalizedFarmers
         countryUk.isAcceptableOrUnknown(data['country_uk']!, _countryUkMeta),
       );
     }
+    if (data.containsKey('story_uk')) {
+      context.handle(
+        _storyUkMeta,
+        storyUk.isAcceptableOrUnknown(data['story_uk']!, _storyUkMeta),
+      );
+    }
     if (data.containsKey('latitude')) {
       context.handle(
         _latitudeMeta,
@@ -811,6 +829,10 @@ class $LocalizedFarmersTable extends LocalizedFarmers
         DriftSqlType.string,
         data['${effectivePrefix}country_uk'],
       ),
+      storyUk: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}story_uk'],
+      ),
       latitude: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}latitude'],
@@ -840,6 +862,7 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
   final String descriptionHtmlUk;
   final String? regionUk;
   final String? countryUk;
+  final String? storyUk;
   final double? latitude;
   final double? longitude;
   final DateTime? createdAt;
@@ -851,6 +874,7 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
     required this.descriptionHtmlUk,
     this.regionUk,
     this.countryUk,
+    this.storyUk,
     this.latitude,
     this.longitude,
     this.createdAt,
@@ -868,6 +892,9 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
     }
     if (!nullToAbsent || countryUk != null) {
       map['country_uk'] = Variable<String>(countryUk);
+    }
+    if (!nullToAbsent || storyUk != null) {
+      map['story_uk'] = Variable<String>(storyUk);
     }
     if (!nullToAbsent || latitude != null) {
       map['latitude'] = Variable<double>(latitude);
@@ -894,6 +921,9 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
       countryUk: countryUk == null && nullToAbsent
           ? const Value.absent()
           : Value(countryUk),
+      storyUk: storyUk == null && nullToAbsent
+          ? const Value.absent()
+          : Value(storyUk),
       latitude: latitude == null && nullToAbsent
           ? const Value.absent()
           : Value(latitude),
@@ -919,6 +949,7 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
       descriptionHtmlUk: serializer.fromJson<String>(json['descriptionHtmlUk']),
       regionUk: serializer.fromJson<String?>(json['regionUk']),
       countryUk: serializer.fromJson<String?>(json['countryUk']),
+      storyUk: serializer.fromJson<String?>(json['storyUk']),
       latitude: serializer.fromJson<double?>(json['latitude']),
       longitude: serializer.fromJson<double?>(json['longitude']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
@@ -935,6 +966,7 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
       'descriptionHtmlUk': serializer.toJson<String>(descriptionHtmlUk),
       'regionUk': serializer.toJson<String?>(regionUk),
       'countryUk': serializer.toJson<String?>(countryUk),
+      'storyUk': serializer.toJson<String?>(storyUk),
       'latitude': serializer.toJson<double?>(latitude),
       'longitude': serializer.toJson<double?>(longitude),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
@@ -949,6 +981,7 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
     String? descriptionHtmlUk,
     Value<String?> regionUk = const Value.absent(),
     Value<String?> countryUk = const Value.absent(),
+    Value<String?> storyUk = const Value.absent(),
     Value<double?> latitude = const Value.absent(),
     Value<double?> longitude = const Value.absent(),
     Value<DateTime?> createdAt = const Value.absent(),
@@ -960,6 +993,7 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
     descriptionHtmlUk: descriptionHtmlUk ?? this.descriptionHtmlUk,
     regionUk: regionUk.present ? regionUk.value : this.regionUk,
     countryUk: countryUk.present ? countryUk.value : this.countryUk,
+    storyUk: storyUk.present ? storyUk.value : this.storyUk,
     latitude: latitude.present ? latitude.value : this.latitude,
     longitude: longitude.present ? longitude.value : this.longitude,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
@@ -975,6 +1009,7 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
           : this.descriptionHtmlUk,
       regionUk: data.regionUk.present ? data.regionUk.value : this.regionUk,
       countryUk: data.countryUk.present ? data.countryUk.value : this.countryUk,
+      storyUk: data.storyUk.present ? data.storyUk.value : this.storyUk,
       latitude: data.latitude.present ? data.latitude.value : this.latitude,
       longitude: data.longitude.present ? data.longitude.value : this.longitude,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
@@ -991,6 +1026,7 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
           ..write('descriptionHtmlUk: $descriptionHtmlUk, ')
           ..write('regionUk: $regionUk, ')
           ..write('countryUk: $countryUk, ')
+          ..write('storyUk: $storyUk, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
           ..write('createdAt: $createdAt')
@@ -1007,6 +1043,7 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
     descriptionHtmlUk,
     regionUk,
     countryUk,
+    storyUk,
     latitude,
     longitude,
     createdAt,
@@ -1022,6 +1059,7 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
           other.descriptionHtmlUk == this.descriptionHtmlUk &&
           other.regionUk == this.regionUk &&
           other.countryUk == this.countryUk &&
+          other.storyUk == this.storyUk &&
           other.latitude == this.latitude &&
           other.longitude == this.longitude &&
           other.createdAt == this.createdAt);
@@ -1035,6 +1073,7 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
   final Value<String> descriptionHtmlUk;
   final Value<String?> regionUk;
   final Value<String?> countryUk;
+  final Value<String?> storyUk;
   final Value<double?> latitude;
   final Value<double?> longitude;
   final Value<DateTime?> createdAt;
@@ -1046,6 +1085,7 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
     this.descriptionHtmlUk = const Value.absent(),
     this.regionUk = const Value.absent(),
     this.countryUk = const Value.absent(),
+    this.storyUk = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -1058,6 +1098,7 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
     this.descriptionHtmlUk = const Value.absent(),
     this.regionUk = const Value.absent(),
     this.countryUk = const Value.absent(),
+    this.storyUk = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -1070,6 +1111,7 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
     Expression<String>? descriptionHtmlUk,
     Expression<String>? regionUk,
     Expression<String>? countryUk,
+    Expression<String>? storyUk,
     Expression<double>? latitude,
     Expression<double>? longitude,
     Expression<DateTime>? createdAt,
@@ -1082,6 +1124,7 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
       if (descriptionHtmlUk != null) 'description_html_uk': descriptionHtmlUk,
       if (regionUk != null) 'region_uk': regionUk,
       if (countryUk != null) 'country_uk': countryUk,
+      if (storyUk != null) 'story_uk': storyUk,
       if (latitude != null) 'latitude': latitude,
       if (longitude != null) 'longitude': longitude,
       if (createdAt != null) 'created_at': createdAt,
@@ -1096,6 +1139,7 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
     Value<String>? descriptionHtmlUk,
     Value<String?>? regionUk,
     Value<String?>? countryUk,
+    Value<String?>? storyUk,
     Value<double?>? latitude,
     Value<double?>? longitude,
     Value<DateTime?>? createdAt,
@@ -1108,6 +1152,7 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
       descriptionHtmlUk: descriptionHtmlUk ?? this.descriptionHtmlUk,
       regionUk: regionUk ?? this.regionUk,
       countryUk: countryUk ?? this.countryUk,
+      storyUk: storyUk ?? this.storyUk,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       createdAt: createdAt ?? this.createdAt,
@@ -1138,6 +1183,9 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
     if (countryUk.present) {
       map['country_uk'] = Variable<String>(countryUk.value);
     }
+    if (storyUk.present) {
+      map['story_uk'] = Variable<String>(storyUk.value);
+    }
     if (latitude.present) {
       map['latitude'] = Variable<double>(latitude.value);
     }
@@ -1160,6 +1208,7 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
           ..write('descriptionHtmlUk: $descriptionHtmlUk, ')
           ..write('regionUk: $regionUk, ')
           ..write('countryUk: $countryUk, ')
+          ..write('storyUk: $storyUk, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
           ..write('createdAt: $createdAt')
@@ -4245,6 +4294,15 @@ class $LocalizedFarmerTranslationsTable extends LocalizedFarmerTranslations
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _storyMeta = const VerificationMeta('story');
+  @override
+  late final GeneratedColumn<String> story = GeneratedColumn<String>(
+    'story',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _regionMeta = const VerificationMeta('region');
   @override
   late final GeneratedColumn<String> region = GeneratedColumn<String>(
@@ -4271,6 +4329,7 @@ class $LocalizedFarmerTranslationsTable extends LocalizedFarmerTranslations
     languageCode,
     name,
     descriptionHtml,
+    story,
     region,
     country,
   ];
@@ -4320,6 +4379,12 @@ class $LocalizedFarmerTranslationsTable extends LocalizedFarmerTranslations
         ),
       );
     }
+    if (data.containsKey('story')) {
+      context.handle(
+        _storyMeta,
+        story.isAcceptableOrUnknown(data['story']!, _storyMeta),
+      );
+    }
     if (data.containsKey('region')) {
       context.handle(
         _regionMeta,
@@ -4360,6 +4425,10 @@ class $LocalizedFarmerTranslationsTable extends LocalizedFarmerTranslations
         DriftSqlType.string,
         data['${effectivePrefix}description_html'],
       ),
+      story: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}story'],
+      ),
       region: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}region'],
@@ -4383,6 +4452,7 @@ class LocalizedFarmerTranslation extends DataClass
   final String languageCode;
   final String? name;
   final String? descriptionHtml;
+  final String? story;
   final String? region;
   final String? country;
   const LocalizedFarmerTranslation({
@@ -4390,6 +4460,7 @@ class LocalizedFarmerTranslation extends DataClass
     required this.languageCode,
     this.name,
     this.descriptionHtml,
+    this.story,
     this.region,
     this.country,
   });
@@ -4403,6 +4474,9 @@ class LocalizedFarmerTranslation extends DataClass
     }
     if (!nullToAbsent || descriptionHtml != null) {
       map['description_html'] = Variable<String>(descriptionHtml);
+    }
+    if (!nullToAbsent || story != null) {
+      map['story'] = Variable<String>(story);
     }
     if (!nullToAbsent || region != null) {
       map['region'] = Variable<String>(region);
@@ -4421,6 +4495,9 @@ class LocalizedFarmerTranslation extends DataClass
       descriptionHtml: descriptionHtml == null && nullToAbsent
           ? const Value.absent()
           : Value(descriptionHtml),
+      story: story == null && nullToAbsent
+          ? const Value.absent()
+          : Value(story),
       region: region == null && nullToAbsent
           ? const Value.absent()
           : Value(region),
@@ -4440,6 +4517,7 @@ class LocalizedFarmerTranslation extends DataClass
       languageCode: serializer.fromJson<String>(json['languageCode']),
       name: serializer.fromJson<String?>(json['name']),
       descriptionHtml: serializer.fromJson<String?>(json['descriptionHtml']),
+      story: serializer.fromJson<String?>(json['story']),
       region: serializer.fromJson<String?>(json['region']),
       country: serializer.fromJson<String?>(json['country']),
     );
@@ -4452,6 +4530,7 @@ class LocalizedFarmerTranslation extends DataClass
       'languageCode': serializer.toJson<String>(languageCode),
       'name': serializer.toJson<String?>(name),
       'descriptionHtml': serializer.toJson<String?>(descriptionHtml),
+      'story': serializer.toJson<String?>(story),
       'region': serializer.toJson<String?>(region),
       'country': serializer.toJson<String?>(country),
     };
@@ -4462,6 +4541,7 @@ class LocalizedFarmerTranslation extends DataClass
     String? languageCode,
     Value<String?> name = const Value.absent(),
     Value<String?> descriptionHtml = const Value.absent(),
+    Value<String?> story = const Value.absent(),
     Value<String?> region = const Value.absent(),
     Value<String?> country = const Value.absent(),
   }) => LocalizedFarmerTranslation(
@@ -4471,6 +4551,7 @@ class LocalizedFarmerTranslation extends DataClass
     descriptionHtml: descriptionHtml.present
         ? descriptionHtml.value
         : this.descriptionHtml,
+    story: story.present ? story.value : this.story,
     region: region.present ? region.value : this.region,
     country: country.present ? country.value : this.country,
   );
@@ -4486,6 +4567,7 @@ class LocalizedFarmerTranslation extends DataClass
       descriptionHtml: data.descriptionHtml.present
           ? data.descriptionHtml.value
           : this.descriptionHtml,
+      story: data.story.present ? data.story.value : this.story,
       region: data.region.present ? data.region.value : this.region,
       country: data.country.present ? data.country.value : this.country,
     );
@@ -4498,6 +4580,7 @@ class LocalizedFarmerTranslation extends DataClass
           ..write('languageCode: $languageCode, ')
           ..write('name: $name, ')
           ..write('descriptionHtml: $descriptionHtml, ')
+          ..write('story: $story, ')
           ..write('region: $region, ')
           ..write('country: $country')
           ..write(')'))
@@ -4510,6 +4593,7 @@ class LocalizedFarmerTranslation extends DataClass
     languageCode,
     name,
     descriptionHtml,
+    story,
     region,
     country,
   );
@@ -4521,6 +4605,7 @@ class LocalizedFarmerTranslation extends DataClass
           other.languageCode == this.languageCode &&
           other.name == this.name &&
           other.descriptionHtml == this.descriptionHtml &&
+          other.story == this.story &&
           other.region == this.region &&
           other.country == this.country);
 }
@@ -4531,6 +4616,7 @@ class LocalizedFarmerTranslationsCompanion
   final Value<String> languageCode;
   final Value<String?> name;
   final Value<String?> descriptionHtml;
+  final Value<String?> story;
   final Value<String?> region;
   final Value<String?> country;
   final Value<int> rowid;
@@ -4539,6 +4625,7 @@ class LocalizedFarmerTranslationsCompanion
     this.languageCode = const Value.absent(),
     this.name = const Value.absent(),
     this.descriptionHtml = const Value.absent(),
+    this.story = const Value.absent(),
     this.region = const Value.absent(),
     this.country = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -4548,6 +4635,7 @@ class LocalizedFarmerTranslationsCompanion
     required String languageCode,
     this.name = const Value.absent(),
     this.descriptionHtml = const Value.absent(),
+    this.story = const Value.absent(),
     this.region = const Value.absent(),
     this.country = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -4558,6 +4646,7 @@ class LocalizedFarmerTranslationsCompanion
     Expression<String>? languageCode,
     Expression<String>? name,
     Expression<String>? descriptionHtml,
+    Expression<String>? story,
     Expression<String>? region,
     Expression<String>? country,
     Expression<int>? rowid,
@@ -4567,6 +4656,7 @@ class LocalizedFarmerTranslationsCompanion
       if (languageCode != null) 'language_code': languageCode,
       if (name != null) 'name': name,
       if (descriptionHtml != null) 'description_html': descriptionHtml,
+      if (story != null) 'story': story,
       if (region != null) 'region': region,
       if (country != null) 'country': country,
       if (rowid != null) 'rowid': rowid,
@@ -4578,6 +4668,7 @@ class LocalizedFarmerTranslationsCompanion
     Value<String>? languageCode,
     Value<String?>? name,
     Value<String?>? descriptionHtml,
+    Value<String?>? story,
     Value<String?>? region,
     Value<String?>? country,
     Value<int>? rowid,
@@ -4587,6 +4678,7 @@ class LocalizedFarmerTranslationsCompanion
       languageCode: languageCode ?? this.languageCode,
       name: name ?? this.name,
       descriptionHtml: descriptionHtml ?? this.descriptionHtml,
+      story: story ?? this.story,
       region: region ?? this.region,
       country: country ?? this.country,
       rowid: rowid ?? this.rowid,
@@ -4608,6 +4700,9 @@ class LocalizedFarmerTranslationsCompanion
     if (descriptionHtml.present) {
       map['description_html'] = Variable<String>(descriptionHtml.value);
     }
+    if (story.present) {
+      map['story'] = Variable<String>(story.value);
+    }
     if (region.present) {
       map['region'] = Variable<String>(region.value);
     }
@@ -4627,6 +4722,7 @@ class LocalizedFarmerTranslationsCompanion
           ..write('languageCode: $languageCode, ')
           ..write('name: $name, ')
           ..write('descriptionHtml: $descriptionHtml, ')
+          ..write('story: $story, ')
           ..write('region: $region, ')
           ..write('country: $country, ')
           ..write('rowid: $rowid')
@@ -11932,6 +12028,7 @@ typedef $$LocalizedFarmersTableCreateCompanionBuilder =
       Value<String> descriptionHtmlUk,
       Value<String?> regionUk,
       Value<String?> countryUk,
+      Value<String?> storyUk,
       Value<double?> latitude,
       Value<double?> longitude,
       Value<DateTime?> createdAt,
@@ -11945,6 +12042,7 @@ typedef $$LocalizedFarmersTableUpdateCompanionBuilder =
       Value<String> descriptionHtmlUk,
       Value<String?> regionUk,
       Value<String?> countryUk,
+      Value<String?> storyUk,
       Value<double?> latitude,
       Value<double?> longitude,
       Value<DateTime?> createdAt,
@@ -12050,6 +12148,11 @@ class $$LocalizedFarmersTableFilterComposer
 
   ColumnFilters<String> get countryUk => $composableBuilder(
     column: $table.countryUk,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get storyUk => $composableBuilder(
+    column: $table.storyUk,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -12167,6 +12270,11 @@ class $$LocalizedFarmersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get storyUk => $composableBuilder(
+    column: $table.storyUk,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<double> get latitude => $composableBuilder(
     column: $table.latitude,
     builder: (column) => ColumnOrderings(column),
@@ -12214,6 +12322,9 @@ class $$LocalizedFarmersTableAnnotationComposer
 
   GeneratedColumn<String> get countryUk =>
       $composableBuilder(column: $table.countryUk, builder: (column) => column);
+
+  GeneratedColumn<String> get storyUk =>
+      $composableBuilder(column: $table.storyUk, builder: (column) => column);
 
   GeneratedColumn<double> get latitude =>
       $composableBuilder(column: $table.latitude, builder: (column) => column);
@@ -12319,6 +12430,7 @@ class $$LocalizedFarmersTableTableManager
                 Value<String> descriptionHtmlUk = const Value.absent(),
                 Value<String?> regionUk = const Value.absent(),
                 Value<String?> countryUk = const Value.absent(),
+                Value<String?> storyUk = const Value.absent(),
                 Value<double?> latitude = const Value.absent(),
                 Value<double?> longitude = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
@@ -12330,6 +12442,7 @@ class $$LocalizedFarmersTableTableManager
                 descriptionHtmlUk: descriptionHtmlUk,
                 regionUk: regionUk,
                 countryUk: countryUk,
+                storyUk: storyUk,
                 latitude: latitude,
                 longitude: longitude,
                 createdAt: createdAt,
@@ -12343,6 +12456,7 @@ class $$LocalizedFarmersTableTableManager
                 Value<String> descriptionHtmlUk = const Value.absent(),
                 Value<String?> regionUk = const Value.absent(),
                 Value<String?> countryUk = const Value.absent(),
+                Value<String?> storyUk = const Value.absent(),
                 Value<double?> latitude = const Value.absent(),
                 Value<double?> longitude = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
@@ -12354,6 +12468,7 @@ class $$LocalizedFarmersTableTableManager
                 descriptionHtmlUk: descriptionHtmlUk,
                 regionUk: regionUk,
                 countryUk: countryUk,
+                storyUk: storyUk,
                 latitude: latitude,
                 longitude: longitude,
                 createdAt: createdAt,
@@ -14518,6 +14633,7 @@ typedef $$LocalizedFarmerTranslationsTableCreateCompanionBuilder =
       required String languageCode,
       Value<String?> name,
       Value<String?> descriptionHtml,
+      Value<String?> story,
       Value<String?> region,
       Value<String?> country,
       Value<int> rowid,
@@ -14528,6 +14644,7 @@ typedef $$LocalizedFarmerTranslationsTableUpdateCompanionBuilder =
       Value<String> languageCode,
       Value<String?> name,
       Value<String?> descriptionHtml,
+      Value<String?> story,
       Value<String?> region,
       Value<String?> country,
       Value<int> rowid,
@@ -14593,6 +14710,11 @@ class $$LocalizedFarmerTranslationsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get story => $composableBuilder(
+    column: $table.story,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get region => $composableBuilder(
     column: $table.region,
     builder: (column) => ColumnFilters(column),
@@ -14651,6 +14773,11 @@ class $$LocalizedFarmerTranslationsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get story => $composableBuilder(
+    column: $table.story,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get region => $composableBuilder(
     column: $table.region,
     builder: (column) => ColumnOrderings(column),
@@ -14706,6 +14833,9 @@ class $$LocalizedFarmerTranslationsTableAnnotationComposer
     column: $table.descriptionHtml,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get story =>
+      $composableBuilder(column: $table.story, builder: (column) => column);
 
   GeneratedColumn<String> get region =>
       $composableBuilder(column: $table.region, builder: (column) => column);
@@ -14783,6 +14913,7 @@ class $$LocalizedFarmerTranslationsTableTableManager
                 Value<String> languageCode = const Value.absent(),
                 Value<String?> name = const Value.absent(),
                 Value<String?> descriptionHtml = const Value.absent(),
+                Value<String?> story = const Value.absent(),
                 Value<String?> region = const Value.absent(),
                 Value<String?> country = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -14791,6 +14922,7 @@ class $$LocalizedFarmerTranslationsTableTableManager
                 languageCode: languageCode,
                 name: name,
                 descriptionHtml: descriptionHtml,
+                story: story,
                 region: region,
                 country: country,
                 rowid: rowid,
@@ -14801,6 +14933,7 @@ class $$LocalizedFarmerTranslationsTableTableManager
                 required String languageCode,
                 Value<String?> name = const Value.absent(),
                 Value<String?> descriptionHtml = const Value.absent(),
+                Value<String?> story = const Value.absent(),
                 Value<String?> region = const Value.absent(),
                 Value<String?> country = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -14809,6 +14942,7 @@ class $$LocalizedFarmerTranslationsTableTableManager
                 languageCode: languageCode,
                 name: name,
                 descriptionHtml: descriptionHtml,
+                story: story,
                 region: region,
                 country: country,
                 rowid: rowid,

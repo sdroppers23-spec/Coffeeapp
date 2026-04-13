@@ -533,13 +533,15 @@ class SyncService {
     await syncAll(onProgress: onProgress);
   }
 
-  /// Removes technical keys like {p1}, [h2], {1}, etc from text.
+  /// Removes technical keys like {p1}, [h2], {1}, etc, and strips HTML tags.
   String _cleanContent(String? content) {
     if (content == null) return '';
-    // Removes patterns like {anything} or [anything]
+    // 1. Removes patterns like {anything} or [anything]
+    // 2. Removes HTML tags like <p>, </p>, <div>, etc.
     return content
         .replaceAll(RegExp(r'\{[^}]+\}'), '')
         .replaceAll(RegExp(r'\[[^\]]+\]'), '')
+        .replaceAll(RegExp(r'<[^>]*>'), '')
         .trim();
   }
 }

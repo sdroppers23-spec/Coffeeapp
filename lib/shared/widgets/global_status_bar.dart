@@ -9,7 +9,7 @@ class GlobalStatusBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final syncState = ref.watch(syncStatusProvider);
+    final syncData = ref.watch(syncStatusProvider);
     final isOnline = ref.watch(isOnlineProvider);
 
     Color statusColor;
@@ -22,10 +22,10 @@ class GlobalStatusBar extends ConsumerWidget {
       statusText = 'Offline Mode';
       statusIcon = Icons.cloud_off;
     } else {
-      switch (syncState) {
+      switch (syncData.state) {
         case SyncState.syncing:
           statusColor = const Color(0xFFC8A96E);
-          statusText = 'Synchronizing...';
+          statusText = syncData.lastMessage ?? 'Synchronizing...';
           statusIcon = Icons.sync;
           isSpinning = true;
           break;

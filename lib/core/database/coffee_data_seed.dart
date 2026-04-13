@@ -128,35 +128,8 @@ class CoffeeDataSeed {
     final isEmpty = await db.farmersIsEmpty();
     if (!isEmpty && !force) return;
 
-    for (int i = 0; i < 10; i++) {
-      final id = i + 1;
-      final main = LocalizedFarmersCompanion.insert(
-        id: Value(id),
-        nameUk: Value('Фермер #$id'),
-        imageUrl: Value('farmer_$id.png'),
-        flagUrl: const Value('brazil.png'),
-        descriptionHtmlUk: Value('Тут має бути опис досягнень та історії фермера $id'),
-        regionUk: Value('Регіон $id'),
-        countryUk: Value('Країна $id'),
-        latitude: const Value(0.0),
-        longitude: const Value(0.0),
-        createdAt: Value(DateTime.now()),
-      );
-
-      final List<LocalizedFarmerTranslationsCompanion> translations = [
-        LocalizedFarmerTranslationsCompanion.insert(
-          farmerId: id,
-          languageCode: 'en',
-          name: Value('Farmer #$id'),
-          descriptionHtml: Value('Farmer description and history #$id'),
-          region: Value('Region $id'),
-          country: Value('Country $id'),
-        ),
-      ];
-
-      await db.smartUpsertFarmer(main, translations);
-    }
-    debugPrint('DB SEEDING: 10 placeholder farmers created.');
+    // Cloud will handle this.
+    debugPrint('DB SEEDING: Skipping placeholder farmers (using Cloud).');
   }
 
   Future<void> _seedEncyclopedia({bool force = false}) async {
@@ -189,29 +162,8 @@ class CoffeeDataSeed {
       'Майбутнє кави',
     ];
 
-    for (int i = 0; i < 10; i++) {
-      final id = i + 1;
-      final main = SpecialtyArticlesCompanion.insert(
-        id: Value(id),
-        titleUk: Value(titlesUk[i]),
-        imageUrl: Value('article_$id.png'),
-        flagUrl: const Value('specialty_icon.png'),
-        contentHtmlUk: Value('Тут має бути текст статті $id (HTML або Markdown)'),
-        readTimeMin: Value(5 + i),
-      );
-
-      final List<SpecialtyArticleTranslationsCompanion> translations = [
-        SpecialtyArticleTranslationsCompanion.insert(
-          articleId: id,
-          languageCode: 'en',
-          title: Value(titles[i]),
-          contentHtml: Value('Article content #$id in English'),
-        ),
-      ];
-
-      await db.smartUpsertArticle(main, translations);
-    }
-    debugPrint('DB SEEDING: 10 placeholder articles created.');
+    // Cloud will handle this.
+    debugPrint('DB SEEDING: Skipping placeholder articles (using Cloud).');
   }
 
   Future<void> _seedBrewingRecipes() async {

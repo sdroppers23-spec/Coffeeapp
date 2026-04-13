@@ -112,9 +112,14 @@ class LocalizedBeanDto {
       (plantationPhotos.isNotEmpty ? plantationPhotos.first : '');
 
   String get effectiveFlagUrl {
-    // Corrected to use the specific 'Flags' bucket as per user feedback
-    final fileName = '${country.toLowerCase().replaceAll(' ', '_')}.png';
-    return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/Flags/$fileName';
+    // Using English country name for reliable bucket mapping
+    final countryEn = translate('en').country;
+    final fileName = countryEn.toLowerCase()
+        .replaceAll(' ', '_')
+        .replaceAll('-', '_')
+        .replaceAll('(', '')
+        .replaceAll(')', '');
+    return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/Flags/$fileName.png';
   }
 }
 
@@ -171,7 +176,7 @@ class LocalizedFarmerDto {
     if (raw.startsWith('http')) return raw;
     if (raw.startsWith('assets/')) return raw;
     
-    // Corrected to use the specific 'Farmers' bucket
+    // Standardizing on 'Farmers' bucket (Capitalized)
     return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/Farmers/$raw';
   }
 }
@@ -198,7 +203,7 @@ class SpecialtyArticleDto {
     if (imageUrl.startsWith('http')) return imageUrl;
     if (imageUrl.startsWith('assets/')) return imageUrl;
     
-    // Corrected to use 'specialty-articles' bucket directly
+    // Standardizing on 'specialty-articles' bucket (lowercase)
     return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/$imageUrl';
   }
 }

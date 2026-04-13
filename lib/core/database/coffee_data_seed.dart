@@ -131,46 +131,104 @@ class CoffeeDataSeed {
     final isEmpty = await db.localizedFarmersIsEmpty();
     if (!isEmpty && !force) return;
 
-    for (int i = 1; i <= 4; i++) {
-      try {
-        final jsonStr = await rootBundle.loadString('assets/data/Farmer$i.json');
-        final data = jsonDecode(jsonStr);
+    try {
+      final jsonStr = await rootBundle.loadString('assets/data/Farmers.json');
+      final List<dynamic> farmersList = jsonDecode(jsonStr);
+
+      for (var data in farmersList) {
+        final idStr = data['id']?.toString() ?? '';
+        final int id = int.tryParse(idStr.replaceAll('f_', '')) ?? 0;
+        if (id == 0) continue;
+
+        final String name = data['farmer_name_en'] ?? 'Unknown Farmer';
+        final String photo = data['image_url_portrait']?.split('/').last ?? 'farmer_placeholder.png';
         
-        final String name = data['name'] ?? 'Unknown Farmer';
-        final String photo = data['photo'] ?? 'farmer_${name.toLowerCase().replaceAll(' ', '_')}.png';
-        final String loc = data['location'] ?? '';
+        // Farmer bio and processing methods joined into a rich story
+        final String biographyUk = data['biography_uk'] ?? '';
+        final List<dynamic> methods = data['processing_methods'] ?? [];
+        final String methodsText = methods.map((m) => "### ${m['method_name_uk']}\n${m['description_uk']}").join('\n\n');
         
-        final country = loc.contains(',') ? loc.split(',').last.trim() : loc;
+        final String fullStoryUk = "$biographyUk\n\n## Методи обробки\n\n$methodsText";
 
         await db.smartUpsertFarmer(
           LocalizedFarmersCompanion.insert(
-            id: Value(i),
+            id: Value(id),
             imageUrl: Value('assets/images/$photo'),
             createdAt: Value(DateTime.now()),
           ),
           [
             LocalizedFarmerTranslationsCompanion.insert(
-              farmerId: i,
+              farmerId: id,
               languageCode: 'uk',
-              name: Value(data['name_uk'] ?? name),
-              country: Value(data['location_uk']?.split(',').last.trim() ?? country),
-              description: Value(data['specialization_uk'] ?? data['specialization'] ?? ''),
-              story: Value(data['bio_uk'] ?? data['bio'] ?? ''),
+              name: Value(data['farmer_name_uk'] ?? name),
+              country: Value(data['country_uk'] ?? ''),
+              description: Value(data['specialization_uk'] ?? ''),
+              story: Value(fullStoryUk),
             ),
             LocalizedFarmerTranslationsCompanion.insert(
-              farmerId: i,
+              farmerId: id,
               languageCode: 'en',
               name: Value(name),
-              country: Value(country),
-              description: Value(data['specialization'] ?? ''),
-              story: Value(data['bio'] ?? ''),
+              country: Value(data['country_en'] ?? ''),
+              description: Value(data['specialization_en'] ?? 'Specialty Coffee Producer'),
+              story: Value(data['biography_en'] ?? 'Biography content coming soon...'),
             ),
           ],
         );
-      } catch (e) {
-        debugPrint('Error seeding Farmer$i: $e');
+      }
+    } catch (e) {
+      debugPrint('Error seeding Farmers: $e');
+    }
+  }
+
+  String _generateMarkdownContent(Map<String, dynamic> data) {
+    final sb = StringBuffer();
+
+    // 1. Definition section
+    if (data['definition'] != null) {
+      if (data['definition'] is Map) {
+         sb.writeln('## Визначення');
+         final def = data['definition'] as Map;
+         def.forEach((key, value) {
+            sb.writeln('**$key**: $value\n');
+         });
+      } else {
+         sb.writeln('## Визначення\n${data['definition']}\n');
       }
     }
+
+    // 2. Fundamental Attributes
+    if (data['fundamental_attributes'] != null && data['fundamental_attributes'] is List) {
+       sb.writeln('## Фундаментальні атрибути');
+       for (var attr in (data['fundamental_attributes'] as List)) {
+         sb.writeln('* **${attr['attribute']}**: ${attr['details']}');
+       }
+       sb.writeln('');
+    }
+
+    // 3. Main Content Blocks
+    if (data['content'] != null && data['content'] is List) {
+      for (var block in (data['content'] as List)) {
+        if (block['topic'] != null) sb.writeln('### ${block['topic']}');
+        if (block['details'] != null) sb.writeln('${block['details']}\n');
+      }
+    }
+
+    // 4. Organizations
+    if (data['organizations'] != null && data['organizations'] is List) {
+       sb.writeln('## Провідні організації');
+       for (var org in (data['organizations'] as List)) {
+         sb.writeln('* **${org['name']}**: ${org['role']}');
+       }
+       sb.writeln('');
+    }
+
+    // 5. Additional data like models, scores, etc.
+    if (data['models_and_scales'] != null) {
+      sb.writeln('## Моделі та шкали\n${data['models_and_scales']}\n');
+    }
+
+    return sb.toString();
   }
 
   Future<void> _seedEncyclopedia({bool force = false}) async {
@@ -184,36 +242,36 @@ class CoffeeDataSeed {
       final List<dynamic> dataList = jsonDecode(jsonStr);
       
       for (var data in dataList) {
-        final int id = int.tryParse(data['module_metadata']?['module_id']?.toString() ?? data['id']?.toString() ?? '0') ?? 0;
+        final String modIdStr = data['module_metadata']?['module_id']?.toString() ?? '0';
+        final int id = int.tryParse(modIdStr.replaceAll('SC-', '')) ?? 0;
         if (id == 0) continue;
 
-        String content = '';
-        if (data['content'] is List) {
-          content = (data['content'] as List).map((e) => e['topic'] ?? '').join('\n\n');
-        } else {
-          content = data['content']?.toString() ?? '';
-        }
+        // Assets mapping: SC-001 -> encyclopedia_module_1_...
+        // We'll follow a heuristic based on ID
+        final String assetName = 'encyclopedia_module_${id}_cover.png';
+
+        final String richMarkdown = _generateMarkdownContent(data);
 
         await db.smartUpsertArticle(
           SpecialtyArticlesCompanion.insert(
             id: Value(id),
-            imageUrl: Value('assets/images/${data['imageUrl'] ?? 'encyclopedia_placeholder.png'}'),
-            readTimeMin: const Value(5),
+            imageUrl: Value('assets/images/$assetName'),
+            readTimeMin: Value(3 + (id % 5)),
           ),
           [
             SpecialtyArticleTranslationsCompanion.insert(
               articleId: id,
               languageCode: 'uk',
-              title: Value(data['module_metadata']?['module_name'] ?? data['titleUk'] ?? ''),
-              subtitle: Value(data['categoryUk'] ?? 'Освіта'),
-              contentHtml: Value(content),
+              title: Value(data['module_metadata']?['module_name'] ?? 'Стаття спешелті'),
+              subtitle: Value(data['module_metadata']?['category'] ?? 'Освіта'),
+              contentHtml: Value(richMarkdown),
             ),
             SpecialtyArticleTranslationsCompanion.insert(
               articleId: id,
               languageCode: 'en',
-              title: Value(data['titleEn'] ?? ''),
-              subtitle: Value(data['categoryEn'] ?? 'Education'),
-              contentHtml: const Value('Coming soon...'),
+              title: Value(data['module_metadata']?['module_name_en'] ?? 'Specialty Article'),
+              subtitle: Value(data['category_en'] ?? 'Education'),
+              contentHtml: const Value('Rich English content coming soon...'),
             ),
           ],
         );
@@ -365,15 +423,21 @@ class CoffeeDataSeed {
     final entries = [
       _Entry(
         LocalizedBeansCompanion.insert(id: const Value(101), brandId: const Value(1), countryEmoji: const Value('🇪🇹'), cupsScore: const Value(88.0)),
-        LocalizedBeanTranslationsCompanion.insert(beanId: 101, languageCode: 'uk', country: const Value('Ефіопія'), region: const Value('Guji'), varieties: const Value('Heirloom'), flavorNotes: Value(jsonEncode(['Peach', 'Jasmine'])), description: const Value('Класична мита Ефіопія.')),
+        [
+          LocalizedBeanTranslationsCompanion.insert(beanId: 101, languageCode: 'uk', country: const Value('Ефіопія'), region: const Value('Guji'), varieties: const Value('Heirloom'), flavorNotes: Value(jsonEncode(['Персик', 'Жасмин', 'Цитрус'])), description: const Value('Класична мита Ефіопія з яскравим квітковим профілем.')),
+          LocalizedBeanTranslationsCompanion.insert(beanId: 101, languageCode: 'en', country: const Value('Ethiopia'), region: const Value('Guji'), varieties: const Value('Heirloom'), flavorNotes: Value(jsonEncode(['Peach', 'Jasmine', 'Citrus'])), description: const Value('Classic washed Ethiopia.')),
+        ],
       ),
       _Entry(
         LocalizedBeansCompanion.insert(id: const Value(102), brandId: const Value(1), countryEmoji: const Value('🇨🇴'), cupsScore: const Value(87.5)),
-        LocalizedBeanTranslationsCompanion.insert(beanId: 102, languageCode: 'uk', country: const Value('Колумбія'), region: const Value('Huila'), varieties: const Value('Caturra'), flavorNotes: Value(jsonEncode(['Chocolate', 'Red Apple'])), description: const Value('Збалансована Колумбія.')),
+        [
+          LocalizedBeanTranslationsCompanion.insert(beanId: 102, languageCode: 'uk', country: const Value('Колумбія'), region: const Value('Huila'), varieties: const Value('Caturra'), flavorNotes: Value(jsonEncode(['Шоколад', 'Червоне яблуко', 'Карамель'])), description: const Value('Збалансована Колумбія з солодким післясмаком.')),
+          LocalizedBeanTranslationsCompanion.insert(beanId: 102, languageCode: 'en', country: const Value('Colombia'), region: const Value('Huila'), varieties: const Value('Caturra'), flavorNotes: Value(jsonEncode(['Chocolate', 'Red Apple', 'Caramel'])), description: const Value('Balanced Colombia.')),
+        ],
       ),
     ];
     for (var e in entries) {
-      await db.smartUpsertBean(e.main, [e.trans]);
+      await db.smartUpsertBean(e.main, e.transList);
     }
   }
 
@@ -381,17 +445,20 @@ class CoffeeDataSeed {
     final entries = [
       _Entry(
         LocalizedBeansCompanion.insert(id: const Value(201), brandId: const Value(2), countryEmoji: const Value('🇰🇪'), cupsScore: const Value(89.0)),
-        LocalizedBeanTranslationsCompanion.insert(beanId: 201, languageCode: 'uk', country: const Value('Кенія'), region: const Value('Nyeri'), varieties: const Value('SL28'), flavorNotes: Value(jsonEncode(['Blackcurrant', 'Tomato'])), description: const Value('Яскрава Кенія.')),
+        [
+          LocalizedBeanTranslationsCompanion.insert(beanId: 201, languageCode: 'uk', country: const Value('Кенія'), region: const Value('Nyeri'), varieties: const Value('SL28'), flavorNotes: Value(jsonEncode(['Чорна смородина', 'Томат', 'Грейпфрут'])), description: const Value('Яскрава Кенія з соковитою кислотністю.')),
+          LocalizedBeanTranslationsCompanion.insert(beanId: 201, languageCode: 'en', country: const Value('Kenya'), region: const Value('Nyeri'), varieties: const Value('SL28'), flavorNotes: Value(jsonEncode(['Blackcurrant', 'Tomato', 'Grapefruit'])), description: const Value('Bright Kenya.')),
+        ],
       ),
     ];
     for (var e in entries) {
-      await db.smartUpsertBean(e.main, [e.trans]);
+      await db.smartUpsertBean(e.main, e.transList);
     }
   }
 }
 
 class _Entry {
   final LocalizedBeansCompanion main;
-  final LocalizedBeanTranslationsCompanion trans;
-  _Entry(this.main, this.trans);
+  final List<LocalizedBeanTranslationsCompanion> transList;
+  _Entry(this.main, this.transList);
 }

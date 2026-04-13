@@ -176,7 +176,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                                   const SizedBox(width: 24),
                                   _NavBarItem(
                                     icon: Icons.local_cafe_outlined,
-                                    label: 'Рецепти',
+                                    label: 'Альтернатива',
                                     isSelected:
                                         widget.navigationShell.currentIndex ==
                                         2,

@@ -266,20 +266,6 @@ class BrewingRecipes extends Table {
   TextColumn get descriptionUk => text().withDefault(const Constant('Тут має бути опис'))();
   TextColumn get imageUrl => text().withDefault(const Constant('Тут має бути лінк на фото'))();
 
-  TextColumn get descriptionRo => text().nullable()();
-
-  TextColumn get nameTr => text().nullable()();
-  TextColumn get descriptionTr => text().nullable()();
-
-  TextColumn get nameJa => text().nullable()();
-  TextColumn get descriptionJa => text().nullable()();
-
-  TextColumn get nameKo => text().nullable()();
-  TextColumn get descriptionKo => text().nullable()();
-
-  TextColumn get nameZh => text().nullable()();
-  TextColumn get descriptionZh => text().nullable()();
-
   // Settings
   RealColumn get ratioGramsPerMl => real().withDefault(const Constant(0.066))();
   RealColumn get tempC => real().withDefault(const Constant(93.0))();

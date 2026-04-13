@@ -49,7 +49,15 @@ class SyncService {
       onProgress?.call('Updating Encyclopedia (Healing Flags)...');
       await syncEncyclopedia();
 
-      // 5. Sync User Content (Push to Cloud)
+      // 5. Sync Brands
+      onProgress?.call('Syncing Coffee Roasters...');
+      await syncBrands();
+
+      // 6. Sync Brewing Methods
+      onProgress?.call('Syncing Brewing Methods...');
+      await syncBrewingRecipes();
+
+      // 7. Sync User Content (Push to Cloud)
       onProgress?.call('Pushing local recipes to cloud...');
       await pushLocalUserContent();
 
@@ -83,12 +91,12 @@ class SyncService {
           String emoji = item['country_emoji'] as String? ?? '';
           final planetEmojis = ['🌎', '🌍', '🌏', '🪐', '☄️', '🌌', 'planet', 'earth'];
           if (planetEmojis.contains(emoji.trim()) || emoji.isEmpty) {
-            final countryLower = (item['country_en'] as String? ?? 'unknown').toLowerCase().replaceAll(' ', '_');
+            final countryLower = (item['country_uk'] as String? ?? item['country_en'] as String? ?? 'unknown').toLowerCase().replaceAll(' ', '_');
             emoji = '$flagsBucket$countryLower.png';
             debugPrint('SYNC: Healed planet emoji for ID $id to flag photo: $emoji');
           }
 
-          // 1. Prepare Bean Companion
+          // 1. Prepare Bean Companion (Main Record with UK data)
           final bean = LocalizedBeansCompanion(
             id: Value(id),
             brandId: Value(item['brand_id'] as int?),
@@ -104,6 +112,14 @@ class SyncService {
             isPremium: Value(item['is_premium'] as bool? ?? false),
             isDecaf: Value(item['is_decaf'] as bool? ?? false),
             url: Value(item['url'] as String? ?? ''),
+            // UK Direct Fields
+            countryUk: Value(item['country_uk'] as String? ?? item['country_en'] as String?),
+            regionUk: Value(item['region_uk'] as String? ?? item['region_en'] as String?),
+            varietiesUk: Value(item['varieties_uk'] as String? ?? item['varieties_en'] as String?),
+            flavorNotesUk: Value(item['flavor_notes_uk']?.toString() ?? item['flavor_notes_en']?.toString() ?? '[]'),
+            processMethodUk: Value(item['process_method_uk'] as String? ?? item['process_method_en'] as String?),
+            descriptionUk: Value(item['description_uk'] as String? ?? item['description_en'] as String?),
+            roastLevelUk: Value(item['roast_level_uk'] as String? ?? item['roast_level_en'] as String?),
             createdAt: Value(
               item['created_at'] != null
                   ? DateTime.tryParse(item['created_at'] as String)
@@ -111,22 +127,26 @@ class SyncService {
             ),
           );
 
-          // 2. Prepare Translations
-          final List<LocalizedBeanTranslationsCompanion> translations = [];
+          // 2. Prepare Translations (Fetches from translation table)
+          final translationsData = await supabase!
+              .from('localized_bean_translations')
+              .select()
+              .eq('bean_id', id);
 
-          for (final lang in ['uk', 'en']) {
+          final List<LocalizedBeanTranslationsCompanion> translations = [];
+          for (final t in translationsData) {
             translations.add(
               LocalizedBeanTranslationsCompanion(
                 beanId: Value(id),
-                languageCode: Value(lang),
-                country: Value(item['country_$lang'] as String?),
-                region: Value(item['region_$lang'] as String?),
-                varieties: Value(item['varieties_$lang'] as String?),
-                flavorNotes: Value(item['flavor_notes_$lang']?.toString() ?? '[]'),
-                processMethod: Value(item['process_method_$lang'] as String?),
-                description: Value(item['description_$lang'] as String?),
-                farmDescription: Value(item['farm'] as String?), 
-                roastLevel: Value(item['roast_level_$lang'] as String?),
+                languageCode: Value(t['language_code'] as String),
+                country: Value(t['country'] as String?),
+                region: Value(t['region'] as String?),
+                varieties: Value(t['varieties'] as String?),
+                flavorNotes: Value(t['flavor_notes']?.toString() ?? '[]'),
+                processMethod: Value(t['process_method'] as String?),
+                description: Value(t['description'] as String?),
+                farmDescription: Value(t['farm_description'] as String?), 
+                roastLevel: Value(t['roast_level'] as String?),
               ),
             );
           }
@@ -207,28 +227,45 @@ class SyncService {
           
           String imageUrl = item['image_url'] as String? ?? '';
           if (imageUrl.isNotEmpty && !imageUrl.startsWith('http') && !imageUrl.startsWith('assets/')) {
-            // Handle cloud prefixing for generic filenames
             final fileName = imageUrl.split('/').last;
             imageUrl = '$farmersBucket$fileName';
           }
 
+          // In "Main + Translation" architecture:
+          // LocalizedFarmers main table holds UK content in nameUk, descriptionHtmlUk, etc.
           final farmer = LocalizedFarmersCompanion(
             id: Value(id),
             imageUrl: Value(imageUrl),
             flagUrl: Value(item['flag_url'] as String? ?? item['country_emoji'] as String? ?? ''),
             latitude: Value((item['latitude'] as num?)?.toDouble() ?? 0.0),
             longitude: Value((item['longitude'] as num?)?.toDouble() ?? 0.0),
-            nameUk: Value(item['name_uk'] as String? ?? ''),
-            nameEn: Value(item['name_en'] as String?),
-            descriptionHtmlUk: Value(item['description_uk'] as String? ?? ''),
-            descriptionHtmlEn: Value(item['description_en'] as String?),
-            regionUk: Value(item['region_uk'] as String? ?? ''),
-            regionEn: Value(item['region_en'] as String?),
-            countryUk: Value(item['country_uk'] as String? ?? ''),
-            countryEn: Value(item['country_en'] as String?),
+            nameUk: Value(item['name_uk'] as String? ?? item['name'] as String? ?? ''),
+            descriptionHtmlUk: Value(item['description_uk'] as String? ?? item['description'] as String? ?? ''),
+            regionUk: Value(item['region_uk'] as String? ?? item['region'] as String? ?? ''),
+            countryUk: Value(item['country_uk'] as String? ?? item['country'] as String? ?? ''),
           );
 
-          await db.smartUpsertFarmer(farmer);
+          // We also fetch translations if any (e.g. 'en')
+          final translationsData = await supabase!
+              .from('localized_farmer_translations')
+              .select()
+              .eq('farmer_id', id);
+
+          final List<LocalizedFarmerTranslationsCompanion> translations = [];
+          for (final t in translationsData) {
+            final lang = t['language_code'] as String;
+            // Map legacy or current fields
+            translations.add(LocalizedFarmerTranslationsCompanion(
+              farmerId: Value(id),
+              languageCode: Value(lang),
+              name: Value(t['name'] as String?),
+              descriptionHtml: Value(t['description_html'] as String? ?? t['description'] as String?),
+              region: Value(t['region'] as String?),
+              country: Value(t['country'] as String?),
+            ));
+          }
+
+          await db.smartUpsertFarmer(farmer, translations);
           successCount++;
         } catch (e) {
           debugPrint('SYNC ERROR for farmer ID ${item['id']}: $e');
@@ -270,15 +307,31 @@ class SyncService {
 
           final article = SpecialtyArticlesCompanion(
             id: Value(id),
+            titleUk: Value(item['title_uk'] as String? ?? item['title_en'] as String? ?? ''),
+            subtitleUk: Value(item['subtitle_uk'] as String? ?? ''),
+            contentHtmlUk: Value(item['content_html_uk'] as String? ?? item['content_uk'] as String? ?? ''),
             imageUrl: Value(imageUrl),
             readTimeMin: Value(item['read_time_min'] as int? ?? 5),
-            titleUk: Value(item['title_uk'] as String? ?? ''),
-            titleEn: Value(item['title_en'] as String?),
-            contentHtmlUk: Value(item['content_html_uk'] as String? ?? ''),
-            contentHtmlEn: Value(item['content_html_en'] as String?),
           );
 
-          await db.smartUpsertArticle(article);
+          // Sync translations
+          final translationsData = await supabase!
+              .from('specialty_article_translations')
+              .select()
+              .eq('article_id', id);
+
+          final List<SpecialtyArticleTranslationsCompanion> translations = [];
+          for (final t in translationsData) {
+             translations.add(SpecialtyArticleTranslationsCompanion(
+               articleId: Value(id),
+               languageCode: Value(t['language_code'] as String),
+               title: Value(t['title'] as String?),
+               subtitle: Value(t['subtitle'] as String?),
+               contentHtml: Value(t['content_html'] as String?),
+             ));
+          }
+
+          await db.smartUpsertArticle(article, translations);
           successCount++;
         } catch (e) {
           debugPrint('SYNC ERROR for article ID ${item['id']}: $e');
@@ -355,16 +408,113 @@ class SyncService {
     }
   }
 
+  /// Pulls brewing recipes from Supabase.
+  Future<void> syncBrewingRecipes() async {
+    if (supabase == null) return;
+    try {
+      debugPrint('SYNC: Pulling methods from brewing_recipes...');
+      final data = await supabase!.from('brewing_recipes').select();
+      
+      for (final item in data) {
+        try {
+          final key = item['method_key'] as String;
+          final companion = BrewingRecipesCompanion(
+            methodKey: Value(key),
+            nameUk: Value(item['name_uk'] as String? ?? item['name'] as String? ?? ''),
+            descriptionUk: Value(item['description_uk'] as String? ?? item['description'] as String? ?? ''),
+            ratioGramsPerMl: Value((item['ratio_grams_per_ml'] as num?)?.toDouble() ?? 0.066),
+            tempC: Value((item['temp_c'] as num?)?.toDouble() ?? 93.0),
+            totalTimeSec: Value((item['total_time_sec'] as num?)?.toInt() ?? 180),
+            difficulty: Value(item['difficulty'] as String? ?? 'Intermediate'),
+            flavorProfile: Value(item['flavor_profile'] as String? ?? 'Balanced'),
+            iconName: Value(item['icon_name'] as String?),
+            stepsJson: Value(item['steps_json']?.toString() ?? '[]'),
+          );
+
+          // Get translations
+          final transData = await supabase!
+              .from('brewing_recipe_translations')
+              .select()
+              .eq('recipe_key', key);
+
+          final List<BrewingRecipeTranslationsCompanion> translations = [];
+          for (final t in transData) {
+            translations.add(BrewingRecipeTranslationsCompanion(
+              recipeKey: Value(key),
+              languageCode: Value(t['language_code'] as String),
+              name: Value(t['name'] as String?),
+              description: Value(t['description'] as String?),
+            ));
+          }
+
+          await db.smartUpsertBrewingRecipe(companion, translations);
+        } catch (e) {
+          debugPrint('SYNC ERROR for method ${item['method_key']}: $e');
+        }
+      }
+    } catch (e) {
+      debugPrint('SYNC ERROR (Brewing Recipes): $e');
+    }
+  }
+
+  /// Pulls brands from Supabase.
+  Future<void> syncBrands() async {
+    if (supabase == null) return;
+    try {
+      debugPrint('SYNC: Pulling brands from localized_brands...');
+      final data = await supabase!.from('localized_brands').select();
+      
+      for (final item in data) {
+        try {
+          final id = item['id'] as int;
+          final companion = LocalizedBrandsCompanion(
+            id: Value(id),
+            name: Value(item['name'] as String? ?? ''),
+            logoUrl: Value(item['logo_url'] as String?),
+            siteUrl: Value(item['site_url'] as String?),
+            shortDescUk: Value(item['short_desc_uk'] as String? ?? item['short_desc_en'] as String? ?? ''),
+            fullDescUk: Value(item['full_desc_uk'] as String? ?? item['full_desc_en'] as String? ?? ''),
+            locationUk: Value(item['location_uk'] as String? ?? item['location_en'] as String? ?? ''),
+          );
+
+          // Get translations
+          final transData = await supabase!
+              .from('localized_brand_translations')
+              .select()
+              .eq('brand_id', id);
+
+          final List<LocalizedBrandTranslationsCompanion> translations = [];
+          for (final t in transData) {
+             translations.add(LocalizedBrandTranslationsCompanion(
+               brandId: Value(id),
+               languageCode: Value(t['language_code'] as String),
+               shortDesc: Value(t['short_desc'] as String?),
+               fullDesc: Value(t['full_desc'] as String?),
+               location: Value(t['location'] as String?),
+             ));
+          }
+
+          await db.smartUpsertBrand(companion, translations);
+        } catch (e) {
+          debugPrint('SYNC ERROR for brand ID ${item['id']}: $e');
+        }
+      }
+    } catch (e) {
+      debugPrint('SYNC ERROR (Brands): $e');
+    }
+  }
+
   /// Clears local shared tables to force fresh sync.
   Future<void> _clearLocalSharedData() async {
     try {
       debugPrint('SYNC: Clearing local shared tables...');
-      // Note: We use raw delete or drift delete statements
       await db.transaction(() async {
         await db.delete(db.localizedFarmers).go();
         await db.delete(db.localizedBeans).go();
         await db.delete(db.localizedBeanTranslations).go();
         await db.delete(db.specialtyArticles).go();
+        await db.delete(db.localizedBrands).go();
+        await db.delete(db.brewingRecipes).go();
       });
       debugPrint('SYNC: Local cache cleared.');
     } catch (e) {

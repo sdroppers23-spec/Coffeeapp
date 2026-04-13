@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../core/database/app_database.dart';
 import '../../core/database/database_provider.dart';
+import '../../core/database/dtos.dart';
 import 'method_tile.dart';
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
-final brewingRecipesProvider = FutureProvider<List<BrewingRecipe>>((ref) async {
+final brewingRecipesProvider = FutureProvider<List<BrewingRecipeDto>>((ref) async {
   final db = ref.watch(databaseProvider);
-  return db.getAllRecipes();
+  return db.getAllBrewingRecipes('uk');
 });
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
@@ -54,7 +54,7 @@ class BrewingGuideScreen extends ConsumerWidget {
           }
 
           // Group recipes by method
-          final grouped = <String, List<BrewingRecipe>>{};
+          final grouped = <String, List<BrewingRecipeDto>>{};
           for (var r in recipes) {
             grouped.putIfAbsent(r.methodKey, () => []).add(r);
           }

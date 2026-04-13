@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../core/database/app_database.dart';
+import '../../core/database/dtos.dart';
 import '../../shared/widgets/glass_container.dart';
 import 'brewing_detail_screen.dart';
 import 'method_recipes_screen.dart';
@@ -9,20 +9,18 @@ import 'method_recipes_screen.dart';
 // ─── Method metadata ─────────────────────────────────────────────────────────
 // ─── MethodTile ───────────────────────────────────────────────────────────────
 class MethodTile extends StatelessWidget {
-  final List<BrewingRecipe> methodRecipes;
+  final List<BrewingRecipeDto> methodRecipes;
 
   const MethodTile({
     super.key,
     required this.methodRecipes,
   });
 
-  BrewingRecipe get _firstRecipe => methodRecipes.first;
+  BrewingRecipeDto get _firstRecipe => methodRecipes.first;
   int get _count => methodRecipes.length;
 
   String _getEffectiveName(BuildContext context) {
-    final lang = Localizations.localeOf(context).languageCode;
-    if (lang == 'uk') return _firstRecipe.nameUk;
-    return _firstRecipe.nameEn ?? _firstRecipe.nameUk;
+    return _firstRecipe.name;
   }
 
   String _getEffectiveImageUrl() {

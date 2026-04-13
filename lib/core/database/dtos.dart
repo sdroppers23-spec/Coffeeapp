@@ -189,6 +189,7 @@ class LocalizedFarmerDto {
 class SpecialtyArticleDto {
   final int id;
   final String title;
+  final String subtitle;
   final String imageUrl;
   final String flagUrl;
   final String contentHtml;
@@ -197,6 +198,7 @@ class SpecialtyArticleDto {
   SpecialtyArticleDto({
     required this.id,
     required this.title,
+    required this.subtitle,
     required this.imageUrl,
     required this.flagUrl,
     required this.contentHtml,
@@ -248,6 +250,36 @@ class RecommendedRecipeDto {
   });
 
   String get sensoryJson => jsonEncode(sensoryPoints);
+}
+
+class BrewingRecipeDto {
+  final int id;
+  final String methodKey;
+  final String name;
+  final String description;
+  final String imageUrl;
+  final double? ratioGramsPerMl;
+  final double? tempC;
+  final int? totalTimeSec;
+  final String? difficulty;
+  final String? stepsJson;
+  final String? flavorProfile;
+  final String? iconName;
+
+  BrewingRecipeDto({
+    required this.id,
+    required this.methodKey,
+    required this.name,
+    required this.description,
+    required this.imageUrl,
+    this.ratioGramsPerMl,
+    this.tempC,
+    this.totalTimeSec,
+    this.difficulty,
+    this.stepsJson,
+    this.flavorProfile,
+    this.iconName,
+  });
 }
 
 class SphereRegionDto {

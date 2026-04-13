@@ -3,7 +3,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../core/database/app_database.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import 'custom_recipe_list.dart';
@@ -20,7 +19,7 @@ const _methodMeta = {
 };
 
 class BrewingDetailScreen extends ConsumerStatefulWidget {
-  final BrewingRecipe recipe;
+  final BrewingRecipeDto recipe;
   const BrewingDetailScreen({super.key, required this.recipe});
 
   @override
@@ -43,7 +42,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    _steps = (jsonDecode(widget.recipe.stepsJson) as List)
+    _steps = (jsonDecode(widget.recipe.stepsJson ?? '[]') as List)
         .cast<Map<String, dynamic>>();
     _progressController = AnimationController(vsync: this);
   }
@@ -98,7 +97,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen>
   }
 
   String get _formattedRatio {
-    final ratio = widget.recipe.ratioGramsPerMl;
+    final ratio = widget.recipe.ratioGramsPerMl ?? 0.0;
     if (ratio >= 1) return '1:${(1 / ratio).toStringAsFixed(0)}';
     return '${(ratio * 100).toStringAsFixed(0)}g per 100ml';
   }
@@ -120,7 +119,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen>
               elevation: 0,
               flexibleSpace: FlexibleSpaceBar(
                 title: Text(
-                  widget.recipe.nameUk,
+                  widget.recipe.name,
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -161,7 +160,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen>
                       children: [
                         _InfoChip(
                           icon: Icons.thermostat_outlined,
-                          label: '${widget.recipe.tempC.toInt()}°C',
+                          label: '${widget.recipe.tempC?.toInt() ?? 0}°C',
                         ),
                         _InfoChip(
                           icon: Icons.balance_outlined,
@@ -169,11 +168,11 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen>
                         ),
                         _InfoChip(
                           icon: Icons.timer_outlined,
-                          label: _formatTime(widget.recipe.totalTimeSec),
+                          label: _formatTime(widget.recipe.totalTimeSec ?? 0),
                         ),
                         _InfoChip(
                           icon: Icons.signal_cellular_alt_outlined,
-                          label: widget.recipe.difficulty,
+                          label: widget.recipe.difficulty ?? 'Medium',
                         ),
                       ],
                     ),

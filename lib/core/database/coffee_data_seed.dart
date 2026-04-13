@@ -129,24 +129,34 @@ class CoffeeDataSeed {
     if (!isEmpty && !force) return;
 
     for (int i = 0; i < 10; i++) {
-      await db.smartUpsertFarmer(
-        LocalizedFarmersCompanion.insert(
-          id: Value(i + 1),
-          nameUk: Value('Фермер #${i + 1}'),
-          nameEn: Value('Farmer #${i + 1}'),
-          imageUrl: Value('farmer_${i + 1}.png'),
-          flagUrl: Value('brazil.png'),
-          descriptionHtmlUk: Value('Тут має бути опис досягнень та історії фермера ${i + 1}'),
-          descriptionHtmlEn: Value('Farmer description and history #${i + 1}'),
-          regionUk: Value('Регіон ${i + 1}'),
-          countryUk: Value('Країна ${i + 1}'),
-          latitude: const Value(0.0),
-          longitude: const Value(0.0),
-          createdAt: Value(DateTime.now()),
-        ),
+      final id = i + 1;
+      final main = LocalizedFarmersCompanion.insert(
+        id: Value(id),
+        nameUk: Value('Фермер #$id'),
+        imageUrl: Value('farmer_$id.png'),
+        flagUrl: const Value('brazil.png'),
+        descriptionHtmlUk: Value('Тут має бути опис досягнень та історії фермера $id'),
+        regionUk: Value('Регіон $id'),
+        countryUk: Value('Країна $id'),
+        latitude: const Value(0.0),
+        longitude: const Value(0.0),
+        createdAt: Value(DateTime.now()),
       );
+
+      final List<LocalizedFarmerTranslationsCompanion> translations = [
+        LocalizedFarmerTranslationsCompanion.insert(
+          farmerId: id,
+          languageCode: 'en',
+          name: Value('Farmer #$id'),
+          descriptionHtml: Value('Farmer description and history #$id'),
+          region: Value('Region $id'),
+          country: Value('Country $id'),
+        ),
+      ];
+
+      await db.smartUpsertFarmer(main, translations);
     }
-    print('DB SEEDING: 10 placeholder farmers created.');
+    debugPrint('DB SEEDING: 10 placeholder farmers created.');
   }
 
   Future<void> _seedEncyclopedia({bool force = false}) async {
@@ -180,94 +190,74 @@ class CoffeeDataSeed {
     ];
 
     for (int i = 0; i < 10; i++) {
-      await db.smartUpsertArticle(
-        SpecialtyArticlesCompanion.insert(
-          id: Value(i + 1),
-          titleUk: Value(titlesUk[i]),
-          titleEn: Value(titles[i]),
-          imageUrl: Value('article_${i + 1}.png'),
-          flagUrl: Value('specialty_icon.png'),
-          contentHtmlUk: Value('Тут має бути текст статті ${i + 1} (HTML або Markdown)'),
-          contentHtmlEn: Value('Article content #${i + 1} in English'),
-          readTimeMin: Value(5 + i),
-        ),
+      final id = i + 1;
+      final main = SpecialtyArticlesCompanion.insert(
+        id: Value(id),
+        titleUk: Value(titlesUk[i]),
+        imageUrl: Value('article_$id.png'),
+        flagUrl: const Value('specialty_icon.png'),
+        contentHtmlUk: Value('Тут має бути текст статті $id (HTML або Markdown)'),
+        readTimeMin: Value(5 + i),
       );
+
+      final List<SpecialtyArticleTranslationsCompanion> translations = [
+        SpecialtyArticleTranslationsCompanion.insert(
+          articleId: id,
+          languageCode: 'en',
+          title: Value(titles[i]),
+          contentHtml: Value('Article content #$id in English'),
+        ),
+      ];
+
+      await db.smartUpsertArticle(main, translations);
     }
-    print('DB SEEDING: 10 placeholder articles created.');
+    debugPrint('DB SEEDING: 10 placeholder articles created.');
   }
 
   Future<void> _seedBrewingRecipes() async {
     debugPrint('DB SEEDING: Populating 8 Brewing Methods...');
     
-    final List<BrewingRecipesCompanion> methods = [
-      BrewingRecipesCompanion.insert(
-        methodKey: 'v60',
-        nameEn: const Value('V60 Pour Over'),
-        nameUk: const Value('V60 Пур-овер'),
-        imageUrl: const Value('p_v60.png'),
-        descriptionEn: const Value('Classic pour-over method for clarity and sweetness.'),
-        descriptionUk: const Value('Класичний метод для чистоти та солодкості.'),
-      ),
-      BrewingRecipesCompanion.insert(
-        methodKey: 'chemex',
-        nameEn: const Value('Chemex'),
-        nameUk: const Value('Чемекс'),
-        imageUrl: const Value('p_chemex.png'),
-        descriptionEn: const Value('Elegant glass brewer for a clean, tea-like body.'),
-        descriptionUk: const Value('Елегантний метод для найчистішого тіла напою.'),
-      ),
-      BrewingRecipesCompanion.insert(
-        methodKey: 'aeropress',
-        nameEn: const Value('AeroPress'),
-        nameUk: const Value('Аеропрес'),
-        imageUrl: const Value('p_aeropress.png'),
-        descriptionEn: const Value('Versatile and portable pressure brewer.'),
-        descriptionUk: const Value('Універсальний та портативний ручний прес.'),
-      ),
-      BrewingRecipesCompanion.insert(
-        methodKey: 'french_press',
-        nameEn: const Value('French Press'),
-        nameUk: const Value('Французький прес'),
-        imageUrl: const Value('p_french_press.png'),
-        descriptionEn: const Value('Full-bodied immersion brewing.'),
-        descriptionUk: const Value('Метод занурення з насиченим тілом.'),
-      ),
-      BrewingRecipesCompanion.insert(
-        methodKey: 'espresso',
-        nameEn: const Value('Espresso'),
-        nameUk: const Value('Еспресо'),
-        imageUrl: const Value('p_espresso.png'),
-        descriptionEn: const Value('Concentrated extraction under high pressure.'),
-        descriptionUk: const Value('Концентрований напій під високим тиском.'),
-      ),
-      BrewingRecipesCompanion.insert(
-        methodKey: 'clever_dripper',
-        nameEn: const Value('Clever Dripper'),
-        nameUk: const Value('Клевер'),
-        imageUrl: const Value('p_clever.png'),
-        descriptionEn: const Value('Best of both worlds: immersion and filtration.'),
-        descriptionUk: const Value('Найкраще з двох світів: занурення та фільтрація.'),
-      ),
-      BrewingRecipesCompanion.insert(
-        methodKey: 'siphon',
-        nameEn: const Value('Siphon'),
-        nameUk: const Value('Сифон'),
-        imageUrl: const Value('p_siphon.png'),
-        descriptionEn: const Value('Visual vacuum brewing for exceptional clarity.'),
-        descriptionUk: const Value('Видовищне вакуумне заварювання.'),
-      ),
-      BrewingRecipesCompanion.insert(
-        methodKey: 'kalita_wave',
-        nameEn: const Value('Kalita Wave'),
-        nameUk: const Value('Каліта'),
-        imageUrl: const Value('p_kalita.png'),
-        descriptionEn: const Value('Flat-bottomed dripper for even extraction.'),
-        descriptionUk: const Value('Дріппер з плоским дном для рівномірної екстракції.'),
-      ),
+    final List<Map<String, dynamic>> recipes = [
+      {
+        'main': BrewingRecipesCompanion.insert(
+          methodKey: 'v60',
+          nameUk: const Value('V60 Пур-овер'),
+          imageUrl: const Value('p_v60.png'),
+          descriptionUk: const Value('Класичний метод для чистоти та солодкості.'),
+        ),
+        'trans': [
+          BrewingRecipeTranslationsCompanion.insert(recipeKey: 'v60', languageCode: 'en', name: const Value('V60 Pour Over'), description: const Value('Classic pour-over method for clarity and sweetness.')),
+        ],
+      },
+      {
+        'main': BrewingRecipesCompanion.insert(
+          methodKey: 'chemex',
+          nameUk: const Value('Чемекс'),
+          imageUrl: const Value('p_chemex.png'),
+          descriptionUk: const Value('Елегантний метод для найчистішого тіла напою.'),
+        ),
+        'trans': [
+          BrewingRecipeTranslationsCompanion.insert(recipeKey: 'chemex', languageCode: 'en', name: const Value('Chemex'), description: const Value('Elegant glass brewer for a clean, tea-like body.')),
+        ],
+      },
+      {
+        'main': BrewingRecipesCompanion.insert(
+          methodKey: 'aeropress',
+          nameUk: const Value('Аеропрес'),
+          imageUrl: const Value('p_aeropress.png'),
+          descriptionUk: const Value('Універсальний та портативний ручний прес.'),
+        ),
+        'trans': [
+          BrewingRecipeTranslationsCompanion.insert(recipeKey: 'aeropress', languageCode: 'en', name: const Value('AeroPress'), description: const Value('Versatile and portable pressure brewer.')),
+        ],
+      },
     ];
 
-    for (var r in methods) {
-      await db.smartUpsertBrewingRecipe(r);
+    for (var r in recipes) {
+      await db.smartUpsertBrewingRecipe(
+        r['main'] as BrewingRecipesCompanion,
+        r['trans'] as List<BrewingRecipeTranslationsCompanion>,
+      );
     }
   }
 

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../core/database/app_database.dart';
+import '../../core/database/dtos.dart';
 import 'recipe_card.dart';
 
 class MethodRecipesScreen extends StatelessWidget {
   final String methodKey;
   final String methodNameUk;
-  final List<BrewingRecipe> recipes;
+  final List<BrewingRecipeDto> recipes;
 
   const MethodRecipesScreen({
     super.key,

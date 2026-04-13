@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../core/database/app_database.dart';
+import '../../core/database/dtos.dart';
 import '../../shared/widgets/glass_container.dart';
 import 'brewing_detail_screen.dart';
 
 class RecipeCard extends StatelessWidget {
-  final BrewingRecipe recipe;
+  final BrewingRecipeDto recipe;
 
   const RecipeCard({super.key, required this.recipe});
 
   String get _formattedTime {
-    final s = recipe.totalTimeSec;
+    final s = recipe.totalTimeSec ?? 0;
     if (s >= 3600) return '${(s / 3600).toStringAsFixed(1)} год';
     if (s >= 60) return '${s ~/ 60} хв';
     return '$s с';
   }
 
   String get _formattedRatio {
-    final r = recipe.ratioGramsPerMl;
+    final r = recipe.ratioGramsPerMl ?? 0.0;
     // Convert ratio g/ml to e.g. "1:15"
     if (r > 0) {
       final inverse = (1 / r).round();
@@ -27,7 +27,7 @@ class RecipeCard extends StatelessWidget {
   }
 
   String get _difficultyUk {
-    switch (recipe.difficulty.toLowerCase()) {
+    switch ((recipe.difficulty ?? 'Medium').toLowerCase()) {
       case 'easy':
       case 'beginner':
         return 'Початковий';
@@ -36,12 +36,12 @@ class RecipeCard extends StatelessWidget {
       case 'advanced':
         return 'Просунутий';
       default:
-        return recipe.difficulty;
+        return recipe.difficulty ?? 'Середній';
     }
   }
 
   Color get _difficultyColor {
-    switch (recipe.difficulty.toLowerCase()) {
+    switch ((recipe.difficulty ?? 'Medium').toLowerCase()) {
       case 'easy':
       case 'beginner':
         return const Color(0xFF4CAF50);
@@ -77,7 +77,7 @@ class RecipeCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          recipe.nameUk,
+                          recipe.name,
                           style: GoogleFonts.cormorantGaramond(
                             fontSize: 22,
                             fontWeight: FontWeight.w700,
@@ -85,10 +85,10 @@ class RecipeCard extends StatelessWidget {
                             height: 1.1,
                           ),
                         ),
-                        if (recipe.descriptionUk.isNotEmpty) ...[
+                        if (recipe.description.isNotEmpty) ...[
                           const SizedBox(height: 6),
                           Text(
-                            recipe.descriptionUk,
+                            recipe.description,
                             style: GoogleFonts.outfit(
                               fontSize: 13.5,
                               color: Colors.white.withValues(alpha: 0.65),
@@ -145,7 +145,7 @@ class RecipeCard extends StatelessWidget {
                   _VerticalDivider(),
                   _StatCell(
                     icon: Icons.thermostat_rounded,
-                    value: '${recipe.tempC.toInt()}°C',
+                    value: '${recipe.tempC?.toInt() ?? 0}°C',
                     label: 'Температура',
                     color: const Color(0xFFFF8A65),
                   ),
@@ -166,7 +166,7 @@ class RecipeCard extends StatelessWidget {
             ),
 
             // ── Flavor Profile tag ────────────────────────────────────────
-            if (recipe.flavorProfile.isNotEmpty)
+            if (recipe.flavorProfile != null && recipe.flavorProfile!.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
                 child: Container(
@@ -185,7 +185,7 @@ class RecipeCard extends StatelessWidget {
                           size: 11, color: gold.withValues(alpha: 0.8)),
                       const SizedBox(width: 5),
                       Text(
-                        recipe.flavorProfile,
+                        recipe.flavorProfile!,
                         style: GoogleFonts.outfit(
                           fontSize: 11,
                           fontWeight: FontWeight.w500,

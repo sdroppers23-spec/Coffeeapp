@@ -14,12 +14,15 @@ part 'app_database.g.dart';
     LocalizedBrands,
     LocalizedBrandTranslations,
     LocalizedFarmers,
+    LocalizedFarmerTranslations,
     SphereRegions,
     SphereRegionTranslations,
     SpecialtyArticles,
+    SpecialtyArticleTranslations,
     CoffeeLots,
     FermentationLogs,
     BrewingRecipes,
+    BrewingRecipeTranslations,
     RecommendedRecipes,
     CustomRecipes,
   ],
@@ -86,34 +89,42 @@ class AppDatabase extends _$AppDatabase {
   // ── Farmers ──────────────────────────────────────────────────────────────────
   // ── Farmers (Wide Table) ───────────────────────────────────────────────────
   Future<List<LocalizedFarmerDto>> getAllFarmers(String lang) async {
-    final query = select(localizedFarmers);
+    final query = select(localizedFarmers).join([
+      leftOuterJoin(
+        localizedFarmerTranslations,
+        localizedFarmerTranslations.farmerId.equalsExp(localizedFarmers.id) &
+            localizedFarmerTranslations.languageCode.equals(lang),
+      ),
+    ]);
+
     final rows = await query.get();
     
-    return rows.map((farmer) {
+    return rows.map((row) {
+      final farmer = row.readTable(localizedFarmers);
+      final translation = row.readTableOrNull(localizedFarmerTranslations);
+
       final isUk = lang == 'uk';
-      final isEn = lang == 'en';
       
-      // Basic 2-lang logic for now, expandable to 13
       String name = farmer.nameUk;
       String desc = farmer.descriptionHtmlUk;
-      
-      if (isEn) {
-        name = farmer.nameEn ?? farmer.nameUk;
-        desc = farmer.descriptionHtmlEn ?? farmer.descriptionHtmlUk;
-      } else if (!isUk) {
-        // Fallback or other language logic here
-        name = farmer.nameEn ?? farmer.nameUk;
-        desc = farmer.descriptionHtmlEn ?? farmer.descriptionHtmlUk;
+      String? reg = farmer.regionUk;
+      String? cou = farmer.countryUk;
+
+      if (!isUk && translation != null) {
+        name = translation.name ?? name;
+        desc = translation.descriptionHtml ?? desc;
+        reg = translation.region ?? reg;
+        cou = translation.country ?? cou;
       }
-      
+
       return LocalizedFarmerDto(
         id: farmer.id,
         imageUrl: farmer.imageUrl,
         flagUrl: farmer.flagUrl,
         name: name,
         descriptionHtml: desc,
-        region: farmer.regionUk ?? '',
-        country: farmer.countryUk ?? '',
+        region: reg ?? '',
+        country: cou ?? '',
         latitude: farmer.latitude,
         longitude: farmer.longitude,
         createdAt: farmer.createdAt,
@@ -121,33 +132,47 @@ class AppDatabase extends _$AppDatabase {
     }).toList();
   }
 
-  Future<void> smartUpsertFarmer(LocalizedFarmersCompanion f) =>
-      into(localizedFarmers).insertOnConflictUpdate(f);
+  Future<void> smartUpsertFarmer(
+    LocalizedFarmersCompanion f,
+    List<LocalizedFarmerTranslationsCompanion> translations,
+  ) async {
+    await batch((batch) {
+      batch.insertAllOnConflictUpdate(localizedFarmers, [f]);
+      batch.insertAllOnConflictUpdate(localizedFarmerTranslations, translations);
+    });
+  }
 
-  Future<void> upsertLocalizedFarmer(LocalizedFarmersCompanion f) =>
-      smartUpsertFarmer(f);
+  Future<void> upsertLocalizedFarmer(
+    LocalizedFarmersCompanion f,
+    List<LocalizedFarmerTranslationsCompanion> translations,
+  ) =>
+      smartUpsertFarmer(f, translations);
 
   // ── Brands ───────────────────────────────────────────────────────────────────
   Future<List<LocalizedBrandDto>> getAllBrands([String lang = 'uk']) async {
     final query = select(localizedBrands).join([
-      innerJoin(
+      leftOuterJoin(
         localizedBrandTranslations,
-        localizedBrandTranslations.brandId.equalsExp(localizedBrands.id),
+        localizedBrandTranslations.brandId.equalsExp(localizedBrands.id) &
+            localizedBrandTranslations.languageCode.equals(lang),
       ),
-    ])..where(localizedBrandTranslations.languageCode.equals(lang));
+    ]);
 
     final rows = await query.get();
     return rows.map((row) {
       final brand = row.readTable(localizedBrands);
-      final translation = row.readTable(localizedBrandTranslations);
+      final translation = row.readTableOrNull(localizedBrandTranslations);
+      
+      final isUk = lang == 'uk';
+      
       return LocalizedBrandDto(
         id: brand.id,
         name: brand.name,
         logoUrl: brand.logoUrl ?? '',
         siteUrl: brand.siteUrl ?? '',
-        shortDesc: translation.shortDesc ?? '',
-        fullDesc: translation.fullDesc ?? '',
-        location: translation.location ?? '',
+        shortDesc: isUk ? (brand.shortDescUk ?? '') : (translation?.shortDesc ?? brand.shortDescUk ?? ''),
+        fullDesc: isUk ? (brand.fullDescUk ?? '') : (translation?.fullDesc ?? brand.fullDescUk ?? ''),
+        location: isUk ? (brand.locationUk ?? '') : (translation?.location ?? brand.locationUk ?? ''),
       );
     }).toList();
   }
@@ -155,29 +180,40 @@ class AppDatabase extends _$AppDatabase {
   Future<LocalizedBrandDto?> getBrandById(int id, String lang) async {
     final query =
         select(localizedBrands).join([
-          innerJoin(
+          leftOuterJoin(
             localizedBrandTranslations,
-            localizedBrandTranslations.brandId.equalsExp(localizedBrands.id),
+            localizedBrandTranslations.brandId.equalsExp(localizedBrands.id) &
+                localizedBrandTranslations.languageCode.equals(lang),
           ),
-        ])..where(
-          localizedBrands.id.equals(id) &
-              localizedBrandTranslations.languageCode.equals(lang),
-        );
+        ])..where(localizedBrands.id.equals(id));
 
     final row = await query.getSingleOrNull();
     if (row == null) return null;
 
     final brand = row.readTable(localizedBrands);
-    final translation = row.readTable(localizedBrandTranslations);
+    final translation = row.readTableOrNull(localizedBrandTranslations);
+    
+    final isUk = lang == 'uk';
+    
     return LocalizedBrandDto(
       id: brand.id,
       name: brand.name,
       logoUrl: brand.logoUrl ?? '',
       siteUrl: brand.siteUrl ?? '',
-      shortDesc: translation.shortDesc ?? '',
-      fullDesc: translation.fullDesc ?? '',
-      location: translation.location ?? '',
+      shortDesc: isUk ? (brand.shortDescUk ?? '') : (translation?.shortDesc ?? brand.shortDescUk ?? ''),
+      fullDesc: isUk ? (brand.fullDescUk ?? '') : (translation?.fullDesc ?? brand.fullDescUk ?? ''),
+      location: isUk ? (brand.locationUk ?? '') : (translation?.location ?? brand.locationUk ?? ''),
     );
+  }
+
+  Future<void> smartUpsertBrand(
+    LocalizedBrandsCompanion brand,
+    List<LocalizedBrandTranslationsCompanion> translations,
+  ) async {
+    await batch((batch) {
+      batch.insertAllOnConflictUpdate(localizedBrands, [brand]);
+      batch.insertAllOnConflictUpdate(localizedBrandTranslations, translations);
+    });
   }
 
   Future<int> addBrand(String name, String location, String shortDesc) async {
@@ -243,26 +279,28 @@ class AppDatabase extends _$AppDatabase {
   // ── Origins / Beans ──────────────────────────────────────────────────────────
   Future<List<LocalizedBeanDto>> getAllOrigins(String lang) async {
     final query = select(localizedBeans).join([
-      innerJoin(
+      leftOuterJoin(
         localizedBeanTranslations,
-        localizedBeanTranslations.beanId.equalsExp(localizedBeans.id),
+        localizedBeanTranslations.beanId.equalsExp(localizedBeans.id) &
+            localizedBeanTranslations.languageCode.equals(lang),
       ),
-    ])..where(localizedBeanTranslations.languageCode.equals(lang));
+    ]);
 
     final rows = await query.get();
-    return rows.map((row) => _mapBeanRow(row)).toList();
+    return rows.map((row) => _mapBeanRow(row, lang)).toList();
   }
 
   Stream<List<LocalizedBeanDto>> watchAllEncyclopediaEntries(String lang) {
     final query = select(localizedBeans).join([
-      innerJoin(
+      leftOuterJoin(
         localizedBeanTranslations,
-        localizedBeanTranslations.beanId.equalsExp(localizedBeans.id),
+        localizedBeanTranslations.beanId.equalsExp(localizedBeans.id) &
+            localizedBeanTranslations.languageCode.equals(lang),
       ),
-    ])..where(localizedBeanTranslations.languageCode.equals(lang));
+    ]);
 
     return query.watch().map(
-      (rows) => rows.map((row) => _mapBeanRow(row)).toList(),
+      (rows) => rows.map((row) => _mapBeanRow(row, lang)).toList(),
     );
   }
 
@@ -276,33 +314,39 @@ class AppDatabase extends _$AppDatabase {
     String lang,
   ) async {
     final query = select(localizedBeans).join([
-      innerJoin(
+      leftOuterJoin(
         localizedBeanTranslations,
-        localizedBeanTranslations.beanId.equalsExp(localizedBeans.id),
+        localizedBeanTranslations.beanId.equalsExp(localizedBeans.id) &
+            localizedBeanTranslations.languageCode.equals(lang),
       ),
-    ])..where(
-      localizedBeans.brandId.equals(brandId) &
-          localizedBeanTranslations.languageCode.equals(lang),
-    );
+    ])..where(localizedBeans.brandId.equals(brandId));
 
     final rows = await query.get();
-    return rows.map((row) => _mapBeanRow(row)).toList();
+    return rows.map((row) => _mapBeanRow(row, lang)).toList();
   }
 
   Future<LocalizedBeanDto?> getBeanById(int id, String lang) async {
     final query =
         select(localizedBeans).join([
-          innerJoin(
+          leftOuterJoin(
             localizedBeanTranslations,
-            localizedBeanTranslations.beanId.equalsExp(localizedBeans.id),
+            localizedBeanTranslations.beanId.equalsExp(localizedBeans.id) &
+                localizedBeanTranslations.languageCode.equals(lang),
           ),
-        ])..where(
-          localizedBeans.id.equals(id) &
-              localizedBeanTranslations.languageCode.equals(lang),
-        );
+        ])..where(localizedBeans.id.equals(id));
 
     final row = await query.getSingleOrNull();
-    return row != null ? _mapBeanRow(row) : null;
+    return row != null ? _mapBeanRow(row, lang) : null;
+  }
+
+  Future<void> smartUpsertBean(
+    LocalizedBeansCompanion bean,
+    List<LocalizedBeanTranslationsCompanion> translations,
+  ) async {
+    await batch((batch) {
+      batch.insertAllOnConflictUpdate(localizedBeans, [bean]);
+      batch.insertAllOnConflictUpdate(localizedBeanTranslations, translations);
+    });
   }
 
   Future<int> insertBean(LocalizedBeansCompanion b) =>
@@ -345,9 +389,11 @@ class AppDatabase extends _$AppDatabase {
     return rows.map((r) => r.read(localizedBeans.id)!).toSet();
   }
 
-  LocalizedBeanDto _mapBeanRow(TypedResult row) {
+  LocalizedBeanDto _mapBeanRow(TypedResult row, String lang) {
     final bean = row.readTable(localizedBeans);
-    final translation = row.readTable(localizedBeanTranslations);
+    final translation = row.readTableOrNull(localizedBeanTranslations);
+
+    final isUk = lang == 'uk';
 
     return LocalizedBeanDto(
       id: bean.id,
@@ -376,46 +422,21 @@ class AppDatabase extends _$AppDatabase {
       weight: bean.weight,
       roastDate: bean.roastDate,
       processingMethodsJson: bean.processingMethodsJson,
-      country: translation.country ?? '',
-      region: translation.region ?? '',
-      varieties: translation.varieties ?? '',
-      flavorNotes: _parseList<String>(translation.flavorNotes),
-      description: translation.description ?? '',
-      farmDescription: translation.farmDescription ?? '',
-      roastLevel: translation.roastLevel ?? '',
-      processMethod: translation.processMethod ?? '',
+      // Priority: Main Record (_uk) for UK, or fallback if translation missing
+      country: isUk ? (bean.countryUk ?? '') : (translation?.country ?? bean.countryUk ?? ''),
+      region: isUk ? (bean.regionUk ?? '') : (translation?.region ?? bean.regionUk ?? ''),
+      varieties: isUk ? (bean.varietiesUk ?? '') : (translation?.varieties ?? bean.varietiesUk ?? ''),
+      flavorNotes: isUk ? _parseList<String>(bean.flavorNotesUk) : _parseList<String>(translation?.flavorNotes ?? bean.flavorNotesUk),
+      description: isUk ? (bean.descriptionUk ?? '') : (translation?.description ?? bean.descriptionUk ?? ''),
+      farmDescription: isUk ? (bean.descriptionUk ?? '') : (translation?.farmDescription ?? bean.descriptionUk ?? ''),
+      roastLevel: isUk ? (bean.roastLevelUk ?? '') : (translation?.roastLevel ?? bean.roastLevelUk ?? ''),
+      processMethod: isUk ? (bean.processMethodUk ?? '') : (translation?.processMethod ?? bean.processMethodUk ?? ''),
       isFavorite: bean.isFavorite,
       createdAt: bean.createdAt,
     );
   }
 
   // ── Smart Upsert & Conflicts ────────────────────────────────────────────────
-  Future<void> smartUpsertBrand(
-    LocalizedBrandsCompanion brand,
-    List<LocalizedBrandTranslationsCompanion> translations,
-  ) async {
-    await transaction(() async {
-      await into(localizedBrands).insertOnConflictUpdate(brand);
-      for (final t in translations) {
-        await into(localizedBrandTranslations).insertOnConflictUpdate(t);
-      }
-    });
-  }
-
-  // smartUpsertFarmer moved to line 129
-
-  Future<void> smartUpsertBean(
-    LocalizedBeansCompanion bean,
-    List<LocalizedBeanTranslationsCompanion> translations,
-  ) async {
-    await transaction(() async {
-      await into(localizedBeans).insertOnConflictUpdate(bean);
-      for (final t in translations) {
-        await into(localizedBeanTranslations).insertOnConflictUpdate(t);
-      }
-    });
-  }
-
   // ── Recommended Recipes ──────────────────────────────────────────────────────
   Future<List<RecommendedRecipeDto>> getRecommendedRecipesForLot(
     int lotId,
@@ -478,23 +499,48 @@ class AppDatabase extends _$AppDatabase {
   // ── Articles (Wide Table) ──────────────────────────────────────────────────
   Future<void> smartUpsertArticle(
     SpecialtyArticlesCompanion article,
+    List<SpecialtyArticleTranslationsCompanion> translations,
   ) async {
-    await into(specialtyArticles).insertOnConflictUpdate(article);
+    await batch((batch) {
+      batch.insertAllOnConflictUpdate(specialtyArticles, [article]);
+      batch.insertAllOnConflictUpdate(specialtyArticleTranslations, translations);
+    });
   }
 
   Future<List<SpecialtyArticleDto>> getAllArticles(String lang) async {
-    final query = select(specialtyArticles);
+    final query = select(specialtyArticles).join([
+      leftOuterJoin(
+        specialtyArticleTranslations,
+        specialtyArticleTranslations.articleId.equalsExp(specialtyArticles.id) &
+            specialtyArticleTranslations.languageCode.equals(lang),
+      ),
+    ]);
+
     final rows = await query.get();
     
-    return rows.map((article) {
+    return rows.map((row) {
+      final article = row.readTable(specialtyArticles);
+      final translation = row.readTableOrNull(specialtyArticleTranslations);
+      
       final isUk = lang == 'uk';
+      String title = article.titleUk;
+      String? subtitle = article.subtitleUk;
+      String content = article.contentHtmlUk;
+      
+      if (!isUk && translation != null) {
+        title = translation.title ?? title;
+        subtitle = translation.subtitle ?? subtitle;
+        content = translation.contentHtml ?? content;
+      }
+      
       return SpecialtyArticleDto(
         id: article.id,
-        title: isUk ? article.titleUk : (article.titleEn ?? article.titleUk),
+        title: title,
+        subtitle: subtitle ?? '',
         imageUrl: article.imageUrl,
         flagUrl: article.flagUrl,
         readTimeMin: article.readTimeMin,
-        contentHtml: isUk ? article.contentHtmlUk : (article.contentHtmlEn ?? article.contentHtmlUk),
+        contentHtml: content,
       );
     }).toList();
   }
@@ -699,53 +745,56 @@ class AppDatabase extends _$AppDatabase {
       (delete(customRecipes)..where((t) => t.id.equals(id))).go();
 
   // ── Brewing (Static Wide Table) ───────────────────────────────────────────
-  Future<List<BrewingRecipe>> getAllRecipes([String lang = 'en']) async {
-    final rows = await select(brewingRecipes).get();
-    return rows.map((r) {
+  Future<List<BrewingRecipeDto>> getAllBrewingRecipes(String lang) async {
+    final query = select(brewingRecipes).join([
+      leftOuterJoin(
+        brewingRecipeTranslations,
+        brewingRecipeTranslations.recipeKey.equalsExp(brewingRecipes.methodKey) &
+            brewingRecipeTranslations.languageCode.equals(lang),
+      ),
+    ]);
 
-      return BrewingRecipe(
-        id: r.id,
-        methodKey: r.methodKey,
-        nameUk: r.nameUk,
-        descriptionUk: r.descriptionUk,
-        imageUrl: r.imageUrl,
-        nameEn: r.nameEn,
-        descriptionEn: r.descriptionEn,
-        namePl: r.namePl,
-        descriptionPl: r.descriptionPl,
-        nameDe: r.nameDe,
-        descriptionDe: r.descriptionDe,
-        nameFr: r.nameFr,
-        descriptionFr: r.descriptionFr,
-        nameEs: r.nameEs,
-        descriptionEs: r.descriptionEs,
-        nameIt: r.nameIt,
-        descriptionIt: r.descriptionIt,
-        namePt: r.namePt,
-        descriptionPt: r.descriptionPt,
-        nameRo: r.nameRo,
-        descriptionRo: r.descriptionRo,
-        nameTr: r.nameTr,
-        descriptionTr: r.descriptionTr,
-        nameJa: r.nameJa,
-        descriptionJa: r.descriptionJa,
-        nameKo: r.nameKo,
-        descriptionKo: r.descriptionKo,
-        nameZh: r.nameZh,
-        descriptionZh: r.descriptionZh,
-        ratioGramsPerMl: r.ratioGramsPerMl,
-        tempC: r.tempC,
-        totalTimeSec: r.totalTimeSec,
-        difficulty: r.difficulty,
-        stepsJson: r.stepsJson,
-        flavorProfile: r.flavorProfile,
-        iconName: r.iconName,
+    final rows = await query.get();
+    
+    return rows.map((row) {
+      final recipe = row.readTable(brewingRecipes);
+      final translation = row.readTableOrNull(brewingRecipeTranslations);
+      
+      final isUk = lang == 'uk';
+      String name = recipe.nameUk;
+      String desc = recipe.descriptionUk;
+      
+      if (!isUk && translation != null) {
+        name = translation.name ?? name;
+        desc = translation.description ?? desc;
+      }
+      
+      return BrewingRecipeDto(
+        id: recipe.id,
+        methodKey: recipe.methodKey,
+        name: name,
+        description: desc,
+        imageUrl: recipe.imageUrl,
+        ratioGramsPerMl: recipe.ratioGramsPerMl,
+        tempC: recipe.tempC,
+        totalTimeSec: recipe.totalTimeSec,
+        difficulty: recipe.difficulty,
+        stepsJson: recipe.stepsJson,
+        flavorProfile: recipe.flavorProfile,
+        iconName: recipe.iconName,
       );
     }).toList();
   }
 
-  Future<int> smartUpsertBrewingRecipe(BrewingRecipesCompanion r) =>
-      into(brewingRecipes).insertOnConflictUpdate(r);
+  Future<void> smartUpsertBrewingRecipe(
+    BrewingRecipesCompanion recipe,
+    List<BrewingRecipeTranslationsCompanion> translations,
+  ) async {
+    await batch((batch) {
+      batch.insertAllOnConflictUpdate(brewingRecipes, [recipe]);
+      batch.insertAllOnConflictUpdate(brewingRecipeTranslations, translations);
+    });
+  }
 
   // ── Helpers ──────────────────────────────────────────────────────────────────
   Map<String, dynamic> _parseJson(String jsonStr) {
@@ -766,14 +815,4 @@ class AppDatabase extends _$AppDatabase {
   }
 }
 
-extension BrewingRecipeX on BrewingRecipe {
-  String getName(String lang) {
-    if (lang == 'uk') return nameUk;
-    return nameEn ?? nameUk;
-  }
-
-  String getDescription(String lang) {
-    if (lang == 'uk') return descriptionUk;
-    return descriptionEn ?? descriptionUk;
-  }
-}
+// Legacy extension removed. Logic moved to AppDatabase.getAllBrewingRecipes.

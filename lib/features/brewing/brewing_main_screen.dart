@@ -10,6 +10,7 @@ import 'custom_recipe_list.dart';
 import 'method_tile.dart';
 import '../../shared/widgets/premium_app_bar.dart';
 import '../../core/database/app_database.dart';
+import '../../core/database/dtos.dart';
 
 class BrewingViewModeNotifier extends Notifier<bool> {
   @override
@@ -119,7 +120,7 @@ class _BrewingMethodsContent extends ConsumerWidget {
         final isGrid = ref.watch(brewingViewModeProvider);
 
         // Group recipes by method for "Method-First" UI
-        final grouped = <String, List<BrewingRecipe>>{};
+        final grouped = <String, List<BrewingRecipeDto>>{};
         for (var r in recipes) {
           grouped.putIfAbsent(r.methodKey, () => []).add(r);
         }

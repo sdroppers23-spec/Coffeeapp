@@ -41,6 +41,17 @@ class LocalizedBeans extends Table {
   IntColumn get farmerId =>
       integer().nullable().references(LocalizedFarmers, #id)();
   BoolColumn get isDecaf => boolean().withDefault(const Constant(false))();
+
+  // PRIMARY CONTENT (UK)
+  TextColumn get countryUk => text().nullable()();
+  TextColumn get regionUk => text().nullable()();
+  TextColumn get varietiesUk => text().nullable()();
+  TextColumn get flavorNotesUk => text().withDefault(const Constant('[]'))();
+  TextColumn get processMethodUk => text().nullable()();
+  TextColumn get descriptionUk => text().nullable()();
+  TextColumn get farmDescriptionUk => text().nullable()();
+  TextColumn get roastLevelUk => text().nullable()();
+
   TextColumn get farm => text().nullable()();
   TextColumn get farmPhotosUrlCover => text().nullable()();
   TextColumn get washStation => text().nullable()();
@@ -48,13 +59,12 @@ class LocalizedBeans extends Table {
   TextColumn get wholesalePrice => text().nullable()();
 
   BoolColumn get isFavorite => boolean().withDefault(const Constant(false))();
-
   DateTimeColumn get createdAt => dateTime().nullable()();
 }
 
 class LocalizedBeanTranslations extends Table {
   IntColumn get beanId => integer().references(LocalizedBeans, #id)();
-  TextColumn get languageCode => text()(); // 'en', 'uk', 'de', etc.
+  TextColumn get languageCode => text()(); // 'en', 'pl', etc.
 
   TextColumn get country => text().nullable()();
   TextColumn get region => text().nullable()();
@@ -76,6 +86,12 @@ class LocalizedBrands extends Table {
   TextColumn get name => text()();
   TextColumn get logoUrl => text().nullable()();
   TextColumn get siteUrl => text().nullable()();
+  
+  // PRIMARY CONTENT (UK)
+  TextColumn get shortDescUk => text().nullable()();
+  TextColumn get fullDescUk => text().nullable()();
+  TextColumn get locationUk => text().nullable()();
+
   DateTimeColumn get createdAt => dateTime().nullable()();
 }
 
@@ -92,6 +108,7 @@ class LocalizedBrandTranslations extends Table {
 }
 
 // ─── LocalizedFarmers (Wide Table for 13 Languages) ──────────────────────────
+// ─── LocalizedFarmers (Main + Translations) ──────────────────────────
 class LocalizedFarmers extends Table {
   IntColumn get id => integer().autoIncrement()();
   
@@ -103,49 +120,23 @@ class LocalizedFarmers extends Table {
   TextColumn get regionUk => text().nullable()();
   TextColumn get countryUk => text().nullable()();
 
-  // OTHER LANGUAGES (12)
-  TextColumn get nameEn => text().nullable()();
-  TextColumn get descriptionHtmlEn => text().nullable()();
-  TextColumn get regionEn => text().nullable()();
-  TextColumn get countryEn => text().nullable()();
-
-  TextColumn get namePl => text().nullable()();
-  TextColumn get descriptionHtmlPl => text().nullable()();
-
-  TextColumn get nameDe => text().nullable()();
-  TextColumn get descriptionHtmlDe => text().nullable()();
-
-  TextColumn get nameFr => text().nullable()();
-  TextColumn get descriptionHtmlFr => text().nullable()();
-
-  TextColumn get nameEs => text().nullable()();
-  TextColumn get descriptionHtmlEs => text().nullable()();
-
-  TextColumn get nameIt => text().nullable()();
-  TextColumn get descriptionHtmlIt => text().nullable()();
-
-  TextColumn get namePt => text().nullable()();
-  TextColumn get descriptionHtmlPt => text().nullable()();
-
-  TextColumn get nameRo => text().nullable()();
-  TextColumn get descriptionHtmlRo => text().nullable()();
-
-  TextColumn get nameTr => text().nullable()();
-  TextColumn get descriptionHtmlTr => text().nullable()();
-
-  TextColumn get nameJa => text().nullable()();
-  TextColumn get descriptionHtmlJa => text().nullable()();
-
-  TextColumn get nameKo => text().nullable()();
-  TextColumn get descriptionHtmlKo => text().nullable()();
-
-  TextColumn get nameZh => text().nullable()();
-  TextColumn get descriptionHtmlZh => text().nullable()();
-
   // Coordinates & Metadata
   RealColumn get latitude => real().nullable()();
   RealColumn get longitude => real().nullable()();
   DateTimeColumn get createdAt => dateTime().nullable()();
+}
+
+class LocalizedFarmerTranslations extends Table {
+  IntColumn get farmerId => integer().references(LocalizedFarmers, #id)();
+  TextColumn get languageCode => text()(); // 'en', 'pl', etc.
+
+  TextColumn get name => text().nullable()();
+  TextColumn get descriptionHtml => text().nullable()();
+  TextColumn get region => text().nullable()();
+  TextColumn get country => text().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {farmerId, languageCode};
 }
 
 // ─── SphereRegions ───────────────────────────────────────────────────────────
@@ -175,53 +166,28 @@ class SphereRegionTranslations extends Table {
   Set<Column> get primaryKey => {regionId, languageCode};
 }
 
-// ─── SpecialtyArticles (Wide Table for 13 Languages) ─────────────────────────
 class SpecialtyArticles extends Table {
   IntColumn get id => integer().autoIncrement()();
   
   // PRIMARY (Ukrainian)
   TextColumn get titleUk => text().withDefault(const Constant('Тут має бути заголовок'))();
+  TextColumn get subtitleUk => text().nullable()();
   TextColumn get imageUrl => text().withDefault(const Constant('Тут має бути лінк на бакет'))();
   TextColumn get flagUrl => text().withDefault(const Constant('Тут має бути лінк на прапор'))();
   TextColumn get contentHtmlUk => text().withDefault(const Constant('Тут має бути текст статті'))();
   IntColumn get readTimeMin => integer().withDefault(const Constant(5))();
+}
 
-  // OTHER LANGUAGES (12)
-  TextColumn get titleEn => text().nullable()();
-  TextColumn get contentHtmlEn => text().nullable()();
+class SpecialtyArticleTranslations extends Table {
+  IntColumn get articleId => integer().references(SpecialtyArticles, #id)();
+  TextColumn get languageCode => text()(); // 'en', 'pl', etc.
 
-  TextColumn get titlePl => text().nullable()();
-  TextColumn get contentHtmlPl => text().nullable()();
+  TextColumn get title => text().nullable()();
+  TextColumn get subtitle => text().nullable()();
+  TextColumn get contentHtml => text().nullable()();
 
-  TextColumn get titleDe => text().nullable()();
-  TextColumn get contentHtmlDe => text().nullable()();
-
-  TextColumn get titleFr => text().nullable()();
-  TextColumn get contentHtmlFr => text().nullable()();
-
-  TextColumn get titleEs => text().nullable()();
-  TextColumn get contentHtmlEs => text().nullable()();
-
-  TextColumn get titleIt => text().nullable()();
-  TextColumn get contentHtmlIt => text().nullable()();
-
-  TextColumn get titlePt => text().nullable()();
-  TextColumn get contentHtmlPt => text().nullable()();
-
-  TextColumn get titleRo => text().nullable()();
-  TextColumn get contentHtmlRo => text().nullable()();
-
-  TextColumn get titleTr => text().nullable()();
-  TextColumn get contentHtmlTr => text().nullable()();
-
-  TextColumn get titleJa => text().nullable()();
-  TextColumn get contentHtmlJa => text().nullable()();
-
-  TextColumn get titleKo => text().nullable()();
-  TextColumn get contentHtmlKo => text().nullable()();
-
-  TextColumn get titleZh => text().nullable()();
-  TextColumn get contentHtmlZh => text().nullable()();
+  @override
+  Set<Column> get primaryKey => {articleId, languageCode};
 }
 
 // ─── CoffeeLots (User's Private) ─────────────────────────────────────────────
@@ -295,34 +261,11 @@ class BrewingRecipes extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get methodKey => text().unique()();
   
-  // PRIMARY (Ukrainian)
-  TextColumn get nameUk => text().withDefault(const Constant('Тут має бути назва'))();
+  // PRIMARY CONTENT (UK)
+  TextColumn get nameUk => text().withDefault(const Constant('Назва методу'))();
   TextColumn get descriptionUk => text().withDefault(const Constant('Тут має бути опис'))();
   TextColumn get imageUrl => text().withDefault(const Constant('Тут має бути лінк на фото'))();
 
-  // OTHER LANGUAGES (12)
-  TextColumn get nameEn => text().nullable()();
-  TextColumn get descriptionEn => text().nullable()();
-
-  TextColumn get namePl => text().nullable()();
-  TextColumn get descriptionPl => text().nullable()();
-
-  TextColumn get nameDe => text().nullable()();
-  TextColumn get descriptionDe => text().nullable()();
-
-  TextColumn get nameFr => text().nullable()();
-  TextColumn get descriptionFr => text().nullable()();
-
-  TextColumn get nameEs => text().nullable()();
-  TextColumn get descriptionEs => text().nullable()();
-
-  TextColumn get nameIt => text().nullable()();
-  TextColumn get descriptionIt => text().nullable()();
-
-  TextColumn get namePt => text().nullable()();
-  TextColumn get descriptionPt => text().nullable()();
-
-  TextColumn get nameRo => text().nullable()();
   TextColumn get descriptionRo => text().nullable()();
 
   TextColumn get nameTr => text().nullable()();
@@ -346,6 +289,18 @@ class BrewingRecipes extends Table {
   TextColumn get flavorProfile => text().withDefault(const Constant('Balanced'))();
   TextColumn get iconName => text().nullable()();
 }
+
+class BrewingRecipeTranslations extends Table {
+  TextColumn get recipeKey => text().references(BrewingRecipes, #methodKey)();
+  TextColumn get languageCode => text()(); // 'en', 'pl', etc.
+
+  TextColumn get name => text().nullable()();
+  TextColumn get description => text().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {recipeKey, languageCode};
+}
+
 
 // ─── RecommendedRecipes ──────────────────────────────────────────────────────
 class RecommendedRecipes extends Table {

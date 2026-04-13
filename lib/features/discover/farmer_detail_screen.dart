@@ -267,10 +267,11 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                     ),
                   ),
 
-                  // Biography in Markdown
+                  // Biography in Markdown (handles HTML tags via gitHubWeb extension set)
                   if (bio.isNotEmpty)
                     MarkdownBody(
                       data: bio,
+                      extensionSet: ExtensionSet.gitHubWeb,
                       styleSheet: markdownStyle,
                       selectable: true,
                       softLineBreak: true,
@@ -289,8 +290,9 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
 
   /// Combines description + story into one coherent Markdown document.
   String _buildBio(String description, String story) {
-    // We only return the story here because description is already displayed 
-    // as a subtitle above the divider in the build method.
+    // If story is identical to description (some cloud data might have this),
+    // we return empty to avoid showing the same block twice.
+    if (story.trim() == description.trim()) return '';
     return story.trim();
   }
 }

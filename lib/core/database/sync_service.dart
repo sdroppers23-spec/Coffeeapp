@@ -242,7 +242,7 @@ class SyncService {
             longitude: Value((item['longitude'] as num?)?.toDouble() ?? 0.0),
             nameUk: Value(item['name_uk'] as String? ?? item['name'] as String? ?? ''),
             descriptionHtmlUk: Value(_cleanContent(item['description_html_uk'] as String? ?? item['description_uk'] as String? ?? item['description'] as String? ?? '')),
-            storyUk: Value(_cleanContent(item['story_uk'] as String? ?? item['story'] as String? ?? item['description_html_uk'] as String? ?? '')),
+            storyUk: Value(_cleanContent(item['story_uk'] as String? ?? item['story'] as String? ?? '')),
             regionUk: Value(item['region_uk'] as String? ?? item['region'] as String? ?? ''),
             countryUk: Value(item['country_uk'] as String? ?? item['country'] as String? ?? ''),
           );
@@ -300,6 +300,7 @@ class SyncService {
       for (final item in data) {
         try {
           final id = item['id'] as int;
+          debugPrint('SYNC: Processing article ID: $id');
 
           String imageUrl = item['image_url'] as String? ?? '';
           if (imageUrl.isNotEmpty && !imageUrl.startsWith('http') && !imageUrl.startsWith('assets/')) {
@@ -322,6 +323,8 @@ class SyncService {
               .select()
               .eq('article_id', id);
 
+          debugPrint('SYNC: Found ${translationsData.length} translations for article $id');
+
           final List<SpecialtyArticleTranslationsCompanion> translations = [];
           for (final t in translationsData) {
              translations.add(SpecialtyArticleTranslationsCompanion(
@@ -340,9 +343,9 @@ class SyncService {
           errorCount++;
         }
       }
-      debugPrint('SYNC: Articles synchronized ($successCount success, $errorCount errors)');
+      debugPrint('SYNC: Articles total - SUCCESS: $successCount, ERRORS: $errorCount');
     } catch (e) {
-      debugPrint('SYNC ERROR (Articles): $e');
+      debugPrint('SYNC CRITICAL ERROR (Articles): $e');
       rethrow;
     }
   }
@@ -415,11 +418,14 @@ class SyncService {
     if (supabase == null) return;
     try {
       debugPrint('SYNC: Pulling methods from brewing_recipes...');
-      final data = await supabase!.from('brewing_recipes').select();
+      int successCount = 0;
+      int errorCount = 0;
       
       for (final item in data) {
         try {
           final key = item['method_key'] as String;
+          debugPrint('SYNC: Processing brewing method: $key');
+
           final companion = BrewingRecipesCompanion(
             methodKey: Value(key),
             nameUk: Value(item['name_uk'] as String? ?? item['name'] as String? ?? ''),
@@ -440,6 +446,8 @@ class SyncService {
               .select()
               .eq('recipe_key', key);
 
+          debugPrint('SYNC: Found ${transData.length} translations for method $key');
+
           final List<BrewingRecipeTranslationsCompanion> translations = [];
           for (final t in transData) {
             translations.add(BrewingRecipeTranslationsCompanion(
@@ -451,12 +459,15 @@ class SyncService {
           }
 
           await db.smartUpsertBrewingRecipe(companion, translations);
+          successCount++;
         } catch (e) {
           debugPrint('SYNC ERROR for method ${item['method_key']}: $e');
+          errorCount++;
         }
       }
+      debugPrint('SYNC: Brewing methods total - SUCCESS: $successCount, ERRORS: $errorCount');
     } catch (e) {
-      debugPrint('SYNC ERROR (Brewing Recipes): $e');
+      debugPrint('SYNC CRITICAL ERROR (Brewing Recipes): $e');
     }
   }
 
@@ -533,15 +544,14 @@ class SyncService {
     await syncAll(onProgress: onProgress);
   }
 
-  /// Removes technical keys like {p1}, [h2], {1}, etc, and strips HTML tags.
+  /// Removes technical keys like {p1}, [h2], {1}, etc. 
+  /// Keeps HTML tags for structure.
   String _cleanContent(String? content) {
     if (content == null) return '';
-    // 1. Removes patterns like {anything} or [anything]
-    // 2. Removes HTML tags like <p>, </p>, <div>, etc.
+    // Removes patterns like {anything} or [anything]
     return content
         .replaceAll(RegExp(r'\{[^}]+\}'), '')
         .replaceAll(RegExp(r'\[[^\]]+\]'), '')
-        .replaceAll(RegExp(r'<[^>]*>'), '')
         .trim();
   }
 }

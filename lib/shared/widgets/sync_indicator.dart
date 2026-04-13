@@ -47,7 +47,7 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
     final prefs = ref.watch(sharedPreferencesProvider);
 
     // Version Guard (Cache Buster for v17 Stabilization)
-    const resyncKey = 'force_resync_v17_v13_final'; // unique key for this update
+    const resyncKey = 'force_resync_v17_structured_v2_final'; // unique key for this update
     final hasResynced = prefs.getBool(resyncKey) ?? false;
 
     if (isOnline && !hasResynced) {
@@ -75,6 +75,8 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
 
   Future<void> syncEverything({bool force = false}) async {
     state = state.copyWith(state: SyncState.syncing, lastError: null);
+    // Tiny delay to ensure UI updates before heavy sync work begins
+    await Future.delayed(const Duration(milliseconds: 500));
     try {
       await _syncService.syncAll(
         force: force,

@@ -25,7 +25,7 @@ class MiniSyncIndicator extends ConsumerWidget {
       switch (syncData.state) {
         case SyncState.syncing:
           statusColor = const Color(0xFFC8A96E);
-          final percent = (syncData.progress * 100).toInt();
+          final percent = (syncData.currentProgress * 100).toInt();
           statusText = 'Sync $percent%';
           statusIcon = Icons.sync;
           isSpinning = true;

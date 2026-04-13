@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:markdown/markdown.dart' as md;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/database/dtos.dart';
@@ -271,7 +272,7 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                   if (bio.isNotEmpty)
                     MarkdownBody(
                       data: bio,
-                      extensionSet: ExtensionSet.gitHubWeb,
+                      extensionSet: md.ExtensionSet.gitHubWeb,
                       styleSheet: markdownStyle,
                       selectable: true,
                       softLineBreak: true,

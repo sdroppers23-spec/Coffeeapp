@@ -421,6 +421,8 @@ class SyncService {
       int successCount = 0;
       int errorCount = 0;
       
+      final data = await supabase!.from('brewing_recipes').select();
+      
       for (final item in data) {
         try {
           final key = item['method_key'] as String;

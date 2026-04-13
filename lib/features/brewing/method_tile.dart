@@ -27,50 +27,50 @@ const _methodMeta = <String, _MethodMeta>{
   'v60': _MethodMeta(
     name: 'V60 Pour Over',
     nameUk: 'V60 Пур-овер',
-    assetPath: '${CoffeeDataSeed.bucketUrl}/methods/v60.png',
+    assetPath: '${CoffeeDataSeed.methodsBucket}v60.png',
     gradient: [Color(0xFFD4A574), Color(0xFF8B5E3C)],
   ),
   'chemex': _MethodMeta(
     name: 'Chemex',
     nameUk: 'Chemex',
-    assetPath: '${CoffeeDataSeed.bucketUrl}/methods/chemex.png',
+    assetPath: '${CoffeeDataSeed.methodsBucket}chemex.png',
     gradient: [Color(0xFFE8D5B7), Color(0xFF9C7048)],
   ),
   'aeropress': _MethodMeta(
     name: 'Aeropress',
     nameUk: 'Аеропрес',
-    assetPath: '${CoffeeDataSeed.bucketUrl}/methods/aeropress.png',
+    assetPath: '${CoffeeDataSeed.methodsBucket}aeropress.png',
     gradient: [Color(0xFFB8C4CC), Color(0xFF5A7A8A)],
   ),
   'french_press': _MethodMeta(
     name: 'French Press',
     nameUk: 'Французький прес',
-    assetPath: '${CoffeeDataSeed.bucketUrl}/methods/french_press.png',
+    assetPath: '${CoffeeDataSeed.methodsBucket}french_press.png',
     gradient: [Color(0xFFC8A96E), Color(0xFF7A5C2E)],
   ),
   'espresso': _MethodMeta(
     name: 'Espresso',
     nameUk: 'Еспресо',
-    assetPath: '${CoffeeDataSeed.bucketUrl}/methods/espresso.png',
+    assetPath: '${CoffeeDataSeed.methodsBucket}espresso.png',
     gradient: [Color(0xFF8B2635), Color(0xFF4A1520)],
   ),
   'clever': _MethodMeta(
     name: 'Clever Dripper',
     nameUk: 'Clever Dripper',
-    assetPath: '${CoffeeDataSeed.bucketUrl}/methods/clever_dripper.png', 
+    assetPath: '${CoffeeDataSeed.methodsBucket}clever_dripper.png', 
     gradient: [Color(0xFFB8860B), Color(0xFF556B2F)],
   ),
   'cold_brew': _MethodMeta(
     name: 'Cold Brew',
     nameUk: 'Холодна екстракція',
-    assetPath: '${CoffeeDataSeed.bucketUrl}/methods/cold_brew.png',
+    assetPath: '${CoffeeDataSeed.methodsBucket}cold_brew.png',
     gradient: [Color(0xFF4A90D9), Color(0xFF1A3A5C)],
     icon: Icons.ac_unit_outlined,
   ),
   'siphon': _MethodMeta(
     name: 'Siphon',
     nameUk: 'Сифон',
-    assetPath: '${CoffeeDataSeed.bucketUrl}/methods/siphon.png',
+    assetPath: '${CoffeeDataSeed.methodsBucket}siphon.png',
     gradient: [Color(0xFF9370DB), Color(0xFF4B0082)],
     icon: Icons.science_outlined,
   ),
@@ -95,7 +95,7 @@ class MethodTile extends StatelessWidget {
         _MethodMeta(
           name: key.toUpperCase(),
           nameUk: key.replaceAll('_', ' '),
-          assetPath: '${CoffeeDataSeed.bucketUrl}/methods/v60.png',
+          assetPath: '${CoffeeDataSeed.methodsBucket}v60.png',
           gradient: const [Color(0xFFD4A574), Color(0xFF8B5E3C)],
         );
 

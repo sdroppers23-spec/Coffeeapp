@@ -389,7 +389,7 @@ class MyLotListCard extends ConsumerWidget {
             // Restore or Edit
             if (onRestoreSwipe != null) {
               onRestoreSwipe!(lot);
-              return false;
+              return true;
             }
             if (onEditSwipe != null) {
               onEditSwipe!(lot);
@@ -568,20 +568,26 @@ class _FreshnessProgressBar extends StatelessWidget {
     if (factor < 0.0) factor = 0.0;
     if (factor > 1.0) factor = 1.0;
 
-    // 4. Determine Dynamic Color
-    Color getDynamicColor(double f) {
-      if (f > 0.75) return const Color(0xFF2DD4BF); // Teal
-      if (f > 0.4) return const Color(0xFFFACC15);  // Yellow
-      if (f > 0.15) return const Color(0xFFFB923C); // Orange
-      return const Color(0xFFEF4444);              // Red
+    // 4. Determine Smooth Dynamic Color (Color.lerp)
+    Color getSmoothColor(double f) {
+      if (f > 0.5) {
+        // Interpolate between Yellow (0.5) and Teal (1.0)
+        return Color.lerp(const Color(0xFFFACC15), const Color(0xFF2DD4BF), (f - 0.5) / 0.5)!;
+      } else if (f > 0.25) {
+        // Interpolate between Orange (0.25) and Yellow (0.5)
+        return Color.lerp(const Color(0xFFFB923C), const Color(0xFFFACC15), (f - 0.25) / 0.25)!;
+      } else {
+        // Interpolate between Red (0.0) and Orange (0.25)
+        return Color.lerp(const Color(0xFFEF4444), const Color(0xFFFB923C), f / 0.25)!;
+      }
     }
 
-    final Color statusColor = isExpired ? Colors.redAccent : getDynamicColor(factor);
+    final Color statusColor = getSmoothColor(factor);
     final String labelText;
     if (isExpired) {
       labelText = isUk ? 'ТЕРМІН ВИЙШОВ' : 'EXPIRED';
     } else {
-      final int daysLeft = limit - ageDays;
+      final int daysLeft = (limit - ageDays).clamp(0, limit);
       labelText = '$daysLeft ${isUk ? 'дн. лишилось' : 'd. left'}';
     }
 

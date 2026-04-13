@@ -58,6 +58,11 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   bool _isFavorite = false;
   bool _isArchived = false;
 
+  // Controllers to prevent cursor jumps and fix focus
+  late final TextEditingController _roasteryController;
+  late final TextEditingController _coffeeNameController;
+  late final TextEditingController _originCountryController;
+
   // ─── Sensory (1-5) ────────────────────────────────────────────────
   double _aroma = 3;
   double _sweetness = 3;
@@ -78,12 +83,20 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(() => setState(() {}));
+
+    _roasteryController = TextEditingController(text: widget.initialLot?.roasteryName ?? '');
+    _coffeeNameController = TextEditingController(text: widget.initialLot?.coffeeName ?? '');
+    _originCountryController = TextEditingController(text: widget.initialLot?.originCountry ?? '');
+
     if (widget.initialLot != null) _populateFields(widget.initialLot!);
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _roasteryController.dispose();
+    _coffeeNameController.dispose();
+    _originCountryController.dispose();
     super.dispose();
   }
 
@@ -136,9 +149,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   }
 
   bool get _canSave => 
-      _roasteryName.trim().isNotEmpty && 
-      _coffeeName.trim().isNotEmpty && 
-      _originCountry.trim().isNotEmpty;
+      _roasteryController.text.trim().isNotEmpty && 
+      _coffeeNameController.text.trim().isNotEmpty && 
+      _originCountryController.text.trim().isNotEmpty;
 
   Future<void> _saveLot() async {
     if (!_canSave) return;
@@ -354,7 +367,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       children: [
         _sectionLabel('Обсмажчик'),
         _darkCard(children: [
-          _fieldRow(label: 'NAME *', value: _roasteryName, onChanged: (v) => _roasteryName = v),
+          _fieldRow(label: 'NAME *', value: '', controller: _roasteryController, onChanged: (_) {}),
           _divider(),
           _fieldRow(label: 'COUNTRY', value: _roasteryCountry, onChanged: (v) => _roasteryCountry = v),
         ]),
@@ -462,7 +475,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       children: [
         _sectionLabel('Кава та лот'),
         _darkCard(children: [
-          _fieldRow(label: 'COFFEE NAME *', value: _coffeeName, onChanged: (v) => _coffeeName = v),
+          _fieldRow(label: 'COFFEE NAME *', value: '', controller: _coffeeNameController, onChanged: (_) {}),
           _divider(),
           _fieldRow(label: 'LOT NUMBER', value: _lotNumber, onChanged: (v) => _lotNumber = v),
           _divider(),
@@ -471,7 +484,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         ]),
         _sectionLabel('Походження'),
         _darkCard(children: [
-          _fieldRow(label: 'COUNTRY *', value: _originCountry, onChanged: (v) => _originCountry = v),
+          _fieldRow(label: 'COUNTRY *', value: '', controller: _originCountryController, onChanged: (_) {}),
           _divider(),
           _fieldRow(label: 'REGION', value: _region, onChanged: (v) => _region = v),
           _divider(),
@@ -539,6 +552,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     required String label,
     required String value,
     required Function(String) onChanged,
+    TextEditingController? controller,
     TextInputType? keyboardType,
     String? suffix,
   }) {
@@ -556,13 +570,16 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             children: [
               Expanded(
                 child: TextField(
-                  controller: TextEditingController(text: value)
+                  controller: controller ?? TextEditingController(text: value)
                     ..selection = TextSelection.fromPosition(TextPosition(offset: value.length)),
                   style: GoogleFonts.outfit(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
                   inputFormatters: keyboardType == TextInputType.number 
                     ? [FilteringTextInputFormatter.digitsOnly]
                     : [GlobalCoffeeInputFormatter()],
-                  onChanged: onChanged,
+                  onChanged: (v) {
+                    onChanged(v);
+                    setState(() {}); // Trigger _canSave update
+                  },
                 ),
               ),
               if (suffix != null)

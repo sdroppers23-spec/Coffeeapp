@@ -10,7 +10,11 @@ class CoffeeDataSeed {
   final AppDatabase db;
   CoffeeDataSeed(this.db);
 
-  static const String bucketUrl = 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles';
+  static const String baseUrl = 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public';
+  static const String articlesBucket = '$baseUrl/specialty-articles/';
+  static const String farmersBucket = '$baseUrl/Farmers/';
+  static const String methodsBucket = '$baseUrl/Methods/';
+  static const String flagsBucket = '$baseUrl/Flags/';
 
   Future<void> seedAll({
     bool force = false,
@@ -79,7 +83,7 @@ class CoffeeDataSeed {
         'main': LocalizedBrandsCompanion.insert(
           id: const Value(1),
           name: 'Mad Heads',
-          logoUrl: const Value('$bucketUrl/brands/mad_heads.png'),
+          logoUrl: Value('$articlesBucket/brands/mad_heads.png'),
           siteUrl: const Value('https://madheadscoffee.com/'),
         ),
         'trans': [
@@ -103,7 +107,7 @@ class CoffeeDataSeed {
         'main': LocalizedBrandsCompanion.insert(
           id: const Value(2),
           name: '3Champs',
-          logoUrl: const Value('$bucketUrl/brands/three_champs.png'),
+          logoUrl: Value('$articlesBucket/brands/three_champs.png'),
           siteUrl: const Value('https://3champsroastery.com.ua/'),
         ),
         'trans': [
@@ -160,7 +164,7 @@ class CoffeeDataSeed {
 *   **Термальний шок:** Використання різкої зміни температури води (гаряча 40°C / холодна 12°C) для миттєвого закриття пор зерна, що дозволяє "запечатати" унікальні ароматичні сполуки всередині.
 *   **Ферментація в біореакторах:** Використання сталевих резервуарів з повним контролем тиску та температури.
 *   **Озонова стерилізація:** Очищення ягід озоном перед обробкою для повного видалення небажаних дріжджів та бактерій.''',
-        imageUrl: '$bucketUrl/methods/farmer_wilton_benitez.png',
+        imageUrl: 'farmer_wilton_benitez.png',
       ),
       _FarmerEntry(
         id: 2,
@@ -177,7 +181,7 @@ class CoffeeDataSeed {
 #### Авторські профілі:
 *   **Perla Negra:** Метод, при якому ягоди сушаться на сонці, але на ніч накриваються плівкою для стимуляції внутрішньої ферментації.
 *   **Black Diamond:** Надповільне сушіння при низьких температурах, що надає каві екстремальну солодкість та лікерні ноти.''',
-        imageUrl: '$bucketUrl/methods/farmer_oscar_francisca_chacon_1775463574148.png',
+        imageUrl: 'farmer_oscar_francisca_chacon_1775463574148.png',
       ),
       _FarmerEntry(
         id: 3,
@@ -194,7 +198,7 @@ class CoffeeDataSeed {
 #### Інновації:
 *   **Двоетапна анаеробна ферментація:** Спочатку ферментація відбувається в цілій ягоді, потім — у клейковині після депульпації.
 *   **Eco-Enigma:** Спеціальна машина для сушіння в закритому циклі, яка видаляє вологу без впливу зовнішнього середовища.''',
-        imageUrl: '$bucketUrl/methods/farmer_samuel_rony.png',
+        imageUrl: 'farmer_samuel_rony.png',
       ),
       _FarmerEntry(
         id: 4,
@@ -211,7 +215,7 @@ class CoffeeDataSeed {
 #### Сміливі експерименти:
 *   **Fruit Co-fermentation:** Додавання свіжих фруктів (персиків, полуниці, маракуї) безпосередньо в танки під час ферментації.
 *   **Ice Fermentation:** Використання крижаної води для уповільнення процесів і досягнення максимальної чистоти чашки.''',
-        imageUrl: '$bucketUrl/methods/farmer_carlos_felipe_arcila_1775463591773.png',
+        imageUrl: 'farmer_carlos_felipe_arcila_1775463591773.png',
       ),
       _FarmerEntry(
         id: 5,
@@ -228,7 +232,7 @@ class CoffeeDataSeed {
 #### Досягнення:
 *   **Кенійський метод:** Впровадила метод подвійної ферментації в Сальвадорі, що дозволило отримати лоти з надзвичайною чистотою та кислотністю.
 *   **Піонер Каскари:** Була однією з перших, хто почав професійно збирати та продавати каскару.''',
-        imageUrl: '$bucketUrl/methods/farmer_aida_batlle_1775463622660.png',
+        imageUrl: 'farmer_aida_batlle_1775463622660.png',
       ),
       _FarmerEntry(
         id: 6,
@@ -245,7 +249,7 @@ class CoffeeDataSeed {
 #### Проєкт Gesha Village:
 *   **Збереження генетики:** Вони виділили кілька різних ефіопських диких сортів (Gori Gesha 2011, Gesha 1931).
 *   **Екосистема:** Ферма інтегрована в природний ландшафт.''',
-        imageUrl: '$bucketUrl/methods/farmer_adam_rachel_overton_1775463606712.png',
+        imageUrl: 'farmer_adam_rachel_overton_1775463606712.png',
       ),
       _FarmerEntry(
         id: 7,
@@ -262,7 +266,7 @@ class CoffeeDataSeed {
 #### Філософія Wave:
 *   **Хвильова ферментація:** Метод, де температура ферментації змінюється циклічно.
 *   **Біодинаміка:** Повна відмова від хімікатів та робота з циклами природи.''',
-        imageUrl: '$bucketUrl/methods/farmer_pepe_jijon_1775463639704.png',
+        imageUrl: 'farmer_pepe_jijon_1775463639704.png',
       ),
       _FarmerEntry(
         id: 8,
@@ -279,7 +283,7 @@ class CoffeeDataSeed {
 #### Його місія:
 *   **Генетичне розмаїття:** На фермі вирощується понад 40 різних сортів.
 *   **Екологія:** Купівля та охорона гектарів дикого тропічного лісу навколо плантацій.''',
-        imageUrl: '$bucketUrl/methods/farmer_alejo_castro_1775463657692.png',
+        imageUrl: 'farmer_alejo_castro_1775463657692.png',
       ),
       _FarmerEntry(
         id: 9,
@@ -295,7 +299,7 @@ class CoffeeDataSeed {
 
 #### Masterpieces by Daterra:
 *   **Експериментальні лоти:** Кожного року випускає серію "Masterpieces" — результат найбільш сміливих експериментів лабораторії.''',
-        imageUrl: '$bucketUrl/methods/farmer_luis_norberto_pascoal_1775463672082.png',
+        imageUrl: 'farmer_luis_norberto_pascoal_1775463672082.png',
       ),
     ];
 
@@ -303,7 +307,7 @@ class CoffeeDataSeed {
       await db.smartUpsertFarmer(
         LocalizedFarmersCompanion.insert(
           id: Value(f.id),
-          imageUrl: Value(f.imageUrl),
+          imageUrl: Value(f.imageUrl.startsWith('http') ? f.imageUrl : '$farmersBucket${f.imageUrl}'),
           createdAt: Value(DateTime.now()),
         ),
         [
@@ -342,7 +346,7 @@ class CoffeeDataSeed {
         titleUk: 'Стандарти та Етика',
         categoryEn: 'Education',
         categoryUk: 'Освіта',
-        imageUrl: '$bucketUrl/methods/encyclopedia_module_1_standards_1775401113100.png',
+        imageUrl: 'encyclopedia_module_1_standards_1775401113100.png',
         contentUk: '''### 1. Фундамент Specialty Coffee
 Specialty Coffee — це не просто кава, це система контролю якості від ферми до чашки.
 
@@ -360,7 +364,7 @@ Specialty Coffee — це не просто кава, це система кон
         titleUk: 'Ботаніка та Теруар',
         categoryEn: 'Education',
         categoryUk: 'Освіта',
-        imageUrl: '$bucketUrl/methods/encyclopedia_module_2_botany_1775401234532.png',
+        imageUrl: 'encyclopedia_module_2_botany_1775401234532.png',
         contentUk: '''### Генетика та Середовище
 Смак кави закладається в зерні задовго до обсмажування.
 
@@ -378,7 +382,7 @@ Specialty Coffee — це не просто кава, це система кон
         titleUk: 'Збір та Сортування',
         categoryEn: 'Education',
         categoryUk: 'Освіта',
-        imageUrl: '$bucketUrl/methods/encyclopedia_module_3_agronomy_1775401618408.png',
+        imageUrl: 'encyclopedia_module_3_agronomy_1775401618408.png',
         contentUk: '''### Тільки стиглі ягоди
 У спешелті допускається лише **Hand Picking** — ручний збір.
 
@@ -395,7 +399,7 @@ Specialty Coffee — це не просто кава, це система кон
         titleUk: 'Обробка та Ферментація',
         categoryEn: 'Education',
         categoryUk: 'Освіта',
-        imageUrl: '$bucketUrl/methods/encyclopedia_module_4_advanced_processing_1775401484863.png',
+        imageUrl: 'encyclopedia_module_4_advanced_processing_1775401484863.png',
         contentUk: '''### Магія перетворення
 Обробка — це процес видалення шарів кавової ягоди для вивільнення зерна.
 
@@ -413,7 +417,7 @@ Specialty Coffee — це не просто кава, це система кон
         titleUk: 'Контроль Якості (Green Coffee)',
         categoryEn: 'Education',
         categoryUk: 'Освіта',
-        imageUrl: '$bucketUrl/methods/encyclopedia_module_5_milling_1775401521163.png',
+        imageUrl: 'encyclopedia_module_5_milling_1775401521163.png',
         contentUk: '''### Аналіз зеленого зерна
 Перед обсмажуванням кава проходить суворий контроль.
 
@@ -430,7 +434,7 @@ Specialty Coffee — це не просто кава, це система кон
         titleUk: 'Наука Обсмажування',
         categoryEn: 'Education',
         categoryUk: 'Освіта',
-        imageUrl: '$bucketUrl/methods/encyclopedia_module_6_roasting_1775401540972.png',
+        imageUrl: 'encyclopedia_module_6_roasting_1775401540972.png',
         contentUk: '''### Реакція Маяра та Карамелізація
 Обсмажування — це керована хімічна реакція.
 
@@ -448,7 +452,7 @@ Specialty Coffee — це не просто кава, це система кон
         titleUk: 'Сенсорика та Хімія Води',
         categoryEn: 'Education',
         categoryUk: 'Освіта',
-        imageUrl: '$bucketUrl/methods/encyclopedia_module_7_sensory_analysis_1775401560217.png',
+        imageUrl: 'encyclopedia_module_7_sensory_analysis_1775401560217.png',
         contentUk: '''### Смак — це хімія
 Ми п'ємо розчин, де 98-99% — це вода.
 
@@ -466,7 +470,7 @@ Specialty Coffee — це не просто кава, це система кон
         titleUk: 'Фізика та Хімія Еспресо',
         categoryEn: 'Education',
         categoryUk: 'Освіта',
-        imageUrl: '$bucketUrl/methods/encyclopedia_module_8_espresso_physics_1775401579031.png',
+        imageUrl: 'encyclopedia_module_8_espresso_physics_1775401579031.png',
         contentUk: '''### Екстракція під тиском
 Еспресо — це найбільш концентрований спосіб заварювання кави.
 
@@ -484,7 +488,7 @@ Specialty Coffee — це не просто кава, це система кон
         titleUk: 'Діджиталізація та Сталий розвиток',
         categoryEn: 'Education',
         categoryUk: 'Освіта',
-        imageUrl: '$bucketUrl/methods/encyclopedia_module_9_digitalization_1775401596943.png',
+        imageUrl: 'encyclopedia_module_9_digitalization_1775401596943.png',
         contentUk: '''### Майбутнє індустрії
 Сучасні технології допомагають зробити ланцюжок постачання прозорим.
 
@@ -502,7 +506,7 @@ Specialty Coffee — це не просто кава, це система кон
       await db.smartUpsertArticle(
         SpecialtyArticlesCompanion.insert(
           id: Value(articleId),
-          imageUrl: a.imageUrl,
+          imageUrl: a.imageUrl.startsWith('http') ? a.imageUrl : '$articlesBucket${a.imageUrl}',
           readTimeMin: 5,
         ),
         [

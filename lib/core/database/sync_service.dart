@@ -9,7 +9,11 @@ class SyncService {
   final AppDatabase db;
   final SupabaseClient? supabase;
 
-  static const String bucketUrl = 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/';
+  static const String baseUrl = 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public';
+  static const String articlesBucket = '$baseUrl/specialty-articles/';
+  static const String methodsBucket = '$baseUrl/Methods/';
+  static const String flagsBucket = '$baseUrl/Flags/';
+  static const String farmersBucket = '$baseUrl/Farmers/';
 
   SyncService(this.db, [this.supabase]);
 
@@ -80,7 +84,7 @@ class SyncService {
           final planetEmojis = ['🌎', '🌍', '🌏', '🪐', '☄️', '🌌', 'planet', 'earth'];
           if (planetEmojis.contains(emoji.trim()) || emoji.isEmpty) {
             final countryLower = (item['country_en'] as String? ?? 'unknown').toLowerCase().replaceAll(' ', '_');
-            emoji = '${bucketUrl}flags/$countryLower.png';
+            emoji = '${flagsBucket}$countryLower.png';
             debugPrint('SYNC: Healed planet emoji for ID $id to flag photo: $emoji');
           }
 
@@ -208,7 +212,7 @@ class SyncService {
           if (imageUrl.isNotEmpty && !imageUrl.startsWith('http') && !imageUrl.startsWith('assets/')) {
             // Handle cloud prefixing for generic filenames
             final fileName = imageUrl.split('/').last;
-            imageUrl = '$bucketUrl/farmers/$fileName';
+            imageUrl = '$farmersBucket$fileName';
           }
 
           final farmer = LocalizedFarmersCompanion(
@@ -281,7 +285,7 @@ class SyncService {
           String imageUrl = item['image_url'] as String? ?? '';
           if (imageUrl.isNotEmpty && !imageUrl.startsWith('http') && !imageUrl.startsWith('assets/')) {
              final fileName = imageUrl.split('/').last;
-             imageUrl = '$bucketUrl/$fileName';
+             imageUrl = '$articlesBucket$fileName';
           }
 
           final article = SpecialtyArticlesCompanion(

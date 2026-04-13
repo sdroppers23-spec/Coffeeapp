@@ -35,24 +35,11 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   late TabController _tabController;
 
   // ─── Form State ───────────────────────────────────────────────────
-  String _roasteryName = '';
-  String _roasteryCountry = 'Ukraine';
-  String _coffeeName = '';
-  String _originCountry = '';
-  String _region = '';
-  String _altitude = '';
-  String _varieties = '';
-  String _process = 'Washed';
-  final String _otherProcess = '';
   bool _isDecaf = false;
   String _decafProcess = 'Sugar Cane';
-  String _flavorProfile = '';
   String _roastLevel = 'Medium';
   DateTime _roastDate = DateTime.now();
   DateTime? _openedAt;
-  String _weight = '250g';
-  String _scaScore = '85';
-  String _lotNumber = '';
   bool _isOpen = false;
   bool _isGround = false;
   bool _isFavorite = false;
@@ -104,19 +91,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     _lotNumberController = TextEditingController(text: widget.initialLot?.lotNumber ?? '');
     _weightController = TextEditingController(text: widget.initialLot?.weight ?? '250g');
     
-    // Synchronize initial strings with controllers
-    _roasteryName = _roasteryController.text;
-    _roasteryCountry = _roasteryCountryController.text;
-    _coffeeName = _coffeeNameController.text;
-    _originCountry = _originCountryController.text;
-    _region = _regionController.text;
-    _altitude = _altitudeController.text;
-    _varieties = _varietiesController.text;
-    _process = _processController.text;
-    _flavorProfile = _flavorProfileController.text;
-    _scaScore = _scaScoreController.text;
-    _lotNumber = _lotNumberController.text;
-    _weight = _weightController.text;
+    // Initial controllers are set based on widget.initialLot in initState
     
     final pricing = widget.initialLot?.pricing ?? {};
     _priceController = TextEditingController(text: pricing['retail_250']?.toString() ?? '');
@@ -151,14 +126,15 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
 
   void _populateFields(CoffeeLotDto lot) {
     setState(() {
-      _roasteryCountry = lot.roasteryCountry ?? 'Ukraine';
-      _process = lot.process ?? 'Washed';
+      String process = lot.process ?? 'Washed';
       _isDecaf = lot.isDecaf == true;
-      if (_isDecaf && _process.contains('(')) {
-        final parts = _process.split('(');
-        _process = parts[0].trim();
+      if (_isDecaf && process.contains('(')) {
+        final parts = process.split('(');
+        process = parts[0].trim();
         _decafProcess = parts[1].replaceAll(')', '').trim();
       }
+      _processController.text = process; // Set the clean process name to the controller
+      
       _roastLevel = lot.roastLevel ?? 'Medium';
       _roastDate = lot.roastDate ?? DateTime.now();
       _openedAt = lot.openedAt;
@@ -193,9 +169,10 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     final db = ref.read(databaseProvider);
     final lotId = widget.initialLot?.id ?? const Uuid().v4();
 
+    final processStr = _processController.text;
     final effectiveProcess = _isDecaf
-        ? '$_process ($_decafProcess)'
-        : (_process == 'Other' ? _otherProcess : _process);
+        ? '$processStr ($_decafProcess)'
+        : processStr;
 
     final sensoryMap = {
       'aroma': _aroma.toInt(),
@@ -223,7 +200,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           id: Value(lotId),
           userId: Value(user.id),
           roasteryName: Value(_roasteryController.text),
-          roasteryCountry: Value(_roasteryCountry),
+          roasteryCountry: Value(_roasteryCountryController.text),
           coffeeName: Value(_coffeeNameController.text),
           originCountry: Value(_originCountryController.text),
           region: Value(_regionController.text),
@@ -320,7 +297,29 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             ),
           ),
           const Spacer(),
-          const SizedBox(width: 36),
+          if (widget.initialLot != null) ...[
+            GestureDetector(
+              onTap: () {
+                setState(() => _isArchived = !_isArchived);
+              },
+              child: Icon(
+                _isArchived ? Icons.unarchive_rounded : Icons.archive_outlined,
+                color: const Color(0xFFC8A96E),
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 16),
+          ],
+          GestureDetector(
+            onTap: () {
+              setState(() => _isFavorite = !_isFavorite);
+            },
+            child: Icon(
+              _isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+              color: _isFavorite ? Colors.red : const Color(0xFFC8A96E),
+              size: 20,
+            ),
+          ),
         ],
       ),
     );
@@ -398,9 +397,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       children: [
         _sectionLabel('Обсмажчик'),
         _darkCard(children: [
-          _fieldRow(label: 'NAME *', controller: _roasteryController, onChanged: (v) => _roasteryName = v),
+          _fieldRow(label: 'NAME *', controller: _roasteryController),
           _divider(),
-          _fieldRow(label: 'COUNTRY', controller: _roasteryCountryController, onChanged: (v) => _roasteryCountry = v),
+          _fieldRow(label: 'COUNTRY', controller: _roasteryCountryController),
         ]),
         _sectionLabel('Дата обсмажування'),
         _darkCard(children: [
@@ -513,19 +512,16 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           _fieldRow(
             label: 'COUNTRY *',
             controller: _originCountryController,
-            onChanged: (v) => _originCountry = v,
           ),
           _divider(),
           _fieldRow(
             label: 'REGION',
             controller: _regionController,
-            onChanged: (v) => _region = v,
           ),
           _divider(),
           _fieldRow(
             label: 'ALTITUDE',
             controller: _altitudeController,
-            onChanged: (v) => _altitude = v,
             keyboardType: TextInputType.number,
             suffix: 'm',
           ),
@@ -533,7 +529,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           _fieldRow(
             label: 'VARIETALS',
             controller: _varietiesController,
-            onChanged: (v) => _varieties = v,
           ),
         ]),
         _sectionLabel('Обробка та смакові ноти'),
@@ -541,13 +536,11 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           _fieldRow(
             label: 'PROCESS',
             controller: _processController,
-            onChanged: (v) => _process = v,
           ),
           _divider(),
           _fieldRow(
             label: 'FLAVOR NOTES',
             controller: _flavorProfileController,
-            onChanged: (v) => _flavorProfile = v,
           ),
         ]),
       ],

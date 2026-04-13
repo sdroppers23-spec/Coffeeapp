@@ -38,7 +38,7 @@ final specialtyEncyclopediaProvider = FutureProvider<SpecialtyEncyclopediaRoot>(
                 'image_url': a.imageUrl,
                 'read_time': a.readTimeMin,
                 'title': a.title,
-                'subtitle': a.subtitle,
+                'subtitle': '', // Subtitle removed in wide schema migration
                 'content_html': a.contentHtml,
               },
             )

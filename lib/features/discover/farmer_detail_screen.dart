@@ -5,7 +5,6 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/database/dtos.dart';
-import '../../core/config/flag_constants.dart';
 import '../navigation/main_scaffold.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 

@@ -39,13 +39,7 @@ class AppDatabase extends _$AppDatabase {
         await transaction(() async {
           // Drop tables that need schema change (ID -> Composite Key)
           // We use the generated table names directly for customStatement
-          final tablesToMigrate = [
-            'localized_bean_translations',
-            'localized_brand_translations',
-            'localized_farmer_translations',
-            'sphere_region_translations',
-            'specialty_article_translations',
-          ];
+          
 
           // Ensure old tables are removed
           await customStatement('DROP TABLE IF EXISTS localized_farmer_translations;');
@@ -127,10 +121,10 @@ class AppDatabase extends _$AppDatabase {
     }).toList();
   }
 
-  Future<int> smartUpsertFarmer(LocalizedFarmersCompanion f) =>
+  Future<void> smartUpsertFarmer(LocalizedFarmersCompanion f) =>
       into(localizedFarmers).insertOnConflictUpdate(f);
 
-  Future<int> upsertLocalizedFarmer(LocalizedFarmersCompanion f) =>
+  Future<void> upsertLocalizedFarmer(LocalizedFarmersCompanion f) =>
       smartUpsertFarmer(f);
 
   // ── Brands ───────────────────────────────────────────────────────────────────
@@ -408,11 +402,7 @@ class AppDatabase extends _$AppDatabase {
     });
   }
 
-  Future<void> smartUpsertFarmer(
-    LocalizedFarmersCompanion farmer,
-  ) async {
-    await into(localizedFarmers).insertOnConflictUpdate(farmer);
-  }
+  // smartUpsertFarmer moved to line 129
 
   Future<void> smartUpsertBean(
     LocalizedBeansCompanion bean,
@@ -712,8 +702,6 @@ class AppDatabase extends _$AppDatabase {
   Future<List<BrewingRecipe>> getAllRecipes([String lang = 'en']) async {
     final rows = await select(brewingRecipes).get();
     return rows.map((r) {
-      final isUk = lang == 'uk';
-      final isEn = lang == 'en';
 
       return BrewingRecipe(
         id: r.id,
@@ -775,5 +763,17 @@ class AppDatabase extends _$AppDatabase {
     } catch (_) {
       return <T>[];
     }
+  }
+}
+
+extension BrewingRecipeX on BrewingRecipe {
+  String getName(String lang) {
+    if (lang == 'uk') return nameUk;
+    return nameEn ?? nameUk;
+  }
+
+  String getDescription(String lang) {
+    if (lang == 'uk') return descriptionUk;
+    return descriptionEn ?? descriptionUk;
   }
 }

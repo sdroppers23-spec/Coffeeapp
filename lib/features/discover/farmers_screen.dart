@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import '../../core/l10n/app_localizations.dart';
-import '../../core/config/flag_constants.dart';
 import '../../shared/widgets/glass_container.dart';
 import '../../shared/widgets/premium_app_bar.dart';
 import '../../shared/widgets/pressable_scale.dart';
@@ -181,7 +180,7 @@ class _PremiumFarmerCard extends ConsumerWidget {
                     ),
                   ),
                   // Country Flag
-                  if (flagUrl != null)
+                  if (flagUrl.isNotEmpty)
                     _buildFlag(flagUrl),
                 ],
               ),

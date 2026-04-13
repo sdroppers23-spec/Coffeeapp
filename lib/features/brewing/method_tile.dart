@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/database/app_database.dart';
-import '../../core/database/coffee_data_seed.dart';
 import '../../shared/widgets/glass_container.dart';
 import 'brewing_detail_screen.dart';
 import 'method_recipes_screen.dart';
@@ -51,8 +50,8 @@ class MethodTile extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (_) => MethodRecipesScreen(
-                methodKey: key,
-                methodNameUk: meta.name, // Use English name
+                methodKey: _firstRecipe.methodKey,
+                methodNameUk: name, 
                 recipes: methodRecipes,
               ),
             ),
@@ -179,7 +178,7 @@ class MethodTile extends StatelessWidget {
                   const SizedBox(height: 6),
 
                   // Recipe count chip
-                  _RecipeCountChip(count: count),
+                  _RecipeCountChip(count: _count),
                 ],
               ),
             ),
@@ -187,6 +186,28 @@ class MethodTile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<Color> _getGradient(String key) {
+    switch (key.toLowerCase()) {
+      case 'v60': return [const Color(0xFFD4A574), const Color(0xFF8B5E3C)];
+      case 'chemex': return [const Color(0xFFE8D5B7), const Color(0xFF9C7048)];
+      case 'aeropress': return [const Color(0xFFB8C4CC), const Color(0xFF5A7A8A)];
+      case 'french_press': return [const Color(0xFFC8A96E), const Color(0xFF7A5C2E)];
+      case 'espresso': return [const Color(0xFF8B2635), const Color(0xFF4A1520)];
+      case 'clever': return [const Color(0xFFB8860B), const Color(0xFF556B2F)];
+      case 'siphon': return [const Color(0xFF9370DB), const Color(0xFF4B0082)];
+      default: return [const Color(0xFF2C2C2E), const Color(0xFF1C1C1E)];
+    }
+  }
+
+  IconData _getIcon(String key) {
+    switch (key.toLowerCase()) {
+      case 'cold_brew': return Icons.ac_unit_outlined;
+      case 'siphon': return Icons.science_outlined;
+      case 'aeropress': return Icons.compress_outlined;
+      default: return Icons.coffee_outlined;
+    }
   }
 }
 

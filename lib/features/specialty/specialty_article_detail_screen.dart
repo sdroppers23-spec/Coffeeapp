@@ -76,7 +76,7 @@ class _SpecialtyArticleDetailScreenState
       h4: GoogleFonts.poppins(
         fontSize: 14,
         fontWeight: FontWeight.w600,
-        color: gold.withOpacity(0.8),
+        color: gold.withValues(alpha: 0.8),
         letterSpacing: 0.5,
       ),
       strong: GoogleFonts.outfit(
@@ -237,13 +237,13 @@ class _SpecialtyArticleDetailScreenState
                   // Read time & Share row
                   Row(
                     children: [
-                      Icon(Icons.access_time, size: 14, color: gold.withOpacity(0.7)),
+                      Icon(Icons.access_time, size: 14, color: gold.withValues(alpha: 0.7)),
                       const SizedBox(width: 6),
                       Text(
                         '${widget.article.readTimeMin} хв читання',
                         style: GoogleFonts.outfit(
                           fontSize: 14,
-                          color: Colors.white.withOpacity(0.6),
+                          color: Colors.white.withValues(alpha: 0.6),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -258,8 +258,8 @@ class _SpecialtyArticleDetailScreenState
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          gold.withOpacity(0.35),
-                          gold.withOpacity(0.0),
+                          gold.withValues(alpha: 0.35),
+                          gold.withValues(alpha: 0.0),
                         ],
                       ),
                     ),

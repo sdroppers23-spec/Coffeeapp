@@ -120,7 +120,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen>
               elevation: 0,
               flexibleSpace: FlexibleSpaceBar(
                 title: Text(
-                  widget.recipe.name,
+                  widget.recipe.nameUk,
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,

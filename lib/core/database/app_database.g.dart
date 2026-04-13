@@ -512,6 +512,28 @@ class $LocalizedFarmersTable extends LocalizedFarmers
         type: DriftSqlType.string,
         requiredDuringInsert: false,
       );
+  static const VerificationMeta _regionEnMeta = const VerificationMeta(
+    'regionEn',
+  );
+  @override
+  late final GeneratedColumn<String> regionEn = GeneratedColumn<String>(
+    'region_en',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _countryEnMeta = const VerificationMeta(
+    'countryEn',
+  );
+  @override
+  late final GeneratedColumn<String> countryEn = GeneratedColumn<String>(
+    'country_en',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _namePlMeta = const VerificationMeta('namePl');
   @override
   late final GeneratedColumn<String> namePl = GeneratedColumn<String>(
@@ -787,6 +809,8 @@ class $LocalizedFarmersTable extends LocalizedFarmers
     countryUk,
     nameEn,
     descriptionHtmlEn,
+    regionEn,
+    countryEn,
     namePl,
     descriptionHtmlPl,
     nameDe,
@@ -880,6 +904,18 @@ class $LocalizedFarmersTable extends LocalizedFarmers
           data['description_html_en']!,
           _descriptionHtmlEnMeta,
         ),
+      );
+    }
+    if (data.containsKey('region_en')) {
+      context.handle(
+        _regionEnMeta,
+        regionEn.isAcceptableOrUnknown(data['region_en']!, _regionEnMeta),
+      );
+    }
+    if (data.containsKey('country_en')) {
+      context.handle(
+        _countryEnMeta,
+        countryEn.isAcceptableOrUnknown(data['country_en']!, _countryEnMeta),
       );
     }
     if (data.containsKey('name_pl')) {
@@ -1110,6 +1146,14 @@ class $LocalizedFarmersTable extends LocalizedFarmers
         DriftSqlType.string,
         data['${effectivePrefix}description_html_en'],
       ),
+      regionEn: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}region_en'],
+      ),
+      countryEn: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}country_en'],
+      ),
       namePl: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}name_pl'],
@@ -1229,6 +1273,8 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
   final String? countryUk;
   final String? nameEn;
   final String? descriptionHtmlEn;
+  final String? regionEn;
+  final String? countryEn;
   final String? namePl;
   final String? descriptionHtmlPl;
   final String? nameDe;
@@ -1264,6 +1310,8 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
     this.countryUk,
     this.nameEn,
     this.descriptionHtmlEn,
+    this.regionEn,
+    this.countryEn,
     this.namePl,
     this.descriptionHtmlPl,
     this.nameDe,
@@ -1309,6 +1357,12 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
     }
     if (!nullToAbsent || descriptionHtmlEn != null) {
       map['description_html_en'] = Variable<String>(descriptionHtmlEn);
+    }
+    if (!nullToAbsent || regionEn != null) {
+      map['region_en'] = Variable<String>(regionEn);
+    }
+    if (!nullToAbsent || countryEn != null) {
+      map['country_en'] = Variable<String>(countryEn);
     }
     if (!nullToAbsent || namePl != null) {
       map['name_pl'] = Variable<String>(namePl);
@@ -1407,6 +1461,12 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
       descriptionHtmlEn: descriptionHtmlEn == null && nullToAbsent
           ? const Value.absent()
           : Value(descriptionHtmlEn),
+      regionEn: regionEn == null && nullToAbsent
+          ? const Value.absent()
+          : Value(regionEn),
+      countryEn: countryEn == null && nullToAbsent
+          ? const Value.absent()
+          : Value(countryEn),
       namePl: namePl == null && nullToAbsent
           ? const Value.absent()
           : Value(namePl),
@@ -1502,6 +1562,8 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
       descriptionHtmlEn: serializer.fromJson<String?>(
         json['descriptionHtmlEn'],
       ),
+      regionEn: serializer.fromJson<String?>(json['regionEn']),
+      countryEn: serializer.fromJson<String?>(json['countryEn']),
       namePl: serializer.fromJson<String?>(json['namePl']),
       descriptionHtmlPl: serializer.fromJson<String?>(
         json['descriptionHtmlPl'],
@@ -1564,6 +1626,8 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
       'countryUk': serializer.toJson<String?>(countryUk),
       'nameEn': serializer.toJson<String?>(nameEn),
       'descriptionHtmlEn': serializer.toJson<String?>(descriptionHtmlEn),
+      'regionEn': serializer.toJson<String?>(regionEn),
+      'countryEn': serializer.toJson<String?>(countryEn),
       'namePl': serializer.toJson<String?>(namePl),
       'descriptionHtmlPl': serializer.toJson<String?>(descriptionHtmlPl),
       'nameDe': serializer.toJson<String?>(nameDe),
@@ -1602,6 +1666,8 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
     Value<String?> countryUk = const Value.absent(),
     Value<String?> nameEn = const Value.absent(),
     Value<String?> descriptionHtmlEn = const Value.absent(),
+    Value<String?> regionEn = const Value.absent(),
+    Value<String?> countryEn = const Value.absent(),
     Value<String?> namePl = const Value.absent(),
     Value<String?> descriptionHtmlPl = const Value.absent(),
     Value<String?> nameDe = const Value.absent(),
@@ -1639,6 +1705,8 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
     descriptionHtmlEn: descriptionHtmlEn.present
         ? descriptionHtmlEn.value
         : this.descriptionHtmlEn,
+    regionEn: regionEn.present ? regionEn.value : this.regionEn,
+    countryEn: countryEn.present ? countryEn.value : this.countryEn,
     namePl: namePl.present ? namePl.value : this.namePl,
     descriptionHtmlPl: descriptionHtmlPl.present
         ? descriptionHtmlPl.value
@@ -1702,6 +1770,8 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
       descriptionHtmlEn: data.descriptionHtmlEn.present
           ? data.descriptionHtmlEn.value
           : this.descriptionHtmlEn,
+      regionEn: data.regionEn.present ? data.regionEn.value : this.regionEn,
+      countryEn: data.countryEn.present ? data.countryEn.value : this.countryEn,
       namePl: data.namePl.present ? data.namePl.value : this.namePl,
       descriptionHtmlPl: data.descriptionHtmlPl.present
           ? data.descriptionHtmlPl.value
@@ -1764,6 +1834,8 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
           ..write('countryUk: $countryUk, ')
           ..write('nameEn: $nameEn, ')
           ..write('descriptionHtmlEn: $descriptionHtmlEn, ')
+          ..write('regionEn: $regionEn, ')
+          ..write('countryEn: $countryEn, ')
           ..write('namePl: $namePl, ')
           ..write('descriptionHtmlPl: $descriptionHtmlPl, ')
           ..write('nameDe: $nameDe, ')
@@ -1804,6 +1876,8 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
     countryUk,
     nameEn,
     descriptionHtmlEn,
+    regionEn,
+    countryEn,
     namePl,
     descriptionHtmlPl,
     nameDe,
@@ -1843,6 +1917,8 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
           other.countryUk == this.countryUk &&
           other.nameEn == this.nameEn &&
           other.descriptionHtmlEn == this.descriptionHtmlEn &&
+          other.regionEn == this.regionEn &&
+          other.countryEn == this.countryEn &&
           other.namePl == this.namePl &&
           other.descriptionHtmlPl == this.descriptionHtmlPl &&
           other.nameDe == this.nameDe &&
@@ -1880,6 +1956,8 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
   final Value<String?> countryUk;
   final Value<String?> nameEn;
   final Value<String?> descriptionHtmlEn;
+  final Value<String?> regionEn;
+  final Value<String?> countryEn;
   final Value<String?> namePl;
   final Value<String?> descriptionHtmlPl;
   final Value<String?> nameDe;
@@ -1915,6 +1993,8 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
     this.countryUk = const Value.absent(),
     this.nameEn = const Value.absent(),
     this.descriptionHtmlEn = const Value.absent(),
+    this.regionEn = const Value.absent(),
+    this.countryEn = const Value.absent(),
     this.namePl = const Value.absent(),
     this.descriptionHtmlPl = const Value.absent(),
     this.nameDe = const Value.absent(),
@@ -1951,6 +2031,8 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
     this.countryUk = const Value.absent(),
     this.nameEn = const Value.absent(),
     this.descriptionHtmlEn = const Value.absent(),
+    this.regionEn = const Value.absent(),
+    this.countryEn = const Value.absent(),
     this.namePl = const Value.absent(),
     this.descriptionHtmlPl = const Value.absent(),
     this.nameDe = const Value.absent(),
@@ -1987,6 +2069,8 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
     Expression<String>? countryUk,
     Expression<String>? nameEn,
     Expression<String>? descriptionHtmlEn,
+    Expression<String>? regionEn,
+    Expression<String>? countryEn,
     Expression<String>? namePl,
     Expression<String>? descriptionHtmlPl,
     Expression<String>? nameDe,
@@ -2023,6 +2107,8 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
       if (countryUk != null) 'country_uk': countryUk,
       if (nameEn != null) 'name_en': nameEn,
       if (descriptionHtmlEn != null) 'description_html_en': descriptionHtmlEn,
+      if (regionEn != null) 'region_en': regionEn,
+      if (countryEn != null) 'country_en': countryEn,
       if (namePl != null) 'name_pl': namePl,
       if (descriptionHtmlPl != null) 'description_html_pl': descriptionHtmlPl,
       if (nameDe != null) 'name_de': nameDe,
@@ -2061,6 +2147,8 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
     Value<String?>? countryUk,
     Value<String?>? nameEn,
     Value<String?>? descriptionHtmlEn,
+    Value<String?>? regionEn,
+    Value<String?>? countryEn,
     Value<String?>? namePl,
     Value<String?>? descriptionHtmlPl,
     Value<String?>? nameDe,
@@ -2097,6 +2185,8 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
       countryUk: countryUk ?? this.countryUk,
       nameEn: nameEn ?? this.nameEn,
       descriptionHtmlEn: descriptionHtmlEn ?? this.descriptionHtmlEn,
+      regionEn: regionEn ?? this.regionEn,
+      countryEn: countryEn ?? this.countryEn,
       namePl: namePl ?? this.namePl,
       descriptionHtmlPl: descriptionHtmlPl ?? this.descriptionHtmlPl,
       nameDe: nameDe ?? this.nameDe,
@@ -2154,6 +2244,12 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
     }
     if (descriptionHtmlEn.present) {
       map['description_html_en'] = Variable<String>(descriptionHtmlEn.value);
+    }
+    if (regionEn.present) {
+      map['region_en'] = Variable<String>(regionEn.value);
+    }
+    if (countryEn.present) {
+      map['country_en'] = Variable<String>(countryEn.value);
     }
     if (namePl.present) {
       map['name_pl'] = Variable<String>(namePl.value);
@@ -2245,6 +2341,8 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
           ..write('countryUk: $countryUk, ')
           ..write('nameEn: $nameEn, ')
           ..write('descriptionHtmlEn: $descriptionHtmlEn, ')
+          ..write('regionEn: $regionEn, ')
+          ..write('countryEn: $countryEn, ')
           ..write('namePl: $namePl, ')
           ..write('descriptionHtmlPl: $descriptionHtmlPl, ')
           ..write('nameDe: $nameDe, ')
@@ -13810,6 +13908,8 @@ typedef $$LocalizedFarmersTableCreateCompanionBuilder =
       Value<String?> countryUk,
       Value<String?> nameEn,
       Value<String?> descriptionHtmlEn,
+      Value<String?> regionEn,
+      Value<String?> countryEn,
       Value<String?> namePl,
       Value<String?> descriptionHtmlPl,
       Value<String?> nameDe,
@@ -13847,6 +13947,8 @@ typedef $$LocalizedFarmersTableUpdateCompanionBuilder =
       Value<String?> countryUk,
       Value<String?> nameEn,
       Value<String?> descriptionHtmlEn,
+      Value<String?> regionEn,
+      Value<String?> countryEn,
       Value<String?> namePl,
       Value<String?> descriptionHtmlPl,
       Value<String?> nameDe,
@@ -13956,6 +14058,16 @@ class $$LocalizedFarmersTableFilterComposer
 
   ColumnFilters<String> get descriptionHtmlEn => $composableBuilder(
     column: $table.descriptionHtmlEn,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get regionEn => $composableBuilder(
+    column: $table.regionEn,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get countryEn => $composableBuilder(
+    column: $table.countryEn,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -14164,6 +14276,16 @@ class $$LocalizedFarmersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get regionEn => $composableBuilder(
+    column: $table.regionEn,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get countryEn => $composableBuilder(
+    column: $table.countryEn,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get namePl => $composableBuilder(
     column: $table.namePl,
     builder: (column) => ColumnOrderings(column),
@@ -14330,6 +14452,12 @@ class $$LocalizedFarmersTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get regionEn =>
+      $composableBuilder(column: $table.regionEn, builder: (column) => column);
+
+  GeneratedColumn<String> get countryEn =>
+      $composableBuilder(column: $table.countryEn, builder: (column) => column);
+
   GeneratedColumn<String> get namePl =>
       $composableBuilder(column: $table.namePl, builder: (column) => column);
 
@@ -14492,6 +14620,8 @@ class $$LocalizedFarmersTableTableManager
                 Value<String?> countryUk = const Value.absent(),
                 Value<String?> nameEn = const Value.absent(),
                 Value<String?> descriptionHtmlEn = const Value.absent(),
+                Value<String?> regionEn = const Value.absent(),
+                Value<String?> countryEn = const Value.absent(),
                 Value<String?> namePl = const Value.absent(),
                 Value<String?> descriptionHtmlPl = const Value.absent(),
                 Value<String?> nameDe = const Value.absent(),
@@ -14527,6 +14657,8 @@ class $$LocalizedFarmersTableTableManager
                 countryUk: countryUk,
                 nameEn: nameEn,
                 descriptionHtmlEn: descriptionHtmlEn,
+                regionEn: regionEn,
+                countryEn: countryEn,
                 namePl: namePl,
                 descriptionHtmlPl: descriptionHtmlPl,
                 nameDe: nameDe,
@@ -14564,6 +14696,8 @@ class $$LocalizedFarmersTableTableManager
                 Value<String?> countryUk = const Value.absent(),
                 Value<String?> nameEn = const Value.absent(),
                 Value<String?> descriptionHtmlEn = const Value.absent(),
+                Value<String?> regionEn = const Value.absent(),
+                Value<String?> countryEn = const Value.absent(),
                 Value<String?> namePl = const Value.absent(),
                 Value<String?> descriptionHtmlPl = const Value.absent(),
                 Value<String?> nameDe = const Value.absent(),
@@ -14599,6 +14733,8 @@ class $$LocalizedFarmersTableTableManager
                 countryUk: countryUk,
                 nameEn: nameEn,
                 descriptionHtmlEn: descriptionHtmlEn,
+                regionEn: regionEn,
+                countryEn: countryEn,
                 namePl: namePl,
                 descriptionHtmlPl: descriptionHtmlPl,
                 nameDe: nameDe,

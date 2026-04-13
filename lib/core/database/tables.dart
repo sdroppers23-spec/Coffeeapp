@@ -106,6 +106,8 @@ class LocalizedFarmers extends Table {
   // OTHER LANGUAGES (12)
   TextColumn get nameEn => text().nullable()();
   TextColumn get descriptionHtmlEn => text().nullable()();
+  TextColumn get regionEn => text().nullable()();
+  TextColumn get countryEn => text().nullable()();
 
   TextColumn get namePl => text().nullable()();
   TextColumn get descriptionHtmlPl => text().nullable()();

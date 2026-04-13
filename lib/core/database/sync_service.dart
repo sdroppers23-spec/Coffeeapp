@@ -84,7 +84,7 @@ class SyncService {
           final planetEmojis = ['🌎', '🌍', '🌏', '🪐', '☄️', '🌌', 'planet', 'earth'];
           if (planetEmojis.contains(emoji.trim()) || emoji.isEmpty) {
             final countryLower = (item['country_en'] as String? ?? 'unknown').toLowerCase().replaceAll(' ', '_');
-            emoji = '${flagsBucket}$countryLower.png';
+            emoji = '$flagsBucket$countryLower.png';
             debugPrint('SYNC: Healed planet emoji for ID $id to flag photo: $emoji');
           }
 
@@ -190,16 +190,13 @@ class SyncService {
     try {
       debugPrint('SYNC: Pulling farmers and translations from Supabase...');
       
-      // Clear old farmers locally to prevent duplicate 'unknown' or stale IDs
+      // Clear old farmers locally
       await db.transaction(() async {
         await db.delete(db.localizedFarmers).go();
-        await db.delete(db.localizedFarmerTranslations).go();
       });
 
       // Fetch main farmer records
       final farmersData = await supabase!.from('localized_farmers').select().order('id');
-      // Fetch all translations
-      final transData = await supabase!.from('localized_farmer_translations').select();
       
       int successCount = 0;
       int errorCount = 0;
@@ -218,36 +215,20 @@ class SyncService {
           final farmer = LocalizedFarmersCompanion(
             id: Value(id),
             imageUrl: Value(imageUrl),
-            countryEmoji: Value(item['country_emoji'] as String?),
+            flagUrl: Value(item['flag_url'] as String? ?? item['country_emoji'] as String? ?? ''),
             latitude: Value((item['latitude'] as num?)?.toDouble() ?? 0.0),
             longitude: Value((item['longitude'] as num?)?.toDouble() ?? 0.0),
+            nameUk: Value(item['name_uk'] as String? ?? ''),
+            nameEn: Value(item['name_en'] as String?),
+            descriptionHtmlUk: Value(item['description_uk'] as String? ?? ''),
+            descriptionHtmlEn: Value(item['description_en'] as String?),
+            regionUk: Value(item['region_uk'] as String? ?? ''),
+            regionEn: Value(item['region_en'] as String?),
+            countryUk: Value(item['country_uk'] as String? ?? ''),
+            countryEn: Value(item['country_en'] as String?),
           );
 
-          final List<LocalizedFarmerTranslationsCompanion> translations = [];
-          
-          // Filter translations for this farmer
-          final farmerTrans = transData.where((t) => t['farmer_id'] == id);
-
-          for (final lang in ['uk', 'en']) {
-            final t = farmerTrans.firstWhere(
-              (t) => t['language_code'] == lang,
-              orElse: () => farmerTrans.isNotEmpty ? farmerTrans.first : {},
-            );
-
-            translations.add(
-              LocalizedFarmerTranslationsCompanion(
-                farmerId: Value(id),
-                languageCode: Value(lang),
-                name: Value(t['name'] as String?),
-                region: Value(t['region'] as String?),
-                description: Value(t['description'] as String?),
-                story: Value(t['story'] as String?),
-                country: Value(t['country'] as String?),
-              ),
-            );
-          }
-
-          await db.smartUpsertFarmer(farmer, translations);
+          await db.smartUpsertFarmer(farmer);
           successCount++;
         } catch (e) {
           debugPrint('SYNC ERROR for farmer ID ${item['id']}: $e');
@@ -272,7 +253,6 @@ class SyncService {
       // Clear old articles locally
       await db.transaction(() async {
         await db.delete(db.specialtyArticles).go();
-        await db.delete(db.specialtyArticleTranslations).go();
       });
 
       int successCount = 0;
@@ -292,22 +272,13 @@ class SyncService {
             id: Value(id),
             imageUrl: Value(imageUrl),
             readTimeMin: Value(item['read_time_min'] as int? ?? 5),
+            titleUk: Value(item['title_uk'] as String? ?? ''),
+            titleEn: Value(item['title_en'] as String?),
+            contentHtmlUk: Value(item['content_html_uk'] as String? ?? ''),
+            contentHtmlEn: Value(item['content_html_en'] as String?),
           );
 
-          final List<SpecialtyArticleTranslationsCompanion> translations = [];
-          for (final lang in ['uk', 'en']) {
-            translations.add(
-              SpecialtyArticleTranslationsCompanion(
-                articleId: Value(id),
-                languageCode: Value(lang),
-                title: Value(item['title_$lang'] as String? ?? ''),
-                subtitle: Value(item['subtitle_$lang'] as String? ?? ''),
-                contentHtml: Value(item['content_html_$lang'] as String? ?? ''),
-              ),
-            );
-          }
-
-          await db.smartUpsertArticle(article, translations);
+          await db.smartUpsertArticle(article);
           successCount++;
         } catch (e) {
           debugPrint('SYNC ERROR for article ID ${item['id']}: $e');
@@ -391,11 +362,9 @@ class SyncService {
       // Note: We use raw delete or drift delete statements
       await db.transaction(() async {
         await db.delete(db.localizedFarmers).go();
-        await db.delete(db.localizedFarmerTranslations).go();
         await db.delete(db.localizedBeans).go();
         await db.delete(db.localizedBeanTranslations).go();
         await db.delete(db.specialtyArticles).go();
-        await db.delete(db.specialtyArticleTranslations).go();
       });
       debugPrint('SYNC: Local cache cleared.');
     } catch (e) {

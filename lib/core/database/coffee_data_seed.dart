@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'app_database.dart';
 
 /// Seeds all static content into the local Drift database on first launch.

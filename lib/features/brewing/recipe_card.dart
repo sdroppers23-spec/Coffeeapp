@@ -77,7 +77,7 @@ class RecipeCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          recipe.name,
+                          recipe.nameUk,
                           style: GoogleFonts.cormorantGaramond(
                             fontSize: 22,
                             fontWeight: FontWeight.w700,
@@ -85,10 +85,10 @@ class RecipeCard extends StatelessWidget {
                             height: 1.1,
                           ),
                         ),
-                        if (recipe.description.isNotEmpty) ...[
+                        if (recipe.descriptionUk.isNotEmpty) ...[
                           const SizedBox(height: 6),
                           Text(
-                            recipe.description,
+                            recipe.descriptionUk,
                             style: GoogleFonts.outfit(
                               fontSize: 13.5,
                               color: Colors.white.withValues(alpha: 0.65),

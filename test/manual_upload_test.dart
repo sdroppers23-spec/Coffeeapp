@@ -31,7 +31,7 @@ void main() {
     // 4. Push to Cloud
     print('Pushing to Supabase...');
     final sync = SyncService(db, Supabase.instance.client);
-    await sync.pushLocalToCloud(onProgress: (p) => print('PUSH: $p'));
+    await sync.pushLocalToCloud(onProgress: (msg, prog) => print('PUSH: $msg ($prog)'));
 
     print('DONE: Data uploaded successfully!');
   });

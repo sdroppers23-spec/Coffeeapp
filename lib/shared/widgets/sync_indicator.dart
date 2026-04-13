@@ -6,16 +6,41 @@ import '../../core/database/sync_service.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/providers/settings_provider.dart';
 
+class SyncStatusData {
+  final SyncState state;
+  final String? lastError;
+  final String? lastMessage;
+  final double currentProgress;
+
+  SyncStatusData({
+    required this.state,
+    this.lastError,
+    this.lastMessage,
+    this.currentProgress = 0.0,
+  });
+
+  SyncStatusData copyWith({
+    SyncState? state,
+    String? lastError,
+    String? lastMessage,
+    double? currentProgress,
+  }) {
+    return SyncStatusData(
+      state: state ?? this.state,
+      lastError: lastError ?? this.lastError,
+      lastMessage: lastMessage ?? this.lastMessage,
+      currentProgress: currentProgress ?? this.currentProgress,
+    );
+  }
+}
+
 enum SyncState { idle, syncing, success, error, offline }
 
-class SyncStatusNotifier extends Notifier<SyncState> {
-  String? lastError;
-  String? lastMessage;
-  double currentProgress = 0.0;
+class SyncStatusNotifier extends Notifier<SyncStatusData> {
   List<ConnectivityResult>? _lastConnectivity;
 
   @override
-  SyncState build() {
+  SyncStatusData build() {
     // Listen to connectivity changes
     final conn = ref.watch(connectivityProvider).value;
     final isOnline = ref.watch(isOnlineProvider);
@@ -42,30 +67,30 @@ class SyncStatusNotifier extends Notifier<SyncState> {
 
     _lastConnectivity = conn;
 
-    if (!isOnline) return SyncState.offline;
-    return SyncState.idle;
+    if (!isOnline) return SyncStatusData(state: SyncState.offline);
+    return SyncStatusData(state: SyncState.idle);
   }
 
   SyncService get _syncService => ref.read(syncServiceProvider);
 
   Future<void> syncEverything({bool force = false}) async {
-    lastError = null;
-    state = SyncState.syncing;
+    state = state.copyWith(state: SyncState.syncing, lastError: null);
     try {
       await _syncService.syncAll(
         force: force,
         onProgress: (m, p) {
-          state = SyncState.syncing;
-          lastMessage = m;
-          currentProgress = p;
+          state = state.copyWith(
+            state: SyncState.syncing,
+            lastMessage: m,
+            currentProgress: p,
+          );
         },
       );
-      state = SyncState.success;
+      state = state.copyWith(state: SyncState.success, currentProgress: 1.0);
       await Future.delayed(const Duration(seconds: 3));
-      state = SyncState.idle;
+      state = state.copyWith(state: SyncState.idle);
     } catch (e) {
-      lastError = e.toString();
-      state = SyncState.error;
+      state = state.copyWith(state: SyncState.error, lastError: e.toString());
     }
   }
 
@@ -74,7 +99,7 @@ class SyncStatusNotifier extends Notifier<SyncState> {
   Future<void> pullFromCloud() => syncEverything();
 }
 
-final syncStatusProvider = NotifierProvider<SyncStatusNotifier, SyncState>(() {
+final syncStatusProvider = NotifierProvider<SyncStatusNotifier, SyncStatusData>(() {
   return SyncStatusNotifier();
 });
 
@@ -83,14 +108,13 @@ class SyncIndicator extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final syncState = ref.watch(syncStatusProvider);
-    final notifier = ref.read(syncStatusProvider.notifier);
+    final syncData = ref.watch(syncStatusProvider);
 
     late Color color;
     late IconData icon;
     late String label;
 
-    switch (syncState) {
+    switch (syncData.state) {
       case SyncState.idle:
         color = Colors.greenAccent;
         icon = Icons.cloud_done_outlined;
@@ -104,8 +128,8 @@ class SyncIndicator extends ConsumerWidget {
       case SyncState.syncing:
         color = const Color(0xFFC8A96E);
         icon = Icons.sync;
-        final pct = (notifier.currentProgress * 100).toInt();
-        label = '${notifier.lastMessage ?? 'Syncing'} ($pct%)';
+        final pct = (syncData.currentProgress * 100).toInt();
+        label = '${syncData.lastMessage ?? 'Syncing'} ($pct%)';
         break;
       case SyncState.success:
         color = Colors.greenAccent;
@@ -120,7 +144,7 @@ class SyncIndicator extends ConsumerWidget {
     }
 
     return Tooltip(
-      message: notifier.lastError ?? label,
+      message: syncData.lastError ?? label,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
@@ -131,14 +155,14 @@ class SyncIndicator extends ConsumerWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (syncState == SyncState.syncing)
+            if (syncData.state == SyncState.syncing)
               SizedBox(
                 width: 12,
                 height: 12,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
                   color: const Color(0xFFC8A96E),
-                  value: notifier.currentProgress > 0.05 ? notifier.currentProgress : null,
+                  value: syncData.currentProgress > 0.05 ? syncData.currentProgress : null,
                   backgroundColor: const Color(0xFFC8A96E).withValues(alpha: 0.2),
                 ),
               )

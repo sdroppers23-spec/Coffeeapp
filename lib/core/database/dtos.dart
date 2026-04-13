@@ -146,6 +146,7 @@ class LocalizedFarmerDto {
   final String region;
   final String country;
   final String descriptionHtml;
+  final String story;
   final double? latitude;
   final double? longitude;
   final DateTime? createdAt;
@@ -158,6 +159,7 @@ class LocalizedFarmerDto {
     required this.region,
     required this.country,
     required this.descriptionHtml,
+    required this.story,
     this.latitude,
     this.longitude,
     this.createdAt,
@@ -182,7 +184,6 @@ class LocalizedFarmerDto {
   }
 
   // UI Backwards Compatibility
-  String get story => descriptionHtml;
   String get description => descriptionHtml;
 }
 

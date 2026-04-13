@@ -37,26 +37,27 @@ class SyncService {
         await _clearLocalSharedData();
       }
 
-      // 2. Optimized Parallel Sync
-      onProgress?.call('Initializing Parallel Sync...', 0.15);
+      // 2. Sequential Stable Sync
+      onProgress?.call('Syncing Farmers...', 0.1);
+      await syncFarmers();
+      await Future.delayed(const Duration(milliseconds: 300));
       
-      int completedTasks = 0;
-      const totalTasks = 5;
-
-      void updateProgress(String msg) {
-        completedTasks++;
-        final progress = 0.15 + (completedTasks / totalTasks) * 0.8;
-        onProgress?.call(msg, progress);
-      }
-
-      await Future.wait([
-        syncFarmers().then((_) => updateProgress('Synced Farmers')),
-        syncArticles().then((_) => updateProgress('Synced Articles')),
-        syncEncyclopedia().then((_) => updateProgress('Synced Encyclopedia')),
-        syncBrands().then((_) => updateProgress('Synced Roasters')),
-        syncBrewingRecipes().then((_) => updateProgress('Synced Methods')),
-      ]);
-
+      onProgress?.call('Syncing Encyclopedia...', 0.3);
+      await syncEncyclopedia();
+      await Future.delayed(const Duration(milliseconds: 300));
+      
+      onProgress?.call('Syncing Methods...', 0.5);
+      await syncBrewingRecipes();
+      await Future.delayed(const Duration(milliseconds: 300));
+      
+      onProgress?.call('Syncing Articles...', 0.7);
+      await syncArticles();
+      await Future.delayed(const Duration(milliseconds: 300));
+      
+      onProgress?.call('Syncing Brands...', 0.85);
+      await syncBrands();
+      await Future.delayed(const Duration(milliseconds: 300));
+      
       // 7. Sync User Content (Push to Cloud) - Keep sequential at end to ensure deps
       onProgress?.call('Finalizing...', 0.98);
       await pushLocalUserContent();
@@ -66,7 +67,7 @@ class SyncService {
     } catch (e, st) {
       debugPrint('SYNC ERROR: $e');
       debugPrint('STACKTRACE: $st');
-      onProgress?.call('Sync failed: $e');
+      onProgress?.call('Sync failed: $e', 1.0);
       rethrow;
     }
   }
@@ -240,7 +241,8 @@ class SyncService {
             latitude: Value((item['latitude'] as num?)?.toDouble() ?? 0.0),
             longitude: Value((item['longitude'] as num?)?.toDouble() ?? 0.0),
             nameUk: Value(item['name_uk'] as String? ?? item['name'] as String? ?? ''),
-            descriptionHtmlUk: Value(item['description_html_uk'] as String? ?? item['description_uk'] as String? ?? item['description'] as String? ?? ''),
+            descriptionHtmlUk: Value(_cleanContent(item['description_html_uk'] as String? ?? item['description_uk'] as String? ?? item['description'] as String? ?? '')),
+            storyUk: Value(_cleanContent(item['story_uk'] as String? ?? item['story'] as String? ?? item['description_html_uk'] as String? ?? '')),
             regionUk: Value(item['region_uk'] as String? ?? item['region'] as String? ?? ''),
             countryUk: Value(item['country_uk'] as String? ?? item['country'] as String? ?? ''),
           );
@@ -307,9 +309,9 @@ class SyncService {
 
           final article = SpecialtyArticlesCompanion(
             id: Value(id),
-            titleUk: Value(item['title_uk'] as String? ?? item['title_en'] as String? ?? ''),
-            subtitleUk: Value(item['subtitle_uk'] as String? ?? ''),
-            contentHtmlUk: Value(item['content_html_uk'] as String? ?? item['content_uk'] as String? ?? ''),
+            titleUk: Value(_cleanContent(item['title_uk'] as String? ?? item['title_en'] as String? ?? '')),
+            subtitleUk: Value(_cleanContent(item['subtitle_uk'] as String? ?? '')),
+            contentHtmlUk: Value(_cleanContent(item['content_html_uk'] as String? ?? item['content_uk'] as String? ?? '')),
             imageUrl: Value(imageUrl),
             readTimeMin: Value(item['read_time_min'] as int? ?? 5),
           );
@@ -325,9 +327,9 @@ class SyncService {
              translations.add(SpecialtyArticleTranslationsCompanion(
                articleId: Value(id),
                languageCode: Value(t['language_code'] as String),
-               title: Value(t['title'] as String?),
-               subtitle: Value(t['subtitle'] as String?),
-               contentHtml: Value(t['content_html'] as String?),
+               title: Value(_cleanContent(t['title'] as String?)),
+               subtitle: Value(_cleanContent(t['subtitle'] as String?)),
+               contentHtml: Value(_cleanContent(t['content_html'] as String?)),
              ));
           }
 
@@ -523,11 +525,21 @@ class SyncService {
     }
   }
 
-  Future<void> pushLocalToCloud({Function(String)? onProgress}) async {
+  Future<void> pushLocalToCloud({Function(String, double)? onProgress}) async {
     await syncAll(onProgress: onProgress);
   }
 
-  Future<void> pullFromCloud({Function(String)? onProgress}) async {
+  Future<void> pullFromCloud({Function(String, double)? onProgress}) async {
     await syncAll(onProgress: onProgress);
+  }
+
+  /// Removes technical keys like {p1}, [h2], {1}, etc from text.
+  String _cleanContent(String? content) {
+    if (content == null) return '';
+    // Removes patterns like {anything} or [anything]
+    return content
+        .replaceAll(RegExp(r'\{[^}]+\}'), '')
+        .replaceAll(RegExp(r'\[[^\]]+\]'), '')
+        .trim();
   }
 }

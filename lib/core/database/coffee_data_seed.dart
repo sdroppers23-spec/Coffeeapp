@@ -136,32 +136,6 @@ class CoffeeDataSeed {
     final isEmpty = await db.encyclopediaIsEmpty();
     if (!isEmpty && !force) return;
 
-    final titles = [
-      'Specialty Coffee Basics',
-      'Roasting Essentials',
-      'Sensory Analysis',
-      'Water for Coffee',
-      'Espresso Physics',
-      'Digital Transformation',
-      'Sensory Analysis II',
-      'Espresso Chemistry',
-      'Farmer Stories',
-      'Future of Coffee',
-    ];
-
-    final titlesUk = [
-      'Основи Спешелті',
-      'Основи Обсмажування',
-      'Сенсорний Аналіз',
-      'Вода для кави',
-      'Фізика еспресо',
-      'Диджиталізація',
-      'Сенсорний Аналіз II',
-      'Хімія еспресо',
-      'Історії фермерів',
-      'Майбутнє кави',
-    ];
-
     // Cloud will handle this.
     debugPrint('DB SEEDING: Skipping placeholder articles (using Cloud).');
   }

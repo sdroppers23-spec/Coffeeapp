@@ -31,34 +31,32 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? e]) : super(e ?? openConnection());
 
   @override
-  int get schemaVersion => 28;
+  int get schemaVersion => 29;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (m) => m.createAll(),
     onUpgrade: (m, from, to) async {
-      if (from < 28) {
-        // Migration to Localized Columns (Main + Translations)
+      if (from < 29) {
+        // Migration for story columns in Farmers
         await transaction(() async {
-          // Drop all tables that underwent major schema changes to force recreation
-          await customStatement('DROP TABLE IF EXISTS localized_beans;');
+          // recreate farmers or just add column, but recreation is safer for this state
           await customStatement('DROP TABLE IF EXISTS localized_farmers;');
+          await customStatement('DROP TABLE IF EXISTS localized_farmer_translations;');
+          
+          await m.createTable(localizedFarmers);
+          await m.createTable(localizedFarmerTranslations);
+          
+          // Force recreation of articles/beans/recipes to ensure they are consistent after parallel sync failures
           await customStatement('DROP TABLE IF EXISTS specialty_articles;');
+          await customStatement('DROP TABLE IF EXISTS specialty_article_translations;');
+          await customStatement('DROP TABLE IF EXISTS localized_beans;');
           await customStatement('DROP TABLE IF EXISTS brewing_recipes;');
           
-          await m.createTable(localizedBeans);
-          await m.createTable(localizedFarmers);
           await m.createTable(specialtyArticles);
-          await m.createTable(brewingRecipes);
-
-          // Delete deprecated translation tables to ensure they are clean
-          await customStatement('DROP TABLE IF EXISTS localized_farmer_translations;');
-          await customStatement('DROP TABLE IF EXISTS specialty_article_translations;');
-          await customStatement('DROP TABLE IF EXISTS brewing_recipe_translations;');
-          
-          await m.createTable(localizedFarmerTranslations);
           await m.createTable(specialtyArticleTranslations);
-          await m.createTable(brewingRecipeTranslations);
+          await m.createTable(localizedBeans);
+          await m.createTable(brewingRecipes);
         });
       }
     },
@@ -101,12 +99,14 @@ class AppDatabase extends _$AppDatabase {
       String desc = farmer.descriptionHtmlUk;
       String? reg = farmer.regionUk;
       String? cou = farmer.countryUk;
+      String? story = farmer.storyUk;
 
       if (!isUk && translation != null) {
         name = translation.name ?? name;
         desc = translation.descriptionHtml ?? desc;
         reg = translation.region ?? reg;
         cou = translation.country ?? cou;
+        story = translation.story ?? story;
       }
 
       return LocalizedFarmerDto(
@@ -115,6 +115,7 @@ class AppDatabase extends _$AppDatabase {
         flagUrl: farmer.flagUrl,
         name: name,
         descriptionHtml: desc,
+        story: story ?? desc,
         region: reg ?? '',
         country: cou ?? '',
         latitude: farmer.latitude,

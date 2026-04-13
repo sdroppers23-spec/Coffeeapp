@@ -121,6 +121,7 @@ class LocalizedFarmers extends Table {
   TextColumn get countryUk => text().nullable()();
 
   // Coordinates & Metadata
+  TextColumn get storyUk => text().nullable()();
   RealColumn get latitude => real().nullable()();
   RealColumn get longitude => real().nullable()();
   DateTimeColumn get createdAt => dateTime().nullable()();
@@ -132,6 +133,7 @@ class LocalizedFarmerTranslations extends Table {
 
   TextColumn get name => text().nullable()();
   TextColumn get descriptionHtml => text().nullable()();
+  TextColumn get story => text().nullable()();
   TextColumn get region => text().nullable()();
   TextColumn get country => text().nullable()();
 

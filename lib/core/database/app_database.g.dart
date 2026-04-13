@@ -8637,97 +8637,6 @@ class $BrewingRecipesTable extends BrewingRecipes
     requiredDuringInsert: false,
     defaultValue: const Constant('Тут має бути лінк на фото'),
   );
-  static const VerificationMeta _descriptionRoMeta = const VerificationMeta(
-    'descriptionRo',
-  );
-  @override
-  late final GeneratedColumn<String> descriptionRo = GeneratedColumn<String>(
-    'description_ro',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _nameTrMeta = const VerificationMeta('nameTr');
-  @override
-  late final GeneratedColumn<String> nameTr = GeneratedColumn<String>(
-    'name_tr',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _descriptionTrMeta = const VerificationMeta(
-    'descriptionTr',
-  );
-  @override
-  late final GeneratedColumn<String> descriptionTr = GeneratedColumn<String>(
-    'description_tr',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _nameJaMeta = const VerificationMeta('nameJa');
-  @override
-  late final GeneratedColumn<String> nameJa = GeneratedColumn<String>(
-    'name_ja',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _descriptionJaMeta = const VerificationMeta(
-    'descriptionJa',
-  );
-  @override
-  late final GeneratedColumn<String> descriptionJa = GeneratedColumn<String>(
-    'description_ja',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _nameKoMeta = const VerificationMeta('nameKo');
-  @override
-  late final GeneratedColumn<String> nameKo = GeneratedColumn<String>(
-    'name_ko',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _descriptionKoMeta = const VerificationMeta(
-    'descriptionKo',
-  );
-  @override
-  late final GeneratedColumn<String> descriptionKo = GeneratedColumn<String>(
-    'description_ko',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _nameZhMeta = const VerificationMeta('nameZh');
-  @override
-  late final GeneratedColumn<String> nameZh = GeneratedColumn<String>(
-    'name_zh',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _descriptionZhMeta = const VerificationMeta(
-    'descriptionZh',
-  );
-  @override
-  late final GeneratedColumn<String> descriptionZh = GeneratedColumn<String>(
-    'description_zh',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
   static const VerificationMeta _ratioGramsPerMlMeta = const VerificationMeta(
     'ratioGramsPerMl',
   );
@@ -8816,15 +8725,6 @@ class $BrewingRecipesTable extends BrewingRecipes
     nameUk,
     descriptionUk,
     imageUrl,
-    descriptionRo,
-    nameTr,
-    descriptionTr,
-    nameJa,
-    descriptionJa,
-    nameKo,
-    descriptionKo,
-    nameZh,
-    descriptionZh,
     ratioGramsPerMl,
     tempC,
     totalTimeSec,
@@ -8875,75 +8775,6 @@ class $BrewingRecipesTable extends BrewingRecipes
       context.handle(
         _imageUrlMeta,
         imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
-      );
-    }
-    if (data.containsKey('description_ro')) {
-      context.handle(
-        _descriptionRoMeta,
-        descriptionRo.isAcceptableOrUnknown(
-          data['description_ro']!,
-          _descriptionRoMeta,
-        ),
-      );
-    }
-    if (data.containsKey('name_tr')) {
-      context.handle(
-        _nameTrMeta,
-        nameTr.isAcceptableOrUnknown(data['name_tr']!, _nameTrMeta),
-      );
-    }
-    if (data.containsKey('description_tr')) {
-      context.handle(
-        _descriptionTrMeta,
-        descriptionTr.isAcceptableOrUnknown(
-          data['description_tr']!,
-          _descriptionTrMeta,
-        ),
-      );
-    }
-    if (data.containsKey('name_ja')) {
-      context.handle(
-        _nameJaMeta,
-        nameJa.isAcceptableOrUnknown(data['name_ja']!, _nameJaMeta),
-      );
-    }
-    if (data.containsKey('description_ja')) {
-      context.handle(
-        _descriptionJaMeta,
-        descriptionJa.isAcceptableOrUnknown(
-          data['description_ja']!,
-          _descriptionJaMeta,
-        ),
-      );
-    }
-    if (data.containsKey('name_ko')) {
-      context.handle(
-        _nameKoMeta,
-        nameKo.isAcceptableOrUnknown(data['name_ko']!, _nameKoMeta),
-      );
-    }
-    if (data.containsKey('description_ko')) {
-      context.handle(
-        _descriptionKoMeta,
-        descriptionKo.isAcceptableOrUnknown(
-          data['description_ko']!,
-          _descriptionKoMeta,
-        ),
-      );
-    }
-    if (data.containsKey('name_zh')) {
-      context.handle(
-        _nameZhMeta,
-        nameZh.isAcceptableOrUnknown(data['name_zh']!, _nameZhMeta),
-      );
-    }
-    if (data.containsKey('description_zh')) {
-      context.handle(
-        _descriptionZhMeta,
-        descriptionZh.isAcceptableOrUnknown(
-          data['description_zh']!,
-          _descriptionZhMeta,
-        ),
       );
     }
     if (data.containsKey('ratio_grams_per_ml')) {
@@ -9026,42 +8857,6 @@ class $BrewingRecipesTable extends BrewingRecipes
         DriftSqlType.string,
         data['${effectivePrefix}image_url'],
       )!,
-      descriptionRo: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}description_ro'],
-      ),
-      nameTr: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}name_tr'],
-      ),
-      descriptionTr: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}description_tr'],
-      ),
-      nameJa: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}name_ja'],
-      ),
-      descriptionJa: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}description_ja'],
-      ),
-      nameKo: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}name_ko'],
-      ),
-      descriptionKo: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}description_ko'],
-      ),
-      nameZh: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}name_zh'],
-      ),
-      descriptionZh: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}description_zh'],
-      ),
       ratioGramsPerMl: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}ratio_grams_per_ml'],
@@ -9105,15 +8900,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
   final String nameUk;
   final String descriptionUk;
   final String imageUrl;
-  final String? descriptionRo;
-  final String? nameTr;
-  final String? descriptionTr;
-  final String? nameJa;
-  final String? descriptionJa;
-  final String? nameKo;
-  final String? descriptionKo;
-  final String? nameZh;
-  final String? descriptionZh;
   final double ratioGramsPerMl;
   final double tempC;
   final int totalTimeSec;
@@ -9127,15 +8913,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
     required this.nameUk,
     required this.descriptionUk,
     required this.imageUrl,
-    this.descriptionRo,
-    this.nameTr,
-    this.descriptionTr,
-    this.nameJa,
-    this.descriptionJa,
-    this.nameKo,
-    this.descriptionKo,
-    this.nameZh,
-    this.descriptionZh,
     required this.ratioGramsPerMl,
     required this.tempC,
     required this.totalTimeSec,
@@ -9152,33 +8929,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
     map['name_uk'] = Variable<String>(nameUk);
     map['description_uk'] = Variable<String>(descriptionUk);
     map['image_url'] = Variable<String>(imageUrl);
-    if (!nullToAbsent || descriptionRo != null) {
-      map['description_ro'] = Variable<String>(descriptionRo);
-    }
-    if (!nullToAbsent || nameTr != null) {
-      map['name_tr'] = Variable<String>(nameTr);
-    }
-    if (!nullToAbsent || descriptionTr != null) {
-      map['description_tr'] = Variable<String>(descriptionTr);
-    }
-    if (!nullToAbsent || nameJa != null) {
-      map['name_ja'] = Variable<String>(nameJa);
-    }
-    if (!nullToAbsent || descriptionJa != null) {
-      map['description_ja'] = Variable<String>(descriptionJa);
-    }
-    if (!nullToAbsent || nameKo != null) {
-      map['name_ko'] = Variable<String>(nameKo);
-    }
-    if (!nullToAbsent || descriptionKo != null) {
-      map['description_ko'] = Variable<String>(descriptionKo);
-    }
-    if (!nullToAbsent || nameZh != null) {
-      map['name_zh'] = Variable<String>(nameZh);
-    }
-    if (!nullToAbsent || descriptionZh != null) {
-      map['description_zh'] = Variable<String>(descriptionZh);
-    }
     map['ratio_grams_per_ml'] = Variable<double>(ratioGramsPerMl);
     map['temp_c'] = Variable<double>(tempC);
     map['total_time_sec'] = Variable<int>(totalTimeSec);
@@ -9198,33 +8948,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
       nameUk: Value(nameUk),
       descriptionUk: Value(descriptionUk),
       imageUrl: Value(imageUrl),
-      descriptionRo: descriptionRo == null && nullToAbsent
-          ? const Value.absent()
-          : Value(descriptionRo),
-      nameTr: nameTr == null && nullToAbsent
-          ? const Value.absent()
-          : Value(nameTr),
-      descriptionTr: descriptionTr == null && nullToAbsent
-          ? const Value.absent()
-          : Value(descriptionTr),
-      nameJa: nameJa == null && nullToAbsent
-          ? const Value.absent()
-          : Value(nameJa),
-      descriptionJa: descriptionJa == null && nullToAbsent
-          ? const Value.absent()
-          : Value(descriptionJa),
-      nameKo: nameKo == null && nullToAbsent
-          ? const Value.absent()
-          : Value(nameKo),
-      descriptionKo: descriptionKo == null && nullToAbsent
-          ? const Value.absent()
-          : Value(descriptionKo),
-      nameZh: nameZh == null && nullToAbsent
-          ? const Value.absent()
-          : Value(nameZh),
-      descriptionZh: descriptionZh == null && nullToAbsent
-          ? const Value.absent()
-          : Value(descriptionZh),
       ratioGramsPerMl: Value(ratioGramsPerMl),
       tempC: Value(tempC),
       totalTimeSec: Value(totalTimeSec),
@@ -9248,15 +8971,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
       nameUk: serializer.fromJson<String>(json['nameUk']),
       descriptionUk: serializer.fromJson<String>(json['descriptionUk']),
       imageUrl: serializer.fromJson<String>(json['imageUrl']),
-      descriptionRo: serializer.fromJson<String?>(json['descriptionRo']),
-      nameTr: serializer.fromJson<String?>(json['nameTr']),
-      descriptionTr: serializer.fromJson<String?>(json['descriptionTr']),
-      nameJa: serializer.fromJson<String?>(json['nameJa']),
-      descriptionJa: serializer.fromJson<String?>(json['descriptionJa']),
-      nameKo: serializer.fromJson<String?>(json['nameKo']),
-      descriptionKo: serializer.fromJson<String?>(json['descriptionKo']),
-      nameZh: serializer.fromJson<String?>(json['nameZh']),
-      descriptionZh: serializer.fromJson<String?>(json['descriptionZh']),
       ratioGramsPerMl: serializer.fromJson<double>(json['ratioGramsPerMl']),
       tempC: serializer.fromJson<double>(json['tempC']),
       totalTimeSec: serializer.fromJson<int>(json['totalTimeSec']),
@@ -9275,15 +8989,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
       'nameUk': serializer.toJson<String>(nameUk),
       'descriptionUk': serializer.toJson<String>(descriptionUk),
       'imageUrl': serializer.toJson<String>(imageUrl),
-      'descriptionRo': serializer.toJson<String?>(descriptionRo),
-      'nameTr': serializer.toJson<String?>(nameTr),
-      'descriptionTr': serializer.toJson<String?>(descriptionTr),
-      'nameJa': serializer.toJson<String?>(nameJa),
-      'descriptionJa': serializer.toJson<String?>(descriptionJa),
-      'nameKo': serializer.toJson<String?>(nameKo),
-      'descriptionKo': serializer.toJson<String?>(descriptionKo),
-      'nameZh': serializer.toJson<String?>(nameZh),
-      'descriptionZh': serializer.toJson<String?>(descriptionZh),
       'ratioGramsPerMl': serializer.toJson<double>(ratioGramsPerMl),
       'tempC': serializer.toJson<double>(tempC),
       'totalTimeSec': serializer.toJson<int>(totalTimeSec),
@@ -9300,15 +9005,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
     String? nameUk,
     String? descriptionUk,
     String? imageUrl,
-    Value<String?> descriptionRo = const Value.absent(),
-    Value<String?> nameTr = const Value.absent(),
-    Value<String?> descriptionTr = const Value.absent(),
-    Value<String?> nameJa = const Value.absent(),
-    Value<String?> descriptionJa = const Value.absent(),
-    Value<String?> nameKo = const Value.absent(),
-    Value<String?> descriptionKo = const Value.absent(),
-    Value<String?> nameZh = const Value.absent(),
-    Value<String?> descriptionZh = const Value.absent(),
     double? ratioGramsPerMl,
     double? tempC,
     int? totalTimeSec,
@@ -9322,25 +9018,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
     nameUk: nameUk ?? this.nameUk,
     descriptionUk: descriptionUk ?? this.descriptionUk,
     imageUrl: imageUrl ?? this.imageUrl,
-    descriptionRo: descriptionRo.present
-        ? descriptionRo.value
-        : this.descriptionRo,
-    nameTr: nameTr.present ? nameTr.value : this.nameTr,
-    descriptionTr: descriptionTr.present
-        ? descriptionTr.value
-        : this.descriptionTr,
-    nameJa: nameJa.present ? nameJa.value : this.nameJa,
-    descriptionJa: descriptionJa.present
-        ? descriptionJa.value
-        : this.descriptionJa,
-    nameKo: nameKo.present ? nameKo.value : this.nameKo,
-    descriptionKo: descriptionKo.present
-        ? descriptionKo.value
-        : this.descriptionKo,
-    nameZh: nameZh.present ? nameZh.value : this.nameZh,
-    descriptionZh: descriptionZh.present
-        ? descriptionZh.value
-        : this.descriptionZh,
     ratioGramsPerMl: ratioGramsPerMl ?? this.ratioGramsPerMl,
     tempC: tempC ?? this.tempC,
     totalTimeSec: totalTimeSec ?? this.totalTimeSec,
@@ -9358,25 +9035,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
           ? data.descriptionUk.value
           : this.descriptionUk,
       imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
-      descriptionRo: data.descriptionRo.present
-          ? data.descriptionRo.value
-          : this.descriptionRo,
-      nameTr: data.nameTr.present ? data.nameTr.value : this.nameTr,
-      descriptionTr: data.descriptionTr.present
-          ? data.descriptionTr.value
-          : this.descriptionTr,
-      nameJa: data.nameJa.present ? data.nameJa.value : this.nameJa,
-      descriptionJa: data.descriptionJa.present
-          ? data.descriptionJa.value
-          : this.descriptionJa,
-      nameKo: data.nameKo.present ? data.nameKo.value : this.nameKo,
-      descriptionKo: data.descriptionKo.present
-          ? data.descriptionKo.value
-          : this.descriptionKo,
-      nameZh: data.nameZh.present ? data.nameZh.value : this.nameZh,
-      descriptionZh: data.descriptionZh.present
-          ? data.descriptionZh.value
-          : this.descriptionZh,
       ratioGramsPerMl: data.ratioGramsPerMl.present
           ? data.ratioGramsPerMl.value
           : this.ratioGramsPerMl,
@@ -9403,15 +9061,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
           ..write('nameUk: $nameUk, ')
           ..write('descriptionUk: $descriptionUk, ')
           ..write('imageUrl: $imageUrl, ')
-          ..write('descriptionRo: $descriptionRo, ')
-          ..write('nameTr: $nameTr, ')
-          ..write('descriptionTr: $descriptionTr, ')
-          ..write('nameJa: $nameJa, ')
-          ..write('descriptionJa: $descriptionJa, ')
-          ..write('nameKo: $nameKo, ')
-          ..write('descriptionKo: $descriptionKo, ')
-          ..write('nameZh: $nameZh, ')
-          ..write('descriptionZh: $descriptionZh, ')
           ..write('ratioGramsPerMl: $ratioGramsPerMl, ')
           ..write('tempC: $tempC, ')
           ..write('totalTimeSec: $totalTimeSec, ')
@@ -9424,21 +9073,12 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
   }
 
   @override
-  int get hashCode => Object.hashAll([
+  int get hashCode => Object.hash(
     id,
     methodKey,
     nameUk,
     descriptionUk,
     imageUrl,
-    descriptionRo,
-    nameTr,
-    descriptionTr,
-    nameJa,
-    descriptionJa,
-    nameKo,
-    descriptionKo,
-    nameZh,
-    descriptionZh,
     ratioGramsPerMl,
     tempC,
     totalTimeSec,
@@ -9446,7 +9086,7 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
     stepsJson,
     flavorProfile,
     iconName,
-  ]);
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -9456,15 +9096,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
           other.nameUk == this.nameUk &&
           other.descriptionUk == this.descriptionUk &&
           other.imageUrl == this.imageUrl &&
-          other.descriptionRo == this.descriptionRo &&
-          other.nameTr == this.nameTr &&
-          other.descriptionTr == this.descriptionTr &&
-          other.nameJa == this.nameJa &&
-          other.descriptionJa == this.descriptionJa &&
-          other.nameKo == this.nameKo &&
-          other.descriptionKo == this.descriptionKo &&
-          other.nameZh == this.nameZh &&
-          other.descriptionZh == this.descriptionZh &&
           other.ratioGramsPerMl == this.ratioGramsPerMl &&
           other.tempC == this.tempC &&
           other.totalTimeSec == this.totalTimeSec &&
@@ -9480,15 +9111,6 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
   final Value<String> nameUk;
   final Value<String> descriptionUk;
   final Value<String> imageUrl;
-  final Value<String?> descriptionRo;
-  final Value<String?> nameTr;
-  final Value<String?> descriptionTr;
-  final Value<String?> nameJa;
-  final Value<String?> descriptionJa;
-  final Value<String?> nameKo;
-  final Value<String?> descriptionKo;
-  final Value<String?> nameZh;
-  final Value<String?> descriptionZh;
   final Value<double> ratioGramsPerMl;
   final Value<double> tempC;
   final Value<int> totalTimeSec;
@@ -9502,15 +9124,6 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
     this.nameUk = const Value.absent(),
     this.descriptionUk = const Value.absent(),
     this.imageUrl = const Value.absent(),
-    this.descriptionRo = const Value.absent(),
-    this.nameTr = const Value.absent(),
-    this.descriptionTr = const Value.absent(),
-    this.nameJa = const Value.absent(),
-    this.descriptionJa = const Value.absent(),
-    this.nameKo = const Value.absent(),
-    this.descriptionKo = const Value.absent(),
-    this.nameZh = const Value.absent(),
-    this.descriptionZh = const Value.absent(),
     this.ratioGramsPerMl = const Value.absent(),
     this.tempC = const Value.absent(),
     this.totalTimeSec = const Value.absent(),
@@ -9525,15 +9138,6 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
     this.nameUk = const Value.absent(),
     this.descriptionUk = const Value.absent(),
     this.imageUrl = const Value.absent(),
-    this.descriptionRo = const Value.absent(),
-    this.nameTr = const Value.absent(),
-    this.descriptionTr = const Value.absent(),
-    this.nameJa = const Value.absent(),
-    this.descriptionJa = const Value.absent(),
-    this.nameKo = const Value.absent(),
-    this.descriptionKo = const Value.absent(),
-    this.nameZh = const Value.absent(),
-    this.descriptionZh = const Value.absent(),
     this.ratioGramsPerMl = const Value.absent(),
     this.tempC = const Value.absent(),
     this.totalTimeSec = const Value.absent(),
@@ -9548,15 +9152,6 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
     Expression<String>? nameUk,
     Expression<String>? descriptionUk,
     Expression<String>? imageUrl,
-    Expression<String>? descriptionRo,
-    Expression<String>? nameTr,
-    Expression<String>? descriptionTr,
-    Expression<String>? nameJa,
-    Expression<String>? descriptionJa,
-    Expression<String>? nameKo,
-    Expression<String>? descriptionKo,
-    Expression<String>? nameZh,
-    Expression<String>? descriptionZh,
     Expression<double>? ratioGramsPerMl,
     Expression<double>? tempC,
     Expression<int>? totalTimeSec,
@@ -9571,15 +9166,6 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
       if (nameUk != null) 'name_uk': nameUk,
       if (descriptionUk != null) 'description_uk': descriptionUk,
       if (imageUrl != null) 'image_url': imageUrl,
-      if (descriptionRo != null) 'description_ro': descriptionRo,
-      if (nameTr != null) 'name_tr': nameTr,
-      if (descriptionTr != null) 'description_tr': descriptionTr,
-      if (nameJa != null) 'name_ja': nameJa,
-      if (descriptionJa != null) 'description_ja': descriptionJa,
-      if (nameKo != null) 'name_ko': nameKo,
-      if (descriptionKo != null) 'description_ko': descriptionKo,
-      if (nameZh != null) 'name_zh': nameZh,
-      if (descriptionZh != null) 'description_zh': descriptionZh,
       if (ratioGramsPerMl != null) 'ratio_grams_per_ml': ratioGramsPerMl,
       if (tempC != null) 'temp_c': tempC,
       if (totalTimeSec != null) 'total_time_sec': totalTimeSec,
@@ -9596,15 +9182,6 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
     Value<String>? nameUk,
     Value<String>? descriptionUk,
     Value<String>? imageUrl,
-    Value<String?>? descriptionRo,
-    Value<String?>? nameTr,
-    Value<String?>? descriptionTr,
-    Value<String?>? nameJa,
-    Value<String?>? descriptionJa,
-    Value<String?>? nameKo,
-    Value<String?>? descriptionKo,
-    Value<String?>? nameZh,
-    Value<String?>? descriptionZh,
     Value<double>? ratioGramsPerMl,
     Value<double>? tempC,
     Value<int>? totalTimeSec,
@@ -9619,15 +9196,6 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
       nameUk: nameUk ?? this.nameUk,
       descriptionUk: descriptionUk ?? this.descriptionUk,
       imageUrl: imageUrl ?? this.imageUrl,
-      descriptionRo: descriptionRo ?? this.descriptionRo,
-      nameTr: nameTr ?? this.nameTr,
-      descriptionTr: descriptionTr ?? this.descriptionTr,
-      nameJa: nameJa ?? this.nameJa,
-      descriptionJa: descriptionJa ?? this.descriptionJa,
-      nameKo: nameKo ?? this.nameKo,
-      descriptionKo: descriptionKo ?? this.descriptionKo,
-      nameZh: nameZh ?? this.nameZh,
-      descriptionZh: descriptionZh ?? this.descriptionZh,
       ratioGramsPerMl: ratioGramsPerMl ?? this.ratioGramsPerMl,
       tempC: tempC ?? this.tempC,
       totalTimeSec: totalTimeSec ?? this.totalTimeSec,
@@ -9655,33 +9223,6 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
     }
     if (imageUrl.present) {
       map['image_url'] = Variable<String>(imageUrl.value);
-    }
-    if (descriptionRo.present) {
-      map['description_ro'] = Variable<String>(descriptionRo.value);
-    }
-    if (nameTr.present) {
-      map['name_tr'] = Variable<String>(nameTr.value);
-    }
-    if (descriptionTr.present) {
-      map['description_tr'] = Variable<String>(descriptionTr.value);
-    }
-    if (nameJa.present) {
-      map['name_ja'] = Variable<String>(nameJa.value);
-    }
-    if (descriptionJa.present) {
-      map['description_ja'] = Variable<String>(descriptionJa.value);
-    }
-    if (nameKo.present) {
-      map['name_ko'] = Variable<String>(nameKo.value);
-    }
-    if (descriptionKo.present) {
-      map['description_ko'] = Variable<String>(descriptionKo.value);
-    }
-    if (nameZh.present) {
-      map['name_zh'] = Variable<String>(nameZh.value);
-    }
-    if (descriptionZh.present) {
-      map['description_zh'] = Variable<String>(descriptionZh.value);
     }
     if (ratioGramsPerMl.present) {
       map['ratio_grams_per_ml'] = Variable<double>(ratioGramsPerMl.value);
@@ -9715,15 +9256,6 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
           ..write('nameUk: $nameUk, ')
           ..write('descriptionUk: $descriptionUk, ')
           ..write('imageUrl: $imageUrl, ')
-          ..write('descriptionRo: $descriptionRo, ')
-          ..write('nameTr: $nameTr, ')
-          ..write('descriptionTr: $descriptionTr, ')
-          ..write('nameJa: $nameJa, ')
-          ..write('descriptionJa: $descriptionJa, ')
-          ..write('nameKo: $nameKo, ')
-          ..write('descriptionKo: $descriptionKo, ')
-          ..write('nameZh: $nameZh, ')
-          ..write('descriptionZh: $descriptionZh, ')
           ..write('ratioGramsPerMl: $ratioGramsPerMl, ')
           ..write('tempC: $tempC, ')
           ..write('totalTimeSec: $totalTimeSec, ')
@@ -17921,15 +17453,6 @@ typedef $$BrewingRecipesTableCreateCompanionBuilder =
       Value<String> nameUk,
       Value<String> descriptionUk,
       Value<String> imageUrl,
-      Value<String?> descriptionRo,
-      Value<String?> nameTr,
-      Value<String?> descriptionTr,
-      Value<String?> nameJa,
-      Value<String?> descriptionJa,
-      Value<String?> nameKo,
-      Value<String?> descriptionKo,
-      Value<String?> nameZh,
-      Value<String?> descriptionZh,
       Value<double> ratioGramsPerMl,
       Value<double> tempC,
       Value<int> totalTimeSec,
@@ -17945,15 +17468,6 @@ typedef $$BrewingRecipesTableUpdateCompanionBuilder =
       Value<String> nameUk,
       Value<String> descriptionUk,
       Value<String> imageUrl,
-      Value<String?> descriptionRo,
-      Value<String?> nameTr,
-      Value<String?> descriptionTr,
-      Value<String?> nameJa,
-      Value<String?> descriptionJa,
-      Value<String?> nameKo,
-      Value<String?> descriptionKo,
-      Value<String?> nameZh,
-      Value<String?> descriptionZh,
       Value<double> ratioGramsPerMl,
       Value<double> tempC,
       Value<int> totalTimeSec,
@@ -18036,51 +17550,6 @@ class $$BrewingRecipesTableFilterComposer
 
   ColumnFilters<String> get imageUrl => $composableBuilder(
     column: $table.imageUrl,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get descriptionRo => $composableBuilder(
-    column: $table.descriptionRo,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get nameTr => $composableBuilder(
-    column: $table.nameTr,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get descriptionTr => $composableBuilder(
-    column: $table.descriptionTr,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get nameJa => $composableBuilder(
-    column: $table.nameJa,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get descriptionJa => $composableBuilder(
-    column: $table.descriptionJa,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get nameKo => $composableBuilder(
-    column: $table.nameKo,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get descriptionKo => $composableBuilder(
-    column: $table.descriptionKo,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get nameZh => $composableBuilder(
-    column: $table.nameZh,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get descriptionZh => $composableBuilder(
-    column: $table.descriptionZh,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -18181,51 +17650,6 @@ class $$BrewingRecipesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get descriptionRo => $composableBuilder(
-    column: $table.descriptionRo,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get nameTr => $composableBuilder(
-    column: $table.nameTr,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get descriptionTr => $composableBuilder(
-    column: $table.descriptionTr,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get nameJa => $composableBuilder(
-    column: $table.nameJa,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get descriptionJa => $composableBuilder(
-    column: $table.descriptionJa,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get nameKo => $composableBuilder(
-    column: $table.nameKo,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get descriptionKo => $composableBuilder(
-    column: $table.descriptionKo,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get nameZh => $composableBuilder(
-    column: $table.nameZh,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get descriptionZh => $composableBuilder(
-    column: $table.descriptionZh,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<double> get ratioGramsPerMl => $composableBuilder(
     column: $table.ratioGramsPerMl,
     builder: (column) => ColumnOrderings(column),
@@ -18287,43 +17711,6 @@ class $$BrewingRecipesTableAnnotationComposer
 
   GeneratedColumn<String> get imageUrl =>
       $composableBuilder(column: $table.imageUrl, builder: (column) => column);
-
-  GeneratedColumn<String> get descriptionRo => $composableBuilder(
-    column: $table.descriptionRo,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get nameTr =>
-      $composableBuilder(column: $table.nameTr, builder: (column) => column);
-
-  GeneratedColumn<String> get descriptionTr => $composableBuilder(
-    column: $table.descriptionTr,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get nameJa =>
-      $composableBuilder(column: $table.nameJa, builder: (column) => column);
-
-  GeneratedColumn<String> get descriptionJa => $composableBuilder(
-    column: $table.descriptionJa,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get nameKo =>
-      $composableBuilder(column: $table.nameKo, builder: (column) => column);
-
-  GeneratedColumn<String> get descriptionKo => $composableBuilder(
-    column: $table.descriptionKo,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get nameZh =>
-      $composableBuilder(column: $table.nameZh, builder: (column) => column);
-
-  GeneratedColumn<String> get descriptionZh => $composableBuilder(
-    column: $table.descriptionZh,
-    builder: (column) => column,
-  );
 
   GeneratedColumn<double> get ratioGramsPerMl => $composableBuilder(
     column: $table.ratioGramsPerMl,
@@ -18417,15 +17804,6 @@ class $$BrewingRecipesTableTableManager
                 Value<String> nameUk = const Value.absent(),
                 Value<String> descriptionUk = const Value.absent(),
                 Value<String> imageUrl = const Value.absent(),
-                Value<String?> descriptionRo = const Value.absent(),
-                Value<String?> nameTr = const Value.absent(),
-                Value<String?> descriptionTr = const Value.absent(),
-                Value<String?> nameJa = const Value.absent(),
-                Value<String?> descriptionJa = const Value.absent(),
-                Value<String?> nameKo = const Value.absent(),
-                Value<String?> descriptionKo = const Value.absent(),
-                Value<String?> nameZh = const Value.absent(),
-                Value<String?> descriptionZh = const Value.absent(),
                 Value<double> ratioGramsPerMl = const Value.absent(),
                 Value<double> tempC = const Value.absent(),
                 Value<int> totalTimeSec = const Value.absent(),
@@ -18439,15 +17817,6 @@ class $$BrewingRecipesTableTableManager
                 nameUk: nameUk,
                 descriptionUk: descriptionUk,
                 imageUrl: imageUrl,
-                descriptionRo: descriptionRo,
-                nameTr: nameTr,
-                descriptionTr: descriptionTr,
-                nameJa: nameJa,
-                descriptionJa: descriptionJa,
-                nameKo: nameKo,
-                descriptionKo: descriptionKo,
-                nameZh: nameZh,
-                descriptionZh: descriptionZh,
                 ratioGramsPerMl: ratioGramsPerMl,
                 tempC: tempC,
                 totalTimeSec: totalTimeSec,
@@ -18463,15 +17832,6 @@ class $$BrewingRecipesTableTableManager
                 Value<String> nameUk = const Value.absent(),
                 Value<String> descriptionUk = const Value.absent(),
                 Value<String> imageUrl = const Value.absent(),
-                Value<String?> descriptionRo = const Value.absent(),
-                Value<String?> nameTr = const Value.absent(),
-                Value<String?> descriptionTr = const Value.absent(),
-                Value<String?> nameJa = const Value.absent(),
-                Value<String?> descriptionJa = const Value.absent(),
-                Value<String?> nameKo = const Value.absent(),
-                Value<String?> descriptionKo = const Value.absent(),
-                Value<String?> nameZh = const Value.absent(),
-                Value<String?> descriptionZh = const Value.absent(),
                 Value<double> ratioGramsPerMl = const Value.absent(),
                 Value<double> tempC = const Value.absent(),
                 Value<int> totalTimeSec = const Value.absent(),
@@ -18485,15 +17845,6 @@ class $$BrewingRecipesTableTableManager
                 nameUk: nameUk,
                 descriptionUk: descriptionUk,
                 imageUrl: imageUrl,
-                descriptionRo: descriptionRo,
-                nameTr: nameTr,
-                descriptionTr: descriptionTr,
-                nameJa: nameJa,
-                descriptionJa: descriptionJa,
-                nameKo: nameKo,
-                descriptionKo: descriptionKo,
-                nameZh: nameZh,
-                descriptionZh: descriptionZh,
                 ratioGramsPerMl: ratioGramsPerMl,
                 tempC: tempC,
                 totalTimeSec: totalTimeSec,

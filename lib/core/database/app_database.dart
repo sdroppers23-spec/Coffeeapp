@@ -31,42 +31,34 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? e]) : super(e ?? openConnection());
 
   @override
-  int get schemaVersion => 27;
+  int get schemaVersion => 28;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (m) => m.createAll(),
     onUpgrade: (m, from, to) async {
-      if (from < 26) {
-        // Migration to Localized Composite Keys & Project Recovery
+      if (from < 28) {
+        // Migration to Localized Columns (Main + Translations)
         await transaction(() async {
-          // Drop tables that need schema change (ID -> Composite Key)
-          // We use the generated table names directly for customStatement
-          
-
-          // Ensure old tables are removed
-          await customStatement('DROP TABLE IF EXISTS localized_farmer_translations;');
-          await customStatement('DROP TABLE IF EXISTS specialty_article_translations;');
-
-          // Recreate tables with new wide schema
+          // Drop all tables that underwent major schema changes to force recreation
+          await customStatement('DROP TABLE IF EXISTS localized_beans;');
           await customStatement('DROP TABLE IF EXISTS localized_farmers;');
           await customStatement('DROP TABLE IF EXISTS specialty_articles;');
+          await customStatement('DROP TABLE IF EXISTS brewing_recipes;');
+          
+          await m.createTable(localizedBeans);
           await m.createTable(localizedFarmers);
           await m.createTable(specialtyArticles);
+          await m.createTable(brewingRecipes);
 
-          // Delete deprecated tables
-          await customStatement('DROP TABLE IF EXISTS latte_art_patterns;');
-          await customStatement(
-            'DROP TABLE IF EXISTS latte_art_pattern_translations;',
-          );
-          await customStatement('DROP TABLE IF EXISTS bean_scans;');
-
-          // Ensure brand_id exists in coffee_lots
-          try {
-            await customStatement(
-              'ALTER TABLE coffee_lots ADD COLUMN brand_id INTEGER;',
-            );
-          } catch (_) {}
+          // Delete deprecated translation tables to ensure they are clean
+          await customStatement('DROP TABLE IF EXISTS localized_farmer_translations;');
+          await customStatement('DROP TABLE IF EXISTS specialty_article_translations;');
+          await customStatement('DROP TABLE IF EXISTS brewing_recipe_translations;');
+          
+          await m.createTable(localizedFarmerTranslations);
+          await m.createTable(specialtyArticleTranslations);
+          await m.createTable(brewingRecipeTranslations);
         });
       }
     },

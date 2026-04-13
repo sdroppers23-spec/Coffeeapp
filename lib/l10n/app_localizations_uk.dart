@@ -66,7 +66,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get error_loading => 'Помилка';
 
   @override
-  String get recipes => 'Рецепти';
+  String get recipes => 'Альтернатива';
 
   @override
   String get scans => 'Скан-історія';

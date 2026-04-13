@@ -240,7 +240,7 @@ class SyncService {
             latitude: Value((item['latitude'] as num?)?.toDouble() ?? 0.0),
             longitude: Value((item['longitude'] as num?)?.toDouble() ?? 0.0),
             nameUk: Value(item['name_uk'] as String? ?? item['name'] as String? ?? ''),
-            descriptionHtmlUk: Value(item['description_uk'] as String? ?? item['description'] as String? ?? ''),
+            descriptionHtmlUk: Value(item['description_html_uk'] as String? ?? item['description_uk'] as String? ?? item['description'] as String? ?? ''),
             regionUk: Value(item['region_uk'] as String? ?? item['region'] as String? ?? ''),
             countryUk: Value(item['country_uk'] as String? ?? item['country'] as String? ?? ''),
           );
@@ -428,6 +428,7 @@ class SyncService {
             difficulty: Value(item['difficulty'] as String? ?? 'Intermediate'),
             flavorProfile: Value(item['flavor_profile'] as String? ?? 'Balanced'),
             iconName: Value(item['icon_name'] as String?),
+            imageUrl: Value(item['image_url'] as String? ?? ''),
             stepsJson: Value(item['steps_json']?.toString() ?? '[]'),
           );
 

@@ -9,7 +9,6 @@ import 'brewing_guide_screen.dart';
 import 'custom_recipe_list.dart';
 import 'method_tile.dart';
 import '../../shared/widgets/premium_app_bar.dart';
-import '../../core/database/app_database.dart';
 import '../../core/database/dtos.dart';
 
 class BrewingViewModeNotifier extends Notifier<bool> {
@@ -50,7 +49,7 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: PremiumAppBar(
-        title: ref.t('recipes'),
+        title: ref.t('alternative'),
         actions: [
           IconButton(
             icon: Icon(

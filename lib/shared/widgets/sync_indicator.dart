@@ -11,6 +11,7 @@ enum SyncState { idle, syncing, success, error, offline }
 class SyncStatusNotifier extends Notifier<SyncState> {
   String? lastError;
   String? lastMessage;
+  double currentProgress = 0.0;
   List<ConnectivityResult>? _lastConnectivity;
 
   @override
@@ -53,9 +54,10 @@ class SyncStatusNotifier extends Notifier<SyncState> {
     try {
       await _syncService.syncAll(
         force: force,
-        onProgress: (m) {
+        onProgress: (m, p) {
           state = SyncState.syncing;
           lastMessage = m;
+          currentProgress = p;
         },
       );
       state = SyncState.success;
@@ -102,7 +104,8 @@ class SyncIndicator extends ConsumerWidget {
       case SyncState.syncing:
         color = const Color(0xFFC8A96E);
         icon = Icons.sync;
-        label = notifier.lastMessage ?? 'Syncing...';
+        final pct = (notifier.currentProgress * 100).toInt();
+        label = '${notifier.lastMessage ?? 'Syncing'} ($pct%)';
         break;
       case SyncState.success:
         color = Colors.greenAccent;
@@ -129,12 +132,14 @@ class SyncIndicator extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (syncState == SyncState.syncing)
-              const SizedBox(
+              SizedBox(
                 width: 12,
                 height: 12,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  color: Color(0xFFC8A96E),
+                  color: const Color(0xFFC8A96E),
+                  value: notifier.currentProgress > 0.05 ? notifier.currentProgress : null,
+                  backgroundColor: const Color(0xFFC8A96E).withValues(alpha: 0.2),
                 ),
               )
             else

@@ -20,48 +20,48 @@ class SyncService {
   /// Synchronizes all systems.
   Future<void> syncAll({
     bool force = false,
-    Function(String)? onProgress,
+    Function(String, double)? onProgress,
   }) async {
     try {
       debugPrint('SYNC: Starting full synchronization...');
-      onProgress?.call('Connecting to cloud...');
-
+      onProgress?.call('Connecting to cloud...', 0.05);
+      
       if (supabase == null) {
-        onProgress?.call('Supabase not available, skipping cloud sync.');
+        onProgress?.call('Supabase not available, skipping cloud sync.', 1.0);
         return;
       }
 
       // 1. Version Guard (Cache Buster)
       if (force) {
-        onProgress?.call('Clearing local cache for stabilization...');
+        onProgress?.call('Clearing local cache...', 0.1);
         await _clearLocalSharedData();
       }
 
-      // 2. Sync Farmers
-      onProgress?.call('Syncing Farmers...');
-      await syncFarmers();
+      // 2. Optimized Parallel Sync
+      onProgress?.call('Initializing Parallel Sync...', 0.15);
+      
+      int completedTasks = 0;
+      const totalTasks = 5;
 
-      // 3. Sync Articles
-      onProgress?.call('Syncing Articles...');
-      await syncArticles();
+      void updateProgress(String msg) {
+        completedTasks++;
+        final progress = 0.15 + (completedTasks / totalTasks) * 0.8;
+        onProgress?.call(msg, progress);
+      }
 
-      // 4. Sync Encyclopedia (Lots)
-      onProgress?.call('Updating Encyclopedia (Healing Flags)...');
-      await syncEncyclopedia();
+      await Future.wait([
+        syncFarmers().then((_) => updateProgress('Synced Farmers')),
+        syncArticles().then((_) => updateProgress('Synced Articles')),
+        syncEncyclopedia().then((_) => updateProgress('Synced Encyclopedia')),
+        syncBrands().then((_) => updateProgress('Synced Roasters')),
+        syncBrewingRecipes().then((_) => updateProgress('Synced Methods')),
+      ]);
 
-      // 5. Sync Brands
-      onProgress?.call('Syncing Coffee Roasters...');
-      await syncBrands();
-
-      // 6. Sync Brewing Methods
-      onProgress?.call('Syncing Brewing Methods...');
-      await syncBrewingRecipes();
-
-      // 7. Sync User Content (Push to Cloud)
-      onProgress?.call('Pushing local recipes to cloud...');
+      // 7. Sync User Content (Push to Cloud) - Keep sequential at end to ensure deps
+      onProgress?.call('Finalizing...', 0.98);
       await pushLocalUserContent();
 
-      onProgress?.call('Cloud Connected');
+      onProgress?.call('Cloud Connected', 1.0);
       debugPrint('SYNC: All systems synchronized [STABLE]');
     } catch (e, st) {
       debugPrint('SYNC ERROR: $e');

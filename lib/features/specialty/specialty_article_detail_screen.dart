@@ -44,8 +44,8 @@ class _SpecialtyArticleDetailScreenState
   Widget build(BuildContext context) {
     final title = widget.article.title;
     final subtitle = widget.article.subtitle;
-    final content = widget.article.contentHtml; // This now contains Markdown
-    final imageUrl = widget.article.imageUrl;
+    final content = widget.article.contentHtml;
+    final imageUrl = widget.article.effectiveImageUrl;
     const gold = Color(0xFFC8A96E);
     const bg = Color(0xFF0A0908);
 

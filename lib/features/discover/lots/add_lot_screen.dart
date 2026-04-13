@@ -60,8 +60,21 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
 
   // Controllers to prevent cursor jumps and fix focus
   late final TextEditingController _roasteryController;
+  late final TextEditingController _roasteryCountryController;
   late final TextEditingController _coffeeNameController;
   late final TextEditingController _originCountryController;
+  late final TextEditingController _regionController;
+  late final TextEditingController _altitudeController;
+  late final TextEditingController _varietiesController;
+  late final TextEditingController _processController;
+  late final TextEditingController _flavorProfileController;
+  late final TextEditingController _scaScoreController;
+  late final TextEditingController _lotNumberController;
+  late final TextEditingController _weightController;
+  late final TextEditingController _priceController;
+  late final TextEditingController _retailPrice1kController;
+  late final TextEditingController _wholesalePrice250Controller;
+  late final TextEditingController _wholesalePrice1kController;
 
   // ─── Sensory (1-5) ────────────────────────────────────────────────
   double _aroma = 3;
@@ -71,12 +84,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   double _body = 3;
   double _intensity = 3;
 
-  // ─── Prices ───────────────────────────────────────────────────────
-  String _price = '';
-  String _retailPrice1k = '';
-  String _wholesalePrice250 = '';
-  String _wholesalePrice1k = '';
-
   // ─── Lifecycle ────────────────────────────────────────────────────
   @override
   void initState() {
@@ -85,8 +92,37 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     _tabController.addListener(() => setState(() {}));
 
     _roasteryController = TextEditingController(text: widget.initialLot?.roasteryName ?? '');
+    _roasteryCountryController = TextEditingController(text: widget.initialLot?.roasteryCountry ?? 'Ukraine');
     _coffeeNameController = TextEditingController(text: widget.initialLot?.coffeeName ?? '');
     _originCountryController = TextEditingController(text: widget.initialLot?.originCountry ?? '');
+    _regionController = TextEditingController(text: widget.initialLot?.region ?? '');
+    _altitudeController = TextEditingController(text: widget.initialLot?.altitude ?? '');
+    _varietiesController = TextEditingController(text: widget.initialLot?.varieties ?? '');
+    _processController = TextEditingController(text: widget.initialLot?.process ?? 'Washed');
+    _flavorProfileController = TextEditingController(text: widget.initialLot?.flavorProfile ?? '');
+    _scaScoreController = TextEditingController(text: widget.initialLot?.scaScore ?? '85');
+    _lotNumberController = TextEditingController(text: widget.initialLot?.lotNumber ?? '');
+    _weightController = TextEditingController(text: widget.initialLot?.weight ?? '250g');
+    
+    // Synchronize initial strings with controllers
+    _roasteryName = _roasteryController.text;
+    _roasteryCountry = _roasteryCountryController.text;
+    _coffeeName = _coffeeNameController.text;
+    _originCountry = _originCountryController.text;
+    _region = _regionController.text;
+    _altitude = _altitudeController.text;
+    _varieties = _varietiesController.text;
+    _process = _processController.text;
+    _flavorProfile = _flavorProfileController.text;
+    _scaScore = _scaScoreController.text;
+    _lotNumber = _lotNumberController.text;
+    _weight = _weightController.text;
+    
+    final pricing = widget.initialLot?.pricing ?? {};
+    _priceController = TextEditingController(text: pricing['retail_250']?.toString() ?? '');
+    _retailPrice1kController = TextEditingController(text: pricing['retail_1k']?.toString() ?? '');
+    _wholesalePrice250Controller = TextEditingController(text: pricing['wholesale_250']?.toString() ?? '');
+    _wholesalePrice1kController = TextEditingController(text: pricing['wholesale_1k']?.toString() ?? '');
 
     if (widget.initialLot != null) _populateFields(widget.initialLot!);
   }
@@ -95,20 +131,27 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   void dispose() {
     _tabController.dispose();
     _roasteryController.dispose();
+    _roasteryCountryController.dispose();
     _coffeeNameController.dispose();
     _originCountryController.dispose();
+    _regionController.dispose();
+    _altitudeController.dispose();
+    _varietiesController.dispose();
+    _processController.dispose();
+    _flavorProfileController.dispose();
+    _scaScoreController.dispose();
+    _lotNumberController.dispose();
+    _weightController.dispose();
+    _priceController.dispose();
+    _retailPrice1kController.dispose();
+    _wholesalePrice250Controller.dispose();
+    _wholesalePrice1kController.dispose();
     super.dispose();
   }
 
   void _populateFields(CoffeeLotDto lot) {
     setState(() {
-      _roasteryName = lot.roasteryName ?? '';
       _roasteryCountry = lot.roasteryCountry ?? 'Ukraine';
-      _coffeeName = lot.coffeeName ?? '';
-      _originCountry = lot.originCountry ?? '';
-      _region = lot.region ?? '';
-      _altitude = lot.altitude ?? '';
-      _varieties = lot.varieties ?? '';
       _process = lot.process ?? 'Washed';
       _isDecaf = lot.isDecaf == true;
       if (_isDecaf && _process.contains('(')) {
@@ -116,13 +159,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         _process = parts[0].trim();
         _decafProcess = parts[1].replaceAll(')', '').trim();
       }
-      _flavorProfile = lot.flavorProfile ?? '';
       _roastLevel = lot.roastLevel ?? 'Medium';
       _roastDate = lot.roastDate ?? DateTime.now();
       _openedAt = lot.openedAt;
-      _weight = lot.weight ?? '250g';
-      _scaScore = lot.scaScore ?? '85';
-      _lotNumber = lot.lotNumber ?? '';
       _isOpen = lot.isOpen;
       _isGround = lot.isGround;
       _isFavorite = lot.isFavorite;
@@ -136,14 +175,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         _bitterness = (sensory['bitterness'] ?? 2).toDouble();
         _body = (sensory['body'] ?? 3).toDouble();
         _intensity = (sensory['intensity'] ?? 3).toDouble();
-      }
-
-      final prices = lot.pricing;
-      if (prices.isNotEmpty) {
-        _price = prices['retail_250']?.toString() ?? '';
-        _retailPrice1k = prices['retail_1k']?.toString() ?? '';
-        _wholesalePrice250 = prices['wholesale_250']?.toString() ?? '';
-        _wholesalePrice1k = prices['wholesale_1k']?.toString() ?? '';
       }
     });
   }
@@ -176,10 +207,10 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     };
 
     final priceMap = {
-      'retail_250': _price,
-      'retail_1k': _retailPrice1k,
-      'wholesale_250': _wholesalePrice250,
-      'wholesale_1k': _wholesalePrice1k,
+      'retail_250': _priceController.text,
+      'retail_1k': _retailPrice1kController.text,
+      'wholesale_250': _wholesalePrice250Controller.text,
+      'wholesale_1k': _wholesalePrice1kController.text,
     };
 
     final effectiveOpenedAt = (_isOpen || _isGround) 
@@ -191,22 +222,22 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         CoffeeLotsCompanion(
           id: Value(lotId),
           userId: Value(user.id),
-          roasteryName: Value(_roasteryName),
+          roasteryName: Value(_roasteryController.text),
           roasteryCountry: Value(_roasteryCountry),
-          coffeeName: Value(_coffeeName),
-          originCountry: Value(_originCountry),
-          region: Value(_region),
-          altitude: Value(_altitude),
+          coffeeName: Value(_coffeeNameController.text),
+          originCountry: Value(_originCountryController.text),
+          region: Value(_regionController.text),
+          altitude: Value(_altitudeController.text),
           process: Value(effectiveProcess),
           roastLevel: Value(_roastLevel),
           roastDate: Value(_roastDate),
           openedAt: Value(effectiveOpenedAt),
-          weight: Value(_weight),
-          lotNumber: Value(_lotNumber),
+          weight: Value(_weightController.text),
+          lotNumber: Value(_lotNumberController.text),
           isDecaf: Value(_isDecaf),
-          varieties: Value(_varieties),
-          flavorProfile: Value(_flavorProfile),
-          scaScore: Value(_scaScore),
+          varieties: Value(_varietiesController.text),
+          flavorProfile: Value(_flavorProfileController.text),
+          scaScore: Value(_scaScoreController.text),
           sensoryJson: Value(jsonEncode(sensoryMap)),
           priceJson: Value(jsonEncode(priceMap)),
           isOpen: Value(_isOpen),
@@ -367,9 +398,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       children: [
         _sectionLabel('Обсмажчик'),
         _darkCard(children: [
-          _fieldRow(label: 'NAME *', value: '', controller: _roasteryController, onChanged: (_) {}),
+          _fieldRow(label: 'NAME *', controller: _roasteryController, onChanged: (v) => _roasteryName = v),
           _divider(),
-          _fieldRow(label: 'COUNTRY', value: _roasteryCountry, onChanged: (v) => _roasteryCountry = v),
+          _fieldRow(label: 'COUNTRY', controller: _roasteryCountryController, onChanged: (v) => _roasteryCountry = v),
         ]),
         _sectionLabel('Дата обсмажування'),
         _darkCard(children: [
@@ -452,17 +483,13 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         ],
         _sectionLabel('Ціноутворення'),
         _darkCard(children: [
-          _fieldRow(label: 'РОЗДРІБ 250G', value: _price, onChanged: (v) => _price = v,
-              keyboardType: TextInputType.number, suffix: '₴'),
+          _fieldRow(label: 'РОЗДРІБ 250G', controller: _priceController, keyboardType: TextInputType.number, suffix: '₴'),
           _divider(),
-          _fieldRow(label: 'РОЗДРІБ 1KG', value: _retailPrice1k, onChanged: (v) => _retailPrice1k = v,
-              keyboardType: TextInputType.number, suffix: '₴'),
+          _fieldRow(label: 'РОЗДРІБ 1KG', controller: _retailPrice1kController, keyboardType: TextInputType.number, suffix: '₴'),
           _divider(),
-          _fieldRow(label: 'ОПТ 250G', value: _wholesalePrice250, onChanged: (v) => _wholesalePrice250 = v,
-              keyboardType: TextInputType.number, suffix: '₴'),
+          _fieldRow(label: 'ОПТ 250G', controller: _wholesalePrice250Controller, keyboardType: TextInputType.number, suffix: '₴'),
           _divider(),
-          _fieldRow(label: 'ОПТ 1KG', value: _wholesalePrice1k, onChanged: (v) => _wholesalePrice1k = v,
-              keyboardType: TextInputType.number, suffix: '₴'),
+          _fieldRow(label: 'ОПТ 1KG', controller: _wholesalePrice1kController, keyboardType: TextInputType.number, suffix: '₴'),
         ]),
       ],
     );
@@ -475,29 +502,53 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       children: [
         _sectionLabel('Кава та лот'),
         _darkCard(children: [
-          _fieldRow(label: 'COFFEE NAME *', value: '', controller: _coffeeNameController, onChanged: (_) {}),
+          _fieldRow(label: 'COFFEE NAME *', controller: _coffeeNameController),
           _divider(),
-          _fieldRow(label: 'LOT NUMBER', value: _lotNumber, onChanged: (v) => _lotNumber = v),
+          _fieldRow(label: 'LOT NUMBER', controller: _lotNumberController),
           _divider(),
-          _fieldRow(label: 'SCA SCORE', value: _scaScore, onChanged: (v) => _scaScore = v,
-              keyboardType: TextInputType.number),
+          _fieldRow(label: 'SCA SCORE', controller: _scaScoreController, keyboardType: TextInputType.number),
         ]),
         _sectionLabel('Походження'),
         _darkCard(children: [
-          _fieldRow(label: 'COUNTRY *', value: '', controller: _originCountryController, onChanged: (_) {}),
+          _fieldRow(
+            label: 'COUNTRY *',
+            controller: _originCountryController,
+            onChanged: (v) => _originCountry = v,
+          ),
           _divider(),
-          _fieldRow(label: 'REGION', value: _region, onChanged: (v) => _region = v),
+          _fieldRow(
+            label: 'REGION',
+            controller: _regionController,
+            onChanged: (v) => _region = v,
+          ),
           _divider(),
-          _fieldRow(label: 'ALTITUDE', value: _altitude, onChanged: (v) => _altitude = v,
-              keyboardType: TextInputType.number, suffix: 'm'),
+          _fieldRow(
+            label: 'ALTITUDE',
+            controller: _altitudeController,
+            onChanged: (v) => _altitude = v,
+            keyboardType: TextInputType.number,
+            suffix: 'm',
+          ),
           _divider(),
-          _fieldRow(label: 'VARIETALS', value: _varieties, onChanged: (v) => _varieties = v),
+          _fieldRow(
+            label: 'VARIETALS',
+            controller: _varietiesController,
+            onChanged: (v) => _varieties = v,
+          ),
         ]),
         _sectionLabel('Обробка та смакові ноти'),
         _darkCard(children: [
-          _fieldRow(label: 'PROCESS', value: _process, onChanged: (v) => _process = v),
+          _fieldRow(
+            label: 'PROCESS',
+            controller: _processController,
+            onChanged: (v) => _process = v,
+          ),
           _divider(),
-          _fieldRow(label: 'FLAVOR NOTES', value: _flavorProfile, onChanged: (v) => _flavorProfile = v),
+          _fieldRow(
+            label: 'FLAVOR NOTES',
+            controller: _flavorProfileController,
+            onChanged: (v) => _flavorProfile = v,
+          ),
         ]),
       ],
     );
@@ -550,9 +601,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
 
   Widget _fieldRow({
     required String label,
-    required String value,
-    required Function(String) onChanged,
     TextEditingController? controller,
+    String? value,
+    Function(String)? onChanged,
     TextInputType? keyboardType,
     String? suffix,
   }) {
@@ -570,14 +621,16 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             children: [
               Expanded(
                 child: TextField(
-                  controller: controller ?? TextEditingController(text: value)
-                    ..selection = TextSelection.fromPosition(TextPosition(offset: value.length)),
+                  controller: controller ?? TextEditingController(text: value ?? ''),
                   style: GoogleFonts.outfit(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
+                  textCapitalization: keyboardType == TextInputType.number 
+                    ? TextCapitalization.none 
+                    : TextCapitalization.sentences,
                   inputFormatters: keyboardType == TextInputType.number 
                     ? [FilteringTextInputFormatter.digitsOnly]
                     : [GlobalCoffeeInputFormatter()],
                   onChanged: (v) {
-                    onChanged(v);
+                    onChanged?.call(v);
                     setState(() {}); // Trigger _canSave update
                   },
                 ),
@@ -772,17 +825,22 @@ class GlobalCoffeeInputFormatter extends TextInputFormatter {
         // Space doesn't reset capitalization intent unless after dot
         sb.write(char);
       } else {
-        // Numbers or allowed signs (if not right after dot)
+        // numbers or allowed signs (if not right after dot)
         sb.write(char);
-        capitalizeNext = false; 
       }
     }
     
-    String finalResult = sb.toString();
+    final finalResult = sb.toString();
+    
+    // Correct selection offset
+    int newOffset = newValue.selection.baseOffset;
+    if (finalResult.length != newValue.text.length) {
+      newOffset = newOffset.clamp(0, finalResult.length);
+    }
 
     return TextEditingValue(
       text: finalResult,
-      selection: TextSelection.collapsed(offset: finalResult.length),
+      selection: TextSelection.collapsed(offset: newOffset),
     );
   }
 }

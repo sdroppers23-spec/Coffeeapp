@@ -648,7 +648,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
             () async {
               final db = ref.read(databaseProvider);
               for (var id in _selectedLotIds) {
-                await db.upsertUserLot(CoffeeLotsCompanion(id: Value(id), isFavorite: const Value(true)));
+                await db.toggleLotFavorite(id, true);
               }
               setState(() => _selectedLotIds.clear());
               ref.invalidate(userLotsProvider);

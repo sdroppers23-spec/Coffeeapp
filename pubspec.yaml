@@ -93,6 +93,11 @@ flutter:
     - assets/images/methods/
     - assets/data/clean_farmers.json
     - assets/data/clean_encyclopedia.json
+    - assets/data/Farmer1.json
+    - assets/data/Farmer2.json
+    - assets/data/Farmer3.json
+    - assets/data/Farmer4.json
+    - assets/data/Farmers.json
 
   # To add assets to your application, add an assets section, like this:
   # assets:

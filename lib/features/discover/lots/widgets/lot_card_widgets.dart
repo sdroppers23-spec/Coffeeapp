@@ -231,7 +231,7 @@ class MyLotListCard extends ConsumerWidget {
   final Function(String) onTap;
   final Function(CoffeeLotDto) onFavoriteToggle;
   final Function(CoffeeLotDto)? onEditSwipe;
-  final Function(CoffeeLotDto)? onRestoreSwipe;
+  final Future<void> Function(CoffeeLotDto)? onRestoreSwipe;
   final Future<bool> Function(CoffeeLotDto)? onDeleteSwipe;
 
   const MyLotListCard({
@@ -388,7 +388,7 @@ class MyLotListCard extends ConsumerWidget {
           } else if (direction == DismissDirection.startToEnd) {
             // Restore or Edit
             if (onRestoreSwipe != null) {
-              onRestoreSwipe!(lot);
+              await onRestoreSwipe!(lot);
               return true;
             }
             if (onEditSwipe != null) {

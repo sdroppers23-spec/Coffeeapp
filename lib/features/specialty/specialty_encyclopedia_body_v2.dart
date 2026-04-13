@@ -22,7 +22,7 @@ class SpecialtyArticleCard extends StatelessWidget {
     final title = article.title;
     final subtitle = article.subtitle;
     final content = article.contentHtml;
-    final imageUrl = article.imageUrl;
+    final imageUrl = article.effectiveImageUrl;
 
     const gold = Color(0xFFC8A96E);
 

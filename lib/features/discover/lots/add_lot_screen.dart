@@ -927,7 +927,6 @@ class LotNumberInputFormatter extends TextInputFormatter {
     if (digitsLength > 6) return oldValue;
 
     // 2. Allowed symbols: 0-9, ., ,, #, №, (, )
-    final allowedRe = RegExp(r'[^0-9\.,#№\(\)]');
     // Note: space is not in this list for Lot Number, but user says "2 пробіли підряд міняємо на крапку"
     // Let's allow spaces for that replacement logic
     final allowedWithSpaceRe = RegExp(r'[^0-9\.,#№\(\)\s]');

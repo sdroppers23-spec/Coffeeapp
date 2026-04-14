@@ -12,9 +12,7 @@ import '../../../../shared/widgets/modern_undo_timer.dart';
 import '../../discovery_filter_provider.dart';
 import '../lots_providers.dart';
 import 'lot_card_widgets.dart';
-import '../../../navigation/main_scaffold.dart';
 import '../../widgets/discovery_action_bar.dart';
-import '../../../../shared/widgets/pressable_scale.dart';
 
 class MyLotsContent extends ConsumerStatefulWidget {
   const MyLotsContent({super.key});
@@ -25,7 +23,6 @@ class MyLotsContent extends ConsumerStatefulWidget {
 
 class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTickerProviderStateMixin {
   late TabController _subTabController;
-  bool _isUndoVisible = false;
   final Set<String> _selectedLotIds = {};
   final Set<String> _pendingDeleteIds = {};
   
@@ -610,7 +607,16 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                   final lot = lotsReady.firstWhere((l) => l.id == id, orElse: () => throw 'Lot not found');
                   await db.deleteUserLot(id);
                   if (id == toDelete.last && mounted) {
-                    _showPremiumUndo(lot, context, ref);
+                    final isUk = Localizations.localeOf(context).languageCode == 'uk';
+                    ModernUndoTimer.show(
+                      context,
+                      message: isUk ? 'Лот видалено' : 'Lot deleted',
+                      onUndo: () async {
+                        await db.upsertUserLot(lot);
+                        ref.invalidate(userLotsProvider);
+                      },
+                      onDismiss: () {},
+                    );
                   }
                 }
                 ref.invalidate(userLotsProvider);

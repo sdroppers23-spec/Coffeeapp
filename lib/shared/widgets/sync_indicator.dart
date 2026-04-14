@@ -5,6 +5,11 @@ import '../../core/network/connectivity_provider.dart';
 import '../../core/database/sync_service.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/providers/settings_provider.dart';
+import '../../features/encyclopedia/encyclopedia_providers.dart';
+import '../../features/specialty/specialty_encyclopedia_provider.dart';
+import '../../features/discover/discovery_providers.dart';
+import '../../features/discover/farmers_screen.dart';
+import '../../features/brewing/brewing_guide_screen.dart';
 
 class SyncStatusData {
   final SyncState state;
@@ -51,12 +56,16 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
     // 1. Initialize Real-time Subscriptions (Once)
     if (isOnline && !_hasInitializedSubscriptions) {
       _hasInitializedSubscriptions = true;
-      Future.microtask(() => _syncService.subscribeToRealtimeUpdates());
+      Future.microtask(() {
+        _syncService.subscribeToRealtimeUpdates();
+        // Automatically invalidate providers when a real-time record is updated
+        _syncService.dataUpdateStream.listen((_) => invalidateData());
+      });
     }
 
     // 2. Continuous Sync Logic
     // Version Guard (Cache Buster) still exists for major schema changes
-    const resyncKey = 'force_resync_v19_final_rendering'; 
+    const resyncKey = 'force_resync_v19_final_rendering_v2'; 
     final hasResyncedVersion = prefs.getBool(resyncKey) ?? false;
 
     if (isOnline) {
@@ -93,10 +102,23 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
 
   SyncService get _syncService => ref.read(syncServiceProvider);
 
+  void invalidateData() {
+    debugPrint('SYNC: Invalidating all data providers for immediate UI update...');
+    ref.invalidate(farmersProvider);
+    ref.invalidate(specialtyArticlesProvider);
+    ref.invalidate(specialtyEncyclopediaProvider);
+    ref.invalidate(encyclopediaDataProvider);
+    ref.invalidate(brandsProvider);
+    ref.invalidate(articlesProvider);
+    ref.invalidate(brewingRecipesProvider);
+  }
+
   Future<void> syncEverything({bool force = false}) async {
     state = state.copyWith(state: SyncState.syncing, lastError: null);
-    // Tiny delay to ensure UI updates before heavy sync work begins
-    await Future.delayed(const Duration(milliseconds: 500));
+    
+    // 1. Tiny delay to ensure UI updates before heavy sync work begins
+    await Future.delayed(const Duration(milliseconds: 300));
+    
     try {
       await _syncService.syncAll(
         force: force,
@@ -108,6 +130,10 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
           );
         },
       );
+      
+      // 2. Perform vital invalidation
+      invalidateData();
+      
       state = state.copyWith(state: SyncState.success, currentProgress: 1.0);
       await Future.delayed(const Duration(seconds: 3));
       state = state.copyWith(state: SyncState.idle);

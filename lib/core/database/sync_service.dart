@@ -1,13 +1,19 @@
-import 'package:drift/drift.dart';
-import 'package:flutter/foundation.dart';
-import '../database/app_database.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'dart:async';
+import '../utils/content_utils.dart';
 
 /// Service responsible for synchronizing user-managed coffee data.
 /// Updated in v17 to support full cloud-to-local sync for Encyclopedia.
 class SyncService {
   final AppDatabase db;
   final SupabaseClient? supabase;
+
+  // Stream for real-time progress tracking
+  final _progressController = StreamController<double>.broadcast();
+  Stream<double> get progressStream => _progressController.stream;
+
+  // Stream to notify UI when a record was updated in real-time
+  final _dataUpdateController = StreamController<void>.broadcast();
+  Stream<void> get dataUpdateStream => _dataUpdateController.stream;
 
   static const String baseUrl = 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public';
   static const String articlesBucket = '$baseUrl/specialty-articles/';
@@ -17,6 +23,11 @@ class SyncService {
 
   SyncService(this.db, [this.supabase]);
 
+  void dispose() {
+    _progressController.close();
+    _dataUpdateController.close();
+  }
+
   /// Synchronizes all systems.
   Future<void> syncAll({
     bool force = false,
@@ -24,9 +35,11 @@ class SyncService {
   }) async {
     try {
       debugPrint('SYNC: Starting full synchronization...');
+      _progressController.add(0.05);
       onProgress?.call('Connecting to cloud...', 0.05);
       
       if (supabase == null) {
+        _progressController.add(1.0);
         onProgress?.call('Supabase not available, skipping cloud sync.', 1.0);
         return;
       }
@@ -34,39 +47,45 @@ class SyncService {
       // 1. Version Guard (Cache Buster)
       if (force) {
         onProgress?.call('Clearing local cache...', 0.1);
+        _progressController.add(0.1);
         await _clearLocalSharedData();
       }
 
-      // 2. Sequential Stable Sync
-      onProgress?.call('Syncing Farmers...', 0.1);
+      // 2. Sequential Stable Sync with real progress updates
+      onProgress?.call('Syncing Farmers...', 0.2);
+      _progressController.add(0.2);
       await syncFarmers();
-      await Future.delayed(const Duration(milliseconds: 300));
+      await Future.delayed(const Duration(milliseconds: 200));
       
-      onProgress?.call('Syncing Encyclopedia...', 0.3);
+      onProgress?.call('Syncing Encyclopedia...', 0.4);
+      _progressController.add(0.4);
       await syncEncyclopedia();
-      await Future.delayed(const Duration(milliseconds: 300));
+      await Future.delayed(const Duration(milliseconds: 200));
       
-      onProgress?.call('Syncing Methods...', 0.5);
+      onProgress?.call('Syncing Methods...', 0.6);
+      _progressController.add(0.6);
       await syncBrewingRecipes();
-      await Future.delayed(const Duration(milliseconds: 300));
+      await Future.delayed(const Duration(milliseconds: 200));
       
-      onProgress?.call('Syncing Articles...', 0.7);
+      onProgress?.call('Syncing Articles...', 0.8);
+      _progressController.add(0.8);
       await syncArticles(onProgress: onProgress);
-      await Future.delayed(const Duration(milliseconds: 300));
+      await Future.delayed(const Duration(milliseconds: 200));
       
-      onProgress?.call('Syncing Brands...', 0.85);
+      onProgress?.call('Syncing Brands...', 0.9);
+      _progressController.add(0.9);
       await syncBrands();
-      await Future.delayed(const Duration(milliseconds: 300));
       
-      // 7. Sync User Content (Push to Cloud) - Keep sequential at end to ensure deps
       onProgress?.call('Finalizing...', 0.98);
+      _progressController.add(0.98);
       await pushLocalUserContent();
 
+      _progressController.add(1.0);
       onProgress?.call('Cloud Connected', 1.0);
       debugPrint('SYNC: All systems synchronized [STABLE]');
     } catch (e, st) {
       debugPrint('SYNC ERROR: $e');
-      debugPrint('STACKTRACE: $st');
+      _progressController.add(0.0); // Reset or mark error
       onProgress?.call('Sync failed: $e', 1.0);
       rethrow;
     }
@@ -145,8 +164,8 @@ class SyncService {
                 varieties: Value(t['varieties'] as String?),
                 flavorNotes: Value(t['flavor_notes']?.toString() ?? '[]'),
                 processMethod: Value(t['process_method'] as String?),
-                description: Value(t['description'] as String?),
-                farmDescription: Value(t['farm_description'] as String?), 
+                description: Value(ContentUtils.cleanCoffeeContent(t['description'] as String? ?? '')),
+                farmDescription: Value(ContentUtils.cleanCoffeeContent(t['farm_description'] as String? ?? '')), 
                 roastLevel: Value(t['roast_level'] as String?),
               ),
             );
@@ -233,6 +252,26 @@ class SyncService {
           },
         )
         .subscribe();
+
+    // 4. Brewing Recipes Channel
+    supabase!
+        .channel('public:brewing_recipes')
+        .onPostgresChanges(
+          event: PostgresChangeEvent.all,
+          schema: 'public',
+          table: 'brewing_recipes',
+          callback: (payload) async {
+            debugPrint('SYNC: Real-time event for Brewing Recipes: ${payload.eventType}');
+            if (payload.eventType == PostgresChangeEvent.delete) {
+              final key = payload.oldRecord['method_key'] as String;
+              await (db.delete(db.brewingRecipes)..where((t) => t.methodKey.equals(key))).go();
+            } else {
+              final key = payload.newRecord['method_key'] as String;
+              await syncSingleBrewingRecipe(key);
+            }
+          },
+        )
+        .subscribe();
   }
 
   /// Pulls farmer data from Supabase and updates local storage.
@@ -291,8 +330,8 @@ class SyncService {
             latitude: Value((item['latitude'] as num?)?.toDouble() ?? 0.0),
             longitude: Value((item['longitude'] as num?)?.toDouble() ?? 0.0),
             nameUk: Value(nameRaw.toString()),
-            descriptionHtmlUk: Value(_cleanContent(descRaw.toString())),
-            storyUk: Value(_cleanContent(storyRaw.toString())),
+            descriptionHtmlUk: Value(ContentUtils.cleanCoffeeContent(descRaw.toString())),
+            storyUk: Value(ContentUtils.cleanCoffeeContent(storyRaw.toString())),
             regionUk: Value(regionRaw.toString()),
             countryUk: Value(countryRaw.toString()),
           );
@@ -371,9 +410,9 @@ class SyncService {
 
           final article = SpecialtyArticlesCompanion(
             id: Value(id),
-            titleUk: Value(_cleanContent(item['title_uk'] as String? ?? item['title_en'] as String? ?? '')),
-            subtitleUk: Value(_cleanContent(item['subtitle_uk'] as String? ?? '')),
-            contentHtmlUk: Value(_cleanContent(item['content_html_uk'] as String? ?? item['content_uk'] as String? ?? '')),
+            titleUk: Value(ContentUtils.cleanCoffeeContent(item['title_uk'] as String? ?? item['title_en'] as String? ?? '')),
+            subtitleUk: Value(ContentUtils.cleanCoffeeContent(item['subtitle_uk'] as String? ?? '')),
+            contentHtmlUk: Value(ContentUtils.cleanCoffeeContent(item['content_html_uk'] as String? ?? item['content_uk'] as String? ?? '')),
             imageUrl: Value(imageUrl),
             readTimeMin: Value(item['read_time_min'] as int? ?? 5),
           );
@@ -391,9 +430,9 @@ class SyncService {
              translations.add(SpecialtyArticleTranslationsCompanion(
                articleId: Value(id),
                languageCode: Value(t['language_code'] as String),
-               title: Value(_cleanContent(t['title'] as String?)),
-               subtitle: Value(_cleanContent(t['subtitle'] as String?)),
-               contentHtml: Value(_cleanContent(t['content_html'] as String?)),
+               title: Value(ContentUtils.cleanCoffeeContent(t['title'] as String? ?? '')),
+               subtitle: Value(ContentUtils.cleanCoffeeContent(t['subtitle'] as String? ?? '')),
+               contentHtml: Value(ContentUtils.cleanCoffeeContent(t['content_html'] as String? ?? '')),
              ));
           }
 
@@ -489,17 +528,22 @@ class SyncService {
           final key = item['method_key'] as String;
           debugPrint('SYNC: Processing brewing method: $key');
 
+          String methodImageUrl = item['image_url'] as String? ?? '';
+          if (methodImageUrl.isNotEmpty && !methodImageUrl.startsWith('http') && !methodImageUrl.startsWith('assets/')) {
+            methodImageUrl = '$methodsBucket${methodImageUrl.split('/').last}';
+          }
+
           final companion = BrewingRecipesCompanion(
             methodKey: Value(key),
             nameUk: Value(item['name_uk'] as String? ?? item['name'] as String? ?? ''),
-            descriptionUk: Value(item['description_uk'] as String? ?? item['description'] as String? ?? ''),
+            descriptionUk: Value(ContentUtils.cleanCoffeeContent(item['description_uk'] as String? ?? item['description'] as String? ?? '')),
             ratioGramsPerMl: Value((item['ratio_grams_per_ml'] as num?)?.toDouble() ?? 0.066),
             tempC: Value((item['temp_c'] as num?)?.toDouble() ?? 93.0),
             totalTimeSec: Value((item['total_time_sec'] as num?)?.toInt() ?? 180),
             difficulty: Value(item['difficulty'] as String? ?? 'Intermediate'),
             flavorProfile: Value(item['flavor_profile'] as String? ?? 'Balanced'),
             iconName: Value(item['icon_name'] as String?),
-            imageUrl: Value(item['image_url'] as String? ?? ''),
+            imageUrl: Value(methodImageUrl),
             stepsJson: Value(item['steps_json']?.toString() ?? '[]'),
           );
 
@@ -517,7 +561,7 @@ class SyncService {
               recipeKey: Value(key),
               languageCode: Value(t['language_code'] as String),
               name: Value(t['name'] as String?),
-              description: Value(t['description'] as String?),
+              description: Value(ContentUtils.cleanCoffeeContent(t['description'] as String? ?? '')),
             ));
           }
 
@@ -607,46 +651,6 @@ class SyncService {
     await syncAll(onProgress: onProgress);
   }
 
-  /// Removes technical keys and converts HTML to Markdown for better rendering.
-  String _cleanContent(String? content) {
-    if (content == null || content.isEmpty) return '';
-    
-    // 1. Remove technical keys like {p1}, [h2], etc.
-    String cleaned = content
-        .replaceAll(RegExp(r'\{[^}]+\}'), '')
-        .replaceAll(RegExp(r'\[[^\]]+\]'), '');
-
-    // 2. Convert common HTML tags to Markdown
-    cleaned = cleaned
-        .replaceAll(RegExp(r'<h1>', caseSensitive: false), '# ')
-        .replaceAll(RegExp(r'</h1>', caseSensitive: false), '\n\n')
-        .replaceAll(RegExp(r'<h2>', caseSensitive: false), '## ')
-        .replaceAll(RegExp(r'</h2>', caseSensitive: false), '\n\n')
-        .replaceAll(RegExp(r'<h3>', caseSensitive: false), '### ')
-        .replaceAll(RegExp(r'</h3>', caseSensitive: false), '\n\n')
-        .replaceAll(RegExp(r'<h4>', caseSensitive: false), '#### ')
-        .replaceAll(RegExp(r'</h4>', caseSensitive: false), '\n\n')
-        .replaceAll(RegExp(r'<h5>', caseSensitive: false), '##### ')
-        .replaceAll(RegExp(r'</h5>', caseSensitive: false), '\n\n')
-        .replaceAll(RegExp(r'<h6>', caseSensitive: false), '###### ')
-        .replaceAll(RegExp(r'</h6>', caseSensitive: false), '\n\n')
-        .replaceAll(RegExp(r'<p>', caseSensitive: false), '')
-        .replaceAll(RegExp(r'</p>', caseSensitive: false), '\n\n')
-        .replaceAll(RegExp(r'<strong>|<b>', caseSensitive: false), '**')
-        .replaceAll(RegExp(r'</strong>|</b>', caseSensitive: false), '**')
-        .replaceAll(RegExp(r'<em>|<i>|<em>|<i>', caseSensitive: false), '*')
-        .replaceAll(RegExp(r'</em>|</i>|</em>|</i>', caseSensitive: false), '*')
-        .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '  \n')
-        .replaceAll(RegExp(r'<li>', caseSensitive: false), '* ')
-        .replaceAll(RegExp(r'</li>', caseSensitive: false), '\n')
-        .replaceAll(RegExp(r'<ul>|</ul>|<ol>|</ol>', caseSensitive: false), '\n');
-
-    // 3. Final cleanup: remove residual multiple newlines/spaces
-    return cleaned
-        .replaceAll(RegExp(r'\n{3,}'), '\n\n')
-        .trim();
-  }
-
   /// Syncs a single farmer by ID.
   Future<void> syncSingleFarmer(int id) async {
     if (supabase == null) return;
@@ -666,8 +670,8 @@ class SyncService {
         latitude: Value((item['latitude'] as num?)?.toDouble() ?? 0.0),
         longitude: Value((item['longitude'] as num?)?.toDouble() ?? 0.0),
         nameUk: Value((item['name_uk'] ?? item['name'] ?? '').toString()),
-        descriptionHtmlUk: Value(_cleanContent((item['description_html_uk'] ?? item['description_uk'] ?? item['description'] ?? '').toString())),
-        storyUk: Value(_cleanContent((item['story_uk'] ?? item['story'] ?? '').toString())),
+        descriptionHtmlUk: Value(ContentUtils.cleanCoffeeContent((item['description_html_uk'] ?? item['description_uk'] ?? item['description'] ?? '').toString())),
+        storyUk: Value(ContentUtils.cleanCoffeeContent((item['story_uk'] ?? item['story'] ?? '').toString())),
         regionUk: Value((item['region_uk'] ?? item['region'] ?? '').toString()),
         countryUk: Value((item['country_uk'] ?? item['country'] ?? '').toString()),
       );
@@ -683,6 +687,7 @@ class SyncService {
       )).toList();
 
       await db.smartUpsertFarmer(farmer, translations);
+      _dataUpdateController.add(null);
       debugPrint('SYNC: Real-time update success for Farmer $id');
     } catch (e) {
       debugPrint('SYNC ERROR (Single Farmer $id): $e');
@@ -703,9 +708,9 @@ class SyncService {
 
       final article = SpecialtyArticlesCompanion(
         id: Value(id),
-        titleUk: Value(_cleanContent(item['title_uk'] as String? ?? item['title_en'] as String? ?? '')),
-        subtitleUk: Value(_cleanContent(item['subtitle_uk'] as String? ?? '')),
-        contentHtmlUk: Value(_cleanContent(item['content_html_uk'] as String? ?? item['content_uk'] as String? ?? '')),
+        titleUk: Value(ContentUtils.cleanCoffeeContent(item['title_uk'] as String? ?? item['title_en'] as String? ?? '')),
+        subtitleUk: Value(ContentUtils.cleanCoffeeContent(item['subtitle_uk'] as String? ?? '')),
+        contentHtmlUk: Value(ContentUtils.cleanCoffeeContent(item['content_html_uk'] as String? ?? item['content_uk'] as String? ?? '')),
         imageUrl: Value(imageUrl),
         readTimeMin: Value(item['read_time_min'] as int? ?? 5),
       );
@@ -714,12 +719,13 @@ class SyncService {
       final List<SpecialtyArticleTranslationsCompanion> translations = translationsData.map((t) => SpecialtyArticleTranslationsCompanion(
         articleId: Value(id),
         languageCode: Value(t['language_code'] as String),
-        title: Value(_cleanContent(t['title'] as String?)),
-        subtitle: Value(_cleanContent(t['subtitle'] as String?)),
-        contentHtml: Value(_cleanContent(t['content_html'] as String?)),
+        title: Value(ContentUtils.cleanCoffeeContent(t['title'] as String? ?? '')),
+        subtitle: Value(ContentUtils.cleanCoffeeContent(t['subtitle'] as String? ?? '')),
+        contentHtml: Value(ContentUtils.cleanCoffeeContent(t['content_html'] as String? ?? '')),
       )).toList();
 
       await db.smartUpsertArticle(article, translations);
+      _dataUpdateController.add(null);
       debugPrint('SYNC: Real-time update success for Article $id');
     } catch (e) {
       debugPrint('SYNC ERROR (Single Article $id): $e');
@@ -760,7 +766,7 @@ class SyncService {
         varietiesUk: Value(item['varieties_uk'] as String? ?? item['varieties_en'] as String?),
         flavorNotesUk: Value(item['flavor_notes_uk']?.toString() ?? item['flavor_notes_en']?.toString() ?? '[]'),
         processMethodUk: Value(item['process_method_uk'] as String? ?? item['process_method_en'] as String?),
-        descriptionUk: Value(item['description_uk'] as String? ?? item['description_en'] as String?),
+        descriptionUk: Value(ContentUtils.cleanCoffeeContent(item['description_uk'] as String? ?? item['description_en'] as String? ?? '')),
         roastLevelUk: Value(item['roast_level_uk'] as String? ?? item['roast_level_en'] as String?),
         createdAt: Value(item['created_at'] != null ? DateTime.tryParse(item['created_at'] as String) : null),
       );
@@ -774,15 +780,58 @@ class SyncService {
         varieties: Value(t['varieties'] as String?),
         flavorNotes: Value(t['flavor_notes']?.toString() ?? '[]'),
         processMethod: Value(t['process_method'] as String?),
-        description: Value(t['description'] as String?),
-        farmDescription: Value(t['farm_description'] as String?),
+        description: Value(ContentUtils.cleanCoffeeContent(t['description'] as String? ?? '')),
+        farmDescription: Value(ContentUtils.cleanCoffeeContent(t['farm_description'] as String? ?? '')),
         roastLevel: Value(t['roast_level'] as String?),
       )).toList();
 
       await db.smartUpsertBean(bean, translations);
+      _dataUpdateController.add(null);
       debugPrint('SYNC: Real-time update success for Bean $id');
     } catch (e) {
       debugPrint('SYNC ERROR (Single Bean $id): $e');
+    }
+  }
+
+  /// Syncs a single brewing recipe by key.
+  Future<void> syncSingleBrewingRecipe(String key) async {
+    if (supabase == null) return;
+    try {
+      final item = await supabase!.from('brewing_recipes').select().eq('method_key', key).maybeSingle();
+      if (item == null) return;
+
+      String methodImageUrl = item['image_url'] as String? ?? '';
+      if (methodImageUrl.isNotEmpty && !methodImageUrl.startsWith('http') && !methodImageUrl.startsWith('assets/')) {
+        methodImageUrl = '$methodsBucket${methodImageUrl.split('/').last}';
+      }
+
+      final companion = BrewingRecipesCompanion(
+        methodKey: Value(key),
+        nameUk: Value(item['name_uk'] as String? ?? item['name'] as String? ?? ''),
+        descriptionUk: Value(ContentUtils.cleanCoffeeContent(item['description_uk'] as String? ?? item['description'] as String? ?? '')),
+        ratioGramsPerMl: Value((item['ratio_grams_per_ml'] as num?)?.toDouble() ?? 0.066),
+        tempC: Value((item['temp_c'] as num?)?.toDouble() ?? 93.0),
+        totalTimeSec: Value((item['total_time_sec'] as num?)?.toInt() ?? 180),
+        difficulty: Value(item['difficulty'] as String? ?? 'Intermediate'),
+        flavorProfile: Value(item['flavor_profile'] as String? ?? 'Balanced'),
+        iconName: Value(item['icon_name'] as String?),
+        imageUrl: Value(methodImageUrl),
+        stepsJson: Value(item['steps_json']?.toString() ?? '[]'),
+      );
+
+      final transData = await supabase!.from('brewing_recipe_translations').select().eq('recipe_key', key);
+      final List<BrewingRecipeTranslationsCompanion> translations = transData.map((t) => BrewingRecipeTranslationsCompanion(
+        recipeKey: Value(key),
+        languageCode: Value(t['language_code'] as String),
+        name: Value(t['name'] as String?),
+        description: Value(ContentUtils.cleanCoffeeContent(t['description'] as String? ?? '')),
+      )).toList();
+
+      await db.smartUpsertBrewingRecipe(companion, translations);
+      _dataUpdateController.add(null);
+      debugPrint('SYNC: Real-time update success for Recipe $key');
+    } catch (e) {
+      debugPrint('SYNC ERROR (Single Recipe $key): $e');
     }
   }
 }

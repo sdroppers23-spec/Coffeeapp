@@ -142,7 +142,7 @@ class SyncService {
             varietiesUk: Value(item['varieties_uk'] as String? ?? item['varieties_en'] as String?),
             flavorNotesUk: Value(item['flavor_notes_uk']?.toString() ?? item['flavor_notes_en']?.toString() ?? '[]'),
             processMethodUk: Value(item['process_method_uk'] as String? ?? item['process_method_en'] as String?),
-            descriptionUk: Value(item['description_uk'] as String? ?? item['description_en'] as String?),
+            descriptionUk: Value(ContentUtils.cleanCoffeeContent(item['description_uk'] as String? ?? item['description_en'] as String? ?? '')),
             roastLevelUk: Value(item['roast_level_uk'] as String? ?? item['roast_level_en'] as String?),
             createdAt: Value(
               item['created_at'] != null
@@ -163,14 +163,14 @@ class SyncService {
               LocalizedBeanTranslationsCompanion(
                 beanId: Value(id),
                 languageCode: Value(t['language_code'] as String),
-                country: Value(t['country'] as String?),
-                region: Value(t['region'] as String?),
-                varieties: Value(t['varieties'] as String?),
+                country: Value(ContentUtils.cleanCoffeeContent(t['country'] as String? ?? '')),
+                region: Value(ContentUtils.cleanCoffeeContent(t['region'] as String? ?? '')),
+                varieties: Value(ContentUtils.cleanCoffeeContent(t['varieties'] as String? ?? '')),
                 flavorNotes: Value(t['flavor_notes']?.toString() ?? '[]'),
-                processMethod: Value(t['process_method'] as String?),
+                processMethod: Value(ContentUtils.cleanCoffeeContent(t['process_method'] as String? ?? '')),
                 description: Value(ContentUtils.cleanCoffeeContent(t['description'] as String? ?? '')),
                 farmDescription: Value(ContentUtils.cleanCoffeeContent(t['farm_description'] as String? ?? '')), 
-                roastLevel: Value(t['roast_level'] as String?),
+                roastLevel: Value(ContentUtils.cleanCoffeeContent(t['roast_level'] as String? ?? '')),
               ),
             );
           }
@@ -353,10 +353,11 @@ class SyncService {
             translations.add(LocalizedFarmerTranslationsCompanion(
               farmerId: Value(id),
               languageCode: Value(lang),
-              name: Value(t['name'] as String?),
-              descriptionHtml: Value(t['description_html'] as String? ?? t['description'] as String?),
+              name: Value(ContentUtils.cleanCoffeeContent(t['name'] as String? ?? '')),
+              descriptionHtml: Value(ContentUtils.cleanCoffeeContent(t['description_html'] as String? ?? t['description'] as String? ?? '')),
               region: Value(t['region'] as String?),
               country: Value(t['country'] as String?),
+              story: Value(ContentUtils.cleanCoffeeContent(t['story'] as String? ?? '')),
             ));
           }
 
@@ -434,9 +435,9 @@ class SyncService {
              translations.add(SpecialtyArticleTranslationsCompanion(
                articleId: Value(id),
                languageCode: Value(t['language_code'] as String),
-               title: Value(ContentUtils.cleanCoffeeContent(t['title'] as String? ?? '')),
-               subtitle: Value(ContentUtils.cleanCoffeeContent(t['subtitle'] as String? ?? '')),
-               contentHtml: Value(ContentUtils.cleanCoffeeContent(t['content_html'] as String? ?? '')),
+                title: Value(ContentUtils.cleanCoffeeContent(t['title'] as String? ?? '')),
+                subtitle: Value(ContentUtils.cleanCoffeeContent(t['subtitle'] as String? ?? '')),
+                contentHtml: Value(ContentUtils.cleanCoffeeContent(t['content_html'] as String? ?? '')),
              ));
           }
 
@@ -564,7 +565,7 @@ class SyncService {
             translations.add(BrewingRecipeTranslationsCompanion(
               recipeKey: Value(key),
               languageCode: Value(t['language_code'] as String),
-              name: Value(t['name'] as String?),
+              name: Value(ContentUtils.cleanCoffeeContent(t['name'] as String? ?? '')),
               description: Value(ContentUtils.cleanCoffeeContent(t['description'] as String? ?? '')),
             ));
           }
@@ -597,9 +598,9 @@ class SyncService {
             name: Value(item['name'] as String? ?? ''),
             logoUrl: Value(item['logo_url'] as String?),
             siteUrl: Value(item['site_url'] as String?),
-            shortDescUk: Value(item['short_desc_uk'] as String? ?? item['short_desc_en'] as String? ?? ''),
-            fullDescUk: Value(item['full_desc_uk'] as String? ?? item['full_desc_en'] as String? ?? ''),
-            locationUk: Value(item['location_uk'] as String? ?? item['location_en'] as String? ?? ''),
+            shortDescUk: Value(ContentUtils.cleanCoffeeContent(item['short_desc_uk'] as String? ?? item['short_desc_en'] as String? ?? '')),
+            fullDescUk: Value(ContentUtils.cleanCoffeeContent(item['full_desc_uk'] as String? ?? item['full_desc_en'] as String? ?? '')),
+            locationUk: Value(ContentUtils.cleanCoffeeContent(item['location_uk'] as String? ?? item['location_en'] as String? ?? '')),
           );
 
           // Get translations

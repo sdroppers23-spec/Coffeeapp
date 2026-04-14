@@ -4,6 +4,9 @@ class ContentUtils {
   /// Robust regex to match any technical key in formats like {p1}, {/p1}, [li], etc.
   static final RegExp _technicalKeyRegex = RegExp(r'\{/?[\w\d]+\}|\[/?[\w\d]+\]');
   
+  /// Matches any standard HTML tag
+  static final RegExp _htmlTagRegex = RegExp(r'<[^>]*>');
+
   /// Cleans raw content from Supabase, converting keys to Markdown and removing artifacts.
   static String cleanCoffeeContent(String raw) {
     if (raw.isEmpty) return '';
@@ -21,16 +24,19 @@ class ContentUtils {
     cleaned = cleaned.replaceAll('{h2}', '\n## ');
     cleaned = cleaned.replaceAll('{h3}', '\n### ');
     
-    // 3. Strip all remaining opening/closing technical keys (including things like {/h3})
+    // 3. Strip all remaining opening/closing technical keys and HTML tags
     cleaned = cleaned.replaceAll(_technicalKeyRegex, '');
+    cleaned = cleaned.replaceAll(_htmlTagRegex, '');
 
-    // 4. Robust artifact removal (fixes fragments like "##" or "*" left at ends of lines)
-    // This targets lines that end with Markdown symbols that were likely artifacts of keys
+    // 4. Robust artifact removal
+    // We only remove a Markdown character at the end of a line if it's isolated 
+    // or looks like a stray decorator from a removed key.
     cleaned = cleaned.split('\n').map((line) {
       String trimmed = line.trimRight();
-      // Remove trailing Markdown artifacts that shouldn't be there at the end of a line
-      while (trimmed.endsWith('#') || trimmed.endsWith('*') || trimmed.endsWith('_')) {
-        trimmed = trimmed.substring(0, trimmed.length - 1).trimRight();
+      // Only strip trailing hashes/stars if they were likely ornaments (surrounded by space or at end of line)
+      // We don't want to kill valid Markdown titles that might have trailing space
+      while (trimmed.length > 2 && (trimmed.endsWith(' #') || trimmed.endsWith(' *') || trimmed.endsWith(' _'))) {
+        trimmed = trimmed.substring(0, trimmed.length - 2).trimRight();
       }
       return trimmed;
     }).join('\n');
@@ -43,17 +49,18 @@ class ContentUtils {
 
   /// Specialized version for text previews (strips all formatting, headers, etc.)
   static String getPreviewText(String raw, {int limit = 150}) {
-    if (raw.isEmpty) return '';
+    if (raw == null || raw.isEmpty) return '';
     
-    // First clean it normally
+    // First clean keys and HTML
     String cleaned = cleanCoffeeContent(raw);
     
-    // Then strip Markdown symbols for the preview
+    // Then strip specific Markdown symbols for the preview list view
     cleaned = cleaned
-        .replaceAll(RegExp(r'#+\s*'), '') // Headers
+        .replaceAll(RegExp(r'^#+\s*', multiLine: true), '') // Headers at start of lines
         .replaceAll(RegExp(r'\*\*|\*|__|_'), '') // Bold/Italic
         .replaceAll(RegExp(r'^\s*[\*\-]\s+', multiLine: true), '') // List markers
-        .replaceAll('\n', ' ')
+        .replaceAll('\n', ' ') // Flatten newlines
+        .replaceAll(RegExp(r'\s{2,}'), ' ') // Normalize spaces
         .trim();
 
     if (cleaned.length <= limit) return cleaned;

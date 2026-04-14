@@ -9,6 +9,7 @@ import '../../shared/widgets/glass_container.dart';
 import '../../shared/widgets/premium_app_bar.dart';
 import '../../shared/widgets/pressable_scale.dart';
 import '../../core/providers/settings_provider.dart';
+import '../../core/utils/content_utils.dart';
 import 'farmer_detail_screen.dart';
 
 final farmersProvider = FutureProvider<List<LocalizedFarmerDto>>((ref) async {
@@ -187,7 +188,7 @@ class _PremiumFarmerCard extends ConsumerWidget {
               const SizedBox(height: 20),
               // Bio Snippet
               Text(
-                _stripMarkdown(farmer.story),
+                ContentUtils.getPreviewText(farmer.story, limit: 120),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.outfit(
@@ -288,18 +289,5 @@ class _PremiumFarmerCard extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  String _stripMarkdown(String text) {
-    // 1. Remove HTML tags
-    String cleaned = text.replaceAll(RegExp(r'<[^>]*>'), '');
-    
-    // 2. Remove Markdown syntax
-    return cleaned
-        .replaceAll(RegExp(r'#+\s*'), '')
-        .replaceAll(RegExp(r'\*\*|\*|__|_'), '')
-        .replaceAll(RegExp(r'\[([^\]]+)\]\([^\)]+\)'), r'$1')
-        .replaceAll('\n', ' ')
-        .trim();
   }
 }

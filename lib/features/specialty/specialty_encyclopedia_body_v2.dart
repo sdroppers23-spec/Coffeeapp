@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../shared/widgets/glass_container.dart';
 
 import '../../core/database/dtos.dart';
+import '../../core/utils/content_utils.dart';
 import 'specialty_article_detail_screen.dart';
 
 class SpecialtyArticleCard extends StatelessWidget {
@@ -106,12 +107,7 @@ class SpecialtyArticleCard extends StatelessWidget {
                 
                 // Preview text (stripped HTML/Markdown)
                 Text(
-                  content
-                      .replaceAll(RegExp(r'<[^>]*>'), '')
-                      .replaceAll(RegExp(r'#+\s*'), '')
-                      .replaceAll(RegExp(r'\*\*|\*|__|_'), '')
-                      .replaceAll('\n', ' ')
-                      .trim(),
+                  ContentUtils.getPreviewText(content, limit: 150),
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.inter(

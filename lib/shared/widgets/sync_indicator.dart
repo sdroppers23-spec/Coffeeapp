@@ -65,7 +65,7 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
 
     // 2. Continuous Sync Logic
     // Version Guard (Cache Buster) still exists for major schema changes
-    const resyncKey = 'force_resync_v19_final_rendering_v2'; 
+    const resyncKey = 'force_resync_v20_unified_content'; 
     final hasResyncedVersion = prefs.getBool(resyncKey) ?? false;
 
     if (isOnline) {

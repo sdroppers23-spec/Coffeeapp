@@ -8,6 +8,7 @@ import '../../../core/l10n/app_localizations.dart';
 import '../../../shared/widgets/glass_container.dart';
 import '../../../shared/widgets/pressable_scale.dart';
 import '../encyclopedia_providers.dart';
+import '../../../core/providers/settings_provider.dart';
 
 // ─── Grid Card ────────────────────────────────────────────────────────────────
 class EncyclopediaLotGridCard extends ConsumerWidget {

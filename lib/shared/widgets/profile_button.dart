@@ -4,8 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/supabase/supabase_provider.dart';
 import '../../core/l10n/app_localizations.dart';
-import '../../features/navigation/main_scaffold.dart'
-    show navBarVisibleProvider;
+import '../../features/navigation/navigation_providers.dart';
 
 /// Універсальна кнопка профілю для AppBar.
 /// Відображає аватар користувача, при натисканні відкриває меню з:

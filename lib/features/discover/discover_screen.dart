@@ -8,7 +8,7 @@ import './discovery_tab_order.dart';
 import '../encyclopedia/encyclopedia_screen.dart';
 import './farmers_screen.dart';
 import './roasters_screen.dart';
-import '../navigation/main_scaffold.dart';
+import '../navigation/navigation_providers.dart';
 import '../specialty/specialty_screen.dart';
 import '../../shared/widgets/sync_indicator.dart';
 

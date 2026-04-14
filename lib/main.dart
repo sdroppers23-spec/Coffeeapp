@@ -8,7 +8,6 @@ import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/providers/settings_provider.dart';
 import 'core/database/database_provider.dart';
-import 'features/navigation/navigation_providers.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

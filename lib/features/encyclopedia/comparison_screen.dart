@@ -7,6 +7,7 @@ import '../../core/l10n/app_localizations.dart';
 import '../../core/database/dtos.dart';
 import '../../shared/widgets/premium_app_bar.dart';
 import '../../shared/widgets/premium_background.dart';
+import 'encyclopedia_providers.dart';
 
 final allOriginsProvider = FutureProvider<List<LocalizedBeanDto>>((ref) {
   final lang = ref.watch(localeProvider);

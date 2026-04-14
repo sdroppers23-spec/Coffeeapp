@@ -11,7 +11,7 @@ import '../../../core/database/dtos.dart';
 import '../../../core/l10n/app_localizations.dart';
 import '../../../shared/widgets/glass_container.dart';
 import 'discovery_providers.dart' show brandsProvider;
-import '../navigation/main_scaffold.dart' show navBarHeightProvider;
+import '../navigation/navigation_providers.dart';
 import 'widgets/conflict_dialog.dart';
 
 class AddRoasterScreen extends ConsumerStatefulWidget {

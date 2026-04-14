@@ -37,6 +37,7 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
 
   @override
   Widget build(BuildContext context) {
+    final isUk = ref.watch(localeProvider) == 'uk';
     final originsAsync = ref.watch(encyclopediaDataProvider);
 
     return Column(

@@ -7,7 +7,7 @@ import '../../core/l10n/app_localizations.dart';
 import '../../shared/widgets/glass_container.dart';
 import '../../shared/widgets/sensory_radar_chart.dart';
 import '../../shared/widgets/sensory_preview.dart';
-import '../navigation/main_scaffold.dart';
+import '../navigation/navigation_providers.dart';
 
 import '../../core/database/database_provider.dart';
 import '../../shared/widgets/add_recipe_dialog.dart';

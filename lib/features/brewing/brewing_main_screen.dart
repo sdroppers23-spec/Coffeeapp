@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/l10n/app_localizations.dart';
 import '../../shared/widgets/profile_button.dart';
-import '../navigation/main_scaffold.dart';
+import '../navigation/navigation_providers.dart';
 import 'brewing_guide_screen.dart';
 import 'custom_recipe_list.dart';
 import 'method_tile.dart';

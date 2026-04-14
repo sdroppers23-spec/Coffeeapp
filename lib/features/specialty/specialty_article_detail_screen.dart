@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_html/flutter_html.dart';
-import '../navigation/main_scaffold.dart';
+import '../navigation/navigation_providers.dart';
 
 import '../../core/database/dtos.dart';
 import '../../shared/widgets/scroll_to_top_button.dart';

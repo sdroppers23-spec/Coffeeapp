@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/providers/settings_provider.dart';
-import '../navigation/main_scaffold.dart' show navBarHeightProvider;
+import '../navigation/navigation_providers.dart';
 import 'world_mask_data.dart';
 
 class TerroirGlobe extends ConsumerStatefulWidget {

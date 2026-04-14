@@ -3,7 +3,6 @@ import 'dart:ui' show ImageFilter;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../core/l10n/app_localizations.dart';
 import 'sca_flavor_wheel_data.dart';
 
 class ScaFlavorWheel extends ConsumerStatefulWidget {
@@ -248,7 +247,7 @@ class _ScaWheelPainter extends CustomPainter {
       // Label for Cat
       _drawTextInsideArc(
         canvas,
-        ref.t(cat.key),
+        cat.name,
         center,
         currentAngle,
         catSweepAngle,
@@ -290,7 +289,7 @@ class _ScaWheelPainter extends CustomPainter {
         if (subSweepAngle > 0.05) {
           _drawTextInsideArc(
             canvas,
-            ref.t(sub.key),
+            sub.name,
             center,
             subStartAngle,
             subSweepAngle,
@@ -334,7 +333,7 @@ class _ScaWheelPainter extends CustomPainter {
             if (noteSweepAngle > 0.005) {
               _drawTextInsideArc(
                 canvas,
-                ref.t(noteKey),
+                noteKey,
                 center,
                 noteStartAngle,
                 noteSweepAngle,

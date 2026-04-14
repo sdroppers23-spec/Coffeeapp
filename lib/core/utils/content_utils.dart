@@ -2,7 +2,9 @@
 /// Handles HTML tags, custom technical keys ({p1}, {li}, etc.), and escaping.
 class ContentUtils {
   /// Robust regex to match any technical key in formats like {p1}, {/p1}, [li], etc.
-  static final RegExp _technicalKeyRegex = RegExp(r'\{/?[\w\d]+\}|\[/?[\w\d]+\]');
+  /// Robust regex to match any technical key in formats like {p1}, {/p1}, [li], etc.
+  /// EXCLUDES our new styling tags: {gold}, {serif}, {accent}, {size}
+  static final RegExp _technicalKeyRegex = RegExp(r'\{/?(?!(gold|serif|accent|size))[\w\d]+\}|\[/?[\w\d]+\]');
   
   /// Matches any standard HTML tag
   static final RegExp _htmlTagRegex = RegExp(r'<[^>]*>');
@@ -49,7 +51,7 @@ class ContentUtils {
 
   /// Specialized version for text previews (strips all formatting, headers, etc.)
   static String getPreviewText(String raw, {int limit = 150}) {
-    if (raw == null || raw.isEmpty) return '';
+    if (raw.isEmpty) return '';
     
     // First clean keys and HTML
     String cleaned = cleanCoffeeContent(raw);

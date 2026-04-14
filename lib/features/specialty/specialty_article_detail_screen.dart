@@ -7,6 +7,7 @@ import 'package:markdown/markdown.dart' as md;
 import '../navigation/main_scaffold.dart';
 
 import '../../core/database/dtos.dart';
+import '../../core/utils/markdown_extensions.dart';
 
 class SpecialtyArticleDetailScreen extends ConsumerStatefulWidget {
   final SpecialtyArticleDto article;
@@ -276,6 +277,10 @@ class _SpecialtyArticleDetailScreenState
                     softLineBreak: true,
                     shrinkWrap: true,
                     extensionSet: md.ExtensionSet.gitHubWeb,
+                    inlineSyntaxes: [StyleTagSyntax()],
+                    builders: {
+                      'style-tag': StyleTagBuilder(context),
+                    },
                   ),
 
                   const SizedBox(height: 80),

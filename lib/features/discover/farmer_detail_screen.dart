@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/database/dtos.dart';
 import '../navigation/main_scaffold.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../core/utils/markdown_extensions.dart';
 
 class FarmerDetailScreen extends ConsumerStatefulWidget {
   final LocalizedFarmerDto farmer;
@@ -277,6 +278,10 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                       selectable: true,
                       softLineBreak: true,
                       shrinkWrap: true,
+                      inlineSyntaxes: [StyleTagSyntax()],
+                      builders: {
+                        'style-tag': StyleTagBuilder(context),
+                      },
                     ),
 
                   const SizedBox(height: 80),

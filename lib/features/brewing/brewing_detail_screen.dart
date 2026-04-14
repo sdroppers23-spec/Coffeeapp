@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import 'custom_recipe_list.dart';
@@ -104,8 +105,6 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen>
 
   @override
   Widget build(BuildContext context) {
-    final assetPath =
-        _methodMeta[widget.recipe.methodKey] ?? 'assets/images/methods/v60.png';
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -128,18 +127,23 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen>
                     ],
                   ),
                 ),
-                background: Container(
-                  foregroundDecoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.black.withValues(alpha: 0.3),
-                        Colors.black.withValues(alpha: 0.8),
-                      ],
+                background: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    _buildHeroImage(widget.recipe.imageUrl),
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.black.withValues(alpha: 0.3),
+                            Colors.black.withValues(alpha: 0.8),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                  child: Image.asset(assetPath, fit: BoxFit.cover),
+                  ],
                 ),
               ),
             ),
@@ -217,6 +221,30 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen>
         ),
       ),
     );
+  }
+
+  Widget _buildHeroImage(String url) {
+    final assetPath = _methodMeta[widget.recipe.methodKey] ?? 'assets/images/methods/v60.png';
+
+    if (url.startsWith('http')) {
+      return CachedNetworkImage(
+        imageUrl: url,
+        fit: BoxFit.cover,
+        placeholder: (context, url) => Container(
+          color: Colors.black,
+          child: const Center(
+            child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFFC8A96E)),
+          ),
+        ),
+        errorWidget: (context, url, error) => Image.asset(assetPath, fit: BoxFit.cover),
+      );
+    }
+    
+    if (url.startsWith('assets/')) {
+      return Image.asset(url, fit: BoxFit.cover);
+    }
+
+    return Image.asset(assetPath, fit: BoxFit.cover);
   }
 }
 

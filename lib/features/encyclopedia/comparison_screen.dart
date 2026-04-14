@@ -47,9 +47,24 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
               );
             }
 
-            // Default selections
-            _coffeeA ??= origins.isNotEmpty ? origins.first : null;
-            _coffeeB ??= origins.length > 1 ? origins[1] : (origins.isNotEmpty ? origins.first : null);
+            // Use selected IDs if they exist
+            final selectedIds = ref.watch(selectedLotIdsProvider);
+            
+            if (_coffeeA == null && _coffeeB == null) {
+              if (selectedIds.isNotEmpty) {
+                final list = selectedIds.toList();
+                _coffeeA = origins.firstWhere((e) => e.id == list[0], orElse: () => origins.first);
+                if (list.length > 1) {
+                  _coffeeB = origins.firstWhere((e) => e.id == list[1], orElse: () => origins.length > 1 ? origins[1] : origins.first);
+                } else {
+                  _coffeeB = origins.firstWhere((e) => e.id != _coffeeA?.id, orElse: () => origins.first);
+                }
+              } else {
+                // Default selections if none selected
+                _coffeeA = origins.isNotEmpty ? origins.first : null;
+                _coffeeB = origins.length > 1 ? origins[1] : (origins.isNotEmpty ? origins.first : null);
+              }
+            }
 
             return SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(16, 120, 16, 110),

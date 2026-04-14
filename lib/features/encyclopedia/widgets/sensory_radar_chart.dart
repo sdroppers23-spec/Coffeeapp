@@ -85,8 +85,20 @@ class RadarChartPainter extends CustomPainter {
       // Axis line
       canvas.drawLine(center, axisEnd, bgPaint);
 
-      // Label
-      final label = keys[j].toUpperCase();
+      // Label Mapping for Ukrainian descriptors
+      final String rawKey = keys[j].toLowerCase();
+      final Map<String, String> labelMapping = {
+        'aroma': 'АРОМАТ',
+        'acidity': 'КИСЛОТНІСТЬ',
+        'body': 'ТІЛО',
+        'aftertaste': 'ПІСЛЯСМАК',
+        'sweetness': 'СОЛОДКІСТЬ',
+        'balance': 'БАЛАНС',
+        'clean_cup': 'ЧИСТОТА',
+        'uniformity': 'ОДНОРІДНІСТЬ',
+      };
+
+      final label = labelMapping[rawKey] ?? rawKey.toUpperCase();
       final textPainter = TextPainter(
         text: TextSpan(text: label, style: labelStyle),
         textDirection: TextDirection.ltr,

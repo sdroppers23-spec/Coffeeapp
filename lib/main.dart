@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/providers/settings_provider.dart';
+import 'core/database/database_provider.dart';
+import 'features/navigation/navigation_providers.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -91,6 +93,9 @@ class SpecialtyTrackerApp extends ConsumerWidget {
 
     final router = ref.watch(routerProvider);
     final themeMode = ref.watch(themeProvider);
+
+    // Watch the database initializer to trigger seeding and cloud sync at startup
+    ref.watch(databaseInitializerProvider);
 
     return MaterialApp.router(
       title: 'Specialty Tracker',

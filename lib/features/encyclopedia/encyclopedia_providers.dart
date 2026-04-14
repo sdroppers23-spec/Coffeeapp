@@ -141,3 +141,27 @@ final availableEncyclopediaProcessesProvider = Provider<List<String>>((ref) {
   return entries.map((e) => e.processMethod).where((p) => p.isNotEmpty).toSet().toList()..sort();
 });
 
+// ─── Comparison Selection ────────────────────────────────────────────────────
+
+final selectedLotIdsProvider =
+    NotifierProvider<ComparisonSelectionNotifier, Set<int>>(() {
+      return ComparisonSelectionNotifier();
+    });
+
+class ComparisonSelectionNotifier extends Notifier<Set<int>> {
+  @override
+  Set<int> build() => {};
+
+  void toggle(int id) {
+    if (state.contains(id)) {
+      state = Set.from(state)..remove(id);
+    } else {
+      if (state.length < 2) {
+        state = Set.from(state)..add(id);
+      }
+    }
+  }
+
+  void clear() => state = {};
+}
+

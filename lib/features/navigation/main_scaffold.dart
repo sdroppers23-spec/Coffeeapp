@@ -9,29 +9,7 @@ import '../../core/providers/settings_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// ─── Nav bar visibility provider ────────────────────────────────────────────
-final navBarVisibleProvider = NotifierProvider<_NavBarVisibleNotifier, bool>(
-  () => _NavBarVisibleNotifier(),
-);
-
-class _NavBarVisibleNotifier extends Notifier<bool> {
-  @override
-  bool build() => true;
-  void show() => state = true;
-  void hide() => state = false;
-}
-
-// ─── Nav bar height provider ─────────────────────────────────────────────────
-// Each child screen should watch this to add correct bottom padding.
-final navBarHeightProvider = NotifierProvider<_NavBarHeightNotifier, double>(
-  () => _NavBarHeightNotifier(),
-);
-
-class _NavBarHeightNotifier extends Notifier<double> {
-  @override
-  double build() => 80.0;
-  void update(double height) => state = height;
-}
+import 'navigation_providers.dart';
 
 class MainScaffold extends ConsumerStatefulWidget {
   final StatefulNavigationShell navigationShell;
@@ -111,7 +89,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
             if (didPop) return;
 
             // 1. Prioritize nested navigation (detail screens, etc.)
-            // We use the secondary navigator for the shell if possible, or context
+            // We check the root navigator and then the current branch's navigator if possible
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
               return;
@@ -123,18 +101,21 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
               return;
             }
 
-            // 3. Double-tap exit logic with premium UI
+            // 3. Double-tap exit logic with premium UI and vibration
             final now = DateTime.now();
             final isFirstPressOrExpired = _lastBackPressTime == null ||
                 now.difference(_lastBackPressTime!) > const Duration(seconds: 2);
 
             if (isFirstPressOrExpired) {
               _lastBackPressTime = now;
+              // Trigger a light haptic to acknowledge the first press
+              await HapticFeedback.lightImpact();
               _showFrostedExitToast(context);
               return;
             }
 
-            // 4. Final Exit
+            // 4. Final Exit with a slightly heavier acknowledgment
+            await HapticFeedback.mediumImpact();
             await SystemNavigator.pop();
           },
           child: Stack(

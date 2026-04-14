@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../discovery_filter_provider.dart';
 import 'filter_sort_sheet.dart';
 import '../../../shared/widgets/pressable_scale.dart';
+import '../../encyclopedia/encyclopedia_providers.dart';
 
 class DiscoveryActionBar extends ConsumerWidget {
   final NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState>
@@ -28,6 +29,7 @@ class DiscoveryActionBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(filterProvider);
+    final selectedLots = ref.watch(selectedLotIdsProvider);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
@@ -47,7 +49,8 @@ class DiscoveryActionBar extends ConsumerWidget {
                   const SizedBox(width: 8),
                   _ActionButton(
                     icon: Icons.compare_arrows_rounded,
-                    label: 'Порівняння',
+                    label: selectedLots.isEmpty ? 'Порівняння' : 'Порівняння (${selectedLots.length})',
+                    isActive: selectedLots.isNotEmpty,
                     onTap: onCompareTap,
                   ),
                   if (showFavoritesButton) ...[

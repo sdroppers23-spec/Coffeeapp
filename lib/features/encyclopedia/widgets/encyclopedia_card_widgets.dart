@@ -25,8 +25,15 @@ class EncyclopediaLotGridCard extends ConsumerWidget {
     final theme = Theme.of(context);
     final isUk = LocaleService.currentLocale == 'uk';
 
+    final selectedIds = ref.watch(selectedLotIdsProvider);
+    final isSelected = selectedIds.contains(entry.id);
+
     return PressableScale(
-      onTap: onTap,
+      onTap: selectedIds.isNotEmpty ? () => ref.read(selectedLotIdsProvider.notifier).toggle(entry.id) : onTap,
+      onLongPress: () {
+        ref.read(settingsProvider.notifier).triggerVibrate();
+        ref.read(selectedLotIdsProvider.notifier).toggle(entry.id);
+      },
       child: GlassContainer(
         padding: const EdgeInsets.all(12),
         opacity: 0.1,
@@ -131,24 +138,48 @@ class EncyclopediaLotGridCard extends ConsumerWidget {
               right: -4,
               child: GestureDetector(
                 onTap: () async {
+                  ref.read(settingsProvider.notifier).triggerSelectionVibrate();
                   final db = ref.read(databaseProvider);
                   await db.toggleFavorite(entry.id, !entry.isFavorite);
                   ref.invalidate(encyclopediaDataProvider);
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(4),
-                  child: Icon(
-                    entry.isFavorite
-                        ? Icons.favorite_rounded
-                        : Icons.favorite_outline_rounded,
-                    color: entry.isFavorite
-                        ? Colors.redAccent
-                        : Colors.white38,
-                    size: 20,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    padding: const EdgeInsets.all(4),
+                    child: Icon(
+                      entry.isFavorite
+                          ? Icons.favorite_rounded
+                          : Icons.favorite_outline_rounded,
+                      color: entry.isFavorite
+                          ? Colors.redAccent
+                          : Colors.white38,
+                      size: isSelected ? 24 : 20, // Slightly larger when selected to indicate focus
+                    ),
                   ),
                 ),
               ),
             ),
+
+            // Selection indicator (top-left)
+            if (isSelected)
+              Positioned(
+                top: 4,
+                left: 4,
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFC8A96E),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.check,
+                    color: Colors.black,
+                    size: 12,
+                  ),
+                ),
+              ),
           ],
         ),
       ),
@@ -172,10 +203,17 @@ class EncyclopediaLotListCard extends ConsumerWidget {
     final theme = Theme.of(context);
     final isUk = LocaleService.currentLocale == 'uk';
 
+    final selectedIds = ref.watch(selectedLotIdsProvider);
+    final isSelected = selectedIds.contains(entry.id);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: PressableScale(
-        onTap: onTap,
+        onTap: selectedIds.isNotEmpty ? () => ref.read(selectedLotIdsProvider.notifier).toggle(entry.id) : onTap,
+        onLongPress: () {
+          ref.read(settingsProvider.notifier).triggerVibrate();
+          ref.read(selectedLotIdsProvider.notifier).toggle(entry.id);
+        },
         child: GlassContainer(
           padding: const EdgeInsets.all(16),
           opacity: 0.05,
@@ -219,6 +257,7 @@ class EncyclopediaLotListCard extends ConsumerWidget {
                   // Favorite heart button
                   GestureDetector(
                     onTap: () async {
+                      ref.read(settingsProvider.notifier).triggerSelectionVibrate();
                       final db = ref.read(databaseProvider);
                       await db.toggleFavorite(entry.id, !entry.isFavorite);
                       ref.invalidate(encyclopediaDataProvider);
@@ -232,12 +271,41 @@ class EncyclopediaLotListCard extends ConsumerWidget {
                         color: entry.isFavorite
                             ? Colors.redAccent
                             : Colors.white38,
-                        size: 22,
+                        size: 26, // Larger heart for better visibility
                       ),
                     ),
                   ),
                 ],
               ),
+              if (isSelected) ...[
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: const Color(0xFFC8A96E)),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.check_circle_rounded, size: 14, color: Color(0xFFC8A96E)),
+                          const SizedBox(width: 6),
+                          Text(
+                            isUk ? 'ОБРАНО ДЛЯ ПОРІВНЯННЯ' : 'SELECTED FOR COMPARISON',
+                            style: GoogleFonts.outfit(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFFC8A96E),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
               const SizedBox(height: 16),
               // Body: Flag + Traits/Tags
               Row(

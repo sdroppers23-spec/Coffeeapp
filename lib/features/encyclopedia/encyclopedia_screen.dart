@@ -45,11 +45,32 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
         DiscoveryActionBar(
           filterProvider: encyclopediaFilterProvider,
           onCompareTap: () {
-            // Відкриваємо екран порівняння
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const ComparisonScreen()),
-            );
+            final selectedCount = ref.read(selectedLotIdsProvider).length;
+            if (selectedCount == 0) {
+              // Redirect to standard comparison if nothing selected
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ComparisonScreen()),
+              );
+            } else if (selectedCount == 1) {
+              // Hint to select second
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(isUk ? 'Оберіть другий лот для порівняння' : 'Select a second lot to compare'),
+                  backgroundColor: const Color(0xFFC8A96E),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            } else {
+              // Direct navigation to comparison with selected lots
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ComparisonScreen()),
+              ).then((_) {
+                // Clear selection after returning if desired, or keep it.
+                // ref.read(selectedLotIdsProvider.notifier).clear();
+              });
+            }
           },
           availableCountries: ref.watch(availableEncyclopediaCountriesProvider),
           availableFlavors: ref.watch(availableEncyclopediaFlavorsProvider),

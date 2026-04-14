@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../core/supabase/supabase_provider.dart';
 import '../../core/l10n/app_localizations.dart';
+import '../navigation/navigation_providers.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -23,6 +24,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Hide nav bar when entering profile
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(navBarVisibleProvider.notifier).hide();
+    });
+  }
+
+  @override
+  void dispose() {
+    // Restore nav bar when leaving profile
+    ref.read(navBarVisibleProvider.notifier).show();
+    super.dispose();
   }
 
   void _editProfile(User user) {

@@ -121,195 +121,195 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
           CustomScrollView(
             controller: _scrollController,
             physics: const BouncingScrollPhysics(),
-        slivers: [
-          // ── Hero Portrait ─────────────────────────────────────────────────
-          SliverAppBar(
-            expandedHeight: 420,
-            backgroundColor: Colors.black,
-            surfaceTintColor: Colors.transparent, // Fix white sheet
-            systemOverlayStyle: SystemUiOverlayStyle.light, // Fix status bar icons
-            elevation: 0,
-            pinned: true,
-            leading: IconButton(
-              icon: const CircleAvatar(
-                backgroundColor: Colors.black45,
-                child: Icon(
-                  Icons.arrow_back_ios_new,
-                  color: Colors.white,
-                  size: 18,
-                ),
-              ),
-              onPressed: () {
-                ref.read(navBarVisibleProvider.notifier).show();
-                Navigator.of(context).pop();
-              },
-            ),
-            flexibleSpace: FlexibleSpaceBar(
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  if (widget.farmer.effectiveImageUrl.isNotEmpty)
-                    _LocalOrNetworkImage(
-                      url: widget.farmer.effectiveImageUrl,
-                      fit: BoxFit.cover,
-                    )
-                  else
-                    Container(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [Color(0xFF1A1208), Color(0xFF120D08)],
-                        ),
-                      ),
-                    ),
-                  // Gradient overlay
-                  const DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.black38,
-                          Colors.transparent,
-                          Colors.transparent,
-                          Color(0xFF0A0908),
-                        ],
-                        stops: [0.0, 0.15, 0.55, 1.0],
-                      ),
+            slivers: [
+              // ── Hero Portrait ─────────────────────────────────────────────────
+              SliverAppBar(
+                expandedHeight: 420,
+                backgroundColor: Colors.black,
+                surfaceTintColor: Colors.transparent, // Fix white sheet
+                systemOverlayStyle: SystemUiOverlayStyle.light, // Fix status bar icons
+                elevation: 0,
+                pinned: true,
+                leading: IconButton(
+                  icon: const CircleAvatar(
+                    backgroundColor: Colors.black45,
+                    child: Icon(
+                      Icons.arrow_back_ios_new,
+                      color: Colors.white,
+                      size: 18,
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-
-          // ── Farmer Info ───────────────────────────────────────────────────
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 12),
-
-                  // Location pill
-                  Row(
+                  onPressed: () {
+                    ref.read(navBarVisibleProvider.notifier).show();
+                    Navigator.of(context).pop();
+                  },
+                ),
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Stack(
+                    fit: StackFit.expand,
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
-                        child: CachedNetworkImage(
-                          imageUrl: widget.farmer.effectiveFlagUrl,
-                          width: 30,
-                          height: 20,
+                      if (widget.farmer.effectiveImageUrl.isNotEmpty)
+                        _LocalOrNetworkImage(
+                          url: widget.farmer.effectiveImageUrl,
                           fit: BoxFit.cover,
-                          placeholder: (context, url) =>
-                              Container(color: Colors.white10),
-                          errorWidget: (context, url, error) => const Icon(
-                            Icons.public,
-                            size: 20,
-                            color: Colors.white24,
+                        )
+                      else
+                        Container(
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [Color(0xFF1A1208), Color(0xFF120D08)],
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 10),
-                      Flexible(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: gold.withValues(alpha: 0.12),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: gold.withValues(alpha: 0.35),
-                            ),
-                          ),
-                          child: Text(
-                            '${widget.farmer.country}, ${widget.farmer.region}'
-                                .toUpperCase(),
-                            style: GoogleFonts.poppins(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w700,
-                              color: gold,
-                              letterSpacing: 1.2,
-                            ),
+                      // Gradient overlay
+                      const DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.black38,
+                              Colors.transparent,
+                              Colors.transparent,
+                              Color(0xFF0A0908),
+                            ],
+                            stops: [0.0, 0.15, 0.55, 1.0],
                           ),
                         ),
                       ),
                     ],
                   ),
+                ),
+              ),
 
-                  const SizedBox(height: 20),
+              // ── Farmer Info ───────────────────────────────────────────────────
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 12),
 
-                  // Farmer Name
-                  Text(
-                    widget.farmer.name,
-                    style: GoogleFonts.cormorantGaramond(
-                      fontSize: 46,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                      height: 0.95,
-                    ),
-                  ),
-
-                  if (widget.farmer.description.isNotEmpty) ...[
-                    const SizedBox(height: 8),
-                    Text(
-                      widget.farmer.description,
-                      style: GoogleFonts.outfit(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: gold.withValues(alpha: 0.85),
-                      ),
-                    ),
-                  ],
-
-                  // Divider
-                  Container(
-                    height: 1,
-                    margin: const EdgeInsets.symmetric(vertical: 24),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          gold.withValues(alpha: 0.5),
-                          gold.withValues(alpha: 0.0),
+                      // Location pill
+                      Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(4),
+                            child: CachedNetworkImage(
+                              imageUrl: widget.farmer.effectiveFlagUrl,
+                              width: 30,
+                              height: 20,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) =>
+                                  Container(color: Colors.white10),
+                              errorWidget: (context, url, error) => const Icon(
+                                Icons.public,
+                                size: 20,
+                                color: Colors.white24,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Flexible(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: gold.withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: gold.withValues(alpha: 0.35),
+                                ),
+                              ),
+                              child: Text(
+                                '${widget.farmer.country}, ${widget.farmer.region}'
+                                    .toUpperCase(),
+                                style: GoogleFonts.poppins(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w700,
+                                  color: gold,
+                                  letterSpacing: 1.2,
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
-                    ),
+
+                      const SizedBox(height: 20),
+
+                      // Farmer Name
+                      Text(
+                        widget.farmer.name,
+                        style: GoogleFonts.cormorantGaramond(
+                          fontSize: 46,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                          height: 0.95,
+                        ),
+                      ),
+
+                      if (widget.farmer.description.isNotEmpty) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          widget.farmer.description,
+                          style: GoogleFonts.outfit(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: gold.withValues(alpha: 0.85),
+                          ),
+                        ),
+                      ],
+
+                      // Divider
+                      Container(
+                        height: 1,
+                        margin: const EdgeInsets.symmetric(vertical: 24),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              gold.withValues(alpha: 0.5),
+                              gold.withValues(alpha: 0.0),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      // Biography in Markdown (handles HTML tags via gitHubWeb extension set)
+                      if (bio.isNotEmpty)
+                        MarkdownBody(
+                          data: bio,
+                          extensionSet: md.ExtensionSet.gitHubWeb,
+                          styleSheet: markdownStyle,
+                          selectable: true,
+                          softLineBreak: true,
+                          shrinkWrap: true,
+                          inlineSyntaxes: [StyleTagSyntax()],
+                          builders: {
+                            'style-tag': StyleTagBuilder(context),
+                          },
+                        ),
+
+                      const SizedBox(height: 80),
+                    ],
                   ),
-
-                  // Biography in Markdown (handles HTML tags via gitHubWeb extension set)
-                  if (bio.isNotEmpty)
-                    MarkdownBody(
-                      data: bio,
-                      extensionSet: md.ExtensionSet.gitHubWeb,
-                      styleSheet: markdownStyle,
-                      selectable: true,
-                      softLineBreak: true,
-                      shrinkWrap: true,
-                      inlineSyntaxes: [StyleTagSyntax()],
-                      builders: {
-                        'style-tag': StyleTagBuilder(context),
-                      },
-                    ),
-
-                   const SizedBox(height: 80),
-                ],
+                ),
               ),
-            ),
+            ],
+          ),
+          ScrollToTopButton(
+            scrollController: _scrollController,
+            threshold: 400,
           ),
         ],
       ),
-    ],
-  ),
-  floatingActionButton: ScrollToTopButton(
-    scrollController: _scrollController,
-    threshold: 400,
-  ),
-);
-}
+    );
+  }
 
   /// Combines description + story into one coherent Markdown document.
   String _buildBio(String description, String story) {

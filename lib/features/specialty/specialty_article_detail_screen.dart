@@ -144,171 +144,171 @@ class _SpecialtyArticleDetailScreenState
           CustomScrollView(
             controller: _scrollController,
             physics: const BouncingScrollPhysics(),
-        slivers: [
-          // ── Hero Image AppBar ──────────────────────────────────────────────
-          SliverAppBar(
-            expandedHeight: 400,
-            backgroundColor: Colors.black,
-            surfaceTintColor: Colors.transparent, // Fix white sheet
-            systemOverlayStyle: SystemUiOverlayStyle.light, // Fix status bar icons
-            elevation: 0,
-            pinned: true,
-            leading: IconButton(
-              icon: const CircleAvatar(
-                backgroundColor: Colors.black45,
-                child: Icon(
-                  Icons.arrow_back_ios_new,
-                  color: Colors.white,
-                  size: 18,
-                ),
-              ),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            flexibleSpace: FlexibleSpaceBar(
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  if (imageUrl.isNotEmpty)
-                    _buildHeroImage(imageUrl)
-                  else
-                    Container(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [Color(0xFF1A1208), Color(0xFF0D0D0D)],
-                        ),
-                      ),
-                    ),
-                  // Multi-stop gradient overlay for readability
-                  const DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.black38,
-                          Colors.transparent,
-                          Colors.transparent,
-                          Color(0xFF0A0908),
-                        ],
-                        stops: [0.0, 0.2, 0.7, 1.0],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // ── Content ───────────────────────────────────────────────────────
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 24),
-
-                  // Module chip
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: gold.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(100),
-                      border: Border.all(color: gold.withValues(alpha: 0.3)),
-                    ),
-                    child: Text(
-                      widget.moduleName.toUpperCase(),
-                      style: GoogleFonts.poppins(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                        color: gold,
-                        letterSpacing: 2.0,
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // Title
-                  Text(
-                    title,
-                    style: GoogleFonts.cormorantGaramond(
-                      fontSize: 48,
-                      fontWeight: FontWeight.w700,
+            slivers: [
+              // ── Hero Image AppBar ──────────────────────────────────────────────
+              SliverAppBar(
+                expandedHeight: 400,
+                backgroundColor: Colors.black,
+                surfaceTintColor: Colors.transparent, // Fix white sheet
+                systemOverlayStyle: SystemUiOverlayStyle.light, // Fix status bar icons
+                elevation: 0,
+                pinned: true,
+                leading: IconButton(
+                  icon: const CircleAvatar(
+                    backgroundColor: Colors.black45,
+                    child: Icon(
+                      Icons.arrow_back_ios_new,
                       color: Colors.white,
-                      height: 1.0,
+                      size: 18,
                     ),
                   ),
-
-                  const SizedBox(height: 12),
-
-                  // Read time & Share row
-                  Row(
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Stack(
+                    fit: StackFit.expand,
                     children: [
-                      Icon(Icons.access_time, size: 14, color: gold.withValues(alpha: 0.7)),
-                      const SizedBox(width: 6),
-                      Text(
-                        '${widget.article.readTimeMin} хв читання',
-                        style: GoogleFonts.outfit(
-                          fontSize: 14,
-                          color: Colors.white.withValues(alpha: 0.6),
-                          fontWeight: FontWeight.w500,
+                      if (imageUrl.isNotEmpty)
+                        _buildHeroImage(imageUrl)
+                      else
+                        Container(
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [Color(0xFF1A1208), Color(0xFF0D0D0D)],
+                            ),
+                          ),
+                        ),
+                      // Multi-stop gradient overlay for readability
+                      const DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.black38,
+                              Colors.transparent,
+                              Colors.transparent,
+                              Color(0xFF0A0908),
+                            ],
+                            stops: [0.0, 0.2, 0.7, 1.0],
+                          ),
                         ),
                       ),
                     ],
                   ),
+                ),
+              ),
 
-                  const SizedBox(height: 32),
+              // ── Content ───────────────────────────────────────────────────────
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 24),
 
-                  // Divider
-                  Container(
-                    height: 1,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          gold.withValues(alpha: 0.35),
-                          gold.withValues(alpha: 0.0),
+                      // Module chip
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: gold.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(100),
+                          border: Border.all(color: gold.withValues(alpha: 0.3)),
+                        ),
+                        child: Text(
+                          widget.moduleName.toUpperCase(),
+                          style: GoogleFonts.poppins(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            color: gold,
+                            letterSpacing: 2.0,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Title
+                      Text(
+                        title,
+                        style: GoogleFonts.cormorantGaramond(
+                          fontSize: 48,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                          height: 1.0,
+                        ),
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      // Read time & Share row
+                      Row(
+                        children: [
+                          Icon(Icons.access_time, size: 14, color: gold.withValues(alpha: 0.7)),
+                          const SizedBox(width: 6),
+                          Text(
+                            '${widget.article.readTimeMin} хв читання',
+                            style: GoogleFonts.outfit(
+                              fontSize: 14,
+                              color: Colors.white.withValues(alpha: 0.6),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ],
                       ),
-                    ),
+
+                      const SizedBox(height: 32),
+
+                      // Divider
+                      Container(
+                        height: 1,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              gold.withValues(alpha: 0.35),
+                              gold.withValues(alpha: 0.0),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 32),
+
+                      // Content: prefer Markdown, fall back to plain text
+                      MarkdownBody(
+                        data: content,
+                        styleSheet: markdownStyle,
+                        selectable: true,
+                        softLineBreak: true,
+                        shrinkWrap: true,
+                        extensionSet: md.ExtensionSet.gitHubWeb,
+                        inlineSyntaxes: [StyleTagSyntax()],
+                        builders: {
+                          'style-tag': StyleTagBuilder(context),
+                        },
+                      ),
+
+                      const SizedBox(height: 80),
+                    ],
                   ),
-
-                  const SizedBox(height: 32),
-
-                  // Content: prefer Markdown, fall back to plain text
-                  MarkdownBody(
-                    data: content,
-                    styleSheet: markdownStyle,
-                    selectable: true,
-                    softLineBreak: true,
-                    shrinkWrap: true,
-                    extensionSet: md.ExtensionSet.gitHubWeb,
-                    inlineSyntaxes: [StyleTagSyntax()],
-                    builders: {
-                      'style-tag': StyleTagBuilder(context),
-                    },
-                  ),
-
-                  const SizedBox(height: 80),
-                ],
+                ),
               ),
-            ),
+            ],
+          ),
+          ScrollToTopButton(
+            scrollController: _scrollController,
+            threshold: 400,
           ),
         ],
       ),
-    ],
-  ),
-  floatingActionButton: ScrollToTopButton(
-    scrollController: _scrollController,
-    threshold: 400,
-  ),
-);
-}
+    );
+  }
 
   Widget _buildHeroImage(String url) {
     if (url.startsWith('assets/')) {

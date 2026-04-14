@@ -9,6 +9,7 @@ import '../../core/database/dtos.dart';
 import '../navigation/main_scaffold.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../shared/widgets/scroll_to_top_button.dart';
+import '../../core/utils/text_processor.dart';
 
 class FarmerDetailScreen extends ConsumerStatefulWidget {
   final LocalizedFarmerDto farmer;
@@ -214,10 +215,9 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                         ),
                       ),
 
-                      // Biography in HTML (handles HTML tags + custom serif processing)
                       if (bio.isNotEmpty)
                         Html(
-                          data: _processBio(bio),
+                          data: CoffeeTextProcessor.process(bio),
                           style: {
                             "body": Style(
                               margin: Margins.zero,
@@ -227,32 +227,35 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                               color: Colors.white.withValues(alpha: 0.88),
                               fontFamily: GoogleFonts.outfit().fontFamily,
                             ),
-                            "h1": Style(
-                              fontSize: FontSize(30),
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                              fontFamily: GoogleFonts.cormorantGaramond().fontFamily,
-                            ),
-                            "h2": Style(
-                              fontSize: FontSize(24),
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                              fontFamily: GoogleFonts.cormorantGaramond().fontFamily,
-                            ),
-                            "h3": Style(
-                              fontSize: FontSize(14),
-                              fontWeight: FontWeight.w700,
+                            "h1,h2,h3": Style(
                               color: gold,
-                              letterSpacing: 0.8,
-                              fontFamily: GoogleFonts.poppins().fontFamily,
+                              fontFamily: GoogleFonts.cormorantGaramond().fontFamily,
+                              margin: Margins.only(top: 24, bottom: 12),
+                            ),
+                            "h1": Style(fontSize: FontSize(30), fontWeight: FontWeight.w700),
+                            "h2": Style(fontSize: FontSize(24), fontWeight: FontWeight.w600),
+                            "h3": Style(fontSize: FontSize(18), fontWeight: FontWeight.w600),
+                            "p": Style(
+                              margin: Margins.only(bottom: 16),
                             ),
                             "strong": Style(
                               color: gold,
                               fontWeight: FontWeight.w700,
                             ),
-                            ".serif": Style(
+                            ".coffee-serif": Style(
                               fontFamily: GoogleFonts.cormorantGaramond().fontFamily,
                               fontWeight: FontWeight.w600,
+                            ),
+                            ".coffee-gold": Style(
+                              color: gold,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            ".coffee-accent": Style(
+                              color: gold.withValues(alpha: 0.5),
+                            ),
+                            ".coffee-accent-gold": Style(
+                              color: gold.withValues(alpha: 0.8),
+                              fontWeight: FontWeight.bold,
                             ),
                           },
                         ),
@@ -283,17 +286,6 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
     
     // Otherwise, prefer showing the detailed story
     return s;
-  }
-
-  String _processBio(String text) {
-    // Convert custom {serif} tags to HTML spans with a class
-    String processed = text.replaceAllMapped(
-      RegExp(r'\{serif\}([\s\S]*?)\{\/serif\}'),
-      (match) => '<span class="serif">${match.group(1)}</span>',
-    );
-    
-    // Also handle other potential tags if needed, but start with serif
-    return processed;
   }
 }
 

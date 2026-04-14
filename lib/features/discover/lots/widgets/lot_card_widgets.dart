@@ -5,6 +5,7 @@ import '../../../../core/database/dtos.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../shared/widgets/glass_container.dart';
 import '../../../../shared/widgets/pressable_scale.dart';
+import 'package:vibration/vibration.dart';
 
 class MyLotGridCard extends ConsumerWidget {
   final CoffeeLotDto lot;
@@ -31,7 +32,13 @@ class MyLotGridCard extends ConsumerWidget {
 
     return PressableScale(
       onLongPress: () => onLongPress(lot.id),
-      onTap: () => onTap(lot.id),
+      onTap: () {
+        if (isSelectionMode) {
+          onLongPress(lot.id); // Toggle selection
+        } else {
+          onTap(lot.id);
+        }
+      },
       child: GlassContainer(
         padding: const EdgeInsets.all(12),
         opacity: isSelected ? 0.2 : 0.1,
@@ -148,10 +155,13 @@ class MyLotGridCard extends ConsumerWidget {
                       ),
                     )
                   : PressableScale(
-                      onTap: () => onFavoriteToggle(lot),
+                      onTap: () {
+                        Vibration.vibrate(duration: 40, amplitude: 100);
+                        onFavoriteToggle(lot);
+                      },
                       child: Icon(
                         lot.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                        size: 14,
+                        size: 20,
                         color: lot.isFavorite ? Colors.redAccent : Colors.white24,
                       ),
                     ),
@@ -299,7 +309,10 @@ class MyLotListCard extends ConsumerWidget {
                   isSelectionMode
                       ? const SizedBox.shrink()
                       : PressableScale(
-                          onTap: () => onFavoriteToggle(lot),
+                          onTap: () {
+                            Vibration.vibrate(duration: 40, amplitude: 100);
+                            onFavoriteToggle(lot);
+                          },
                           child: Icon(
                             lot.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
                             size: 20,

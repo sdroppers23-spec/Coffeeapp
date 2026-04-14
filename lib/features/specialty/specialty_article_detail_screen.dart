@@ -8,6 +8,7 @@ import '../navigation/main_scaffold.dart';
 
 import '../../core/database/dtos.dart';
 import '../../shared/widgets/scroll_to_top_button.dart';
+import '../../core/utils/text_processor.dart';
 
 class SpecialtyArticleDetailScreen extends ConsumerStatefulWidget {
   final SpecialtyArticleDto article;
@@ -197,9 +198,9 @@ class _SpecialtyArticleDetailScreenState
 
                       const SizedBox(height: 32),
 
-                      // Content: supports full HTML + custom serif processing
+                      // Content: supports full HTML + automatic structure processing
                       Html(
-                        data: _processContent(content),
+                        data: CoffeeTextProcessor.process(content),
                         style: {
                           "body": Style(
                             margin: Margins.zero,
@@ -209,32 +210,35 @@ class _SpecialtyArticleDetailScreenState
                             color: Colors.white.withValues(alpha: 0.9),
                             fontFamily: GoogleFonts.outfit().fontFamily,
                           ),
-                          "h1": Style(
-                            fontSize: FontSize(36),
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                            fontFamily: GoogleFonts.cormorantGaramond().fontFamily,
-                          ),
-                          "h2": Style(
-                            fontSize: FontSize(28),
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                            fontFamily: GoogleFonts.cormorantGaramond().fontFamily,
-                          ),
-                          "h3": Style(
-                            fontSize: FontSize(16),
-                            fontWeight: FontWeight.w700,
+                          "h1,h2,h3": Style(
                             color: gold,
-                            letterSpacing: 1.0,
-                            fontFamily: GoogleFonts.poppins().fontFamily,
+                            fontFamily: GoogleFonts.cormorantGaramond().fontFamily,
+                            margin: Margins.only(top: 24, bottom: 12),
+                          ),
+                          "h1": Style(fontSize: FontSize(36), fontWeight: FontWeight.w700),
+                          "h2": Style(fontSize: FontSize(28), fontWeight: FontWeight.w700),
+                          "h3": Style(fontSize: FontSize(20), fontWeight: FontWeight.w600),
+                          "p": Style(
+                            margin: Margins.only(bottom: 16),
                           ),
                           "strong": Style(
                             color: gold,
                             fontWeight: FontWeight.w700,
                           ),
-                          ".serif": Style(
+                          ".coffee-serif": Style(
                             fontFamily: GoogleFonts.cormorantGaramond().fontFamily,
                             fontWeight: FontWeight.w600,
+                          ),
+                          ".coffee-gold": Style(
+                            color: gold,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          ".coffee-accent": Style(
+                            color: gold.withValues(alpha: 0.5),
+                          ),
+                          ".coffee-accent-gold": Style(
+                            color: gold.withValues(alpha: 0.8),
+                            fontWeight: FontWeight.bold,
                           ),
                         },
                       ),
@@ -253,22 +257,6 @@ class _SpecialtyArticleDetailScreenState
         ],
       ),
     );
-  }
-
-  String _processContent(String text) {
-    // Convert custom {serif} tags to HTML spans with a class
-    String processed = text.replaceAllMapped(
-      RegExp(r'\{serif\}([\s\S]*?)\{\/serif\}'),
-      (match) => '<span class="serif">${match.group(1)}</span>',
-    );
-    
-    // Support potential legacy gold tags if they exist in DB
-    processed = processed.replaceAllMapped(
-      RegExp(r'\{gold\}([\s\S]*?)\{\/gold\}'),
-      (match) => '<span style="color: #C8A96E; font-weight: bold;">${match.group(1)}</span>',
-    );
-
-    return processed;
   }
 
   Widget _buildHeroImage(String url) {

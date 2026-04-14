@@ -25,6 +25,8 @@ class SpecialtyArticleDetailScreen extends ConsumerStatefulWidget {
       _SpecialtyArticleDetailScreenState();
 }
 
+class _SpecialtyArticleDetailScreenState
+    extends ConsumerState<SpecialtyArticleDetailScreen> {
   @override
   void initState() {
     super.initState();
@@ -296,12 +298,14 @@ class SpecialtyArticleDetailScreen extends ConsumerStatefulWidget {
           ),
         ],
       ),
-      floatingActionButton: ScrollToTopButton(
-        scrollController: _scrollController,
-        threshold: 400,
-      ),
-    );
-  }
+    ],
+  ),
+  floatingActionButton: ScrollToTopButton(
+    scrollController: _scrollController,
+    threshold: 400,
+  ),
+);
+}
 
   Widget _buildHeroImage(String url) {
     if (url.startsWith('assets/')) {

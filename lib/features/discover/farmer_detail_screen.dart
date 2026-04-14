@@ -292,19 +292,21 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                       },
                     ),
 
-                  const SizedBox(height: 80),
+                   const SizedBox(height: 80),
                 ],
               ),
             ),
           ),
         ],
       ),
-      floatingActionButton: ScrollToTopButton(
-        scrollController: _scrollController,
-        threshold: 400,
-      ),
-    );
-  }
+    ],
+  ),
+  floatingActionButton: ScrollToTopButton(
+    scrollController: _scrollController,
+    threshold: 400,
+  ),
+);
+}
 
   /// Combines description + story into one coherent Markdown document.
   String _buildBio(String description, String story) {

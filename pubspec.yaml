@@ -65,6 +65,7 @@ dependencies:
   html: ^0.15.6
   shared_preferences: ^2.5.5
   collection: ^1.19.1
+  markdown: ^7.3.1
 
 dev_dependencies:
   flutter_test:

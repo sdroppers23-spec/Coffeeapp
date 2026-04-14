@@ -169,48 +169,63 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
     return result ?? false;
   }
 
-  void _showModernUndo(CoffeeLotDto lot, BuildContext context, WidgetRef ref, {bool isArchive = false}) {
+  void _showModernUndo(List<CoffeeLotDto> lots, BuildContext context, WidgetRef ref, {bool isArchive = false}) {
+    if (lots.isEmpty) return;
     final isUk = Localizations.localeOf(context).languageCode == 'uk';
-    final message = isArchive 
-        ? (isUk ? 'Лот архівовано' : 'Lot archived')
-        : (isUk ? 'Лот видалено' : 'Lot deleted');
+    String message;
+    
+    if (isArchive) {
+      if (lots.length == 1) {
+        message = isUk ? 'Лот архівовано' : 'Lot archived';
+      } else {
+        message = isUk ? 'Лотів архівовано: ${lots.length}' : '${lots.length} lots archived';
+      }
+    } else {
+      if (lots.length == 1) {
+        message = isUk ? 'Лот видалено' : 'Lot deleted';
+      } else {
+        message = isUk ? 'Лотів видалено: ${lots.length}' : '${lots.length} lots deleted';
+      }
+    }
 
     ModernUndoTimer.show(
       context,
       message: message,
       onUndo: () async {
         final db = ref.read(databaseProvider);
-        await db.upsertUserLot(CoffeeLotsCompanion(
-          id: Value(lot.id),
-          userId: Value(lot.userId ?? ''),
-          roasteryName: Value(lot.roasteryName),
-          roasteryCountry: Value(lot.roasteryCountry),
-          coffeeName: Value(lot.coffeeName),
-          originCountry: Value(lot.originCountry),
-          region: Value(lot.region),
-          altitude: Value(lot.altitude),
-          process: Value(lot.process),
-          roastLevel: Value(lot.roastLevel),
-          roastDate: Value(lot.roastDate),
-          openedAt: Value(lot.openedAt),
-          weight: Value(lot.weight),
-          lotNumber: Value(lot.lotNumber),
-          isDecaf: Value(lot.isDecaf),
-          farm: Value(lot.farm),
-          washStation: Value(lot.washStation),
-          farmer: Value(lot.farmer),
-          varieties: Value(lot.varieties),
-          flavorProfile: Value(lot.flavorProfile),
-          scaScore: Value(lot.scaScore),
-          isFavorite: Value(lot.isFavorite),
-          isArchived: Value(isArchive ? false : lot.isArchived),
-          isOpen: Value(lot.isOpen),
-          isGround: Value(lot.isGround),
-          sensoryJson: Value(lot.sensoryJson),
-          priceJson: Value(lot.priceJson),
-          createdAt: Value(lot.createdAt),
-          updatedAt: Value(DateTime.now()),
-        ));
+        for (final lot in lots) {
+          await db.upsertUserLot(CoffeeLotsCompanion(
+            id: Value(lot.id),
+            userId: Value(lot.userId ?? ''),
+            roasteryName: Value(lot.roasteryName),
+            roasteryCountry: Value(lot.roasteryCountry),
+            coffeeName: Value(lot.coffeeName),
+            originCountry: Value(lot.originCountry),
+            region: Value(lot.region),
+            altitude: Value(lot.altitude),
+            process: Value(lot.process),
+            roastLevel: Value(lot.roastLevel),
+            roastDate: Value(lot.roastDate),
+            openedAt: Value(lot.openedAt),
+            weight: Value(lot.weight),
+            lotNumber: Value(lot.lotNumber),
+            isDecaf: Value(lot.isDecaf),
+            farm: Value(lot.farm),
+            washStation: Value(lot.washStation),
+            farmer: Value(lot.farmer),
+            varieties: Value(lot.varieties),
+            flavorProfile: Value(lot.flavorProfile),
+            scaScore: Value(lot.scaScore),
+            isFavorite: Value(lot.isFavorite),
+            isArchived: Value(isArchive ? false : lot.isArchived),
+            isOpen: Value(lot.isOpen),
+            isGround: Value(lot.isGround),
+            sensoryJson: Value(lot.sensoryJson),
+            priceJson: Value(lot.priceJson),
+            createdAt: Value(lot.createdAt),
+            updatedAt: Value(DateTime.now()),
+          ));
+        }
         ref.invalidate(userLotsProvider);
         if (mounted) setState(() => _isUndoVisible = false);
       },
@@ -475,7 +490,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                     await db.toggleLotArchive(lot.id, true);
                     ref.invalidate(userLotsProvider);
                     if (context.mounted) {
-                      _showModernUndo(lot, context, ref, isArchive: true);
+                      _showModernUndo([lot], context, ref, isArchive: true);
                     }
                     return true;
                   } else {
@@ -484,7 +499,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                       await db.deleteUserLot(lot.id);
                       ref.invalidate(userLotsProvider);
                       if (context.mounted) {
-                        _showModernUndo(lot, context, ref, isArchive: false);
+                        _showModernUndo([lot], context, ref, isArchive: false);
                       }
                       return true;
                     }
@@ -587,9 +602,31 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
             () async {
               final db = ref.read(databaseProvider);
               final activeTab = _subTabController.index;
+              final lotsReady = lotsAsync.asData?.value ?? [];
+              final toProcess = lotsReady.where((l) => _selectedLotIds.contains(l.id)).toList();
+              
               for (var id in _selectedLotIds) {
                 await db.toggleLotArchive(id, activeTab != 2);
               }
+              
+              if (mounted) {
+                final isRestore = activeTab == 2;
+                if (isRestore) {
+                  final isUk = Localizations.localeOf(context).languageCode == 'uk';
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(toProcess.length == 1 
+                        ? (isUk ? 'Лот відновлено' : 'Lot restored')
+                        : (isUk ? 'Лотів відновлено: ${toProcess.length}' : '${toProcess.length} lots restored')
+                      ),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                } else {
+                  _showModernUndo(toProcess, context, ref, isArchive: true);
+                }
+              }
+              
               setState(() => _selectedLotIds.clear());
               ref.invalidate(userLotsProvider);
             },
@@ -606,12 +643,12 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
               final confirmed = await _confirmDeleteDialog(firstLot);
               if (confirmed && mounted) {
                 final db = ref.read(databaseProvider);
+                final lotsToUndo = lotsReady.where((l) => toDelete.contains(l.id)).toList();
                 for (var id in toDelete) {
-                  final lot = lotsReady.firstWhere((l) => l.id == id, orElse: () => throw 'Lot not found');
                   await db.deleteUserLot(id);
-                  if (id == toDelete.last && mounted) {
-                    _showModernUndo(lot, context, ref, isArchive: false);
-                  }
+                }
+                if (mounted) {
+                  _showModernUndo(lotsToUndo, context, ref, isArchive: false);
                 }
                 ref.invalidate(userLotsProvider);
                 setState(() => _selectedLotIds.clear());

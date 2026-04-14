@@ -505,7 +505,12 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           _divider(),
           _fieldRow(label: 'LOT NUMBER', controller: _lotNumberController),
           _divider(),
-          _fieldRow(label: 'SCA SCORE', controller: _scaScoreController, keyboardType: TextInputType.number),
+          _fieldRow(
+            label: 'SCA SCORE', 
+            controller: _scaScoreController, 
+            keyboardType: TextInputType.number,
+            helperText: 'Оцінка SCA від 80 до 100',
+          ),
         ]),
         _sectionLabel('Походження'),
         _darkCard(children: [
@@ -592,13 +597,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
 
   Widget _divider() => Divider(height: 1, color: const Color(0xFFC8A96E).withValues(alpha: 0.06));
 
-  Widget _fieldRow({
-    required String label,
-    TextEditingController? controller,
-    String? value,
-    Function(String)? onChanged,
     TextInputType? keyboardType,
     String? suffix,
+    String? helperText,
   }) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
@@ -643,6 +644,17 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 Text(suffix, style: GoogleFonts.outfit(color: const Color(0xFFC8A96E), fontWeight: FontWeight.bold, fontSize: 13)),
             ],
           ),
+          if (helperText != null) ...[
+            const SizedBox(height: 4),
+            Text(
+              helperText,
+              style: GoogleFonts.outfit(
+                fontSize: 10,
+                color: Colors.white.withValues(alpha: 0.38),
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ],
         ],
       ),
     );

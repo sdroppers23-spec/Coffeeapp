@@ -24,7 +24,8 @@ class MyLotsContent extends ConsumerStatefulWidget {
 class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTickerProviderStateMixin {
   late TabController _subTabController;
   final Set<String> _selectedLotIds = {};
-  final Set<String> _pendingDeleteIds = {};
+  final List<String> _pendingDeleteIds = [];
+  bool _isUndoVisible = false;
   
   bool get _isSelectionMode => _selectedLotIds.isNotEmpty;
 
@@ -211,11 +212,13 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
           updatedAt: Value(DateTime.now()),
         ));
         ref.invalidate(userLotsProvider);
+        if (mounted) setState(() => _isUndoVisible = false);
       },
       onDismiss: () {
-        // Finalized
+        if (mounted) setState(() => _isUndoVisible = false);
       },
     );
+    if (mounted) setState(() => _isUndoVisible = true);
   }
 
   void _toggleLotSelection(String id) {
@@ -607,16 +610,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                   final lot = lotsReady.firstWhere((l) => l.id == id, orElse: () => throw 'Lot not found');
                   await db.deleteUserLot(id);
                   if (id == toDelete.last && mounted) {
-                    final isUk = Localizations.localeOf(context).languageCode == 'uk';
-                    ModernUndoTimer.show(
-                      context,
-                      message: isUk ? 'Лот видалено' : 'Lot deleted',
-                      onUndo: () async {
-                        await db.upsertUserLot(lot);
-                        ref.invalidate(userLotsProvider);
-                      },
-                      onDismiss: () {},
-                    );
+                    _showModernUndo(lot, context, ref, isArchive: false);
                   }
                 }
                 ref.invalidate(userLotsProvider);

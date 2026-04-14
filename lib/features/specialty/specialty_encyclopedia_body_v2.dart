@@ -106,7 +106,12 @@ class SpecialtyArticleCard extends StatelessWidget {
                 
                 // Preview text (stripped HTML/Markdown)
                 Text(
-                  content.replaceAll(RegExp(r'<[^>]*>'), '').replaceAll(RegExp(r'#+\s*'), ''),
+                  content
+                      .replaceAll(RegExp(r'<[^>]*>'), '')
+                      .replaceAll(RegExp(r'#+\s*'), '')
+                      .replaceAll(RegExp(r'\*\*|\*|__|_'), '')
+                      .replaceAll('\n', ' ')
+                      .trim(),
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.inter(

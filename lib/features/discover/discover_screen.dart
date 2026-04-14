@@ -10,6 +10,7 @@ import './farmers_screen.dart';
 import './roasters_screen.dart';
 import '../navigation/main_scaffold.dart';
 import '../specialty/specialty_screen.dart';
+import '../../shared/widgets/sync_indicator.dart';
 
 class DiscoverScreen extends ConsumerStatefulWidget {
   const DiscoverScreen({super.key});
@@ -110,39 +111,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.greenAccent.withValues(alpha: 0.3),
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(20),
-                          color: const Color(0xFF2D322F),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.cloud_done_outlined,
-                              color: Colors.greenAccent,
-                              size: 14,
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              "Cloud Connected",
-                              style: GoogleFonts.poppins(
-                                color: Colors.greenAccent,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      const SyncIndicator(),
                     ],
                   ),
                   Align(

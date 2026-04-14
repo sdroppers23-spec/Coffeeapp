@@ -291,10 +291,14 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
 
   /// Combines description + story into one coherent Markdown document.
   String _buildBio(String description, String story) {
-    // If story is identical to description (some cloud data might have this),
-    // we return empty to avoid showing the same block twice.
-    if (story.trim() == description.trim()) return '';
-    return story.trim();
+    final s = story.trim();
+    final d = description.trim();
+    
+    // If story is empty or identical to description, fall back to description
+    if (s.isEmpty || s == d) return d;
+    
+    // Otherwise, prefer showing the detailed story
+    return s;
   }
 }
 

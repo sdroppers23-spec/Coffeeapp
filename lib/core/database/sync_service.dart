@@ -51,7 +51,7 @@ class SyncService {
       await Future.delayed(const Duration(milliseconds: 300));
       
       onProgress?.call('Syncing Articles...', 0.7);
-      await syncArticles();
+      await syncArticles(onProgress: onProgress);
       await Future.delayed(const Duration(milliseconds: 300));
       
       onProgress?.call('Syncing Brands...', 0.85);
@@ -209,21 +209,29 @@ class SyncService {
     if (supabase == null) return;
 
     try {
-      debugPrint('SYNC: Pulling farmers and translations from Supabase...');
-      
-      // Clear old farmers locally
-      await db.transaction(() async {
-        await db.delete(db.localizedFarmers).go();
-      });
+      debugPrint('SYNC: Pulling farmers from Supabase...');
 
       // Fetch main farmer records
       final farmersData = await supabase!.from('localized_farmers').select().order('id');
+      
+      debugPrint('SYNC: Received ${farmersData.length} farmers from Supabase');
+
+      if (farmersData.isEmpty) {
+        debugPrint('SYNC WARNING: Supabase returned 0 farmers. Check RLS or table content.');
+        return;
+      }
+
+      // ONLY clear old farmers if we actually got new ones
+      await db.transaction(() async {
+        await db.delete(db.localizedFarmers).go();
+      });
       
       int successCount = 0;
       int errorCount = 0;
 
       for (final item in farmersData) {
         try {
+          debugPrint('SYNC: Processing farmer ID: ${item['id']}');
           final id = item['id'] as int;
           
           String imageUrl = item['image_url'] as String? ?? '';
@@ -234,17 +242,27 @@ class SyncService {
 
           // In "Main + Translation" architecture:
           // LocalizedFarmers main table holds UK content in nameUk, descriptionHtmlUk, etc.
+          debugPrint('SYNC: Mapping farmer ID: $id (name: ${item['name_uk']})');
+
+          // Use safe conversion to string to avoid casting errors if Supabase types differ
+          final nameRaw = item['name_uk'] ?? item['name'] ?? '';
+          final descRaw = item['description_html_uk'] ?? item['description_uk'] ?? item['description'] ?? '';
+          final storyRaw = item['story_uk'] ?? item['story'] ?? '';
+          final countryRaw = item['country_uk'] ?? item['country'] ?? '';
+          final regionRaw = item['region_uk'] ?? item['region'] ?? '';
+          final flagRaw = item['flag_url'] ?? item['country_emoji'] ?? '';
+
           final farmer = LocalizedFarmersCompanion(
             id: Value(id),
             imageUrl: Value(imageUrl),
-            flagUrl: Value(item['flag_url'] as String? ?? item['country_emoji'] as String? ?? ''),
+            flagUrl: Value(flagRaw.toString()),
             latitude: Value((item['latitude'] as num?)?.toDouble() ?? 0.0),
             longitude: Value((item['longitude'] as num?)?.toDouble() ?? 0.0),
-            nameUk: Value(item['name_uk'] as String? ?? item['name'] as String? ?? ''),
-            descriptionHtmlUk: Value(_cleanContent(item['description_html_uk'] as String? ?? item['description_uk'] as String? ?? item['description'] as String? ?? '')),
-            storyUk: Value(_cleanContent(item['story_uk'] as String? ?? item['story'] as String? ?? '')),
-            regionUk: Value(item['region_uk'] as String? ?? item['region'] as String? ?? ''),
-            countryUk: Value(item['country_uk'] as String? ?? item['country'] as String? ?? ''),
+            nameUk: Value(nameRaw.toString()),
+            descriptionHtmlUk: Value(_cleanContent(descRaw.toString())),
+            storyUk: Value(_cleanContent(storyRaw.toString())),
+            regionUk: Value(regionRaw.toString()),
+            countryUk: Value(countryRaw.toString()),
           );
 
           // We also fetch translations if any (e.g. 'en')
@@ -282,22 +300,33 @@ class SyncService {
   }
 
   /// Pulls specialty articles from Supabase.
-  Future<void> syncArticles() async {
+  Future<void> syncArticles({Function(String, double)? onProgress}) async {
     if (supabase == null) return;
 
     try {
       debugPrint('SYNC: Pulling articles from specialty_articles...');
       final data = await supabase!.from('specialty_articles').select().order('id');
       
-      // Clear old articles locally
+      if (data.isEmpty) {
+        debugPrint('SYNC: No articles found in cloud, skipping clear to prevent data loss.');
+        return;
+      }
+
+      // Clear old articles locally only after successful fetch
       await db.transaction(() async {
         await db.delete(db.specialtyArticles).go();
+        await db.delete(db.specialtyArticleTranslations).go();
       });
 
       int successCount = 0;
       int errorCount = 0;
+      final total = data.length;
 
-      for (final item in data) {
+      for (int i = 0; i < total; i++) {
+        final item = data[i];
+        final progress = 0.5 + (i / total * 0.5); // Articles are the second half of sync
+        onProgress?.call('Syncing Articles...', progress);
+
         try {
           final id = item['id'] as int;
           debugPrint('SYNC: Processing article ID: $id');
@@ -546,14 +575,43 @@ class SyncService {
     await syncAll(onProgress: onProgress);
   }
 
-  /// Removes technical keys like {p1}, [h2], {1}, etc. 
-  /// Keeps HTML tags for structure.
+  /// Removes technical keys and converts HTML to Markdown for better rendering.
   String _cleanContent(String? content) {
-    if (content == null) return '';
-    // Removes patterns like {anything} or [anything]
-    return content
+    if (content == null || content.isEmpty) return '';
+    
+    // 1. Remove technical keys like {p1}, [h2], etc.
+    String cleaned = content
         .replaceAll(RegExp(r'\{[^}]+\}'), '')
-        .replaceAll(RegExp(r'\[[^\]]+\]'), '')
+        .replaceAll(RegExp(r'\[[^\]]+\]'), '');
+
+    // 2. Convert common HTML tags to Markdown
+    cleaned = cleaned
+        .replaceAll(RegExp(r'<h1>', caseSensitive: false), '# ')
+        .replaceAll(RegExp(r'</h1>', caseSensitive: false), '\n\n')
+        .replaceAll(RegExp(r'<h2>', caseSensitive: false), '## ')
+        .replaceAll(RegExp(r'</h2>', caseSensitive: false), '\n\n')
+        .replaceAll(RegExp(r'<h3>', caseSensitive: false), '### ')
+        .replaceAll(RegExp(r'</h3>', caseSensitive: false), '\n\n')
+        .replaceAll(RegExp(r'<h4>', caseSensitive: false), '#### ')
+        .replaceAll(RegExp(r'</h4>', caseSensitive: false), '\n\n')
+        .replaceAll(RegExp(r'<h5>', caseSensitive: false), '##### ')
+        .replaceAll(RegExp(r'</h5>', caseSensitive: false), '\n\n')
+        .replaceAll(RegExp(r'<h6>', caseSensitive: false), '###### ')
+        .replaceAll(RegExp(r'</h6>', caseSensitive: false), '\n\n')
+        .replaceAll(RegExp(r'<p>', caseSensitive: false), '')
+        .replaceAll(RegExp(r'</p>', caseSensitive: false), '\n\n')
+        .replaceAll(RegExp(r'<strong>|<b>', caseSensitive: false), '**')
+        .replaceAll(RegExp(r'</strong>|</b>', caseSensitive: false), '**')
+        .replaceAll(RegExp(r'<em>|<i>|<em>|<i>', caseSensitive: false), '*')
+        .replaceAll(RegExp(r'</em>|</i>|</em>|</i>', caseSensitive: false), '*')
+        .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '  \n')
+        .replaceAll(RegExp(r'<li>', caseSensitive: false), '* ')
+        .replaceAll(RegExp(r'</li>', caseSensitive: false), '\n')
+        .replaceAll(RegExp(r'<ul>|</ul>|<ol>|</ol>', caseSensitive: false), '\n');
+
+    // 3. Final cleanup: remove residual multiple newlines/spaces
+    return cleaned
+        .replaceAll(RegExp(r'\n{3,}'), '\n\n')
         .trim();
   }
 }

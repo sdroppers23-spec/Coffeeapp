@@ -291,8 +291,11 @@ class _PremiumFarmerCard extends ConsumerWidget {
   }
 
   String _stripMarkdown(String text) {
-    // Basic stripping: remove #, *, _, [link text](url), etc.
-    return text
+    // 1. Remove HTML tags
+    String cleaned = text.replaceAll(RegExp(r'<[^>]*>'), '');
+    
+    // 2. Remove Markdown syntax
+    return cleaned
         .replaceAll(RegExp(r'#+\s*'), '')
         .replaceAll(RegExp(r'\*\*|\*|__|_'), '')
         .replaceAll(RegExp(r'\[([^\]]+)\]\([^\)]+\)'), r'$1')

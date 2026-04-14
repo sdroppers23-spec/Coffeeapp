@@ -6,7 +6,11 @@ final connectivityProvider = StreamProvider<List<ConnectivityResult>>((ref) {
 });
 
 final isOnlineProvider = Provider<bool>((ref) {
-  final connectivity = ref.watch(connectivityProvider).value;
-  if (connectivity == null) return true; // Default to online if unknown
-  return !connectivity.contains(ConnectivityResult.none);
+  final connectivity = ref.watch(connectivityProvider);
+  
+  return connectivity.when(
+    data: (results) => !results.contains(ConnectivityResult.none),
+    loading: () => true, // Default to online if we haven't checked yet
+    error: (_, __) => true,
+  );
 });

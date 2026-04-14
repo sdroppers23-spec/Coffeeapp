@@ -46,8 +46,8 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
     final isOnline = ref.watch(isOnlineProvider);
     final prefs = ref.watch(sharedPreferencesProvider);
 
-    // Version Guard (Cache Buster for v17 Stabilization)
-    const resyncKey = 'force_resync_v17_structured_v2_final'; // unique key for this update
+    // Version Guard (Cache Buster for v19 HTML-to-Markdown)
+    const resyncKey = 'force_resync_v19_final_rendering'; // unique key for this update
     final hasResynced = prefs.getBool(resyncKey) ?? false;
 
     if (isOnline && !hasResynced) {
@@ -60,14 +60,16 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
 
     if (_lastConnectivity != null &&
         _lastConnectivity!.contains(ConnectivityResult.none) &&
-        !conn!.contains(ConnectivityResult.none)) {
+        conn != null && !conn.contains(ConnectivityResult.none)) {
       // Transition from offline to online -> Auto-sync
       Future.microtask(() => pullFromCloud());
     }
 
     _lastConnectivity = conn;
 
-    if (!isOnline) return SyncStatusData(state: SyncState.offline);
+    if (!isOnline) {
+      return SyncStatusData(state: SyncState.offline, lastMessage: 'OFFLINE MODE');
+    }
     return SyncStatusData(state: SyncState.idle);
   }
 

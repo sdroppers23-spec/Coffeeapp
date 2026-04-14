@@ -616,12 +616,23 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 child: TextField(
                   controller: controller ?? TextEditingController(text: value ?? ''),
                   style: GoogleFonts.outfit(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
-                  textCapitalization: keyboardType == TextInputType.number 
+                  enableInteractiveSelection: label != 'SCA SCORE' && label != 'LOT NUMBER',
+                  textCapitalization: (label == 'SCA SCORE' || label == 'LOT NUMBER' || keyboardType == TextInputType.number)
                     ? TextCapitalization.none 
                     : TextCapitalization.sentences,
-                  inputFormatters: keyboardType == TextInputType.number 
-                    ? [FilteringTextInputFormatter.digitsOnly]
-                    : [GlobalCoffeeInputFormatter()],
+                  inputFormatters: label == 'SCA SCORE'
+                    ? [ScaScoreInputFormatter()]
+                    : label == 'LOT NUMBER'
+                      ? [LotNumberInputFormatter()]
+                      : keyboardType == TextInputType.number 
+                        ? [FilteringTextInputFormatter.digitsOnly]
+                        : [GlobalCoffeeInputFormatter()],
+                  decoration: InputDecoration(
+                    hintText: label == 'SCA SCORE' ? '80-100' : null,
+                    hintStyle: GoogleFonts.outfit(color: Colors.white.withValues(alpha: 0.2)),
+                    border: InputBorder.none,
+                    isDense: true,
+                  ),
                   onChanged: (v) {
                     onChanged?.call(v);
                     setState(() {}); // Trigger _canSave update
@@ -834,6 +845,107 @@ class GlobalCoffeeInputFormatter extends TextInputFormatter {
     return TextEditingValue(
       text: finalResult,
       selection: TextSelection.collapsed(offset: newOffset),
+    );
+  }
+}
+
+class ScaScoreInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    String text = newValue.text;
+    if (text.isEmpty) return newValue;
+
+    // First char rule: must be 1, 8, or 9
+    if (text.isNotEmpty) {
+      final first = text[0];
+      if (first != '1' && first != '8' && first != '9') {
+        return oldValue;
+      }
+    }
+
+    // 11 -> 99.9
+    if (text == '11') {
+      return const TextEditingValue(text: '99.9', selection: TextSelection.collapsed(offset: 4));
+    }
+
+    // Handle 100 and 10x
+    if (text.startsWith('10')) {
+      if (text.length == 3) {
+        if (text == '100') {
+          return newValue;
+        } else {
+          // 10x where x != 0 -> 99.9
+          return const TextEditingValue(text: '99.9', selection: TextSelection.collapsed(offset: 4));
+        }
+      }
+      if (text.length > 3) {
+         return oldValue;
+      }
+      return newValue;
+    }
+
+    // Standard numeric first digit (8 or 9)
+    // Only one dot allowed. Auto-insert after 2nd digit.
+    // Spaces forbidden.
+    text = text.replaceAll(' ', '');
+    
+    // Auto dot injection
+    if (text.length == 2 && !oldValue.text.contains('.')) {
+       text = '$text.';
+    }
+
+    // Prevent second dot
+    if (text.split('.').length > 2) {
+      return oldValue;
+    }
+
+    // Prevent dot before 2nd digit
+    if (text.contains('.') && text.indexOf('.') < 2) {
+      return oldValue;
+    }
+
+    // Max length Check: 99.9 is 4 chars
+    if (text.length > 4) {
+      return oldValue;
+    }
+
+    return TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
+    );
+  }
+}
+
+class LotNumberInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    String text = newValue.text;
+    if (text.isEmpty) return newValue;
+
+    // 1. Max 6 digits (plus allowed symbols)
+    final digitsLength = text.replaceAll(RegExp(r'[^0-9]'), '').length;
+    if (digitsLength > 6) return oldValue;
+
+    // 2. Allowed symbols: 0-9, ., ,, #, №, (, )
+    final allowedRe = RegExp(r'[^0-9\.,#№\(\)]');
+    // Note: space is not in this list for Lot Number, but user says "2 пробіли підряд міняємо на крапку"
+    // Let's allow spaces for that replacement logic
+    final allowedWithSpaceRe = RegExp(r'[^0-9\.,#№\(\)\s]');
+    text = text.replaceAll(allowedWithSpaceRe, '');
+
+    // 3. Double space -> dot
+    if (text.contains('  ')) {
+      text = text.replaceAll('  ', '.');
+    }
+
+    // 4. Max 3 dots in row
+    while (text.contains('....')) {
+      text = text.replaceAll('....', '...');
+    }
+
+    return TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
     );
   }
 }

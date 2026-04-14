@@ -8,6 +8,7 @@ import '../../../../core/database/database_provider.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/providers/settings_provider.dart';
 import '../../../../core/database/dtos.dart';
+import '../../../../shared/widgets/modern_undo_timer.dart';
 import '../../discovery_filter_provider.dart';
 import '../lots_providers.dart';
 import 'lot_card_widgets.dart';
@@ -170,142 +171,54 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
     return result ?? false;
   }
 
-  void _showPremiumUndo(CoffeeLotDto lot, BuildContext context, WidgetRef ref) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    
-    if (mounted) setState(() => _isUndoVisible = true);
+  void _showModernUndo(CoffeeLotDto lot, BuildContext context, WidgetRef ref, {bool isArchive = false}) {
+    final isUk = Localizations.localeOf(context).languageCode == 'uk';
+    final message = isArchive 
+        ? (isUk ? 'Лот архівовано' : 'Lot archived')
+        : (isUk ? 'Лот видалено' : 'Lot deleted');
 
-    final controller = ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        behavior: SnackBarBehavior.floating,
-        margin: const EdgeInsets.fromLTRB(16, 0, 16, 90),
-        duration: const Duration(seconds: 4),
-        content: ClipRRect(
-          borderRadius: BorderRadius.circular(50),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(
-              height: 50,
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.05),
-                borderRadius: BorderRadius.circular(50),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 42,
-                    height: 42,
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.05),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: _CountdownProgress(duration: const Duration(seconds: 4)),
-                        ),
-                        const Icon(
-                          Icons.timer_outlined,
-                          color: Color(0xFFC8A96E),
-                          size: 14,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'Лот видалено',
-                      style: GoogleFonts.outfit(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  PressableScale(
-                    onTap: () async {
-                      if (!_isUndoVisible) return;
-                      setState(() => _isUndoVisible = false);
-                      
-                      final messenger = ScaffoldMessenger.of(context);
-                      messenger.removeCurrentSnackBar(); // Trigger .closed immediately
-                      final db = ref.read(databaseProvider);
-                      // Re-insert the lot into database to "undo" deletion
-                      await db.upsertUserLot(CoffeeLotsCompanion(
-                        id: Value(lot.id),
-                        userId: Value(lot.userId ?? ''),
-                        roasteryName: Value(lot.roasteryName),
-                        roasteryCountry: Value(lot.roasteryCountry),
-                        coffeeName: Value(lot.coffeeName),
-                        originCountry: Value(lot.originCountry),
-                        region: Value(lot.region),
-                        altitude: Value(lot.altitude),
-                        process: Value(lot.process),
-                        roastLevel: Value(lot.roastLevel),
-                        roastDate: Value(lot.roastDate),
-                        openedAt: Value(lot.openedAt),
-                        weight: Value(lot.weight),
-                        lotNumber: Value(lot.lotNumber),
-                        isDecaf: Value(lot.isDecaf),
-                        farm: Value(lot.farm),
-                        washStation: Value(lot.washStation),
-                        farmer: Value(lot.farmer),
-                        varieties: Value(lot.varieties),
-                        flavorProfile: Value(lot.flavorProfile),
-                        scaScore: Value(lot.scaScore),
-                        isFavorite: Value(lot.isFavorite),
-                        isArchived: Value(lot.isArchived),
-                        isOpen: Value(lot.isOpen),
-                        isGround: Value(lot.isGround),
-                        sensoryJson: Value(lot.sensoryJson),
-                        priceJson: Value(lot.priceJson),
-                        createdAt: Value(lot.createdAt),
-                        updatedAt: Value(DateTime.now()),
-                      ));
-                      ref.invalidate(userLotsProvider);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        'СКАСУВАТИ',
-                        style: GoogleFonts.outfit(
-                          color: const Color(0xFFC8A96E),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 11,
-                          letterSpacing: 1.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
+    ModernUndoTimer.show(
+      context,
+      message: message,
+      onUndo: () async {
+        final db = ref.read(databaseProvider);
+        await db.upsertUserLot(CoffeeLotsCompanion(
+          id: Value(lot.id),
+          userId: Value(lot.userId ?? ''),
+          roasteryName: Value(lot.roasteryName),
+          roasteryCountry: Value(lot.roasteryCountry),
+          coffeeName: Value(lot.coffeeName),
+          originCountry: Value(lot.originCountry),
+          region: Value(lot.region),
+          altitude: Value(lot.altitude),
+          process: Value(lot.process),
+          roastLevel: Value(lot.roastLevel),
+          roastDate: Value(lot.roastDate),
+          openedAt: Value(lot.openedAt),
+          weight: Value(lot.weight),
+          lotNumber: Value(lot.lotNumber),
+          isDecaf: Value(lot.isDecaf),
+          farm: Value(lot.farm),
+          washStation: Value(lot.washStation),
+          farmer: Value(lot.farmer),
+          varieties: Value(lot.varieties),
+          flavorProfile: Value(lot.flavorProfile),
+          scaScore: Value(lot.scaScore),
+          isFavorite: Value(lot.isFavorite),
+          isArchived: Value(isArchive ? false : lot.isArchived),
+          isOpen: Value(lot.isOpen),
+          isGround: Value(lot.isGround),
+          sensoryJson: Value(lot.sensoryJson),
+          priceJson: Value(lot.priceJson),
+          createdAt: Value(lot.createdAt),
+          updatedAt: Value(DateTime.now()),
+        ));
+        ref.invalidate(userLotsProvider);
+      },
+      onDismiss: () {
+        // Finalized
+      },
     );
-
-    controller.closed.then((reason) {
-      if (mounted) {
-        setState(() => _isUndoVisible = false);
-        // Force show nav bar and ensure UI is in correct state
-        ref.read(navBarVisibleProvider.notifier).show();
-      }
-    });
   }
 
   void _toggleLotSelection(String id) {
@@ -547,21 +460,34 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                   
                   if (!context.mounted) return;
                   final isUk = Localizations.localeOf(context).languageCode == 'uk';
-                  
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(isUk ? 'Лот повернуто з архіву' : 'Lot restored from archive')),
+                    SnackBar(
+                      content: Text(isUk ? 'Лот відновлено' : 'Lot restored'),
+                      behavior: SnackBarBehavior.floating,
+                    ),
                   );
                 } : null,
                 onDeleteSwipe: (lot) async {
-                  final confirm = await _confirmDeleteDialog(lot);
-                  if (confirm) {
-                    final db = ref.read(databaseProvider);
-                    await db.deleteUserLot(lot.id);
+                  final db = ref.read(databaseProvider);
+                  // Mark as archived if not already, or delete if it's in archive?
+                  // Usually swipe to delete in active lots archives them.
+                  if (activeTab != 2) {
+                    await db.toggleLotArchive(lot.id, true);
                     ref.invalidate(userLotsProvider);
                     if (context.mounted) {
-                      _showPremiumUndo(lot, context, ref);
+                      _showModernUndo(lot, context, ref, isArchive: true);
                     }
                     return true;
+                  } else {
+                    final confirm = await _confirmDeleteDialog(lot);
+                    if (confirm) {
+                      await db.deleteUserLot(lot.id);
+                      ref.invalidate(userLotsProvider);
+                      if (context.mounted) {
+                        _showModernUndo(lot, context, ref, isArchive: false);
+                      }
+                      return true;
+                    }
                   }
                   return false;
                 },
@@ -656,12 +582,13 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
           ),
           const SizedBox(width: 16),
           _buildSelectionAction(
-            Icons.archive_outlined,
+            _subTabController.index == 2 ? Icons.unarchive_outlined : Icons.archive_outlined,
             Colors.white,
             () async {
               final db = ref.read(databaseProvider);
+              final activeTab = _subTabController.index;
               for (var id in _selectedLotIds) {
-                await db.toggleLotArchive(id, true);
+                await db.toggleLotArchive(id, activeTab != 2);
               }
               setState(() => _selectedLotIds.clear());
               ref.invalidate(userLotsProvider);

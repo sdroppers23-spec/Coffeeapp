@@ -6,6 +6,7 @@ import '../../shared/widgets/glass_container.dart';
 import '../../shared/widgets/premium_background.dart';
 import '../../shared/widgets/pressable_scale.dart';
 import '../../core/providers/settings_provider.dart';
+import 'package:flutter/services.dart';
 
 // ─── Nav bar visibility provider ────────────────────────────────────────────
 final navBarVisibleProvider = NotifierProvider<_NavBarVisibleNotifier, bool>(
@@ -42,6 +43,7 @@ class MainScaffold extends ConsumerStatefulWidget {
 
 class _MainScaffoldState extends ConsumerState<MainScaffold> {
   final GlobalKey _navBarKey = GlobalKey();
+  DateTime? _lastBackPressTime;
 
   @override
   void initState() {
@@ -102,133 +104,177 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         extendBody: true,
-        body: Stack(
-          children: [
-            // Main Content
-            Positioned.fill(
-              child: AnimatedBranchContainer(
-                currentIndex: widget.navigationShell.currentIndex,
-                child: widget.navigationShell,
+        body: PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (bool didPop, Object? result) async {
+            if (didPop) return;
+
+            // 1. If not on the first tab, go to it first
+            if (widget.navigationShell.currentIndex != 0) {
+              _onTap(0);
+              return;
+            }
+
+            // 2. Double tap exit logic
+            final now = DateTime.now();
+            final backButtonHasNotBeenPressedOrSnackBarHasExpired =
+                _lastBackPressTime == null ||
+                now.difference(_lastBackPressTime!) > const Duration(seconds: 2);
+
+            if (backButtonHasNotBeenPressedOrSnackBarHasExpired) {
+              _lastBackPressTime = now;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text(
+                    'Натисніть ще раз щоб вийти',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  backgroundColor: const Color(0xFFC8A96E).withValues(alpha: 0.8),
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+              return;
+            }
+
+            // 3. Exit the app
+            await SystemNavigator.pop();
+          },
+          child: Stack(
+            children: [
+              // Main Content
+              Positioned.fill(
+                child: AnimatedBranchContainer(
+                  currentIndex: widget.navigationShell.currentIndex,
+                  child: widget.navigationShell,
+                ),
               ),
-            ),
 
-            // Floating Navigation Bar Area
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 50, // Raised from 45 to 50
-              child: AnimatedSlide(
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.fastOutSlowIn,
-                offset: navVisible ? Offset.zero : const Offset(0, 1.5),
-                child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 300),
-                  opacity: navVisible ? 1.0 : 0.0,
-                  child: Padding(
-                    key: _navBarKey,
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Main Capsule Bar
-                        Flexible(
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(maxWidth: 330),
-                            child: GlassContainer(
-                              borderRadius: 40,
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 1,
-                                horizontal: 6,
-                              ),
-                              blur: 60,
-                              opacity: 0.1, // Reduced for better transparency
-                              backgroundGradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  Colors.white.withValues(alpha: 0.15),
-                                  const Color(
-                                    0xFFFFF9E3,
-                                  ).withValues(alpha: 0.08), // Softer Milk
-                                ],
-                              ),
-                              borderColor: Colors.white.withValues(alpha: 0.15),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  _NavBarItem(
-                                    icon: Icons.track_changes_rounded,
-                                    label: 'Спешелті',
-                                    isSelected:
-                                        widget.navigationShell.currentIndex ==
-                                        0,
-                                    onTap: () => _onTap(0),
-                                  ),
-                                  const SizedBox(width: 24),
-                                  _NavBarItem(
-                                    icon: Icons.explore_outlined,
-                                    label: 'Відкриття',
-                                    isSelected:
-                                        widget.navigationShell.currentIndex ==
-                                        1,
-                                    onTap: () => _onTap(1),
-                                  ),
-                                  const SizedBox(width: 24),
-                                  _NavBarItem(
-                                    icon: Icons.local_cafe_outlined,
-                                    label: 'Альтернатива',
-                                    isSelected:
-                                        widget.navigationShell.currentIndex ==
-                                        2,
-                                    onTap: () => _onTap(2),
-                                  ),
-                                ],
+              // Floating Navigation Bar Area
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 50, // Raised from 45 to 50
+                child: AnimatedSlide(
+                  duration: const Duration(milliseconds: 400),
+                  curve: Curves.fastOutSlowIn,
+                  offset: navVisible ? Offset.zero : const Offset(0, 1.5),
+                  child: AnimatedOpacity(
+                    duration: const Duration(milliseconds: 300),
+                    opacity: navVisible ? 1.0 : 0.0,
+                    child: Padding(
+                      key: _navBarKey,
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Main Capsule Bar
+                          Flexible(
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 330),
+                              child: GlassContainer(
+                                borderRadius: 40,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 1,
+                                  horizontal: 6,
+                                ),
+                                blur: 60,
+                                opacity: 0.1, // Reduced for better transparency
+                                backgroundGradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Colors.white.withValues(alpha: 0.15),
+                                    const Color(
+                                      0xFFFFF9E3,
+                                    ).withValues(alpha: 0.08), // Softer Milk
+                                  ],
+                                ),
+                                borderColor: Colors.white.withValues(alpha: 0.15),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    _NavBarItem(
+                                      icon: Icons.track_changes_rounded,
+                                      label: 'Спешелті',
+                                      isSelected:
+                                          widget.navigationShell.currentIndex ==
+                                          0,
+                                      onTap: () => _onTap(0),
+                                    ),
+                                    const SizedBox(width: 24),
+                                    _NavBarItem(
+                                      icon: Icons.explore_outlined,
+                                      label: 'Відкриття',
+                                      isSelected:
+                                          widget.navigationShell.currentIndex ==
+                                          1,
+                                      onTap: () => _onTap(1),
+                                    ),
+                                    const SizedBox(width: 24),
+                                    _NavBarItem(
+                                      icon: Icons.local_cafe_outlined,
+                                      label: 'Альтернатива',
+                                      isSelected:
+                                          widget.navigationShell.currentIndex ==
+                                          2,
+                                      onTap: () => _onTap(2),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
 
-                        const SizedBox(width: 12),
+                          const SizedBox(width: 12),
 
-                        // Separate Settings Island - Now Milky Glass
-                        PressableScale(
-                          onTap: () {
-                            ref.read(settingsProvider.notifier).triggerSelectionVibrate();
-                            context.push('/settings');
-                          },
-                            child: GlassContainer(
-                              width: 52,
-                              height: 52,
-                              borderRadius: 26,
-                              blur: 60,
-                              opacity: 0.1,
-                              backgroundGradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  Colors.white.withValues(alpha: 0.15),
-                                  const Color(
-                                    0xFFFFF9E3,
-                                  ).withValues(alpha: 0.08),
-                                ],
-                              ),
-                              borderColor: Colors.white.withValues(alpha: 0.15),
-                            child: const Center(
-                              child: Icon(
-                                Icons.settings_rounded,
-                                color: Colors.white,
-                                size: 24,
+                          // Separate Settings Island - Now Milky Glass
+                          PressableScale(
+                            onTap: () {
+                              ref.read(settingsProvider.notifier).triggerSelectionVibrate();
+                              context.push('/settings');
+                            },
+                              child: GlassContainer(
+                                width: 52,
+                                height: 52,
+                                borderRadius: 26,
+                                blur: 60,
+                                opacity: 0.1,
+                                backgroundGradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Colors.white.withValues(alpha: 0.15),
+                                    const Color(
+                                      0xFFFFF9E3,
+                                    ).withValues(alpha: 0.08),
+                                  ],
+                                ),
+                                borderColor: Colors.white.withValues(alpha: 0.15),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.settings_rounded,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

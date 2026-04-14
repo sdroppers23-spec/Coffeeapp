@@ -79,7 +79,7 @@ class SpecialtyArticleCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '$readTime МИН',
+                      '$readTime хв',
                       style: GoogleFonts.poppins(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,

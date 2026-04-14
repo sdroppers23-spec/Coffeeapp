@@ -53,15 +53,16 @@ class ContentUtils {
   static String getPreviewText(String raw, {int limit = 150}) {
     if (raw.isEmpty) return '';
     
-    // First clean keys and HTML
-    String cleaned = cleanCoffeeContent(raw);
+    String cleaned = raw.replaceAll(RegExp(r'\{[^}]*\}|\[[^\]]*\]'), '');
     
-    // Then strip specific Markdown symbols for the preview list view
+    // Then flatten HTML and standard Markdown
     cleaned = cleaned
-        .replaceAll(RegExp(r'^#+\s*', multiLine: true), '') // Headers at start of lines
+        .replaceAll(_htmlTagRegex, '')
+        .replaceAll(RegExp(r'^#+\s*', multiLine: true), '') // Headers
         .replaceAll(RegExp(r'\*\*|\*|__|_'), '') // Bold/Italic
         .replaceAll(RegExp(r'^\s*[\*\-]\s+', multiLine: true), '') // List markers
-        .replaceAll('\n', ' ') // Flatten newlines
+        .replaceAll('\\n', ' ') // Escaped newlines
+        .replaceAll('\n', ' ') // Regular newlines
         .replaceAll(RegExp(r'\s{2,}'), ' ') // Normalize spaces
         .trim();
 

@@ -46,7 +46,7 @@ class CoffeeTextProcessor {
     return {
       '.coffee-gold': 'color: #C8A96E; font-weight: bold;',
       '.coffee-accent': 'color: #C8A96E; opacity: 0.6;',
-      '.coffee-accent-gold': 'color: #C8A96E; font-weight: bold; opacity: 0.8;',
+      '.coffee-accent-gold': 'color: #C8A96E; font-weight: bold;',
       '.coffee-serif': 'font-family: "Cormorant Garamond", serif;',
       '.coffee-white': 'color: #FFFFFF;',
       'p': 'margin-bottom: 16px; line-height: 1.6; color: rgba(255,255,255,0.85);',

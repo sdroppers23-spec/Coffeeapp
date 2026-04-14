@@ -49,9 +49,16 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
     // Build unified Bio from description + story
     final bio = _buildBio(widget.farmer.description, widget.farmer.story);
 
-    return Scaffold(
-      backgroundColor: bg,
-      body: Stack(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        ref.read(navBarVisibleProvider.notifier).show();
+        Navigator.of(context).pop();
+      },
+      child: Scaffold(
+        backgroundColor: bg,
+        body: Stack(
         children: [
           CustomScrollView(
             controller: _scrollController,
@@ -98,19 +105,19 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                             ),
                           ),
                         ),
-                      // Gradient overlay
+                      // Multi-stop gradient overlay for seamless blending
                       const DecoratedBox(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [
-                              Colors.black38,
+                              Colors.black45,
                               Colors.transparent,
                               Colors.transparent,
-                              Color(0xFF0A0908),
+                              Color(0xFF0A0908), // Match BG
                             ],
-                            stops: [0.0, 0.15, 0.55, 1.0],
+                            stops: [0.0, 0.15, 0.5, 1.0], // Deeper bottom fade
                           ),
                         ),
                       ),
@@ -155,10 +162,10 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                color: gold.withValues(alpha: 0.12),
+                                color: gold.withValues(alpha: 0.15),
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: gold.withValues(alpha: 0.35),
+                                  color: gold.withValues(alpha: 0.45),
                                 ),
                               ),
                               child: Text(
@@ -254,8 +261,23 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                               color: gold.withValues(alpha: 0.5),
                             ),
                             ".coffee-accent-gold": Style(
-                              color: gold.withValues(alpha: 0.8),
+                              color: gold, // Solid gold for better contrast
                               fontWeight: FontWeight.bold,
+                            ),
+                            "ol, ul": Style(
+                              margin: Margins.only(top: 16, bottom: 16),
+                              padding: HtmlPaddings.only(left: 4),
+                            ),
+                            "li": Style(
+                              fontSize: FontSize(16.5),
+                              lineHeight: LineHeight(1.6),
+                              margin: Margins.only(bottom: 8),
+                              color: Colors.white.withValues(alpha: 0.9),
+                            ),
+                            "li::marker": Style(
+                              color: gold,
+                              fontWeight: FontWeight.bold,
+                              fontSize: FontSize(18), // Larger numbering
                             ),
                           },
                         ),
@@ -273,8 +295,9 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   /// Combines description + story into one coherent Markdown document.
   String _buildBio(String description, String story) {

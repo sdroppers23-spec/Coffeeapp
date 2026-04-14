@@ -55,9 +55,16 @@ class _SpecialtyArticleDetailScreenState
     const gold = Color(0xFFC8A96E);
     const bg = Color(0xFF0A0908);
 
-    return Scaffold(
-      backgroundColor: bg,
-      body: Stack(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        ref.read(navBarVisibleProvider.notifier).show();
+        Navigator.of(context).pop();
+      },
+      child: Scaffold(
+        backgroundColor: bg,
+        body: Stack(
         children: [
           CustomScrollView(
             controller: _scrollController,
@@ -98,19 +105,19 @@ class _SpecialtyArticleDetailScreenState
                             ),
                           ),
                         ),
-                      // Multi-stop gradient overlay for readability
+                      // Multi-stop gradient overlay for readability and smooth transition
                       const DecoratedBox(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [
-                              Colors.black38,
+                              Colors.black45,
                               Colors.transparent,
                               Colors.transparent,
-                              Color(0xFF0A0908),
+                              Color(0xFF0A0908), // Match BG exactly
                             ],
-                            stops: [0.0, 0.2, 0.7, 1.0],
+                            stops: [0.0, 0.2, 0.5, 1.0], // Deeper bottom fade
                           ),
                         ),
                       ),
@@ -156,10 +163,10 @@ class _SpecialtyArticleDetailScreenState
                       Text(
                         title,
                         style: GoogleFonts.cormorantGaramond(
-                          fontSize: 48,
+                          fontSize: 38,
                           fontWeight: FontWeight.w700,
                           color: Colors.white,
-                          height: 1.0,
+                          height: 1.1,
                         ),
                       ),
 
@@ -240,6 +247,21 @@ class _SpecialtyArticleDetailScreenState
                             color: gold.withValues(alpha: 0.8),
                             fontWeight: FontWeight.bold,
                           ),
+                          "ol, ul": Style(
+                            margin: Margins.only(top: 16, bottom: 16),
+                            padding: HtmlPaddings.only(left: 4),
+                          ),
+                          "li": Style(
+                            fontSize: FontSize(17),
+                            lineHeight: LineHeight(1.6),
+                            margin: Margins.only(bottom: 8),
+                            color: Colors.white.withValues(alpha: 0.9),
+                          ),
+                          "li::marker": Style(
+                            color: gold,
+                            fontWeight: FontWeight.bold,
+                            fontSize: FontSize(18), // Larger numbering
+                          ),
                         },
                       ),
 
@@ -256,8 +278,9 @@ class _SpecialtyArticleDetailScreenState
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildHeroImage(String url) {
     if (url.startsWith('assets/')) {

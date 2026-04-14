@@ -178,6 +178,12 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
     final isUk = Localizations.localeOf(context).languageCode == 'uk';
     String message;
     
+    final ids = lots.map((l) => l.id).toSet();
+    setState(() {
+      _pendingDeleteIds.addAll(ids);
+      _isUndoVisible = true;
+    });
+
     if (isArchive) {
       if (lots.length == 1) {
         message = isUk ? 'Лот архівовано' : 'Lot archived';
@@ -195,49 +201,36 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
     ModernUndoTimer.show(
       context,
       message: message,
-      onUndo: () async {
-        final db = ref.read(databaseProvider);
-        for (final lot in lots) {
-          await db.upsertUserLot(CoffeeLotsCompanion(
-            id: Value(lot.id),
-            userId: Value(lot.userId ?? ''),
-            roasteryName: Value(lot.roasteryName),
-            roasteryCountry: Value(lot.roasteryCountry),
-            coffeeName: Value(lot.coffeeName),
-            originCountry: Value(lot.originCountry),
-            region: Value(lot.region),
-            altitude: Value(lot.altitude),
-            process: Value(lot.process),
-            roastLevel: Value(lot.roastLevel),
-            roastDate: Value(lot.roastDate),
-            openedAt: Value(lot.openedAt),
-            weight: Value(lot.weight),
-            lotNumber: Value(lot.lotNumber),
-            isDecaf: Value(lot.isDecaf),
-            farm: Value(lot.farm),
-            washStation: Value(lot.washStation),
-            farmer: Value(lot.farmer),
-            varieties: Value(lot.varieties),
-            flavorProfile: Value(lot.flavorProfile),
-            scaScore: Value(lot.scaScore),
-            isFavorite: Value(lot.isFavorite),
-            isArchived: Value(isArchive ? false : lot.isArchived),
-            isOpen: Value(lot.isOpen),
-            isGround: Value(lot.isGround),
-            sensoryJson: Value(lot.sensoryJson),
-            priceJson: Value(lot.priceJson),
-            createdAt: Value(lot.createdAt),
-            updatedAt: Value(DateTime.now()),
-          ));
+      onUndo: () {
+        if (mounted) {
+          setState(() {
+            _pendingDeleteIds.removeAll(ids);
+            _isUndoVisible = false;
+          });
         }
-        ref.invalidate(userLotsProvider);
-        if (mounted) setState(() => _isUndoVisible = false);
       },
-      onDismiss: () {
-        if (mounted) setState(() => _isUndoVisible = false);
+      onDismiss: () async {
+        if (!mounted) return;
+        final db = ref.read(databaseProvider);
+        
+        // Physically delete/archive after timer
+        for (final lot in lots) {
+          if (isArchive) {
+            await db.toggleLotArchive(lot.id, true);
+          } else {
+            await db.deleteUserLot(lot.id);
+          }
+        }
+        
+        if (mounted) {
+          setState(() {
+            _pendingDeleteIds.removeAll(ids);
+            _isUndoVisible = false;
+          });
+          ref.invalidate(userLotsProvider);
+        }
       },
     );
-    if (mounted) setState(() => _isUndoVisible = true);
   }
 
   void _toggleLotSelection(String id) {
@@ -493,21 +486,12 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                   );
                 } : null,
                 onDeleteSwipe: (lot) async {
-                  final db = ref.read(databaseProvider);
-                  // Mark as archived if not already, or delete if it's in archive?
-                  // Usually swipe to delete in active lots archives them.
                   if (activeTab != 2) {
-                    await db.toggleLotArchive(lot.id, true);
-                    ref.invalidate(userLotsProvider);
-                    if (context.mounted) {
-                      _showModernUndo([lot], context, ref, isArchive: true);
-                    }
+                    _showModernUndo([lot], context, ref, isArchive: true);
                     return true;
                   } else {
                     final confirm = await _confirmDeleteDialog(lot);
                     if (confirm) {
-                      await db.deleteUserLot(lot.id);
-                      ref.invalidate(userLotsProvider);
                       if (context.mounted) {
                         _showModernUndo([lot], context, ref, isArchive: false);
                       }
@@ -650,12 +634,136 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                   Icons.delete_outline_rounded,
                   Colors.orangeAccent,
                   () async {
-                    final db = ref.read(databaseProvider);
-                    for (var id in _selectedLotIds) {
-                      await db.deleteUserLot(id);
+                    final confirm = await showGeneralDialog<bool>(
+                      context: context,
+                      barrierDismissible: true,
+                      barrierLabel: '',
+                      barrierColor: Colors.black54,
+                      transitionDuration: const Duration(milliseconds: 200),
+                      pageBuilder: (ctx, anim1, anim2) {
+                        return Center(
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 40),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(24),
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                                child: Container(
+                                  padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withValues(alpha: 0.05),
+                                    borderRadius: BorderRadius.circular(24),
+                                    border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                                  ),
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          width: 64,
+                                          height: 64,
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const Icon(
+                                            Icons.warning_amber_rounded,
+                                            color: Color(0xFFC8A96E),
+                                            size: 32,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 20),
+                                        Text(
+                                          'Видалити лоти?',
+                                          style: GoogleFonts.outfit(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 22,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 12),
+                                        Text(
+                                          'Ви впевнені, що хочете видалити ${_selectedLotIds.length} вибраних документів?',
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.outfit(
+                                            color: Colors.white70,
+                                            fontSize: 14,
+                                            height: 1.4,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 32),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: GestureDetector(
+                                                onTap: () => Navigator.pop(ctx, false),
+                                                child: Container(
+                                                  height: 48,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(14),
+                                                    color: Colors.white.withValues(alpha: 0.05),
+                                                    border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                                                  ),
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                    'СКАСУВАТИ',
+                                                    style: GoogleFonts.outfit(
+                                                      color: Colors.white70,
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 12,
+                                                      letterSpacing: 1.2,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 12),
+                                            Expanded(
+                                              child: GestureDetector(
+                                                onTap: () => Navigator.pop(ctx, true),
+                                                child: Container(
+                                                  height: 48,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(14),
+                                                    color: Colors.redAccent,
+                                                    border: Border.all(color: Colors.redAccent.withValues(alpha: 0.5)),
+                                                  ),
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                    'ВИДАЛИТИ',
+                                                    style: GoogleFonts.outfit(
+                                                      color: Colors.white,
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 12,
+                                                      letterSpacing: 1.2,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+
+                    if (confirm == true) {
+                      final selectedLots = (lotsAsync.value ?? []).where((l) => _selectedLotIds.contains(l.id)).toList();
+                      final isArchive = _subTabController.index == 2;
+                      
+                      setState(() => _selectedLotIds.clear());
+                      if (mounted) {
+                        _showModernUndo(selectedLots, context, ref, isArchive: isArchive);
+                      }
                     }
-                    setState(() => _selectedLotIds.clear());
-                    ref.invalidate(userLotsProvider);
                   },
                 ),
               ],

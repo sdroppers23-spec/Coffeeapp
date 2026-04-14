@@ -109,10 +109,9 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
           onPopInvokedWithResult: (bool didPop, Object? result) async {
             if (didPop) return;
 
-            // 1. Prioritize nested navigation (detail screens, etc.)
-            final nav = Navigator.maybeOf(context);
-            if (nav != null && nav.canPop()) {
-              nav.pop();
+            // 1. Prioritize nested navigation (detail screens, etc.) using GoRouter
+            if (GoRouter.of(context).canPop()) {
+              GoRouter.of(context).pop();
               return;
             }
 

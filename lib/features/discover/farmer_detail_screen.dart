@@ -125,6 +125,8 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
           SliverAppBar(
             expandedHeight: 420,
             backgroundColor: Colors.black,
+            surfaceTintColor: Colors.transparent, // Fix white sheet
+            systemOverlayStyle: SystemUiOverlayStyle.light, // Fix status bar icons
             elevation: 0,
             pinned: true,
             leading: IconButton(

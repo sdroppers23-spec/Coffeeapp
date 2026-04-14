@@ -622,6 +622,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 child: TextField(
                   controller: controller ?? TextEditingController(text: value ?? ''),
                   style: GoogleFonts.outfit(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
+                  keyboardType: keyboardType,
                   enableInteractiveSelection: label != 'SCA SCORE' && label != 'LOT NUMBER',
                   textCapitalization: (label == 'SCA SCORE' || label == 'LOT NUMBER' || keyboardType == TextInputType.number)
                     ? TextCapitalization.none 
@@ -630,8 +631,8 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                     ? [ScaScoreInputFormatter()]
                     : label == 'LOT NUMBER'
                       ? [LotNumberInputFormatter()]
-                      : keyboardType == TextInputType.number 
-                        ? [FilteringTextInputFormatter.digitsOnly]
+                      : (keyboardType == TextInputType.number || keyboardType == const TextInputType.numberWithOptions(decimal: true))
+                        ? [FilteringTextInputFormatter.allow(RegExp(r'[0-9\.,]'))]
                         : [GlobalCoffeeInputFormatter()],
                   decoration: InputDecoration(
                     hintText: label == 'SCA SCORE' ? '80-100' : null,
@@ -871,6 +872,8 @@ class ScaScoreInputFormatter extends TextInputFormatter {
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     String text = newValue.text.replaceAll(',', '.').replaceAll(' ', '');
+    // Strictly allow only digits and dot
+    text = text.replaceAll(RegExp(r'[^0-9.]'), '');
 
     if (text.isEmpty) return newValue.copyWith(text: '');
 

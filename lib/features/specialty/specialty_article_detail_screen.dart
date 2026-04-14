@@ -148,6 +148,8 @@ class _SpecialtyArticleDetailScreenState
           SliverAppBar(
             expandedHeight: 400,
             backgroundColor: Colors.black,
+            surfaceTintColor: Colors.transparent, // Fix white sheet
+            systemOverlayStyle: SystemUiOverlayStyle.light, // Fix status bar icons
             elevation: 0,
             pinned: true,
             leading: IconButton(

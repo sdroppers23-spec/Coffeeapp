@@ -21,6 +21,9 @@ class FarmerDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
+  @override
+  void initState() {
+    super.initState();
     _scrollController = ScrollController();
     Future.microtask(() {
       ref.read(navBarVisibleProvider.notifier).hide();

@@ -677,7 +677,6 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
       ),
     );
   }
-  }
 
   String get _selectionCountText {
     final count = _selectedLotIds.length;

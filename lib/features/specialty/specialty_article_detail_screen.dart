@@ -25,8 +25,9 @@ class SpecialtyArticleDetailScreen extends ConsumerStatefulWidget {
       _SpecialtyArticleDetailScreenState();
 }
 
-class _SpecialtyArticleDetailScreenState
-    extends ConsumerState<SpecialtyArticleDetailScreen> {
+  @override
+  void initState() {
+    super.initState();
     _scrollController = ScrollController();
     Future.microtask(() {
       ref.read(navBarVisibleProvider.notifier).hide();

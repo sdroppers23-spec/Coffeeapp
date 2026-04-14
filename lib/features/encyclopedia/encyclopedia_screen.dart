@@ -8,7 +8,6 @@ import '../../core/l10n/app_localizations.dart';
 import 'widgets/encyclopedia_card_widgets.dart';
 import 'coffee_lot_detail_screen.dart';
 import 'comparison_screen.dart'; 
-import 'comparison_screen.dart'; 
 import '../../shared/widgets/premium_app_bar.dart';
 import '../../shared/widgets/profile_button.dart';
 import '../../shared/widgets/scroll_to_top_button.dart';

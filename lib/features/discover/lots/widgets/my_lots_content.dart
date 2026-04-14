@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
-import 'package:drift/drift.dart' hide Column;
 import '../../../../core/database/database_provider.dart';
-import '../../../../core/database/app_database.dart';
 import '../../../../core/providers/settings_provider.dart';
 import '../../../../core/database/dtos.dart';
 import '../../../../shared/widgets/modern_undo_timer.dart';
@@ -25,7 +23,7 @@ class MyLotsContent extends ConsumerStatefulWidget {
 class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTickerProviderStateMixin {
   late TabController _subTabController;
   final Set<String> _selectedLotIds = {};
-  final List<String> _pendingDeleteIds = [];
+  final Set<String> _pendingDeleteIds = {};
   bool _isUndoVisible = false;
   
   bool get _isSelectionMode => _selectedLotIds.isNotEmpty;

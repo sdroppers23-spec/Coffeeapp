@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:markdown/markdown.dart' as md;
 
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
@@ -274,12 +276,16 @@ class _InfoTabState extends ConsumerState<_InfoTab> {
           ),
         ),
         const SizedBox(height: 12),
-        Text(
-          entry.description,
-          style: GoogleFonts.outfit(
-            fontSize: 13,
-            height: 1.5,
-            color: Colors.white70,
+        MarkdownBody(
+          data: entry.description,
+          extensionSet: md.ExtensionSet.gitHubWeb,
+          styleSheet: MarkdownStyleSheet(
+            p: GoogleFonts.outfit(
+              fontSize: 13,
+              height: 1.6,
+              color: Colors.white70,
+            ),
+            strong: GoogleFonts.outfit(fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
           ),
         ),
       ],
@@ -342,12 +348,16 @@ class _ProfileTab extends ConsumerWidget {
                 child: ListView(
                   controller: controller,
                   children: [
-                    Text(
-                      entry.detailedProcess,
-                      style: GoogleFonts.outfit(
-                        fontSize: 14,
-                        height: 1.6,
-                        color: Colors.white70,
+                    MarkdownBody(
+                      data: entry.detailedProcess,
+                      extensionSet: md.ExtensionSet.gitHubWeb,
+                      styleSheet: MarkdownStyleSheet(
+                        p: GoogleFonts.outfit(
+                          fontSize: 14,
+                          height: 1.6,
+                          color: Colors.white70,
+                        ),
+                        strong: GoogleFonts.outfit(fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                     ),
                     const SizedBox(height: 40),

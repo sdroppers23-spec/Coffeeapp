@@ -28,9 +28,10 @@ final localEncyclopediaStreamProvider =
   Future.microtask(() async {
     try {
       final syncService = ref.read(syncServiceProvider);
+      // Ensure we have initial data (gentle pull)
       await syncService.syncEncyclopedia();
-      // Start real-time subscription
-      syncService.subscribeToEncyclopedia();
+      // subscribeToRealtimeUpdates now handles all shared tables including beans
+      syncService.subscribeToRealtimeUpdates();
     } catch (e) {
       debugPrint('BACKGROUND SYNC ERROR: $e');
     }

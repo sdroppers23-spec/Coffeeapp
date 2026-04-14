@@ -167,40 +167,72 @@ class SyncService {
     }
   }
 
-  /// Sets up a real-time subscription for Encyclopedia changes.
-  void subscribeToEncyclopedia() {
+  /// Sets up real-time subscriptions for all main content tables.
+  void subscribeToRealtimeUpdates() {
     if (supabase == null) return;
     
-    debugPrint('SYNC: Subscribing to Encyclopedia real-time changes...');
-    supabase!
-        .from('localized_beans')
-        .stream(primaryKey: ['id'])
-        .listen((data) {
-          debugPrint('SYNC: Beans cloud data changed (localized_beans), triggering re-sync...');
-          syncEncyclopedia().catchError((e) {
-            debugPrint('SYNC ERROR after stream update (beans): $e');
-          });
-        });
+    debugPrint('SYNC: Initializing real-time subscriptions...');
 
+    // 1. Articles Channel
     supabase!
-        .from('localized_farmers')
-        .stream(primaryKey: ['id'])
-        .listen((data) {
-          debugPrint('SYNC: Farmers cloud data changed, triggering re-sync...');
-          syncFarmers().catchError((e) {
-            debugPrint('SYNC ERROR after stream update (farmers): $e');
-          });
-        });
+        .channel('public:specialty_articles')
+        .onPostgresChanges(
+          event: PostgresChangeEvent.all,
+          schema: 'public',
+          table: 'specialty_articles',
+          callback: (payload) async {
+            debugPrint('SYNC: Real-time event for Articles: ${payload.eventType}');
+            if (payload.eventType == PostgresChangeEvent.delete) {
+              final id = payload.oldRecord['id'] as int;
+              await (db.delete(db.specialtyArticles)..where((t) => t.id.equals(id))).go();
+            } else {
+              // INSERT or UPDATE
+              final id = payload.newRecord['id'] as int;
+              await syncSingleArticle(id);
+            }
+          },
+        )
+        .subscribe();
 
+    // 2. Farmers Channel
     supabase!
-        .from('specialty_articles')
-        .stream(primaryKey: ['id'])
-        .listen((data) {
-          debugPrint('SYNC: Articles cloud data changed, triggering re-sync...');
-          syncArticles().catchError((e) {
-            debugPrint('SYNC ERROR after stream update (articles): $e');
-          });
-        });
+        .channel('public:localized_farmers')
+        .onPostgresChanges(
+          event: PostgresChangeEvent.all,
+          schema: 'public',
+          table: 'localized_farmers',
+          callback: (payload) async {
+            debugPrint('SYNC: Real-time event for Farmers: ${payload.eventType}');
+            if (payload.eventType == PostgresChangeEvent.delete) {
+              final id = payload.oldRecord['id'] as int;
+              await (db.delete(db.localizedFarmers)..where((t) => t.id.equals(id))).go();
+            } else {
+              final id = payload.newRecord['id'] as int;
+              await syncSingleFarmer(id);
+            }
+          },
+        )
+        .subscribe();
+
+    // 3. Beans (Encyclopedia) Channel
+    supabase!
+        .channel('public:localized_beans')
+        .onPostgresChanges(
+          event: PostgresChangeEvent.all,
+          schema: 'public',
+          table: 'localized_beans',
+          callback: (payload) async {
+            debugPrint('SYNC: Real-time event for Beans: ${payload.eventType}');
+            if (payload.eventType == PostgresChangeEvent.delete) {
+              final id = payload.oldRecord['id'] as int;
+              await (db.delete(db.localizedBeans)..where((t) => t.id.equals(id))).go();
+            } else {
+              final id = payload.newRecord['id'] as int;
+              await syncSingleBean(id);
+            }
+          },
+        )
+        .subscribe();
   }
 
   /// Pulls farmer data from Supabase and updates local storage.
@@ -613,5 +645,144 @@ class SyncService {
     return cleaned
         .replaceAll(RegExp(r'\n{3,}'), '\n\n')
         .trim();
+  }
+
+  /// Syncs a single farmer by ID.
+  Future<void> syncSingleFarmer(int id) async {
+    if (supabase == null) return;
+    try {
+      final item = await supabase!.from('localized_farmers').select().eq('id', id).maybeSingle();
+      if (item == null) return;
+
+      String imageUrl = item['image_url'] as String? ?? '';
+      if (imageUrl.isNotEmpty && !imageUrl.startsWith('http') && !imageUrl.startsWith('assets/')) {
+        imageUrl = '$farmersBucket${imageUrl.split('/').last}';
+      }
+
+      final farmer = LocalizedFarmersCompanion(
+        id: Value(id),
+        imageUrl: Value(imageUrl),
+        flagUrl: Value((item['flag_url'] ?? item['country_emoji'] ?? '').toString()),
+        latitude: Value((item['latitude'] as num?)?.toDouble() ?? 0.0),
+        longitude: Value((item['longitude'] as num?)?.toDouble() ?? 0.0),
+        nameUk: Value((item['name_uk'] ?? item['name'] ?? '').toString()),
+        descriptionHtmlUk: Value(_cleanContent((item['description_html_uk'] ?? item['description_uk'] ?? item['description'] ?? '').toString())),
+        storyUk: Value(_cleanContent((item['story_uk'] ?? item['story'] ?? '').toString())),
+        regionUk: Value((item['region_uk'] ?? item['region'] ?? '').toString()),
+        countryUk: Value((item['country_uk'] ?? item['country'] ?? '').toString()),
+      );
+
+      final translationsData = await supabase!.from('localized_farmer_translations').select().eq('farmer_id', id);
+      final List<LocalizedFarmerTranslationsCompanion> translations = translationsData.map((t) => LocalizedFarmerTranslationsCompanion(
+        farmerId: Value(id),
+        languageCode: Value(t['language_code'] as String),
+        name: Value(t['name'] as String?),
+        descriptionHtml: Value(t['description_html'] as String? ?? t['description'] as String?),
+        region: Value(t['region'] as String?),
+        country: Value(t['country'] as String?),
+      )).toList();
+
+      await db.smartUpsertFarmer(farmer, translations);
+      debugPrint('SYNC: Real-time update success for Farmer $id');
+    } catch (e) {
+      debugPrint('SYNC ERROR (Single Farmer $id): $e');
+    }
+  }
+
+  /// Syncs a single article by ID.
+  Future<void> syncSingleArticle(int id) async {
+    if (supabase == null) return;
+    try {
+      final item = await supabase!.from('specialty_articles').select().eq('id', id).maybeSingle();
+      if (item == null) return;
+
+      String imageUrl = item['image_url'] as String? ?? '';
+      if (imageUrl.isNotEmpty && !imageUrl.startsWith('http') && !imageUrl.startsWith('assets/')) {
+        imageUrl = '$articlesBucket${imageUrl.split('/').last}';
+      }
+
+      final article = SpecialtyArticlesCompanion(
+        id: Value(id),
+        titleUk: Value(_cleanContent(item['title_uk'] as String? ?? item['title_en'] as String? ?? '')),
+        subtitleUk: Value(_cleanContent(item['subtitle_uk'] as String? ?? '')),
+        contentHtmlUk: Value(_cleanContent(item['content_html_uk'] as String? ?? item['content_uk'] as String? ?? '')),
+        imageUrl: Value(imageUrl),
+        readTimeMin: Value(item['read_time_min'] as int? ?? 5),
+      );
+
+      final translationsData = await supabase!.from('specialty_article_translations').select().eq('article_id', id);
+      final List<SpecialtyArticleTranslationsCompanion> translations = translationsData.map((t) => SpecialtyArticleTranslationsCompanion(
+        articleId: Value(id),
+        languageCode: Value(t['language_code'] as String),
+        title: Value(_cleanContent(t['title'] as String?)),
+        subtitle: Value(_cleanContent(t['subtitle'] as String?)),
+        contentHtml: Value(_cleanContent(t['content_html'] as String?)),
+      )).toList();
+
+      await db.smartUpsertArticle(article, translations);
+      debugPrint('SYNC: Real-time update success for Article $id');
+    } catch (e) {
+      debugPrint('SYNC ERROR (Single Article $id): $e');
+    }
+  }
+
+  /// Syncs a single bean by ID.
+  Future<void> syncSingleBean(int id) async {
+    if (supabase == null) return;
+    try {
+      final item = await supabase!.from('localized_beans').select().eq('id', id).maybeSingle();
+      if (item == null) return;
+
+      String emoji = item['country_emoji'] as String? ?? '';
+      final planetEmojis = ['🌎', '🌍', '🌏', '🪐', '☄️', '🌌', 'planet', 'earth'];
+      if (planetEmojis.contains(emoji.trim()) || emoji.isEmpty) {
+        final countryLower = (item['country_uk'] as String? ?? item['country_en'] as String? ?? 'unknown').toLowerCase().replaceAll(' ', '_');
+        emoji = '$flagsBucket$countryLower.png';
+      }
+
+      final bean = LocalizedBeansCompanion(
+        id: Value(id),
+        brandId: Value(item['brand_id'] as int?),
+        countryEmoji: Value(emoji),
+        altitudeMin: Value(item['altitude_min'] as int?),
+        altitudeMax: Value(item['altitude_max'] as int?),
+        lotNumber: Value(item['lot_number'] as String? ?? ''),
+        scaScore: Value(item['sca_score']?.toString() ?? '82+'),
+        cupsScore: Value(double.tryParse(item['cups_score']?.toString() ?? '82.0') ?? 82.0),
+        sensoryJson: Value(item['sensory_json']?.toString() ?? '{}'),
+        priceJson: Value(item['price_json']?.toString() ?? '{}'),
+        retailPrice: Value(item['retail_price']?.toString() ?? item['price']?.toString()),
+        isPremium: Value(item['is_premium'] as bool? ?? false),
+        isDecaf: Value(item['is_decaf'] as bool? ?? false),
+        url: Value(item['url'] as String? ?? ''),
+        countryUk: Value(item['country_uk'] as String? ?? item['country_en'] as String?),
+        regionUk: Value(item['region_uk'] as String? ?? item['region_en'] as String?),
+        varietiesUk: Value(item['varieties_uk'] as String? ?? item['varieties_en'] as String?),
+        flavorNotesUk: Value(item['flavor_notes_uk']?.toString() ?? item['flavor_notes_en']?.toString() ?? '[]'),
+        processMethodUk: Value(item['process_method_uk'] as String? ?? item['process_method_en'] as String?),
+        descriptionUk: Value(item['description_uk'] as String? ?? item['description_en'] as String?),
+        roastLevelUk: Value(item['roast_level_uk'] as String? ?? item['roast_level_en'] as String?),
+        createdAt: Value(item['created_at'] != null ? DateTime.tryParse(item['created_at'] as String) : null),
+      );
+
+      final translationsData = await supabase!.from('localized_bean_translations').select().eq('bean_id', id);
+      final List<LocalizedBeanTranslationsCompanion> translations = translationsData.map((t) => LocalizedBeanTranslationsCompanion(
+        beanId: Value(id),
+        languageCode: Value(t['language_code'] as String),
+        country: Value(t['country'] as String?),
+        region: Value(t['region'] as String?),
+        varieties: Value(t['varieties'] as String?),
+        flavorNotes: Value(t['flavor_notes']?.toString() ?? '[]'),
+        processMethod: Value(t['process_method'] as String?),
+        description: Value(t['description'] as String?),
+        farmDescription: Value(t['farm_description'] as String?),
+        roastLevel: Value(t['roast_level'] as String?),
+      )).toList();
+
+      await db.smartUpsertBean(bean, translations);
+      debugPrint('SYNC: Real-time update success for Bean $id');
+    } catch (e) {
+      debugPrint('SYNC ERROR (Single Bean $id): $e');
+    }
   }
 }

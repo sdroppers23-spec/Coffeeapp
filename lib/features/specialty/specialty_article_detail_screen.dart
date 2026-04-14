@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:markdown/markdown.dart' as md;
 import '../navigation/main_scaffold.dart';
 
 import '../../core/database/dtos.dart';
@@ -274,6 +275,7 @@ class _SpecialtyArticleDetailScreenState
                     selectable: true,
                     softLineBreak: true,
                     shrinkWrap: true,
+                    extensionSet: md.ExtensionSet.gitHubWeb,
                   ),
 
                   const SizedBox(height: 80),

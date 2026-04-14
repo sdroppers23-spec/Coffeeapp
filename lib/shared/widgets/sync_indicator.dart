@@ -38,6 +38,8 @@ enum SyncState { idle, syncing, success, error, offline }
 
 class SyncStatusNotifier extends Notifier<SyncStatusData> {
   List<ConnectivityResult>? _lastConnectivity;
+  bool _hasInitializedSubscriptions = false;
+  bool _hasPerformedSessionSync = false;
 
   @override
   SyncStatusData build() {
@@ -46,22 +48,38 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
     final isOnline = ref.watch(isOnlineProvider);
     final prefs = ref.watch(sharedPreferencesProvider);
 
-    // Version Guard (Cache Buster for v19 HTML-to-Markdown)
-    const resyncKey = 'force_resync_v19_final_rendering'; // unique key for this update
-    final hasResynced = prefs.getBool(resyncKey) ?? false;
-
-    if (isOnline && !hasResynced) {
-      Future.microtask(() async {
-        await syncEverything(force: true);
-        await prefs.setBool(resyncKey, true);
-        debugPrint('SYNC: Version Guard completed. Local cache wiped and re-synced.');
-      });
+    // 1. Initialize Real-time Subscriptions (Once)
+    if (isOnline && !_hasInitializedSubscriptions) {
+      _hasInitializedSubscriptions = true;
+      Future.microtask(() => _syncService.subscribeToRealtimeUpdates());
     }
 
+    // 2. Continuous Sync Logic
+    // Version Guard (Cache Buster) still exists for major schema changes
+    const resyncKey = 'force_resync_v19_final_rendering'; 
+    final hasResyncedVersion = prefs.getBool(resyncKey) ?? false;
+
+    if (isOnline) {
+      if (!hasResyncedVersion) {
+        // Force full wipe/sync for version update
+        Future.microtask(() async {
+          await syncEverything(force: true);
+          await prefs.setBool(resyncKey, true);
+          _hasPerformedSessionSync = true;
+          debugPrint('SYNC: Version Guard completed.');
+        });
+      } else if (!_hasPerformedSessionSync) {
+        // Normal session-start sync (gentle)
+        _hasPerformedSessionSync = true;
+        Future.microtask(() => pullFromCloud());
+        debugPrint('SYNC: Standard session-start sync triggered.');
+      }
+    }
+
+    // 3. Connectivity Recovery Sync
     if (_lastConnectivity != null &&
         _lastConnectivity!.contains(ConnectivityResult.none) &&
         conn != null && !conn.contains(ConnectivityResult.none)) {
-      // Transition from offline to online -> Auto-sync
       Future.microtask(() => pullFromCloud());
     }
 
@@ -121,8 +139,8 @@ class SyncIndicator extends ConsumerWidget {
     switch (syncData.state) {
       case SyncState.idle:
         color = Colors.greenAccent;
-        icon = Icons.cloud_done_outlined;
-        label = 'Cloud Connected';
+        icon = Icons.sensors; // Changed to indicate active listening
+        label = 'Cloud Active';
         break;
       case SyncState.offline:
         color = Colors.redAccent;

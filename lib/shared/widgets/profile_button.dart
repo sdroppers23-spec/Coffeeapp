@@ -75,8 +75,13 @@ class ProfileButton extends ConsumerWidget {
         bottomPad: navBarBottom,
       ),
     ).whenComplete(() {
+      if (!context.mounted) return;
       // Restore nav bar when sheet is dismissed (any method)
-      ref.read(navBarVisibleProvider.notifier).show();
+      // Only do it if we are NOT on the profile screen (which handles its own visibility)
+      final String location = GoRouterState.of(context).uri.toString();
+      if (location != '/profile') {
+        ref.read(navBarVisibleProvider.notifier).show();
+      }
     });
   }
 }

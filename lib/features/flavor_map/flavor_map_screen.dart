@@ -7,7 +7,9 @@ import '../../shared/widgets/user_profile_avatar.dart';
 import '../../core/providers/settings_provider.dart';
 import 'terroir_globe.dart';
 import 'sca_flavor_wheel.dart';
+import '../../shared/widgets/sync_indicator.dart';
 import '../../core/l10n/app_localizations.dart';
+import '../navigation/navigation_providers.dart';
 
 class FlavorValuesNotifier extends Notifier<Map<String, double>> {
   @override
@@ -44,6 +46,14 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
   String? _selectedFlavorKey;
   Color? _selectedFlavorColor;
   List<String>? _selectedFlavorItems;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) ref.read(navBarVisibleProvider.notifier).show();
+    });
+  }
 
   void _setTab(int index) {
     ref.read(settingsProvider.notifier).triggerSelectionVibrate();
@@ -89,38 +99,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      // Connected Badge
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1B231F),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: Colors.greenAccent.withValues(alpha: 0.2),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.cloud_done,
-                              size: 14,
-                              color: Color(0xFF62D39F),
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              'Connected',
-                              style: GoogleFonts.poppins(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                                color: const Color(0xFF62D39F),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      const SyncIndicator(),
                     ],
                   ),
                   const Align(

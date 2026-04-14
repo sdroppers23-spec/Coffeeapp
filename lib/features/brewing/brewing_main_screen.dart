@@ -36,6 +36,9 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) ref.read(navBarVisibleProvider.notifier).show();
+    });
   }
 
   @override

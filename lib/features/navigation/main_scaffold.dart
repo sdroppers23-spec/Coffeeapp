@@ -79,46 +79,47 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
   Widget build(BuildContext context) {
     final navVisible = ref.watch(navBarVisibleProvider);
 
-    return PremiumBackground(
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        extendBody: true,
-        body: PopScope(
-          canPop: false,
-          onPopInvokedWithResult: (bool didPop, Object? result) async {
-            if (didPop) return;
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, Object? result) async {
+        if (didPop) return;
 
-            // 1. Prioritize nested navigation (detail screens, etc.)
-            // We check the root navigator and then the current branch's navigator if possible
-            if (Navigator.of(context).canPop()) {
-              Navigator.of(context).pop();
-              return;
-            }
+        // 1. Prioritize internal navigator pop (for sub-routes in branches)
+        // If we are here, it means GoRouter didn't catch a pop.
+        
+        if (Navigator.of(context).canPop()) {
+          Navigator.of(context).pop();
+          return;
+        }
 
-            // 2. If not on the first tab, switch to it instead of exiting
-            if (widget.navigationShell.currentIndex != 0) {
-              _onTap(0);
-              return;
-            }
+        // 2. If not on the first tab, switch to it instead of exiting
+        if (widget.navigationShell.currentIndex != 0) {
+          _onTap(0);
+          return;
+        }
 
-            // 3. Double-tap exit logic with premium UI and vibration
-            final now = DateTime.now();
-            final isFirstPressOrExpired = _lastBackPressTime == null ||
-                now.difference(_lastBackPressTime!) > const Duration(seconds: 2);
+        // 3. Double-tap exit logic
+        final now = DateTime.now();
+        final isFirstPressOrExpired =
+            _lastBackPressTime == null ||
+            now.difference(_lastBackPressTime!) > const Duration(seconds: 2);
 
-            if (isFirstPressOrExpired) {
-              _lastBackPressTime = now;
-              // Trigger a light haptic to acknowledge the first press
-              await HapticFeedback.lightImpact();
-              _showFrostedExitToast(context);
-              return;
-            }
+        if (isFirstPressOrExpired) {
+          _lastBackPressTime = now;
+          await HapticFeedback.lightImpact();
+          if (context.mounted) _showFrostedExitToast(context);
+          return;
+        }
 
-            // 4. Final Exit with a slightly heavier acknowledgment
-            await HapticFeedback.mediumImpact();
-            await SystemNavigator.pop();
-          },
-          child: Stack(
+        // 4. Final Exit
+        await HapticFeedback.mediumImpact();
+        await SystemNavigator.pop();
+      },
+      child: PremiumBackground(
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          extendBody: true,
+          body: Stack(
             children: [
               // Main Content
               Positioned.fill(

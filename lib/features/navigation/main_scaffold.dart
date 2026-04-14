@@ -7,7 +7,7 @@ import '../../shared/widgets/premium_background.dart';
 import '../../shared/widgets/pressable_scale.dart';
 import '../../core/providers/settings_provider.dart';
 import 'package:flutter/services.dart';
-import 'dart:ui';
+import 'package:google_fonts/google_fonts.dart';
 
 // ─── Nav bar visibility provider ────────────────────────────────────────────
 final navBarVisibleProvider = NotifierProvider<_NavBarVisibleNotifier, bool>(
@@ -466,7 +466,7 @@ class _FrostedCapsuleToastState extends State<_FrostedCapsuleToast>
 
     _fade = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
     _scale = Tween<double>(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.backOut),
+      CurvedAnimation(parent: _controller, curve: Curves.easeOutBack),
     );
 
     _controller.forward();

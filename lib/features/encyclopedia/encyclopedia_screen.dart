@@ -8,8 +8,10 @@ import '../../core/l10n/app_localizations.dart';
 import 'widgets/encyclopedia_card_widgets.dart';
 import 'coffee_lot_detail_screen.dart';
 import 'comparison_screen.dart'; 
+import 'comparison_screen.dart'; 
 import '../../shared/widgets/premium_app_bar.dart';
 import '../../shared/widgets/profile_button.dart';
+import '../../shared/widgets/scroll_to_top_button.dart';
 
 // ─── Body (Embedded Version) ──────────────────────────────────────────────────
 class EncyclopediaBody extends ConsumerStatefulWidget {
@@ -20,6 +22,20 @@ class EncyclopediaBody extends ConsumerStatefulWidget {
 }
 
 class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final originsAsync = ref.watch(encyclopediaDataProvider);
@@ -46,7 +62,15 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
 
         // ── Content ─────────────────────────────────────────────────────────
         Expanded(
-          child: _buildList(originsAsync),
+          child: Stack(
+            children: [
+              _buildList(originsAsync),
+              ScrollToTopButton(
+                scrollController: _scrollController,
+                threshold: 400,
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -81,6 +105,7 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
 
         if (isGrid) {
           return GridView.builder(
+            controller: _scrollController,
             padding: const EdgeInsets.all(16),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
@@ -100,6 +125,7 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
         }
 
         return ListView.separated(
+          controller: _scrollController,
           padding: const EdgeInsets.all(16),
           itemCount: filtered.length,
           separatorBuilder: (context, index) => const SizedBox(height: 12),

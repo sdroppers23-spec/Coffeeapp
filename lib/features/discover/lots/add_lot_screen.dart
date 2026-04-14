@@ -508,7 +508,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           _fieldRow(
             label: 'SCA SCORE', 
             controller: _scaScoreController, 
-            keyboardType: TextInputType.number,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             helperText: 'Оцінка SCA від 80 до 100',
           ),
         ]),
@@ -527,7 +527,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           _fieldRow(
             label: 'ALTITUDE',
             controller: _altitudeController,
-            keyboardType: TextInputType.number,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             suffix: 'm',
           ),
           _divider(),
@@ -868,68 +868,50 @@ class GlobalCoffeeInputFormatter extends TextInputFormatter {
 
 class ScaScoreInputFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    String text = newValue.text;
-    if (text.isEmpty) return newValue;
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    String text = newValue.text.replaceAll(',', '.').replaceAll(' ', '');
 
-    // First char rule: must be 1, 8, or 9
-    if (text.isNotEmpty) {
-      final first = text[0];
-      if (first != '1' && first != '8' && first != '9') {
-        return oldValue;
-      }
-    }
+    if (text.isEmpty) return newValue.copyWith(text: '');
 
-    // 11 -> 99.9
-    if (text == '11') {
-      return const TextEditingValue(text: '99.9', selection: TextSelection.collapsed(offset: 4));
-    }
-
-    // Handle 100 and 10x
-    if (text.startsWith('10')) {
-      if (text.length == 3) {
-        if (text == '100') {
-          return newValue;
-        } else {
-          // 10x where x != 0 -> 99.9
-          return const TextEditingValue(text: '99.9', selection: TextSelection.collapsed(offset: 4));
-        }
-      }
-      if (text.length > 3) {
-         return oldValue;
-      }
-      return newValue;
-    }
-
-    // Standard numeric first digit (8 or 9)
-    // Only one dot allowed. Auto-insert after 2nd digit.
-    // Spaces forbidden.
-    text = text.replaceAll(' ', '');
-    
-    // Auto dot injection
-    if (text.length == 2 && !oldValue.text.contains('.')) {
-       text = '$text.';
-    }
-
-    // Prevent second dot
-    if (text.split('.').length > 2) {
+    // Rule: First digit must be 1, 8, or 9
+    final firstChar = text[0];
+    if (firstChar != '1' && firstChar != '8' && firstChar != '9') {
       return oldValue;
     }
 
-    // Prevent dot before 2nd digit
-    if (text.contains('.') && text.indexOf('.') < 2) {
-      return oldValue;
+    // Rule: If starts with 1, second must be 0
+    if (text.length >= 2 && text[0] == '1' && text[1] != '0') {
+      return const TextEditingValue(
+        text: '99.9',
+        selection: TextSelection.collapsed(offset: 4),
+      );
     }
 
-    // Max length Check: 99.9 is 4 chars
-    if (text.length > 4) {
-      return oldValue;
+    // Rule: Auto-dot after 2 digits if not 100
+    if (text.length == 3 && !text.contains('.')) {
+      if (text == '100') return newValue;
+      // If 10x where x != 0, cap at 99.9
+      if (text.startsWith('10') && text[2] != '0') {
+        return const TextEditingValue(
+          text: '99.9',
+          selection: TextSelection.collapsed(offset: 4),
+        );
+      }
+      return TextEditingValue(
+        text: '${text.substring(0, 2)}.${text.substring(2)}',
+        selection: TextSelection.collapsed(offset: 4),
+      );
     }
 
-    return TextEditingValue(
-      text: text,
-      selection: TextSelection.collapsed(offset: text.length),
-    );
+    // Rule: Max 3 digits excluding dot (e.g. 99.9 or 100)
+    final digitsOnly = text.replaceAll('.', '');
+    if (digitsOnly.length > 3) return oldValue;
+
+    // Rule: Only one dot
+    if ('.'.allMatches(text).length > 1) return oldValue;
+
+    return newValue.copyWith(text: text);
   }
 }
 

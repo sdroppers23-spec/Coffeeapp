@@ -9,6 +9,7 @@ import '../../../../core/database/app_database.dart';
 import '../../../../core/providers/settings_provider.dart';
 import '../../../../core/database/dtos.dart';
 import '../../../../shared/widgets/modern_undo_timer.dart';
+import '../../../../shared/widgets/scroll_to_top_button.dart';
 import '../../discovery_filter_provider.dart';
 import '../lots_providers.dart';
 import 'lot_card_widgets.dart';
@@ -28,10 +29,12 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
   bool _isUndoVisible = false;
   
   bool get _isSelectionMode => _selectedLotIds.isNotEmpty;
+  late final ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController();
     _subTabController = TabController(length: 3, vsync: this);
     _subTabController.addListener(() {
       if (_subTabController.indexIsChanging) return;
@@ -41,6 +44,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
 
   @override
   void dispose() {
+    _scrollController.dispose();
     _subTabController.dispose();
     super.dispose();
   }
@@ -315,6 +319,10 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                   ),
           ),
         ),
+        ScrollToTopButton(
+          scrollController: _scrollController,
+          threshold: 400,
+        ),
       ],
     );
   }
@@ -422,6 +430,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
 
         if (filter.isGrid) {
           return GridView.builder(
+            controller: _scrollController,
             padding: const EdgeInsets.fromLTRB(21, 16, 21, 100),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
@@ -449,6 +458,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
           );
         }
         return ListView.builder(
+          controller: _scrollController,
           padding: const EdgeInsets.fromLTRB(26, 16, 26, 100),
           itemCount: filteredLots.length,
           itemBuilder: (context, index) {
@@ -566,112 +576,107 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
 
   Widget _buildSelectionBar(AsyncValue<List<CoffeeLotDto>> lotsAsync) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       decoration: BoxDecoration(
         color: const Color(0xFF1D1B1A),
         borderRadius: BorderRadius.circular(30),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.5), blurRadius: 20, spreadRadius: 4),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.5),
+            blurRadius: 20,
+            spreadRadius: 4,
+          ),
         ],
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              _selectionCountText,
-              style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(30),
+        child: Material(
+          color: Colors.transparent,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    _selectionCountText,
+                    style: GoogleFonts.outfit(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+                _buildSelectionAction(
+                  Icons.favorite_rounded,
+                  Colors.redAccent,
+                  () async {
+                    final db = ref.read(databaseProvider);
+                    for (var id in _selectedLotIds) {
+                      await db.toggleLotFavorite(id, true);
+                    }
+                    setState(() => _selectedLotIds.clear());
+                    ref.invalidate(userLotsProvider);
+                  },
+                ),
+                const SizedBox(width: 16),
+                _buildSelectionAction(
+                  _subTabController.index == 2
+                      ? Icons.unarchive_outlined
+                      : Icons.archive_outlined,
+                  Colors.white,
+                  () async {
+                    final db = ref.read(databaseProvider);
+                    final activeTab = _subTabController.index;
+                    for (var id in _selectedLotIds) {
+                      await db.toggleLotArchive(id, activeTab != 2);
+                    }
+
+                    if (mounted) {
+                      final isUk = Localizations.localeOf(context).languageCode == 'uk';
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(isUk ? 'Зміни збережено' : 'Changes saved'),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    }
+                    setState(() => _selectedLotIds.clear());
+                    ref.invalidate(userLotsProvider);
+                  },
+                ),
+                const SizedBox(width: 16),
+                _buildSelectionAction(
+                  Icons.delete_outline_rounded,
+                  Colors.orangeAccent,
+                  () async {
+                    final db = ref.read(databaseProvider);
+                    for (var id in _selectedLotIds) {
+                      await db.deleteUserLot(id);
+                    }
+                    setState(() => _selectedLotIds.clear());
+                    ref.invalidate(userLotsProvider);
+                  },
+                ),
+              ],
             ),
           ),
-          _buildSelectionAction(
-            Icons.favorite_rounded,
-            Colors.redAccent,
-            () async {
-              final db = ref.read(databaseProvider);
-              for (var id in _selectedLotIds) {
-                await db.toggleLotFavorite(id, true);
-              }
-              setState(() => _selectedLotIds.clear());
-              ref.invalidate(userLotsProvider);
-            },
-          ),
-          const SizedBox(width: 16),
-          _buildSelectionAction(
-            _subTabController.index == 2 ? Icons.unarchive_outlined : Icons.archive_outlined,
-            Colors.white,
-            () async {
-              final db = ref.read(databaseProvider);
-              final activeTab = _subTabController.index;
-              final lotsReady = lotsAsync.asData?.value ?? [];
-              final toProcess = lotsReady.where((l) => _selectedLotIds.contains(l.id)).toList();
-              
-              for (var id in _selectedLotIds) {
-                await db.toggleLotArchive(id, activeTab != 2);
-              }
-              
-              if (mounted) {
-                final isRestore = activeTab == 2;
-                if (isRestore) {
-                  final isUk = Localizations.localeOf(context).languageCode == 'uk';
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(toProcess.length == 1 
-                        ? (isUk ? 'Лот відновлено' : 'Lot restored')
-                        : (isUk ? 'Лотів відновлено: ${toProcess.length}' : '${toProcess.length} lots restored')
-                      ),
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                } else {
-                  _showModernUndo(toProcess, context, ref, isArchive: true);
-                }
-              }
-              
-              setState(() => _selectedLotIds.clear());
-              ref.invalidate(userLotsProvider);
-            },
-          ),
-          const SizedBox(width: 16),
-          _buildSelectionAction(
-            Icons.delete_outline_rounded,
-            Colors.redAccent,
-            () async {
-              final toDelete = _selectedLotIds.toList();
-              final lotsReady = lotsAsync.asData?.value ?? [];
-              final firstLot = lotsReady.firstWhere((l) => l.id == toDelete.first, orElse: () => throw 'Lot not found');
-              
-              final confirmed = await _confirmDeleteDialog(firstLot);
-              if (confirmed && mounted) {
-                final db = ref.read(databaseProvider);
-                final lotsToUndo = lotsReady.where((l) => toDelete.contains(l.id)).toList();
-                for (var id in toDelete) {
-                  await db.deleteUserLot(id);
-                }
-                if (mounted) {
-                  _showModernUndo(lotsToUndo, context, ref, isArchive: false);
-                }
-                ref.invalidate(userLotsProvider);
-                setState(() => _selectedLotIds.clear());
-              }
-            },
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _buildSelectionAction(IconData icon, Color color, VoidCallback onTap) {
-    return GestureDetector(
+  Widget _buildSelectionAction(
+      IconData icon, Color color, VoidCallback onTap) {
+    return InkWell(
       onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.05),
-          shape: BoxShape.circle,
-        ),
-        child: Icon(icon, color: color, size: 20),
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Icon(icon, color: color, size: 26),
       ),
     );
+  }
   }
 
   String get _selectionCountText {

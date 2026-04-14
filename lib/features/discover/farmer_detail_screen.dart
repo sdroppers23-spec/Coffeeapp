@@ -9,6 +9,7 @@ import '../../core/database/dtos.dart';
 import '../navigation/main_scaffold.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/utils/markdown_extensions.dart';
+import '../../shared/widgets/scroll_to_top_button.dart';
 
 class FarmerDetailScreen extends ConsumerStatefulWidget {
   final LocalizedFarmerDto farmer;
@@ -20,19 +21,20 @@ class FarmerDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
-  @override
-  void initState() {
-    super.initState();
+    _scrollController = ScrollController();
     Future.microtask(() {
       ref.read(navBarVisibleProvider.notifier).hide();
     });
   }
+
+  late final ScrollController _scrollController;
 
   @override
   void dispose() {
     Future.microtask(() {
       ref.read(navBarVisibleProvider.notifier).show();
     });
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -110,8 +112,11 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
 
     return Scaffold(
       backgroundColor: bg,
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
+      body: Stack(
+        children: [
+          CustomScrollView(
+            controller: _scrollController,
+            physics: const BouncingScrollPhysics(),
         slivers: [
           // ── Hero Portrait ─────────────────────────────────────────────────
           SliverAppBar(
@@ -290,6 +295,10 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
             ),
           ),
         ],
+      ),
+      floatingActionButton: ScrollToTopButton(
+        scrollController: _scrollController,
+        threshold: 400,
       ),
     );
   }

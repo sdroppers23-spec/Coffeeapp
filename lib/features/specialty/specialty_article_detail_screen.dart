@@ -8,6 +8,7 @@ import '../navigation/main_scaffold.dart';
 
 import '../../core/database/dtos.dart';
 import '../../core/utils/markdown_extensions.dart';
+import '../../shared/widgets/scroll_to_top_button.dart';
 
 class SpecialtyArticleDetailScreen extends ConsumerStatefulWidget {
   final SpecialtyArticleDto article;
@@ -26,19 +27,20 @@ class SpecialtyArticleDetailScreen extends ConsumerStatefulWidget {
 
 class _SpecialtyArticleDetailScreenState
     extends ConsumerState<SpecialtyArticleDetailScreen> {
-  @override
-  void initState() {
-    super.initState();
+    _scrollController = ScrollController();
     Future.microtask(() {
       ref.read(navBarVisibleProvider.notifier).hide();
     });
   }
+
+  late final ScrollController _scrollController;
 
   @override
   void dispose() {
     Future.microtask(() {
       ref.read(navBarVisibleProvider.notifier).show();
     });
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -133,8 +135,11 @@ class _SpecialtyArticleDetailScreenState
 
     return Scaffold(
       backgroundColor: bg,
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
+      body: Stack(
+        children: [
+          CustomScrollView(
+            controller: _scrollController,
+            physics: const BouncingScrollPhysics(),
         slivers: [
           // ── Hero Image AppBar ──────────────────────────────────────────────
           SliverAppBar(
@@ -289,6 +294,10 @@ class _SpecialtyArticleDetailScreenState
             ),
           ),
         ],
+      ),
+      floatingActionButton: ScrollToTopButton(
+        scrollController: _scrollController,
+        threshold: 400,
       ),
     );
   }

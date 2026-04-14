@@ -109,13 +109,20 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
           onPopInvokedWithResult: (bool didPop, Object? result) async {
             if (didPop) return;
 
-            // 1. If not on the first tab, go to it first
+            // 1. Prioritize nested navigation (detail screens, etc.)
+            final nav = Navigator.maybeOf(context);
+            if (nav != null && nav.canPop()) {
+              nav.pop();
+              return;
+            }
+
+            // 2. If not on the first tab, go to it first
             if (widget.navigationShell.currentIndex != 0) {
               _onTap(0);
               return;
             }
 
-            // 2. Double tap exit logic
+            // 3. Double tap exit logic
             final now = DateTime.now();
             final backButtonHasNotBeenPressedOrSnackBarHasExpired =
                 _lastBackPressTime == null ||
@@ -144,7 +151,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
               return;
             }
 
-            // 3. Exit the app
+            // 4. Exit the app
             await SystemNavigator.pop();
           },
           child: Stack(

@@ -597,6 +597,11 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
 
   Widget _divider() => Divider(height: 1, color: const Color(0xFFC8A96E).withValues(alpha: 0.06));
 
+  Widget _fieldRow({
+    required String label,
+    TextEditingController? controller,
+    String? value,
+    Function(String)? onChanged,
     TextInputType? keyboardType,
     String? suffix,
     String? helperText,

@@ -1,4 +1,8 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
+import 'package:drift/drift.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'app_database.dart';
 import '../utils/content_utils.dart';
 
 /// Service responsible for synchronizing user-managed coffee data.
@@ -83,7 +87,7 @@ class SyncService {
       _progressController.add(1.0);
       onProgress?.call('Cloud Connected', 1.0);
       debugPrint('SYNC: All systems synchronized [STABLE]');
-    } catch (e, st) {
+    } catch (e) {
       debugPrint('SYNC ERROR: $e');
       _progressController.add(0.0); // Reset or mark error
       onProgress?.call('Sync failed: $e', 1.0);

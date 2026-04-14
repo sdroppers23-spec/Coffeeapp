@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
-
-/// Universal utility for cleaning and formatting coffee-related content.
+/// Utilities for cleaning and parsing specialty coffee related content.
 /// Handles HTML tags, custom technical keys ({p1}, {li}, etc.), and escaping.
 class ContentUtils {
   /// Robust regex to match any technical key in formats like {p1}, {/p1}, [li], etc.

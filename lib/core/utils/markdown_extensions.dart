@@ -5,7 +5,7 @@ import 'package:markdown/markdown.dart' as md;
 
 /// Syntax parser for custom style tags like {gold}text{/gold}
 class StyleTagSyntax extends md.InlineSyntax {
-  StyleTagSyntax() : super(r'\{(gold|serif|accent|size:[\d.]+)\}(.*?)\{/\1\}');
+  StyleTagSyntax() : super(r'\{(gold|serif|accent|size:[\d.]+)\}([\s\S]*?)\{/\1\}');
 
   @override
   bool onMatch(md.InlineParser parser, Match match) {

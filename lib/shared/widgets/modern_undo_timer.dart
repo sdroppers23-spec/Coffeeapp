@@ -59,6 +59,11 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
     super.initState();
     _secondsRemaining = widget.duration.inSeconds;
     _controller = AnimationController(vsync: this, duration: widget.duration);
+    
+    // Add listener for smooth, frame-by-frame progress updates
+    _controller.addListener(() {
+      if (mounted) setState(() {});
+    });
 
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -96,20 +101,20 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+              filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
               child: Container(
-                height: 64,
+                height: 72,
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1D1B1A).withValues(alpha: 0.85),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                  color: Colors.white.withValues(alpha: 0.08), // Premium Matte Glass
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.3),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
+                      color: Colors.black.withValues(alpha: 0.4),
+                      blurRadius: 30,
+                      offset: const Offset(0, 15),
                     ),
                   ],
                 ),

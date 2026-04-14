@@ -7,6 +7,7 @@ import '../../shared/widgets/premium_background.dart';
 import '../../shared/widgets/pressable_scale.dart';
 import '../../core/providers/settings_provider.dart';
 import 'package:flutter/services.dart';
+import 'dart:ui';
 
 // ─── Nav bar visibility provider ────────────────────────────────────────────
 final navBarVisibleProvider = NotifierProvider<_NavBarVisibleNotifier, bool>(
@@ -109,48 +110,31 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
           onPopInvokedWithResult: (bool didPop, Object? result) async {
             if (didPop) return;
 
-            // 1. Prioritize nested navigation (detail screens, etc.) using GoRouter
-            if (GoRouter.of(context).canPop()) {
-              GoRouter.of(context).pop();
+            // 1. Prioritize nested navigation (detail screens, etc.)
+            // We use the secondary navigator for the shell if possible, or context
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
               return;
             }
 
-            // 2. If not on the first tab, go to it first
+            // 2. If not on the first tab, switch to it instead of exiting
             if (widget.navigationShell.currentIndex != 0) {
               _onTap(0);
               return;
             }
 
-            // 3. Double tap exit logic
+            // 3. Double-tap exit logic with premium UI
             final now = DateTime.now();
-            final backButtonHasNotBeenPressedOrSnackBarHasExpired =
-                _lastBackPressTime == null ||
+            final isFirstPressOrExpired = _lastBackPressTime == null ||
                 now.difference(_lastBackPressTime!) > const Duration(seconds: 2);
 
-            if (backButtonHasNotBeenPressedOrSnackBarHasExpired) {
+            if (isFirstPressOrExpired) {
               _lastBackPressTime = now;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text(
-                    'Натисніть ще раз щоб вийти',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  backgroundColor: const Color(0xFFC8A96E).withValues(alpha: 0.8),
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  duration: const Duration(seconds: 2),
-                ),
-              );
+              _showFrostedExitToast(context);
               return;
             }
 
-            // 4. Exit the app
+            // 4. Final Exit
             await SystemNavigator.pop();
           },
           child: Stack(
@@ -284,6 +268,20 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
         ),
       ),
     );
+  }
+
+  void _showFrostedExitToast(BuildContext context) {
+    final overlay = Overlay.of(context);
+    late OverlayEntry entry;
+
+    entry = OverlayEntry(
+      builder: (context) => _FrostedCapsuleToast(
+        message: 'Натисніть ще раз щоб вийти',
+        onFinished: () => entry.remove(),
+      ),
+    );
+
+    overlay.insert(entry);
   }
 }
 
@@ -435,6 +433,96 @@ class AnimatedBranchContainer extends StatelessWidget {
         );
       },
       child: KeyedSubtree(key: ValueKey<int>(currentIndex), child: child),
+    );
+  }
+}
+
+class _FrostedCapsuleToast extends StatefulWidget {
+  final String message;
+  final VoidCallback onFinished;
+
+  const _FrostedCapsuleToast({
+    required this.message,
+    required this.onFinished,
+  });
+
+  @override
+  State<_FrostedCapsuleToast> createState() => _FrostedCapsuleToastState();
+}
+
+class _FrostedCapsuleToastState extends State<_FrostedCapsuleToast>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fade;
+  late Animation<double> _scale;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+
+    _fade = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+    _scale = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.backOut),
+    );
+
+    _controller.forward();
+
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) {
+        _controller.reverse().then((_) => widget.onFinished());
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    return Positioned(
+      bottom: 110 + bottomPadding,
+      left: 0,
+      right: 0,
+      child: Center(
+        child: FadeTransition(
+          opacity: _fade,
+          child: ScaleTransition(
+            scale: _scale,
+            child: Material(
+              color: Colors.transparent,
+              child: GlassContainer(
+                borderRadius: 30,
+                blur: 20,
+                opacity: 0.1,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                backgroundGradient: LinearGradient(
+                  colors: [
+                    Colors.white.withValues(alpha: 0.15),
+                    Colors.white.withValues(alpha: 0.05),
+                  ],
+                ),
+                borderColor: Colors.white.withValues(alpha: 0.2),
+                child: Text(
+                  widget.message,
+                  style: GoogleFonts.outfit(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

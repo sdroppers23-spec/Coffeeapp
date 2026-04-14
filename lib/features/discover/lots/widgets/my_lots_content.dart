@@ -484,17 +484,12 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                   );
                 } : null,
                 onDeleteSwipe: (lot) async {
-                  if (activeTab != 2) {
-                    _showModernUndo([lot], context, ref, isArchive: true);
-                    return true;
-                  } else {
-                    final confirm = await _confirmDeleteDialog(lot);
-                    if (confirm) {
-                      if (context.mounted) {
-                        _showModernUndo([lot], context, ref, isArchive: false);
-                      }
-                      return true;
+                  final confirm = await _confirmDeleteDialog(lot);
+                  if (confirm) {
+                    if (context.mounted) {
+                      _showModernUndo([lot], context, ref, isArchive: false);
                     }
+                    return true;
                   }
                   return false;
                 },

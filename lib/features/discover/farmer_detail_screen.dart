@@ -2,14 +2,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:markdown/markdown.dart' as md;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 import '../../core/database/dtos.dart';
 import '../navigation/main_scaffold.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../core/utils/markdown_extensions.dart';
 import '../../shared/widgets/scroll_to_top_button.dart';
 
 class FarmerDetailScreen extends ConsumerStatefulWidget {
@@ -47,72 +45,8 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
     const gold = Color(0xFFC8A96E);
     const bg = Color(0xFF0A0908);
 
-    // Build unified Markdown bio from description + story
+    // Build unified Bio from description + story
     final bio = _buildBio(widget.farmer.description, widget.farmer.story);
-
-    final markdownStyle = MarkdownStyleSheet(
-      p: GoogleFonts.outfit(
-        fontSize: 16.5,
-        height: 1.78,
-        color: Colors.white.withValues(alpha: 0.88),
-      ),
-      h1: GoogleFonts.cormorantGaramond(
-        fontSize: 30,
-        fontWeight: FontWeight.w700,
-        color: Colors.white,
-        height: 1.2,
-      ),
-      h2: GoogleFonts.cormorantGaramond(
-        fontSize: 24,
-        fontWeight: FontWeight.w600,
-        color: Colors.white,
-        height: 1.25,
-      ),
-      h3: GoogleFonts.poppins(
-        fontSize: 14,
-        fontWeight: FontWeight.w700,
-        color: gold,
-        letterSpacing: 0.8,
-        height: 1.4,
-      ),
-      strong: GoogleFonts.outfit(
-        fontSize: 16.5,
-        fontWeight: FontWeight.w700,
-        color: gold,
-      ),
-      em: GoogleFonts.outfit(
-        fontSize: 16,
-        fontStyle: FontStyle.italic,
-        color: Colors.white.withValues(alpha: 0.75),
-      ),
-      listBullet: GoogleFonts.outfit(
-        fontSize: 16.5,
-        color: gold,
-      ),
-      blockquoteDecoration: BoxDecoration(
-        color: gold.withValues(alpha: 0.08),
-        border: Border(
-          left: BorderSide(color: gold.withValues(alpha: 0.5), width: 3),
-        ),
-      ),
-      blockquote: GoogleFonts.outfit(
-        fontSize: 15.5,
-        fontStyle: FontStyle.italic,
-        color: Colors.white.withValues(alpha: 0.75),
-        height: 1.65,
-      ),
-      horizontalRuleDecoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(color: gold.withValues(alpha: 0.25), width: 1),
-        ),
-      ),
-      h1Padding: const EdgeInsets.only(top: 28, bottom: 8),
-      h2Padding: const EdgeInsets.only(top: 24, bottom: 8),
-      h3Padding: const EdgeInsets.only(top: 20, bottom: 6),
-      pPadding: const EdgeInsets.only(bottom: 12),
-      listIndent: 20,
-      blockquotePadding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-    );
 
     return Scaffold(
       backgroundColor: bg,
@@ -280,18 +214,46 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                         ),
                       ),
 
-                      // Biography in Markdown (handles HTML tags via gitHubWeb extension set)
+                      // Biography in HTML (handles HTML tags + custom serif processing)
                       if (bio.isNotEmpty)
-                        MarkdownBody(
-                          data: bio,
-                          extensionSet: md.ExtensionSet.gitHubWeb,
-                          styleSheet: markdownStyle,
-                          selectable: true,
-                          softLineBreak: true,
-                          shrinkWrap: true,
-                          inlineSyntaxes: [StyleTagSyntax()],
-                          builders: {
-                            'style-tag': StyleTagBuilder(context),
+                        Html(
+                          data: _processBio(bio),
+                          style: {
+                            "body": Style(
+                              margin: Margins.zero,
+                              padding: HtmlPaddings.zero,
+                              fontSize: FontSize(16.5),
+                              lineHeight: LineHeight(1.78),
+                              color: Colors.white.withValues(alpha: 0.88),
+                              fontFamily: GoogleFonts.outfit().fontFamily,
+                            ),
+                            "h1": Style(
+                              fontSize: FontSize(30),
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                              fontFamily: GoogleFonts.cormorantGaramond().fontFamily,
+                            ),
+                            "h2": Style(
+                              fontSize: FontSize(24),
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                              fontFamily: GoogleFonts.cormorantGaramond().fontFamily,
+                            ),
+                            "h3": Style(
+                              fontSize: FontSize(14),
+                              fontWeight: FontWeight.w700,
+                              color: gold,
+                              letterSpacing: 0.8,
+                              fontFamily: GoogleFonts.poppins().fontFamily,
+                            ),
+                            "strong": Style(
+                              color: gold,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            ".serif": Style(
+                              fontFamily: GoogleFonts.cormorantGaramond().fontFamily,
+                              fontWeight: FontWeight.w600,
+                            ),
                           },
                         ),
 
@@ -321,6 +283,17 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
     
     // Otherwise, prefer showing the detailed story
     return s;
+  }
+
+  String _processBio(String text) {
+    // Convert custom {serif} tags to HTML spans with a class
+    String processed = text.replaceAllMapped(
+      RegExp(r'\{serif\}([\s\S]*?)\{\/serif\}'),
+      (match) => '<span class="serif">${match.group(1)}</span>',
+    );
+    
+    // Also handle other potential tags if needed, but start with serif
+    return processed;
   }
 }
 

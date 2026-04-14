@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:markdown/markdown.dart' as md;
+import 'package:flutter_html/flutter_html.dart';
 import '../navigation/main_scaffold.dart';
 
 import '../../core/database/dtos.dart';
-import '../../core/utils/markdown_extensions.dart';
 import '../../shared/widgets/scroll_to_top_button.dart';
 
 class SpecialtyArticleDetailScreen extends ConsumerStatefulWidget {
@@ -55,87 +53,6 @@ class _SpecialtyArticleDetailScreenState
     final imageUrl = widget.article.effectiveImageUrl;
     const gold = Color(0xFFC8A96E);
     const bg = Color(0xFF0A0908);
-
-    final markdownStyle = MarkdownStyleSheet(
-      p: GoogleFonts.outfit(
-        fontSize: 17,
-        height: 1.8,
-        color: Colors.white.withValues(alpha: 0.9),
-      ),
-      h1: GoogleFonts.cormorantGaramond(
-        fontSize: 36,
-        fontWeight: FontWeight.w700,
-        color: Colors.white,
-        height: 1.1,
-      ),
-      h2: GoogleFonts.cormorantGaramond(
-        fontSize: 28,
-        fontWeight: FontWeight.w700,
-        color: Colors.white,
-        height: 1.2,
-      ),
-      h3: GoogleFonts.poppins(
-        fontSize: 16,
-        fontWeight: FontWeight.w700,
-        color: gold,
-        letterSpacing: 1.0,
-        height: 1.4,
-      ),
-      h4: GoogleFonts.poppins(
-        fontSize: 14,
-        fontWeight: FontWeight.w600,
-        color: gold.withValues(alpha: 0.8),
-        letterSpacing: 0.5,
-      ),
-      strong: GoogleFonts.outfit(
-        fontSize: 17,
-        fontWeight: FontWeight.w700,
-        color: gold,
-      ),
-      em: GoogleFonts.outfit(
-        fontSize: 17,
-        fontStyle: FontStyle.italic,
-        color: Colors.white.withValues(alpha: 0.8),
-      ),
-      listBullet: GoogleFonts.outfit(
-        fontSize: 17,
-        color: gold,
-      ),
-      blockquoteDecoration: BoxDecoration(
-        color: gold.withValues(alpha: 0.08),
-        border: Border(
-          left: BorderSide(color: gold.withValues(alpha: 0.5), width: 4),
-        ),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      blockquote: GoogleFonts.outfit(
-        fontSize: 16,
-        fontStyle: FontStyle.italic,
-        color: Colors.white.withValues(alpha: 0.8),
-        height: 1.7,
-      ),
-      code: GoogleFonts.firaCode(
-        fontSize: 14,
-        color: gold,
-        backgroundColor: Colors.white.withValues(alpha: 0.08),
-      ),
-      codeblockDecoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.04),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-      ),
-      horizontalRuleDecoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(color: gold.withValues(alpha: 0.2), width: 1),
-        ),
-      ),
-      h1Padding: const EdgeInsets.only(top: 32, bottom: 12),
-      h2Padding: const EdgeInsets.only(top: 28, bottom: 10),
-      h3Padding: const EdgeInsets.only(top: 24, bottom: 8),
-      pPadding: const EdgeInsets.only(bottom: 16),
-      listIndent: 24,
-      blockquotePadding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-    );
 
     return Scaffold(
       backgroundColor: bg,
@@ -280,17 +197,45 @@ class _SpecialtyArticleDetailScreenState
 
                       const SizedBox(height: 32),
 
-                      // Content: prefer Markdown, fall back to plain text
-                      MarkdownBody(
-                        data: content,
-                        styleSheet: markdownStyle,
-                        selectable: true,
-                        softLineBreak: true,
-                        shrinkWrap: true,
-                        extensionSet: md.ExtensionSet.gitHubWeb,
-                        inlineSyntaxes: [StyleTagSyntax()],
-                        builders: {
-                          'style-tag': StyleTagBuilder(context),
+                      // Content: supports full HTML + custom serif processing
+                      Html(
+                        data: _processContent(content),
+                        style: {
+                          "body": Style(
+                            margin: Margins.zero,
+                            padding: HtmlPaddings.zero,
+                            fontSize: FontSize(17),
+                            lineHeight: LineHeight(1.8),
+                            color: Colors.white.withValues(alpha: 0.9),
+                            fontFamily: GoogleFonts.outfit().fontFamily,
+                          ),
+                          "h1": Style(
+                            fontSize: FontSize(36),
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            fontFamily: GoogleFonts.cormorantGaramond().fontFamily,
+                          ),
+                          "h2": Style(
+                            fontSize: FontSize(28),
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            fontFamily: GoogleFonts.cormorantGaramond().fontFamily,
+                          ),
+                          "h3": Style(
+                            fontSize: FontSize(16),
+                            fontWeight: FontWeight.w700,
+                            color: gold,
+                            letterSpacing: 1.0,
+                            fontFamily: GoogleFonts.poppins().fontFamily,
+                          ),
+                          "strong": Style(
+                            color: gold,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          ".serif": Style(
+                            fontFamily: GoogleFonts.cormorantGaramond().fontFamily,
+                            fontWeight: FontWeight.w600,
+                          ),
                         },
                       ),
 
@@ -308,6 +253,22 @@ class _SpecialtyArticleDetailScreenState
         ],
       ),
     );
+  }
+
+  String _processContent(String text) {
+    // Convert custom {serif} tags to HTML spans with a class
+    String processed = text.replaceAllMapped(
+      RegExp(r'\{serif\}([\s\S]*?)\{\/serif\}'),
+      (match) => '<span class="serif">${match.group(1)}</span>',
+    );
+    
+    // Support potential legacy gold tags if they exist in DB
+    processed = processed.replaceAllMapped(
+      RegExp(r'\{gold\}([\s\S]*?)\{\/gold\}'),
+      (match) => '<span style="color: #C8A96E; font-weight: bold;">${match.group(1)}</span>',
+    );
+
+    return processed;
   }
 
   Widget _buildHeroImage(String url) {

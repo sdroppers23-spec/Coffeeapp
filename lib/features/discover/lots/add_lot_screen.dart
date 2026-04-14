@@ -621,12 +621,13 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               Expanded(
                 child: TextField(
                   controller: controller ?? TextEditingController(text: value ?? ''),
-                  style: GoogleFonts.outfit(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
+                  style: GoogleFonts.outfit(color: Colors.white, fontSize: 16),
                   keyboardType: keyboardType,
                   enableInteractiveSelection: label != 'SCA SCORE' && label != 'LOT NUMBER',
-                  textCapitalization: (label == 'SCA SCORE' || label == 'LOT NUMBER' || keyboardType == TextInputType.number)
+                  textCapitalization: (label == 'SCA SCORE' || label == 'LOT NUMBER') 
                     ? TextCapitalization.none 
                     : TextCapitalization.sentences,
+                  autocorrect: (label == 'SCA SCORE' || label == 'LOT NUMBER') ? false : true,
                   inputFormatters: label == 'SCA SCORE'
                     ? [ScaScoreInputFormatter()]
                     : label == 'LOT NUMBER'

@@ -133,28 +133,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     if (widget.initialLot != null) _populateFields(widget.initialLot!);
   }
 
-  @override
-  void dispose() {
-    ref.read(navBarVisibleProvider.notifier).show();
-    _tabController.dispose();
-    _roasteryController.dispose();
-    _roasteryCountryController.dispose();
-    _coffeeNameController.dispose();
-    _originCountryController.dispose();
-    _regionController.dispose();
-    _altitudeController.dispose();
-    _varietiesController.dispose();
-    _processController.dispose();
-    _flavorProfileController.dispose();
-    _scaScoreController.dispose();
-    _lotNumberController.dispose();
-    _weightController.dispose();
-    _priceController.dispose();
-    _retailPrice1kController.dispose();
-    _wholesalePrice250Controller.dispose();
-    _wholesalePrice1kController.dispose();
-    super.dispose();
-  }
 
   void _populateFields(CoffeeLotDto lot) {
     setState(() {

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/providers/settings_provider.dart';
 
 enum DiscoverTabType { farmers, roasters, history, encyclopedia, myLots }
 

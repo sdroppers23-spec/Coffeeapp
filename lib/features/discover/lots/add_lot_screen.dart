@@ -935,24 +935,24 @@ class LotNumberInputFormatter extends TextInputFormatter {
     String text = newValue.text;
     if (text.isEmpty) return newValue;
 
-    // 1. Max 6 digits (plus allowed symbols)
+    // 1. Max 6 digits aggregate
     final digitsLength = text.replaceAll(RegExp(r'[^0-9]'), '').length;
     if (digitsLength > 6) return oldValue;
 
-    // 2. Allowed symbols: 0-9, ., ,, #, №, (, )
-    // Note: space is not in this list for Lot Number, but user says "2 пробіли підряд міняємо на крапку"
-    // Let's allow spaces for that replacement logic
-    final allowedWithSpaceRe = RegExp(r'[^0-9\.,#№\(\)\s]');
-    text = text.replaceAll(allowedWithSpaceRe, '');
-
-    // 3. Double space -> dot
-    if (text.contains('  ')) {
-      text = text.replaceAll('  ', '.');
+    // 2. Prevent consecutive dots or commas
+    if (text.contains('..') || text.contains(',,') || text.contains('.,') || text.contains(',.')) {
+      return oldValue;
     }
 
-    // 4. Max 3 dots in row
-    while (text.contains('....')) {
-      text = text.replaceAll('....', '...');
+    // 3. Allowed symbols: 0-9, ., ,, #, №, (, ), /, -
+    final allowedRe = RegExp(r'[^0-9\.,#№\(\)\/\-\s]');
+    text = text.replaceAll(allowedRe, '');
+
+    // 4. Double space -> dot (classic shortcut)
+    if (text.contains('  ')) {
+      text = text.replaceAll('  ', '.');
+      // Re-verify no consecutive dots after replacement
+      if (text.contains('..')) return oldValue;
     }
 
     return TextEditingValue(

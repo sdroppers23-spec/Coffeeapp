@@ -411,29 +411,33 @@ class MyLotListCard extends ConsumerWidget {
           }
           return false;
         },
-        background: Container(
-          decoration: BoxDecoration(
-            color: onRestoreSwipe != null 
-              ? const Color(0xFFC8A96E).withValues(alpha: 0.8) 
-              : const Color(0xFF62D39F).withValues(alpha: 0.8),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.only(left: 20),
-          child: Icon(
-            onRestoreSwipe != null ? Icons.unarchive_outlined : Icons.edit_rounded, 
-            color: Colors.black, 
-            size: 32
+        background: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Container(
+            decoration: BoxDecoration(
+              color: onRestoreSwipe != null 
+                ? const Color(0xFFC8A96E).withValues(alpha: 0.8) 
+                : const Color(0xFF62D39F).withValues(alpha: 0.8),
+            ),
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.only(left: 20),
+            child: Icon(
+              onRestoreSwipe != null ? Icons.unarchive_outlined : Icons.edit_rounded, 
+              color: Colors.black, 
+              size: 32
+            ),
           ),
         ),
-        secondaryBackground: Container(
-          decoration: BoxDecoration(
-            color: Colors.redAccent.withValues(alpha: 0.8),
-            borderRadius: BorderRadius.circular(20),
+        secondaryBackground: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.redAccent.withValues(alpha: 0.8),
+            ),
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: 20),
+            child: const Icon(Icons.delete_outline_rounded, color: Colors.white, size: 32),
           ),
-          alignment: Alignment.centerRight,
-          padding: const EdgeInsets.only(right: 20),
-          child: const Icon(Icons.delete_outline_rounded, color: Colors.white, size: 32),
         ),
         child: card,
       );

@@ -156,7 +156,7 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
                 minScale: 0.8,
                 maxScale: 5.0,
                 panEnabled: _transformationController.value.getMaxScaleOnAxis() > 1.05,
-                boundaryMargin: const EdgeInsets.all(double.infinity),
+                boundaryMargin: EdgeInsets.zero,
                 child: GestureDetector(
                   onTapDown: (details) =>
                       _handleTap(details.localPosition, currentSize),

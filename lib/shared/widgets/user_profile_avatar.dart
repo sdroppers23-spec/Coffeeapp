@@ -51,7 +51,7 @@ class UserProfileAvatar extends ConsumerWidget {
       builder: (context) {
         return GlassContainer(
           borderRadius: 24,
-          padding: const EdgeInsets.fromLTRB(16, 24, 16, 120),
+          padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
           blur: 30,
           opacity: 0.15,
           child: SafeArea(

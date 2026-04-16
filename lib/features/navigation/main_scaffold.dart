@@ -206,11 +206,13 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
 
                           const SizedBox(width: 12),
 
-                          // Separate Settings Island - Now Milky Glass
                           PressableScale(
-                            onTap: () {
+                            onTap: () async {
                               ref.read(settingsProvider.notifier).triggerSelectionVibrate();
-                              context.push('/settings');
+                              await context.push('/settings');
+                              if (context.mounted) {
+                                ref.read(navBarVisibleProvider.notifier).show();
+                              }
                             },
                               child: GlassContainer(
                                 width: 52,

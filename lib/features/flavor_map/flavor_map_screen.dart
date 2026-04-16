@@ -198,7 +198,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                                 onSelect: _onFlavorSelect,
                               ),
                             ),
-                            const SizedBox(height: 120),
+                            const SizedBox(height: 60),
                           ],
                         ),
                       ],

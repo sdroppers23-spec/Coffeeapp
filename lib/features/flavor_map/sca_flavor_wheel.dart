@@ -18,6 +18,7 @@ class ScaFlavorWheel extends ConsumerStatefulWidget {
 class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  late TransformationController _transformationController;
   String? _selectedCategory;
 
   final List<WheelCategory> _data = ScaFlavorData.localizedData;
@@ -29,12 +30,17 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
       vsync: this,
       duration: const Duration(milliseconds: 1000),
     );
+    _transformationController = TransformationController();
+    _transformationController.addListener(() {
+      setState(() {}); // Rebuild to update panEnabled if needed
+    });
     _controller.forward();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _transformationController.dispose();
     super.dispose();
   }
 
@@ -130,45 +136,63 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
         return Center(
           child: AspectRatio(
             aspectRatio: 1,
-            child: InteractiveViewer(
-              minScale: 0.8,
-              maxScale: 5.0,
-              boundaryMargin: const EdgeInsets.all(double.infinity),
-              child: GestureDetector(
-                onTapDown: (details) =>
-                    _handleTap(details.localPosition, currentSize),
-                child: AnimatedBuilder(
-                  animation: _controller,
-                  builder: (context, child) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.2),
-                            blurRadius: 20,
-                            spreadRadius: 5,
-                          ),
-                        ],
-                      ),
-                      child: ClipOval(
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                        child: RepaintBoundary(
-                          child: CustomPaint(
-                            size: Size(currentSize, currentSize),
-                            painter: _ScaWheelPainter(
-                              data: _data,
-                              animationValue: _controller.value,
-                              selectedCategory: _selectedCategory,
-                              ref: ref,
+            child: ShaderMask(
+              shaderCallback: (Rect bounds) {
+                return LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black.withValues(alpha: 0.0),
+                    Colors.black,
+                    Colors.black,
+                    Colors.black.withValues(alpha: 0.0),
+                  ],
+                  stops: const [0.0, 0.1, 0.9, 1.0],
+                ).createShader(bounds);
+              },
+              blendMode: BlendMode.dstIn,
+              child: InteractiveViewer(
+                transformationController: _transformationController,
+                minScale: 0.8,
+                maxScale: 5.0,
+                panEnabled: _transformationController.value.getMaxScaleOnAxis() > 1.05,
+                boundaryMargin: const EdgeInsets.all(double.infinity),
+                child: GestureDetector(
+                  onTapDown: (details) =>
+                      _handleTap(details.localPosition, currentSize),
+                  child: AnimatedBuilder(
+                    animation: _controller,
+                    builder: (context, child) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.2),
+                              blurRadius: 20,
+                              spreadRadius: 5,
+                            ),
+                          ],
+                        ),
+                        child: ClipOval(
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                            child: RepaintBoundary(
+                              child: CustomPaint(
+                                size: Size(currentSize, currentSize),
+                                painter: _ScaWheelPainter(
+                                  data: _data,
+                                  animationValue: _controller.value,
+                                  selectedCategory: _selectedCategory,
+                                  ref: ref,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                        ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
@@ -411,55 +435,73 @@ class _ScaWheelPainter extends CustomPainter {
     final middleRadius = (rStart + rEnd) / 2;
 
     // Calculate max allowed width (roughly the width of the arc at middleRadius)
-    final maxAllowedWidth = (middleRadius * sweepAngle) * 0.9;
+    final maxAllowedWidth = (middleRadius * sweepAngle) * 0.85;
 
-    final tp = TextPainter(
-      text: TextSpan(
-        text: text,
-        style: GoogleFonts.outfit(
-          color: color,
-          fontSize: baseFontSize,
-          fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-          letterSpacing: -0.5,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    );
-    tp.layout();
+    // Handle multi-line wrapping for long names or specific delimiters
+    List<String> lines = [text];
+    if (text.contains(' / ')) {
+      lines = text.split(' / ').map((e) => e.trim()).toList();
+    } else if (text.length > 10 && text.contains(' ')) {
+      // Very simple heuristic for wrapping at spaces
+      final mid = text.length ~/ 2;
+      int spaceIdx = text.indexOf(' ', mid);
+      if (spaceIdx == -1) spaceIdx = text.lastIndexOf(' ', mid);
+      if (spaceIdx != -1) {
+        lines = [text.substring(0, spaceIdx), text.substring(spaceIdx + 1)];
+      }
+    }
 
-    // Scale font size if it exceeds max allowed width instead of iterative layout
-    if (tp.width > maxAllowedWidth) {
-      final scaleFactor = (maxAllowedWidth / tp.width).clamp(0.5, 1.0);
-      tp.text = TextSpan(
-        text: text,
-        style: GoogleFonts.outfit(
-          color: color,
-          fontSize: baseFontSize * scaleFactor,
-          fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-          letterSpacing: -0.5,
+    final List<TextPainter> painters = lines.map((line) {
+      final tp = TextPainter(
+        text: TextSpan(
+          text: line,
+          style: GoogleFonts.outfit(
+            color: color,
+            fontSize: baseFontSize,
+            fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+            letterSpacing: -0.2,
+          ),
         ),
+        textDirection: TextDirection.ltr,
       );
       tp.layout();
-    }
+      
+      // Proportional scaling if still too wide
+      if (tp.width > maxAllowedWidth) {
+        final scale = (maxAllowedWidth / tp.width).clamp(0.6, 1.0);
+        tp.text = TextSpan(
+          text: line,
+          style: GoogleFonts.outfit(
+            color: color,
+            fontSize: baseFontSize * scale,
+            fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+            letterSpacing: -0.2,
+          ),
+        );
+        tp.layout();
+      }
+      return tp;
+    }).toList();
 
     canvas.save();
     canvas.translate(center.dx, center.dy);
     canvas.rotate(middleAngle);
     canvas.translate(middleRadius, 0);
 
-    // Auto-flip text to be readable
-    bool shouldFlip =
-        middleAngle > math.pi / 2 && middleAngle < 3 * math.pi / 2;
+    bool shouldFlip = middleAngle > math.pi / 2 && middleAngle < 3 * math.pi / 2;
     if (shouldFlip) {
       canvas.rotate(math.pi);
-      canvas.translate(
-        -tp.width / 2,
-        -tp.height / 2,
-      ); // Center horizontally too
-    } else {
-      canvas.translate(-tp.width / 2, -tp.height / 2);
     }
-    tp.paint(canvas, Offset.zero);
+
+    // Stack lines vertically
+    final totalHeight = painters.fold<double>(0, (sum, p) => sum + p.height);
+    double currentY = -totalHeight / 2;
+
+    for (var tp in painters) {
+      tp.paint(canvas, Offset(-tp.width / 2, currentY));
+      currentY += tp.height;
+    }
+
     canvas.restore();
   }
 

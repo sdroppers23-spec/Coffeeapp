@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/supabase/supabase_provider.dart';
+import '../../features/navigation/navigation_providers.dart';
 import 'glass_container.dart';
 
 class UserProfileAvatar extends ConsumerWidget {
@@ -39,6 +40,9 @@ class UserProfileAvatar extends ConsumerWidget {
     final meta = user?.userMetadata ?? {};
     final displayName = meta['full_name'] as String? ?? 'Barista';
     final email = user?.email ?? '';
+
+    // Hide NavBar before showing bottom sheet
+    ref.read(navBarVisibleProvider.notifier).hide();
 
     showModalBottomSheet(
       context: context,
@@ -112,7 +116,10 @@ class UserProfileAvatar extends ConsumerWidget {
           ),
         );
       },
-    );
+    ).then((_) {
+      // Restore NavBar when bottom sheet is dismissed
+      ref.read(navBarVisibleProvider.notifier).show();
+    });
   }
 
   String avatarUrlFromMeta(Map<String, dynamic> meta, String? userId) {

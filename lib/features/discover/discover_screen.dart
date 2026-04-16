@@ -96,28 +96,26 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
             // Header: Title, Badge, Avatar
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              child: Stack(
-                alignment: Alignment.center,
+              child: Row(
                 children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Відкриття',
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 22,
-                          color: const Color(0xFFC8A96E),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Відкриття',
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                            color: const Color(0xFFC8A96E),
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      const SyncIndicator(),
-                    ],
+                        const SizedBox(width: 12),
+                        const SyncIndicator(),
+                      ],
+                    ),
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: UserProfileAvatar(radius: 17),
-                  ),
+                  const UserProfileAvatar(radius: 17),
                 ],
               ),
             ),

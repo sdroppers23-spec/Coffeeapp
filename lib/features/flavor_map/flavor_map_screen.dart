@@ -86,15 +86,12 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 child: Row(
                   children: [
-                    // Empty left space to balance the avatar if needed,
-                    // or just use Expanded for the center.
-                    const SizedBox(width: 34), // Matches avatar width(17*2)
                     Expanded(
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
-                            ref.t('flavor_map'),
+                            ref.t('specialty'),
                             style: GoogleFonts.poppins(
                               color: Colors.white,
                               fontSize: 20,

@@ -257,7 +257,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
 
     entry = OverlayEntry(
       builder: (context) => _FrostedCapsuleToast(
-        message: 'Натисніть ще раз щоб вийти',
+        message: 'Натисніть ще раз, щоб вийти',
         onFinished: () => entry.remove(),
       ),
     );

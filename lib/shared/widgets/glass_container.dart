@@ -41,13 +41,14 @@ class GlassContainer extends StatelessWidget {
       width: width ?? double.infinity,
       height: height,
       decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.5), // Base background to prevent square highlights
         borderRadius: BorderRadius.circular(borderRadius),
         boxShadow:
             shadows ??
             [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 10,
+                color: Colors.black.withValues(alpha: 0.2),
+                blurRadius: 15,
                 spreadRadius: 2,
               ),
             ],

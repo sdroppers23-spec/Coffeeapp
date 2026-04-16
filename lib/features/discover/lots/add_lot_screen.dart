@@ -46,6 +46,33 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   bool _isFavorite = false;
   bool _isArchived = false;
 
+  @override
+  void dispose() {
+    _tabController.dispose();
+    _roasteryController.dispose();
+    _roasteryCountryController.dispose();
+    _coffeeNameController.dispose();
+    _originCountryController.dispose();
+    _regionController.dispose();
+    _altitudeController.dispose();
+    _varietiesController.dispose();
+    _processController.dispose();
+    _flavorProfileController.dispose();
+    _scaScoreController.dispose();
+    _lotNumberController.dispose();
+    _weightController.dispose();
+    _priceController.dispose();
+    _retailPrice1kController.dispose();
+    _wholesalePrice250Controller.dispose();
+    _wholesalePrice1kController.dispose();
+    
+    // Ensure navbar is visible when leaving this screen
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(navBarVisibleProvider.notifier).show();
+    });
+    super.dispose();
+  }
+
   // Controllers to prevent cursor jumps and fix focus
   late final TextEditingController _roasteryController;
   late final TextEditingController _roasteryCountryController;
@@ -935,27 +962,27 @@ class LotNumberInputFormatter extends TextInputFormatter {
     String text = newValue.text;
     if (text.isEmpty) return newValue;
 
-    // 1. Max 6 digits aggregate
+    // 1. Max 6 digits total
     final digitsLength = text.replaceAll(RegExp(r'[^0-9]'), '').length;
     if (digitsLength > 6) return oldValue;
 
-    // 2. Prevent consecutive dots or commas
+    // 2. Prevent consecutive dots or commas (or mix)
     if (text.contains('..') || text.contains(',,') || text.contains('.,') || text.contains(',.')) {
       return oldValue;
     }
-
-    // 3. Allowed symbols: 0-9, ., ,, #, №, (, ), /, -
-    final allowedRe = RegExp(r'[^0-9\.,#№\(\)\/\-\s]');
-    text = text.replaceAll(allowedRe, '');
-
-    // 4. Double space -> dot (classic shortcut)
-    if (text.contains('  ')) {
-      text = text.replaceAll('  ', '.');
-      // Re-verify no consecutive dots after replacement
-      if (text.contains('..')) return oldValue;
+    
+    // 3. Prevent starting with dot or comma
+    if (text.startsWith('.') || text.startsWith(',')) {
+      return oldValue;
     }
 
-    return TextEditingValue(
+    // 4. Allowed symbols: 0-9, ., ,, #, №, (, ), /, -
+    final allowedRe = RegExp(r'[^0-9\.,#№\(\)\/\-\s]');
+    if (allowedRe.hasMatch(text)) {
+      text = text.replaceAll(allowedRe, '');
+    }
+
+    return newValue.copyWith(
       text: text,
       selection: TextSelection.collapsed(offset: text.length),
     );

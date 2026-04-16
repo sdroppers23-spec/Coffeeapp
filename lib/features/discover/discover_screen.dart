@@ -48,7 +48,26 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
   @override
   void dispose() {
     _pageController.dispose();
+    _reorderController.dispose();
     super.dispose();
+  }
+
+  void _scrollToActiveTab(int index) {
+    if (!_reorderController.hasClients) return;
+    
+    // We want to scroll so the active tab is at the edge.
+    // For simplicity, we just use ensureVisible or animateTo index position.
+    // Each tab is roughly 120-140px wide. 
+    // We'll calculate a target offset to center or pin it.
+    const approxTabWidth = 110.0;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final targetOffset = (index * approxTabWidth) - (screenWidth / 2) + (approxTabWidth / 2);
+    
+    _reorderController.animateTo(
+      targetOffset.clamp(0.0, _reorderController.position.maxScrollExtent),
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOutCubic,
+    );
   }
 
   String _getTabLabel(DiscoverTabType type) {
@@ -183,6 +202,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                       if (_selectedTabId != newTabId) {
                          ref.read(navBarVisibleProvider.notifier).show(); // FORCE SHOW NAVBAR
                          setState(() { _selectedTabId = newTabId; });
+                         _scrollToActiveTab(index);
                       }
                    }
                 },

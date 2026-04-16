@@ -153,10 +153,11 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
               blendMode: BlendMode.dstIn,
               child: InteractiveViewer(
                 transformationController: _transformationController,
-                minScale: 0.8,
-                maxScale: 5.0,
+                minScale: 1.0,
+                maxScale: 4.0,
                 panEnabled: _transformationController.value.getMaxScaleOnAxis() > 1.05,
                 boundaryMargin: EdgeInsets.zero,
+                constrained: true,
                 child: GestureDetector(
                   onTapDown: (details) =>
                       _handleTap(details.localPosition, currentSize),
@@ -176,7 +177,7 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
                         ),
                         child: ClipOval(
                           child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                            filter: ImageFilter.blur(sigmaX: 0.5, sigmaY: 0.5),
                             child: RepaintBoundary(
                               child: CustomPaint(
                                 size: Size(currentSize, currentSize),
@@ -457,9 +458,9 @@ class _ScaWheelPainter extends CustomPainter {
           text: line,
           style: GoogleFonts.outfit(
             color: color,
-            fontSize: baseFontSize,
-            fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-            letterSpacing: -0.2,
+            fontSize: 8.5,
+            fontWeight: bold ? FontWeight.w500 : FontWeight.w400,
+            letterSpacing: 0.2,
           ),
         ),
         textDirection: TextDirection.ltr,

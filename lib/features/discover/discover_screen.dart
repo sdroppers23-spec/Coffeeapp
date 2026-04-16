@@ -20,9 +20,10 @@ class DiscoverScreen extends ConsumerStatefulWidget {
 }
 
 class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
-  String _selectedTabId = 'encyclopedia'; // Default to Encyclopedia
+  String _selectedTabId = 'encyclopedia'; 
   final ScrollController _reorderController = ScrollController();
   late PageController _pageController;
+  final Map<String, GlobalKey> _tabKeys = {};
 
   @override
   void initState() {
@@ -52,21 +53,15 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
     super.dispose();
   }
 
-  void _scrollToActiveTab(int index) {
-    if (!_reorderController.hasClients) return;
+  void _scrollToActiveTab(String tabId) {
+    final key = _tabKeys[tabId];
+    if (key == null || key.currentContext == null) return;
     
-    // We want to scroll so the active tab is at the edge.
-    // For simplicity, we just use ensureVisible or animateTo index position.
-    // Each tab is roughly 120-140px wide. 
-    // We'll calculate a target offset to center or pin it.
-    const approxTabWidth = 110.0;
-    final screenWidth = MediaQuery.of(context).size.width;
-    final targetOffset = (index * approxTabWidth) - (screenWidth / 2) + (approxTabWidth / 2);
-    
-    _reorderController.animateTo(
-      targetOffset.clamp(0.0, _reorderController.position.maxScrollExtent),
-      duration: const Duration(milliseconds: 300),
+    Scrollable.ensureVisible(
+      key.currentContext!,
+      duration: const Duration(milliseconds: 350),
       curve: Curves.easeOutCubic,
+      alignment: 0.5, // Center the tab
     );
   }
 
@@ -162,11 +157,16 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                     final type = tabOrder[index];
                     final tabId = type.name;
                     final isSelected = _selectedTabId == tabId;
+                    
+                    // Assign or reuse key
+                    final tabKey = _tabKeys.putIfAbsent(tabId, () => GlobalKey());
 
                     return ReorderableDelayedDragStartListener(
                       key: ValueKey(tabId),
                       index: index,
-                      child: _CapsuleTab(
+                      child: Container(
+                        key: tabKey,
+                        child: _CapsuleTab(
                         label: _getTabLabel(type),
                         isSelected: isSelected,
                         onTap: () {
@@ -199,11 +199,11 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                 onPageChanged: (index) {
                    if (index >= 0 && index < tabOrder.length) {
                       final newTabId = tabOrder[index].name;
-                      if (_selectedTabId != newTabId) {
-                         ref.read(navBarVisibleProvider.notifier).show(); // FORCE SHOW NAVBAR
-                         setState(() { _selectedTabId = newTabId; });
-                         _scrollToActiveTab(index);
-                      }
+                       if (_selectedTabId != newTabId) {
+                          ref.read(navBarVisibleProvider.notifier).show(); // FORCE SHOW NAVBAR
+                          setState(() { _selectedTabId = newTabId; });
+                          _scrollToActiveTab(newTabId);
+                       }
                    }
                 },
                 itemCount: tabOrder.length,

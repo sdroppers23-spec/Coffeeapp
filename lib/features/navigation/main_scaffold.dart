@@ -84,14 +84,17 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
       onPopInvokedWithResult: (bool didPop, Object? result) async {
         if (didPop) return;
 
-        // 1. Prioritize internal navigator pop (for sub-routes in branches)
-        // We use context.canPop() and context.pop() which correctly handles root navigator vs shell
+        // 1. Prioritize internal navigator pop
         if (context.canPop()) {
           context.pop();
+          // Safety: ensure navbar shows when coming back
+          Future.delayed(const Duration(milliseconds: 100), () {
+            if (mounted) ref.read(navBarVisibleProvider.notifier).show();
+          });
           return;
         }
 
-        // 2. If not on the first tab, switch to it instead of exiting
+        // 2. If not on Discovery tab (index 0), switch to it instead of exiting
         if (widget.navigationShell.currentIndex != 0) {
           _onTap(0);
           return;

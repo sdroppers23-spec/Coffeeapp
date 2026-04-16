@@ -171,7 +171,7 @@ class AppLocalizations {
       'encyclopedia': 'Енциклопедія',
       'farmers': 'Фермери',
       'roasters': 'Обсмажчики',
-      'specialty': 'Спешелти',
+      'specialty': 'Спешелті',
       'recipes': 'Рецепти',
       'scans': 'Скан-історія',
       'badges': 'Значки',

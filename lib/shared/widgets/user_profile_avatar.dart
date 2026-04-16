@@ -51,7 +51,7 @@ class UserProfileAvatar extends ConsumerWidget {
       builder: (context) {
         return GlassContainer(
           borderRadius: 24,
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.fromLTRB(16, 24, 16, 120),
           blur: 30,
           opacity: 0.15,
           child: SafeArea(
@@ -117,8 +117,13 @@ class UserProfileAvatar extends ConsumerWidget {
         );
       },
     ).then((_) {
-      // Restore NavBar when bottom sheet is dismissed
-      ref.read(navBarVisibleProvider.notifier).show();
+      // Restore NavBar when bottom sheet is dismissed with a safe delay
+      // to avoid race conditions with screen transitions
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (ref.context.mounted) {
+          ref.read(navBarVisibleProvider.notifier).show();
+        }
+      });
     });
   }
 

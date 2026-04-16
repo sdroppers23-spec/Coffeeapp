@@ -540,12 +540,14 @@ class _InteractiveSpiderChartState
                 onPanUpdate: (details) =>
                     _handleDragUpdate(details.localPosition, center, radius),
                 onPanEnd: (_) => setState(() => _draggingLabel = null),
-                child: CustomPaint(
-                  size: Size(constraints.maxWidth, constraints.maxHeight),
-                  painter: RadarPainter(
-                    values: values,
-                    primaryColor: const Color(0xFFC8A96E),
-                    textColor: Colors.white54,
+                child: RepaintBoundary(
+                  child: CustomPaint(
+                    size: Size(constraints.maxWidth, constraints.maxHeight),
+                    painter: RadarPainter(
+                      values: values,
+                      primaryColor: const Color(0xFFC8A96E),
+                      textColor: Colors.white54,
+                    ),
                   ),
                 ),
               );
@@ -687,21 +689,27 @@ class RadarPainter extends CustomPainter {
 
       canvas.drawCircle(point, 4, Paint()..color = primaryColor);
 
+      // Handle text wrapping/splitting if too wide
+      final labelText = labels[i];
+      final maxLabelWidth = 65.0; // Restrict width to encourage wrapping
+      
       textPainter.text = TextSpan(
-        text: labels[i],
-        style: TextStyle(
+        text: labelText,
+        style: GoogleFonts.outfit( // Using Outfit for better wrapping aesthetics
           color: textColor,
           fontSize: 10,
           fontWeight: FontWeight.bold,
-          letterSpacing: 1,
+          letterSpacing: 0.5,
         ),
       );
-      textPainter.layout();
+      
+      textPainter.layout(maxWidth: maxLabelWidth);
 
       final labelR = maxRadius + 22;
       final labelX = center.dx + labelR * cos(angle);
       final labelY = center.dy + labelR * sin(angle);
 
+      // Adjust offset to center multi-line text
       textPainter.paint(
         canvas,
         Offset(labelX - textPainter.width / 2, labelY - textPainter.height / 2),
@@ -710,7 +718,20 @@ class RadarPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant RadarPainter oldDelegate) => true;
+  bool shouldRepaint(covariant RadarPainter oldDelegate) {
+    if (oldDelegate.primaryColor != primaryColor || 
+        oldDelegate.textColor != textColor ||
+        oldDelegate.values.length != values.length) {
+      return true;
+    }
+    
+    // Deep compare values
+    for (final key in values.keys) {
+      if (oldDelegate.values[key] != values[key]) return true;
+    }
+    
+    return false;
+  }
 }
 
 class _TemplateChip extends ConsumerWidget {

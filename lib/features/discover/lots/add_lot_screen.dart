@@ -508,7 +508,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         _darkCard(children: [
           _fieldRow(label: 'COFFEE NAME *', controller: _coffeeNameController),
           _divider(),
-          _fieldRow(label: 'LOT NUMBER', controller: _lotNumberController),
+          _fieldRow(label: 'LOT NUMBER', controller: _lotNumberController, keyboardType: TextInputType.number),
           _divider(),
           _fieldRow(
             label: 'SCA SCORE', 

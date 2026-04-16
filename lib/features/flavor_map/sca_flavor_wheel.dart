@@ -154,6 +154,7 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
                       child: ClipOval(
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                        child: RepaintBoundary(
                           child: CustomPaint(
                             size: Size(currentSize, currentSize),
                             painter: _ScaWheelPainter(
@@ -163,6 +164,7 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
                               ref: ref,
                             ),
                           ),
+                        ),
                         ),
                       ),
                     );
@@ -405,33 +407,40 @@ class _ScaWheelPainter extends CustomPainter {
     double baseFontSize,
     bool bold,
   ) {
-    double fontSize = baseFontSize;
     final middleAngle = startAngle + sweepAngle / 2;
     final middleRadius = (rStart + rEnd) / 2;
 
     // Calculate max allowed width (roughly the width of the arc at middleRadius)
     final maxAllowedWidth = (middleRadius * sweepAngle) * 0.9;
 
-    TextPainter tp;
-    int iterations = 0;
-    do {
-      tp = TextPainter(
-        text: TextSpan(
-          text: text,
-          style: GoogleFonts.outfit(
-            color: color,
-            fontSize: fontSize,
-            fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-            letterSpacing: -0.5,
-          ),
+    final tp = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: GoogleFonts.outfit(
+          color: color,
+          fontSize: baseFontSize,
+          fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+          letterSpacing: -0.5,
         ),
-        textDirection: TextDirection.ltr,
+      ),
+      textDirection: TextDirection.ltr,
+    );
+    tp.layout();
+
+    // Scale font size if it exceeds max allowed width instead of iterative layout
+    if (tp.width > maxAllowedWidth) {
+      final scaleFactor = (maxAllowedWidth / tp.width).clamp(0.5, 1.0);
+      tp.text = TextSpan(
+        text: text,
+        style: GoogleFonts.outfit(
+          color: color,
+          fontSize: baseFontSize * scaleFactor,
+          fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+          letterSpacing: -0.5,
+        ),
       );
       tp.layout();
-      if (tp.width <= maxAllowedWidth || fontSize < 4) break;
-      fontSize -= 0.5;
-      iterations++;
-    } while (iterations < 12);
+    }
 
     canvas.save();
     canvas.translate(center.dx, center.dy);

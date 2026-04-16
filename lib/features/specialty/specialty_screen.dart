@@ -21,7 +21,7 @@ class SpecialtyEducationScreen extends ConsumerWidget {
             return Center(child: Text(ref.t('no_articles')));
           }
           return ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            padding: const EdgeInsets.fromLTRB(16, 24, 16, 120),
             itemCount: articles.length,
             itemBuilder: (context, index) {
               final art = articles[index];

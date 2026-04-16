@@ -43,7 +43,7 @@ class FarmersBody extends ConsumerWidget {
         }
 
         return ListView.builder(
-          padding: const EdgeInsets.fromLTRB(16, 20, 16, 150),
+          padding: const EdgeInsets.fromLTRB(16, 20, 16, 220),
           physics: const BouncingScrollPhysics(),
           itemCount: farmers.length,
           itemBuilder: (context, index) {

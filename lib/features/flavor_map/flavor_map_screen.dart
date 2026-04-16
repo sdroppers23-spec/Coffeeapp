@@ -205,6 +205,17 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                       ],
                     ),
 
+                    if (_selectedFlavorKey != null && _selectedTab == 2)
+                      Positioned(
+                        left: 16,
+                        right: 16,
+                        bottom: 140, // Above bottom nav
+                        child: _FlavorInfoCard(
+                          flavorKey: _selectedFlavorKey!,
+                          color: _selectedFlavorColor!,
+                          relatedItems: _selectedFlavorItems!,
+                          onClose: () => setState(() => _selectedFlavorKey = null),
+                        ),
                       ),
 
                     if (_selectedTab == 2)

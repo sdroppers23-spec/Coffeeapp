@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:go_router/go_router.dart';
 import '../../shared/widgets/glass_container.dart';
 import '../../shared/widgets/user_profile_avatar.dart';
 import '../../core/providers/settings_provider.dart';
@@ -76,169 +77,176 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Top Bar: Matches Discover Screen Style
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Мапа смаків',
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 22,
-                          color: const Color(0xFFC8A96E),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      const SyncIndicator(),
-                    ],
-                  ),
-                  const Align(
-                    alignment: Alignment.centerRight,
-                    child: UserProfileAvatar(radius: 17),
-                  ),
-                ],
-              ),
-            ),
-
-            // Internal Tab Bar Segmented Control: Matches Screenshot
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1D1B1A), // Dark brown matte
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: _TabOption(
-                      icon: Icons.radar,
-                      label: 'Профіль',
-                      isSelected: _selectedTab == 0,
-                      onTap: () => _setTab(0),
-                    ),
-                  ),
-                  Expanded(
-                    child: _TabOption(
-                      icon: Icons.public,
-                      label: 'Сфера',
-                      isSelected: _selectedTab == 1,
-                      onTap: () => _setTab(1),
-                    ),
-                  ),
-                  Expanded(
-                    child: _TabOption(
-                      icon: Icons.pie_chart_outline,
-                      label: 'Коло смаків',
-                      isSelected: _selectedTab == 2,
-                      onTap: () => _setTab(2),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // Content Area
-            Expanded(
-              child: Stack(
-                children: [
-                  IndexedStack(
-                    index: _selectedTab,
-                    children: [
-                      // Tab 0: Profile - Matching Screenshot
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF171312),
-                            borderRadius: BorderRadius.circular(40),
-                            border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.05),
-                            ),
-                          ),
-                          child: Column(
-                            children: [
-                              const SizedBox(height: 32),
-                              Text(
-                                'СЕНСОРНИЙ ПРОФІЛЬ',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xFFC8A96E),
-                                  letterSpacing: 1.5,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              const Expanded(child: InteractiveSpiderChart()),
-                              const SizedBox(height: 32),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      // Tab 1: Sphere
-                      const TerroirGlobe(),
-
-                      // Tab 2: Flavor Wheel
-                      Column(
-                        children: [
-                          Expanded(
-                            child: ScaFlavorWheel(
-                              onSelect: _onFlavorSelect,
-                            ),
-                          ),
-                          const SizedBox(height: 120),
-                        ],
-                      ),
-                    ],
-                  ),
-
-                  // Overlay Info Card if a flavor is selected
-                  if (_selectedFlavorKey != null && _selectedTab == 2)
-                    Positioned(
-                      left: 16,
-                      right: 16,
-                      bottom: 140, // Above bottom nav
-                      child: _FlavorInfoCard(
-                        flavorKey: _selectedFlavorKey!,
-                        color: _selectedFlavorColor!,
-                        relatedItems: _selectedFlavorItems!,
-                        onClose: () => setState(() => _selectedFlavorKey = null),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-
-            // Simple Legend at the bottom of the stack or column as seen in screenshot
-            if (_selectedTab == 0)
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        context.pop();
+      },
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+          child: Column(
+            children: [
+              // Top Bar: Matches Discover Screen Style
               Padding(
-                padding: const EdgeInsets.only(top: 24, bottom: 140),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                child: Stack(
+                  alignment: Alignment.center,
                   children: [
-                    _LegendItem(color: const Color(0xFFFFEB3B), label: 'Кислотність'),
-                    const SizedBox(width: 20),
-                    _LegendItem(color: const Color(0xFF8D6E63), label: 'Тіло'),
-                    const SizedBox(width: 20),
-                    _LegendItem(color: const Color(0xFFE91E63), label: 'Солодкість'),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Мапа смаків',
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                            color: const Color(0xFFC8A96E),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        const SyncIndicator(),
+                      ],
+                    ),
+                    const Align(
+                      alignment: Alignment.centerRight,
+                      child: UserProfileAvatar(radius: 17),
+                    ),
                   ],
                 ),
               ),
-          ],
+
+              // Internal Tab Bar Segmented Control: Matches Screenshot
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1D1B1A), // Dark brown matte
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _TabOption(
+                        icon: Icons.radar,
+                        label: 'Профіль',
+                        isSelected: _selectedTab == 0,
+                        onTap: () => _setTab(0),
+                      ),
+                    ),
+                    Expanded(
+                      child: _TabOption(
+                        icon: Icons.public,
+                        label: 'Сфера',
+                        isSelected: _selectedTab == 1,
+                        onTap: () => _setTab(1),
+                      ),
+                    ),
+                    Expanded(
+                      child: _TabOption(
+                        icon: Icons.pie_chart_outline,
+                        label: 'Коло смаків',
+                        isSelected: _selectedTab == 2,
+                        onTap: () => _setTab(2),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              // Content Area
+              Expanded(
+                child: Stack(
+                  children: [
+                    IndexedStack(
+                      index: _selectedTab,
+                      children: [
+                        // Tab 0: Profile - Matching Screenshot
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF171312),
+                              borderRadius: BorderRadius.circular(40),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.05),
+                              ),
+                            ),
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 32),
+                                Text(
+                                  'СЕНСОРНИЙ ПРОФІЛЬ',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFFC8A96E),
+                                    letterSpacing: 1.5,
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                const Expanded(child: InteractiveSpiderChart()),
+                                const SizedBox(height: 32),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        // Tab 1: Sphere
+                        const TerroirGlobe(),
+
+                        // Tab 2: Flavor Wheel
+                        Column(
+                          children: [
+                            Expanded(
+                              child: ScaFlavorWheel(
+                                onSelect: _onFlavorSelect,
+                              ),
+                            ),
+                            const SizedBox(height: 120),
+                          ],
+                        ),
+                      ],
+                    ),
+
+                    // Overlay Info Card if a flavor is selected
+                    if (_selectedFlavorKey != null && _selectedTab == 2)
+                      Positioned(
+                        left: 16,
+                        right: 16,
+                        bottom: 140, // Above bottom nav
+                        child: _FlavorInfoCard(
+                          flavorKey: _selectedFlavorKey!,
+                          color: _selectedFlavorColor!,
+                          relatedItems: _selectedFlavorItems!,
+                          onClose: () => setState(() => _selectedFlavorKey = null),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+
+              // Simple Legend at the bottom of the stack or column as seen in screenshot
+              if (_selectedTab == 0)
+                Padding(
+                  padding: const EdgeInsets.only(top: 24, bottom: 140),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _LegendItem(color: const Color(0xFFFFEB3B), label: 'Кислотність'),
+                      const SizedBox(width: 20),
+                      _LegendItem(color: const Color(0xFF8D6E63), label: 'Тіло'),
+                      const SizedBox(width: 20),
+                      _LegendItem(color: const Color(0xFFE91E63), label: 'Солодкість'),
+                    ],
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

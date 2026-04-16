@@ -42,14 +42,11 @@ class SyncStatusData {
 enum SyncState { idle, syncing, success, error, offline }
 
 class SyncStatusNotifier extends Notifier<SyncStatusData> {
-  List<ConnectivityResult>? _lastConnectivity;
   bool _hasInitializedSubscriptions = false;
   bool _hasPerformedSessionSync = false;
 
   @override
   SyncStatusData build() {
-    // Listen to connectivity changes
-    final conn = ref.watch(connectivityProvider).value;
     final isOnline = ref.watch(isOnlineProvider);
     final prefs = ref.watch(sharedPreferencesProvider);
 
@@ -58,19 +55,16 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
       _hasInitializedSubscriptions = true;
       Future.microtask(() {
         _syncService.subscribeToRealtimeUpdates();
-        // Automatically invalidate providers when a real-time record is updated
         _syncService.dataUpdateStream.listen((_) => invalidateData());
       });
     }
 
     // 2. Continuous Sync Logic
-    // Version Guard (Cache Buster) still exists for major schema changes
     const resyncKey = 'force_resync_v20_unified_content'; 
     final hasResyncedVersion = prefs.getBool(resyncKey) ?? false;
 
     if (isOnline) {
       if (!hasResyncedVersion) {
-        // Force full wipe/sync for version update
         Future.microtask(() async {
           await syncEverything(force: true);
           await prefs.setBool(resyncKey, true);
@@ -78,25 +72,35 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
           debugPrint('SYNC: Version Guard completed.');
         });
       } else if (!_hasPerformedSessionSync) {
-        // Normal session-start sync (gentle)
         _hasPerformedSessionSync = true;
         Future.microtask(() => pullFromCloud());
         debugPrint('SYNC: Standard session-start sync triggered.');
       }
     }
 
-    // 3. Connectivity Recovery Sync
-    if (_lastConnectivity != null &&
-        _lastConnectivity!.contains(ConnectivityResult.none) &&
-        conn != null && !conn.contains(ConnectivityResult.none)) {
-      Future.microtask(() => pullFromCloud());
-    }
+    // 3. Connectivity Recovery Sync (via ref.listen for side effects)
+    ref.listen(connectivityProvider, (previous, next) {
+      final prevList = previous?.value;
+      final nextList = next.value;
 
-    _lastConnectivity = conn;
+      final wasOffline = prevList == null || prevList.contains(ConnectivityResult.none);
+      final isNowOnline = nextList != null && !nextList.contains(ConnectivityResult.none);
+
+      if (wasOffline && isNowOnline && _hasPerformedSessionSync) {
+        debugPrint('SYNC: Connectivity recovered. Triggering sync...');
+        Future.microtask(() => syncEverything());
+      }
+    });
 
     if (!isOnline) {
       return SyncStatusData(state: SyncState.offline, lastMessage: 'OFFLINE MODE');
     }
+    
+    // For initial return, we use idle or syncing based on _hasPerformedSessionSync
+    if (!_hasPerformedSessionSync && isOnline) {
+      return SyncStatusData(state: SyncState.syncing, lastMessage: 'Initializing...');
+    }
+    
     return SyncStatusData(state: SyncState.idle);
   }
 

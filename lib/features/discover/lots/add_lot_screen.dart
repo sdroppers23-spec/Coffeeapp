@@ -243,28 +243,35 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   // ─── Build ────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF0A0908),
-      body: SafeArea(
-        child: Column(
-          children: [
-            _buildHeader(),
-            _buildTabBar(),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  _buildRoasteryTab(),
-                  _buildCoffeeTab(),
-                  _buildSensoryTab(),
-                ],
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        context.pop();
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFF0A0908),
+        body: SafeArea(
+          child: Column(
+            children: [
+              _buildHeader(),
+              _buildTabBar(),
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    _buildRoasteryTab(),
+                    _buildCoffeeTab(),
+                    _buildSensoryTab(),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: _buildSaveFab(),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: _buildSaveFab(),
     );
   }
 
@@ -881,6 +888,11 @@ class ScaScoreInputFormatter extends TextInputFormatter {
     // Rule: First digit must be 1, 8, or 9
     final firstChar = text[0];
     if (firstChar != '1' && firstChar != '8' && firstChar != '9') {
+      return oldValue;
+    }
+
+    // NEW Rule: Prevent dot after the first digit (e.g., prevent "8.")
+    if (text.length >= 2 && text[1] == '.') {
       return oldValue;
     }
 

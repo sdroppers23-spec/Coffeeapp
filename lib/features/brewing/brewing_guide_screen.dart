@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:go_router/go_router.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import 'method_tile.dart';
@@ -19,8 +20,14 @@ class BrewingGuideScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final recipesAsync = ref.watch(brewingRecipesProvider);
 
-    return Scaffold(
-      backgroundColor: const Color(0xFF0F0F0F),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        context.pop();
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFF0F0F0F),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -80,6 +87,7 @@ class BrewingGuideScreen extends ConsumerWidget {
           );
         },
       ),
-    );
-  }
+    ),
+  );
+}
 }

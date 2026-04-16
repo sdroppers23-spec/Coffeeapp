@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../core/supabase/supabase_provider.dart';
@@ -74,8 +75,20 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         meta['avatar_url'] as String? ??
         'https://api.dicebear.com/7.x/adventurer/png?seed=${user.id}';
 
-    return Scaffold(
-      appBar: AppBar(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        // Profile is a root-level sibling pushed onto the stack
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          // If for some reason we can't pop, go back to specialty_hub
+          context.go('/specialty_hub');
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
         title: Text(
           ref.t('profile'),
           style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
@@ -251,8 +264,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }
 
 class _StatColumn extends StatelessWidget {

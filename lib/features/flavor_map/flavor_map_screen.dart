@@ -147,7 +147,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                 ),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 4),
 
               // Content Area
               Expanded(

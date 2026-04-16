@@ -474,7 +474,10 @@ class MyLotListCard extends ConsumerWidget {
 
       return Padding(
         padding: const EdgeInsets.only(bottom: 12),
-        child: dismissibleCard,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: dismissibleCard,
+        ),
       );
   }
 }

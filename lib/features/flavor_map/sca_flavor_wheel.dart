@@ -147,7 +147,7 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
                     Colors.black,
                     Colors.black.withValues(alpha: 0.0),
                   ],
-                  stops: const [0.0, 0.1, 0.9, 1.0],
+                  stops: const [0.0, 0.04, 0.96, 1.0],
                 ).createShader(bounds);
               },
               blendMode: BlendMode.dstIn,
@@ -322,8 +322,8 @@ class _ScaWheelPainter extends CustomPainter {
             r1,
             r2,
             Colors.white,
-            9,
-            false,
+            11,
+            true,
           );
         }
 
@@ -366,8 +366,8 @@ class _ScaWheelPainter extends CustomPainter {
                 r2,
                 r3,
                 Colors.white.withValues(alpha: 0.9),
-                7,
-                false,
+                11,
+                true,
               );
             }
           }
@@ -466,9 +466,9 @@ class _ScaWheelPainter extends CustomPainter {
       );
       tp.layout();
       
-      // Proportional scaling if still too wide
+      // Proportional scaling if still too wide (minimized range to maintain uniformity)
       if (tp.width > maxAllowedWidth) {
-        final scale = (maxAllowedWidth / tp.width).clamp(0.6, 1.0);
+        final scale = (maxAllowedWidth / tp.width).clamp(0.9, 1.0);
         tp.text = TextSpan(
           text: line,
           style: GoogleFonts.outfit(

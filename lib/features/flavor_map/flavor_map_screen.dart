@@ -2,7 +2,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:go_router/go_router.dart';
 import '../../shared/widgets/glass_container.dart';
 import '../../shared/widgets/user_profile_avatar.dart';
 import '../../core/providers/settings_provider.dart';
@@ -243,7 +242,6 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
             ],
           ),
         ),
-      ),
     );
   }
 }

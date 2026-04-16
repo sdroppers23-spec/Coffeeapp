@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'sca_flavor_wheel_data.dart';
+import 'wheel_admin_provider.dart';
 
 class ScaFlavorWheel extends ConsumerStatefulWidget {
   final double size;
@@ -186,6 +187,7 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
                                   animationValue: _controller.value,
                                   selectedCategory: _selectedCategory,
                                   ref: ref,
+                                  adminSettings: ref.watch(wheelAdminProvider),
                                 ),
                               ),
                             ),
@@ -209,12 +211,14 @@ class _ScaWheelPainter extends CustomPainter {
   final double animationValue;
   final String? selectedCategory;
   final WidgetRef ref;
+  final WheelSettings adminSettings;
 
   _ScaWheelPainter({
     required this.data,
     required this.animationValue,
     this.selectedCategory,
     required this.ref,
+    required this.adminSettings,
   });
 
   @override
@@ -364,11 +368,14 @@ class _ScaWheelPainter extends CustomPainter {
                 center,
                 noteStartAngle,
                 noteSweepAngle,
-                r2,
-                r3,
+                middleRadius,
+                rStart,
+                rEnd,
                 Colors.white.withValues(alpha: 0.9),
-                11,
+                adminSettings.fontSize,
                 true,
+                fontFamily: adminSettings.fontFamily,
+                fontWeight: adminSettings.fontWeight,
               );
             }
           }
@@ -430,10 +437,24 @@ class _ScaWheelPainter extends CustomPainter {
     double rEnd,
     Color color,
     double baseFontSize,
-    bool bold,
-  ) {
+    bool bold, {
+    String? fontFamily,
+    int? fontWeight,
+  }) {
     final middleAngle = startAngle + sweepAngle / 2;
     final middleRadius = (rStart + rEnd) / 2;
+
+    const weights = [
+      FontWeight.w100, FontWeight.w200, FontWeight.w300,
+      FontWeight.w400, FontWeight.w500, FontWeight.w600,
+      FontWeight.w700, FontWeight.w800, FontWeight.w900,
+    ];
+
+    final actualFontWeight = fontWeight == null
+        ? (bold ? FontWeight.w500 : FontWeight.w400)
+        : weights[(fontWeight ~/ 100 - 1).clamp(0, 8)];
+
+    final actualFontFamily = fontFamily ?? 'Outfit';
 
     // Calculate max allowed width (roughly the width of the arc at middleRadius)
     final maxAllowedWidth = (middleRadius * sweepAngle) * 0.85;
@@ -456,10 +477,11 @@ class _ScaWheelPainter extends CustomPainter {
       final tp = TextPainter(
         text: TextSpan(
           text: line,
-          style: GoogleFonts.outfit(
+          style: GoogleFonts.getFont(
+            actualFontFamily,
             color: color,
-            fontSize: 8.5,
-            fontWeight: bold ? FontWeight.w500 : FontWeight.w400,
+            fontSize: baseFontSize,
+            fontWeight: actualFontWeight,
             letterSpacing: 0.2,
           ),
         ),
@@ -472,10 +494,11 @@ class _ScaWheelPainter extends CustomPainter {
         final scale = (maxAllowedWidth / tp.width).clamp(0.9, 1.0);
         tp.text = TextSpan(
           text: line,
-          style: GoogleFonts.outfit(
+          style: GoogleFonts.getFont(
+            actualFontFamily,
             color: color,
             fontSize: baseFontSize * scale,
-            fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+            fontWeight: actualFontWeight,
             letterSpacing: -0.2,
           ),
         );
@@ -510,6 +533,9 @@ class _ScaWheelPainter extends CustomPainter {
   bool shouldRepaint(covariant _ScaWheelPainter oldDelegate) {
     return oldDelegate.animationValue != animationValue ||
         oldDelegate.selectedCategory != selectedCategory ||
-        oldDelegate.data != data;
+        oldDelegate.data != data ||
+        oldDelegate.adminSettings.fontSize != adminSettings.fontSize ||
+        oldDelegate.adminSettings.fontWeight != adminSettings.fontWeight ||
+        oldDelegate.adminSettings.fontFamily != adminSettings.fontFamily;
   }
 }

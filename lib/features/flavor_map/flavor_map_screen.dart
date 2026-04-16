@@ -7,6 +7,7 @@ import '../../shared/widgets/user_profile_avatar.dart';
 import '../../core/providers/settings_provider.dart';
 import 'terroir_globe.dart';
 import 'sca_flavor_wheel.dart';
+import 'wheel_admin_provider.dart';
 import '../../shared/widgets/sync_indicator.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../navigation/navigation_providers.dart';
@@ -204,18 +205,25 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                       ],
                     ),
 
-                    // Overlay Info Card if a flavor is selected
-                    if (_selectedFlavorKey != null && _selectedTab == 2)
+                      ),
+
+                    if (_selectedTab == 2)
+                      Positioned(
+                        right: 16,
+                        bottom: 140,
+                        child: FloatingActionButton.small(
+                          onPressed: () => ref.read(wheelAdminProvider.notifier).toggleAdmin(),
+                          backgroundColor: const Color(0xFFC8A96E),
+                          child: const Icon(Icons.settings, color: Colors.black),
+                        ),
+                      ),
+                    
+                    if (_selectedTab == 2 && ref.watch(wheelAdminProvider).showAdmin)
                       Positioned(
                         left: 16,
                         right: 16,
-                        bottom: 140, // Above bottom nav
-                        child: _FlavorInfoCard(
-                          flavorKey: _selectedFlavorKey!,
-                          color: _selectedFlavorColor!,
-                          relatedItems: _selectedFlavorItems!,
-                          onClose: () => setState(() => _selectedFlavorKey = null),
-                        ),
+                        bottom: 140,
+                        child: _WheelAdminPanel(),
                       ),
                   ],
                 ),
@@ -263,6 +271,154 @@ class _LegendItem extends StatelessWidget {
         Text(
           label,
           style: GoogleFonts.poppins(color: Colors.white70, fontSize: 12),
+        ),
+      ],
+    );
+  }
+}
+
+class _WheelAdminPanel extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(wheelAdminProvider);
+    final notifier = ref.read(wheelAdminProvider.notifier);
+
+    return GlassContainer(
+      padding: const EdgeInsets.all(16),
+      borderRadius: 24,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'WHEEL TUNER [TEMP]',
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFFC8A96E),
+                ),
+              ),
+              IconButton(
+                onPressed: () => notifier.toggleAdmin(),
+                icon: const Icon(Icons.close, size: 16, color: Colors.white54),
+                constraints: const BoxConstraints(),
+                padding: EdgeInsets.zero,
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          
+          // Font Family
+          _buildFontSelector(settings, notifier),
+          const SizedBox(height: 12),
+
+          // Font Size
+          _buildNumericSlider(
+            label: 'FONT SIZE',
+            value: settings.fontSize,
+            min: 6.0,
+            max: 20.0,
+            onChanged: (v) => notifier.updateFontSize(v),
+          ),
+          const SizedBox(height: 12),
+
+          // Font Weight
+          _buildNumericSlider(
+            label: 'WEIGHT',
+            value: settings.fontWeight.toDouble(),
+            min: 100,
+            max: 900,
+            divisions: 8,
+            onChanged: (v) => notifier.updateFontWeight(v.round()),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFontSelector(WheelSettings settings, WheelAdminNotifier notifier) {
+    final fonts = ['Outfit', 'Poppins', 'Inter', 'Cormorant Garamond', 'Roboto', 'Montserrat'];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'FONT FAMILY',
+          style: GoogleFonts.poppins(fontSize: 8, color: Colors.white54, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 4),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: DropdownButton<String>(
+            value: settings.fontFamily,
+            isExpanded: true,
+            dropdownColor: const Color(0xFF1D1B1A),
+            underline: const SizedBox(),
+            items: fonts.map((f) => DropdownMenuItem(
+              value: f,
+              child: Text(f, style: GoogleFonts.getFont(f, color: Colors.white, fontSize: 13)),
+            )).toList(),
+            onChanged: (v) => v != null ? notifier.updateFontFamily(v) : null,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNumericSlider({
+    required String label,
+    required double value,
+    required double min,
+    required double max,
+    int? divisions,
+    required ValueChanged<double> onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              label,
+              style: GoogleFonts.poppins(fontSize: 8, color: Colors.white54, fontWeight: FontWeight.bold),
+            ),
+            Container(
+              width: 50,
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                value.toStringAsFixed(1),
+                textAlign: TextAlign.center,
+                style: GoogleFonts.outfit(color: const Color(0xFFC8A96E), fontSize: 12, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+        SliderTheme(
+          data: SliderThemeData(
+            thumbColor: const Color(0xFFC8A96E),
+            activeTrackColor: const Color(0xFFC8A96E),
+            inactiveTrackColor: Colors.white12,
+            trackHeight: 2,
+            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+            overlayShape: const RoundSliderOverlayShape(overlayRadius: 10),
+          ),
+          child: Slider(
+            value: value,
+            min: min,
+            max: max,
+            divisions: divisions,
+            onChanged: onChanged,
+          ),
         ),
       ],
     );

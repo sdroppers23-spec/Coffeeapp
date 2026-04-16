@@ -45,13 +45,7 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
   Widget build(BuildContext context) {
     final asyncOrigins = ref.watch(allOriginsProvider);
 
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
-        context.pop();
-      },
-      child: Scaffold(
+    return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: PremiumAppBar(
           title: ref.t('compare_coffees'),
@@ -188,8 +182,7 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
             },
           ),
         ),
-      ),
-    );
+      );
   }
 
   String _getFlavors(LocalizedBeanDto entry) {

@@ -51,13 +51,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
-        context.pop();
-      },
-      child: Scaffold(
+    return Scaffold(
         backgroundColor: Colors.black, // Solid black matching screenshot
         appBar: AppBar(
         backgroundColor: Colors.black,
@@ -337,5 +331,4 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       ),
     );
   }
-
 }

@@ -85,10 +85,9 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
         if (didPop) return;
 
         // 1. Prioritize internal navigator pop (for sub-routes in branches)
-        // If we are here, it means GoRouter didn't catch a pop.
-        
-        if (Navigator.of(context).canPop()) {
-          Navigator.of(context).pop();
+        // We use context.canPop() and context.pop() which correctly handles root navigator vs shell
+        if (context.canPop()) {
+          context.pop();
           return;
         }
 

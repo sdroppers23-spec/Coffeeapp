@@ -77,13 +77,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
-        context.pop();
-      },
-      child: Scaffold(
+    return Scaffold(
         backgroundColor: Colors.transparent,
         body: SafeArea(
           child: Column(
@@ -91,28 +85,29 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
               // Top Bar: Matches Discover Screen Style
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                child: Stack(
-                  alignment: Alignment.center,
+                child: Row(
                   children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Мапа смаків',
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
-                            color: const Color(0xFFC8A96E),
+                    // Empty left space to balance the avatar if needed,
+                    // or just use Expanded for the center.
+                    const SizedBox(width: 34), // Matches avatar width(17*2)
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            ref.t('flavor_map'),
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        const SyncIndicator(),
-                      ],
+                          const SizedBox(width: 8),
+                          const SyncIndicator(),
+                        ],
+                      ),
                     ),
-                    const Align(
-                      alignment: Alignment.centerRight,
-                      child: UserProfileAvatar(radius: 17),
-                    ),
+                    const UserProfileAvatar(radius: 17),
                   ],
                 ),
               ),

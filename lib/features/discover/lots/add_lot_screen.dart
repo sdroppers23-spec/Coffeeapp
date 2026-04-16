@@ -248,13 +248,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   // ─── Build ────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
-        context.pop();
-      },
-      child: Scaffold(
+    return Scaffold(
         backgroundColor: const Color(0xFF0A0908),
         body: SafeArea(
           child: Column(
@@ -276,8 +270,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: _buildSaveFab(),
-      ),
-    );
+      );
   }
 
   // ─── Header ───────────────────────────────────────────────────────

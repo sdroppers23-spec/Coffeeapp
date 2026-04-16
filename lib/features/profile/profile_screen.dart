@@ -75,19 +75,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         meta['avatar_url'] as String? ??
         'https://api.dicebear.com/7.x/adventurer/png?seed=${user.id}';
 
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
-        // Profile is a root-level sibling pushed onto the stack
-        if (context.canPop()) {
-          context.pop();
-        } else {
-          // If for some reason we can't pop, go back to specialty_hub
-          context.go('/specialty_hub');
-        }
-      },
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(
         title: Text(
           ref.t('profile'),
@@ -264,9 +252,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ],
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }
 
 class _StatColumn extends StatelessWidget {

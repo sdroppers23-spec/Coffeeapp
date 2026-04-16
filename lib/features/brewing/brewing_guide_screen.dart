@@ -40,13 +40,7 @@ class _BrewingGuideScreenState extends ConsumerState<BrewingGuideScreen> {
   Widget build(BuildContext context) {
     final recipesAsync = ref.watch(brewingRecipesProvider);
 
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
-        context.pop();
-      },
-      child: Scaffold(
+    return Scaffold(
         backgroundColor: const Color(0xFF0F0F0F),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -107,7 +101,6 @@ class _BrewingGuideScreenState extends ConsumerState<BrewingGuideScreen> {
           );
         },
       ),
-    ),
-  );
-}
+    );
+  }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
+import '../navigation/navigation_providers.dart';
 import '../../core/supabase/supabase_provider.dart';
 import '../../core/providers/settings_provider.dart';
 // import '../../shared/widgets/premium_background.dart'; // Removed unused import
@@ -15,6 +16,22 @@ class SettingsScreen extends ConsumerStatefulWidget {
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        ref.read(navBarVisibleProvider.notifier).hide();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    ref.read(navBarVisibleProvider.notifier).show();
+    super.dispose();
+  }
 
   Future<void> _signOut() async {
     setState(() => _isLoading = true);

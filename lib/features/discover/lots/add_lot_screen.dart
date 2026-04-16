@@ -12,6 +12,7 @@ import '../../../core/database/database_provider.dart';
 import '../../../core/providers/settings_provider.dart';
 import '../../../shared/widgets/sync_indicator.dart';
 import '../../../shared/widgets/pressable_scale.dart';
+import '../../navigation/navigation_providers.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/dtos.dart';
 import 'lots_providers.dart';
@@ -75,6 +76,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) ref.read(navBarVisibleProvider.notifier).hide();
+    });
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(() => setState(() {}));
 
@@ -104,6 +108,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
 
   @override
   void dispose() {
+    ref.read(navBarVisibleProvider.notifier).show();
     _tabController.dispose();
     _roasteryController.dispose();
     _roasteryCountryController.dispose();

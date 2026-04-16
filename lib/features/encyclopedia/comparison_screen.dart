@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 
+import '../navigation/navigation_providers.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/database/dtos.dart';
@@ -25,6 +26,20 @@ class ComparisonScreen extends ConsumerStatefulWidget {
 class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
   LocalizedBeanDto? _coffeeA;
   LocalizedBeanDto? _coffeeB;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) ref.read(navBarVisibleProvider.notifier).hide();
+    });
+  }
+
+  @override
+  void dispose() {
+    ref.read(navBarVisibleProvider.notifier).show();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

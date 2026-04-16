@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
+import '../navigation/navigation_providers.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import 'method_tile.dart';
@@ -13,11 +14,30 @@ final brewingRecipesProvider = FutureProvider<List<BrewingRecipeDto>>((ref) asyn
 });
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
-class BrewingGuideScreen extends ConsumerWidget {
+class BrewingGuideScreen extends ConsumerStatefulWidget {
   const BrewingGuideScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<BrewingGuideScreen> createState() => _BrewingGuideScreenState();
+}
+
+class _BrewingGuideScreenState extends ConsumerState<BrewingGuideScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) ref.read(navBarVisibleProvider.notifier).hide();
+    });
+  }
+
+  @override
+  void dispose() {
+    ref.read(navBarVisibleProvider.notifier).show();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final recipesAsync = ref.watch(brewingRecipesProvider);
 
     return PopScope(

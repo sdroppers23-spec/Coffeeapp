@@ -126,7 +126,7 @@ class AppTheme {
           fontWeight: FontWeight.w600,
         ),
       ),
-      tabBarTheme: TabBarTheme(
+      tabBarTheme: TabBarThemeData(
         labelColor: isDark ? Colors.black : Colors.white,
         unselectedLabelColor: isDark ? Colors.white70 : textSecondary,
         indicatorSize: TabBarIndicatorSize.tab,

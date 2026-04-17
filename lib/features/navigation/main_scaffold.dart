@@ -77,6 +77,8 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final navVisible = ref.watch(navBarVisibleProvider);
 
     return PopScope(

@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vibration/vibration.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import '../../core/l10n/app_localizations.dart';
 import 'glass_container.dart';
 import 'sensory_radar_chart.dart';
-import '../../features/brewing/custom_recipe_form.dart';
+import '../../features/brewing/widgets/custom_recipe_card.dart';
 
 class LotDetailView extends ConsumerStatefulWidget {
-  final EncyclopediaEntry entry;
-  const LotDetailView({super.key, required this.entry});
+  final CoffeeLotDto? lot;
+  final EncyclopediaEntry? entry;
+
+  const LotDetailView({
+    super.key,
+    this.lot,
+    this.entry,
+  }) : assert(lot != null || entry != null, 'Either lot or entry must be provided');
 
   @override
   ConsumerState<LotDetailView> createState() => _LotDetailViewState();
@@ -35,522 +43,308 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
 
   @override
   Widget build(BuildContext context) {
+    final isUk = LocaleService.currentLocale == 'uk';
     final theme = Theme.of(context);
-    final gold = const Color(0xFFC8A96E);
+    
+    // Normalize data from either lot or entry
+    final String coffeeName = widget.lot?.coffeeName ?? widget.entry?.fullDisplayName ?? 'Unnamed';
+    final String roasteryName = widget.lot?.roasteryName ?? 'Specialty Roaster';
+    final String? imageUrl = widget.lot?.brandId != null ? null : widget.entry?.imageUrl;
+    final Map<String, dynamic> points = widget.lot?.sensoryPoints ?? widget.entry?.sensoryPoints ?? {};
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // ── Header ───────────────────────────────────────────────────────────
-        _buildHeader(theme),
-        const SizedBox(height: 16),
-
-        // ── Tabs Header ──────────────────────────────────────────────────────
-        TabBar(
-          controller: _tabController,
-          indicatorColor: gold,
-          labelColor: gold,
-          unselectedLabelColor: Colors.white38,
-          labelStyle: GoogleFonts.outfit(
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1,
-          ),
-          tabs: [
-            Tab(text: ref.t('description').toUpperCase()),
-            Tab(text: ref.t('sensory').toUpperCase()),
-            Tab(text: ref.t('recipes').toUpperCase()),
-          ],
-        ),
-
-        const SizedBox(height: 20),
-
-        // ── Tab Views ────────────────────────────────────────────────────────
-        SizedBox(
-          height: 500, // Fixed height for content or auto-expanding
-          child: TabBarView(
-            controller: _tabController,
-            children: [
-              _buildDescriptionTab(theme),
-              _buildSensoryTab(theme),
-              _buildRecipesTab(theme),
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              theme.colorScheme.surface,
+              Colors.black,
             ],
           ),
         ),
-      ],
-    );
-  }
-
-  Widget _buildHeader(ThemeData theme) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-          decoration: BoxDecoration(
-            color: const Color(0xFF88DDEE).withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Text(
-            widget.entry.processMethod.toUpperCase(),
-            style: GoogleFonts.outfit(
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFF88DDEE),
-              letterSpacing: 1,
-            ),
-          ),
-        ),
-        const SizedBox(height: 8),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Column(
           children: [
-            Expanded(
-              child: Text(
-                widget.entry.fullDisplayName.toUpperCase(),
-                style: GoogleFonts.outfit(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
-                  height: 1.1,
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            _ScaBadge(score: widget.entry.scaScore, theme: theme),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDescriptionTab(ThemeData theme) {
-    final pTable = widget.entry.pricing;
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          GlassContainer(
-            padding: const EdgeInsets.all(16),
-            opacity: 0.04,
-            child: Column(
+            // Top Image Area
+            Stack(
               children: [
-                _SpecRow(
-                  label1: ref.t('varieties'),
-                  value1: widget.entry.varieties,
-                  label2: ref.t('altitude'),
-                  value2:
-                      '${widget.entry.altitudeMin ?? '?'}-${widget.entry.altitudeMax ?? '?'} m',
+                Container(
+                  height: 320,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    image: imageUrl != null
+                        ? DecorationImage(
+                            image: NetworkImage(imageUrl),
+                            fit: BoxFit.cover,
+                          )
+                        : null,
+                    color: Colors.black12,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withValues(alpha: 0.2),
+                          Colors.black,
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-                const Divider(
-                  height: 24,
-                  thickness: 0.5,
-                  color: Colors.white10,
+                Positioned(
+                  top: 50,
+                  left: 20,
+                  child: GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.black45,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white10),
+                      ),
+                      child: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
+                    ),
+                  ),
                 ),
-                _SpecRow(
-                  label1: "LOT #",
-                  value1: widget.entry.lotNumber,
-                  label2: ref.t('roast_level'),
-                  value2: widget.entry.roastLevel,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 24),
-          _SectionTitle(title: ref.t('pricing'), theme: theme),
-          const SizedBox(height: 12),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                pTable['retail_250']?.toString() ?? '?',
-                style: GoogleFonts.outfit(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(width: 4),
-              Text(
-                "₴",
-                style: GoogleFonts.outfit(fontSize: 24, color: Colors.white),
-              ),
-              const SizedBox(width: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+                if (widget.lot != null)
+                  Positioned(
+                    top: 50,
+                    right: 20,
+                    child: GestureDetector(
+                      onTap: () {
+                        Vibration.vibrate(duration: 50);
+                        // Using go_router to navigate to edit lot
+                        context.push('/edit_lot', extra: widget.lot);
+                      },
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                          shape: BoxShape.circle,
+                          border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.3)),
+                        ),
+                        child: Icon(Icons.edit_rounded, color: theme.colorScheme.primary, size: 20),
+                      ),
+                    ),
+                  ),
+                Positioned(
+                  bottom: 20,
+                  left: 20,
+                  right: 20,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        pTable['wholesale_1k']?.toString() ?? '?',
+                        roasteryName.toUpperCase(),
                         style: GoogleFonts.outfit(
-                          fontSize: 18,
+                          color: theme.colorScheme.primary.withValues(alpha: 0.6),
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white38,
+                          letterSpacing: 2,
                         ),
                       ),
-                      const SizedBox(width: 2),
+                      const SizedBox(height: 4),
                       Text(
-                        "₴",
-                        style: GoogleFonts.outfit(
-                          fontSize: 14,
-                          color: Colors.white38,
+                        coffeeName,
+                        style: GoogleFonts.cormorantGaramond(
+                          color: Colors.white,
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
                   ),
-                  Text(
-                    ref.t('wholesale').toUpperCase(),
-                    style: GoogleFonts.outfit(
-                      fontSize: 8,
-                      color: Colors.white24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-          _SectionTitle(title: ref.t('description'), theme: theme),
-          const SizedBox(height: 8),
-          Text(
-            widget.entry.description,
-            style: GoogleFonts.outfit(
-              fontSize: 13,
-              height: 1.5,
-              color: Colors.white70,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSensoryTab(ThemeData theme) {
-    final sPoints = widget.entry.sensoryPoints;
-
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          AspectRatio(
-            aspectRatio: 1.2,
-            child: SensoryRadarChart(
-              interactive: false,
-              staticValues: widget.entry.sensoryPoints.map(
-                (k, v) => MapEntry(k, (v as num).toDouble() / 5.0),
-              ), // Scale 1-5 instead of 1-10
-            ),
-          ),
-          const SizedBox(height: 32),
-
-          // ── Sensory Grid ──────────────────────────────────────────────
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: _SensoryPointBar(
-                        label: ref.t('aroma'),
-                        points: (sPoints['aroma'] as num? ?? 0).toInt(),
-                        theme: theme,
-                      ),
-                    ),
-                    const SizedBox(width: 24),
-                    Expanded(
-                      child: _SensoryPointBar(
-                        label: ref.t('flavor'),
-                        points: (sPoints['flavor'] as num? ?? 0).toInt(),
-                        theme: theme,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _SensoryPointBar(
-                        label: ref.t('acidity'),
-                        points: (sPoints['acidity'] as num? ?? 0).toInt(),
-                        theme: theme,
-                      ),
-                    ),
-                    const SizedBox(width: 24),
-                    Expanded(
-                      child: _SensoryPointBar(
-                        label: ref.t('body'),
-                        points: (sPoints['body'] as num? ?? 0).toInt(),
-                        theme: theme,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _SensoryPointBar(
-                        label: ref.t('aftertaste'),
-                        points: (sPoints['aftertaste'] as num? ?? 0).toInt(),
-                        theme: theme,
-                      ),
-                    ),
-                    const SizedBox(width: 24),
-                    Expanded(
-                      child: _SensoryPointBar(
-                        label: ref.t('balance'),
-                        points: (sPoints['balance'] as num? ?? 0).toInt(),
-                        theme: theme,
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 40),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRecipesTab(ThemeData theme) {
-    return FutureBuilder<List<RecommendedRecipeDto>>(
-      future: ref
-          .read(databaseProvider)
-          .getRecommendedRecipesForLot(widget.entry.id),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        final recipes = snapshot.data!;
-
-        return Column(
-          children: [
-            if (recipes.isEmpty)
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Text(
-                    "No recipes added to this lot yet.",
-                    style: TextStyle(color: Colors.white24),
-                  ),
-                ),
+            
+            // Tabs
+            TabBar(
+              controller: _tabController,
+              dividerColor: Colors.transparent,
+              indicatorColor: theme.colorScheme.primary,
+              labelColor: theme.colorScheme.primary,
+              unselectedLabelColor: Colors.white24,
+              tabAlignment: TabAlignment.start,
+              isScrollable: true,
+              labelStyle: GoogleFonts.outfit(
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+                letterSpacing: 1.2,
               ),
-            ...recipes.map((r) => _RecipeCard(recipe: r, theme: theme)),
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CustomRecipeFormScreen(
-                        methodKey: 'v60',
-                        lotId: widget.entry.id.toString(),
-                      ),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.add),
-                label: const Text("Add Custom Recipe"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.primary.withValues(
-                    alpha: 0.1,
-                  ),
-                  foregroundColor: theme.colorScheme.primary,
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
+              tabs: [
+                Tab(text: isUk ? 'ІНФО' : 'INFO'),
+                Tab(text: isUk ? 'ПРОФІЛЬ' : 'PROFILE'),
+                Tab(text: isUk ? 'РЕЦЕПТИ' : 'RECIPES'),
+              ],
+            ),
+            
+            const SizedBox(height: 10),
+            
+            // Tab Content
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _InfoTab(lot: widget.lot, entry: widget.entry),
+                  _SensoryTab(points: points, isUk: isUk),
+                  _RecipesTab(lotId: widget.lot?.id ?? widget.entry?.lotNumber ?? ''),
+                ],
               ),
             ),
           ],
-        );
-      },
+        ),
+      ),
     );
   }
 }
 
-// ── Shared Helper Components ────────────────────────────────────────────────
+class _InfoTab extends ConsumerWidget {
+  final CoffeeLotDto? lot;
+  final EncyclopediaEntry? entry;
 
-class _ScaBadge extends StatelessWidget {
-  final String score;
-  final ThemeData theme;
-  const _ScaBadge({required this.score, required this.theme});
+  const _InfoTab({this.lot, this.entry});
+
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.primary.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.colorScheme.primary.withValues(alpha: 0.3),
-        ),
-      ),
-      child: Column(
-        children: [
-          Text(
-            "SCA",
-            style: GoogleFonts.outfit(
-              fontSize: 8,
-              fontWeight: FontWeight.bold,
-              color: theme.colorScheme.primary,
-            ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isUk = ref.watch(localeProvider) == 'uk';
+    final String region = lot?.region ?? entry?.region ?? 'Unknown';
+    final String? altitude = lot?.altitude ?? (entry?.altitudeMin != null ? '${entry!.altitudeMin}-${entry!.altitudeMax}m' : null);
+    final String varieties = lot?.varieties ?? entry?.varieties ?? 'Unknown';
+    final String process = lot?.process ?? entry?.processMethod ?? 'Unknown';
+    final String? description = lot?.flavorProfile ?? entry?.description;
+
+    return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      children: [
+        GlassContainer(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _SectionTitle(title: isUk ? 'ТЕХНІЧНІ ХАРАКТЕРИСТИКИ' : 'TECHNICAL SPECS', isUk: isUk),
+              _InfoRow(label: isUk ? 'Регіон' : 'Region', value: region),
+              if (altitude != null) _InfoRow(label: isUk ? 'Висота' : 'Altitude', value: altitude),
+              _InfoRow(label: isUk ? 'Сорт' : 'Variety', value: varieties),
+              _InfoRow(label: isUk ? 'Обробка' : 'Process', value: process),
+              if (entry?.harvestSeason != null) _InfoRow(label: isUk ? 'Врожай' : 'Harvest', value: entry!.harvestSeason!),
+            ],
           ),
+        ),
+        const SizedBox(height: 20),
+        if (description != null && description.isNotEmpty) ...[
+          _SectionTitle(title: isUk ? 'ОПИС СМАКУ' : 'FLAVOR PROFILE', isUk: isUk),
           Text(
-            score,
+            description,
             style: GoogleFonts.outfit(
+              color: Colors.white70,
               fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+              height: 1.6,
             ),
           ),
+          const SizedBox(height: 20),
         ],
-      ),
-    );
-  }
-}
-
-class _SectionTitle extends StatelessWidget {
-  final String title;
-  final ThemeData theme;
-  const _SectionTitle({required this.title, required this.theme});
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      title.toUpperCase(),
-      style: GoogleFonts.outfit(
-        fontSize: 11,
-        fontWeight: FontWeight.bold,
-        color: theme.colorScheme.primary.withValues(alpha: 0.7),
-        letterSpacing: 1,
-      ),
-    );
-  }
-}
-
-class _SpecRow extends StatelessWidget {
-  final String label1, value1, label2, value2;
-  const _SpecRow({
-    required this.label1,
-    required this.value1,
-    required this.label2,
-    required this.value2,
-  });
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: _SpecItem(label: label1, value: value1),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: _SpecItem(label: label2, value: value2),
-        ),
+        const SizedBox(height: 100),
       ],
     );
   }
 }
 
-class _SpecItem extends StatelessWidget {
-  final String label, value;
-  const _SpecItem({required this.label, required this.value});
+class _SensoryTab extends StatelessWidget {
+  final Map<String, dynamic> points;
+  final bool isUk;
+
+  const _SensoryTab({required this.points, required this.isUk});
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+
+    return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       children: [
-        Text(
-          label.toUpperCase(),
-          style: GoogleFonts.outfit(
-            fontSize: 9,
-            color: Colors.white38,
-            fontWeight: FontWeight.bold,
+        SizedBox(
+          height: 300,
+          child: SensoryRadarChart(
+            interactive: false,
+            height: 300,
+            staticValues: points.map(
+              (k, v) => MapEntry(k, (v as num).toDouble() / 5.0),
+            ),
           ),
         ),
-        const SizedBox(height: 2),
-        Text(
-          value,
-          style: GoogleFonts.outfit(
-            fontSize: 13,
-            color: Colors.white70,
-            fontWeight: FontWeight.w500,
-          ),
+        const SizedBox(height: 32),
+        const Divider(color: Colors.white10),
+        const SizedBox(height: 24),
+        Wrap(
+          spacing: 20,
+          runSpacing: 24,
+          children: [
+            _SensoryPointScale(label: isUk ? 'Аромат' : 'Aroma', value: (points['aroma'] ?? 3).toInt()),
+            _SensoryPointScale(label: isUk ? 'Солодкість' : 'Sweetness', value: (points['sweetness'] ?? 3).toInt()),
+            _SensoryPointScale(label: isUk ? 'Кислотність' : 'Acidity', value: (points['acidity'] ?? 3).toInt()),
+            _SensoryPointScale(label: isUk ? 'Гіркота' : 'Bitterness', value: (points['bitterness'] ?? 3).toInt()),
+            _SensoryPointScale(label: isUk ? 'Тіло' : 'Body', value: (points['body'] ?? 3).toInt()),
+            _SensoryPointScale(label: isUk ? 'Інтенсивність' : 'Intensity', value: (points['intensity'] ?? 3).toInt()),
+          ],
         ),
+        const SizedBox(height: 100),
       ],
     );
   }
 }
 
-// ── Shared Helper Components ────────────────────────────────────────────────
-
-class _SensoryPointBar extends StatelessWidget {
+class _SensoryPointScale extends StatelessWidget {
   final String label;
-  final num points;
-  final ThemeData theme;
-  const _SensoryPointBar({
-    required this.label,
-    required this.points,
-    required this.theme,
-  });
+  final int value;
+
+  const _SensoryPointScale({required this.label, required this.value});
+
   @override
   Widget build(BuildContext context) {
-    final cyan = const Color(0xFF88DDEE);
-    // Auto-scaling: round to nearest integer (1-5)
-    final int intValue = (points > 5 ? points / 2.0 : points.toDouble())
-        .round()
-        .toInt()
-        .clamp(0, 5);
+    final accentColor = const Color(0xFFC8A96E);
+    final width = (MediaQuery.of(context).size.width - 60) / 2;
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
+    return SizedBox(
+      width: width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                label.toUpperCase(),
-                style: GoogleFonts.outfit(
-                  fontSize: 10,
-                  letterSpacing: 1.2,
-                  color: Colors.white38,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                "$intValue / 5",
-                style: GoogleFonts.outfit(
-                  fontSize: 10,
-                  color: cyan,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+          Text(
+            label.toUpperCase(),
+            style: GoogleFonts.outfit(
+              color: Colors.white38,
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.5,
+            ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 8),
           Row(
-            children: List.generate(5, (i) {
-              final bool isActive = i < intValue;
-
+            children: List.generate(5, (index) {
+              final isActive = index < value;
               return Expanded(
                 child: Container(
-                  height: 2,
-                  margin: EdgeInsets.only(right: i == 4 ? 0 : 4),
+                  height: 6,
+                  margin: EdgeInsets.only(right: index == 4 ? 0 : 4),
                   decoration: BoxDecoration(
-                    color: isActive
-                        ? cyan
-                        : Colors.white.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(1),
+                    borderRadius: BorderRadius.circular(2),
+                    color: isActive 
+                        ? accentColor 
+                        : Colors.white.withValues(alpha: 0.05),
+                    boxShadow: isActive ? [
+                      BoxShadow(
+                        color: accentColor.withValues(alpha: 0.3),
+                        blurRadius: 4,
+                        offset: const Offset(0, 1),
+                      )
+                    ] : null,
                   ),
                 ),
               );
@@ -562,39 +356,138 @@ class _SensoryPointBar extends StatelessWidget {
   }
 }
 
-class _RecipeCard extends StatelessWidget {
-  final RecommendedRecipeDto recipe;
-  final ThemeData theme;
-  const _RecipeCard({required this.recipe, required this.theme});
+class _RecipesTab extends ConsumerWidget {
+  final String lotId;
+
+  const _RecipesTab({required this.lotId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isUk = ref.watch(localeProvider) == 'uk';
+    final db = ref.watch(databaseProvider);
+    final theme = Theme.of(context);
+    
+    return StreamBuilder<List<CustomRecipeDto>>(
+      stream: db.watchCustomRecipesForLot(lotId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        final recipes = snapshot.data ?? [];
+
+        if (recipes.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.coffee_maker_outlined, color: Colors.white10, size: 64),
+                const SizedBox(height: 16),
+                Text(
+                  isUk ? 'НЕМАЄ РЕЦЕПТІВ ДЛЯ ЦЬОГО ЛОТУ' : 'NO RECIPES FOR THIS LOT',
+                  style: GoogleFonts.outfit(
+                    color: Colors.white24,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Vibration.vibrate(duration: 50);
+                    // Navigate to add recipe screen
+                    context.push('/custom_recipe_form', extra: {'lotId': lotId});
+                  },
+                  icon: const Icon(Icons.add_rounded, size: 18),
+                  label: Text(isUk ? 'ДОДАТИ РЕЦЕПТ' : 'ADD RECIPE'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.colorScheme.primary,
+                    foregroundColor: Colors.black,
+                    textStyle: GoogleFonts.outfit(fontWeight: FontWeight.bold),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return ListView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          itemCount: recipes.length + 1,
+          itemBuilder: (context, index) {
+            if (index == recipes.length) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Center(
+                  child: TextButton.icon(
+                    onPressed: () => context.push('/custom_recipe_form', extra: {'lotId': lotId}),
+                    icon: const Icon(Icons.add_rounded),
+                    label: Text(isUk ? 'ДОДАТИ ЩЕ ОДИН' : 'ADD ANOTHER ONE'),
+                  ),
+                ),
+              );
+            }
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: CustomRecipeCard(
+                recipe: recipes[index],
+                methodKey: recipes[index].methodKey,
+                ref: ref,
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _SectionTitle extends StatelessWidget {
+  final String title;
+  final bool isUk;
+
+  const _SectionTitle({required this.title, required this.isUk});
+
   @override
   Widget build(BuildContext context) {
-    return GlassContainer(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      opacity: 0.05,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Text(
+        title,
+        style: GoogleFonts.outfit(
+          color: const Color(0xFFC8A96E),
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 2,
+        ),
+      ),
+    );
+  }
+}
+
+class _InfoRow extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const _InfoRow({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(Icons.coffee_maker, color: theme.colorScheme.primary, size: 30),
-          const SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                recipe.methodKey.toUpperCase(),
-                style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
-              ),
-              Text(
-                "${recipe.coffeeGrams}g / ${recipe.waterGrams}ml",
-                style: TextStyle(fontSize: 12, color: Colors.white38),
-              ),
-            ],
-          ),
-          const Spacer(),
           Text(
-            "${recipe.rating}",
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            label,
+            style: GoogleFonts.outfit(color: Colors.white38, fontSize: 13),
           ),
-          const Icon(Icons.star, size: 14, color: Colors.amber),
+          Text(
+            value,
+            style: GoogleFonts.outfit(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+          ),
         ],
       ),
     );

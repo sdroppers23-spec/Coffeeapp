@@ -280,7 +280,72 @@ class _SensoryTab extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(height: 30),
+          _SectionTitle(title: isUk ? 'СЕНСОРНИЙ ПРОФІЛЬ' : 'SENSORY PROFILE', isUk: isUk),
+          _SegmentedSensoryBar(label: isUk ? 'Аромат' : 'Aroma', value: (points['aroma'] ?? 3).toDouble()),
+          _SegmentedSensoryBar(label: isUk ? 'Смак' : 'Flavor', value: (points['flavor'] ?? 3).toDouble()),
+          _SegmentedSensoryBar(label: isUk ? 'Кислотність' : 'Acidity', value: (points['acidity'] ?? 3).toDouble()),
+          _SegmentedSensoryBar(label: isUk ? 'Тіло' : 'Body', value: (points['body'] ?? 3).toDouble()),
+          _SegmentedSensoryBar(label: isUk ? 'Післясмак' : 'Aftertaste', value: (points['aftertaste'] ?? 3).toDouble()),
+          _SegmentedSensoryBar(label: isUk ? 'Баланс' : 'Balance', value: (points['balance'] ?? 3).toDouble()),
           const SizedBox(height: 40),
+        ],
+      ),
+    );
+  }
+}
+
+class _SegmentedSensoryBar extends StatelessWidget {
+  final String label;
+  final double value;
+
+  const _SegmentedSensoryBar({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                label,
+                style: GoogleFonts.outfit(
+                  fontSize: 14,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Text(
+                '${value.toInt()}/5',
+                style: GoogleFonts.outfit(
+                  fontSize: 14,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: List.generate(5, (index) {
+              final isFilled = index < value.toInt();
+              return Expanded(
+                child: Container(
+                  height: 4,
+                  margin: EdgeInsets.only(right: index == 4 ? 0 : 4),
+                  decoration: BoxDecoration(
+                    color: isFilled ? theme.colorScheme.primary : const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              );
+            }),
+          ),
         ],
       ),
     );

@@ -586,7 +586,7 @@ class AppDatabase extends _$AppDatabase {
 
   // ── User Data (Private) ──────────────────────────────────────────────────────
   Future<List<CoffeeLotDto>> getAllUserLots(String userId) async {
-    final query = select(coffeeLots)..where((t) => t.userId.equals(userId));
+    final query = select(coffeeLots)..where((t) => t.userId.equals(userId) & t.isDeletedLocal.equals(false));
     final rows = await query.get();
     return rows.map((r) => _mapLotRow(r)).toList();
   }
@@ -595,7 +595,7 @@ class AppDatabase extends _$AppDatabase {
       getAllUserLots(userId);
 
   Future<List<CoffeeLotDto>> getLotsForBrand(int brandId) async {
-    final query = select(coffeeLots)..where((t) => t.brandId.equals(brandId));
+    final query = select(coffeeLots)..where((t) => t.brandId.equals(brandId) & t.isDeletedLocal.equals(false));
     final rows = await query.get();
     return rows.map((r) => _mapLotRow(r)).toList();
   }
@@ -697,7 +697,7 @@ class AppDatabase extends _$AppDatabase {
   Future<List<CustomRecipeDto>> getAllCustomRecipes(String userId) async {
     final rows = await (select(
       customRecipes,
-    )..where((t) => t.userId.equals(userId))).get();
+    )..where((t) => t.userId.equals(userId) & t.isDeletedLocal.equals(false))).get();
     return rows.map((r) => _mapCustomRecipe(r)).toList();
   }
 
@@ -705,11 +705,12 @@ class AppDatabase extends _$AppDatabase {
     String userId,
     String methodKey,
   ) async {
-    final rows =
-        await (select(customRecipes)..where(
-              (t) => t.userId.equals(userId) & t.methodKey.equals(methodKey),
-            ))
-            .get();
+    final rows = await (select(customRecipes)
+          ..where((t) =>
+              t.userId.equals(userId) &
+              t.methodKey.equals(methodKey) &
+              t.isDeletedLocal.equals(false)))
+        .get();
     return rows.map((r) => _mapCustomRecipe(r)).toList();
   }
 

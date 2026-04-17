@@ -466,8 +466,8 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                         turns: _isExpanded ? 0.5 : 0,
                         child: Icon(
                           Icons.keyboard_arrow_down_rounded,
-                          size: 18,
-                          color: theme.colorScheme.primary.withValues(alpha: 0.4),
+                          size: 24,
+                          color: theme.colorScheme.primary,
                         ),
                       ),
                     ),

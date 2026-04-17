@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:drift/drift.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -80,9 +81,12 @@ class SyncService {
       _progressController.add(0.9);
       await syncBrands();
       
-      onProgress?.call('Finalizing...', 0.98);
-      _progressController.add(0.98);
+      onProgress?.call('Syncing User Data...', 0.95);
+      _progressController.add(0.95);
+      await pullUserContent();
       await pushLocalUserContent();
+      
+      onProgress?.call('Finalizing...', 0.98);
 
       _progressController.add(1.0);
       onProgress?.call('Cloud Connected', 1.0);
@@ -463,58 +467,178 @@ class SyncService {
   }
 
   /// Pushes local user data (recipes and lots) to Supabase.
+  /// Pushes local user data (recipes and lots) to Supabase, including deletions.
   Future<void> pushLocalUserContent() async {
     if (supabase == null || supabase!.auth.currentUser == null) return;
 
     try {
       final userId = supabase!.auth.currentUser!.id;
       
-      // 1. Sync Custom Recipes
-      final recipes = await (db.select(db.customRecipes)..where((t) => t.isSynced.equals(false))).get();
-      for (final r in recipes) {
+      // 1. Sync Custom Recipes (Upsert & Delete)
+      final recipesToSync = await (db.select(db.customRecipes)..where((t) => t.isSynced.equals(false))).get();
+      for (final r in recipesToSync) {
         try {
-          await supabase!.from('user_custom_recipes').upsert({
-            'id': r.id,
-            'user_id': userId,
-            'method_key': r.methodKey,
-            'name': r.name,
-            'coffee_grams': r.coffeeGrams,
-            'total_water_ml': r.totalWaterMl,
-            'grind_number': r.grindNumber,
-            'brew_temp_c': r.brewTempC,
-            'notes': r.notes,
-            'rating': r.rating,
-            'created_at': r.createdAt?.toIso8601String(),
-          });
-          await (db.update(db.customRecipes)..where((t) => t.id.equals(r.id))).write(const CustomRecipesCompanion(isSynced: Value(true)));
+          if (r.isDeletedLocal) {
+            await supabase!.from('user_custom_recipes').delete().eq('id', r.id).eq('user_id', userId);
+            await db.deleteCustomRecipe(r.id);
+            debugPrint('SYNC: Deleted recipe ${r.id} from cloud');
+          } else {
+            await supabase!.from('user_custom_recipes').upsert({
+              'id': r.id,
+              'user_id': userId,
+              'lot_id': r.lotId,
+              'method_key': r.methodKey,
+              'name': r.name,
+              'coffee_grams': r.coffeeGrams,
+              'total_water_ml': r.totalWaterMl,
+              'grind_number': r.grindNumber,
+              'comandante_clicks': r.comandanteClicks,
+              'ek43_division': r.ek43Division,
+              'total_pours': r.totalPours,
+              'pour_schedule_json': r.pourScheduleJson,
+              'brew_temp_c': r.brewTempC,
+              'notes': r.notes,
+              'rating': r.rating,
+              'created_at': r.createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
+              'updated_at': DateTime.now().toIso8601String(),
+            });
+            await (db.update(db.customRecipes)..where((t) => t.id.equals(r.id))).write(const CustomRecipesCompanion(isSynced: Value(true)));
+          }
         } catch (e) {
           debugPrint('SYNC ERROR: Could not push recipe ${r.id}: $e');
         }
       }
 
-      // 2. Sync Personal Coffee Lots
-      final lots = await (db.select(db.coffeeLots)..where((t) => t.isSynced.equals(false))).get();
-      for (final l in lots) {
+      // 2. Sync Personal Coffee Lots (Upsert & Delete)
+      final lotsToSync = await (db.select(db.coffeeLots)..where((t) => t.isSynced.equals(false))).get();
+      for (final l in lotsToSync) {
         try {
-          await supabase!.from('user_coffee_lots').upsert({
-            'id': l.id,
-            'user_id': userId,
-            'coffee_name': l.coffeeName,
-            'roastery_name': l.roasteryName,
-            'origin_country': l.originCountry,
-            'region': l.region,
-            'process': l.process,
-            'roast_level': l.roastLevel,
-            'is_decaf': l.isDecaf,
-            'created_at': l.createdAt?.toIso8601String(),
-          });
-          await (db.update(db.coffeeLots)..where((t) => t.id.equals(l.id))).write(const CoffeeLotsCompanion(isSynced: Value(true)));
+          if (l.isDeletedLocal) {
+            await supabase!.from('user_coffee_lots').delete().eq('id', l.id).eq('user_id', userId);
+            await db.deleteLotPermanently(l.id);
+            debugPrint('SYNC: Deleted lot ${l.id} from cloud');
+          } else {
+            await supabase!.from('user_coffee_lots').upsert({
+              'id': l.id,
+              'user_id': userId,
+              'coffee_name': l.coffeeName,
+              'roastery_name': l.roasteryName,
+              'roastery_country': l.roasteryCountry,
+              'origin_country': l.originCountry,
+              'region': l.region,
+              'altitude': l.altitude,
+              'process': l.process,
+              'roast_level': l.roastLevel,
+              'roast_date': l.roastDate?.toIso8601String(),
+              'opened_at': l.openedAt?.toIso8601String(),
+              'weight': l.weight,
+              'lot_number': l.lotNumber,
+              'is_decaf': l.isDecaf,
+              'farm': l.farm,
+              'wash_station': l.washStation,
+              'farmer': l.farmer,
+              'varieties': l.varieties,
+              'flavor_profile': l.flavorProfile,
+              'sca_score': l.scaScore,
+              'is_favorite': l.isFavorite,
+              'is_archived': l.isArchived,
+              'is_open': l.isOpen,
+              'is_ground': l.isGround,
+              'sensory_json': l.sensoryJson,
+              'price_json': l.priceJson,
+              'brand_id': l.brandId,
+              'created_at': l.createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
+              'updated_at': DateTime.now().toIso8601String(),
+            });
+            await (db.update(db.coffeeLots)..where((t) => t.id.equals(l.id))).write(const CoffeeLotsCompanion(isSynced: Value(true)));
+          }
         } catch (e) {
           debugPrint('SYNC ERROR: Could not push lot ${l.id}: $e');
         }
       }
     } catch (e) {
       debugPrint('SYNC ERROR (User Push): $e');
+    }
+  }
+
+  /// Pulls user-specific lots and recipes from Supabase.
+  Future<void> pullUserContent() async {
+    if (supabase == null || supabase!.auth.currentUser == null) return;
+    
+    try {
+      final userId = supabase!.auth.currentUser!.id;
+      debugPrint('SYNC: Pulling user content for $userId');
+
+      // 1. Pull Lots
+      final lotsData = await supabase!.from('user_coffee_lots').select().eq('user_id', userId);
+      for (final item in lotsData) {
+        final id = item['id'] as String;
+        final lot = CoffeeLotsCompanion(
+          id: Value(id),
+          userId: Value(userId),
+          coffeeName: Value(item['coffee_name'] as String?),
+          roasteryName: Value(item['roastery_name'] as String?),
+          roasteryCountry: Value(item['roastery_country'] as String?),
+          originCountry: Value(item['origin_country'] as String?),
+          region: Value(item['region'] as String?),
+          altitude: Value(item['altitude'] as String?),
+          process: Value(item['process'] as String?),
+          roastLevel: Value(item['roast_level'] as String?),
+          roastDate: Value(DateTime.tryParse(item['roast_date'] ?? '')),
+          openedAt: Value(DateTime.tryParse(item['opened_at'] ?? '')),
+          weight: Value(item['weight'] as String?),
+          lotNumber: Value(item['lot_number'] as String?),
+          isDecaf: Value(item['is_decaf'] as bool? ?? false),
+          farm: Value(item['farm'] as String?),
+          washStation: Value(item['wash_station'] as String?),
+          farmer: Value(item['farmer'] as String?),
+          varieties: Value(item['varieties'] as String?),
+          flavorProfile: Value(item['flavor_profile'] as String?),
+          scaScore: Value(item['sca_score'] as String?),
+          isFavorite: Value(item['is_favorite'] as bool? ?? false),
+          isArchived: Value(item['is_archived'] as bool? ?? false),
+          isOpen: Value(item['is_open'] as bool? ?? false),
+          isGround: Value(item['is_ground'] as bool? ?? false),
+          sensoryJson: Value(item['sensory_json']?.toString() ?? '{}'),
+          priceJson: Value(item['price_json']?.toString() ?? '{}'),
+          brandId: Value(item['brand_id'] as int?),
+          isSynced: const Value(true),
+          createdAt: Value(DateTime.tryParse(item['created_at'] ?? '')),
+          updatedAt: Value(DateTime.tryParse(item['updated_at'] ?? '')),
+        );
+        await db.into(db.coffeeLots).insertOnConflictUpdate(lot);
+      }
+
+      // 2. Pull Recipes
+      final recipesData = await supabase!.from('user_custom_recipes').select().eq('user_id', userId);
+      for (final item in recipesData) {
+        final id = item['id'] as String;
+        final recipe = CustomRecipesCompanion(
+          id: Value(id),
+          userId: Value(userId),
+          lotId: Value(item['lot_id'] as String?),
+          methodKey: Value(item['method_key'] as String),
+          name: Value(item['name'] as String),
+          coffeeGrams: Value((item['coffee_grams'] as num).toDouble()),
+          totalWaterMl: Value((item['total_water_ml'] as num).toDouble()),
+          grindNumber: Value(item['grind_number'] as int? ?? 0),
+          comandanteClicks: Value(item['comandante_clicks'] as int? ?? 0),
+          ek43Division: Value(item['ek43_division'] as int? ?? 0),
+          totalPours: Value(item['total_pours'] as int? ?? 1),
+          pourScheduleJson: Value(item['pour_schedule_json']?.toString() ?? '[]'),
+          brewTempC: Value((item['brew_temp_c'] as num?)?.toDouble() ?? 93.0),
+          notes: Value(item['notes'] as String? ?? ''),
+          rating: Value(item['rating'] as int? ?? 0),
+          isSynced: const Value(true),
+          createdAt: Value(DateTime.tryParse(item['created_at'] ?? '')),
+          updatedAt: Value(DateTime.tryParse(item['updated_at'] ?? '')),
+        );
+        await db.into(db.customRecipes).insertOnConflictUpdate(recipe);
+      }
+      
+      debugPrint('SYNC: User content pulled (${lotsData.length} lots, ${recipesData.length} recipes)');
+    } catch (e) {
+      debugPrint('SYNC ERROR (User Pull): $e');
     }
   }
 

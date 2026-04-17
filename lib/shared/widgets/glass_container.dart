@@ -36,9 +36,6 @@ class GlassContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
     return Padding(
       padding: margin ?? EdgeInsets.zero,
       child: Container(
@@ -48,12 +45,10 @@ class GlassContainer extends StatelessWidget {
           borderRadius: BorderRadius.circular(borderRadius),
           boxShadow: shadows ?? [
             BoxShadow(
-              color: isDark 
-                  ? Colors.black.withValues(alpha: 0.3)
-                  : theme.primaryColor.withValues(alpha: 0.05),
-              blurRadius: isDark ? 20 : 15,
-              spreadRadius: isDark ? 0 : -2,
-              offset: isDark ? const Offset(0, 4) : const Offset(0, 8),
+              color: Colors.black.withValues(alpha: 0.3),
+              blurRadius: 20,
+              spreadRadius: 0,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
@@ -62,12 +57,10 @@ class GlassContainer extends StatelessWidget {
           clipBehavior: Clip.antiAlias,
           child: Stack(
             children: [
-              // Layer 1: Base matte tint
+              // Layer 1: Base matte tint (Smoked Glass)
               Positioned.fill(
                 child: Container(
-                  color: isDark 
-                      ? Colors.black.withValues(alpha: 0.5)
-                      : theme.colorScheme.surface.withValues(alpha: 0.8),
+                  color: Colors.black.withValues(alpha: 0.5),
                 ),
               ),
               // Layer 2: Glass Blur
@@ -77,37 +70,15 @@ class GlassContainer extends StatelessWidget {
                   child: Container(color: Colors.transparent),
                 ),
               ),
-              // Layer 3: Specular Highlight (Light Mode only)
-              if (!isDark)
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(borderRadius),
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Colors.white.withValues(alpha: 0.5),
-                          Colors.white.withValues(alpha: 0.0),
-                        ],
-                        stops: const [0.0, 0.3],
-                      ),
-                    ),
-                  ),
-                ),
-              // Layer 4: Main decoration and content
+              // Layer 3: Main decoration and content
               Container(
                 padding: padding,
                 decoration: BoxDecoration(
-                  color: isDark 
-                      ? Colors.white.withValues(alpha: opacity)
-                      : Colors.white.withValues(alpha: 0.1),
+                  color: Colors.white.withValues(alpha: opacity),
                   borderRadius: BorderRadius.circular(borderRadius),
                   border: Border.all(
-                    color: borderColor ?? (isDark 
-                        ? Colors.white.withValues(alpha: 0.12)
-                        : theme.colorScheme.primary.withValues(alpha: 0.08)),
-                    width: isDark ? 1.0 : 1.5,
+                    color: borderColor ?? Colors.white.withValues(alpha: 0.12),
+                    width: 1.0,
                   ),
                   image: imageUrl != null
                       ? DecorationImage(
@@ -126,12 +97,9 @@ class GlassContainer extends StatelessWidget {
                           LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
-                            colors: isDark ? [
+                            colors: [
                               Colors.white.withValues(alpha: 0.1),
                               Colors.white.withValues(alpha: 0.02),
-                            ] : [
-                              Colors.white.withValues(alpha: 0.5),
-                              Colors.white.withValues(alpha: 0.1),
                             ],
                           )
                       : null,

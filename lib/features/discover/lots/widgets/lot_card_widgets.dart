@@ -5,6 +5,7 @@ import '../../../../core/database/dtos.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../shared/widgets/glass_container.dart';
 import '../../../../shared/widgets/pressable_scale.dart';
+import '../../../../shared/widgets/sensory_radar_chart.dart';
 import 'package:vibration/vibration.dart';
 
 class MyLotGridCard extends ConsumerWidget {
@@ -233,7 +234,8 @@ class _SensoryFiveSegmentBarSmall extends StatelessWidget {
     );
   }
 }
-class MyLotListCard extends ConsumerWidget {
+
+class MyLotListCard extends ConsumerStatefulWidget {
   final CoffeeLotDto lot;
   final bool isSelected;
   final bool isSelectionMode;
@@ -258,13 +260,36 @@ class MyLotListCard extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
+  ConsumerState<MyLotListCard> createState() => _MyLotListCardState();
+}
+
+class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTickerProviderStateMixin {
+  bool _isExpanded = false;
+
+  void _toggleExpanded() {
+    setState(() {
+      _isExpanded = !_isExpanded;
+    });
+    Vibration.vibrate(duration: 10, amplitude: 50);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final lot = widget.lot;
     final isUk = LocaleService.currentLocale == 'uk';
+    final theme = Theme.of(context);
+    final isSelected = widget.isSelected;
+    final isSelectionMode = widget.isSelectionMode;
 
     final card = PressableScale(
-      onLongPress: () => onLongPress(lot.id),
-      onTap: () => isSelectionMode ? onLongPress(lot.id) : onTap(lot.id),
+      onLongPress: () => widget.onLongPress(lot.id),
+      onTap: () {
+        if (isSelectionMode) {
+          widget.onLongPress(lot.id);
+        } else {
+          _toggleExpanded();
+        }
+      },
       child: GlassContainer(
         padding: const EdgeInsets.all(16),
         opacity: isSelected ? 0.2 : 0.05, 
@@ -275,7 +300,7 @@ class MyLotListCard extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header: Title, Subtitle, Heart
+              // Header: Title, Subtitle, Heart + NEW: Expand Arrow
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -306,19 +331,18 @@ class MyLotListCard extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  isSelectionMode
-                      ? const SizedBox.shrink()
-                      : PressableScale(
-                          onTap: () {
-                            Vibration.vibrate(duration: 40, amplitude: 100);
-                            onFavoriteToggle(lot);
-                          },
-                          child: Icon(
-                            lot.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                            size: 20,
-                            color: lot.isFavorite ? Colors.redAccent : Colors.white24,
-                          ),
-                        ),
+                  if (!isSelectionMode)
+                    PressableScale(
+                      onTap: () {
+                        Vibration.vibrate(duration: 40, amplitude: 100);
+                        widget.onFavoriteToggle(lot);
+                      },
+                      child: Icon(
+                        lot.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                        size: 20,
+                        color: lot.isFavorite ? Colors.redAccent : Colors.white24,
+                      ),
+                    ),
                 ],
               ),
               const SizedBox(height: 16),
@@ -381,104 +405,169 @@ class MyLotListCard extends ConsumerWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
-              // Freshness Bar
-              _FreshnessProgressBar(lot: lot, isUk: isUk, theme: theme),
-            ],
-          ),
-        ),
-      );
-
-      final dismissibleCard = isSelectionMode ? card : Dismissible(
-        key: Key(lot.id),
-        direction: DismissDirection.horizontal,
-        confirmDismiss: (direction) async {
-          if (direction == DismissDirection.endToStart) {
-            // Delete
-            if (onDeleteSwipe != null) {
-              return await onDeleteSwipe!(lot);
-            }
-          } else if (direction == DismissDirection.startToEnd) {
-            // Restore or Edit
-            if (onRestoreSwipe != null) {
-              await onRestoreSwipe!(lot);
-              return true;
-            }
-            if (onEditSwipe != null) {
-              onEditSwipe!(lot);
-            }
-            return false; // Don't actually dismiss the item off screen for info edits
-          }
-          return false;
-        },
-        background: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Container(
-            decoration: BoxDecoration(
-              color: onRestoreSwipe != null 
-                ? const Color(0xFFC8A96E).withValues(alpha: 0.8) 
-                : const Color(0xFF62D39F).withValues(alpha: 0.8),
-            ),
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.only(left: 20),
-            child: Icon(
-              onRestoreSwipe != null ? Icons.unarchive_outlined : Icons.edit_rounded, 
-              color: Colors.black, 
-              size: 32
-            ),
-          ),
-        ),
-        secondaryBackground: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.redAccent.withValues(alpha: 0.8),
-            ),
-            alignment: Alignment.centerRight,
-            padding: const EdgeInsets.only(right: 20),
-            child: const Icon(Icons.delete_outline_rounded, color: Colors.white, size: 32),
-          ),
-        ),
-        child: card,
-      );
-
-      if (isSelectionMode) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: Row(
-            children: [
-              GestureDetector(
-                onTap: () => onLongPress(lot.id),
-                child: Container(
-                  margin: const EdgeInsets.only(left: 4, right: 12),
-                  width: 24,
-                  height: 24,
-                  decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFFC8A96E) : Colors.transparent,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: isSelected ? const Color(0xFFC8A96E) : const Color(0xFFC8A96E).withValues(alpha: 0.38),
-                      width: 2,
+              
+              // EXPANDABLE AREA
+              AnimatedCrossFade(
+                firstChild: const SizedBox(width: double.infinity),
+                secondChild: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    const Divider(color: Colors.white10),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      height: 220,
+                      child: SensoryRadarChart(
+                        interactive: false,
+                        height: 220,
+                        staticValues: lot.sensoryPoints.map(
+                          (k, v) => MapEntry(k, (v as num).toDouble()),
+                        ),
+                      ),
                     ),
-                  ),
-                  child: isSelected
-                      ? const Icon(Icons.check, size: 16, color: Colors.black)
-                      : null,
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () => widget.onTap(lot.id),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
+                        foregroundColor: theme.colorScheme.primary,
+                        elevation: 0,
+                        minimumSize: const Size(double.infinity, 44),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          side: BorderSide(color: theme.colorScheme.primary.withValues(alpha: 0.1)),
+                        ),
+                      ),
+                      child: Text(
+                        isUk ? 'ДЕТАЛЬНІШЕ' : 'VIEW DETAILS',
+                        style: GoogleFonts.outfit(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+                crossFadeState: _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                duration: const Duration(milliseconds: 300),
               ),
-              Expanded(child: dismissibleCard),
+
+              const SizedBox(height: 16),
+              // Freshness Bar + Expand Arrow in bottom corner
+              Stack(
+                alignment: Alignment.bottomRight,
+                children: [
+                  _FreshnessProgressBar(lot: lot, isUk: isUk, theme: theme),
+                  if (!isSelectionMode)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 2),
+                      child: AnimatedRotation(
+                        duration: const Duration(milliseconds: 300),
+                        turns: _isExpanded ? 0.5 : 0,
+                        child: Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          size: 18,
+                          color: theme.colorScheme.primary.withValues(alpha: 0.4),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ],
           ),
-        );
-      }
+        ),
+    );
 
+    final dismissibleCard = isSelectionMode ? card : Dismissible(
+      key: Key(lot.id),
+      direction: DismissDirection.horizontal,
+      confirmDismiss: (direction) async {
+        if (direction == DismissDirection.endToStart) {
+          // Delete
+          if (widget.onDeleteSwipe != null) {
+            return await widget.onDeleteSwipe!(lot);
+          }
+        } else if (direction == DismissDirection.startToEnd) {
+          // Restore or Edit
+          if (widget.onRestoreSwipe != null) {
+            await widget.onRestoreSwipe!(lot);
+            return true;
+          }
+          if (widget.onEditSwipe != null) {
+            widget.onEditSwipe!(lot);
+          }
+          return false; // Don't actually dismiss the item off screen for info edits
+        }
+        return false;
+      },
+      background: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          decoration: BoxDecoration(
+            color: widget.onRestoreSwipe != null 
+              ? const Color(0xFFC8A96E).withValues(alpha: 0.8) 
+              : const Color(0xFF62D39F).withValues(alpha: 0.8),
+          ),
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.only(left: 20),
+          child: Icon(
+            widget.onRestoreSwipe != null ? Icons.unarchive_outlined : Icons.edit_rounded, 
+            color: Colors.black, 
+            size: 32
+          ),
+        ),
+      ),
+      secondaryBackground: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.redAccent.withValues(alpha: 0.8),
+          ),
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(right: 20),
+          child: const Icon(Icons.delete_outline_rounded, color: Colors.white, size: 32),
+        ),
+      ),
+      child: card,
+    );
+
+    if (isSelectionMode) {
       return Padding(
         padding: const EdgeInsets.only(bottom: 12),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: dismissibleCard,
+        child: Row(
+          children: [
+            GestureDetector(
+              onTap: () => widget.onLongPress(lot.id),
+              child: Container(
+                margin: const EdgeInsets.only(left: 4, right: 12),
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  color: isSelected ? const Color(0xFFC8A96E) : Colors.transparent,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: isSelected ? const Color(0xFFC8A96E) : const Color(0xFFC8A96E).withValues(alpha: 0.38),
+                    width: 2,
+                  ),
+                ),
+                child: isSelected
+                    ? const Icon(Icons.check, size: 16, color: Colors.black)
+                    : null,
+              ),
+            ),
+            Expanded(child: dismissibleCard),
+          ],
         ),
       );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: dismissibleCard,
+      ),
+    );
   }
 }
 

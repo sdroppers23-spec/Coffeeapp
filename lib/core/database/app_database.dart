@@ -600,6 +600,11 @@ class AppDatabase extends _$AppDatabase {
     return rows.map((r) => _mapLotRow(r)).toList();
   }
 
+  Stream<List<CoffeeLotDto>> watchUserLots(String userId) {
+    final query = select(coffeeLots)..where((t) => t.userId.equals(userId));
+    return query.watch().map((rows) => rows.map((r) => _mapLotRow(r)).toList());
+  }
+
   Future<CoffeeLotDto?> findConflictLot(String id) async {
     final row = await (select(
       coffeeLots,
@@ -700,6 +705,11 @@ class AppDatabase extends _$AppDatabase {
       customRecipes,
     )..where((t) => t.lotId.equals(lotId))).get();
     return rows.map((r) => _mapCustomRecipe(r)).toList();
+  }
+
+  Stream<List<CustomRecipeDto>> watchCustomRecipesForLot(String lotId) {
+    final query = select(customRecipes)..where((t) => t.lotId.equals(lotId));
+    return query.watch().map((rows) => rows.map((r) => _mapCustomRecipe(r)).toList());
   }
 
   CustomRecipeDto _mapCustomRecipe(CustomRecipe r) {

@@ -437,7 +437,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                 isSelected: _selectedLotIds.contains(lot.id),
                 isSelectionMode: _isSelectionMode,
                 onLongPress: (id) => _toggleLotSelection(id),
-                onTap: (id) => context.push('/edit_lot', extra: lot),
+                onTap: (id) => context.push('/lot_details', extra: {'lot': lot}),
                 onFavoriteToggle: (lot) async {
                   ref.read(settingsProvider.notifier).triggerHaptic();
                   final db = ref.read(databaseProvider);
@@ -459,7 +459,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                 isSelected: _selectedLotIds.contains(lot.id),
                 isSelectionMode: _isSelectionMode,
                 onLongPress: (id) => _toggleLotSelection(id),
-                onTap: (id) => context.push('/edit_lot', extra: lot),
+                onTap: (id) => context.push('/lot_details', extra: {'lot': lot}),
                 onFavoriteToggle: (lot) async {
                   ref.read(settingsProvider.notifier).triggerSelectionVibrate();
                   final db = ref.read(databaseProvider);

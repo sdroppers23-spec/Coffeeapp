@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../navigation/navigation_providers.dart';
 import '../../core/supabase/supabase_provider.dart';
 import '../../core/providers/settings_provider.dart';
-import '../../core/theme/app_theme.dart';
 // import '../../shared/widgets/premium_background.dart'; // Removed unused import
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -53,7 +52,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -121,56 +119,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
             ),
 
-            const SizedBox(height: 32),
-
-            // ТЕМА
-            _buildSectionTitle(context, 'ТЕМА'),
-            _buildCard(
-              context,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 8, 16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            isDark ? 'Dark Roast' : 'Morning Crema',
-                            style: GoogleFonts.outfit(
-                              color: theme.colorScheme.onSurface,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            isDark ? 'Перейти на світлу тему' : 'Перейти на темну тему',
-                            style: GoogleFonts.outfit(
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                              fontSize: 13,
-                              height: 1.2,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Switch(
-                      value: !isDark,
-                      activeThumbColor: theme.colorScheme.secondary,
-                      activeTrackColor: theme.colorScheme.secondary.withValues(alpha: 0.2),
-                      inactiveThumbColor: Colors.grey[400],
-                      inactiveTrackColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
-                      onChanged: (val) {
-                        ref.read(themeProvider.notifier).toggleTheme(!val);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 32),
 
             // ВІБРАЦІЯ
             _buildSectionTitle(context, 'ВІБРАЦІЯ'),
@@ -219,38 +167,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
             ),
 
-            const SizedBox(height: 12),
-
-            // TEST HAPTIC
-            GestureDetector(
-              onTap: () => ref.read(settingsProvider.notifier).triggerVibrate(),
-              behavior: HitTestBehavior.opaque,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.vibration_rounded,
-                      color: theme.colorScheme.primary,
-                      size: 18,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'TEST HAPTIC',
-                      style: GoogleFonts.poppins(
-                        color: theme.colorScheme.primary,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 1.5,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 32),
 
             // ЮРИДИЧНА ІНФОРМАЦІЯ
             _buildSectionTitle(context, 'ЮРИДИЧНА ІНФОРМАЦІЯ'),

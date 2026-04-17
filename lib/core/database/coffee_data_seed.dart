@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'app_database.dart';
@@ -65,56 +64,7 @@ class CoffeeDataSeed {
     final isEmpty = await db.brandsIsEmpty();
     if (!isEmpty && !force) return;
 
-    final List<Map<String, dynamic>> brandsToSeed = [
-      {
-        'main': LocalizedBrandsCompanion.insert(
-          id: const Value(1),
-          name: 'Mad Heads',
-          logoUrl: Value('$articlesBucket/brands/mad_heads.png'),
-          siteUrl: const Value('https://madheadscoffee.com/'),
-        ),
-        'trans': [
-          LocalizedBrandTranslationsCompanion.insert(
-            brandId: 1,
-            languageCode: 'uk',
-            shortDesc: const Value('Stay Mad. Respect Quality.'),
-            fullDesc: const Value('Mad Heads Coffee — це незалежна українська обсмажка, заснована у 2017 році.'),
-            location: const Value('Київ, вул. Кирилівська 69'),
-          ),
-          LocalizedBrandTranslationsCompanion.insert(
-            brandId: 1,
-            languageCode: 'en',
-            shortDesc: const Value('Stay Mad. Respect Quality.'),
-            fullDesc: const Value('Mad Heads Coffee is an independent Ukrainian roaster founded in 2017.'),
-            location: const Value('Kyiv, Kyrylivska st. 69'),
-          ),
-        ],
-      },
-      {
-        'main': LocalizedBrandsCompanion.insert(
-          id: const Value(2),
-          name: '3Champs',
-          logoUrl: Value('$articlesBucket/brands/three_champs.png'),
-          siteUrl: const Value('https://3champsroastery.com.ua/'),
-        ),
-        'trans': [
-          LocalizedBrandTranslationsCompanion.insert(
-            brandId: 2,
-            languageCode: 'uk',
-            shortDesc: const Value('Спешелті обсмажка з акцентом на чистоту та яскравість смаку.'),
-            fullDesc: const Value('3Champs Roastery — це команда професіоналів. Плодова 1.'),
-            location: const Value('Kyiv, Plodova 1'),
-          ),
-          LocalizedBrandTranslationsCompanion.insert(
-            brandId: 2,
-            languageCode: 'en',
-            shortDesc: const Value('Specialty roastery with an emphasis on purity.'),
-            fullDesc: const Value('Professional team based in Kyiv.'),
-            location: const Value('Kyiv, Plodova 1'),
-          ),
-        ],
-      },
-    ];
+    final List<Map<String, dynamic>> brandsToSeed = [];
 
     for (var item in brandsToSeed) {
       await db.smartUpsertBrand(
@@ -209,45 +159,16 @@ class CoffeeDataSeed {
   }
 
   Future<void> _seedMadHeadsOrigins() async {
-    final entries = [
-      _Entry(
-        LocalizedBeansCompanion.insert(id: const Value(101), brandId: const Value(1), countryEmoji: const Value('🇪🇹'), cupsScore: const Value(88.0)),
-        [
-          LocalizedBeanTranslationsCompanion.insert(beanId: 101, languageCode: 'uk', country: const Value('Ефіопія'), region: const Value('Guji'), varieties: const Value('Heirloom'), flavorNotes: Value(jsonEncode(['Персик', 'Жасмин', 'Цитрус'])), description: const Value('Класична мита Ефіопія з яскравим квітковим профілем.')),
-          LocalizedBeanTranslationsCompanion.insert(beanId: 101, languageCode: 'en', country: const Value('Ethiopia'), region: const Value('Guji'), varieties: const Value('Heirloom'), flavorNotes: Value(jsonEncode(['Peach', 'Jasmine', 'Citrus'])), description: const Value('Classic washed Ethiopia.')),
-        ],
-      ),
-      _Entry(
-        LocalizedBeansCompanion.insert(id: const Value(102), brandId: const Value(1), countryEmoji: const Value('🇨🇴'), cupsScore: const Value(87.5)),
-        [
-          LocalizedBeanTranslationsCompanion.insert(beanId: 102, languageCode: 'uk', country: const Value('Колумбія'), region: const Value('Huila'), varieties: const Value('Caturra'), flavorNotes: Value(jsonEncode(['Шоколад', 'Червоне яблуко', 'Карамель'])), description: const Value('Збалансована Колумбія з солодким післясмаком.')),
-          LocalizedBeanTranslationsCompanion.insert(beanId: 102, languageCode: 'en', country: const Value('Colombia'), region: const Value('Huila'), varieties: const Value('Caturra'), flavorNotes: Value(jsonEncode(['Chocolate', 'Red Apple', 'Caramel'])), description: const Value('Balanced Colombia.')),
-        ],
-      ),
-    ];
+    final entries = [];
     for (var e in entries) {
       await db.smartUpsertBean(e.main, e.transList);
     }
   }
 
   Future<void> _seed3ChampsOrigins() async {
-    final entries = [
-      _Entry(
-        LocalizedBeansCompanion.insert(id: const Value(201), brandId: const Value(2), countryEmoji: const Value('🇰🇪'), cupsScore: const Value(89.0)),
-        [
-          LocalizedBeanTranslationsCompanion.insert(beanId: 201, languageCode: 'uk', country: const Value('Кенія'), region: const Value('Nyeri'), varieties: const Value('SL28'), flavorNotes: Value(jsonEncode(['Чорна смородина', 'Томат', 'Грейпфрут'])), description: const Value('Яскрава Кенія з соковитою кислотністю.')),
-          LocalizedBeanTranslationsCompanion.insert(beanId: 201, languageCode: 'en', country: const Value('Kenya'), region: const Value('Nyeri'), varieties: const Value('SL28'), flavorNotes: Value(jsonEncode(['Blackcurrant', 'Tomato', 'Grapefruit'])), description: const Value('Bright Kenya.')),
-        ],
-      ),
-    ];
+    final entries = [];
     for (var e in entries) {
       await db.smartUpsertBean(e.main, e.transList);
     }
   }
-}
-
-class _Entry {
-  final LocalizedBeansCompanion main;
-  final List<LocalizedBeanTranslationsCompanion> transList;
-  _Entry(this.main, this.transList);
 }

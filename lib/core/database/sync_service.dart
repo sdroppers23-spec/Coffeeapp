@@ -106,6 +106,12 @@ class SyncService {
     if (supabase == null) return;
 
     try {
+      debugPrint('SYNC: Clearing local beans before pull...');
+      await db.transaction(() async {
+        await db.delete(db.localizedBeans).go();
+        await db.delete(db.localizedBeanTranslations).go();
+      });
+
       debugPrint('SYNC: Pulling beans from localized_beans...');
       final data = await supabase!.from('localized_beans').select().order('id');
       
@@ -663,6 +669,12 @@ class SyncService {
   Future<void> syncBrewingRecipes() async {
     if (supabase == null) return;
     try {
+      debugPrint('SYNC: Clearing local brewing recipes before pull...');
+      await db.transaction(() async {
+        await db.delete(db.brewingRecipes).go();
+        await db.delete(db.brewingRecipeTranslations).go();
+      });
+
       debugPrint('SYNC: Pulling methods from brewing_recipes...');
       int successCount = 0;
       int errorCount = 0;
@@ -728,6 +740,12 @@ class SyncService {
   Future<void> syncBrands() async {
     if (supabase == null) return;
     try {
+      debugPrint('SYNC: Clearing local brands before pull...');
+      await db.transaction(() async {
+        await db.delete(db.localizedBrands).go();
+        await db.delete(db.localizedBrandTranslations).go();
+      });
+
       debugPrint('SYNC: Pulling brands from localized_brands...');
       final data = await supabase!.from('localized_brands').select();
       

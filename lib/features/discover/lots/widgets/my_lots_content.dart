@@ -423,10 +423,10 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
         if (filter.isGrid) {
           return GridView.builder(
             controller: _scrollController,
-            padding: const EdgeInsets.fromLTRB(21, 16, 21, 100),
+            padding: const EdgeInsets.fromLTRB(21, 16, 21, 140),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 0.72,
+              childAspectRatio: 0.68,
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
             ),
@@ -452,7 +452,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
         return ListView.builder(
           controller: _scrollController,
           physics: _expandedCount > 0 ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(26, 16, 26, 100),
+          padding: const EdgeInsets.fromLTRB(26, 16, 26, 140),
           itemCount: filteredLots.length,
           itemBuilder: (context, index) {
             final lot = filteredLots[index];

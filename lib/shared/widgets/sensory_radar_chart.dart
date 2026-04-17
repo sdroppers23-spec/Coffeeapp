@@ -217,13 +217,18 @@ class RadarPainter extends CustomPainter {
     if (values.isEmpty) return;
 
     final center = Offset(size.width / 2, size.height / 2);
-    // Increased padding for tip labels
-    final maxRadius = min(size.width, size.height) / 2 - 40;
+    // Adjust padding for labels to prevent clipping
+    final maxRadius = min(size.width, size.height) / 2 - 48;
     final labels = values.keys.toList();
     final angleStep = 2 * pi / labels.length;
 
     final gridPaint = Paint()
-      ..color = textColor.withValues(alpha: 0.1)
+      ..color = textColor.withValues(alpha: 0.25)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.0;
+
+    final axisPaint = Paint()
+      ..color = textColor.withValues(alpha: 0.45)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
@@ -240,7 +245,7 @@ class RadarPainter extends CustomPainter {
         } else {
           path.lineTo(x, y);
         }
-        if (level == 5) canvas.drawLine(center, Offset(x, y), gridPaint);
+        if (level == 5) canvas.drawLine(center, Offset(x, y), axisPaint);
       }
       path.close();
       canvas.drawPath(path, gridPaint);
@@ -264,7 +269,7 @@ class RadarPainter extends CustomPainter {
       )..layout();
 
       // Position label slightly further out
-      final labelRadius = maxRadius + 15;
+      final labelRadius = maxRadius + 22;
       final labelX =
           center.dx + labelRadius * cos(angle) - textPainter.width / 2;
       final labelY =

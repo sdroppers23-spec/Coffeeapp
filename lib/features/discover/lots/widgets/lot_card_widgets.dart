@@ -298,7 +298,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
         if (isSelectionMode) {
           widget.onLongPress(lot.id);
         } else {
-          _toggleExpanded();
+          widget.onTap(lot.id);
         }
       },
       child: GlassContainer(
@@ -308,170 +308,153 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
         borderColor: isSelected
             ? theme.colorScheme.primary.withValues(alpha: 0.6)
             : Colors.white.withValues(alpha: 0.08),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header: Title, Subtitle, Heart + NEW: Expand Arrow
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          lot.coffeeName ?? 'Unnamed',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.outfit(
-                            color: const Color(0xFFC8A96E),
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        if (lot.roasteryName != null && lot.roasteryName!.isNotEmpty)
-                          Text(
-                            lot.roasteryName!,
-                            style: GoogleFonts.outfit(
-                              color: const Color(0xFFC8A96E).withValues(alpha: 0.38),
-                              fontSize: 12,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  if (!isSelectionMode)
-                    PressableScale(
-                      onTap: () {
-                        Vibration.vibrate(duration: 40, amplitude: 100);
-                        widget.onFavoriteToggle(lot);
-                      },
-                      child: Icon(
-                        lot.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                        size: 20,
-                        color: lot.isFavorite ? Colors.redAccent : Colors.white24,
-                      ),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              // Body: Score + Traits/Tags
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Score Circle
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: Text(
-                        lot.scaScore ?? '85',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header: Title, Subtitle, Heart + NEW: Expand Arrow
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        lot.coffeeName ?? 'Unnamed',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.outfit(
-                          color: theme.colorScheme.primary,
-                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFFC8A96E),
                           fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
+                      ),
+                      if (lot.roasteryName != null && lot.roasteryName!.isNotEmpty)
+                        Text(
+                          lot.roasteryName!,
+                          style: GoogleFonts.outfit(
+                            color: const Color(0xFFC8A96E).withValues(alpha: 0.38),
+                            fontSize: 12,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                if (!isSelectionMode)
+                  PressableScale(
+                    onTap: () {
+                      Vibration.vibrate(duration: 40, amplitude: 100);
+                      widget.onFavoriteToggle(lot);
+                    },
+                    child: Icon(
+                      lot.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                      size: 20,
+                      color: lot.isFavorite ? Colors.redAccent : Colors.white24,
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            // Body: Score + Traits/Tags
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Score Circle
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Text(
+                      lot.scaScore ?? '85',
+                      style: GoogleFonts.outfit(
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  // Traits and Tags
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Traits Row
-                        Row(
+                ),
+                const SizedBox(width: 16),
+                // Traits and Tags
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Traits Row
+                      Row(
+                        children: [
+                          SizedBox(width: 80, child: _HorizontalSensoryBar(label: isUk ? 'ГІРКОТА' : 'BITTERNESS', value: (lot.sensoryPoints['bitterness'] ?? 3).toDouble(), theme: theme)),
+                          const SizedBox(width: 12),
+                          SizedBox(width: 80, child: _HorizontalSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (lot.sensoryPoints['acidity'] ?? 3).toDouble(), theme: theme)),
+                          const SizedBox(width: 12),
+                          SizedBox(width: 80, child: _HorizontalSensoryBar(label: isUk ? 'СОЛОДКІСТЬ' : 'SWEETNESS', value: (lot.sensoryPoints['sweetness'] ?? 3).toDouble(), theme: theme)),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      // Tags Row
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
                           children: [
-                            Expanded(child: _HorizontalSensoryBar(label: isUk ? 'ГІРКОТА' : 'BITTERNESS', value: (lot.sensoryPoints['bitterness'] ?? 3).toDouble(), theme: theme)),
+                            _TagChip(icon: Icons.star_border_rounded, text: '${lot.scaScore ?? 85} SCA', theme: theme),
                             const SizedBox(width: 8),
-                            Expanded(child: _HorizontalSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (lot.sensoryPoints['acidity'] ?? 3).toDouble(), theme: theme)),
+                            _TagChip(icon: Icons.location_on_outlined, text: lot.originCountry, theme: theme),
                             const SizedBox(width: 8),
-                            Expanded(child: _HorizontalSensoryBar(label: isUk ? 'СОЛОДКІСТЬ' : 'SWEETNESS', value: (lot.sensoryPoints['sweetness'] ?? 3).toDouble(), theme: theme)),
+                            if (lot.process != null && lot.process!.isNotEmpty)
+                              _TagChip(icon: Icons.water_drop_outlined, text: lot.process, theme: theme),
                           ],
                         ),
-                        const SizedBox(height: 12),
-                        // Tags Row
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              _TagChip(icon: Icons.star_border_rounded, text: '${lot.scaScore ?? 85} SCA', theme: theme),
-                              const SizedBox(width: 8),
-                              _TagChip(icon: Icons.location_on_outlined, text: null, theme: theme),
-                              const SizedBox(width: 8),
-                              if (lot.process != null && lot.process!.isNotEmpty)
-                                _TagChip(icon: Icons.water_drop_outlined, text: lot.process, theme: theme),
-                            ],
-                          ),
-                        ),
-                      ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            
+            // EXPANDABLE AREA
+            AnimatedCrossFade(
+              duration: const Duration(milliseconds: 300),
+              crossFadeState: _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+              firstChild: const SizedBox(width: double.infinity),
+              secondChild: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  const Divider(color: Colors.white10),
+                  const SizedBox(height: 16),
+                  _LotPropertyGrid(lot: lot),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    height: 200,
+                    child: SensoryRadarChart(
+                      interactive: false,
+                      height: 200,
+                      staticValues: lot.sensoryPoints.map(
+                        (k, v) => MapEntry(k, (v as num).toDouble()),
+                      ),
                     ),
                   ),
                 ],
               ),
-              
-              // EXPANDABLE AREA
-              AnimatedCrossFade(
-                firstChild: const SizedBox(width: double.infinity),
-                secondChild: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    const Divider(color: Colors.white10),
-                    const SizedBox(height: 12),
-                    SizedBox(
-                      height: 220,
-                      child: SensoryRadarChart(
-                        interactive: false,
-                        height: 220,
-                        staticValues: lot.sensoryPoints.map(
-                          (k, v) => MapEntry(k, (v as num).toDouble()),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () => widget.onTap(lot.id),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
-                        foregroundColor: theme.colorScheme.primary,
-                        elevation: 0,
-                        minimumSize: const Size(double.infinity, 44),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          side: BorderSide(color: theme.colorScheme.primary.withValues(alpha: 0.1)),
-                        ),
-                      ),
-                      child: Text(
-                        isUk ? 'ДЕТАЛЬНІШЕ' : 'VIEW DETAILS',
-                        style: GoogleFonts.outfit(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                crossFadeState: _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                duration: const Duration(milliseconds: 300),
-              ),
+            ),
 
-              const SizedBox(height: 16),
-              // Freshness Bar + Expand Arrow in bottom corner
-              Stack(
-                alignment: Alignment.bottomRight,
-                children: [
-                  _FreshnessProgressBar(lot: lot, isUk: isUk, theme: theme),
-                  if (!isSelectionMode)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 2),
+            const SizedBox(height: 16),
+            // Freshness Bar + Expand Arrow below
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                _FreshnessProgressBar(lot: lot, isUk: isUk, theme: theme),
+                if (!isSelectionMode)
+                  GestureDetector(
+                    onTap: _toggleExpanded,
+                    behavior: HitTestBehavior.opaque,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       child: AnimatedRotation(
                         duration: const Duration(milliseconds: 300),
                         turns: _isExpanded ? 0.5 : 0,
@@ -482,16 +465,20 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                         ),
                       ),
                     ),
-                ],
-              ),
-            ],
-          ),
+                  ),
+              ],
+            ),
+          ],
         ),
+      ),
     );
 
     final dismissibleCard = isSelectionMode ? card : Dismissible(
       key: Key(lot.id),
-      direction: DismissDirection.horizontal,
+      direction: _isExpanded ? DismissDirection.none : DismissDirection.horizontal,
+      onDismissed: (_) {
+        // The actual state update happens via confirmDismiss -> onDeleteSwipe -> _showModernUndo -> setState
+      },
       confirmDismiss: (direction) async {
         if (direction == DismissDirection.endToStart) {
           // Delete
@@ -756,6 +743,107 @@ class _FreshnessProgressBar extends StatelessWidget {
                 ],
               ),
             ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+class _LotPropertyGrid extends StatelessWidget {
+  final CoffeeLotDto lot;
+
+  const _LotPropertyGrid({required this.lot});
+
+  @override
+  Widget build(BuildContext context) {
+    final isUk = LocaleService.currentLocale == 'uk';
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionHeader(isUk ? 'ПОХОДЖЕННЯ ТА ФЕРМА' : 'ORIGIN & FARM'),
+        const SizedBox(height: 12),
+        _buildGrid([
+          _InfoItem(label: isUk ? 'Країна' : 'Country', value: lot.originCountry),
+          _InfoItem(label: isUk ? 'Регіон' : 'Region', value: lot.region),
+          _InfoItem(label: isUk ? 'Ферма' : 'Farm', value: lot.farm),
+          _InfoItem(label: isUk ? 'Станція' : 'Station', value: lot.washStation),
+          _InfoItem(label: isUk ? 'Фермер' : 'Farmer', value: lot.farmer),
+          _InfoItem(label: isUk ? 'Висота' : 'Altitude', value: lot.altitude != null ? '${lot.altitude}m' : null),
+        ]),
+        const SizedBox(height: 20),
+        _buildSectionHeader(isUk ? 'КАВА ТА ОБРОБКА' : 'COFFEE & PROCESS'),
+        const SizedBox(height: 12),
+        _buildGrid([
+          _InfoItem(label: isUk ? 'Різновид' : 'Varieties', value: lot.varieties),
+          _InfoItem(label: isUk ? 'Оброба' : 'Process', value: lot.process),
+          _InfoItem(label: isUk ? 'Декаф' : 'Decaf', value: lot.isDecaf ? (isUk ? 'Так' : 'Yes') : (isUk ? 'Ні' : 'No')),
+          _InfoItem(label: isUk ? 'Мелена' : 'Ground', value: lot.isGround ? (isUk ? 'Так' : 'Yes') : (isUk ? 'Ні' : 'No')),
+        ]),
+        const SizedBox(height: 20),
+        _buildSectionHeader(isUk ? 'ОБСМАЖЕННЯ ТА КУПІВЛЯ' : 'ROAST & PURCHASE'),
+        const SizedBox(height: 12),
+        _buildGrid([
+          _InfoItem(label: isUk ? 'Рівень' : 'Roast Level', value: lot.roastLevel),
+          _InfoItem(label: isUk ? 'Дата обсмажки' : 'Roast Date', value: lot.roastDate?.toString().split(' ')[0]),
+          _InfoItem(label: isUk ? 'Відкрито' : 'Opened At', value: lot.openedAt?.toString().split(' ')[0]),
+          _InfoItem(label: isUk ? 'Ціна' : 'Price', value: lot.pricing['retail']?.toString()),
+          _InfoItem(label: isUk ? 'Вага' : 'Weight', value: lot.weight != null ? '${lot.weight}g' : null),
+          _InfoItem(label: isUk ? 'ID Лоту' : 'Lot ID', value: lot.lotNumber),
+        ]),
+      ],
+    );
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return Text(
+      title,
+      style: GoogleFonts.outfit(
+        fontSize: 10,
+        fontWeight: FontWeight.w900,
+        color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
+        letterSpacing: 2.0,
+      ),
+    );
+  }
+
+  Widget _buildGrid(List<Widget> items) {
+    return Wrap(
+      spacing: 16,
+      runSpacing: 16,
+      children: items.map((item) => SizedBox(width: 85, child: item)).toList(),
+    );
+  }
+}
+
+class _InfoItem extends StatelessWidget {
+  final String label;
+  final String? value;
+
+  const _InfoItem({required this.label, this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label.toUpperCase(),
+          style: GoogleFonts.outfit(
+            fontSize: 8,
+            color: const Color(0xFFC8A96E).withValues(alpha: 0.4),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          (value == null || value!.isEmpty) ? 'N/A' : value!,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: GoogleFonts.outfit(
+            fontSize: 11,
+            color: const Color(0xFFC8A96E),
+            fontWeight: FontWeight.w600,
           ),
         ),
       ],

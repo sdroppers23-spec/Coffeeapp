@@ -28,6 +28,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
   
   bool get _isSelectionMode => _selectedLotIds.isNotEmpty;
   late final ScrollController _scrollController;
+  int _expandedCount = 0;
 
   @override
   void initState() {
@@ -450,6 +451,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
         }
         return ListView.builder(
           controller: _scrollController,
+          physics: _expandedCount > 0 ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
           padding: const EdgeInsets.fromLTRB(26, 16, 26, 100),
           itemCount: filteredLots.length,
           itemBuilder: (context, index) {
@@ -458,6 +460,15 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                 lot: lot,
                 isSelected: _selectedLotIds.contains(lot.id),
                 isSelectionMode: _isSelectionMode,
+                onExpansionChanged: (isExpanded) {
+                  setState(() {
+                    if (isExpanded) {
+                      _expandedCount++;
+                    } else {
+                      _expandedCount--;
+                    }
+                  });
+                },
                 onLongPress: (id) => _toggleLotSelection(id),
                 onTap: (id) => context.push('/lot_details', extra: {'lot': lot}),
                 onFavoriteToggle: (lot) async {

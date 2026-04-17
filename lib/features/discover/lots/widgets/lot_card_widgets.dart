@@ -245,6 +245,7 @@ class MyLotListCard extends ConsumerStatefulWidget {
   final Function(CoffeeLotDto)? onEditSwipe;
   final Future<void> Function(CoffeeLotDto)? onRestoreSwipe;
   final Future<bool> Function(CoffeeLotDto)? onDeleteSwipe;
+  final Function(bool)? onExpansionChanged;
 
   const MyLotListCard({
     super.key,
@@ -257,6 +258,7 @@ class MyLotListCard extends ConsumerStatefulWidget {
     this.onEditSwipe,
     this.onRestoreSwipe,
     this.onDeleteSwipe,
+    this.onExpansionChanged,
   });
 
   @override
@@ -270,7 +272,16 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
     setState(() {
       _isExpanded = !_isExpanded;
     });
+    widget.onExpansionChanged?.call(_isExpanded);
     Vibration.vibrate(duration: 10, amplitude: 50);
+  }
+
+  @override
+  void dispose() {
+    if (_isExpanded) {
+      widget.onExpansionChanged?.call(false);
+    }
+    super.dispose();
   }
 
   @override

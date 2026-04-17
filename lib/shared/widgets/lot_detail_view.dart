@@ -265,91 +265,22 @@ class _SensoryTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      children: [
-        SizedBox(
-          height: 300,
-          child: SensoryRadarChart(
-            interactive: false,
-            height: 300,
-            staticValues: points.map(
-              (k, v) => MapEntry(k, (v as num).toDouble() / 5.0),
-            ),
-          ),
-        ),
-        const SizedBox(height: 32),
-        const Divider(color: Colors.white10),
-        const SizedBox(height: 24),
-        Wrap(
-          spacing: 20,
-          runSpacing: 24,
-          children: [
-            _SensoryPointScale(label: isUk ? 'Аромат' : 'Aroma', value: (points['aroma'] ?? 3).toInt()),
-            _SensoryPointScale(label: isUk ? 'Солодкість' : 'Sweetness', value: (points['sweetness'] ?? 3).toInt()),
-            _SensoryPointScale(label: isUk ? 'Кислотність' : 'Acidity', value: (points['acidity'] ?? 3).toInt()),
-            _SensoryPointScale(label: isUk ? 'Гіркота' : 'Bitterness', value: (points['bitterness'] ?? 3).toInt()),
-            _SensoryPointScale(label: isUk ? 'Тіло' : 'Body', value: (points['body'] ?? 3).toInt()),
-            _SensoryPointScale(label: isUk ? 'Інтенсивність' : 'Intensity', value: (points['intensity'] ?? 3).toInt()),
-          ],
-        ),
-        const SizedBox(height: 100),
-      ],
-    );
-  }
-}
-
-class _SensoryPointScale extends StatelessWidget {
-  final String label;
-  final int value;
-
-  const _SensoryPointScale({required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    final accentColor = const Color(0xFFC8A96E);
-    final width = (MediaQuery.of(context).size.width - 60) / 2;
-
-    return SizedBox(
-      width: width,
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label.toUpperCase(),
-            style: GoogleFonts.outfit(
-              color: Colors.white38,
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.5,
+          const SizedBox(height: 10),
+          SizedBox(
+            height: 350,
+            child: SensoryRadarChart(
+              interactive: false,
+              height: 350,
+              staticValues: points.map(
+                (k, v) => MapEntry(k, (v as num).toDouble()),
+              ),
             ),
           ),
-          const SizedBox(height: 8),
-          Row(
-            children: List.generate(5, (index) {
-              final isActive = index < value;
-              return Expanded(
-                child: Container(
-                  height: 6,
-                  margin: EdgeInsets.only(right: index == 4 ? 0 : 4),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(2),
-                    color: isActive 
-                        ? accentColor 
-                        : Colors.white.withValues(alpha: 0.05),
-                    boxShadow: isActive ? [
-                      BoxShadow(
-                        color: accentColor.withValues(alpha: 0.3),
-                        blurRadius: 4,
-                        offset: const Offset(0, 1),
-                      )
-                    ] : null,
-                  ),
-                ),
-              );
-            }),
-          ),
+          const SizedBox(height: 40),
         ],
       ),
     );

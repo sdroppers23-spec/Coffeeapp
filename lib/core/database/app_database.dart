@@ -615,10 +615,17 @@ class AppDatabase extends _$AppDatabase {
   Future<int> upsertUserLot(CoffeeLotsCompanion lot) =>
       into(coffeeLots).insertOnConflictUpdate(lot);
 
-  Future<int> deleteUserLot(String id) =>
-      (delete(coffeeLots)..where((t) => t.id.equals(id))).go();
+  Future<int> deleteUserLot(String id) async {
+    return (update(coffeeLots)..where((t) => t.id.equals(id))).write(
+      const CoffeeLotsCompanion(
+        isDeletedLocal: Value(true),
+        isSynced: Value(false),
+      ),
+    );
+  }
 
-  Future<int> deleteLotPermanently(String id) => deleteUserLot(id);
+  Future<int> deleteLotPermanently(String id) =>
+      (delete(coffeeLots)..where((t) => t.id.equals(id))).go();
 
   Future<void> syncLotsInTx(List<CoffeeLotsCompanion> lots) {
     return transaction(() async {
@@ -633,13 +640,19 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> toggleLotFavorite(String id, bool val) async {
     await (update(coffeeLots)..where((t) => t.id.equals(id))).write(
-      CoffeeLotsCompanion(isFavorite: Value(val)),
+      CoffeeLotsCompanion(
+        isFavorite: Value(val),
+        isSynced: const Value(false),
+      ),
     );
   }
 
   Future<void> toggleLotArchive(String id, bool val) async {
     await (update(coffeeLots)..where((t) => t.id.equals(id))).write(
-      CoffeeLotsCompanion(isArchived: Value(val)),
+      CoffeeLotsCompanion(
+        isArchived: Value(val),
+        isSynced: const Value(false),
+      ),
     );
   }
 
@@ -744,7 +757,16 @@ class AppDatabase extends _$AppDatabase {
     await upsertCustomRecipe(r);
   }
 
-  Future<int> deleteCustomRecipe(String id) =>
+  Future<int> deleteCustomRecipe(String id) async {
+    return (update(customRecipes)..where((t) => t.id.equals(id))).write(
+      const CustomRecipesCompanion(
+        isDeletedLocal: Value(true),
+        isSynced: Value(false),
+      ),
+    );
+  }
+
+  Future<int> deleteCustomRecipePermanently(String id) =>
       (delete(customRecipes)..where((t) => t.id.equals(id))).go();
 
   // ── Brewing (Static Wide Table) ───────────────────────────────────────────

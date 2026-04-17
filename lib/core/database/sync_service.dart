@@ -83,8 +83,9 @@ class SyncService {
       
       onProgress?.call('Syncing User Data...', 0.95);
       _progressController.add(0.95);
+      // Push local changes (including deletions) BEFORE pulling to prevent restored deleted items
+      await pushLocalUserContent(); 
       await pullUserContent();
-      await pushLocalUserContent();
       
       onProgress?.call('Finalizing...', 0.98);
 
@@ -573,6 +574,14 @@ class SyncService {
       final lotsData = await supabase!.from('user_coffee_lots').select().eq('user_id', userId);
       for (final item in lotsData) {
         final id = item['id'] as String;
+        
+        // CHECK: If lot is deleted locally but not yet synced with cloud, do not pull it back
+        final localLot = await db.findConflictLot(id);
+        if (localLot != null && localLot.isDeletedLocal) {
+          debugPrint('SYNC: Skipping pull for locally deleted lot $id');
+          continue;
+        }
+
         final lot = CoffeeLotsCompanion(
           id: Value(id),
           userId: Value(userId),
@@ -613,6 +622,14 @@ class SyncService {
       final recipesData = await supabase!.from('user_custom_recipes').select().eq('user_id', userId);
       for (final item in recipesData) {
         final id = item['id'] as String;
+
+        // CHECK: If recipe is deleted locally, skip pull
+        final existing = await (db.select(db.customRecipes)..where((t) => t.id.equals(id))).getSingleOrNull();
+        if (existing != null && existing.isDeletedLocal) {
+          debugPrint('SYNC: Skipping pull for locally deleted recipe $id');
+          continue;
+        }
+
         final recipe = CustomRecipesCompanion(
           id: Value(id),
           userId: Value(userId),

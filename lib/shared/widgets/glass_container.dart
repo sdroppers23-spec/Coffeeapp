@@ -56,44 +56,45 @@ class GlassContainer extends StatelessWidget {
               ],
         ),
         child: ClipRRect(
-        borderRadius: BorderRadius.circular(borderRadius),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-          child: Container(
-            padding: padding,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: opacity),
-              borderRadius: BorderRadius.circular(borderRadius),
-              border: Border.all(
-                color: borderColor ?? Colors.white.withValues(alpha: 0.15),
-                width: 1.2,
+          borderRadius: BorderRadius.circular(borderRadius),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+            child: Container(
+              padding: padding,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: opacity),
+                borderRadius: BorderRadius.circular(borderRadius),
+                border: Border.all(
+                  color: borderColor ?? Colors.white.withValues(alpha: 0.15),
+                  width: 1.2,
+                ),
+                image: imageUrl != null
+                    ? DecorationImage(
+                        image: imageUrl!.startsWith('http')
+                            ? CachedNetworkImageProvider(imageUrl!) as ImageProvider
+                            : AssetImage(imageUrl!),
+                        fit: BoxFit.cover,
+                        colorFilter: ColorFilter.mode(
+                          Colors.black.withValues(alpha: 1 - imageOpacity),
+                          BlendMode.darken,
+                        ),
+                      )
+                    : null,
+                gradient:
+                    imageUrl == null
+                        ? backgroundGradient ??
+                            LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Colors.white.withValues(alpha: 0.12),
+                                Colors.white.withValues(alpha: 0.04),
+                              ],
+                            )
+                        : null,
               ),
-              image: imageUrl != null
-                  ? DecorationImage(
-                      image: imageUrl!.startsWith('http')
-                          ? CachedNetworkImageProvider(imageUrl!) as ImageProvider
-                          : AssetImage(imageUrl!),
-                      fit: BoxFit.cover,
-                      colorFilter: ColorFilter.mode(
-                        Colors.black.withValues(alpha: 1 - imageOpacity),
-                        BlendMode.darken,
-                      ),
-                    )
-                  : null,
-              gradient:
-                  imageUrl == null
-                      ? backgroundGradient ??
-                          LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              Colors.white.withValues(alpha: 0.12),
-                              Colors.white.withValues(alpha: 0.04),
-                            ],
-                          )
-                      : null,
+              child: child,
             ),
-            child: child,
           ),
         ),
       ),

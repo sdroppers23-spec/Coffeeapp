@@ -473,8 +473,21 @@ class SpecialtyArticleCard extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
-          color: Colors.white.withValues(alpha: 0.06),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+          color: isDark 
+              ? Colors.white.withValues(alpha: 0.06) 
+              : Colors.white,
+          border: Border.all(
+            color: isDark 
+                ? Colors.white.withValues(alpha: 0.08)
+                : theme.colorScheme.primary.withValues(alpha: 0.1),
+          ),
+          boxShadow: isDark ? null : [
+            BoxShadow(
+              color: theme.colorScheme.primary.withValues(alpha: 0.03),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
         ),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(22, 22, 22, 24),

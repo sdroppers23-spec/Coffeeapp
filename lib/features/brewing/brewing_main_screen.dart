@@ -49,6 +49,10 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final accentColor = theme.colorScheme.secondary;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: PremiumAppBar(
@@ -59,7 +63,7 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
               ref.watch(brewingViewModeProvider)
                   ? Icons.view_list_rounded
                   : Icons.grid_view_rounded,
-              color: const Color(0xFFC8A96E),
+              color: accentColor,
             ),
             onPressed: () => ref.read(brewingViewModeProvider.notifier).toggle(),
           ),
@@ -77,20 +81,9 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
               padding: const EdgeInsets.symmetric(horizontal: 16),
               indicator: BoxDecoration(
                 borderRadius: BorderRadius.circular(24),
-                color: const Color(0xFFC8A96E),
+                color: accentColor,
               ),
-              indicatorSize: TabBarIndicatorSize.tab,
-              dividerColor: Colors.transparent,
-              labelColor: Colors.black,
-              unselectedLabelColor: Colors.white70,
-              labelStyle: GoogleFonts.poppins(
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
-              ),
-              unselectedLabelStyle: GoogleFonts.poppins(
-                fontWeight: FontWeight.w500,
-                fontSize: 13,
-              ),
+              // Most styles now come from global tabBarTheme in AppTheme
               tabs: [
                 Tab(text: ref.t('alternative')),
                 Tab(text: ref.t('my_recipes')),

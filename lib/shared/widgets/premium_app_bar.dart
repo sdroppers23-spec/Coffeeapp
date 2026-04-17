@@ -18,21 +18,28 @@ class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return ClipRect(
       child: BackdropFilter(
         filter: ui.ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: AppBar(
-          backgroundColor: Colors.black.withValues(alpha: 0.2),
+          backgroundColor: isDark 
+              ? Colors.black.withValues(alpha: 0.2)
+              : theme.colorScheme.surface.withValues(alpha: 0.7),
           elevation: 0,
           scrolledUnderElevation: 0,
-          leading: showBackButton ? const BackButton(color: Colors.white) : null,
+          leading: showBackButton 
+              ? BackButton(color: theme.colorScheme.onSurface) 
+              : null,
           title: Text(
             title,
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.outfit(
               fontWeight: FontWeight.bold,
               letterSpacing: 0.5,
               fontSize: 22,
-              color: Colors.white,
+              color: theme.colorScheme.onSurface,
             ),
           ),
           centerTitle: false,

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../navigation/navigation_providers.dart';
 import '../../core/supabase/supabase_provider.dart';
 import '../../core/providers/settings_provider.dart';
+import '../../core/theme/app_theme.dart';
 // import '../../shared/widgets/premium_background.dart'; // Removed unused import
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -51,15 +52,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
-        backgroundColor: Colors.black, // Solid black matching screenshot
-        appBar: AppBar(
-        backgroundColor: Colors.black,
+      backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: Colors.white,
+            color: theme.colorScheme.onSurface,
             size: 20,
           ),
           onPressed: () => context.pop(),
@@ -69,11 +73,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           style: GoogleFonts.outfit(
             fontWeight: FontWeight.w600,
             fontSize: 20,
-            color: Colors.white,
+            color: theme.colorScheme.onSurface,
           ),
         ),
-        centerTitle:
-            false, // Screenshot looks slightly left or centered, but let's go with standard clean look
+        centerTitle: false,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -81,8 +84,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // МОВА
-            _buildSectionTitle('МОВА'),
+            _buildSectionTitle(context, 'МОВА'),
             _buildCard(
+              context,
               child: InkWell(
                 onTap: () {},
                 borderRadius: BorderRadius.circular(16),
@@ -90,9 +94,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   padding: const EdgeInsets.all(16),
                   child: Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.public_rounded,
-                        color: Colors.white70,
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                         size: 22,
                       ),
                       const SizedBox(width: 12),
@@ -100,15 +104,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         child: Text(
                           'Українська',
                           style: GoogleFonts.outfit(
-                            color: Colors.white,
+                            color: theme.colorScheme.onSurface,
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
                       ),
-                      const Icon(
+                      Icon(
                         Icons.keyboard_arrow_down_rounded,
-                        color: Color(0xFFC8A96E),
+                        color: theme.colorScheme.primary,
                         size: 24,
                       ),
                     ],
@@ -119,9 +123,59 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
             const SizedBox(height: 32),
 
-            // ВІБРАЦІЯ
-            _buildSectionTitle('ВІБРАЦІЯ'),
+            // ТЕМА
+            _buildSectionTitle(context, 'ТЕМА'),
             _buildCard(
+              context,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 8, 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            isDark ? 'Dark Roast' : 'Morning Crema',
+                            style: GoogleFonts.outfit(
+                              color: theme.colorScheme.onSurface,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            isDark ? 'Перейти на світлу тему' : 'Перейти на темну тему',
+                            style: GoogleFonts.outfit(
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                              fontSize: 13,
+                              height: 1.2,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Switch(
+                      value: !isDark,
+                      activeThumbColor: theme.colorScheme.secondary,
+                      activeTrackColor: theme.colorScheme.secondary.withValues(alpha: 0.2),
+                      inactiveThumbColor: Colors.grey[400],
+                      inactiveTrackColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+                      onChanged: (val) {
+                        ref.read(themeProvider.notifier).toggleTheme(!val);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 32),
+
+            // ВІБРАЦІЯ
+            _buildSectionTitle(context, 'ВІБРАЦІЯ'),
+            _buildCard(
+              context,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 8, 16),
                 child: Row(
@@ -133,7 +187,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           Text(
                             'Тактильний відгук',
                             style: GoogleFonts.outfit(
-                              color: Colors.white,
+                              color: theme.colorScheme.onSurface,
                               fontSize: 16,
                               fontWeight: FontWeight.w400,
                             ),
@@ -142,7 +196,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           Text(
                             'Легка вібрація при натисканні та\nутриманні',
                             style: GoogleFonts.outfit(
-                              color: Colors.white38,
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                               fontSize: 13,
                               height: 1.2,
                             ),
@@ -152,16 +206,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     ),
                     Switch(
                       value: ref.watch(settingsProvider),
-                      activeThumbColor: const Color(0xFFC8A96E),
-                      activeTrackColor: const Color(
-                        0xFFC8A96E,
-                      ).withValues(alpha: 0.2),
+                      activeThumbColor: theme.colorScheme.secondary,
+                      activeTrackColor: theme.colorScheme.secondary.withValues(alpha: 0.2),
                       inactiveThumbColor: Colors.grey[400],
-                      inactiveTrackColor: Colors.white10,
+                      inactiveTrackColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
                       onChanged: (val) {
-                        ref
-                            .read(settingsProvider.notifier)
-                            .toggleVibration(val);
+                        ref.read(settingsProvider.notifier).toggleVibration(val);
                       },
                     ),
                   ],
@@ -180,16 +230,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.vibration_rounded,
-                      color: Color(0xFFC8A96E),
+                      color: theme.colorScheme.primary,
                       size: 18,
                     ),
                     const SizedBox(width: 8),
                     Text(
                       'TEST HAPTIC',
                       style: GoogleFonts.poppins(
-                        color: const Color(0xFFC8A96E),
+                        color: theme.colorScheme.primary,
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 1.5,
@@ -203,22 +253,25 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             const SizedBox(height: 32),
 
             // ЮРИДИЧНА ІНФОРМАЦІЯ
-            _buildSectionTitle('ЮРИДИЧНА ІНФОРМАЦІЯ'),
+            _buildSectionTitle(context, 'ЮРИДИЧНА ІНФОРМАЦІЯ'),
             _buildCard(
+              context,
               child: Column(
                 children: [
                   _buildListItem(
+                    context,
                     icon: Icons.lock_outline_rounded,
                     title: 'Політика конфіденційності',
                     onTap: () {},
                   ),
-                  const Divider(
-                    color: Colors.white10,
+                  Divider(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
                     height: 1,
                     indent: 16,
                     endIndent: 16,
                   ),
                   _buildListItem(
+                    context,
                     icon: Icons.insert_drive_file_outlined,
                     title: 'Умови використання',
                     onTap: () {},
@@ -230,11 +283,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             const SizedBox(height: 32),
 
             // ПІДТРИМКА
-            _buildSectionTitle('ПІДТРИМКА'),
+            _buildSectionTitle(context, 'ПІДТРИМКА'),
             _buildCard(
+              context,
               child: Column(
                 children: [
                   _buildListItem(
+                    context,
                     icon: Icons.help_outline_rounded,
                     title: 'Служба підтримки',
                     onTap: () {},
@@ -265,10 +320,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ],
         ),
       ),
-  );
-}
+    );
+  }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(BuildContext context, String title) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.only(left: 8, bottom: 12),
       child: Text(
@@ -276,31 +333,45 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         style: GoogleFonts.outfit(
           fontSize: 13,
           fontWeight: FontWeight.bold,
-          color: const Color(0xFFC8A96E),
+          color: isDark ? theme.colorScheme.primary : theme.colorScheme.primary.withValues(alpha: 0.6),
           letterSpacing: 2.0,
         ),
       ),
     );
   }
 
-  Widget _buildCard({required Widget child}) {
+  Widget _buildCard(BuildContext context, {required Widget child}) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
-        color: const Color(
-          0xFF111111,
-        ), // Darkest card color matching screenshot
+        color: isDark ? const Color(0xFF111111) : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+        border: Border.all(
+          color: isDark 
+              ? theme.colorScheme.onSurface.withValues(alpha: 0.05)
+              : theme.colorScheme.primary.withValues(alpha: 0.08),
+        ),
+        boxShadow: isDark ? null : [
+          BoxShadow(
+            color: theme.colorScheme.primary.withValues(alpha: 0.03),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: child,
     );
   }
 
-  Widget _buildListItem({
+  Widget _buildListItem(
+    BuildContext context, {
     required IconData icon,
     required String title,
     required VoidCallback onTap,
   }) {
+    final theme = Theme.of(context);
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
@@ -308,21 +379,25 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: Row(
           children: [
-            Icon(icon, color: Colors.white70, size: 22),
+            Icon(
+              icon,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+              size: 22,
+            ),
             const SizedBox(width: 14),
             Expanded(
               child: Text(
                 title,
                 style: GoogleFonts.outfit(
-                  color: Colors.white,
+                  color: theme.colorScheme.onSurface,
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
                 ),
               ),
             ),
-            const Icon(
+            Icon(
               Icons.chevron_right_rounded,
-              color: Colors.white24,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
               size: 24,
             ),
           ],

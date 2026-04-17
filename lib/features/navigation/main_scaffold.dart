@@ -160,19 +160,24 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                                   vertical: 1,
                                   horizontal: 6,
                                 ),
-                                blur: 60,
-                                opacity: 0.1, // Reduced for better transparency
+                                blur: isDark ? 60 : 40,
+                                opacity: isDark ? 0.1 : 0.6,
                                 backgroundGradient: LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
-                                  colors: [
-                                    Colors.white.withValues(alpha: 0.15),
-                                    const Color(
-                                      0xFFFFF9E3,
-                                    ).withValues(alpha: 0.08), // Softer Milk
-                                  ],
+                                  colors: isDark
+                                      ? [
+                                          Colors.white.withValues(alpha: 0.15),
+                                          const Color(0xFFFFF9E3).withValues(alpha: 0.08),
+                                        ]
+                                      : [
+                                          Colors.white.withValues(alpha: 0.9),
+                                          theme.colorScheme.surface.withValues(alpha: 0.7),
+                                        ],
                                 ),
-                                borderColor: Colors.white.withValues(alpha: 0.15),
+                                borderColor: isDark
+                                    ? Colors.white.withValues(alpha: 0.15)
+                                    : theme.colorScheme.primary.withValues(alpha: 0.1),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -222,23 +227,28 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                                 width: 52,
                                 height: 52,
                                 borderRadius: 26,
-                                blur: 60,
-                                opacity: 0.1,
+                                blur: isDark ? 60 : 40,
+                                opacity: isDark ? 0.1 : 0.6,
                                 backgroundGradient: LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
-                                  colors: [
-                                    Colors.white.withValues(alpha: 0.15),
-                                    const Color(
-                                      0xFFFFF9E3,
-                                    ).withValues(alpha: 0.08),
-                                  ],
+                                  colors: isDark
+                                      ? [
+                                          Colors.white.withValues(alpha: 0.15),
+                                          const Color(0xFFFFF9E3).withValues(alpha: 0.08),
+                                        ]
+                                      : [
+                                          Colors.white.withValues(alpha: 0.9),
+                                          theme.colorScheme.surface.withValues(alpha: 0.7),
+                                        ],
                                 ),
-                                borderColor: Colors.white.withValues(alpha: 0.15),
-                              child: const Center(
+                                borderColor: isDark
+                                    ? Colors.white.withValues(alpha: 0.15)
+                                    : theme.colorScheme.primary.withValues(alpha: 0.1),
+                              child: Center(
                                 child: Icon(
                                   Icons.settings_rounded,
-                                  color: Colors.white,
+                                  color: isDark ? Colors.white : theme.colorScheme.primary,
                                   size: 24,
                                 ),
                               ),
@@ -325,6 +335,11 @@ class _NavBarItemState extends ConsumerState<_NavBarItem>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final activeColor = isDark ? const Color(0xFFC8A96E) : theme.colorScheme.primary;
+    final inactiveColor = isDark ? Colors.white54 : theme.colorScheme.onSurfaceVariant;
+
     return PressableScale(
       onTap: widget.onTap,
       child: Column(
@@ -340,28 +355,23 @@ class _NavBarItemState extends ConsumerState<_NavBarItem>
                   duration: const Duration(milliseconds: 300),
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color:
-                        widget.isSelected
-                            ? Colors.white.withValues(alpha: 0.1) // Subtle mask
-                            : Colors.transparent,
+                    color: widget.isSelected
+                        ? (isDark ? Colors.white10 : theme.colorScheme.primary.withValues(alpha: 0.1))
+                        : Colors.transparent,
                     shape: BoxShape.circle,
-                    boxShadow:
-                        widget.isSelected
-                            ? [
-                              BoxShadow(
-                                color: Colors.white.withValues(alpha: 0.15),
-                                blurRadius: 25, // Softer, more diffuse
-                                spreadRadius: 2,
-                              ),
-                            ]
-                            : [],
+                    boxShadow: widget.isSelected
+                        ? [
+                            BoxShadow(
+                              color: activeColor.withValues(alpha: 0.15),
+                              blurRadius: 25,
+                              spreadRadius: 2,
+                            ),
+                          ]
+                        : [],
                   ),
                   child: Icon(
                     widget.icon,
-                    color:
-                        widget.isSelected
-                            ? const Color(0xFFC8A96E) // Gold for active
-                            : Colors.white54,
+                    color: widget.isSelected ? activeColor : inactiveColor,
                     size: 22,
                   ),
                 ),
@@ -373,8 +383,7 @@ class _NavBarItemState extends ConsumerState<_NavBarItem>
             widget.label,
             style: TextStyle(
               fontSize: 10,
-              color:
-                  widget.isSelected ? const Color(0xFFC8A96E) : Colors.white54,
+              color: widget.isSelected ? activeColor : inactiveColor,
               fontWeight: widget.isSelected ? FontWeight.bold : FontWeight.w500,
             ),
           ),

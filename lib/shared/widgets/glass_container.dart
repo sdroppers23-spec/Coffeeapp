@@ -36,40 +36,47 @@ class GlassContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget mainContent = Stack(
-      children: [
-        // Layer 1: Base black background for smoothness and to prevent sharp highlights
-        Positioned.fill(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.5),
-              borderRadius: BorderRadius.circular(borderRadius),
-              boxShadow: shadows ?? [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
-                  blurRadius: 15,
-                  spreadRadius: 2,
-                ),
-              ],
-            ),
+    return Container(
+      margin: margin,
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(borderRadius),
+        boxShadow: shadows ?? [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.25),
+            blurRadius: 15,
+            spreadRadius: 2,
           ),
-        ),
-        // Layer 2: Blur and Main Glass Decoration
-        ClipRRect(
-          borderRadius: BorderRadius.circular(borderRadius),
-          clipBehavior: Clip.antiAlias,
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-            child: Container(
-              width: width ?? double.infinity,
-              height: height,
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(borderRadius),
+        clipBehavior: Clip.antiAlias,
+        child: Stack(
+          children: [
+            // 1. Matte base tint - provides depth and weight
+            Positioned.fill(
+              child: Container(
+                color: Colors.black.withValues(alpha: 0.4),
+              ),
+            ),
+            // 2. The glass blur effect
+            Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+                child: Container(color: Colors.transparent),
+              ),
+            ),
+            // 3. Main decoration and content
+            Container(
               padding: padding,
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: opacity),
                 borderRadius: BorderRadius.circular(borderRadius),
                 border: Border.all(
-                  color: borderColor ?? Colors.white.withValues(alpha: 0.15),
-                  width: 1.2,
+                  color: borderColor ?? Colors.white.withValues(alpha: 0.12),
+                  width: 1.0,
                 ),
                 image: imageUrl != null
                     ? DecorationImage(
@@ -84,30 +91,22 @@ class GlassContainer extends StatelessWidget {
                       )
                     : null,
                 gradient: imageUrl == null
-                        ? backgroundGradient ??
-                            LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                Colors.white.withValues(alpha: 0.12),
-                                Colors.white.withValues(alpha: 0.04),
-                              ],
-                            )
-                        : null,
+                    ? backgroundGradient ??
+                        LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Colors.white.withValues(alpha: 0.1),
+                            Colors.white.withValues(alpha: 0.02),
+                          ],
+                        )
+                    : null,
               ),
               child: child,
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
-
-    if (margin != null) {
-      return Padding(
-        padding: margin!,
-        child: mainContent,
-      );
-    }
-    return mainContent;
   }
 }

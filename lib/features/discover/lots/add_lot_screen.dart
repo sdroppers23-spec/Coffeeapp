@@ -290,6 +290,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               ref.read(navBarVisibleProvider.notifier).show();
               context.pop();
             },
+            child: Container(
               width: 36,
               height: 36,
               decoration: BoxDecoration(

@@ -108,8 +108,10 @@ class SyncService {
     try {
       debugPrint('SYNC: Clearing local beans before pull...');
       await db.transaction(() async {
-        await db.delete(db.localizedBeans).go();
-        await db.delete(db.localizedBeanTranslations).go();
+        debugPrint('SYNC: Clearing localizedBeanTranslations...');
+        await (db.delete(db.localizedBeanTranslations)).go();
+        debugPrint('SYNC: Clearing localizedBeans...');
+        await (db.delete(db.localizedBeans)).go();
       });
 
       debugPrint('SYNC: Pulling beans from localized_beans...');
@@ -302,14 +304,12 @@ class SyncService {
       
       debugPrint('SYNC: Received ${farmersData.length} farmers from Supabase');
 
-      if (farmersData.isEmpty) {
-        debugPrint('SYNC WARNING: Supabase returned 0 farmers. Check RLS or table content.');
-        return;
-      }
-
-      // ONLY clear old farmers if we actually got new ones
+      // Clear old farmers locally (translations first to avoid FK issues)
       await db.transaction(() async {
-        await db.delete(db.localizedFarmers).go();
+        debugPrint('SYNC: Clearing localizedFarmerTranslations...');
+        await (db.delete(db.localizedFarmerTranslations)).go();
+        debugPrint('SYNC: Clearing localizedFarmers...');
+        await (db.delete(db.localizedFarmers)).go();
       });
       
       int successCount = 0;
@@ -394,15 +394,14 @@ class SyncService {
       debugPrint('SYNC: Pulling articles from specialty_articles...');
       final data = await supabase!.from('specialty_articles').select().order('id');
       
-      if (data.isEmpty) {
-        debugPrint('SYNC: No articles found in cloud, skipping clear to prevent data loss.');
-        return;
-      }
+      // Clear old articles locally after successful connection to Supabase
 
       // Clear old articles locally only after successful fetch
       await db.transaction(() async {
-        await db.delete(db.specialtyArticles).go();
-        await db.delete(db.specialtyArticleTranslations).go();
+        debugPrint('SYNC: Clearing specialtyArticleTranslations...');
+        await (db.delete(db.specialtyArticleTranslations)).go();
+        debugPrint('SYNC: Clearing specialtyArticles...');
+        await (db.delete(db.specialtyArticles)).go();
       });
 
       int successCount = 0;
@@ -671,8 +670,10 @@ class SyncService {
     try {
       debugPrint('SYNC: Clearing local brewing recipes before pull...');
       await db.transaction(() async {
-        await db.delete(db.brewingRecipes).go();
-        await db.delete(db.brewingRecipeTranslations).go();
+        debugPrint('SYNC: Clearing brewingRecipeTranslations...');
+        await (db.delete(db.brewingRecipeTranslations)).go();
+        debugPrint('SYNC: Clearing brewingRecipes...');
+        await (db.delete(db.brewingRecipes)).go();
       });
 
       debugPrint('SYNC: Pulling methods from brewing_recipes...');
@@ -742,8 +743,10 @@ class SyncService {
     try {
       debugPrint('SYNC: Clearing local brands before pull...');
       await db.transaction(() async {
-        await db.delete(db.localizedBrands).go();
-        await db.delete(db.localizedBrandTranslations).go();
+        debugPrint('SYNC: Clearing localizedBrandTranslations...');
+        await (db.delete(db.localizedBrandTranslations)).go();
+        debugPrint('SYNC: Clearing localizedBrands...');
+        await (db.delete(db.localizedBrands)).go();
       });
 
       debugPrint('SYNC: Pulling brands from localized_brands...');

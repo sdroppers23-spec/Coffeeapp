@@ -267,11 +267,24 @@ class MyLotListCard extends ConsumerStatefulWidget {
 
 class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTickerProviderStateMixin {
   bool _isExpanded = false;
-
   void _toggleExpanded() {
     setState(() {
       _isExpanded = !_isExpanded;
     });
+    
+    if (_isExpanded) {
+      // Small delay to let the animation start before scrolling
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (mounted) {
+          Scrollable.ensureVisible(
+            context,
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeInOut,
+            alignment: 0.1, // Scroll so it's near the top
+          );
+        }
+      });
+    }
     widget.onExpansionChanged?.call(_isExpanded);
     Vibration.vibrate(duration: 10, amplitude: 50);
   }
@@ -434,9 +447,25 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                     child: SensoryRadarChart(
                       interactive: false,
                       height: 200,
-                      staticValues: lot.sensoryPoints.map(
-                        (k, v) => MapEntry(k, (v as num).toDouble()),
-                      ),
+                      staticValues: (() {
+                        final Map<String, double> result = {
+                          'aroma': 0.0,
+                          'flavor': 0.0,
+                          'acidity': 0.0,
+                          'body': 0.0,
+                          'aftertaste': 0.0,
+                          'balance': 0.0,
+                        };
+                        
+                        lot.sensoryPoints.forEach((k, v) {
+                          final key = k.toLowerCase();
+                          if (result.containsKey(key)) {
+                            result[key] = (v as num?)?.toDouble() ?? 0.0;
+                          }
+                        });
+                        
+                        return result;
+                      })(),
                     ),
                   ),
                 ],

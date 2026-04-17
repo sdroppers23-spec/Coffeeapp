@@ -425,9 +425,9 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
             padding: const EdgeInsets.fromLTRB(21, 16, 21, 100),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              mainAxisSpacing: 20,
-              crossAxisSpacing: 20,
-              childAspectRatio: 0.68,
+              childAspectRatio: 0.72,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
             ),
             itemCount: filteredLots.length,
             itemBuilder: (context, index) {

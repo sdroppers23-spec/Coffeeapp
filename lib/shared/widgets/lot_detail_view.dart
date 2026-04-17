@@ -320,31 +320,42 @@ class _SegmentedSensoryBar extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              Text(
-                '${value.toInt()}/5',
-                style: GoogleFonts.outfit(
-                  fontSize: 14,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 100,
+                    child: Row(
+                      children: List.generate(5, (index) {
+                        final isFilled = index < value.toInt();
+                        return Expanded(
+                          child: Container(
+                            height: 3,
+                            margin: EdgeInsets.only(right: index == 4 ? 0 : 3),
+                            decoration: BoxDecoration(
+                              color: isFilled ? theme.colorScheme.primary : const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  SizedBox(
+                    width: 30,
+                    child: Text(
+                      '${value.toInt()}/5',
+                      textAlign: TextAlign.right,
+                      style: GoogleFonts.outfit(
+                        fontSize: 12,
+                        color: Colors.white.withValues(alpha: 0.7),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: List.generate(5, (index) {
-              final isFilled = index < value.toInt();
-              return Expanded(
-                child: Container(
-                  height: 4,
-                  margin: EdgeInsets.only(right: index == 4 ? 0 : 4),
-                  decoration: BoxDecoration(
-                    color: isFilled ? theme.colorScheme.primary : const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              );
-            }),
           ),
         ],
       ),

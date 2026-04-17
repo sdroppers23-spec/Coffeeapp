@@ -323,7 +323,7 @@ class _SegmentedSensoryBar extends StatelessWidget {
               Row(
                 children: [
                   SizedBox(
-                    width: 100,
+                    width: 80,
                     child: Row(
                       children: List.generate(5, (index) {
                         final isFilled = index < value.toInt();

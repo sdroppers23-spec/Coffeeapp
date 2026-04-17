@@ -237,11 +237,12 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         ),
       );
 
-      if (mounted) {
-        ref.invalidate(userLotsProvider);
-        ref.read(syncStatusProvider.notifier).syncEverything();
-        context.pop();
-      }
+        if (mounted) {
+          ref.invalidate(userLotsProvider);
+          ref.read(syncStatusProvider.notifier).syncEverything();
+          ref.read(navBarVisibleProvider.notifier).show();
+          context.pop();
+        }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context)
@@ -285,8 +286,10 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       child: Row(
         children: [
           GestureDetector(
-            onTap: () => context.pop(),
-            child: Container(
+            onTap: () {
+              ref.read(navBarVisibleProvider.notifier).show();
+              context.pop();
+            },
               width: 36,
               height: 36,
               decoration: BoxDecoration(

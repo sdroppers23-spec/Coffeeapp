@@ -87,8 +87,9 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
         // 1. Prioritize internal navigator pop
         if (context.canPop()) {
           context.pop();
-          // Safety: ensure navbar shows when coming back
-          Future.delayed(const Duration(milliseconds: 100), () {
+          // Force visibility immediately and after a short delay to account for animations
+          ref.read(navBarVisibleProvider.notifier).show();
+          Future.delayed(const Duration(milliseconds: 300), () {
             if (mounted) ref.read(navBarVisibleProvider.notifier).show();
           });
           return;

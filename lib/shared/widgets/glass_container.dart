@@ -36,30 +36,33 @@ class GlassContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(borderRadius),
-      child: Container(
-        margin: margin,
-        width: width ?? double.infinity,
-        height: height,
-        decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.5), // Base background to prevent square highlights
-          borderRadius: BorderRadius.circular(borderRadius),
-          boxShadow:
-              shadows ??
-              [
+    Widget mainContent = Stack(
+      children: [
+        // Layer 1: Base black background for smoothness and to prevent sharp highlights
+        Positioned.fill(
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.black.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(borderRadius),
+              boxShadow: shadows ?? [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.2),
                   blurRadius: 15,
                   spreadRadius: 2,
                 ),
               ],
+            ),
+          ),
         ),
-        child: ClipRRect(
+        // Layer 2: Blur and Main Glass Decoration
+        ClipRRect(
           borderRadius: BorderRadius.circular(borderRadius),
+          clipBehavior: Clip.antiAlias,
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
             child: Container(
+              width: width ?? double.infinity,
+              height: height,
               padding: padding,
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: opacity),
@@ -80,8 +83,7 @@ class GlassContainer extends StatelessWidget {
                         ),
                       )
                     : null,
-                gradient:
-                    imageUrl == null
+                gradient: imageUrl == null
                         ? backgroundGradient ??
                             LinearGradient(
                               begin: Alignment.topLeft,
@@ -97,7 +99,15 @@ class GlassContainer extends StatelessWidget {
             ),
           ),
         ),
-      ),
+      ],
     );
+
+    if (margin != null) {
+      return Padding(
+        padding: margin!,
+        child: mainContent,
+      );
+    }
+    return mainContent;
   }
 }

@@ -11,10 +11,12 @@ import '../../features/encyclopedia/comparison_screen.dart';
 import '../../features/specialty/specialty_screen.dart';
 import '../../features/settings/settings_screen.dart';
 import '../../features/flavor_map/flavor_map_screen.dart';
-import '../../features/brewing/brewing_main_screen.dart';
-import '../../features/navigation/main_scaffold.dart';
 import '../../features/discover/lots/add_lot_screen.dart';
+import '../../features/brewing/custom_recipe_form.dart';
 import '../../core/database/dtos.dart';
+import '../../features/navigation/main_scaffold.dart';
+import '../../features/brewing/brewing_main_screen.dart';
+import '../../shared/widgets/lot_detail_view.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorSpecialtyKey = GlobalKey<NavigatorState>(
@@ -109,6 +111,27 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final lot = state.extra as CoffeeLotDto?;
           return AddLotScreen(initialLot: lot);
+        },
+      ),
+      GoRoute(
+        path: '/custom_recipe_form',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return CustomRecipeFormScreen(
+            methodKey: extra?['methodKey'] as String? ?? 'v60',
+            lotId: extra?['lotId'] as String?,
+            existingRecipe: extra?['recipe'] as CustomRecipeDto?,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/lot_details',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          return LotDetailView(
+            lot: extra['lot'] as CoffeeLotDto?,
+            entry: extra['entry'] as EncyclopediaEntry?,
+          );
         },
       ),
     ],

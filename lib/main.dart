@@ -98,7 +98,7 @@ class SpecialtyTrackerApp extends ConsumerWidget {
 
     return MaterialApp.router(
       title: 'Specialty Tracker',
-      theme: AppTheme.lightTheme,
+      theme: AppTheme.darkTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,
       routerConfig: router,

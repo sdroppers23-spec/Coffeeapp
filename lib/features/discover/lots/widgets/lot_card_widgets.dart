@@ -43,12 +43,12 @@ class MyLotGridCard extends ConsumerWidget {
       },
       child: GlassContainer(
         padding: const EdgeInsets.all(12),
-        opacity: isSelected ? 0.8 : 0.6,
+        opacity: isSelected ? 0.25 : 0.08,
         borderRadius: 24,
-        color: const Color(0xFFC8A96E),
+        color: isSelected ? const Color(0xFFC8A96E) : Colors.white,
         borderColor: isSelected
-            ? const Color(0xFFC8A96E).withValues(alpha: 0.9)
-            : const Color(0xFFC8A96E).withValues(alpha: 0.3),
+            ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
+            : Colors.white.withValues(alpha: 0.12),
         child: Stack(
           children: [
             Column(
@@ -322,12 +322,12 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
       },
       child: GlassContainer(
         padding: const EdgeInsets.all(16),
-        opacity: isSelected ? 0.8 : 0.6,
+        opacity: isSelected ? 0.25 : 0.08,
         borderRadius: 20,
-        color: const Color(0xFFC8A96E),
+        color: isSelected ? const Color(0xFFC8A96E) : Colors.white,
         borderColor: isSelected
-            ? const Color(0xFFC8A96E).withValues(alpha: 0.9)
-            : const Color(0xFFC8A96E).withValues(alpha: 0.3),
+            ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
+            : Colors.white.withValues(alpha: 0.12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -578,10 +578,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: dismissibleCard,
-      ),
+      child: dismissibleCard,
     );
   }
 }

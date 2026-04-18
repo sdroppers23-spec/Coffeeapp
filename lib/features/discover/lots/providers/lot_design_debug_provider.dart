@@ -1,0 +1,103 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class LotDesignConfig {
+  final Color baseColor;
+  final double baseOpacity;
+  final double blur;
+  final Color tintColor;
+  final double tintOpacity;
+  final double borderRadius;
+  final Color borderColor;
+  final double borderOpacity;
+  final Color shadowColor;
+  final double shadowBlur;
+  final double shadowSpread;
+  final double shadowOffsetY;
+  final bool isDebugMode;
+
+  const LotDesignConfig({
+    required this.baseColor,
+    required this.baseOpacity,
+    required this.blur,
+    required this.tintColor,
+    required this.tintOpacity,
+    required this.borderRadius,
+    required this.borderColor,
+    required this.borderOpacity,
+    required this.shadowColor,
+    required this.shadowBlur,
+    required this.shadowSpread,
+    required this.shadowOffsetY,
+    this.isDebugMode = false,
+  });
+
+  LotDesignConfig copyWith({
+    Color? baseColor,
+    double? baseOpacity,
+    double? blur,
+    Color? tintColor,
+    double? tintOpacity,
+    double? borderRadius,
+    Color? borderColor,
+    double? borderOpacity,
+    Color? shadowColor,
+    double? shadowBlur,
+    double? shadowSpread,
+    double? shadowOffsetY,
+    bool? isDebugMode,
+  }) {
+    return LotDesignConfig(
+      baseColor: baseColor ?? this.baseColor,
+      baseOpacity: baseOpacity ?? this.baseOpacity,
+      blur: blur ?? this.blur,
+      tintColor: tintColor ?? this.tintColor,
+      tintOpacity: tintOpacity ?? this.tintOpacity,
+      borderRadius: borderRadius ?? this.borderRadius,
+      borderColor: borderColor ?? this.borderColor,
+      borderOpacity: borderOpacity ?? this.borderOpacity,
+      shadowColor: shadowColor ?? this.shadowColor,
+      shadowBlur: shadowBlur ?? this.shadowBlur,
+      shadowSpread: shadowSpread ?? this.shadowSpread,
+      shadowOffsetY: shadowOffsetY ?? this.shadowOffsetY,
+      isDebugMode: isDebugMode ?? this.isDebugMode,
+    );
+  }
+
+  static const defaultWhiteGlass = LotDesignConfig(
+    baseColor: Colors.black,
+    baseOpacity: 0.5,
+    blur: 15.0,
+    tintColor: Colors.white,
+    tintOpacity: 0.1,
+    borderRadius: 20.0,
+    borderColor: Colors.white,
+    borderOpacity: 0.12,
+    shadowColor: Colors.black,
+    shadowBlur: 20.0,
+    shadowSpread: 0.0,
+    shadowOffsetY: 4.0,
+    isDebugMode: false,
+  );
+}
+
+class LotDesignDebugNotifier extends Notifier<LotDesignConfig> {
+  @override
+  LotDesignConfig build() => LotDesignConfig.defaultWhiteGlass;
+
+  void updateConfig(LotDesignConfig config) {
+    state = config;
+  }
+
+  void reset() {
+    state = LotDesignConfig.defaultWhiteGlass;
+  }
+
+  void toggleDebug(bool value) {
+    state = state.copyWith(isDebugMode: value);
+  }
+}
+
+final lotDesignDebugProvider = NotifierProvider<LotDesignDebugNotifier, LotDesignConfig>(() {
+  return LotDesignDebugNotifier();
+});

@@ -12,6 +12,8 @@ import '../../discovery_filter_provider.dart';
 import '../lots_providers.dart';
 import 'lot_card_widgets.dart';
 import '../../widgets/discovery_action_bar.dart';
+import 'lot_design_debug_menu.dart';
+
 
 class MyLotsContent extends ConsumerStatefulWidget {
   const MyLotsContent({super.key});
@@ -317,6 +319,32 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
         ScrollToTopButton(
           scrollController: _scrollController,
           threshold: 400,
+        ),
+
+        // DIAGNOSTIC BUTTON (Temporary)
+        Positioned(
+          bottom: 100,
+          left: 16,
+          child: AnimatedScale(
+            scale: _isSelectionMode || _isUndoVisible ? 0.0 : 1.0,
+            duration: const Duration(milliseconds: 300),
+            child: FloatingActionButton.small(
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) => const LotDesignDebugMenu(),
+                );
+              },
+              backgroundColor: Colors.black54,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: const BorderSide(color: Colors.white10),
+              ),
+              child: const Icon(Icons.tune_rounded, color: Color(0xFFC8A96E), size: 18),
+            ),
+          ),
         ),
       ],
     );

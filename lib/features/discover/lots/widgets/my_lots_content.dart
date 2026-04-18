@@ -317,7 +317,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
         ),
         ScrollToTopButton(
           scrollController: _scrollController,
-          threshold: 400,
+          threshold: 1000,
         ),
       ],
     );

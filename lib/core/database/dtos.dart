@@ -344,6 +344,8 @@ class CoffeeLotDto {
   final DateTime? updatedAt;
   final bool isDeletedLocal;
   final int? brandId;
+  final bool isSynced;
+  final String? imageUrl;
 
   CoffeeLotDto({
     required this.id,
@@ -377,6 +379,8 @@ class CoffeeLotDto {
     required this.pricing,
     this.brandId,
     this.isDeletedLocal = false,
+    this.isSynced = false,
+    this.imageUrl,
   });
 
   String get sensoryJson => jsonEncode(sensoryPoints);
@@ -415,6 +419,8 @@ class CoffeeLotDto {
     Map<String, dynamic>? pricing,
     int? brandId,
     bool? isDeletedLocal,
+    bool? isSynced,
+    String? imageUrl,
   }) {
     return CoffeeLotDto(
       id: id ?? this.id,
@@ -448,6 +454,8 @@ class CoffeeLotDto {
       pricing: pricing ?? this.pricing,
       brandId: brandId ?? this.brandId,
       isDeletedLocal: isDeletedLocal ?? this.isDeletedLocal,
+      isSynced: isSynced ?? this.isSynced,
+      imageUrl: imageUrl ?? this.imageUrl,
     );
   }
 }
@@ -468,6 +476,7 @@ class CustomRecipeDto {
   final String notes;
   final int rating;
   final DateTime? updatedAt;
+  final bool isSynced;
 
   CustomRecipeDto({
     required this.id,
@@ -485,6 +494,7 @@ class CustomRecipeDto {
     required this.notes,
     required this.rating,
     this.updatedAt,
+    this.isSynced = false,
   });
 
   String get pourScheduleJson => jsonEncode(pours);

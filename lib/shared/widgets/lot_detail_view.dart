@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vibration/vibration.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
@@ -36,6 +37,11 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging || !_tabController.indexIsChanging) {
+        setState(() {}); // Required to update header based on tab
+      }
+    });
   }
 
   @override
@@ -64,7 +70,8 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
             // Priority: Live Data -> Widget Extra (Fallback)
             final String coffeeName = liveLot?.coffeeName ?? liveBean?.varieties ?? widget.lot?.coffeeName ?? widget.entry?.fullDisplayName ?? 'Unnamed';
             final String roasteryName = liveLot?.roasteryName ?? 'Specialty Roaster';
-            final String? imageUrl = liveBean?.farmPhotosUrlCover ?? widget.entry?.imageUrl;
+            // Priority: Live Lot Image -> Live Bean Image -> Entry Image
+            final String? imageUrl = liveLot?.imageUrl ?? liveBean?.farmPhotosUrlCover ?? widget.lot?.imageUrl ?? widget.entry?.imageUrl;
             
             // Map sensory points using the shared utility
             final rawPoints = liveLot?.sensoryPoints ?? liveBean?.sensoryPoints ?? widget.lot?.sensoryPoints ?? widget.entry?.sensoryPoints ?? {};
@@ -87,6 +94,7 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                       roasteryName: roasteryName,
                       imageUrl: imageUrl,
                       lot: liveLot ?? widget.lot,
+                      isImageVisible: _tabController.index < 2, // Hide on Recipes tab
                       onBack: () => Navigator.pop(context),
                       onEdit: liveLot != null ? () {
                         if (!kIsWeb && !Platform.isWindows) {
@@ -137,6 +145,7 @@ class _DetailHeader extends StatelessWidget {
   final String roasteryName;
   final String? imageUrl;
   final CoffeeLotDto? lot;
+  final bool isImageVisible;
   final VoidCallback onBack;
   final VoidCallback? onEdit;
 
@@ -145,6 +154,7 @@ class _DetailHeader extends StatelessWidget {
     required this.roasteryName,
     this.imageUrl,
     this.lot,
+    this.isImageVisible = true,
     required this.onBack,
     this.onEdit,
   });
@@ -154,11 +164,16 @@ class _DetailHeader extends StatelessWidget {
     final theme = Theme.of(context);
     return Stack(
       children: [
-        Container(
-          height: 320,
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          height: isImageVisible ? 320 : 160,
           width: double.infinity,
           decoration: BoxDecoration(
-            image: imageUrl != null ? DecorationImage(image: NetworkImage(imageUrl!), fit: BoxFit.cover) : null,
+            image: (isImageVisible && imageUrl != null && imageUrl!.isNotEmpty) 
+                ? (imageUrl!.startsWith('http') 
+                    ? DecorationImage(image: CachedNetworkImageProvider(imageUrl!), fit: BoxFit.cover)
+                    : DecorationImage(image: FileImage(File(imageUrl!)), fit: BoxFit.cover))
+                : null,
             color: Colors.black12,
           ),
           child: Container(
@@ -232,38 +247,177 @@ class _InfoTab extends ConsumerWidget {
 
   const _InfoTab({this.lot, this.bean});
 
+  void _showProcessInfoSheet(BuildContext context, String process) {
+    // Basic local dictionary for process info
+    final isUk = LocaleService.currentLocale == 'uk';
+    String title = process;
+    String description = isUk 
+      ? 'Детальна інформація про цей метод обробки поки відсутня в нашому довіднику.'
+      : 'Detailed information about this process is not yet available in our guide.';
+
+    final pLower = process.toLowerCase();
+    if (pLower.contains('wash') || pLower.contains('мит')) {
+      title = isUk ? 'Митий метод (Washed)' : 'Washed Process';
+      description = isUk 
+        ? 'Плоди депульпують (знімають шкірку та частину м’якоті), після чого зерна ферментують у воді та ретельно промивають. Цей метод підкреслює чистоту смаку, кислотність та терруар.' 
+        : 'The fruit is pulped, fermented in water, and then washed clean. This method highlights flavor clarity, acidity, and terroir characteristics.';
+    } else if (pLower.contains('natural') || pLower.contains('натур')) {
+      title = isUk ? 'Натуральний метод (Natural)' : 'Natural Process';
+      description = isUk 
+        ? 'Зерна сушать всередині цілої ягоди. Це надає каві виражену солодкість, насичене тіло та інтенсивні фруктові ноти.' 
+        : 'The fruit is dried whole with the beans inside. This imparts heavy sweetness, a full body, and intense fruity notes to the coffee.';
+    } else if (pLower.contains('honey') || pLower.contains('хані')) {
+      title = isUk ? 'Метод Хані (Honey)' : 'Honey Process';
+      description = isUk 
+        ? 'Проміжний метод, де шкірку знімають, але залишають частину м’якоті (клейковини) під час сушіння. Кава виходить збалансованою та солодкою.' 
+        : 'A middle ground where the skin is removed but some mucilage is left on the bean during drying. Results in a balanced and sweet cup.';
+    } else if (pLower.contains('anaerobic') || pLower.contains('анаероб')) {
+      title = isUk ? 'Анаеробний метод (Anaerobic)' : 'Anaerobic Process';
+      description = isUk 
+        ? 'Ферментація відбувається у герметичних ємностях без доступу кисню. Це дозволяє контролювати бактеріальні процеси, створюючи надзвичайно складні, часто "алкогольні" смакові профілі.' 
+        : 'Fermentation takes place in sealed tanks without oxygen. This creates highly complex, sometimes boozy, and unique flavor profiles.';
+    }
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => GlassContainer(
+        padding: const EdgeInsets.all(24),
+        borderRadius: 32,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.white24,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              title.toUpperCase(),
+              style: GoogleFonts.outfit(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFFC8A96E),
+                letterSpacing: 2,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            const Divider(color: Colors.white10),
+            const SizedBox(height: 16),
+            Text(
+              description,
+              style: GoogleFonts.outfit(
+                fontSize: 14,
+                height: 1.6,
+                color: Colors.white70,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isUk = LocaleService.currentLocale == 'uk';
-    final String region = lot?.region ?? bean?.region ?? 'Unknown';
-    final String altitude = lot?.altitude ?? bean?.altitude ?? 'Unknown';
-    final String varieties = lot?.varieties ?? bean?.varieties ?? 'Unknown';
-    final String process = lot?.process ?? bean?.processing ?? 'Unknown';
-    final String? description = lot?.flavorProfile ?? bean?.description;
 
+    // Grouping fields for a premium look
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       children: [
+        // ── ORIGIN \u0026 FARM ─────────────────────────────────────────────
+        _SectionTitle(title: isUk ? 'ПОХОДЖЕННЯ ТА ФЕРМА' : 'ORIGIN \u0026 FARM'),
         GlassContainer(
           padding: const EdgeInsets.all(20),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _SectionTitle(title: isUk ? 'ТЕХНІЧНІ ХАРАКТЕРИСТИКИ' : 'TECHNICAL SPECS'),
-              _InfoRow(label: isUk ? 'Регіон' : 'Region', value: region),
-              _InfoRow(label: isUk ? 'Висота' : 'Altitude', value: altitude),
-              _InfoRow(label: isUk ? 'Сорт' : 'Variety', value: varieties),
-              _InfoRow(label: isUk ? 'Обробка' : 'Process', value: process),
-              if (bean?.harvestSeason != null) _InfoRow(label: isUk ? 'Врожай' : 'Harvest', value: bean!.harvestSeason!),
+              _InfoRow(label: isUk ? 'Назва кави' : 'Coffee Name', value: lot?.coffeeName ?? bean?.fullDisplayName),
+              _InfoRow(label: isUk ? 'Країна' : 'Country', value: lot?.originCountry ?? bean?.country),
+              _InfoRow(label: isUk ? 'Регіон' : 'Region', value: lot?.region ?? bean?.region),
+              _InfoRow(label: isUk ? 'Висота' : 'Altitude', value: lot?.altitude ?? (bean?.altitudeMin != null ? '${bean!.altitudeMin}-${bean!.altitudeMax}m' : null)),
+              _InfoRow(label: isUk ? 'Ферма' : 'Farm', value: lot?.farm),
+              _InfoRow(label: isUk ? 'Фермер' : 'Farmer', value: lot?.farmer),
+              _InfoRow(label: isUk ? 'Станція' : 'Station', value: lot?.washStation),
             ],
           ),
         ),
-        const SizedBox(height: 20),
-        if (description != null && description.isNotEmpty) ...[
+        const SizedBox(height: 24),
+
+        // ── COFFEE SPECS ───────────────────────────────────────────────────
+        _SectionTitle(title: isUk ? 'ХАРАКТЕРИСТИКИ КАВИ' : 'COFFEE SPECS'),
+        GlassContainer(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              _InfoRow(label: isUk ? 'Сорт' : 'Variety', value: lot?.varieties ?? bean?.varieties),
+              _InfoRow(
+                label: isUk ? 'Обробка' : 'Process', 
+                value: lot?.process ?? bean?.processMethod,
+                trailing: (lot?.process ?? bean?.processMethod) != null ? GestureDetector(
+                  onTap: () => _showProcessInfoSheet(context, lot?.process ?? bean?.processMethod ?? ''),
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 8),
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.5)),
+                    ),
+                    child: const Icon(Icons.info_outline_rounded, size: 10, color: Color(0xFFC8A96E)),
+                  ),
+                ) : null,
+              ),
+              _InfoRow(label: isUk ? 'Декаф' : 'Decaf', value: lot != null ? (lot!.isDecaf ? (isUk ? 'Так' : 'Yes') : (isUk ? 'Ні' : 'No')) : null),
+              _InfoRow(label: isUk ? 'Мелена' : 'Ground', value: lot != null ? (lot!.isGround ? (isUk ? 'Так' : 'Yes') : (isUk ? 'Ні' : 'No')) : null),
+              _InfoRow(label: 'SCA SCORE', value: lot?.scaScore ?? bean?.scaScore),
+            ],
+          ),
+        ),
+        const SizedBox(height: 24),
+
+        // ── ROAST \u0026 PURCHASE ───────────────────────────────────────────
+        _SectionTitle(title: isUk ? 'ОБСМАЖЕННЯ ТА КУПІВЛЯ' : 'ROAST \u0026 PURCHASE'),
+        GlassContainer(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              _InfoRow(label: isUk ? 'Ростерія' : 'Roastery', value: lot?.roasteryName),
+              _InfoRow(label: isUk ? 'Країна обсмажки' : 'Roast Country', value: lot?.roasteryCountry),
+              _InfoRow(label: isUk ? 'Рівень' : 'Roast Level', value: lot?.roastLevel),
+              _InfoRow(label: isUk ? 'Дата обсмажки' : 'Roast Date', value: lot?.roastDate?.toString().split(' ')[0]),
+              _InfoRow(label: isUk ? 'Відкрито' : 'Opened At', value: lot?.openedAt?.toString().split(' ')[0]),
+              _InfoRow(label: isUk ? 'Ціна' : 'Price', value: lot?.pricing['retail']?.toString()),
+              _InfoRow(label: isUk ? 'Вага' : 'Weight', value: lot?.weight != null ? (lot!.weight!.endsWith('g') ? lot!.weight : '${lot!.weight}g') : null),
+              _InfoRow(label: 'ID Лоту', value: lot?.lotNumber),
+            ],
+          ),
+        ),
+        const SizedBox(height: 24),
+
+        // ── FLAVOR PROFILE ────────────────────────────────────────────────
+        if ((lot?.flavorProfile != null && lot!.flavorProfile!.isNotEmpty) || (bean?.description != null && bean!.description.isNotEmpty)) ...[
           _SectionTitle(title: isUk ? 'ОПИС СМАКУ' : 'FLAVOR PROFILE'),
-          Text(description, style: GoogleFonts.outfit(color: Colors.white70, fontSize: 14, height: 1.6)),
-          const SizedBox(height: 20),
+          GlassContainer(
+            padding: const EdgeInsets.all(20),
+            child: Text(
+              lot?.flavorProfile ?? bean?.description ?? '',
+              style: GoogleFonts.outfit(
+                color: Colors.white70,
+                fontSize: 14,
+                height: 1.6,
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
         ],
+
         const SizedBox(height: 100),
       ],
     );
@@ -463,19 +617,39 @@ class _SectionTitle extends StatelessWidget {
 
 class _InfoRow extends StatelessWidget {
   final String label;
-  final String value;
+  final String? value;
+  final Widget? trailing;
 
-  const _InfoRow({required this.label, required this.value});
+  const _InfoRow({required this.label, this.value, this.trailing});
 
   @override
   Widget build(BuildContext context) {
+    final v = value;
+    final t = trailing;
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: GoogleFonts.outfit(color: Colors.white38, fontSize: 13)),
-          Text(value, style: GoogleFonts.outfit(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500)),
+          Text(
+            label,
+            style: GoogleFonts.outfit(color: Colors.white38, fontSize: 13),
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                (v == null || v.isEmpty) ? 'N/A' : v,
+                style: GoogleFonts.outfit(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              // ignore: use_null_aware_elements
+              if (t != null) t,
+            ],
+          ),
         ],
       ),
     );

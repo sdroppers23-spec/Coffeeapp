@@ -31,7 +31,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? e]) : super(e ?? openConnection());
 
   @override
-  int get schemaVersion => 29;
+  int get schemaVersion => 30;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -58,6 +58,10 @@ class AppDatabase extends _$AppDatabase {
           await m.createTable(localizedBeans);
           await m.createTable(brewingRecipes);
         });
+      }
+      if (from < 30) {
+        // v30: Add imageUrl to CoffeeLots
+        await m.addColumn(coffeeLots, coffeeLots.imageUrl);
       }
     },
     beforeOpen: (details) async {
@@ -740,6 +744,8 @@ class AppDatabase extends _$AppDatabase {
       pricing: _parseJson(r.priceJson),
       brandId: r.brandId,
       isDeletedLocal: r.isDeletedLocal,
+      isSynced: r.isSynced,
+      imageUrl: r.imageUrl,
     );
   }
 
@@ -792,6 +798,7 @@ class AppDatabase extends _$AppDatabase {
       notes: r.notes,
       rating: r.rating,
       updatedAt: r.updatedAt,
+      isSynced: r.isSynced,
     );
   }
 

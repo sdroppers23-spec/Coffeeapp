@@ -237,6 +237,7 @@ class CoffeeLots extends Table {
 
   // Sync Status
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+  TextColumn get imageUrl => text().nullable()();
   BoolColumn get isDeletedLocal =>
       boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().nullable()();

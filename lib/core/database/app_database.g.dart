@@ -1247,7 +1247,7 @@ class $LocalizedBeansTable extends LocalizedBeans
     type: DriftSqlType.int,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES localized_brands (id) ON DELETE SET NULL',
+      'REFERENCES localized_brands (id)',
     ),
   );
   static const VerificationMeta _countryEmojiMeta = const VerificationMeta(
@@ -1455,7 +1455,7 @@ class $LocalizedBeansTable extends LocalizedBeans
     type: DriftSqlType.int,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES localized_farmers (id) ON DELETE SET NULL',
+      'REFERENCES localized_farmers (id)',
     ),
   );
   static const VerificationMeta _isDecafMeta = const VerificationMeta(
@@ -6498,7 +6498,7 @@ class $CoffeeLotsTable extends CoffeeLots
     type: DriftSqlType.int,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES localized_brands (id) ON DELETE SET NULL',
+      'REFERENCES localized_brands (id)',
     ),
   );
   static const VerificationMeta _coffeeNameMeta = const VerificationMeta(
@@ -6803,6 +6803,17 @@ class $CoffeeLotsTable extends CoffeeLots
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
+    'imageUrl',
+  );
+  @override
+  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
+    'image_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _isDeletedLocalMeta = const VerificationMeta(
     'isDeletedLocal',
   );
@@ -6873,6 +6884,7 @@ class $CoffeeLotsTable extends CoffeeLots
     isFavorite,
     isArchived,
     isSynced,
+    imageUrl,
     isDeletedLocal,
     createdAt,
     updatedAt,
@@ -7100,6 +7112,12 @@ class $CoffeeLotsTable extends CoffeeLots
         isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
       );
     }
+    if (data.containsKey('image_url')) {
+      context.handle(
+        _imageUrlMeta,
+        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
+      );
+    }
     if (data.containsKey('is_deleted_local')) {
       context.handle(
         _isDeletedLocalMeta,
@@ -7254,6 +7272,10 @@ class $CoffeeLotsTable extends CoffeeLots
         DriftSqlType.bool,
         data['${effectivePrefix}is_synced'],
       )!,
+      imageUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_url'],
+      ),
       isDeletedLocal: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_deleted_local'],
@@ -7307,6 +7329,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
   final bool isFavorite;
   final bool isArchived;
   final bool isSynced;
+  final String? imageUrl;
   final bool isDeletedLocal;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -7342,6 +7365,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
     required this.isFavorite,
     required this.isArchived,
     required this.isSynced,
+    this.imageUrl,
     required this.isDeletedLocal,
     this.createdAt,
     this.updatedAt,
@@ -7422,6 +7446,9 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
     map['is_favorite'] = Variable<bool>(isFavorite);
     map['is_archived'] = Variable<bool>(isArchived);
     map['is_synced'] = Variable<bool>(isSynced);
+    if (!nullToAbsent || imageUrl != null) {
+      map['image_url'] = Variable<String>(imageUrl);
+    }
     map['is_deleted_local'] = Variable<bool>(isDeletedLocal);
     if (!nullToAbsent || createdAt != null) {
       map['created_at'] = Variable<DateTime>(createdAt);
@@ -7505,6 +7532,9 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
       isFavorite: Value(isFavorite),
       isArchived: Value(isArchived),
       isSynced: Value(isSynced),
+      imageUrl: imageUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(imageUrl),
       isDeletedLocal: Value(isDeletedLocal),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
@@ -7552,6 +7582,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
       isFavorite: serializer.fromJson<bool>(json['isFavorite']),
       isArchived: serializer.fromJson<bool>(json['isArchived']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
+      imageUrl: serializer.fromJson<String?>(json['imageUrl']),
       isDeletedLocal: serializer.fromJson<bool>(json['isDeletedLocal']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
@@ -7592,6 +7623,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
       'isFavorite': serializer.toJson<bool>(isFavorite),
       'isArchived': serializer.toJson<bool>(isArchived),
       'isSynced': serializer.toJson<bool>(isSynced),
+      'imageUrl': serializer.toJson<String?>(imageUrl),
       'isDeletedLocal': serializer.toJson<bool>(isDeletedLocal),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
       'updatedAt': serializer.toJson<DateTime?>(updatedAt),
@@ -7630,6 +7662,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
     bool? isFavorite,
     bool? isArchived,
     bool? isSynced,
+    Value<String?> imageUrl = const Value.absent(),
     bool? isDeletedLocal,
     Value<DateTime?> createdAt = const Value.absent(),
     Value<DateTime?> updatedAt = const Value.absent(),
@@ -7673,6 +7706,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
     isFavorite: isFavorite ?? this.isFavorite,
     isArchived: isArchived ?? this.isArchived,
     isSynced: isSynced ?? this.isSynced,
+    imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
     isDeletedLocal: isDeletedLocal ?? this.isDeletedLocal,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
     updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
@@ -7734,6 +7768,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
           ? data.isArchived.value
           : this.isArchived,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
       isDeletedLocal: data.isDeletedLocal.present
           ? data.isDeletedLocal.value
           : this.isDeletedLocal,
@@ -7776,6 +7811,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
           ..write('isFavorite: $isFavorite, ')
           ..write('isArchived: $isArchived, ')
           ..write('isSynced: $isSynced, ')
+          ..write('imageUrl: $imageUrl, ')
           ..write('isDeletedLocal: $isDeletedLocal, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
@@ -7816,6 +7852,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
     isFavorite,
     isArchived,
     isSynced,
+    imageUrl,
     isDeletedLocal,
     createdAt,
     updatedAt,
@@ -7855,6 +7892,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
           other.isFavorite == this.isFavorite &&
           other.isArchived == this.isArchived &&
           other.isSynced == this.isSynced &&
+          other.imageUrl == this.imageUrl &&
           other.isDeletedLocal == this.isDeletedLocal &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
@@ -7892,6 +7930,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
   final Value<bool> isFavorite;
   final Value<bool> isArchived;
   final Value<bool> isSynced;
+  final Value<String?> imageUrl;
   final Value<bool> isDeletedLocal;
   final Value<DateTime?> createdAt;
   final Value<DateTime?> updatedAt;
@@ -7928,6 +7967,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
     this.isFavorite = const Value.absent(),
     this.isArchived = const Value.absent(),
     this.isSynced = const Value.absent(),
+    this.imageUrl = const Value.absent(),
     this.isDeletedLocal = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -7965,6 +8005,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
     this.isFavorite = const Value.absent(),
     this.isArchived = const Value.absent(),
     this.isSynced = const Value.absent(),
+    this.imageUrl = const Value.absent(),
     this.isDeletedLocal = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -8003,6 +8044,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
     Expression<bool>? isFavorite,
     Expression<bool>? isArchived,
     Expression<bool>? isSynced,
+    Expression<String>? imageUrl,
     Expression<bool>? isDeletedLocal,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
@@ -8040,6 +8082,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
       if (isFavorite != null) 'is_favorite': isFavorite,
       if (isArchived != null) 'is_archived': isArchived,
       if (isSynced != null) 'is_synced': isSynced,
+      if (imageUrl != null) 'image_url': imageUrl,
       if (isDeletedLocal != null) 'is_deleted_local': isDeletedLocal,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
@@ -8079,6 +8122,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
     Value<bool>? isFavorite,
     Value<bool>? isArchived,
     Value<bool>? isSynced,
+    Value<String?>? imageUrl,
     Value<bool>? isDeletedLocal,
     Value<DateTime?>? createdAt,
     Value<DateTime?>? updatedAt,
@@ -8116,6 +8160,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
       isFavorite: isFavorite ?? this.isFavorite,
       isArchived: isArchived ?? this.isArchived,
       isSynced: isSynced ?? this.isSynced,
+      imageUrl: imageUrl ?? this.imageUrl,
       isDeletedLocal: isDeletedLocal ?? this.isDeletedLocal,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -8219,6 +8264,9 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
     if (isSynced.present) {
       map['is_synced'] = Variable<bool>(isSynced.value);
     }
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
     if (isDeletedLocal.present) {
       map['is_deleted_local'] = Variable<bool>(isDeletedLocal.value);
     }
@@ -8268,6 +8316,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
           ..write('isFavorite: $isFavorite, ')
           ..write('isArchived: $isArchived, ')
           ..write('isSynced: $isSynced, ')
+          ..write('imageUrl: $imageUrl, ')
           ..write('isDeletedLocal: $isDeletedLocal, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
@@ -9730,7 +9779,7 @@ class $RecommendedRecipesTable extends RecommendedRecipes
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES localized_beans (id) ON DELETE CASCADE',
+      'REFERENCES localized_beans (id)',
     ),
   );
   static const VerificationMeta _methodKeyMeta = const VerificationMeta(
@@ -11413,37 +11462,6 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     recommendedRecipes,
     customRecipes,
   ];
-  @override
-  StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
-    WritePropagation(
-      on: TableUpdateQuery.onTableName(
-        'localized_brands',
-        limitUpdateKind: UpdateKind.delete,
-      ),
-      result: [TableUpdate('localized_beans', kind: UpdateKind.update)],
-    ),
-    WritePropagation(
-      on: TableUpdateQuery.onTableName(
-        'localized_farmers',
-        limitUpdateKind: UpdateKind.delete,
-      ),
-      result: [TableUpdate('localized_beans', kind: UpdateKind.update)],
-    ),
-    WritePropagation(
-      on: TableUpdateQuery.onTableName(
-        'localized_brands',
-        limitUpdateKind: UpdateKind.delete,
-      ),
-      result: [TableUpdate('coffee_lots', kind: UpdateKind.update)],
-    ),
-    WritePropagation(
-      on: TableUpdateQuery.onTableName(
-        'localized_beans',
-        limitUpdateKind: UpdateKind.delete,
-      ),
-      result: [TableUpdate('recommended_recipes', kind: UpdateKind.delete)],
-    ),
-  ]);
 }
 
 typedef $$LocalizedBrandsTableCreateCompanionBuilder =
@@ -16523,6 +16541,7 @@ typedef $$CoffeeLotsTableCreateCompanionBuilder =
       Value<bool> isFavorite,
       Value<bool> isArchived,
       Value<bool> isSynced,
+      Value<String?> imageUrl,
       Value<bool> isDeletedLocal,
       Value<DateTime?> createdAt,
       Value<DateTime?> updatedAt,
@@ -16561,6 +16580,7 @@ typedef $$CoffeeLotsTableUpdateCompanionBuilder =
       Value<bool> isFavorite,
       Value<bool> isArchived,
       Value<bool> isSynced,
+      Value<String?> imageUrl,
       Value<bool> isDeletedLocal,
       Value<DateTime?> createdAt,
       Value<DateTime?> updatedAt,
@@ -16747,6 +16767,11 @@ class $$CoffeeLotsTableFilterComposer
 
   ColumnFilters<bool> get isSynced => $composableBuilder(
     column: $table.isSynced,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -16948,6 +16973,11 @@ class $$CoffeeLotsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isDeletedLocal => $composableBuilder(
     column: $table.isDeletedLocal,
     builder: (column) => ColumnOrderings(column),
@@ -17110,6 +17140,9 @@ class $$CoffeeLotsTableAnnotationComposer
   GeneratedColumn<bool> get isSynced =>
       $composableBuilder(column: $table.isSynced, builder: (column) => column);
 
+  GeneratedColumn<String> get imageUrl =>
+      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
   GeneratedColumn<bool> get isDeletedLocal => $composableBuilder(
     column: $table.isDeletedLocal,
     builder: (column) => column,
@@ -17204,6 +17237,7 @@ class $$CoffeeLotsTableTableManager
                 Value<bool> isFavorite = const Value.absent(),
                 Value<bool> isArchived = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
+                Value<String?> imageUrl = const Value.absent(),
                 Value<bool> isDeletedLocal = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
                 Value<DateTime?> updatedAt = const Value.absent(),
@@ -17240,6 +17274,7 @@ class $$CoffeeLotsTableTableManager
                 isFavorite: isFavorite,
                 isArchived: isArchived,
                 isSynced: isSynced,
+                imageUrl: imageUrl,
                 isDeletedLocal: isDeletedLocal,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
@@ -17278,6 +17313,7 @@ class $$CoffeeLotsTableTableManager
                 Value<bool> isFavorite = const Value.absent(),
                 Value<bool> isArchived = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
+                Value<String?> imageUrl = const Value.absent(),
                 Value<bool> isDeletedLocal = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
                 Value<DateTime?> updatedAt = const Value.absent(),
@@ -17314,6 +17350,7 @@ class $$CoffeeLotsTableTableManager
                 isFavorite: isFavorite,
                 isArchived: isArchived,
                 isSynced: isSynced,
+                imageUrl: imageUrl,
                 isDeletedLocal: isDeletedLocal,
                 createdAt: createdAt,
                 updatedAt: updatedAt,

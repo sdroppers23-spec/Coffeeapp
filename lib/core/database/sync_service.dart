@@ -560,10 +560,10 @@ class SyncService {
       for (final item in lotsData) {
         final id = item['id'] as String;
         
-        // CHECK: If lot is deleted locally but not yet synced with cloud, do not pull it back
+        // CHECK: If lot is deleted locally OR has unsynced changes, do not pull it back from cloud
         final localLot = await db.findConflictLot(id);
-        if (localLot != null && localLot.isDeletedLocal) {
-          debugPrint('SYNC: Skipping pull for locally deleted lot $id');
+        if (localLot != null && (localLot.isDeletedLocal || !localLot.isSynced)) {
+          debugPrint('SYNC: Skipping pull for locally modified/deleted lot $id');
           continue;
         }
 
@@ -608,10 +608,10 @@ class SyncService {
       for (final item in recipesData) {
         final id = item['id'] as String;
 
-        // CHECK: If recipe is deleted locally, skip pull
+        // CHECK: If recipe is deleted locally OR has unsynced changes, skip pull
         final existing = await (db.select(db.customRecipes)..where((t) => t.id.equals(id))).getSingleOrNull();
-        if (existing != null && existing.isDeletedLocal) {
-          debugPrint('SYNC: Skipping pull for locally deleted recipe $id');
+        if (existing != null && (existing.isDeletedLocal || !existing.isSynced)) {
+          debugPrint('SYNC: Skipping pull for locally modified/deleted recipe $id');
           continue;
         }
 
@@ -979,6 +979,33 @@ class SyncService {
       debugPrint('SYNC: Real-time update success for Recipe $key');
     } catch (e) {
       debugPrint('SYNC ERROR (Single Recipe $key): $e');
+    }
+  }
+
+  /// Uploads a coffee image to Supabase Storage.
+  /// Returns the public URL of the uploaded image.
+  Future<String?> uploadCoffeeImage(Uint8List bytes, String fileName) async {
+    if (supabase == null) return null;
+    try {
+      final path = 'lots/$fileName';
+      
+      // Upload to the specified bucket
+      await supabase!.storage.from('User_coffee_logo').uploadBinary(
+            path,
+            bytes,
+            fileOptions: const FileOptions(
+              contentType: 'image/jpeg', // Default, can be dynamic if needed
+              upsert: true,
+            ),
+          );
+
+      // Get the public URL
+      final String publicUrl = supabase!.storage.from('User_coffee_logo').getPublicUrl(path);
+      debugPrint('STORAGE: Uploaded image to $publicUrl');
+      return publicUrl;
+    } catch (e) {
+      debugPrint('STORAGE ERROR: Upload failed: $e');
+      return null;
     }
   }
 }

@@ -7,6 +7,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:drift/drift.dart' hide Column;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../../core/database/database_provider.dart';
 import '../../../core/providers/settings_provider.dart';
@@ -45,6 +47,34 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   bool _isGround = false;
   bool _isFavorite = false;
   bool _isArchived = false;
+
+  // New State for Images
+  Uint8List? _imageBytes;
+  String? _imageExtension;
+  String? _currentImageUrl;
+
+  final List<String> _processingMethods = [
+    'Washed',
+    'Natural',
+    'Honey',
+    'Anaerobic',
+    'Carbonic Maceration',
+    'Cold Soul',
+    'Experimental',
+    'Other'
+  ];
+
+  final List<String> _decafMethods = [
+    'Sugar Cane',
+    'Swiss Water',
+    'CO2',
+    'Mountain Water',
+    'Other'
+  ];
+
+  String? _selectedProcess;
+  bool _isOtherProcess = false;
+  bool _isOtherDecaf = false;
 
   @override
   void dispose() {
@@ -130,20 +160,16 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     _wholesalePrice250Controller = TextEditingController(text: pricing['wholesale_250']?.toString() ?? '');
     _wholesalePrice1kController = TextEditingController(text: pricing['wholesale_1k']?.toString() ?? '');
 
-    if (widget.initialLot != null) _populateFields(widget.initialLot!);
+    if (widget.initialLot != null) {
+      _currentImageUrl = widget.initialLot!.imageUrl;
+      _populateFields(widget.initialLot!);
+    }
   }
 
 
   void _populateFields(CoffeeLotDto lot) {
     setState(() {
-      String process = lot.process ?? 'Washed';
-      _isDecaf = lot.isDecaf == true;
-      if (_isDecaf && process.contains('(')) {
-        final parts = process.split('(');
-        process = parts[0].trim();
-        _decafProcess = parts[1].replaceAll(')', '').trim();
-      }
-      _processController.text = process; // Set the clean process name to the controller
+      _populateProcess(lot);
       
       _roastLevel = lot.roastLevel ?? 'Medium';
       _roastDate = lot.roastDate ?? DateTime.now();
@@ -165,6 +191,66 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     });
   }
 
+  void _populateProcess(CoffeeLotDto lot) {
+    String process = lot.process ?? '';
+    _isDecaf = lot.isDecaf == true;
+
+    if (_isDecaf && process.contains('(')) {
+      final parts = process.split('(');
+      process = parts[0].trim();
+      _decafProcess = parts[1].replaceAll(')', '').trim();
+    }
+
+    if (_processingMethods.contains(process)) {
+      _selectedProcess = process;
+      _isOtherProcess = false;
+    } else if (process.isNotEmpty) {
+      _selectedProcess = 'Other';
+      _isOtherProcess = true;
+      _processController.text = process;
+    } else {
+      _selectedProcess = 'Washed';
+      _isOtherProcess = false;
+    }
+
+    if (!_decafMethods.contains(_decafProcess) && _isDecaf) {
+      _isOtherDecaf = true;
+      // We can use a separate controller if needed, but for now we use _decafProcess as is
+    }
+  }
+
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    try {
+      final XFile? image = await picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1600,
+        maxHeight: 1600,
+        imageQuality: 85,
+      );
+
+      if (image != null) {
+        final bytes = await image.readAsBytes();
+        if (bytes.length > 5 * 1024 * 1024) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Зображення занадто велике (макс. 5МБ)')),
+            );
+          }
+          return;
+        }
+
+        setState(() {
+          _imageBytes = bytes;
+          _imageExtension = image.name.split('.').last.toLowerCase();
+          _currentImageUrl = null; // New image replaces old one
+        });
+      }
+    } catch (e) {
+      debugPrint('PICK IMAGE ERROR: $e');
+    }
+  }
+
   bool get _canSave => 
       _roasteryController.text.trim().isNotEmpty && 
       _coffeeNameController.text.trim().isNotEmpty && 
@@ -176,36 +262,59 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     final user = Supabase.instance.client.auth.currentUser;
     if (user == null) return;
 
+    // Show loading
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator(color: Color(0xFFC8A96E))),
+    );
+
     final db = ref.read(databaseProvider);
+    final syncService = ref.read(syncServiceProvider);
     final lotId = widget.initialLot?.id ?? const Uuid().v4();
 
-    final processStr = _processController.text;
-    final effectiveProcess = _isDecaf
-        ? '$processStr ($_decafProcess)'
-        : processStr;
-
-    final sensoryMap = {
-      'aroma': _aroma.toInt(),
-      'flavor': _flavor.toInt(),
-      'acidity': _acidity.toInt(),
-      'body': _body.toInt(),
-      'aftertaste': _aftertaste.toInt(),
-      'balance': _balance.toInt(),
-    };
-
-    final priceMap = {
-      'retail_250': _priceController.text,
-      'retail_1k': _retailPrice1kController.text,
-      'wholesale_250': _wholesalePrice250Controller.text,
-      'wholesale_1k': _wholesalePrice1kController.text,
-    };
-
-    final effectiveOpenedAt = (_isOpen || _isGround) 
-        ? (_openedAt ?? _roastDate) 
-        : null;
+    String finalImageUrl = _currentImageUrl ?? '';
 
     try {
-      debugPrint('SAVE LOT: Successfully saved $lotId to local database');
+      // 1. Handle Image Upload if new image selected
+      if (_imageBytes != null && _imageExtension != null) {
+        final fileName = '${lotId}_${DateTime.now().millisecondsSinceEpoch}.$_imageExtension';
+        final uploadedUrl = await syncService.uploadCoffeeImage(_imageBytes!, fileName);
+        if (uploadedUrl != null) {
+          finalImageUrl = uploadedUrl;
+        }
+      }
+
+      // 2. Prepare Processing Method
+      String processStr = (_selectedProcess == 'Other' || _selectedProcess == null)
+          ? _processController.text
+          : _selectedProcess!;
+      
+      final effectiveProcess = _isDecaf
+          ? '$processStr ($_decafProcess)'
+          : processStr;
+
+      final sensoryMap = {
+        'aroma': _aroma.toInt(),
+        'flavor': _flavor.toInt(),
+        'acidity': _acidity.toInt(),
+        'body': _body.toInt(),
+        'aftertaste': _aftertaste.toInt(),
+        'balance': _balance.toInt(),
+      };
+
+      final priceMap = {
+        'retail_250': _priceController.text,
+        'retail_1k': _retailPrice1kController.text,
+        'wholesale_250': _wholesalePrice250Controller.text,
+        'wholesale_1k': _wholesalePrice1kController.text,
+      };
+
+      final effectiveOpenedAt = (_isOpen || _isGround) 
+          ? (_openedAt ?? _roastDate) 
+          : null;
+
+      // 3. Save to Local DB
       await db.insertUserLot(
         CoffeeLotsCompanion(
           id: Value(lotId),
@@ -232,30 +341,30 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           isGround: Value(_isGround),
           isFavorite: Value(_isFavorite),
           isArchived: Value(_isArchived),
+          imageUrl: Value(finalImageUrl),
           isSynced: const Value(false),
           createdAt: Value(widget.initialLot?.createdAt ?? DateTime.now()),
           updatedAt: Value(DateTime.now()),
         ),
       );
       
-      // Verification read back
-      final savedLot = await db.getLotById(lotId);
-      if (savedLot == null) {
-        debugPrint('SAVE LOT ERROR: Verification failed, lot not found after save!');
-      } else {
-        debugPrint('SAVE LOT: Verification success, lot retrieved and matches.');
-      }
+      debugPrint('SAVE LOT: Successfully saved $lotId to local database');
 
-        if (mounted) {
-          ref.invalidate(userLotsProvider);
-          ref.read(syncStatusProvider.notifier).syncEverything();
-          ref.read(navBarVisibleProvider.notifier).show();
-          context.pop();
-        }
+      if (mounted) {
+        // Pop loading
+        Navigator.of(context).pop();
+        
+        ref.invalidate(userLotsProvider);
+        ref.read(syncStatusProvider.notifier).syncEverything();
+        ref.read(navBarVisibleProvider.notifier).show();
+        context.pop();
+      }
     } catch (e) {
       if (mounted) {
+        // Pop loading
+        Navigator.of(context).pop();
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Помилка: $e')));
+            .showSnackBar(SnackBar(content: Text('Помилка при збереженні: $e')));
       }
     }
   }
@@ -529,6 +638,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
       children: [
+        _sectionLabel('Фото кави'),
+        _buildImagePicker(),
+        const SizedBox(height: 16),
         _sectionLabel('Кава та лот'),
         _darkCard(children: [
           _fieldRow(label: 'COFFEE NAME *', controller: _coffeeNameController),
@@ -540,6 +652,17 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             controller: _scaScoreController, 
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             helperText: 'Оцінка SCA від 80 до 100',
+          ),
+          _divider(),
+          _fieldRow(
+            label: 'WEIGHT',
+            controller: _weightController,
+            suffix: 'g',
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              _WeightInputFormatter(),
+            ],
           ),
         ]),
         _sectionLabel('Походження'),
@@ -566,19 +689,178 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             controller: _varietiesController,
           ),
         ]),
-        _sectionLabel('Обробка та смакові ноти'),
+        _sectionLabel('Обробка'),
+        _buildProcessSection(),
+        _sectionLabel('Смакові ноти'),
         _darkCard(children: [
-          _fieldRow(
-            label: 'PROCESS',
-            controller: _processController,
-          ),
-          _divider(),
           _fieldRow(
             label: 'FLAVOR NOTES',
             controller: _flavorProfileController,
           ),
         ]),
       ],
+    );
+  }
+
+  Widget _buildImagePicker() {
+    return GestureDetector(
+      onTap: _pickImage,
+      child: Container(
+        height: 180,
+        decoration: BoxDecoration(
+          color: const Color(0xFF1A1714),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.2)),
+          image: (_imageBytes != null)
+              ? DecorationImage(image: MemoryImage(_imageBytes!), fit: BoxFit.cover)
+              : (_currentImageUrl != null && _currentImageUrl!.isNotEmpty)
+                  ? DecorationImage(image: CachedNetworkImageProvider(_currentImageUrl!), fit: BoxFit.cover)
+                  : null,
+        ),
+        child: (_imageBytes == null && (_currentImageUrl == null || _currentImageUrl!.isEmpty))
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.add_a_photo_outlined, color: const Color(0xFFC8A96E).withValues(alpha: 0.5), size: 40),
+                    const SizedBox(height: 8),
+                    Text(
+                      'ДОДАТИ ФОТО',
+                      style: GoogleFonts.outfit(
+                        color: const Color(0xFFC8A96E).withValues(alpha: 0.5),
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : Align(
+                alignment: Alignment.bottomRight,
+                child: Container(
+                  margin: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(8),
+                  decoration: const BoxDecoration(
+                    color: Colors.black54,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.edit_rounded, color: Colors.white, size: 18),
+                ),
+              ),
+      ),
+    );
+  }
+
+  Widget _buildProcessSection() {
+    return Column(
+      children: [
+        _darkCard(children: [
+          _dropdownRow(
+            label: 'METHOD',
+            value: _selectedProcess,
+            items: _processingMethods,
+            onChanged: (val) {
+              setState(() {
+                _selectedProcess = val;
+                _isOtherProcess = val == 'Other';
+                if (!_isOtherProcess) _processController.clear();
+              });
+            },
+          ),
+          if (_isOtherProcess) ...[
+            _divider(),
+            _fieldRow(label: 'СВІЙ МЕТОД', controller: _processController, placeholder: 'Введіть назву'),
+          ],
+          _divider(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              children: [
+                Text(
+                  'DECAF',
+                  style: GoogleFonts.outfit(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.6),
+                    letterSpacing: 1.0,
+                  ),
+                ),
+                const Spacer(),
+                Switch(
+                  value: _isDecaf,
+                  onChanged: (v) => setState(() => _isDecaf = v),
+                  activeThumbColor: const Color(0xFFC8A96E),
+                  activeTrackColor: const Color(0xFFC8A96E).withValues(alpha: 0.5),
+                ),
+              ],
+            ),
+          ),
+          if (_isDecaf) ...[
+            _divider(),
+            _dropdownRow(
+              label: 'DECAF METHOD',
+              value: _decafMethods.contains(_decafProcess) ? _decafProcess : 'Other',
+              items: _decafMethods,
+              onChanged: (val) {
+                setState(() {
+                  _decafProcess = val!;
+                  _isOtherDecaf = val == 'Other';
+                });
+              },
+            ),
+            if (_isOtherDecaf) ...[
+              _divider(),
+              _fieldRow(
+                label: 'СВІЙ МЕТОД ДЕКАФУ',
+                controller: TextEditingController(text: _decafProcess == 'Other' ? '' : _decafProcess),
+                onChanged: (v) => _decafProcess = v,
+                placeholder: 'Введіть назву',
+              ),
+            ],
+          ],
+        ]),
+      ],
+    );
+  }
+
+  Widget _dropdownRow({
+    required String label,
+    required String? value,
+    required List<String> items,
+    required ValueChanged<String?> onChanged,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 80,
+            child: Text(
+              label,
+              style: GoogleFonts.outfit(
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFFC8A96E).withValues(alpha: 0.6),
+                letterSpacing: 1.0,
+              ),
+            ),
+          ),
+          Expanded(
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: value,
+                isExpanded: true,
+                dropdownColor: const Color(0xFF1A1714),
+                icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFFC8A96E), size: 18),
+                style: GoogleFonts.outfit(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+                items: items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                onChanged: onChanged,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -635,6 +917,8 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     TextInputType? keyboardType,
     String? suffix,
     String? helperText,
+    List<TextInputFormatter>? inputFormatters,
+    String? placeholder,
   }) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
@@ -658,15 +942,15 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                     ? TextCapitalization.none 
                     : TextCapitalization.sentences,
                   autocorrect: (label == 'SCA SCORE' || label == 'LOT NUMBER') ? false : true,
-                  inputFormatters: label == 'SCA SCORE'
+                  inputFormatters: inputFormatters ?? (label == 'SCA SCORE'
                     ? [ScaScoreInputFormatter()]
                     : label == 'LOT NUMBER'
                       ? [LotNumberInputFormatter()]
                       : (keyboardType == TextInputType.number || keyboardType == const TextInputType.numberWithOptions(decimal: true))
                         ? [FilteringTextInputFormatter.allow(RegExp(r'[0-9\.,]'))]
-                        : [GlobalCoffeeInputFormatter()],
+                        : [GlobalCoffeeInputFormatter()]),
                   decoration: InputDecoration(
-                    hintText: label == 'SCA SCORE' ? '80-100' : null,
+                    hintText: placeholder ?? (label == 'SCA SCORE' ? '80-100' : null),
                     hintStyle: GoogleFonts.outfit(color: Colors.white.withValues(alpha: 0.2)),
                     border: InputBorder.none,
                     isDense: true,
@@ -984,5 +1268,20 @@ class LotNumberInputFormatter extends TextInputFormatter {
       text: text,
       selection: TextSelection.collapsed(offset: text.length),
     );
+  }
+}
+
+class _WeightInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+    
+    // Limit to 4 digits (up to 9999g)
+    if (newValue.text.length > 4) return oldValue;
+    
+    return newValue;
   }
 }

@@ -987,26 +987,44 @@ class SyncService {
   /// Uploads a coffee image to Supabase Storage.
   /// Returns the public URL of the uploaded image.
   Future<String?> uploadCoffeeImage(Uint8List bytes, String fileName) async {
-    if (supabase == null) return null;
+    if (supabase == null) {
+      debugPrint('STORAGE ERROR: Supabase client is null');
+      return null;
+    }
     try {
       final path = 'lots/$fileName';
+      debugPrint('STORAGE: Starting upload to User_coffee_logo/path: $path');
       
+      // Determine content type
+      String contentType = 'image/jpeg';
+      if (fileName.toLowerCase().endsWith('.png')) {
+        contentType = 'image/png';
+      } else if (fileName.toLowerCase().endsWith('.webp')) {
+        contentType = 'image/webp';
+      }
+
       // Upload to the specified bucket
-      await supabase!.storage.from('User_coffee_logo').uploadBinary(
+      final uploadResponse = await supabase!.storage.from('User_coffee_logo').uploadBinary(
             path,
             bytes,
-            fileOptions: const FileOptions(
-              contentType: 'image/jpeg', // Default, can be dynamic if needed
+            fileOptions: FileOptions(
+              contentType: contentType,
               upsert: true,
             ),
           );
 
+      debugPrint('STORAGE: Upload output: $uploadResponse');
+      debugPrint('STORAGE: Upload bytes successful, getting URL...');
+
       // Get the public URL
       final String publicUrl = supabase!.storage.from('User_coffee_logo').getPublicUrl(path);
-      debugPrint('STORAGE: Uploaded image to $publicUrl');
+      debugPrint('STORAGE: Upload success. Public URL: $publicUrl');
       return publicUrl;
     } catch (e) {
-      debugPrint('STORAGE ERROR: Upload failed: $e');
+      debugPrint('STORAGE ERROR: Upload failed for $fileName: $e');
+      if (e.toString().contains('403')) {
+        debugPrint('STORAGE ERROR: 403 Forbidden - Check bucket policies!');
+      }
       return null;
     }
   }

@@ -44,136 +44,210 @@ class MyLotGridCard extends ConsumerWidget {
         }
       },
       child: GlassContainer(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(0), // Remove padding to allow image to fill
         opacity: isSelected ? 0.25 : 0.20,
         borderRadius: 24,
         color: isSelected ? const Color(0xFFC8A96E) : Colors.white,
         borderColor: isSelected
             ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
             : Colors.white.withValues(alpha: 0.12),
-        child: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Score Badge
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.6),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.3),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        lot.scaScore ?? '85',
-                        style: GoogleFonts.outfit(
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.primary,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        'SCA',
-                        style: GoogleFonts.outfit(
-                          fontSize: 8,
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.primary.withValues(alpha: 0.5),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-                // Title
-                Text(
-                  lot.coffeeName ?? 'Unnamed',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.outfit(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFFC8A96E),
-                    height: 1.1,
-                  ),
-                ),
-                Text(
-                  (lot.roasteryName ?? 'Personal').toUpperCase(),
-                  style: GoogleFonts.outfit(
-                    fontSize: 9,
-                    color: const Color(0xFFC8A96E).withValues(alpha: 0.24),
-                    letterSpacing: 1.2,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 14),
-                // Sensory Bars (Mini 6-axis simplified or core 3)
-                _SensoryFiveSegmentBarSmall(
-                  label: isUk ? 'Смак' : 'Flavor',
-                  value: (lot.sensoryPoints['flavor'] ?? 3).toDouble(),
-                  theme: theme,
-                ),
-                _SensoryFiveSegmentBarSmall(
-                  label: isUk ? 'Кислотність' : 'Acidity',
-                  value: (lot.sensoryPoints['acidity'] ?? 3).toDouble(),
-                  theme: theme,
-                ),
-                _SensoryFiveSegmentBarSmall(
-                  label: isUk ? 'Солодкість' : 'Sweetness',
-                  value: (lot.sensoryPoints['sweetness'] ?? 3).toDouble(),
-                  theme: theme,
-                ),
-                const Spacer(),
-                // Bottom Info
-                Text(
-                  '${lot.originCountry} • ${lot.process}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.outfit(fontSize: 9, color: const Color(0xFFC8A96E).withValues(alpha: 0.38)),
-                ),
-              ],
-            ),
-            // Heart or Selection Mark
-            Positioned(
-              top: 0,
-              right: 0,
-              child: isSelectionMode
-                  ? Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: isSelected ? theme.colorScheme.primary : Colors.transparent,
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: isSelected ? theme.colorScheme.primary : Colors.white24,
-                          width: 1.5,
-                        ),
-                      ),
-                      child: Icon(
-                        Icons.check,
-                        size: 10,
-                        color: isSelected ? Colors.black : Colors.transparent,
-                      ),
-                    )
-                  : PressableScale(
-                      onTap: () {
-                        if (!kIsWeb && !Platform.isWindows) {
-                          Vibration.vibrate(duration: 40, amplitude: 100);
-                        }
-                        onFavoriteToggle(lot);
-                      },
-                      child: Icon(
-                        lot.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                        size: 20,
-                        color: lot.isFavorite ? Colors.redAccent : Colors.white24,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+          child: Stack(
+            children: [
+              // Background Image if available
+              if (lot.imageUrl != null && lot.imageUrl!.isNotEmpty)
+                Positioned.fill(
+                  child: Image.network(
+                    lot.imageUrl!,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      color: const Color(0xFF1A1714),
+                      child: Center(
+                        child: Icon(Icons.broken_image_outlined, color: const Color(0xFFC8A96E).withValues(alpha: 0.1)),
                       ),
                     ),
-            ),
-          ],
+                  ),
+                ),
+              // Gradient Overlay if image is present
+              if (lot.imageUrl != null && lot.imageUrl!.isNotEmpty)
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withValues(alpha: 0.2),
+                          Colors.black.withValues(alpha: 0.8),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              // Content
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Top Row: Score + Roast Level (if available)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Score Badge
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.6),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                lot.scaScore ?? '85',
+                                style: GoogleFonts.outfit(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.colorScheme.primary,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                'SCA',
+                                style: GoogleFonts.outfit(
+                                  fontSize: 8,
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.colorScheme.primary.withValues(alpha: 0.5),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Roast Level Badge
+                        if (lot.roastLevel != null && lot.roastLevel!.isNotEmpty)
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primary.withValues(alpha: 0.9),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              lot.roastLevel!.toUpperCase(),
+                              style: GoogleFonts.outfit(
+                                fontSize: 7,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    // Title
+                    Text(
+                      lot.coffeeName ?? 'Unnamed',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.outfit(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFFC8A96E),
+                        height: 1.1,
+                        shadows: lot.imageUrl != null ? [
+                          const Shadow(color: Colors.black87, offset: Offset(0, 1), blurRadius: 4),
+                        ] : null,
+                      ),
+                    ),
+                    Text(
+                      (lot.roasteryName ?? 'Personal').toUpperCase(),
+                      style: GoogleFonts.outfit(
+                        fontSize: 9,
+                        color: lot.imageUrl != null 
+                            ? const Color(0xFFC8A96E)
+                            : const Color(0xFFC8A96E).withValues(alpha: 0.24),
+                        letterSpacing: 1.2,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    // Sensory Bars (Mini 6-axis simplified or core 3)
+                    _SensoryFiveSegmentBarSmall(
+                      label: isUk ? 'Смак' : 'Flavor',
+                      value: (lot.sensoryPoints['flavor'] ?? 3).toDouble(),
+                      theme: theme,
+                      isOverImage: lot.imageUrl != null && lot.imageUrl!.isNotEmpty,
+                    ),
+                    _SensoryFiveSegmentBarSmall(
+                      label: isUk ? 'Кислотність' : 'Acidity',
+                      value: (lot.sensoryPoints['acidity'] ?? 3).toDouble(),
+                      theme: theme,
+                      isOverImage: lot.imageUrl != null && lot.imageUrl!.isNotEmpty,
+                    ),
+                    _SensoryFiveSegmentBarSmall(
+                      label: isUk ? 'Солодкість' : 'Sweetness',
+                      value: (lot.sensoryPoints['sweetness'] ?? 3).toDouble(),
+                      theme: theme,
+                      isOverImage: lot.imageUrl != null && lot.imageUrl!.isNotEmpty,
+                    ),
+                    const Spacer(),
+                    // Bottom Info
+                    Text(
+                      '${lot.originCountry} • ${lot.process}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.outfit(
+                        fontSize: 9, 
+                        color: lot.imageUrl != null 
+                            ? Colors.white70 
+                            : const Color(0xFFC8A96E).withValues(alpha: 0.38)
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Heart or Selection Mark
+              Positioned(
+                top: 12,
+                right: 12,
+                child: isSelectionMode
+                    ? Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: isSelected ? theme.colorScheme.primary : Colors.black45,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: isSelected ? theme.colorScheme.primary : Colors.white24,
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.check,
+                          size: 10,
+                          color: isSelected ? Colors.black : Colors.transparent,
+                        ),
+                      )
+                    : PressableScale(
+                        onTap: () {
+                          if (!kIsWeb && !Platform.isWindows) {
+                            Vibration.vibrate(duration: 40, amplitude: 100);
+                          }
+                          onFavoriteToggle(lot);
+                        },
+                        child: Icon(
+                          lot.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                          size: 20,
+                          color: lot.isFavorite ? Colors.redAccent : Colors.white24,
+                        ),
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -184,11 +258,13 @@ class _SensoryFiveSegmentBarSmall extends StatelessWidget {
   final String label;
   final double value;
   final ThemeData theme;
+  final bool isOverImage;
 
   const _SensoryFiveSegmentBarSmall({
     required this.label,
     required this.value,
     required this.theme,
+    this.isOverImage = false,
   });
 
   @override
@@ -389,24 +465,68 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Score Circle
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Text(
-                      lot.scaScore ?? '85',
-                      style: GoogleFonts.outfit(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                // Image or Score Circle
+                Stack(
+                  children: [
+                    if (lot.imageUrl != null && lot.imageUrl!.isNotEmpty)
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(24), // Circular-ish but consistent
+                        child: Image.network(
+                          lot.imageUrl!,
+                          width: 54,
+                          height: 54,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => Container(
+                            width: 54,
+                            height: 54,
+                            color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                            child: const Icon(Icons.coffee_rounded, color: Color(0xFFC8A96E), size: 18),
+                          ),
+                        ),
+                      )
+                    else
+                      Container(
+                        width: 54,
+                        height: 54,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Text(
+                            lot.scaScore ?? '85',
+                            style: GoogleFonts.outfit(
+                              color: theme.colorScheme.primary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
+                    
+                    // Small floating score if image is present
+                    if (lot.imageUrl != null && lot.imageUrl!.isNotEmpty)
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF1A1714),
+                            shape: BoxShape.circle,
+                            border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.4), width: 1),
+                          ),
+                          child: Text(
+                            lot.scaScore ?? '85',
+                            style: GoogleFonts.outfit(
+                              color: theme.colorScheme.primary,
+                              fontSize: 8,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
                 const SizedBox(width: 16),
                 // Traits and Tags
@@ -429,7 +549,13 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: [
-                            _TagChip(icon: Icons.star_border_rounded, text: '${lot.scaScore ?? 85} SCA', theme: theme),
+                            if (lot.roastLevel != null && lot.roastLevel!.isNotEmpty)
+                              _TagChip(
+                                icon: Icons.local_fire_department_rounded, 
+                                text: lot.roastLevel!.toUpperCase(), 
+                                theme: theme,
+                                color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                              ),
                             const SizedBox(width: 8),
                             _TagChip(icon: Icons.location_on_outlined, text: lot.originCountry, theme: theme),
                             const SizedBox(width: 8),
@@ -634,15 +760,16 @@ class _TagChip extends StatelessWidget {
   final IconData icon;
   final String? text;
   final ThemeData theme;
+  final Color? color;
 
-  const _TagChip({required this.icon, this.text, required this.theme});
+  const _TagChip({required this.icon, this.text, required this.theme, this.color});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
+        color: color ?? const Color(0xFFC8A96E).withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.03)),
       ),

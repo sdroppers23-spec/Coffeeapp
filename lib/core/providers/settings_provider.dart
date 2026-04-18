@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,31 +19,33 @@ class SettingsNotifier extends Notifier<bool> {
     await prefs.setBool(_vibrationKey, value);
     state = value;
     if (value) {
-      HapticFeedback.lightImpact();
-      Vibration.vibrate(duration: 50);
+      if (!kIsWeb && !Platform.isWindows) {
+        HapticFeedback.lightImpact();
+        Vibration.vibrate(duration: 50);
+      }
     }
   }
 
   void triggerHaptic() {
-    if (state) {
+    if (state && !kIsWeb && !Platform.isWindows) {
       HapticFeedback.mediumImpact();
     }
   }
 
   void triggerSelectionVibrate() {
-    if (state) {
+    if (state && !kIsWeb && !Platform.isWindows) {
       Vibration.vibrate(duration: 30);
     }
   }
 
   void triggerVibrate() {
-    if (state) {
+    if (state && !kIsWeb && !Platform.isWindows) {
       Vibration.vibrate(duration: 50);
     }
   }
 
   void triggerHeavyVibrate() {
-    if (state) {
+    if (state && !kIsWeb && !Platform.isWindows) {
       // For heavy actions like deletion, use a longer duration
       Vibration.vibrate(duration: 100);
     }

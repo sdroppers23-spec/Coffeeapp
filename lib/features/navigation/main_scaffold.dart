@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -111,13 +113,17 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
 
         if (isFirstPressOrExpired) {
           _lastBackPressTime = now;
-          await HapticFeedback.lightImpact();
+          if (!kIsWeb && !Platform.isWindows) {
+            await HapticFeedback.lightImpact();
+          }
           if (context.mounted) _showFrostedExitToast(context);
           return;
         }
 
         // 4. Final Exit
-        await HapticFeedback.mediumImpact();
+        if (!kIsWeb && !Platform.isWindows) {
+          await HapticFeedback.mediumImpact();
+        }
         await SystemNavigator.pop();
       },
       child: PremiumBackground(

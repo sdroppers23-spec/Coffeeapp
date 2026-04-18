@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -159,7 +161,9 @@ class MyLotGridCard extends ConsumerWidget {
                     )
                   : PressableScale(
                       onTap: () {
-                        Vibration.vibrate(duration: 40, amplitude: 100);
+                        if (!kIsWeb && !Platform.isWindows) {
+                          Vibration.vibrate(duration: 40, amplitude: 100);
+                        }
                         onFavoriteToggle(lot);
                       },
                       child: Icon(
@@ -288,7 +292,9 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
       });
     }
     widget.onExpansionChanged?.call(_isExpanded);
-    Vibration.vibrate(duration: 10, amplitude: 50);
+    if (!kIsWeb && !Platform.isWindows) {
+      Vibration.vibrate(duration: 10, amplitude: 50);
+    }
   }
 
   @override
@@ -365,7 +371,9 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                 if (!isSelectionMode)
                   PressableScale(
                     onTap: () {
-                      Vibration.vibrate(duration: 40, amplitude: 100);
+                      if (!kIsWeb && !Platform.isWindows) {
+                        Vibration.vibrate(duration: 40, amplitude: 100);
+                      }
                       widget.onFavoriteToggle(lot);
                     },
                     child: Icon(

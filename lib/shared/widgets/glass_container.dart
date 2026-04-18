@@ -1,4 +1,6 @@
 import 'dart:ui';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -88,7 +90,10 @@ class GlassContainer extends StatelessWidget {
                   // Layer 2: Glass Blur
                   Positioned.fill(
                     child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: effectiveBlur, sigmaY: effectiveBlur),
+                      filter: ImageFilter.blur(
+                        sigmaX: (kIsWeb || !Platform.isWindows) ? effectiveBlur : effectiveBlur.clamp(0, 15),
+                        sigmaY: (kIsWeb || !Platform.isWindows) ? effectiveBlur : effectiveBlur.clamp(0, 15),
+                      ),
                       child: Container(color: Colors.transparent),
                     ),
                   ),

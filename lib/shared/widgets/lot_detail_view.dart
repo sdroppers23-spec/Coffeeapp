@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -87,7 +89,9 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                       lot: liveLot ?? widget.lot,
                       onBack: () => Navigator.pop(context),
                       onEdit: liveLot != null ? () {
-                        Vibration.vibrate(duration: 50);
+                        if (!kIsWeb && !Platform.isWindows) {
+                          Vibration.vibrate(duration: 50);
+                        }
                         context.push('/edit_lot', extra: liveLot);
                       } : null,
                     ),
@@ -394,7 +398,9 @@ class _RecipesTab extends ConsumerWidget {
                 const SizedBox(height: 24),
                 ElevatedButton.icon(
                   onPressed: () {
-                    Vibration.vibrate(duration: 50);
+                    if (!kIsWeb && !Platform.isWindows) {
+                      Vibration.vibrate(duration: 50);
+                    }
                     context.push('/custom_recipe_form', extra: {'lotId': lotId});
                   },
                   icon: const Icon(Icons.add_rounded, size: 18),

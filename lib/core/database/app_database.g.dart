@@ -10543,6 +10543,51 @@ class $CustomRecipesTable extends CustomRecipes
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _micronsMeta = const VerificationMeta(
+    'microns',
+  );
+  @override
+  late final GeneratedColumn<int> microns = GeneratedColumn<int>(
+    'microns',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _recipeTypeMeta = const VerificationMeta(
+    'recipeType',
+  );
+  @override
+  late final GeneratedColumn<String> recipeType = GeneratedColumn<String>(
+    'recipe_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('filter'),
+  );
+  static const VerificationMeta _brewRatioMeta = const VerificationMeta(
+    'brewRatio',
+  );
+  @override
+  late final GeneratedColumn<double> brewRatio = GeneratedColumn<double>(
+    'brew_ratio',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _grinderNameMeta = const VerificationMeta(
+    'grinderName',
+  );
+  @override
+  late final GeneratedColumn<String> grinderName = GeneratedColumn<String>(
+    'grinder_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _isSyncedMeta = const VerificationMeta(
     'isSynced',
   );
@@ -10592,6 +10637,10 @@ class $CustomRecipesTable extends CustomRecipes
     brewTempC,
     notes,
     rating,
+    microns,
+    recipeType,
+    brewRatio,
+    grinderName,
     isSynced,
     isDeletedLocal,
   ];
@@ -10734,6 +10783,33 @@ class $CustomRecipesTable extends CustomRecipes
         rating.isAcceptableOrUnknown(data['rating']!, _ratingMeta),
       );
     }
+    if (data.containsKey('microns')) {
+      context.handle(
+        _micronsMeta,
+        microns.isAcceptableOrUnknown(data['microns']!, _micronsMeta),
+      );
+    }
+    if (data.containsKey('recipe_type')) {
+      context.handle(
+        _recipeTypeMeta,
+        recipeType.isAcceptableOrUnknown(data['recipe_type']!, _recipeTypeMeta),
+      );
+    }
+    if (data.containsKey('brew_ratio')) {
+      context.handle(
+        _brewRatioMeta,
+        brewRatio.isAcceptableOrUnknown(data['brew_ratio']!, _brewRatioMeta),
+      );
+    }
+    if (data.containsKey('grinder_name')) {
+      context.handle(
+        _grinderNameMeta,
+        grinderName.isAcceptableOrUnknown(
+          data['grinder_name']!,
+          _grinderNameMeta,
+        ),
+      );
+    }
     if (data.containsKey('is_synced')) {
       context.handle(
         _isSyncedMeta,
@@ -10826,6 +10902,22 @@ class $CustomRecipesTable extends CustomRecipes
         DriftSqlType.int,
         data['${effectivePrefix}rating'],
       )!,
+      microns: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}microns'],
+      ),
+      recipeType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}recipe_type'],
+      )!,
+      brewRatio: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}brew_ratio'],
+      ),
+      grinderName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}grinder_name'],
+      ),
       isSynced: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_synced'],
@@ -10861,6 +10953,10 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
   final double brewTempC;
   final String notes;
   final int rating;
+  final int? microns;
+  final String recipeType;
+  final double? brewRatio;
+  final String? grinderName;
   final bool isSynced;
   final bool isDeletedLocal;
   const CustomRecipe({
@@ -10881,6 +10977,10 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     required this.brewTempC,
     required this.notes,
     required this.rating,
+    this.microns,
+    required this.recipeType,
+    this.brewRatio,
+    this.grinderName,
     required this.isSynced,
     required this.isDeletedLocal,
   });
@@ -10910,6 +11010,16 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     map['brew_temp_c'] = Variable<double>(brewTempC);
     map['notes'] = Variable<String>(notes);
     map['rating'] = Variable<int>(rating);
+    if (!nullToAbsent || microns != null) {
+      map['microns'] = Variable<int>(microns);
+    }
+    map['recipe_type'] = Variable<String>(recipeType);
+    if (!nullToAbsent || brewRatio != null) {
+      map['brew_ratio'] = Variable<double>(brewRatio);
+    }
+    if (!nullToAbsent || grinderName != null) {
+      map['grinder_name'] = Variable<String>(grinderName);
+    }
     map['is_synced'] = Variable<bool>(isSynced);
     map['is_deleted_local'] = Variable<bool>(isDeletedLocal);
     return map;
@@ -10940,6 +11050,16 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       brewTempC: Value(brewTempC),
       notes: Value(notes),
       rating: Value(rating),
+      microns: microns == null && nullToAbsent
+          ? const Value.absent()
+          : Value(microns),
+      recipeType: Value(recipeType),
+      brewRatio: brewRatio == null && nullToAbsent
+          ? const Value.absent()
+          : Value(brewRatio),
+      grinderName: grinderName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(grinderName),
       isSynced: Value(isSynced),
       isDeletedLocal: Value(isDeletedLocal),
     );
@@ -10968,6 +11088,10 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       brewTempC: serializer.fromJson<double>(json['brewTempC']),
       notes: serializer.fromJson<String>(json['notes']),
       rating: serializer.fromJson<int>(json['rating']),
+      microns: serializer.fromJson<int?>(json['microns']),
+      recipeType: serializer.fromJson<String>(json['recipeType']),
+      brewRatio: serializer.fromJson<double?>(json['brewRatio']),
+      grinderName: serializer.fromJson<String?>(json['grinderName']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
       isDeletedLocal: serializer.fromJson<bool>(json['isDeletedLocal']),
     );
@@ -10993,6 +11117,10 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       'brewTempC': serializer.toJson<double>(brewTempC),
       'notes': serializer.toJson<String>(notes),
       'rating': serializer.toJson<int>(rating),
+      'microns': serializer.toJson<int?>(microns),
+      'recipeType': serializer.toJson<String>(recipeType),
+      'brewRatio': serializer.toJson<double?>(brewRatio),
+      'grinderName': serializer.toJson<String?>(grinderName),
       'isSynced': serializer.toJson<bool>(isSynced),
       'isDeletedLocal': serializer.toJson<bool>(isDeletedLocal),
     };
@@ -11016,6 +11144,10 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     double? brewTempC,
     String? notes,
     int? rating,
+    Value<int?> microns = const Value.absent(),
+    String? recipeType,
+    Value<double?> brewRatio = const Value.absent(),
+    Value<String?> grinderName = const Value.absent(),
     bool? isSynced,
     bool? isDeletedLocal,
   }) => CustomRecipe(
@@ -11036,6 +11168,10 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     brewTempC: brewTempC ?? this.brewTempC,
     notes: notes ?? this.notes,
     rating: rating ?? this.rating,
+    microns: microns.present ? microns.value : this.microns,
+    recipeType: recipeType ?? this.recipeType,
+    brewRatio: brewRatio.present ? brewRatio.value : this.brewRatio,
+    grinderName: grinderName.present ? grinderName.value : this.grinderName,
     isSynced: isSynced ?? this.isSynced,
     isDeletedLocal: isDeletedLocal ?? this.isDeletedLocal,
   );
@@ -11072,6 +11208,14 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       brewTempC: data.brewTempC.present ? data.brewTempC.value : this.brewTempC,
       notes: data.notes.present ? data.notes.value : this.notes,
       rating: data.rating.present ? data.rating.value : this.rating,
+      microns: data.microns.present ? data.microns.value : this.microns,
+      recipeType: data.recipeType.present
+          ? data.recipeType.value
+          : this.recipeType,
+      brewRatio: data.brewRatio.present ? data.brewRatio.value : this.brewRatio,
+      grinderName: data.grinderName.present
+          ? data.grinderName.value
+          : this.grinderName,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
       isDeletedLocal: data.isDeletedLocal.present
           ? data.isDeletedLocal.value
@@ -11099,6 +11243,10 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
           ..write('brewTempC: $brewTempC, ')
           ..write('notes: $notes, ')
           ..write('rating: $rating, ')
+          ..write('microns: $microns, ')
+          ..write('recipeType: $recipeType, ')
+          ..write('brewRatio: $brewRatio, ')
+          ..write('grinderName: $grinderName, ')
           ..write('isSynced: $isSynced, ')
           ..write('isDeletedLocal: $isDeletedLocal')
           ..write(')'))
@@ -11106,7 +11254,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
     userId,
     lotId,
@@ -11124,9 +11272,13 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     brewTempC,
     notes,
     rating,
+    microns,
+    recipeType,
+    brewRatio,
+    grinderName,
     isSynced,
     isDeletedLocal,
-  );
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -11148,6 +11300,10 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
           other.brewTempC == this.brewTempC &&
           other.notes == this.notes &&
           other.rating == this.rating &&
+          other.microns == this.microns &&
+          other.recipeType == this.recipeType &&
+          other.brewRatio == this.brewRatio &&
+          other.grinderName == this.grinderName &&
           other.isSynced == this.isSynced &&
           other.isDeletedLocal == this.isDeletedLocal);
 }
@@ -11170,6 +11326,10 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
   final Value<double> brewTempC;
   final Value<String> notes;
   final Value<int> rating;
+  final Value<int?> microns;
+  final Value<String> recipeType;
+  final Value<double?> brewRatio;
+  final Value<String?> grinderName;
   final Value<bool> isSynced;
   final Value<bool> isDeletedLocal;
   final Value<int> rowid;
@@ -11191,6 +11351,10 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     this.brewTempC = const Value.absent(),
     this.notes = const Value.absent(),
     this.rating = const Value.absent(),
+    this.microns = const Value.absent(),
+    this.recipeType = const Value.absent(),
+    this.brewRatio = const Value.absent(),
+    this.grinderName = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.isDeletedLocal = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -11213,6 +11377,10 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     this.brewTempC = const Value.absent(),
     this.notes = const Value.absent(),
     this.rating = const Value.absent(),
+    this.microns = const Value.absent(),
+    this.recipeType = const Value.absent(),
+    this.brewRatio = const Value.absent(),
+    this.grinderName = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.isDeletedLocal = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -11239,6 +11407,10 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     Expression<double>? brewTempC,
     Expression<String>? notes,
     Expression<int>? rating,
+    Expression<int>? microns,
+    Expression<String>? recipeType,
+    Expression<double>? brewRatio,
+    Expression<String>? grinderName,
     Expression<bool>? isSynced,
     Expression<bool>? isDeletedLocal,
     Expression<int>? rowid,
@@ -11261,6 +11433,10 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
       if (brewTempC != null) 'brew_temp_c': brewTempC,
       if (notes != null) 'notes': notes,
       if (rating != null) 'rating': rating,
+      if (microns != null) 'microns': microns,
+      if (recipeType != null) 'recipe_type': recipeType,
+      if (brewRatio != null) 'brew_ratio': brewRatio,
+      if (grinderName != null) 'grinder_name': grinderName,
       if (isSynced != null) 'is_synced': isSynced,
       if (isDeletedLocal != null) 'is_deleted_local': isDeletedLocal,
       if (rowid != null) 'rowid': rowid,
@@ -11285,6 +11461,10 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     Value<double>? brewTempC,
     Value<String>? notes,
     Value<int>? rating,
+    Value<int?>? microns,
+    Value<String>? recipeType,
+    Value<double?>? brewRatio,
+    Value<String?>? grinderName,
     Value<bool>? isSynced,
     Value<bool>? isDeletedLocal,
     Value<int>? rowid,
@@ -11307,6 +11487,10 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
       brewTempC: brewTempC ?? this.brewTempC,
       notes: notes ?? this.notes,
       rating: rating ?? this.rating,
+      microns: microns ?? this.microns,
+      recipeType: recipeType ?? this.recipeType,
+      brewRatio: brewRatio ?? this.brewRatio,
+      grinderName: grinderName ?? this.grinderName,
       isSynced: isSynced ?? this.isSynced,
       isDeletedLocal: isDeletedLocal ?? this.isDeletedLocal,
       rowid: rowid ?? this.rowid,
@@ -11367,6 +11551,18 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     if (rating.present) {
       map['rating'] = Variable<int>(rating.value);
     }
+    if (microns.present) {
+      map['microns'] = Variable<int>(microns.value);
+    }
+    if (recipeType.present) {
+      map['recipe_type'] = Variable<String>(recipeType.value);
+    }
+    if (brewRatio.present) {
+      map['brew_ratio'] = Variable<double>(brewRatio.value);
+    }
+    if (grinderName.present) {
+      map['grinder_name'] = Variable<String>(grinderName.value);
+    }
     if (isSynced.present) {
       map['is_synced'] = Variable<bool>(isSynced.value);
     }
@@ -11399,6 +11595,10 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
           ..write('brewTempC: $brewTempC, ')
           ..write('notes: $notes, ')
           ..write('rating: $rating, ')
+          ..write('microns: $microns, ')
+          ..write('recipeType: $recipeType, ')
+          ..write('brewRatio: $brewRatio, ')
+          ..write('grinderName: $grinderName, ')
           ..write('isSynced: $isSynced, ')
           ..write('isDeletedLocal: $isDeletedLocal, ')
           ..write('rowid: $rowid')
@@ -18896,6 +19096,10 @@ typedef $$CustomRecipesTableCreateCompanionBuilder =
       Value<double> brewTempC,
       Value<String> notes,
       Value<int> rating,
+      Value<int?> microns,
+      Value<String> recipeType,
+      Value<double?> brewRatio,
+      Value<String?> grinderName,
       Value<bool> isSynced,
       Value<bool> isDeletedLocal,
       Value<int> rowid,
@@ -18919,6 +19123,10 @@ typedef $$CustomRecipesTableUpdateCompanionBuilder =
       Value<double> brewTempC,
       Value<String> notes,
       Value<int> rating,
+      Value<int?> microns,
+      Value<String> recipeType,
+      Value<double?> brewRatio,
+      Value<String?> grinderName,
       Value<bool> isSynced,
       Value<bool> isDeletedLocal,
       Value<int> rowid,
@@ -19015,6 +19223,26 @@ class $$CustomRecipesTableFilterComposer
 
   ColumnFilters<int> get rating => $composableBuilder(
     column: $table.rating,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get microns => $composableBuilder(
+    column: $table.microns,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get recipeType => $composableBuilder(
+    column: $table.recipeType,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get brewRatio => $composableBuilder(
+    column: $table.brewRatio,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get grinderName => $composableBuilder(
+    column: $table.grinderName,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -19123,6 +19351,26 @@ class $$CustomRecipesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get microns => $composableBuilder(
+    column: $table.microns,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get recipeType => $composableBuilder(
+    column: $table.recipeType,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get brewRatio => $composableBuilder(
+    column: $table.brewRatio,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get grinderName => $composableBuilder(
+    column: $table.grinderName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isSynced => $composableBuilder(
     column: $table.isSynced,
     builder: (column) => ColumnOrderings(column),
@@ -19208,6 +19456,22 @@ class $$CustomRecipesTableAnnotationComposer
   GeneratedColumn<int> get rating =>
       $composableBuilder(column: $table.rating, builder: (column) => column);
 
+  GeneratedColumn<int> get microns =>
+      $composableBuilder(column: $table.microns, builder: (column) => column);
+
+  GeneratedColumn<String> get recipeType => $composableBuilder(
+    column: $table.recipeType,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get brewRatio =>
+      $composableBuilder(column: $table.brewRatio, builder: (column) => column);
+
+  GeneratedColumn<String> get grinderName => $composableBuilder(
+    column: $table.grinderName,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<bool> get isSynced =>
       $composableBuilder(column: $table.isSynced, builder: (column) => column);
 
@@ -19265,6 +19529,10 @@ class $$CustomRecipesTableTableManager
                 Value<double> brewTempC = const Value.absent(),
                 Value<String> notes = const Value.absent(),
                 Value<int> rating = const Value.absent(),
+                Value<int?> microns = const Value.absent(),
+                Value<String> recipeType = const Value.absent(),
+                Value<double?> brewRatio = const Value.absent(),
+                Value<String?> grinderName = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<bool> isDeletedLocal = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -19286,6 +19554,10 @@ class $$CustomRecipesTableTableManager
                 brewTempC: brewTempC,
                 notes: notes,
                 rating: rating,
+                microns: microns,
+                recipeType: recipeType,
+                brewRatio: brewRatio,
+                grinderName: grinderName,
                 isSynced: isSynced,
                 isDeletedLocal: isDeletedLocal,
                 rowid: rowid,
@@ -19309,6 +19581,10 @@ class $$CustomRecipesTableTableManager
                 Value<double> brewTempC = const Value.absent(),
                 Value<String> notes = const Value.absent(),
                 Value<int> rating = const Value.absent(),
+                Value<int?> microns = const Value.absent(),
+                Value<String> recipeType = const Value.absent(),
+                Value<double?> brewRatio = const Value.absent(),
+                Value<String?> grinderName = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<bool> isDeletedLocal = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -19330,6 +19606,10 @@ class $$CustomRecipesTableTableManager
                 brewTempC: brewTempC,
                 notes: notes,
                 rating: rating,
+                microns: microns,
+                recipeType: recipeType,
+                brewRatio: brewRatio,
+                grinderName: grinderName,
                 isSynced: isSynced,
                 isDeletedLocal: isDeletedLocal,
                 rowid: rowid,

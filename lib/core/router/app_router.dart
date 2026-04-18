@@ -121,6 +121,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             methodKey: extra?['methodKey'] as String? ?? 'v60',
             lotId: extra?['lotId'] as String?,
             existingRecipe: extra?['recipe'] as CustomRecipeDto?,
+            recipeType: extra?['recipeType'] as String? ?? 'filter',
           );
         },
       ),

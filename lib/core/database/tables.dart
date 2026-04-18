@@ -329,6 +329,12 @@ class CustomRecipes extends Table {
   TextColumn get notes => text().withDefault(const Constant(''))();
   IntColumn get rating => integer().withDefault(const Constant(0))();
 
+  // Advanced Recipe Features
+  IntColumn get microns => integer().nullable()();
+  TextColumn get recipeType => text().withDefault(const Constant('filter'))(); // 'espresso' or 'filter'
+  RealColumn get brewRatio => real().nullable()();
+  TextColumn get grinderName => text().nullable()();
+
   // Sync Status
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
   BoolColumn get isDeletedLocal =>

@@ -31,7 +31,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? e]) : super(e ?? openConnection());
 
   @override
-  int get schemaVersion => 30;
+  int get schemaVersion => 31;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -59,9 +59,12 @@ class AppDatabase extends _$AppDatabase {
           await m.createTable(brewingRecipes);
         });
       }
-      if (from < 30) {
-        // v30: Add imageUrl to CoffeeLots
-        await m.addColumn(coffeeLots, coffeeLots.imageUrl);
+      if (from < 31) {
+        // v31: Add advanced recipe columns
+        await m.addColumn(customRecipes, customRecipes.recipeType);
+        await m.addColumn(customRecipes, customRecipes.brewRatio);
+        await m.addColumn(customRecipes, customRecipes.grinderName);
+        await m.addColumn(customRecipes, customRecipes.microns);
       }
     },
     beforeOpen: (details) async {
@@ -799,6 +802,10 @@ class AppDatabase extends _$AppDatabase {
       rating: r.rating,
       updatedAt: r.updatedAt,
       isSynced: r.isSynced,
+      microns: r.microns,
+      recipeType: r.recipeType,
+      brewRatio: r.brewRatio,
+      grinderName: r.grinderName,
     );
   }
 

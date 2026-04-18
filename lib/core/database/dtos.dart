@@ -478,6 +478,11 @@ class CustomRecipeDto {
   final DateTime? updatedAt;
   final bool isSynced;
 
+  final int? microns;
+  final String recipeType;
+  final double? brewRatio;
+  final String? grinderName;
+
   CustomRecipeDto({
     required this.id,
     this.lotId,
@@ -495,6 +500,10 @@ class CustomRecipeDto {
     required this.rating,
     this.updatedAt,
     this.isSynced = false,
+    this.microns,
+    this.recipeType = 'filter',
+    this.brewRatio,
+    this.grinderName,
   });
 
   String get pourScheduleJson => jsonEncode(pours);

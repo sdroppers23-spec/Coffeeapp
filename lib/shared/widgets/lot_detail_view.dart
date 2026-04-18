@@ -132,10 +132,166 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                   ],
                 ),
               ),
+              floatingActionButton: Padding(
+                padding: const EdgeInsets.only(bottom: 20, right: 8),
+                child: FloatingActionButton(
+                  onPressed: () => _showRecipeTypeSelector(context, ref, liveLot?.id ?? widget.lot!.id),
+                  backgroundColor: theme.colorScheme.primary,
+                  foregroundColor: Colors.black,
+                  shape: const CircleBorder(),
+                  child: const Icon(Icons.add_rounded, size: 28),
+                ),
+              ),
+              floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             );
           },
         );
       },
+    );
+  }
+
+  void _showRecipeTypeSelector(BuildContext context, WidgetRef ref, String lotId) async {
+    final isUk = LocaleService.currentLocale == 'uk';
+    final db = ref.read(databaseProvider);
+    final recipes = await db.getCustomRecipesForLot(lotId);
+    
+    final espressoCount = recipes.where((r) => r.recipeType == 'espresso').length;
+    final filterCount = recipes.where((r) => r.recipeType == 'filter').length;
+
+    if (!context.mounted) return;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => GlassContainer(
+        padding: const EdgeInsets.all(24),
+        borderRadius: 32,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(2)),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              isUk ? 'ОБЕРІТЬ ТИП РЕЦЕПТУ' : 'SELECT RECIPE TYPE',
+              style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.bold, color: const Color(0xFFC8A96E), letterSpacing: 2),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                Expanded(
+                  child: _RecipeTypeCard(
+                    title: isUk ? 'ФІЛЬТР' : 'FILTER',
+                    icon: Icons.coffee_rounded,
+                    count: filterCount,
+                    isLimitReached: filterCount >= 10,
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      context.push('/custom_recipe_form', extra: {
+                        'lotId': lotId,
+                        'methodKey': 'v60',
+                        'recipeType': 'filter',
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: _RecipeTypeCard(
+                    title: isUk ? 'ЕCПРЕСО' : 'ESPRESSO',
+                    icon: Icons.coffee_maker_rounded,
+                    count: espressoCount,
+                    isLimitReached: espressoCount >= 10,
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      context.push('/custom_recipe_form', extra: {
+                        'lotId': lotId,
+                        'methodKey': 'espresso',
+                        'recipeType': 'espresso',
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 32),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _RecipeTypeCard extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final int count;
+  final bool isLimitReached;
+  final VoidCallback onTap;
+
+  const _RecipeTypeCard({
+    required this.title,
+    required this.icon,
+    required this.count,
+    required this.isLimitReached,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isUk = LocaleService.currentLocale == 'uk';
+
+    return GestureDetector(
+      onTap: isLimitReached ? null : onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 24),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: isLimitReached 
+              ? Colors.red.withValues(alpha: 0.3)
+              : theme.colorScheme.primary.withValues(alpha: 0.2),
+          ),
+        ),
+        child: Column(
+          children: [
+            Icon(
+              icon, 
+              color: isLimitReached ? Colors.red.withValues(alpha: 0.5) : theme.colorScheme.primary, 
+              size: 32
+            ),
+            const SizedBox(height: 12),
+            Text(
+              title,
+              style: GoogleFonts.outfit(
+                fontSize: 14, 
+                fontWeight: FontWeight.bold, 
+                color: isLimitReached ? Colors.white24 : Colors.white,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '$count / 10',
+              style: GoogleFonts.outfit(
+                fontSize: 11, 
+                color: isLimitReached ? Colors.redAccent : Colors.white38,
+              ),
+            ),
+            if (isLimitReached) ...[
+              const SizedBox(height: 8),
+              Text(
+                isUk ? 'ЛІМІТ' : 'LIMIT',
+                style: GoogleFonts.outfit(fontSize: 10, color: Colors.redAccent, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }
@@ -226,12 +382,22 @@ class _DetailHeader extends StatelessWidget {
             children: [
               Text(
                 roasteryName.toUpperCase(),
-                style: GoogleFonts.outfit(color: theme.colorScheme.primary.withValues(alpha: 0.6), fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 2),
+                style: GoogleFonts.outfit(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.6), 
+                  fontSize: 12, 
+                  fontWeight: FontWeight.bold, 
+                  letterSpacing: 2
+                ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 8),
               Text(
                 coffeeName,
-                style: GoogleFonts.cormorantGaramond(color: Colors.white, fontSize: 36, fontWeight: FontWeight.bold),
+                style: GoogleFonts.cormorantGaramond(
+                  color: Colors.white, 
+                  fontSize: 36, 
+                  fontWeight: FontWeight.bold,
+                  height: 1.1, // Better spacing for multi-line
+                ),
               ),
             ],
           ),
@@ -576,16 +742,7 @@ class _RecipesTab extends ConsumerWidget {
           itemCount: recipes.length + 1,
           itemBuilder: (context, index) {
             if (index == recipes.length) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Center(
-                  child: TextButton.icon(
-                    onPressed: () => context.push('/custom_recipe_form', extra: {'lotId': lotId}),
-                    icon: const Icon(Icons.add_rounded),
-                    label: Text(isUk ? 'ДОДАТИ ЩЕ ОДИН' : 'ADD ANOTHER ONE'),
-                  ),
-                ),
-              );
+              return const SizedBox.shrink(); // Using FAB now
             }
             return Padding(
               padding: const EdgeInsets.only(bottom: 12),

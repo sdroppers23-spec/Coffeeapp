@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/database/database_provider.dart';
 import '../../../core/database/dtos.dart';
 import '../../../shared/widgets/glass_container.dart';
-import '../custom_recipe_form.dart';
 import '../custom_recipe_timer_screen.dart';
 import '../custom_recipe_list.dart';
 
@@ -51,9 +51,11 @@ class CustomRecipeCard extends StatelessWidget {
                     color: const Color(0xFFC8A96E).withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(
-                    Icons.coffee_rounded,
-                    color: Color(0xFFC8A96E),
+                  child: Icon(
+                    recipe.recipeType == 'espresso' 
+                      ? Icons.coffee_maker_rounded 
+                      : Icons.coffee_rounded,
+                    color: const Color(0xFFC8A96E),
                     size: 18,
                   ),
                 ),
@@ -116,19 +118,13 @@ class CustomRecipeCard extends StatelessWidget {
                                 'Edit Recipe',
                                 style: TextStyle(color: Colors.white),
                               ),
-                              onTap: () async {
+                              onTap: () {
                                 Navigator.pop(context);
-                                await Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => CustomRecipeFormScreen(
-                                      methodKey: methodKey,
-                                      existingRecipe: recipe,
-                                    ),
-                                  ),
-                                );
-                                ref.invalidate(
-                                  customRecipesForMethodProvider(methodKey),
-                                );
+                                context.push('/custom_recipe_form', extra: {
+                                  'methodKey': methodKey,
+                                  'recipe': recipe,
+                                  'recipeType': recipe.recipeType,
+                                });
                               },
                             ),
                             ListTile(
@@ -179,12 +175,28 @@ class CustomRecipeCard extends StatelessWidget {
                     Icons.thermostat_rounded,
                     '${recipe.brewTempC.toInt()}°C',
                   ),
-                if (recipe.grindNumber > 0)
+                if (recipe.brewRatio != null && recipe.brewRatio! > 0)
+                  _Tag(
+                    Icons.balance_rounded,
+                    '1:${recipe.brewRatio!.toStringAsFixed(1)}',
+                  ),
+                // Grinder display logic
+                if (recipe.grinderName != 'Other' && recipe.grinderName != null)
+                  _Tag(
+                    Icons.settings_input_component_rounded,
+                    '${recipe.grinderName}: ${_getGrinderValue()}',
+                  )
+                else if (recipe.grindNumber > 0)
                   _Tag(
                     Icons.settings_input_component_rounded,
                     'Grind ${recipe.grindNumber}',
                   ),
-                if (recipe.totalPours > 1)
+                if (recipe.microns != null && recipe.microns! > 0)
+                  _Tag(
+                    Icons.height_rounded, 
+                    '${recipe.microns}μm',
+                  ),
+                if (recipe.totalPours > 1 && recipe.recipeType != 'espresso')
                   _Tag(Icons.opacity_rounded, '${recipe.totalPours} pours'),
               ],
             ),
@@ -295,6 +307,14 @@ class CustomRecipeCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _getGrinderValue() {
+    if (recipe.grinderName == 'EK43') return recipe.ek43Division.toString();
+    if (recipe.grinderName != null && recipe.grinderName!.contains('Comandante')) {
+      return recipe.comandanteClicks.toString();
+    }
+    return recipe.grindNumber.toString();
   }
 }
 

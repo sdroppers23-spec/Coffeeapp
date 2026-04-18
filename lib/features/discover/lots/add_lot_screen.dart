@@ -536,7 +536,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       child: PressableScale(
         onTap: _saveLot,
         child: Container(
-          width: double.infinity,
           height: 54,
           decoration: BoxDecoration(
             color: _canSave ? const Color(0xFF1A1714) : const Color(0xFF1A1714).withValues(alpha: 0.5),
@@ -574,107 +573,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           _divider(),
           _fieldRow(label: 'COUNTRY', controller: _roasteryCountryController),
         ]),
-        _sectionLabel('Дата обсмажування'),
-        _darkCard(children: [
-          _dateRow(
-            label: 'ROAST DATE',
-            date: _roastDate,
-            onTap: () async {
-              final picked = await showDatePicker(
-                context: context, initialDate: _roastDate,
-                firstDate: DateTime(2020), lastDate: DateTime.now(),
-                builder: (ctx, child) => Theme(
-                  data: ThemeData.dark().copyWith(colorScheme: const ColorScheme.dark(primary: Color(0xFFC8A96E))),
-                  child: child!,
-                ),
-              );
-              if (picked != null) setState(() => _roastDate = picked);
-            },
-          ),
-          _divider(),
-          _dateRow(
-            label: 'OPENED AT',
-            date: _openedAt,
-            placeholder: 'Не відкрито',
-            onTap: () async {
-              final picked = await showDatePicker(
-                context: context, 
-                initialDate: (_openedAt != null && _openedAt!.isAfter(_roastDate)) 
-                    ? _openedAt! 
-                    : _roastDate,
-                firstDate: _roastDate, 
-                lastDate: DateTime.now(),
-                builder: (ctx, child) => Theme(
-                  data: ThemeData.dark().copyWith(colorScheme: const ColorScheme.dark(primary: Color(0xFFC8A96E))),
-                  child: child!,
-                ),
-              );
-              if (picked != null) setState(() => _openedAt = picked);
-            },
-          ),
-        ]),
-        _sectionLabel('Стан пачки'),
-        Row(
-          children: [
-            Expanded(child: _toggleButton(label: 'ЗАКРИТА', active: !_isOpen, onTap: () => setState(() => _isOpen = false))),
-            const SizedBox(width: 8),
-            Expanded(child: _toggleButton(label: 'ВІДКРИТА', active: _isOpen, onTap: () {
-              setState(() {
-                _isOpen = true;
-                _openedAt ??= _roastDate;
-              });
-            })),
-          ],
-        ),
-        if (_isOpen) ...[
-          _sectionLabel('Тип помелу'),
-          _darkCard(children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<bool>(
-                  value: _isGround,
-                  isExpanded: true,
-                  dropdownColor: const Color(0xFF1A1714),
-                  icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFFC8A96E)),
-                  style: GoogleFonts.outfit(color: const Color(0xFFC8A96E), fontSize: 15, fontWeight: FontWeight.w500),
-                  items: [
-                    DropdownMenuItem(value: false, child: Text('В ЗЕРНАХ', style: GoogleFonts.outfit(color: Colors.white))),
-                    DropdownMenuItem(value: true, child: Text('ЗМЕЛЕНА', style: GoogleFonts.outfit(color: Colors.white))),
-                  ],
-                  onChanged: (v) {
-                    setState(() {
-                      _isGround = v ?? false;
-                      if (_isGround) _openedAt ??= _roastDate;
-                    });
-                  },
-                ),
-              ),
-            ),
-          ]),
-        ],
-        _sectionLabel('Ціноутворення'),
-        _darkCard(children: [
-          _fieldRow(label: 'РОЗДРІБ 250G', controller: _priceController, keyboardType: TextInputType.number, suffix: '₴'),
-          _divider(),
-          _fieldRow(label: 'РОЗДРІБ 1KG', controller: _retailPrice1kController, keyboardType: TextInputType.number, suffix: '₴'),
-          _divider(),
-          _fieldRow(label: 'ОПТ 250G', controller: _wholesalePrice250Controller, keyboardType: TextInputType.number, suffix: '₴'),
-          _divider(),
-          _fieldRow(label: 'ОПТ 1KG', controller: _wholesalePrice1kController, keyboardType: TextInputType.number, suffix: '₴'),
-        ]),
-      ],
-    );
-  }
-
-  // ─── Tab 2: Coffee Info ───────────────────────────────────────────
-  Widget _buildCoffeeTab() {
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
-      children: [
-        _sectionLabel('Фото кави'),
-        _buildImagePicker(),
-        const SizedBox(height: 16),
+        
         _sectionLabel('Кава та лот'),
         _darkCard(children: [
           _fieldRow(label: 'COFFEE NAME *', controller: _coffeeNameController),
@@ -699,17 +598,12 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             ],
           ),
         ]),
+
         _sectionLabel('Походження'),
         _darkCard(children: [
-          _fieldRow(
-            label: 'COUNTRY *',
-            controller: _originCountryController,
-          ),
+          _fieldRow(label: 'COUNTRY *', controller: _originCountryController),
           _divider(),
-          _fieldRow(
-            label: 'REGION',
-            controller: _regionController,
-          ),
+          _fieldRow(label: 'REGION', controller: _regionController),
           _divider(),
           _fieldRow(
             label: 'ALTITUDE',
@@ -718,35 +612,164 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             suffix: 'm',
           ),
           _divider(),
-          _fieldRow(
-            label: 'VARIETALS',
-            controller: _varietiesController,
-          ),
+          _fieldRow(label: 'VARIETALS', controller: _varietiesController),
         ]),
+
         _sectionLabel('Обробка'),
         _buildProcessSection(),
+
         _sectionLabel('Смакові ноти'),
         _darkCard(children: [
-          _fieldRow(
-            label: 'FLAVOR NOTES',
-            controller: _flavorProfileController,
+          _fieldRow(label: 'FLAVOR NOTES', controller: _flavorProfileController),
+        ]),
+
+        _sectionLabel('Ціноутворення'),
+        _darkCard(children: [
+          _fieldRow(label: 'РОЗДРІБ 250G', controller: _priceController, keyboardType: TextInputType.number, suffix: '₴'),
+          _divider(),
+          _fieldRow(label: 'РОЗДРІБ 1KG', controller: _retailPrice1kController, keyboardType: TextInputType.number, suffix: '₴'),
+          _divider(),
+          _fieldRow(label: 'ОПТ 250G', controller: _wholesalePrice250Controller, keyboardType: TextInputType.number, suffix: '₴'),
+          _divider(),
+          _fieldRow(label: 'ОПТ 1KG', controller: _wholesalePrice1kController, keyboardType: TextInputType.number, suffix: '₴'),
+        ]),
+      ],
+    );
+  }
+
+  // ─── Tab 2: Coffee Info ───────────────────────────────────────────
+  Widget _buildCoffeeTab() {
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+      children: [
+        _sectionLabel('Фото лоту'),
+        _buildImagePicker(),
+        const SizedBox(height: 16),
+
+        _sectionLabel('Дата обсмажування'),
+        _darkCard(children: [
+          _dateRow(
+            label: 'ROAST DATE',
+            date: _roastDate,
+            onTap: () async {
+              final picked = await showDatePicker(
+                context: context, 
+                initialDate: _roastDate,
+                firstDate: DateTime(2020), 
+                lastDate: DateTime.now(),
+                builder: (ctx, child) => Theme(
+                  data: ThemeData.dark().copyWith(
+                    colorScheme: const ColorScheme.dark(primary: Color(0xFFC8A96E)),
+                  ),
+                  child: child!,
+                ),
+              );
+              if (picked != null) setState(() => _roastDate = picked);
+            },
+          ),
+          _divider(),
+          _dateRow(
+            label: 'OPENED AT',
+            date: _openedAt,
+            placeholder: 'Не відкрито',
+            onTap: () async {
+              final picked = await showDatePicker(
+                context: context, 
+                initialDate: (_openedAt != null && _openedAt!.isAfter(_roastDate)) 
+                    ? _openedAt! 
+                    : _roastDate,
+                firstDate: _roastDate, 
+                lastDate: DateTime.now(),
+                builder: (ctx, child) => Theme(
+                  data: ThemeData.dark().copyWith(
+                    colorScheme: const ColorScheme.dark(primary: Color(0xFFC8A96E)),
+                  ),
+                  child: child!,
+                ),
+              );
+              if (picked != null) setState(() => _openedAt = picked);
+            },
           ),
         ]),
+
+        _sectionLabel('Стан пачки'),
+        Row(
+          children: [
+            Expanded(
+              child: _toggleButton(
+                label: 'ЗАКРИТА', 
+                active: !_isOpen, 
+                onTap: () => setState(() => _isOpen = false),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: _toggleButton(
+                label: 'ВІДКРИТА', 
+                active: _isOpen, 
+                onTap: () {
+                  setState(() {
+                    _isOpen = true;
+                    _openedAt ??= _roastDate;
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+
+        if (_isOpen) ...[
+          _sectionLabel('Тип помелу'),
+          _darkCard(children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<bool>(
+                  value: _isGround,
+                  isExpanded: true,
+                  dropdownColor: const Color(0xFF1A1714),
+                  icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFFC8A96E)),
+                  style: GoogleFonts.outfit(
+                    color: const Color(0xFFC8A96E), 
+                    fontSize: 15, 
+                    fontWeight: FontWeight.w500,
+                  ),
+                  items: [
+                    DropdownMenuItem(value: false, child: Text('В ЗЕРНАХ', style: GoogleFonts.outfit(color: Colors.white))),
+                    DropdownMenuItem(value: true, child: Text('ЗМЕЛЕНА', style: GoogleFonts.outfit(color: Colors.white))),
+                  ],
+                  onChanged: (v) {
+                    setState(() {
+                      _isGround = v ?? false;
+                      if (_isGround) _openedAt ??= _roastDate;
+                    });
+                  },
+                ),
+              ),
+            ),
+          ]),
+        ],
+
         _sectionLabel('Обсмажка'),
         _darkCard(children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'ROAST LEVEL',
-                  style: GoogleFonts.outfit(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 1.2),
+                  style: GoogleFonts.outfit(
+                    fontSize: 10, 
+                    color: Colors.white, 
+                    fontWeight: FontWeight.bold, 
+                    letterSpacing: 1.2,
+                  ),
                 ),
                 const SizedBox(height: 2),
                 DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
-                    value: _roastLevels.contains(_roastLevel) ? _roastLevel : _roastLevels[2], // Default to Medium
+                    value: _roastLevels.contains(_roastLevel) ? _roastLevel : _roastLevels[2],
                     isExpanded: true,
                     dropdownColor: const Color(0xFF1A1714),
                     icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFFC8A96E)),
@@ -768,20 +791,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 ),
               ],
             ),
-          ),
-          _divider(),
-          _dateRow(
-            label: 'ROAST DATE',
-            date: _roastDate,
-            onTap: () async {
-              final picked = await showDatePicker(
-                context: context,
-                initialDate: _roastDate,
-                firstDate: DateTime(2000),
-                lastDate: DateTime.now(),
-              );
-              if (picked != null) setState(() => _roastDate = picked);
-            },
           ),
         ]),
       ],

@@ -46,11 +46,14 @@ class CustomRecipeFormScreen extends ConsumerStatefulWidget {
   final String? lotId;
   final CustomRecipeDto? existingRecipe;
 
+  final String recipeType;
+
   const CustomRecipeFormScreen({
     super.key,
     required this.methodKey,
     this.lotId,
     this.existingRecipe,
+    this.recipeType = 'filter',
   });
 
   @override
@@ -72,6 +75,11 @@ class _CustomRecipeFormScreenState
   late TextEditingController _ek43Ctrl;
   late TextEditingController _tempCtrl;
   late TextEditingController _notesCtrl;
+  late TextEditingController _micronsCtrl;
+  late TextEditingController _brewRatioCtrl;
+
+  String _selectedGrinder = 'Other';
+  late String _recipeType;
 
   int _totalPours = 1;
   int _rating = 0;
@@ -106,8 +114,26 @@ class _CustomRecipeFormScreenState
       text: r != null ? r.brewTempC.toString() : '93.0',
     );
     _notesCtrl = TextEditingController(text: r?.notes ?? '');
+    _micronsCtrl = TextEditingController(text: r?.microns?.toString() ?? '');
+    _brewRatioCtrl = TextEditingController(
+      text: r?.brewRatio != null ? '1:${r!.brewRatio!.toStringAsFixed(1)}' : '',
+    );
+    _selectedGrinder = r?.grinderName ?? 'Other';
+    _recipeType = r?.recipeType ?? widget.recipeType;
+
     _rating = r?.rating ?? 0;
     _totalPours = r?.totalPours ?? 1;
+
+    // Default values for new Espresso
+    if (r == null && _recipeType == 'espresso') {
+      _coffeeGCtrl.text = '18.0';
+      _waterMlCtrl.text = '36.0';
+      _updateRatio();
+    }
+
+    // Listeners for ratio
+    _coffeeGCtrl.addListener(_updateRatio);
+    _waterMlCtrl.addListener(_updateRatio);
 
     // Load existing pours or create empty ones
     if (r != null) {
@@ -165,6 +191,8 @@ class _CustomRecipeFormScreenState
       _ek43Ctrl,
       _tempCtrl,
       _notesCtrl,
+      _micronsCtrl,
+      _brewRatioCtrl,
     ]) {
       c.dispose();
     }
@@ -174,6 +202,18 @@ class _CustomRecipeFormScreenState
       }
     }
     super.dispose();
+  }
+
+  void _updateRatio() {
+    final coffee = double.tryParse(_coffeeGCtrl.text) ?? 0;
+    final water = double.tryParse(_waterMlCtrl.text) ?? 0;
+    if (coffee > 0 && water > 0) {
+      final ratio = water / coffee;
+      final result = '1:${ratio.toStringAsFixed(1)}';
+      if (_brewRatioCtrl.text != result) {
+        _brewRatioCtrl.text = result;
+      }
+    }
   }
 
   void _readPourControllers() {
@@ -219,6 +259,10 @@ class _CustomRecipeFormScreenState
         notes: Value(_notesCtrl.text),
         rating: Value(_rating),
         userId: Value(''), // v17 compatibility
+        recipeType: Value(_recipeType),
+        microns: Value(int.tryParse(_micronsCtrl.text)),
+        brewRatio: Value(double.tryParse(_brewRatioCtrl.text.replaceAll('1:', ''))),
+        grinderName: Value(_selectedGrinder),
       );
       await db.updateCustomRecipe(updateCompanion);
     } else {
@@ -241,6 +285,10 @@ class _CustomRecipeFormScreenState
           notes: Value(_notesCtrl.text),
           rating: Value(_rating),
           userId: '', // v17 compatibility
+          recipeType: Value(_recipeType),
+          microns: Value(int.tryParse(_micronsCtrl.text)),
+          brewRatio: Value(double.tryParse(_brewRatioCtrl.text.replaceAll('1:', ''))),
+          grinderName: Value(_selectedGrinder),
         ),
       );
     }
@@ -343,46 +391,87 @@ class _CustomRecipeFormScreenState
 
             // ── Grinder ────────────────────────────────────────────────────────
             _SectionHeader('Grinder Settings'),
-            _Field(
-              controller: _grindCtrl,
-              label: 'Grind Number (any grinder)',
-              hint: '28',
-              keyboardType: TextInputType.number,
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.07),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  value: _selectedGrinder,
+                  isExpanded: true,
+                  dropdownColor: const Color(0xFF1A1714),
+                  style: GoogleFonts.outfit(color: Colors.white, fontSize: 14),
+                  items: ['Other', 'EK43', 'Comandante Standard', 'Comandante Red Clicks']
+                      .map((String value) => DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          ))
+                      .toList(),
+                  onChanged: (v) {
+                    if (v != null) {
+                      setState(() {
+                        // Handle Comandante conversion logic
+                        if (_selectedGrinder == 'Comandante Standard' && v == 'Comandante Red Clicks') {
+                          final clicks = int.tryParse(_comandanteCtrl.text);
+                          if (clicks != null) _comandanteCtrl.text = (clicks * 2).toString();
+                        } else if (_selectedGrinder == 'Comandante Red Clicks' && v == 'Comandante Standard') {
+                          final clicks = int.tryParse(_comandanteCtrl.text);
+                          if (clicks != null) _comandanteCtrl.text = (clicks ~/ 2).toString();
+                        }
+                        _selectedGrinder = v;
+                      });
+                    }
+                  },
+                ),
+              ),
             ),
             const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: _Field(
-                    controller: _comandanteCtrl,
-                    label: 'Comandante Clicks',
-                    hint: '28',
-                    keyboardType: TextInputType.number,
-                    prefixIcon: const Icon(
-                      Icons.circle,
-                      color: Colors.redAccent,
-                      size: 14,
-                    ),
-                  ),
+            if (_selectedGrinder == 'EK43')
+              _Field(
+                controller: _ek43Ctrl,
+                label: 'Mahlkoenig EK43 Division',
+                hint: '8.5',
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              )
+            else if (_selectedGrinder.contains('Comandante'))
+              _Field(
+                controller: _comandanteCtrl,
+                label: 'Comandante Clicks',
+                hint: '25',
+                keyboardType: TextInputType.number,
+                prefixIcon: Icon(
+                  Icons.circle,
+                  color: _selectedGrinder == 'Comandante Red Clicks' ? Colors.redAccent : Colors.white24,
+                  size: 14,
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _Field(
-                    controller: _ek43Ctrl,
-                    label: 'Mahlkoenig EK43 Div.',
-                    hint: '8.5',
-                    keyboardType: TextInputType.numberWithOptions(
-                      decimal: true,
-                    ),
-                    prefixIcon: const Icon(
-                      Icons.circle,
-                      color: Colors.lightBlueAccent,
-                      size: 14,
-                    ),
-                  ),
-                ),
-              ],
+              )
+            else ...[
+              _Field(
+                controller: _grindCtrl,
+                label: 'Grind Settings',
+                hint: '28',
+                keyboardType: TextInputType.number,
+              ),
+            ],
+            const SizedBox(height: 12),
+            _Field(
+              controller: _micronsCtrl,
+              label: 'Microns (μm)',
+              hint: '800',
+              keyboardType: TextInputType.number,
             ),
+            if (_recipeType == 'espresso') ...[
+              const SizedBox(height: 12),
+              _Field(
+                controller: _brewRatioCtrl,
+                label: 'Brew Ratio',
+                hint: '1:2.0',
+                readOnly: true,
+              ),
+            ],
             const SizedBox(height: 20),
 
             // ── Pour Schedule ──────────────────────────────────────────────────
@@ -569,7 +658,10 @@ class _Field extends StatelessWidget {
     this.validator,
     this.prefixIcon,
     this.dense = false,
+    this.readOnly = false,
   });
+
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -578,6 +670,7 @@ class _Field extends StatelessWidget {
       keyboardType: keyboardType,
       maxLines: maxLines,
       validator: validator,
+      readOnly: readOnly,
       style: const TextStyle(color: Colors.white, fontSize: 14),
       decoration: InputDecoration(
         labelText: label,

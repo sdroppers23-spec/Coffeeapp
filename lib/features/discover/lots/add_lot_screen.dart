@@ -72,6 +72,17 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     'Other'
   ];
 
+  final List<String> _roastLevels = [
+    'Light',
+    'Medium-Light',
+    'Medium',
+    'Medium-Dark',
+    'Dark',
+    'Filter',
+    'Omni',
+    'Espresso'
+  ];
+
   String? _selectedProcess;
   bool _isOtherProcess = false;
   bool _isOtherDecaf = false;
@@ -245,6 +256,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           _imageExtension = image.name.split('.').last.toLowerCase();
           _currentImageUrl = null; // New image replaces old one
         });
+        debugPrint('IMAGE PICKED: extension=$_imageExtension, bytes=${bytes.length}');
       }
     } catch (e) {
       debugPrint('PICK IMAGE ERROR: $e');
@@ -279,7 +291,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       // 1. Handle Image Upload if new image selected
       if (_imageBytes != null && _imageExtension != null) {
         final fileName = '${lotId}_${DateTime.now().millisecondsSinceEpoch}.$_imageExtension';
+        debugPrint('UPLOADING IMAGE: $fileName');
         final uploadedUrl = await syncService.uploadCoffeeImage(_imageBytes!, fileName);
+        debugPrint('UPLOAD RESULT: $uploadedUrl');
         if (uploadedUrl != null) {
           finalImageUrl = uploadedUrl;
         }
@@ -696,6 +710,58 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           _fieldRow(
             label: 'FLAVOR NOTES',
             controller: _flavorProfileController,
+          ),
+        ]),
+        _sectionLabel('Обсмажка'),
+        _darkCard(children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'ROAST LEVEL',
+                  style: GoogleFonts.outfit(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 1.2),
+                ),
+                const SizedBox(height: 2),
+                DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: _roastLevels.contains(_roastLevel) ? _roastLevel : _roastLevels[2], // Default to Medium
+                    isExpanded: true,
+                    dropdownColor: const Color(0xFF1A1714),
+                    icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFFC8A96E)),
+                    style: GoogleFonts.outfit(color: Colors.white, fontSize: 16),
+                    items: _roastLevels.map((String level) {
+                      return DropdownMenuItem<String>(
+                        value: level,
+                        child: Text(level.toUpperCase(), style: GoogleFonts.outfit(color: Colors.white)),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        setState(() {
+                          _roastLevel = newValue;
+                        });
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          _divider(),
+          _dateRow(
+            label: 'ROAST DATE',
+            date: _roastDate,
+            onTap: () async {
+              final picked = await showDatePicker(
+                context: context,
+                initialDate: _roastDate,
+                firstDate: DateTime(2000),
+                lastDate: DateTime.now(),
+              );
+              if (picked != null) setState(() => _roastDate = picked);
+            },
           ),
         ]),
       ],
@@ -1255,19 +1321,18 @@ class AltitudeInputFormatter extends TextInputFormatter {
       return oldValue;
     }
 
-    // 3. Prevent consecutive separators
-    if (text.contains('--') || text.contains('..') || text.contains(',,') || 
-        text.contains('-.') || text.contains('-,') || text.contains('.-') || text.contains(',-')) {
+    // 3. Prevent consecutive separators or invalid ones
+    if (text.contains('--') || text.contains('..') || text.contains('.-') || text.contains('-.')) {
       return oldValue;
     }
 
     // 4. Prevent starting with separator
-    if (text.startsWith('.') || text.startsWith(',') || text.startsWith('-')) {
+    if (text.startsWith('.') || text.startsWith('-')) {
       return oldValue;
     }
 
-    // 5. Allow only digits, dot, comma, and hyphen
-    if (!RegExp(r'^[0-9\.,\-]*$').hasMatch(text)) {
+    // 5. Allow ONLY digits, dot, and hyphen (as requested: "тільки крапка і дифіс")
+    if (!RegExp(r'^[0-9\.\-]*$').hasMatch(text)) {
       return oldValue;
     }
 

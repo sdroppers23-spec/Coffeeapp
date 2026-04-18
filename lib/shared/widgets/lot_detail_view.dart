@@ -132,16 +132,20 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                   ],
                 ),
               ),
-              floatingActionButton: Padding(
+              floatingActionButton: _tabController.index == 2 ? Padding(
                 padding: const EdgeInsets.only(bottom: 20, right: 8),
-                child: FloatingActionButton(
+                child: FloatingActionButton.extended(
                   onPressed: () => _showRecipeTypeSelector(context, ref, liveLot?.id ?? widget.lot!.id),
                   backgroundColor: theme.colorScheme.primary,
                   foregroundColor: Colors.black,
-                  shape: const CircleBorder(),
-                  child: const Icon(Icons.add_rounded, size: 28),
+                  label: Text(
+                    isUk ? '+ ДОДАТИ РЕЦЕПТ' : '+ ADD RECIPE',
+                    style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
+                  ),
+                  icon: const Icon(Icons.add_rounded, size: 24),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 ),
-              ),
+              ) : null,
               floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             );
           },
@@ -714,23 +718,6 @@ class _RecipesTab extends ConsumerWidget {
                 Text(
                   isUk ? 'НЕМАЄ РЕЦЕПТІВ ДЛЯ ЦЬОГО ЛОТУ' : 'NO RECIPES FOR THIS LOT',
                   style: GoogleFonts.outfit(color: Colors.white24, fontWeight: FontWeight.bold, fontSize: 12, letterSpacing: 1.2),
-                ),
-                const SizedBox(height: 24),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    if (!kIsWeb && !Platform.isWindows) {
-                      Vibration.vibrate(duration: 50);
-                    }
-                    context.push('/custom_recipe_form', extra: {'lotId': lotId});
-                  },
-                  icon: const Icon(Icons.add_rounded, size: 18),
-                  label: Text(isUk ? 'ДОДАТИ РЕЦЕПТ' : 'ADD RECIPE'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: theme.colorScheme.primary,
-                    foregroundColor: Colors.black,
-                    textStyle: GoogleFonts.outfit(fontWeight: FontWeight.bold),
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  ),
                 ),
               ],
             ),

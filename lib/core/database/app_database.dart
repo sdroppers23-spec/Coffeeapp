@@ -775,12 +775,12 @@ class AppDatabase extends _$AppDatabase {
   Future<List<CustomRecipeDto>> getCustomRecipesForLot(String lotId) async {
     final rows = await (select(
       customRecipes,
-    )..where((t) => t.lotId.equals(lotId))).get();
+    )..where((t) => t.lotId.equals(lotId) & t.isDeletedLocal.equals(false))).get();
     return rows.map((r) => _mapCustomRecipe(r)).toList();
   }
 
   Stream<List<CustomRecipeDto>> watchCustomRecipesForLot(String lotId) {
-    final query = select(customRecipes)..where((t) => t.lotId.equals(lotId));
+    final query = select(customRecipes)..where((t) => t.lotId.equals(lotId) & t.isDeletedLocal.equals(false));
     return query.watch().map((rows) => rows.map((r) => _mapCustomRecipe(r)).toList());
   }
 

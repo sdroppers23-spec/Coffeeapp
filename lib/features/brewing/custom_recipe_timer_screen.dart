@@ -31,9 +31,11 @@ class _CustomRecipeTimerScreenState
       _pours = (jsonDecode(widget.recipe.pourScheduleJson) as List)
           .cast<Map<String, dynamic>>();
       // Sort by minute just in case
-      _pours.sort(
-        (a, b) => (a['atMinute'] as num).compareTo(b['atMinute'] as num),
-      );
+      _pours.sort((a, b) {
+        final aMin = (a['atMinute'] as num?)?.toDouble() ?? 0.0;
+        final bMin = (b['atMinute'] as num?)?.toDouble() ?? 0.0;
+        return aMin.compareTo(bMin);
+      });
     } catch (_) {
       _pours = [];
     }
@@ -52,6 +54,10 @@ class _CustomRecipeTimerScreenState
         _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
           setState(() {
             _elapsedSec++;
+            if (_elapsedSec >= 600) { // 10 minutes limit
+              _isRunning = false;
+              _timer?.cancel();
+            }
           });
         });
       } else {
@@ -75,8 +81,11 @@ class _CustomRecipeTimerScreenState
   }
 
   int _getActivePourIndex() {
+    if (_pours.isEmpty) return -1;
     for (int i = _pours.length - 1; i >= 0; i--) {
-      final pourSec = ((_pours[i]['atMinute'] as num) * 60).round();
+      final atMin = _pours[i]['atMinute'] as num?;
+      if (atMin == null) continue;
+      final pourSec = (atMin.toDouble() * 60).round();
       if (_elapsedSec >= pourSec) {
         return i;
       }
@@ -258,7 +267,8 @@ class _CustomRecipeTimerScreenState
                 final pour = _pours[i];
                 final isPast = i < activeIndex;
                 final isActive = i == activeIndex;
-                final pourSec = ((pour['atMinute'] as num) * 60).round();
+                final atMin = pour['atMinute'] as num?;
+                final pourSec = atMin != null ? (atMin.toDouble() * 60).round() : 0;
                 final ml = pour['waterMl'];
                 final n = pour['pourNumber'] ?? (i + 1);
                 final isBloom = i == 0;

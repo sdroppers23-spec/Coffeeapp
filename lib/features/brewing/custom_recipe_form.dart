@@ -205,13 +205,15 @@ class _CustomRecipeFormScreenState
   }
 
   void _updateRatio() {
-    final coffee = double.tryParse(_coffeeGCtrl.text) ?? 0;
-    final water = double.tryParse(_waterMlCtrl.text) ?? 0;
+    final coffee = double.tryParse(_coffeeGCtrl.text.replaceAll(',', '.')) ?? 0;
+    final water = double.tryParse(_waterMlCtrl.text.replaceAll(',', '.')) ?? 0;
     if (coffee > 0 && water > 0) {
       final ratio = water / coffee;
       final result = '1:${ratio.toStringAsFixed(1)}';
       if (_brewRatioCtrl.text != result) {
-        _brewRatioCtrl.text = result;
+        setState(() {
+          _brewRatioCtrl.text = result;
+        });
       }
     }
   }
@@ -237,28 +239,28 @@ class _CustomRecipeFormScreenState
     final now = DateTime.now();
     final pourJson = jsonEncode(_pours.map((p) => p.toJson()).toList());
 
+    if (_recipeType == 'espresso') {
+      _totalPours = 1;
+    }
+
     if (widget.existingRecipe != null) {
-      // Build a full companion with id for update
       final updateCompanion = CustomRecipesCompanion(
         id: Value(widget.existingRecipe!.id),
         methodKey: Value(widget.methodKey),
         name: Value(_nameCtrl.text.trim()),
-        createdAt: Value(
-          widget.existingRecipe!.updatedAt ?? now,
-        ), // Best effort for createdAt
+        createdAt: Value(widget.existingRecipe!.updatedAt ?? now),
         updatedAt: Value(now),
-        coffeeGrams: Value(double.tryParse(_coffeeGCtrl.text) ?? 0),
-
-        totalWaterMl: Value(double.tryParse(_waterMlCtrl.text) ?? 0),
+        coffeeGrams: Value(double.tryParse(_coffeeGCtrl.text.replaceAll(',', '.')) ?? 0),
+        totalWaterMl: Value(double.tryParse(_waterMlCtrl.text.replaceAll(',', '.')) ?? 0),
         grindNumber: Value(int.tryParse(_grindCtrl.text) ?? 0),
         comandanteClicks: Value(int.tryParse(_comandanteCtrl.text) ?? 0),
         ek43Division: Value(int.tryParse(_ek43Ctrl.text) ?? 0),
         totalPours: Value(_totalPours),
         pourScheduleJson: Value(pourJson),
-        brewTempC: Value(double.tryParse(_tempCtrl.text) ?? 93.0),
+        brewTempC: Value(double.tryParse(_tempCtrl.text.replaceAll(',', '.')) ?? 93.0),
         notes: Value(_notesCtrl.text),
         rating: Value(_rating),
-        userId: Value(''), // v17 compatibility
+        userId: Value(''), 
         recipeType: Value(_recipeType),
         microns: Value(int.tryParse(_micronsCtrl.text)),
         brewRatio: Value(double.tryParse(_brewRatioCtrl.text.replaceAll('1:', ''))),
@@ -273,18 +275,17 @@ class _CustomRecipeFormScreenState
           name: _nameCtrl.text.trim(),
           createdAt: Value(now),
           updatedAt: Value(now),
-
-          coffeeGrams: double.tryParse(_coffeeGCtrl.text) ?? 0,
-          totalWaterMl: double.tryParse(_waterMlCtrl.text) ?? 0,
+          coffeeGrams: double.tryParse(_coffeeGCtrl.text.replaceAll(',', '.')) ?? 0,
+          totalWaterMl: double.tryParse(_waterMlCtrl.text.replaceAll(',', '.')) ?? 0,
           grindNumber: Value(int.tryParse(_grindCtrl.text) ?? 0),
           comandanteClicks: Value(int.tryParse(_comandanteCtrl.text) ?? 0),
           ek43Division: Value(int.tryParse(_ek43Ctrl.text) ?? 0),
           totalPours: Value(_totalPours),
           pourScheduleJson: Value(pourJson),
-          brewTempC: Value(double.tryParse(_tempCtrl.text) ?? 93.0),
+          brewTempC: Value(double.tryParse(_tempCtrl.text.replaceAll(',', '.')) ?? 93.0),
           notes: Value(_notesCtrl.text),
           rating: Value(_rating),
-          userId: '', // v17 compatibility
+          userId: '', 
           recipeType: Value(_recipeType),
           microns: Value(int.tryParse(_micronsCtrl.text)),
           brewRatio: Value(double.tryParse(_brewRatioCtrl.text.replaceAll('1:', ''))),
@@ -294,7 +295,6 @@ class _CustomRecipeFormScreenState
     }
 
     if (mounted) {
-      setState(() => _saving = false);
       Navigator.of(context).pop();
     }
   }
@@ -475,32 +475,34 @@ class _CustomRecipeFormScreenState
             const SizedBox(height: 20),
 
             // ── Pour Schedule ──────────────────────────────────────────────────
-            _SectionHeader('Pour Schedule'),
-            Row(
-              children: [
-                const Text(
-                  'Number of pours:',
-                  style: TextStyle(color: Colors.white70),
-                ),
-                const SizedBox(width: 16),
-                _CounterWidget(
-                  value: _totalPours,
-                  min: 1,
-                  max: 12,
-                  onChanged: (v) => setState(() {
-                    _totalPours = v;
-                    _syncPourRows();
-                  }),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            // Pour rows
-            ...List.generate(
-              _totalPours,
-              (i) => _PourRow(index: i, ctrls: _pourCtrlsList[i]),
-            ),
-            const SizedBox(height: 20),
+            if (_recipeType != 'espresso') ...[
+              _SectionHeader('Pour Schedule'),
+              Row(
+                children: [
+                  const Text(
+                    'Number of pours:',
+                    style: TextStyle(color: Colors.white70),
+                  ),
+                  const SizedBox(width: 16),
+                  _CounterWidget(
+                    value: _totalPours,
+                    min: 1,
+                    max: 12,
+                    onChanged: (v) => setState(() {
+                      _totalPours = v;
+                      _syncPourRows();
+                    }),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              // Pour rows
+              ...List.generate(
+                _totalPours,
+                (i) => _PourRow(index: i, ctrls: _pourCtrlsList[i]),
+              ),
+              const SizedBox(height: 20),
+            ],
 
             // ── Notes ─────────────────────────────────────────────────────────
             _SectionHeader('Notes'),

@@ -107,11 +107,8 @@ class SyncService {
       debugPrint('SYNC: Pulling beans from localized_beans...');
       final data = await supabase!.from('localized_beans').select().order('id');
       
-      // Clear old entries locally
-      await db.transaction(() async {
-        await (db.delete(db.localizedBeanTranslations)).go();
-        await (db.delete(db.localizedBeans)).go();
-      });
+      // Collect remote IDs for cleanup later
+      final remoteIds = data.map((item) => item['id'] as int).toList();
 
       int successCount = 0;
       int errorCount = 0;
@@ -176,6 +173,14 @@ class SyncService {
           errorCount++;
         }
       }
+      // Cleanup: Delete local beans (and translations) missing from remote
+      if (remoteIds.isNotEmpty) {
+        await db.transaction(() async {
+          await (db.delete(db.localizedBeanTranslations)..where((t) => t.beanId.isIn(remoteIds).not())).go();
+          await (db.delete(db.localizedBeans)..where((t) => t.id.isIn(remoteIds).not())).go();
+        });
+      }
+
       debugPrint('SYNC: Encyclopedia synchronized ($successCount success, $errorCount errors)');
     } catch (e) {
       debugPrint('SYNC ERROR (Encyclopedia): $e');
@@ -284,13 +289,8 @@ class SyncService {
       
       debugPrint('SYNC: Received ${farmersData.length} farmers from Supabase');
 
-      // Clear old farmers locally (translations first to avoid FK issues)
-      await db.transaction(() async {
-        debugPrint('SYNC: Clearing localizedFarmerTranslations...');
-        await (db.delete(db.localizedFarmerTranslations)).go();
-        debugPrint('SYNC: Clearing localizedFarmers...');
-        await (db.delete(db.localizedFarmers)).go();
-      });
+      // Collect remote IDs for cleanup later
+      final remoteIds = farmersData.map((item) => item['id'] as int).toList();
       
       int successCount = 0;
       int errorCount = 0;
@@ -359,6 +359,14 @@ class SyncService {
           errorCount++;
         }
       }
+      // Cleanup: Delete local farmers (and translations) missing from remote
+      if (remoteIds.isNotEmpty) {
+        await db.transaction(() async {
+          await (db.delete(db.localizedFarmerTranslations)..where((t) => t.farmerId.isIn(remoteIds).not())).go();
+          await (db.delete(db.localizedFarmers)..where((t) => t.id.isIn(remoteIds).not())).go();
+        });
+      }
+
       debugPrint('SYNC: Farmers synchronized ($successCount success, $errorCount errors)');
     } catch (e) {
       debugPrint('SYNC ERROR (Farmers): $e');
@@ -374,15 +382,8 @@ class SyncService {
       debugPrint('SYNC: Pulling articles from specialty_articles...');
       final data = await supabase!.from('specialty_articles').select().order('id');
       
-      // Clear old articles locally after successful connection to Supabase
-
-      // Clear old articles locally only after successful fetch
-      await db.transaction(() async {
-        debugPrint('SYNC: Clearing specialtyArticleTranslations...');
-        await (db.delete(db.specialtyArticleTranslations)).go();
-        debugPrint('SYNC: Clearing specialtyArticles...');
-        await (db.delete(db.specialtyArticles)).go();
-      });
+      // Collect remote IDs for cleanup later
+      final remoteIds = data.map((item) => item['id'] as int).toList();
 
       int successCount = 0;
       int errorCount = 0;
@@ -438,6 +439,14 @@ class SyncService {
           errorCount++;
         }
       }
+      // Cleanup: Delete local articles (and translations) missing from remote
+      if (remoteIds.isNotEmpty) {
+        await db.transaction(() async {
+          await (db.delete(db.specialtyArticleTranslations)..where((t) => t.articleId.isIn(remoteIds).not())).go();
+          await (db.delete(db.specialtyArticles)..where((t) => t.id.isIn(remoteIds).not())).go();
+        });
+      }
+
       debugPrint('SYNC: Articles total - SUCCESS: $successCount, ERRORS: $errorCount');
     } catch (e) {
       debugPrint('SYNC CRITICAL ERROR (Articles): $e');
@@ -646,23 +655,17 @@ class SyncService {
     }
   }
 
-  /// Pulls brewing recipes from Supabase.
   Future<void> syncBrewingRecipes() async {
     if (supabase == null) return;
     try {
-      debugPrint('SYNC: Clearing local brewing recipes before pull...');
-      await db.transaction(() async {
-        debugPrint('SYNC: Clearing brewingRecipeTranslations...');
-        await (db.delete(db.brewingRecipeTranslations)).go();
-        debugPrint('SYNC: Clearing brewingRecipes...');
-        await (db.delete(db.brewingRecipes)).go();
-      });
-
       debugPrint('SYNC: Pulling methods from brewing_recipes...');
       int successCount = 0;
       int errorCount = 0;
-      
+
       final data = await supabase!.from('brewing_recipes').select();
+      
+      // Collect remote keys for cleanup later
+      final remoteKeys = data.map((item) => item['method_key'] as String).toList();
       
       for (final item in data) {
         try {
@@ -713,6 +716,14 @@ class SyncService {
           errorCount++;
         }
       }
+      // Cleanup: Delete local methods (and translations) missing from remote
+      if (remoteKeys.isNotEmpty) {
+        await db.transaction(() async {
+          await (db.delete(db.brewingRecipeTranslations)..where((t) => t.recipeKey.isIn(remoteKeys).not())).go();
+          await (db.delete(db.brewingRecipes)..where((t) => t.methodKey.isIn(remoteKeys).not())).go();
+        });
+      }
+
       debugPrint('SYNC: Brewing methods total - SUCCESS: $successCount, ERRORS: $errorCount');
     } catch (e) {
       debugPrint('SYNC CRITICAL ERROR (Brewing Recipes): $e');
@@ -723,16 +734,11 @@ class SyncService {
   Future<void> syncBrands() async {
     if (supabase == null) return;
     try {
-      debugPrint('SYNC: Clearing local brands before pull...');
-      await db.transaction(() async {
-        debugPrint('SYNC: Clearing localizedBrandTranslations...');
-        await (db.delete(db.localizedBrandTranslations)).go();
-        debugPrint('SYNC: Clearing localizedBrands...');
-        await (db.delete(db.localizedBrands)).go();
-      });
-
       debugPrint('SYNC: Pulling brands from localized_brands...');
       final data = await supabase!.from('localized_brands').select();
+      
+      // Collect remote IDs for cleanup later
+      final remoteIds = data.map((item) => item['id'] as int).toList();
       
       for (final item in data) {
         try {
@@ -768,6 +774,14 @@ class SyncService {
         } catch (e) {
           debugPrint('SYNC ERROR for brand ID ${item['id']}: $e');
         }
+      }
+
+      // Cleanup: Delete local brands (and translations) missing from remote
+      if (remoteIds.isNotEmpty) {
+        await db.transaction(() async {
+          await (db.delete(db.localizedBrandTranslations)..where((t) => t.brandId.isIn(remoteIds).not())).go();
+          await (db.delete(db.localizedBrands)..where((t) => t.id.isIn(remoteIds).not())).go();
+        });
       }
     } catch (e) {
       debugPrint('SYNC ERROR (Brands): $e');

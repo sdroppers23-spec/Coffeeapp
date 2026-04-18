@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'app_database.dart';
 import 'sync_service.dart';
 import 'coffee_data_seed.dart';
+import 'dtos.dart';
 
 final databaseProvider = Provider<AppDatabase>((ref) {
   final db = AppDatabase();
@@ -29,4 +30,14 @@ final databaseInitializerProvider = FutureProvider<void>((ref) async {
 final syncServiceProvider = Provider<SyncService>((ref) {
   final db = ref.watch(databaseProvider);
   return SyncService(db, Supabase.instance.client);
+});
+
+final beanProvider = StreamProvider.family<LocalizedBeanDto?, int>((ref, id) {
+  final db = ref.watch(databaseProvider);
+  return db.watchBeanById(id, 'uk'); 
+});
+
+final lotProvider = StreamProvider.family<CoffeeLotDto?, String>((ref, id) {
+  final db = ref.watch(databaseProvider);
+  return db.watchLotById(id);
 });

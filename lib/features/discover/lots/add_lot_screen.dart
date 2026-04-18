@@ -205,6 +205,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         : null;
 
     try {
+      debugPrint('SAVE LOT: Successfully saved $lotId to local database');
       await db.insertUserLot(
         CoffeeLotsCompanion(
           id: Value(lotId),
@@ -236,6 +237,14 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           updatedAt: Value(DateTime.now()),
         ),
       );
+      
+      // Verification read back
+      final savedLot = await db.getLotById(lotId);
+      if (savedLot == null) {
+        debugPrint('SAVE LOT ERROR: Verification failed, lot not found after save!');
+      } else {
+        debugPrint('SAVE LOT: Verification success, lot retrieved and matches.');
+      }
 
         if (mounted) {
           ref.invalidate(userLotsProvider);
@@ -254,7 +263,13 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   // ─── Build ────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          ref.read(navBarVisibleProvider.notifier).show();
+        }
+      },
+      child: Scaffold(
         backgroundColor: const Color(0xFF0A0908),
         body: SafeArea(
           child: Column(
@@ -276,7 +291,8 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: _buildSaveFab(),
-      );
+      ),
+    );
   }
 
   // ─── Header ───────────────────────────────────────────────────────

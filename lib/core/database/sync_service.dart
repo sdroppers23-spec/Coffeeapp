@@ -100,23 +100,19 @@ class SyncService {
     }
   }
 
-  /// Pulls encyclopedia data from Supabase and updates local storage.
-  /// Updated to use 'localized_beans' table for full localization support and healing.
   Future<void> syncEncyclopedia() async {
     if (supabase == null) return;
 
     try {
-      debugPrint('SYNC: Clearing local beans before pull...');
-      await db.transaction(() async {
-        debugPrint('SYNC: Clearing localizedBeanTranslations...');
-        await (db.delete(db.localizedBeanTranslations)).go();
-        debugPrint('SYNC: Clearing localizedBeans...');
-        await (db.delete(db.localizedBeans)).go();
-      });
-
       debugPrint('SYNC: Pulling beans from localized_beans...');
       final data = await supabase!.from('localized_beans').select().order('id');
       
+      // Clear old entries locally
+      await db.transaction(() async {
+        await (db.delete(db.localizedBeanTranslations)).go();
+        await (db.delete(db.localizedBeans)).go();
+      });
+
       int successCount = 0;
       int errorCount = 0;
 
@@ -130,10 +126,8 @@ class SyncService {
           if (planetEmojis.contains(emoji.trim()) || emoji.isEmpty) {
             final countryLower = (item['country_uk'] as String? ?? item['country_en'] as String? ?? 'unknown').toLowerCase().replaceAll(' ', '_');
             emoji = '$flagsBucket$countryLower.png';
-            debugPrint('SYNC: Healed planet emoji for ID $id to flag photo: $emoji');
           }
 
-          // 1. Prepare Bean Companion (Main Record with UK data)
           final bean = LocalizedBeansCompanion(
             id: Value(id),
             brandId: Value(item['brand_id'] as int?),
@@ -149,14 +143,12 @@ class SyncService {
             isPremium: Value(item['is_premium'] as bool? ?? false),
             isDecaf: Value(item['is_decaf'] as bool? ?? false),
             url: Value(item['url'] as String? ?? ''),
-            // UK Direct Fields
-            countryUk: Value(item['country_uk'] as String? ?? item['country_en'] as String?),
-            regionUk: Value(item['region_uk'] as String? ?? item['region_en'] as String?),
-            varietiesUk: Value(item['varieties_uk'] as String? ?? item['varieties_en'] as String?),
-            flavorNotesUk: Value(item['flavor_notes_uk']?.toString() ?? item['flavor_notes_en']?.toString() ?? '[]'),
-            processMethodUk: Value(item['process_method_uk'] as String? ?? item['process_method_en'] as String?),
-            descriptionUk: Value(ContentUtils.cleanCoffeeContent(item['description_uk'] as String? ?? item['description_en'] as String? ?? '')),
-            roastLevelUk: Value(item['roast_level_uk'] as String? ?? item['roast_level_en'] as String?),
+            countryUk: Value(item['country_uk'] as String? ?? item['country'] as String?),
+            regionUk: Value(item['region_uk'] as String? ?? item['region'] as String?),
+            varietiesUk: Value(item['varieties_uk'] as String? ?? item['varieties'] as String?),
+            flavorNotesUk: Value(item['flavor_notes_uk']?.toString() ?? item['flavor_notes']?.toString() ?? '[]'),
+            processMethodUk: Value(item['process_method_uk'] as String? ?? item['process_method'] as String?),
+            descriptionUk: Value(ContentUtils.cleanCoffeeContent(item['description_uk'] as String? ?? item['description'] as String? ?? '')),
             createdAt: Value(
               item['created_at'] != null
                   ? DateTime.tryParse(item['created_at'] as String)
@@ -164,31 +156,19 @@ class SyncService {
             ),
           );
 
-          // 2. Prepare Translations (Fetches from translation table)
-          final translationsData = await supabase!
-              .from('localized_bean_translations')
-              .select()
-              .eq('bean_id', id);
+          // Get translations if any
+          final transData = await supabase!.from('localized_bean_translations').select().eq('bean_id', id);
+          final List<LocalizedBeanTranslationsCompanion> translations = transData.map((t) => LocalizedBeanTranslationsCompanion(
+            beanId: Value(id),
+            languageCode: Value(t['language_code'] as String),
+            country: Value(t['country'] as String?),
+            region: Value(t['region'] as String?),
+            varieties: Value(t['varieties'] as String?),
+            flavorNotes: Value(t['flavor_notes']?.toString() ?? '[]'),
+            processMethod: Value(t['process_method'] as String?),
+            description: Value(ContentUtils.cleanCoffeeContent(t['description'] as String? ?? '')),
+          )).toList();
 
-          final List<LocalizedBeanTranslationsCompanion> translations = [];
-          for (final t in translationsData) {
-            translations.add(
-              LocalizedBeanTranslationsCompanion(
-                beanId: Value(id),
-                languageCode: Value(t['language_code'] as String),
-                country: Value(ContentUtils.cleanCoffeeContent(t['country'] as String? ?? '')),
-                region: Value(ContentUtils.cleanCoffeeContent(t['region'] as String? ?? '')),
-                varieties: Value(ContentUtils.cleanCoffeeContent(t['varieties'] as String? ?? '')),
-                flavorNotes: Value(t['flavor_notes']?.toString() ?? '[]'),
-                processMethod: Value(ContentUtils.cleanCoffeeContent(t['process_method'] as String? ?? '')),
-                description: Value(ContentUtils.cleanCoffeeContent(t['description'] as String? ?? '')),
-                farmDescription: Value(ContentUtils.cleanCoffeeContent(t['farm_description'] as String? ?? '')), 
-                roastLevel: Value(ContentUtils.cleanCoffeeContent(t['roast_level'] as String? ?? '')),
-              ),
-            );
-          }
-
-          // 3. Upsert into local DB
           await db.smartUpsertBean(bean, translations);
           successCount++;
         } catch (e) {

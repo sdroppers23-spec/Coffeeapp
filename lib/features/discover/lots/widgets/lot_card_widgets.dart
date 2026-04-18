@@ -6,6 +6,7 @@ import '../../../../core/l10n/app_localizations.dart';
 import '../../../../shared/widgets/glass_container.dart';
 import '../../../../shared/widgets/pressable_scale.dart';
 import '../../../../shared/widgets/sensory_radar_chart.dart';
+import '../../../../shared/utils/sensory_utils.dart';
 import 'package:vibration/vibration.dart';
 
 class MyLotGridCard extends ConsumerWidget {
@@ -42,11 +43,12 @@ class MyLotGridCard extends ConsumerWidget {
       },
       child: GlassContainer(
         padding: const EdgeInsets.all(12),
-        opacity: isSelected ? 0.2 : 0.1,
+        opacity: isSelected ? 0.4 : 0.25,
         borderRadius: 24,
+        color: const Color(0xFFC8A96E).withValues(alpha: isSelected ? 0.3 : 0.15),
         borderColor: isSelected
-            ? theme.colorScheme.primary.withValues(alpha: 0.6)
-            : Colors.white.withValues(alpha: 0.08),
+            ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
+            : const Color(0xFFC8A96E).withValues(alpha: 0.2),
         child: Stack(
           children: [
             Column(
@@ -108,10 +110,10 @@ class MyLotGridCard extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 14),
-                // Sensory Bars
+                // Sensory Bars (Mini 6-axis simplified or core 3)
                 _SensoryFiveSegmentBarSmall(
-                  label: isUk ? 'Гіркота' : 'Bitterness',
-                  value: (lot.sensoryPoints['bitterness'] ?? 3).toDouble(),
+                  label: isUk ? 'Смак' : 'Flavor',
+                  value: (lot.sensoryPoints['flavor'] ?? 3).toDouble(),
                   theme: theme,
                 ),
                 _SensoryFiveSegmentBarSmall(
@@ -316,11 +318,12 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
       },
       child: GlassContainer(
         padding: const EdgeInsets.all(16),
-        opacity: isSelected ? 0.2 : 0.05, 
+        opacity: isSelected ? 0.4 : 0.25, 
         borderRadius: 20,
+        color: const Color(0xFFC8A96E).withValues(alpha: isSelected ? 0.3 : 0.15),
         borderColor: isSelected
-            ? theme.colorScheme.primary.withValues(alpha: 0.6)
-            : Colors.white.withValues(alpha: 0.08),
+            ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
+            : const Color(0xFFC8A96E).withValues(alpha: 0.2),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -399,14 +402,13 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Traits Row
                       Row(
                         children: [
-                          SizedBox(width: 80, child: _HorizontalSensoryBar(label: isUk ? 'ГІРКОТА' : 'BITTERNESS', value: (lot.sensoryPoints['bitterness'] ?? 3).toDouble(), theme: theme)),
-                          const SizedBox(width: 12),
-                          SizedBox(width: 80, child: _HorizontalSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (lot.sensoryPoints['acidity'] ?? 3).toDouble(), theme: theme)),
-                          const SizedBox(width: 12),
-                          SizedBox(width: 80, child: _HorizontalSensoryBar(label: isUk ? 'СОЛОДКІСТЬ' : 'SWEETNESS', value: (lot.sensoryPoints['sweetness'] ?? 3).toDouble(), theme: theme)),
+                          Expanded(child: _HorizontalSensoryBar(label: isUk ? 'СМАК' : 'FLAVOR', value: (lot.sensoryPoints['flavor'] ?? 3).toDouble(), theme: theme)),
+                          const SizedBox(width: 8),
+                          Expanded(child: _HorizontalSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (lot.sensoryPoints['acidity'] ?? 3).toDouble(), theme: theme)),
+                          const SizedBox(width: 8),
+                          Expanded(child: _HorizontalSensoryBar(label: isUk ? 'СОЛОДКІСТЬ' : 'SWEETNESS', value: (lot.sensoryPoints['sweetness'] ?? 3).toDouble(), theme: theme)),
                         ],
                       ),
                       const SizedBox(height: 12),
@@ -447,25 +449,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                     child: SensoryRadarChart(
                       interactive: false,
                       height: 200,
-                      staticValues: (() {
-                        final Map<String, double> result = {
-                          'aroma': 0.0,
-                          'flavor': 0.0,
-                          'acidity': 0.0,
-                          'body': 0.0,
-                          'aftertaste': 0.0,
-                          'balance': 0.0,
-                        };
-                        
-                        lot.sensoryPoints.forEach((k, v) {
-                          final key = k.toLowerCase();
-                          if (result.containsKey(key)) {
-                            result[key] = (v as num?)?.toDouble() ?? 0.0;
-                          }
-                        });
-                        
-                        return result;
-                      })(),
+                      staticValues: SensoryUtils.map4To6Axis(lot.sensoryPoints),
                     ),
                   ),
                 ],

@@ -28,7 +28,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
   
   bool get _isSelectionMode => _selectedLotIds.isNotEmpty;
   late final ScrollController _scrollController;
-  int _expandedCount = 0;
+
 
   @override
   void initState() {
@@ -423,12 +423,12 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
         if (filter.isGrid) {
           return GridView.builder(
             controller: _scrollController,
-            padding: const EdgeInsets.fromLTRB(21, 16, 21, 140),
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 140),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 0.68,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
+              childAspectRatio: 0.72,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
             ),
             itemCount: filteredLots.length,
             itemBuilder: (context, index) {
@@ -451,8 +451,8 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
         }
         return ListView.builder(
           controller: _scrollController,
-          physics: _expandedCount > 0 ? const NeverScrollableScrollPhysics() : const BouncingScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(26, 16, 26, 140),
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 140),
           itemCount: filteredLots.length,
           itemBuilder: (context, index) {
             final lot = filteredLots[index];
@@ -461,13 +461,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                 isSelected: _selectedLotIds.contains(lot.id),
                 isSelectionMode: _isSelectionMode,
                 onExpansionChanged: (isExpanded) {
-                  setState(() {
-                    if (isExpanded) {
-                      _expandedCount++;
-                    } else {
-                      _expandedCount--;
-                    }
-                  });
+                  setState(() {});
                 },
                 onLongPress: (id) => _toggleLotSelection(id),
                 onTap: (id) => context.push('/lot_details', extra: {'lot': lot}),

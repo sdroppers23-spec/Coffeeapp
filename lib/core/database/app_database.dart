@@ -318,20 +318,6 @@ class AppDatabase extends _$AppDatabase {
     return rows.map((row) => _mapBeanRow(row, lang)).toList();
   }
 
-  Future<LocalizedBeanDto?> getBeanById(int id, String lang) async {
-    final query =
-        select(localizedBeans).join([
-          leftOuterJoin(
-            localizedBeanTranslations,
-            localizedBeanTranslations.beanId.equalsExp(localizedBeans.id) &
-                localizedBeanTranslations.languageCode.equals(lang),
-          ),
-        ])..where(localizedBeans.id.equals(id));
-
-    final row = await query.getSingleOrNull();
-    return row != null ? _mapBeanRow(row, lang) : null;
-  }
-
   Future<void> smartUpsertBean(
     LocalizedBeansCompanion bean,
     List<LocalizedBeanTranslationsCompanion> translations,
@@ -355,6 +341,61 @@ class AppDatabase extends _$AppDatabase {
   Future<int> upsertLocalizedBeanTranslation(
     LocalizedBeanTranslationsCompanion t,
   ) => into(localizedBeanTranslations).insertOnConflictUpdate(t);
+
+  Future<LocalizedBeanDto?> getBeanById(int id, String locale) async {
+    final query = select(localizedBeans)..where((t) => t.id.equals(id));
+    final row = await query.getSingleOrNull();
+    if (row == null) return null;
+    return _mapBeanToDto(row);
+  }
+
+  Stream<LocalizedBeanDto?> watchBeanById(int id, String locale) {
+    return (select(localizedBeans)..where((t) => t.id.equals(id)))
+        .watchSingleOrNull()
+        .map((row) => row != null ? _mapBeanToDto(row) : null);
+  }
+
+  LocalizedBeanDto _mapBeanToDto(LocalizedBean row) {
+    return LocalizedBeanDto(
+      id: row.id,
+      brandId: row.brandId,
+      countryEmoji: row.countryEmoji,
+      altitudeMin: row.altitudeMin,
+      altitudeMax: row.altitudeMax,
+      lotNumber: row.lotNumber,
+      scaScore: row.scaScore,
+      cupsScore: row.cupsScore,
+      sensoryPoints: _parseJson(row.sensoryJson),
+      pricing: _parseJson(row.priceJson),
+      plantationPhotos: _parseList(row.plantationPhotosUrl),
+      isPremium: row.isPremium,
+      detailedProcess: row.detailedProcessMarkdown,
+      url: row.url,
+      farmerId: row.farmerId,
+      isDecaf: row.isDecaf,
+      farm: row.farm,
+      farmPhotosUrlCover: row.farmPhotosUrlCover,
+      washStation: row.washStation,
+      retailPrice: row.retailPrice,
+      wholesalePrice: row.wholesalePrice,
+      harvestSeason: row.harvestSeason,
+      price: row.price,
+      weight: row.weight,
+      roastDate: row.roastDate,
+      processingMethodsJson: row.processingMethodsJson,
+      country: row.countryUk ?? '',
+      region: row.regionUk ?? '',
+      varieties: row.varietiesUk ?? '',
+      flavorNotes: _parseList(row.flavorNotesUk),
+      description: row.descriptionUk ?? '',
+      farmDescription: row.farmDescriptionUk ?? '',
+      roastLevel: row.roastLevelUk ?? '',
+      processMethod: row.processMethodUk ?? '',
+      isFavorite: row.isFavorite,
+      isArchived: false,
+      createdAt: row.createdAt,
+    );
+  }
 
   Future<LocalizedBeanTranslation?> getBeanTranslation(
     int beanId,
@@ -656,8 +697,16 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
-  Future<int> deleteUserLotsByBrand(int brandId) =>
-      (delete(coffeeLots)..where((t) => t.brandId.equals(brandId))).go();
+  Future<CoffeeLotDto?> getLotById(String id) async {
+    final query = select(coffeeLots)..where((t) => t.id.equals(id));
+    final row = await query.getSingleOrNull();
+    return row != null ? _mapLotRow(row) : null;
+  }
+
+  Stream<CoffeeLotDto?> watchLotById(String id) {
+    final query = select(coffeeLots)..where((t) => t.id.equals(id));
+    return query.watchSingleOrNull().map((row) => row != null ? _mapLotRow(row) : null);
+  }
 
   CoffeeLotDto _mapLotRow(CoffeeLot r) {
     return CoffeeLotDto(

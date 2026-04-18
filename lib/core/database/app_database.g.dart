@@ -1247,7 +1247,7 @@ class $LocalizedBeansTable extends LocalizedBeans
     type: DriftSqlType.int,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES localized_brands (id)',
+      'REFERENCES localized_brands (id) ON DELETE SET NULL',
     ),
   );
   static const VerificationMeta _countryEmojiMeta = const VerificationMeta(
@@ -1455,7 +1455,7 @@ class $LocalizedBeansTable extends LocalizedBeans
     type: DriftSqlType.int,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES localized_farmers (id)',
+      'REFERENCES localized_farmers (id) ON DELETE SET NULL',
     ),
   );
   static const VerificationMeta _isDecafMeta = const VerificationMeta(
@@ -6498,7 +6498,7 @@ class $CoffeeLotsTable extends CoffeeLots
     type: DriftSqlType.int,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES localized_brands (id)',
+      'REFERENCES localized_brands (id) ON DELETE SET NULL',
     ),
   );
   static const VerificationMeta _coffeeNameMeta = const VerificationMeta(
@@ -9730,7 +9730,7 @@ class $RecommendedRecipesTable extends RecommendedRecipes
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES localized_beans (id)',
+      'REFERENCES localized_beans (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _methodKeyMeta = const VerificationMeta(
@@ -11413,6 +11413,37 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     recommendedRecipes,
     customRecipes,
   ];
+  @override
+  StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'localized_brands',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('localized_beans', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'localized_farmers',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('localized_beans', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'localized_brands',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('coffee_lots', kind: UpdateKind.update)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'localized_beans',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('recommended_recipes', kind: UpdateKind.delete)],
+    ),
+  ]);
 }
 
 typedef $$LocalizedBrandsTableCreateCompanionBuilder =

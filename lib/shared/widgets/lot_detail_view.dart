@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import '../../core/l10n/app_localizations.dart';
+import '../utils/sensory_utils.dart';
 import 'glass_container.dart';
 import 'sensory_radar_chart.dart';
 import '../../features/brewing/widgets/custom_recipe_card.dart';
@@ -43,183 +44,198 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
 
   @override
   Widget build(BuildContext context) {
-    final isUk = LocaleService.currentLocale == 'uk';
     final theme = Theme.of(context);
-    
-    // Normalize data from either lot or entry
-    final String coffeeName = widget.lot?.coffeeName ?? widget.entry?.fullDisplayName ?? 'Unnamed';
-    final String roasteryName = widget.lot?.roasteryName ?? 'Specialty Roaster';
-    final String? imageUrl = widget.lot?.brandId != null ? null : widget.entry?.imageUrl;
-    final Map<String, dynamic> points = widget.lot?.sensoryPoints ?? widget.entry?.sensoryPoints ?? {};
+    final isUk = LocaleService.currentLocale == 'uk';
 
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              theme.colorScheme.surface,
-              Colors.black,
-            ],
-          ),
-        ),
-        child: Column(
-          children: [
-            // Top Image Area
-            Stack(
-              children: [
-                Container(
-                  height: 320,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    image: imageUrl != null
-                        ? DecorationImage(
-                            image: NetworkImage(imageUrl),
-                            fit: BoxFit.cover,
-                          )
-                        : null,
-                    color: Colors.black12,
+    // Reactively watch for updates if we have IDs
+    final lotAsync = widget.lot != null ? ref.watch(lotProvider(widget.lot!.id)) : const AsyncValue.data(null);
+    final beanAsync = widget.entry != null ? ref.watch(beanProvider(widget.entry!.id)) : const AsyncValue.data(null);
+
+    return lotAsync.when(
+      loading: () => const Scaffold(backgroundColor: Colors.black, body: Center(child: CircularProgressIndicator())),
+      error: (e, s) => Scaffold(backgroundColor: Colors.black, body: Center(child: Text('Error: $e', style: const TextStyle(color: Colors.white)))),
+      data: (liveLot) {
+        return beanAsync.when(
+          loading: () => const Scaffold(backgroundColor: Colors.black, body: Center(child: CircularProgressIndicator())),
+          error: (e, s) => Scaffold(backgroundColor: Colors.black, body: Center(child: Text('Error: $e', style: const TextStyle(color: Colors.white)))),
+          data: (liveBean) {
+            // Priority: Live Data -> Widget Extra (Fallback)
+            final String coffeeName = liveLot?.coffeeName ?? liveBean?.varieties ?? widget.lot?.coffeeName ?? widget.entry?.fullDisplayName ?? 'Unnamed';
+            final String roasteryName = liveLot?.roasteryName ?? 'Specialty Roaster';
+            final String? imageUrl = liveBean?.farmPhotosUrlCover ?? widget.entry?.imageUrl;
+            
+            // Map sensory points using the shared utility
+            final rawPoints = liveLot?.sensoryPoints ?? liveBean?.sensoryPoints ?? widget.lot?.sensoryPoints ?? widget.entry?.sensoryPoints ?? {};
+            final mappedPoints = SensoryUtils.map4To6Axis(rawPoints);
+
+            return Scaffold(
+              backgroundColor: Colors.black,
+              body: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [theme.colorScheme.surface, Colors.black],
                   ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.black.withValues(alpha: 0.2),
-                          Colors.black,
+                ),
+                child: Column(
+                  children: [
+                    _DetailHeader(
+                      coffeeName: coffeeName,
+                      roasteryName: roasteryName,
+                      imageUrl: imageUrl,
+                      lot: liveLot ?? widget.lot,
+                      onBack: () => Navigator.pop(context),
+                      onEdit: liveLot != null ? () {
+                        Vibration.vibrate(duration: 50);
+                        context.push('/edit_lot', extra: liveLot);
+                      } : null,
+                    ),
+                    TabBar(
+                      controller: _tabController,
+                      dividerColor: Colors.transparent,
+                      indicatorColor: theme.colorScheme.primary,
+                      labelColor: theme.colorScheme.primary,
+                      unselectedLabelColor: Colors.white24,
+                      tabAlignment: TabAlignment.start,
+                      isScrollable: true,
+                      labelStyle: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 12, letterSpacing: 1.2),
+                      tabs: [
+                        Tab(text: isUk ? 'ІНФО' : 'INFO'),
+                        Tab(text: isUk ? 'ПРОФІЛЬ' : 'PROFILE'),
+                        Tab(text: isUk ? 'РЕЦЕПТИ' : 'RECIPES'),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          _InfoTab(lot: liveLot ?? widget.lot, bean: liveBean),
+                          _SensoryTab(points: mappedPoints, isUk: isUk),
+                          _RecipesTab(lotId: liveLot?.id ?? widget.lot?.id ?? widget.entry?.lotNumber ?? ''),
                         ],
                       ),
                     ),
-                  ),
+                  ],
                 ),
-                Positioned(
-                  top: 50,
-                  left: 20,
-                  child: GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.black45,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white10),
-                      ),
-                      child: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
-                    ),
-                  ),
-                ),
-                if (widget.lot != null)
-                  Positioned(
-                    top: 50,
-                    right: 20,
-                    child: GestureDetector(
-                      onTap: () {
-                        Vibration.vibrate(duration: 50);
-                        // Using go_router to navigate to edit lot
-                        context.push('/edit_lot', extra: widget.lot);
-                      },
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primary.withValues(alpha: 0.2),
-                          shape: BoxShape.circle,
-                          border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.3)),
-                        ),
-                        child: Icon(Icons.edit_rounded, color: theme.colorScheme.primary, size: 20),
-                      ),
-                    ),
-                  ),
-                Positioned(
-                  bottom: 20,
-                  left: 20,
-                  right: 20,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        roasteryName.toUpperCase(),
-                        style: GoogleFonts.outfit(
-                          color: theme.colorScheme.primary.withValues(alpha: 0.6),
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 2,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        coffeeName,
-                        style: GoogleFonts.cormorantGaramond(
-                          color: Colors.white,
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            
-            // Tabs
-            TabBar(
-              controller: _tabController,
-              dividerColor: Colors.transparent,
-              indicatorColor: theme.colorScheme.primary,
-              labelColor: theme.colorScheme.primary,
-              unselectedLabelColor: Colors.white24,
-              tabAlignment: TabAlignment.start,
-              isScrollable: true,
-              labelStyle: GoogleFonts.outfit(
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-                letterSpacing: 1.2,
               ),
-              tabs: [
-                Tab(text: isUk ? 'ІНФО' : 'INFO'),
-                Tab(text: isUk ? 'ПРОФІЛЬ' : 'PROFILE'),
-                Tab(text: isUk ? 'РЕЦЕПТИ' : 'RECIPES'),
-              ],
-            ),
-            
-            const SizedBox(height: 10),
-            
-            // Tab Content
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  _InfoTab(lot: widget.lot, entry: widget.entry),
-                  _SensoryTab(points: points, isUk: isUk),
-                  _RecipesTab(lotId: widget.lot?.id ?? widget.entry?.lotNumber ?? ''),
-                ],
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _DetailHeader extends StatelessWidget {
+  final String coffeeName;
+  final String roasteryName;
+  final String? imageUrl;
+  final CoffeeLotDto? lot;
+  final VoidCallback onBack;
+  final VoidCallback? onEdit;
+
+  const _DetailHeader({
+    required this.coffeeName,
+    required this.roasteryName,
+    this.imageUrl,
+    this.lot,
+    required this.onBack,
+    this.onEdit,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Stack(
+      children: [
+        Container(
+          height: 320,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            image: imageUrl != null ? DecorationImage(image: NetworkImage(imageUrl!), fit: BoxFit.cover) : null,
+            color: Colors.black12,
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.black.withValues(alpha: 0.2), Colors.black],
               ),
             ),
-          ],
+          ),
         ),
-      ),
+        Positioned(
+          top: 50,
+          left: 20,
+          child: GestureDetector(
+            onTap: onBack,
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(color: Colors.black45, shape: BoxShape.circle, border: Border.all(color: Colors.white10)),
+              child: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
+            ),
+          ),
+        ),
+        if (onEdit != null)
+          Positioned(
+            top: 50,
+            right: 20,
+            child: GestureDetector(
+              onTap: onEdit,
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.3)),
+                ),
+                child: Icon(Icons.edit_rounded, color: theme.colorScheme.primary, size: 20),
+              ),
+            ),
+          ),
+        Positioned(
+          bottom: 20,
+          left: 20,
+          right: 20,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                roasteryName.toUpperCase(),
+                style: GoogleFonts.outfit(color: theme.colorScheme.primary.withValues(alpha: 0.6), fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 2),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                coffeeName,
+                style: GoogleFonts.cormorantGaramond(color: Colors.white, fontSize: 36, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
 
 class _InfoTab extends ConsumerWidget {
   final CoffeeLotDto? lot;
-  final EncyclopediaEntry? entry;
+  final LocalizedBeanDto? bean;
 
-  const _InfoTab({this.lot, this.entry});
+  const _InfoTab({this.lot, this.bean});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isUk = ref.watch(localeProvider) == 'uk';
-    final String region = lot?.region ?? entry?.region ?? 'Unknown';
-    final String? altitude = lot?.altitude ?? (entry?.altitudeMin != null ? '${entry!.altitudeMin}-${entry!.altitudeMax}m' : null);
-    final String varieties = lot?.varieties ?? entry?.varieties ?? 'Unknown';
-    final String process = lot?.process ?? entry?.processMethod ?? 'Unknown';
-    final String? description = lot?.flavorProfile ?? entry?.description;
+    final isUk = LocaleService.currentLocale == 'uk';
+    final String region = lot?.region ?? bean?.region ?? 'Unknown';
+    final String altitude = lot?.altitude ?? bean?.altitude ?? 'Unknown';
+    final String varieties = lot?.varieties ?? bean?.varieties ?? 'Unknown';
+    final String process = lot?.process ?? bean?.processing ?? 'Unknown';
+    final String? description = lot?.flavorProfile ?? bean?.description;
 
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -229,26 +245,19 @@ class _InfoTab extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _SectionTitle(title: isUk ? 'ТЕХНІЧНІ ХАРАКТЕРИСТИКИ' : 'TECHNICAL SPECS', isUk: isUk),
+              _SectionTitle(title: isUk ? 'ТЕХНІЧНІ ХАРАКТЕРИСТИКИ' : 'TECHNICAL SPECS'),
               _InfoRow(label: isUk ? 'Регіон' : 'Region', value: region),
-              if (altitude != null) _InfoRow(label: isUk ? 'Висота' : 'Altitude', value: altitude),
+              _InfoRow(label: isUk ? 'Висота' : 'Altitude', value: altitude),
               _InfoRow(label: isUk ? 'Сорт' : 'Variety', value: varieties),
               _InfoRow(label: isUk ? 'Обробка' : 'Process', value: process),
-              if (entry?.harvestSeason != null) _InfoRow(label: isUk ? 'Врожай' : 'Harvest', value: entry!.harvestSeason!),
+              if (bean?.harvestSeason != null) _InfoRow(label: isUk ? 'Врожай' : 'Harvest', value: bean!.harvestSeason!),
             ],
           ),
         ),
         const SizedBox(height: 20),
         if (description != null && description.isNotEmpty) ...[
-          _SectionTitle(title: isUk ? 'ОПИС СМАКУ' : 'FLAVOR PROFILE', isUk: isUk),
-          Text(
-            description,
-            style: GoogleFonts.outfit(
-              color: Colors.white70,
-              fontSize: 14,
-              height: 1.6,
-            ),
-          ),
+          _SectionTitle(title: isUk ? 'ОПИС СМАКУ' : 'FLAVOR PROFILE'),
+          Text(description, style: GoogleFonts.outfit(color: Colors.white70, fontSize: 14, height: 1.6)),
           const SizedBox(height: 20),
         ],
         const SizedBox(height: 100),
@@ -258,7 +267,7 @@ class _InfoTab extends ConsumerWidget {
 }
 
 class _SensoryTab extends StatelessWidget {
-  final Map<String, dynamic> points;
+  final Map<String, double> points;
   final bool isUk;
 
   const _SensoryTab({required this.points, required this.isUk});
@@ -275,23 +284,29 @@ class _SensoryTab extends StatelessWidget {
             child: SensoryRadarChart(
               interactive: false,
               height: 350,
-              staticValues: points.map(
-                (k, v) => MapEntry(k, (v as num).toDouble()),
-              ),
+              staticValues: points,
             ),
           ),
           const SizedBox(height: 30),
-          _SectionTitle(title: isUk ? 'СЕНСОРНИЙ ПРОФІЛЬ' : 'SENSORY PROFILE', isUk: isUk),
-          _SegmentedSensoryBar(label: isUk ? 'Аромат' : 'Aroma', value: (points['aroma'] ?? 3).toDouble()),
-          _SegmentedSensoryBar(label: isUk ? 'Смак' : 'Flavor', value: (points['flavor'] ?? 3).toDouble()),
-          _SegmentedSensoryBar(label: isUk ? 'Кислотність' : 'Acidity', value: (points['acidity'] ?? 3).toDouble()),
-          _SegmentedSensoryBar(label: isUk ? 'Тіло' : 'Body', value: (points['body'] ?? 3).toDouble()),
-          _SegmentedSensoryBar(label: isUk ? 'Післясмак' : 'Aftertaste', value: (points['aftertaste'] ?? 3).toDouble()),
-          _SegmentedSensoryBar(label: isUk ? 'Баланс' : 'Balance', value: (points['balance'] ?? 3).toDouble()),
+          _SectionTitle(title: isUk ? 'СЕНСОРНИЙ ПРОФІЛЬ' : 'SENSORY PROFILE'),
+          ...points.entries.map((e) => _SegmentedSensoryBar(label: _getLocalizedLabel(e.key, isUk), value: e.value)),
           const SizedBox(height: 40),
         ],
       ),
     );
+  }
+
+  String _getLocalizedLabel(String key, bool isUk) {
+    switch (key) {
+      case 'aroma': return isUk ? 'Аромат' : 'Aroma';
+      case 'flavor': return isUk ? 'Смак' : 'Flavor';
+      case 'acidity': return isUk ? 'Кислотність' : 'Acidity';
+      case 'body': return isUk ? 'Тіло' : 'Body';
+      case 'aftertaste': return isUk ? 'Післясмак' : 'Aftertaste';
+      case 'balance': return isUk ? 'Баланс' : 'Balance';
+      case 'sweetness': return isUk ? 'Солодкість' : 'Sweetness';
+      default: return key.toUpperCase();
+    }
   }
 }
 
@@ -306,54 +321,39 @@ class _SegmentedSensoryBar extends StatelessWidget {
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          Text(label, style: GoogleFonts.outfit(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500)),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                label,
-                style: GoogleFonts.outfit(
-                  fontSize: 14,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
+              SizedBox(
+                width: 80,
+                child: Row(
+                  children: List.generate(5, (index) {
+                    final normalizedScore = (value / 10.0) * 5.0;
+                    final isFilled = index < normalizedScore.round();
+                    return Expanded(
+                      child: Container(
+                        height: 3,
+                        margin: EdgeInsets.only(right: index == 4 ? 0 : 3),
+                        decoration: BoxDecoration(
+                          color: isFilled ? theme.colorScheme.primary : const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                    );
+                  }),
                 ),
               ),
-              Row(
-                children: [
-                  SizedBox(
-                    width: 80,
-                    child: Row(
-                      children: List.generate(5, (index) {
-                        final isFilled = index < value.toInt();
-                        return Expanded(
-                          child: Container(
-                            height: 3,
-                            margin: EdgeInsets.only(right: index == 4 ? 0 : 3),
-                            decoration: BoxDecoration(
-                              color: isFilled ? theme.colorScheme.primary : const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                          ),
-                        );
-                      }),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  SizedBox(
-                    width: 30,
-                    child: Text(
-                      '${value.toInt()}/5',
-                      textAlign: TextAlign.right,
-                      style: GoogleFonts.outfit(
-                        fontSize: 12,
-                        color: Colors.white.withValues(alpha: 0.7),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
+              const SizedBox(width: 12),
+              SizedBox(
+                width: 30,
+                child: Text(
+                  '${value.toInt()}',
+                  textAlign: TextAlign.right,
+                  style: GoogleFonts.outfit(fontSize: 12, color: Colors.white.withValues(alpha: 0.7), fontWeight: FontWeight.bold),
+                ),
               ),
             ],
           ),
@@ -370,17 +370,14 @@ class _RecipesTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isUk = ref.watch(localeProvider) == 'uk';
+    final isUk = LocaleService.currentLocale == 'uk';
     final db = ref.watch(databaseProvider);
     final theme = Theme.of(context);
     
     return StreamBuilder<List<CustomRecipeDto>>(
       stream: db.watchCustomRecipesForLot(lotId),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
+        if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
         final recipes = snapshot.data ?? [];
 
         if (recipes.isEmpty) {
@@ -392,18 +389,12 @@ class _RecipesTab extends ConsumerWidget {
                 const SizedBox(height: 16),
                 Text(
                   isUk ? 'НЕМАЄ РЕЦЕПТІВ ДЛЯ ЦЬОГО ЛОТУ' : 'NO RECIPES FOR THIS LOT',
-                  style: GoogleFonts.outfit(
-                    color: Colors.white24,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                    letterSpacing: 1.2,
-                  ),
+                  style: GoogleFonts.outfit(color: Colors.white24, fontWeight: FontWeight.bold, fontSize: 12, letterSpacing: 1.2),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton.icon(
                   onPressed: () {
                     Vibration.vibrate(duration: 50);
-                    // Navigate to add recipe screen
                     context.push('/custom_recipe_form', extra: {'lotId': lotId});
                   },
                   icon: const Icon(Icons.add_rounded, size: 18),
@@ -438,11 +429,7 @@ class _RecipesTab extends ConsumerWidget {
             }
             return Padding(
               padding: const EdgeInsets.only(bottom: 12),
-              child: CustomRecipeCard(
-                recipe: recipes[index],
-                methodKey: recipes[index].methodKey,
-                ref: ref,
-              ),
+              child: CustomRecipeCard(recipe: recipes[index], methodKey: recipes[index].methodKey, ref: ref),
             );
           },
         );
@@ -453,9 +440,8 @@ class _RecipesTab extends ConsumerWidget {
 
 class _SectionTitle extends StatelessWidget {
   final String title;
-  final bool isUk;
 
-  const _SectionTitle({required this.title, required this.isUk});
+  const _SectionTitle({required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -463,12 +449,7 @@ class _SectionTitle extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 16),
       child: Text(
         title,
-        style: GoogleFonts.outfit(
-          color: const Color(0xFFC8A96E),
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 2,
-        ),
+        style: GoogleFonts.outfit(color: const Color(0xFFC8A96E), fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 2),
       ),
     );
   }
@@ -487,14 +468,8 @@ class _InfoRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: GoogleFonts.outfit(color: Colors.white38, fontSize: 13),
-          ),
-          Text(
-            value,
-            style: GoogleFonts.outfit(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
-          ),
+          Text(label, style: GoogleFonts.outfit(color: Colors.white38, fontSize: 13)),
+          Text(value, style: GoogleFonts.outfit(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500)),
         ],
       ),
     );

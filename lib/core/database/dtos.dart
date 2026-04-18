@@ -61,6 +61,7 @@ class LocalizedBeanDto {
   final String roastLevel;
   final String processMethod;
   final bool isFavorite;
+  final bool isArchived;
   final DateTime? createdAt;
 
   LocalizedBeanDto({
@@ -99,6 +100,7 @@ class LocalizedBeanDto {
     required this.roastLevel,
     required this.processMethod,
     required this.isFavorite,
+    this.isArchived = false,
     this.createdAt,
   });
 
@@ -110,6 +112,9 @@ class LocalizedBeanDto {
   String get imageUrl =>
       farmPhotosUrlCover ??
       (plantationPhotos.isNotEmpty ? plantationPhotos.first : '');
+
+  String get altitude => altitudeMax != null ? altitudeMax.toString() : '';
+  String get processing => processMethod;
 
   String get effectiveFlagUrl {
     // Corrected to use the specific 'Flags' bucket as per user feedback

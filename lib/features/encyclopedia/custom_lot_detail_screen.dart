@@ -85,7 +85,100 @@ class _CustomLotDetailScreenState extends ConsumerState<CustomLotDetailScreen>
         ),
         child: Column(
           children: [
-            const SizedBox(height: kToolbarHeight + 40),
+            // Image Header or Placeholder
+            Stack(
+              children: [
+                Hero(
+                  tag: 'lot_image_${lot.id}',
+                  child: Container(
+                    height: 320,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1A1714),
+                      image: lot.imageUrl != null && lot.imageUrl!.isNotEmpty
+                          ? DecorationImage(
+                              image: NetworkImage(lot.imageUrl!),
+                              fit: BoxFit.cover,
+                            )
+                          : null,
+                    ),
+                    child: lot.imageUrl == null || lot.imageUrl!.isEmpty
+                        ? Center(
+                            child: Icon(
+                              Icons.coffee_rounded,
+                              size: 64,
+                              color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                            ),
+                          )
+                        : null,
+                  ),
+                ),
+                // Gradient Overlays
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withValues(alpha: 0.6),
+                          Colors.transparent,
+                          Colors.black.withValues(alpha: 1.0),
+                        ],
+                        stops: const [0.0, 0.5, 1.0],
+                      ),
+                    ),
+                  ),
+                ),
+                // Lot Info Overlay
+                Positioned(
+                  bottom: 20,
+                  left: 20,
+                  right: 20,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (lot.roasteryName != null)
+                        Text(
+                          lot.roasteryName!.toUpperCase(),
+                          style: GoogleFonts.outfit(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 2,
+                            color: theme.colorScheme.primary,
+                          ),
+                        ),
+                      const SizedBox(height: 8),
+                      Text(
+                        (lot.coffeeName ?? lot.id).toUpperCase(),
+                        style: GoogleFonts.outfit(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white,
+                          height: 1.1,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          if (lot.scaScore != null)
+                            _Badge(label: '${lot.scaScore} SCA', theme: theme),
+                          if (lot.roastLevel != null) ...[
+                            const SizedBox(width: 8),
+                            _Badge(
+                              label: lot.roastLevel!.toUpperCase(), 
+                              theme: theme,
+                              isPrimary: true,
+                            ),
+                          ],
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            
             TabBar(
               controller: _tabController,
               tabs: [
@@ -694,6 +787,36 @@ class _DetailRow extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+class _Badge extends StatelessWidget {
+  final String label;
+  final ThemeData theme;
+  final bool isPrimary;
+
+  const _Badge({required this.label, required this.theme, this.isPrimary = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: isPrimary 
+            ? theme.colorScheme.primary.withValues(alpha: 0.9)
+            : Colors.white.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(10),
+        border: isPrimary ? null : Border.all(color: Colors.white10),
+      ),
+      child: Text(
+        label,
+        style: GoogleFonts.outfit(
+          fontSize: 9,
+          fontWeight: FontWeight.w900,
+          color: isPrimary ? Colors.black : Colors.white70,
+          letterSpacing: 0.5,
+        ),
       ),
     );
   }

@@ -128,24 +128,6 @@ class MyLotGridCard extends ConsumerWidget {
                             ],
                           ),
                         ),
-                        // Roast Level Badge
-                        if (lot.roastLevel != null && lot.roastLevel!.isNotEmpty)
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.primary.withValues(alpha: 0.9),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              lot.roastLevel!.toUpperCase(),
-                              style: GoogleFonts.outfit(
-                                fontSize: 7,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                                letterSpacing: 0.5,
-                              ),
-                            ),
-                          ),
                       ],
                     ),
                     const SizedBox(height: 16),
@@ -195,6 +177,29 @@ class MyLotGridCard extends ConsumerWidget {
                       theme: theme,
                       isOverImage: lot.imageUrl != null && lot.imageUrl!.isNotEmpty,
                     ),
+                    const SizedBox(height: 10),
+                    // Roast Level Badge (Repositioned here)
+                    if (lot.roastLevel != null && lot.roastLevel!.isNotEmpty)
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primary.withValues(alpha: 0.9),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              lot.roastLevel!.toUpperCase(),
+                              style: GoogleFonts.outfit(
+                                fontSize: 7,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.black,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     const Spacer(),
                     // Bottom Info
                     Text(

@@ -17,6 +17,7 @@ import '../../../shared/widgets/pressable_scale.dart';
 import '../../navigation/navigation_providers.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/dtos.dart';
+import '../../../core/l10n/app_localizations.dart';
 import 'lots_providers.dart';
 
 class AddLotScreen extends ConsumerStatefulWidget {
@@ -285,17 +286,46 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     final syncService = ref.read(syncServiceProvider);
     final lotId = widget.initialLot?.id ?? const Uuid().v4();
 
+    final messenger = ScaffoldMessenger.of(context);
+    final isUk = LocaleService.currentLocale == 'uk';
+
     String finalImageUrl = _currentImageUrl ?? '';
 
     try {
       // 1. Handle Image Upload if new image selected
       if (_imageBytes != null && _imageExtension != null) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(isUk ? 'Завантаження фото...' : 'Uploading photo...'),
+            duration: const Duration(seconds: 5),
+            backgroundColor: const Color(0xFFC8A96E),
+          ),
+        );
+
         final fileName = '${lotId}_${DateTime.now().millisecondsSinceEpoch}.$_imageExtension';
         debugPrint('UPLOADING IMAGE: $fileName');
         final uploadedUrl = await syncService.uploadCoffeeImage(_imageBytes!, fileName);
         debugPrint('UPLOAD RESULT: $uploadedUrl');
+        
         if (uploadedUrl != null) {
           finalImageUrl = uploadedUrl;
+          messenger.hideCurrentSnackBar();
+          messenger.showSnackBar(
+            SnackBar(
+              content: Text(isUk ? 'Фото завантажено!' : 'Photo uploaded!'),
+              backgroundColor: Colors.green.withValues(alpha: 0.8),
+              duration: const Duration(seconds: 1),
+            ),
+          );
+        } else {
+          messenger.hideCurrentSnackBar();
+          messenger.showSnackBar(
+            SnackBar(
+              content: Text(isUk ? 'Помилка завантаження фото' : 'Photo upload error'),
+              backgroundColor: Colors.redAccent,
+              duration: const Duration(seconds: 2),
+            ),
+          );
         }
       }
 

@@ -700,7 +700,6 @@ class _RecipesTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isUk = LocaleService.currentLocale == 'uk';
     final db = ref.watch(databaseProvider);
-    final theme = Theme.of(context);
     
     return StreamBuilder<List<CustomRecipeDto>>(
       stream: db.watchCustomRecipesForLot(lotId),

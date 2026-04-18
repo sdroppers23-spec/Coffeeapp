@@ -45,7 +45,7 @@ class MyLotGridCard extends ConsumerWidget {
       },
       child: GlassContainer(
         padding: const EdgeInsets.all(12),
-        opacity: isSelected ? 0.25 : 0.08,
+        opacity: isSelected ? 0.25 : 0.14,
         borderRadius: 24,
         color: isSelected ? const Color(0xFFC8A96E) : Colors.white,
         borderColor: isSelected
@@ -328,7 +328,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
       },
       child: GlassContainer(
         padding: const EdgeInsets.all(16),
-        opacity: isSelected ? 0.25 : 0.08,
+        opacity: isSelected ? 0.25 : 0.14,
         borderRadius: 20,
         color: isSelected ? const Color(0xFFC8A96E) : Colors.white,
         borderColor: isSelected

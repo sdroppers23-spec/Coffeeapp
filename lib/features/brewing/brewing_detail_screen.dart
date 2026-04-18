@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -242,6 +243,10 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen>
     
     if (url.startsWith('assets/')) {
       return Image.asset(url, fit: BoxFit.cover);
+    }
+
+    if (url.isNotEmpty) {
+      return Image.file(File(url), fit: BoxFit.cover);
     }
 
     return Image.asset(assetPath, fit: BoxFit.cover);

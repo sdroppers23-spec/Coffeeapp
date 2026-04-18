@@ -58,16 +58,27 @@ class MyLotGridCard extends ConsumerWidget {
               // Background Image if available
               if (lot.imageUrl != null && lot.imageUrl!.isNotEmpty)
                 Positioned.fill(
-                  child: Image.network(
-                    lot.imageUrl!,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      color: const Color(0xFF1A1714),
-                      child: Center(
-                        child: Icon(Icons.broken_image_outlined, color: const Color(0xFFC8A96E).withValues(alpha: 0.1)),
-                      ),
-                    ),
-                  ),
+                  child: lot.imageUrl!.startsWith('http')
+                      ? Image.network(
+                          lot.imageUrl!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => Container(
+                            color: const Color(0xFF1A1714),
+                            child: Center(
+                              child: Icon(Icons.broken_image_outlined, color: const Color(0xFFC8A96E).withValues(alpha: 0.1)),
+                            ),
+                          ),
+                        )
+                      : Image.file(
+                          File(lot.imageUrl!),
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => Container(
+                            color: const Color(0xFF1A1714),
+                            child: Center(
+                              child: Icon(Icons.broken_image_outlined, color: const Color(0xFFC8A96E).withValues(alpha: 0.1)),
+                            ),
+                          ),
+                        ),
                 ),
               // Gradient Overlay if image is present
               if (lot.imageUrl != null && lot.imageUrl!.isNotEmpty)
@@ -470,24 +481,36 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Image or Score Circle
                 Stack(
                   children: [
                     if (lot.imageUrl != null && lot.imageUrl!.isNotEmpty)
                       ClipRRect(
                         borderRadius: BorderRadius.circular(24), // Circular-ish but consistent
-                        child: Image.network(
-                          lot.imageUrl!,
-                          width: 54,
-                          height: 54,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Container(
-                            width: 54,
-                            height: 54,
-                            color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                            child: const Icon(Icons.coffee_rounded, color: Color(0xFFC8A96E), size: 18),
-                          ),
-                        ),
+                        child: lot.imageUrl!.startsWith('http')
+                            ? Image.network(
+                                lot.imageUrl!,
+                                width: 54,
+                                height: 54,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) => Container(
+                                  width: 54,
+                                  height: 54,
+                                  color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                                  child: const Icon(Icons.coffee_rounded, color: Color(0xFFC8A96E), size: 18),
+                                ),
+                              )
+                            : Image.file(
+                                File(lot.imageUrl!),
+                                width: 54,
+                                height: 54,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) => Container(
+                                  width: 54,
+                                  height: 54,
+                                  color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                                  child: const Icon(Icons.coffee_rounded, color: Color(0xFFC8A96E), size: 18),
+                                ),
+                              ),
                       )
                     else
                       Container(

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -96,10 +97,15 @@ class _CustomLotDetailScreenState extends ConsumerState<CustomLotDetailScreen>
                     decoration: BoxDecoration(
                       color: const Color(0xFF1A1714),
                       image: lot.imageUrl != null && lot.imageUrl!.isNotEmpty
-                          ? DecorationImage(
-                              image: NetworkImage(lot.imageUrl!),
-                              fit: BoxFit.cover,
-                            )
+                          ? (lot.imageUrl!.startsWith('http')
+                              ? DecorationImage(
+                                  image: NetworkImage(lot.imageUrl!),
+                                  fit: BoxFit.cover,
+                                )
+                              : DecorationImage(
+                                  image: FileImage(File(lot.imageUrl!)),
+                                  fit: BoxFit.cover,
+                                ))
                           : null,
                     ),
                     child: lot.imageUrl == null || lot.imageUrl!.isEmpty

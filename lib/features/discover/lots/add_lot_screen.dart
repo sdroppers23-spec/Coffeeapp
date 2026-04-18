@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
@@ -18,6 +19,7 @@ import '../../navigation/navigation_providers.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/dtos.dart';
 import '../../../core/l10n/app_localizations.dart';
+import '../../../core/utils/local_file_manager.dart';
 import 'lots_providers.dart';
 
 class AddLotScreen extends ConsumerStatefulWidget {
@@ -283,7 +285,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     );
 
     final db = ref.read(databaseProvider);
-    final syncService = ref.read(syncServiceProvider);
     final lotId = widget.initialLot?.id ?? const Uuid().v4();
 
     final messenger = ScaffoldMessenger.of(context);
@@ -292,38 +293,27 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     String finalImageUrl = _currentImageUrl ?? '';
 
     try {
-      // 1. Handle Image Upload if new image selected
+      // 1. Handle Image saving to Local Storage if new image selected
       if (_imageBytes != null && _imageExtension != null) {
-        messenger.showSnackBar(
-          SnackBar(
-            content: Text(isUk ? 'Завантаження фото...' : 'Uploading photo...'),
-            duration: const Duration(seconds: 5),
-            backgroundColor: const Color(0xFFC8A96E),
-          ),
-        );
-
-        final fileName = '${lotId}_${DateTime.now().millisecondsSinceEpoch}.$_imageExtension';
-        debugPrint('UPLOADING IMAGE: $fileName');
-        final uploadedUrl = await syncService.uploadCoffeeImage(_imageBytes!, fileName);
-        debugPrint('UPLOAD RESULT: $uploadedUrl');
-        
-        if (uploadedUrl != null) {
-          finalImageUrl = uploadedUrl;
-          messenger.hideCurrentSnackBar();
+        try {
+          final localPath = await LocalFileManager.saveImageLocal(
+            _imageBytes!, 
+            extension: '.$_imageExtension'
+          );
+          finalImageUrl = localPath;
+          
           messenger.showSnackBar(
             SnackBar(
-              content: Text(isUk ? 'Фото завантажено!' : 'Photo uploaded!'),
-              backgroundColor: Colors.green.withValues(alpha: 0.8),
+              content: Text(isUk ? 'Фото збережено локально' : 'Photo saved locally'),
+              backgroundColor: const Color(0xFFC8A96E),
               duration: const Duration(seconds: 1),
             ),
           );
-        } else {
-          messenger.hideCurrentSnackBar();
+        } catch (e) {
           messenger.showSnackBar(
             SnackBar(
-              content: Text(isUk ? 'Помилка завантаження фото' : 'Photo upload error'),
+              content: Text(isUk ? 'Помилка збереження фото: $e' : 'Error saving photo: $e'),
               backgroundColor: Colors.redAccent,
-              duration: const Duration(seconds: 2),
             ),
           );
         }
@@ -810,7 +800,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           image: (_imageBytes != null)
               ? DecorationImage(image: MemoryImage(_imageBytes!), fit: BoxFit.cover)
               : (_currentImageUrl != null && _currentImageUrl!.isNotEmpty)
-                  ? DecorationImage(image: CachedNetworkImageProvider(_currentImageUrl!), fit: BoxFit.cover)
+                  ? (_currentImageUrl!.startsWith('http')
+                      ? DecorationImage(image: CachedNetworkImageProvider(_currentImageUrl!), fit: BoxFit.cover)
+                      : DecorationImage(image: FileImage(File(_currentImageUrl!)), fit: BoxFit.cover))
                   : null,
         ),
         child: (_imageBytes == null && (_currentImageUrl == null || _currentImageUrl!.isEmpty))

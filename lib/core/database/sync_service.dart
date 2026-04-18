@@ -533,6 +533,7 @@ class SyncService {
               'sensory_json': l.sensoryJson,
               'price_json': l.priceJson,
               'brand_id': l.brandId,
+              'image_url': l.imageUrl,
               'created_at': l.createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
               'updated_at': DateTime.now().toIso8601String(),
             });
@@ -596,6 +597,7 @@ class SyncService {
           sensoryJson: Value(item['sensory_json'] is Map ? jsonEncode(item['sensory_json']) : (item['sensory_json']?.toString() ?? '{}')),
           priceJson: Value(item['price_json'] is Map ? jsonEncode(item['price_json']) : (item['price_json']?.toString() ?? '{}')),
           brandId: Value(item['brand_id'] as int?),
+          imageUrl: Value(item['image_url'] as String?),
           isSynced: const Value(true),
           createdAt: Value(DateTime.tryParse(item['created_at'] ?? '')),
           updatedAt: Value(DateTime.tryParse(item['updated_at'] ?? '')),

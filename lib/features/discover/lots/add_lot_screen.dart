@@ -946,6 +946,8 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                     ? [ScaScoreInputFormatter()]
                     : label == 'LOT NUMBER'
                       ? [LotNumberInputFormatter()]
+                      : label == 'ALTITUDE'
+                        ? [AltitudeInputFormatter()]
                       : (keyboardType == TextInputType.number || keyboardType == const TextInputType.numberWithOptions(decimal: true))
                         ? [FilteringTextInputFormatter.allow(RegExp(r'[0-9\.,]'))]
                         : [GlobalCoffeeInputFormatter()]),
@@ -1235,6 +1237,41 @@ class ScaScoreInputFormatter extends TextInputFormatter {
     if ('.'.allMatches(text).length > 1) return oldValue;
 
     return newValue.copyWith(text: text);
+  }
+}
+
+class AltitudeInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    String text = newValue.text;
+    if (text.isEmpty) return newValue;
+
+    // 1. Max 8 digits total
+    final digitsLength = text.replaceAll(RegExp(r'[^0-9]'), '').length;
+    if (digitsLength > 8) return oldValue;
+
+    // 2. Max 1 hyphen
+    if ('-'.allMatches(text).length > 1) {
+      return oldValue;
+    }
+
+    // 3. Prevent consecutive separators
+    if (text.contains('--') || text.contains('..') || text.contains(',,') || 
+        text.contains('-.') || text.contains('-,') || text.contains('.-') || text.contains(',-')) {
+      return oldValue;
+    }
+
+    // 4. Prevent starting with separator
+    if (text.startsWith('.') || text.startsWith(',') || text.startsWith('-')) {
+      return oldValue;
+    }
+
+    // 5. Allow only digits, dot, comma, and hyphen
+    if (!RegExp(r'^[0-9\.,\-]*$').hasMatch(text)) {
+      return oldValue;
+    }
+
+    return newValue;
   }
 }
 

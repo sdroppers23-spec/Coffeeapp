@@ -37,6 +37,9 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
     _subTabController = TabController(length: 3, vsync: this);
     _subTabController.addListener(() {
       if (_subTabController.indexIsChanging) return;
+      if (_scrollController.hasClients) {
+        _scrollController.jumpTo(0);
+      }
       setState(() {});
     });
   }

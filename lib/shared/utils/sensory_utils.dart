@@ -26,9 +26,11 @@ class SensoryUtils {
         'aroma': intensity,
         'flavor': (sweetness + intensity) / 2,
         'acidity': acidity,
+        'sweetness': sweetness,
         'body': bodyScore,
         'aftertaste': (sweetness + balance) / 2,
         'balance': balance.clamp(1.0, 5.0),
+        'bitterness': bitterness,
       };
     }
 
@@ -48,9 +50,11 @@ class SensoryUtils {
         'aroma': aroma,
         'flavor': (sweetness + intensity) / 2,
         'acidity': acidity,
+        'sweetness': sweetness,
         'body': body,
         'aftertaste': (sweetness + balance) / 2,
         'balance': balance.clamp(1.0, 5.0),
+        'bitterness': bitterness,
       };
     }
 
@@ -59,9 +63,11 @@ class SensoryUtils {
       'aroma': (points['aroma'] as num?)?.toDouble() ?? 3.5,
       'flavor': (points['flavor'] as num?)?.toDouble() ?? 3.5,
       'acidity': (points['acidity'] as num?)?.toDouble() ?? 3.5,
+      'sweetness': (points['sweetness'] as num?)?.toDouble() ?? 3.5,
       'body': (points['body'] as num?)?.toDouble() ?? 3.5,
       'aftertaste': (points['aftertaste'] as num?)?.toDouble() ?? 3.5,
       'balance': (points['balance'] as num?)?.toDouble() ?? 3.5,
+      'bitterness': (points['bitterness'] as num?)?.toDouble() ?? 1.0,
     };
   }
 }

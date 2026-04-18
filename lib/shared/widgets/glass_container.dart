@@ -62,7 +62,7 @@ class GlassContainer extends StatelessWidget {
               // Layer 1: Base matte tint (Smoked Glass)
               Positioned.fill(
                 child: Container(
-                  color: Colors.black.withValues(alpha: 0.5),
+                  color: (color ?? Colors.black).withValues(alpha: 0.5),
                 ),
               ),
               // Layer 2: Glass Blur

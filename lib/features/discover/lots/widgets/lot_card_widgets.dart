@@ -43,12 +43,12 @@ class MyLotGridCard extends ConsumerWidget {
       },
       child: GlassContainer(
         padding: const EdgeInsets.all(12),
-        opacity: isSelected ? 0.4 : 0.25,
+        opacity: isSelected ? 0.8 : 0.6,
         borderRadius: 24,
-        color: const Color(0xFFC8A96E).withValues(alpha: isSelected ? 0.3 : 0.15),
+        color: const Color(0xFFC8A96E),
         borderColor: isSelected
-            ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
-            : const Color(0xFFC8A96E).withValues(alpha: 0.2),
+            ? const Color(0xFFC8A96E).withValues(alpha: 0.9)
+            : const Color(0xFFC8A96E).withValues(alpha: 0.3),
         child: Stack(
           children: [
             Column(
@@ -306,6 +306,10 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
     final theme = Theme.of(context);
     final isSelected = widget.isSelected;
     final isSelectionMode = widget.isSelectionMode;
+    
+    // Normalize sensory data
+    final mappedSensory = SensoryUtils.map4To6Axis(lot.sensoryPoints);
+    final radarValues = mappedSensory.map((key, value) => MapEntry(key, value / 5.0));
 
     final card = PressableScale(
       onLongPress: () => widget.onLongPress(lot.id),
@@ -318,12 +322,12 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
       },
       child: GlassContainer(
         padding: const EdgeInsets.all(16),
-        opacity: isSelected ? 0.4 : 0.25, 
+        opacity: isSelected ? 0.8 : 0.6,
         borderRadius: 20,
-        color: const Color(0xFFC8A96E).withValues(alpha: isSelected ? 0.3 : 0.15),
+        color: const Color(0xFFC8A96E),
         borderColor: isSelected
-            ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
-            : const Color(0xFFC8A96E).withValues(alpha: 0.2),
+            ? const Color(0xFFC8A96E).withValues(alpha: 0.9)
+            : const Color(0xFFC8A96E).withValues(alpha: 0.3),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -404,11 +408,11 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                     children: [
                       Row(
                         children: [
-                          Expanded(child: _HorizontalSensoryBar(label: isUk ? 'СМАК' : 'FLAVOR', value: (lot.sensoryPoints['flavor'] ?? 3).toDouble(), theme: theme)),
+                          Expanded(child: _HorizontalSensoryBar(label: isUk ? 'СМАК' : 'FLAVOR', value: (mappedSensory['flavor'] ?? 3).toDouble(), theme: theme)),
                           const SizedBox(width: 8),
-                          Expanded(child: _HorizontalSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (lot.sensoryPoints['acidity'] ?? 3).toDouble(), theme: theme)),
+                          Expanded(child: _HorizontalSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme)),
                           const SizedBox(width: 8),
-                          Expanded(child: _HorizontalSensoryBar(label: isUk ? 'СОЛОДКІСТЬ' : 'SWEETNESS', value: (lot.sensoryPoints['sweetness'] ?? 3).toDouble(), theme: theme)),
+                          Expanded(child: _HorizontalSensoryBar(label: isUk ? 'СОЛОДКІСТЬ' : 'SWEETNESS', value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme)),
                         ],
                       ),
                       const SizedBox(height: 12),
@@ -449,7 +453,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                     child: SensoryRadarChart(
                       interactive: false,
                       height: 200,
-                      staticValues: SensoryUtils.map4To6Axis(lot.sensoryPoints),
+                      staticValues: radarValues,
                     ),
                   ),
                 ],

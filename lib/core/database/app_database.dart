@@ -877,20 +877,18 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
-  Future<List<CustomRecipeDto>> getAllCustomRecipes(String userId) async {
+  Future<List<CustomRecipeDto>> getAllCustomRecipes() async {
     final rows = await (select(
       customRecipes,
-    )..where((t) => t.userId.equals(userId) & t.isDeletedLocal.equals(false))).get();
+    )..where((t) => t.isDeletedLocal.equals(false))).get();
     return rows.map((r) => _mapCustomRecipe(r)).toList();
   }
 
   Future<List<CustomRecipeDto>> getCustomRecipesForMethod(
-    String userId,
     String methodKey,
   ) async {
     final rows = await (select(customRecipes)
           ..where((t) =>
-              t.userId.equals(userId) &
               t.methodKey.equals(methodKey) &
               t.isDeletedLocal.equals(false)))
         .get();

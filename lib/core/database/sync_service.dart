@@ -221,6 +221,15 @@ class SyncService {
           final List<LocalizedFarmerTranslationsV2Companion> translations = [
             LocalizedFarmerTranslationsV2Companion(
               farmerId: Value(id),
+              languageCode: const Value('en'),
+              name: Value(item['name_uk'] as String? ?? ''),
+              descriptionHtml: Value(ContentUtils.cleanCoffeeContent(item['description_html_uk'] as String? ?? '')),
+              story: Value(ContentUtils.cleanCoffeeContent(item['story_uk'] as String? ?? '')),
+              region: Value(item['region_uk'] as String? ?? ''),
+              country: Value(item['country_uk'] as String? ?? ''),
+            ),
+            LocalizedFarmerTranslationsV2Companion(
+              farmerId: Value(id),
               languageCode: const Value('uk'),
               name: Value(item['name_uk'] as String? ?? ''),
               descriptionHtml: Value(ContentUtils.cleanCoffeeContent(item['description_html_uk'] as String? ?? '')),
@@ -276,6 +285,13 @@ class SyncService {
 
           // specialty_article_translations is empty in Supabase — read _uk fields directly from main row
           final List<SpecialtyArticleTranslationsV2Companion> translations = [
+            SpecialtyArticleTranslationsV2Companion(
+              articleId: Value(id),
+              languageCode: const Value('en'),
+              title: Value(ContentUtils.cleanCoffeeContent(item['title_uk'] as String? ?? '')),
+              subtitle: Value(ContentUtils.cleanCoffeeContent(item['subtitle_uk'] as String? ?? '')),
+              contentHtml: Value(ContentUtils.cleanCoffeeContent(item['content_html_uk'] as String? ?? '')),
+            ),
             SpecialtyArticleTranslationsV2Companion(
               articleId: Value(id),
               languageCode: const Value('uk'),
@@ -880,9 +896,9 @@ class SyncService {
           // encyclopedia_entries has no separate translations table — data is in the main row
           final List<LocalizedBeanTranslationsV2Companion> translations = [];
 
-          // encyclopedia_entries has data directly in the row — add 'uk' translation from main fields
+          // encyclopedia_entries has data directly in the row — add both 'en' and 'uk' translation
           if (!translations.any((t) => t.languageCode.value == 'uk')) {
-            translations.add(LocalizedBeanTranslationsV2Companion(
+            final transData = LocalizedBeanTranslationsV2Companion(
               beanId: Value(id),
               languageCode: const Value('uk'),
               country: Value(item['country'] as String?),
@@ -893,7 +909,9 @@ class SyncService {
               description: Value(ContentUtils.cleanCoffeeContent(item['description'] as String? ?? '')),
               farmDescription: Value(ContentUtils.cleanCoffeeContent(item['farm_description'] as String? ?? '')),
               roastLevel: Value(item['roast_level'] as String?),
-            ));
+            );
+            translations.add(transData);
+            translations.add(transData.copyWith(languageCode: const Value('en')));
           }
 
           await db.smartUpsertBeanV2(bean, translations);

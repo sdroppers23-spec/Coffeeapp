@@ -16,14 +16,14 @@ final customRecipesForMethodProvider =
       methodKey,
     ) async {
       final db = ref.watch(databaseProvider);
-      return db.getCustomRecipesForMethod('', methodKey);
+      return db.getCustomRecipesForMethod(methodKey);
     });
 
 final globalCustomRecipesProvider = FutureProvider<List<CustomRecipeDto>>((
   ref,
 ) async {
   final db = ref.watch(databaseProvider);
-  return db.getAllCustomRecipes('');
+  return db.getAllCustomRecipes();
 });
 
 // ─── Tab widget (embedded inside BrewingDetailScreen Tab 2) ───────────────────

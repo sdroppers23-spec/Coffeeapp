@@ -42,7 +42,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isLoggingIn = state.matchedLocation == '/auth';
 
       if (!isLoggedIn && !isLoggingIn) return '/auth';
-      if (isLoggedIn && isLoggingIn) return '/';
+      if (isLoggedIn && isLoggingIn) return '/specialty_hub';
 
       return null;
     },

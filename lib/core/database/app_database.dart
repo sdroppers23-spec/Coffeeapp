@@ -31,7 +31,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? e]) : super(e ?? openConnection());
 
   @override
-  int get schemaVersion => 32;
+  int get schemaVersion => 33;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -70,6 +70,11 @@ class AppDatabase extends _$AppDatabase {
         // v32: Add sync flags to brands
         await m.addColumn(localizedBrands, localizedBrands.isSynced);
         await m.addColumn(localizedBrands, localizedBrands.isDeletedLocal);
+      }
+      if (from < 33) {
+        // v33: Add favorite/archive support for brands
+        await m.addColumn(localizedBrands, localizedBrands.isFavorite);
+        await m.addColumn(localizedBrands, localizedBrands.isArchived);
       }
     },
     beforeOpen: (details) async {
@@ -160,6 +165,8 @@ class AppDatabase extends _$AppDatabase {
         shortDesc: translation?.shortDesc ?? '',
         fullDesc: translation?.fullDesc ?? '',
         location: translation?.location ?? '',
+        isFavorite: brand.isFavorite,
+        isArchived: brand.isArchived,
       );
     }).toList();
   }
@@ -188,6 +195,8 @@ class AppDatabase extends _$AppDatabase {
       shortDesc: translation?.shortDesc ?? '',
       fullDesc: translation?.fullDesc ?? '',
       location: translation?.location ?? '',
+      isFavorite: brand.isFavorite,
+      isArchived: brand.isArchived,
     );
   }
 
@@ -258,6 +267,24 @@ class AppDatabase extends _$AppDatabase {
           isSynced: Value(false),
         ),
       );
+
+  Future<void> toggleBrandFavorite(int id, bool val) async {
+    await (update(localizedBrands)..where((t) => t.id.equals(id))).write(
+      LocalizedBrandsCompanion(
+        isFavorite: Value(val),
+        isSynced: const Value(false),
+      ),
+    );
+  }
+
+  Future<void> toggleBrandArchive(int id, bool val) async {
+    await (update(localizedBrands)..where((t) => t.id.equals(id))).write(
+      LocalizedBrandsCompanion(
+        isArchived: Value(val),
+        isSynced: const Value(false),
+      ),
+    );
+  }
 
   // Helper methods to clear data
   Future<void> clearFarmers() async {
@@ -610,8 +637,14 @@ class AppDatabase extends _$AppDatabase {
     return row != null ? _mapLotRow(row) : null;
   }
 
-  Future<int> upsertUserLot(CoffeeLotsCompanion lot) =>
-      into(coffeeLots).insertOnConflictUpdate(lot);
+  Future<int> upsertUserLot(CoffeeLotsCompanion lot) {
+    // Always mark as unsynced so the next push will pick it up
+    final markedLot = lot.copyWith(
+      isSynced: const Value(false),
+      updatedAt: Value(DateTime.now()),
+    );
+    return into(coffeeLots).insertOnConflictUpdate(markedLot);
+  }
 
   Future<int> deleteUserLot(String id) async {
     return (update(coffeeLots)..where((t) => t.id.equals(id))).write(

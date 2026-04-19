@@ -131,6 +131,8 @@ class LocalizedBrandDto {
   final String shortDesc;
   final String fullDesc;
   final String location;
+  final bool isFavorite;
+  final bool isArchived;
 
   LocalizedBrandDto({
     required this.id,
@@ -140,6 +142,8 @@ class LocalizedBrandDto {
     required this.shortDesc,
     required this.fullDesc,
     required this.location,
+    this.isFavorite = false,
+    this.isArchived = false,
   });
 }
 

@@ -100,101 +100,6 @@ class SyncService {
     }
   }
 
-  Future<void> syncEncyclopedia() async {
-    if (supabase == null) return;
-
-    try {
-      debugPrint('SYNC: Pulling beans from localized_beans...');
-      final data = await supabase!.from('localized_beans').select().order('id');
-      
-      // Collect remote IDs for cleanup later
-      final remoteIds = data.map((item) => item['id'] as int).toList();
-
-      int successCount = 0;
-      int errorCount = 0;
-
-      for (final item in data) {
-        try {
-          final id = item['id'] as int;
-
-          // Healing: Detect planets and replace with bucket flags
-          String emoji = item['country_emoji'] as String? ?? '';
-          final planetEmojis = ['🌎', '🌍', '🌏', '🪐', '☄️', '🌌', 'planet', 'earth'];
-          if (planetEmojis.contains(emoji.trim()) || emoji.isEmpty) {
-            final countryLower = (item['country_uk'] as String? ?? item['country_en'] as String? ?? 'unknown').toLowerCase().replaceAll(' ', '_');
-            emoji = '$flagsBucket$countryLower.png';
-          }
-
-          final bean = LocalizedBeansCompanion(
-            id: Value(id),
-            brandId: Value(item['brand_id'] as int?),
-            countryEmoji: Value(emoji),
-            altitudeMin: Value(item['altitude_min'] as int?),
-            altitudeMax: Value(item['altitude_max'] as int?),
-            lotNumber: Value(item['lot_number'] as String? ?? ''),
-            scaScore: Value(item['sca_score']?.toString() ?? '82+'), 
-            cupsScore: Value(double.tryParse(item['cups_score']?.toString() ?? '82.0') ?? 82.0),
-            sensoryJson: Value(item['sensory_json'] is Map ? jsonEncode(item['sensory_json']) : (item['sensory_json']?.toString() ?? '{}')),
-            priceJson: Value(item['price_json'] is Map ? jsonEncode(item['price_json']) : (item['price_json']?.toString() ?? '{}')),
-            retailPrice: Value(item['retail_price']?.toString() ?? item['price']?.toString()),
-            isPremium: Value(item['is_premium'] as bool? ?? false),
-            isDecaf: Value(item['is_decaf'] as bool? ?? false),
-            url: Value(item['url'] as String? ?? ''),
-            createdAt: Value(
-              item['created_at'] != null
-                  ? DateTime.tryParse(item['created_at'] as String)
-                  : null,
-            ),
-          );
-
-          // Get translations if any
-          final transData = await supabase!.from('localized_bean_translations').select().eq('bean_id', id);
-          final List<LocalizedBeanTranslationsCompanion> translations = transData.map((t) => LocalizedBeanTranslationsCompanion(
-            beanId: Value(id),
-            languageCode: Value(t['language_code'] as String),
-            country: Value(t['country'] as String?),
-            region: Value(t['region'] as String?),
-            varieties: Value(t['varieties'] as String?),
-            flavorNotes: Value(t['flavor_notes']?.toString() ?? '[]'),
-            processMethod: Value(t['process_method'] as String?),
-            description: Value(ContentUtils.cleanCoffeeContent(t['description'] as String? ?? '')),
-          )).toList();
-
-          // Add 'uk' translation from main record if not present
-          if (!translations.any((t) => t.languageCode.value == 'uk')) {
-            translations.add(LocalizedBeanTranslationsCompanion(
-              beanId: Value(id),
-              languageCode: const Value('uk'),
-              country: Value(item['country_uk'] as String? ?? item['country'] as String?),
-              region: Value(item['region_uk'] as String? ?? item['region'] as String?),
-              varieties: Value(item['varieties_uk'] as String? ?? item['varieties'] as String?),
-              flavorNotes: Value(item['flavor_notes_uk']?.toString() ?? item['flavor_notes']?.toString() ?? '[]'),
-              processMethod: Value(item['process_method_uk'] as String? ?? item['process_method'] as String?),
-              description: Value(ContentUtils.cleanCoffeeContent(item['description_uk'] as String? ?? item['description'] as String? ?? '')),
-            ));
-          }
-
-          await db.smartUpsertBean(bean, translations);
-          successCount++;
-        } catch (e) {
-          debugPrint('SYNC ERROR for bean ID ${item['id']}: $e');
-          errorCount++;
-        }
-      }
-      // Cleanup: Delete local beans (and translations) missing from remote
-      if (remoteIds.isNotEmpty) {
-        await db.transaction(() async {
-          await (db.delete(db.localizedBeanTranslations)..where((t) => t.beanId.isIn(remoteIds).not())).go();
-          await (db.delete(db.localizedBeans)..where((t) => t.id.isIn(remoteIds).not())).go();
-        });
-      }
-
-      debugPrint('SYNC: Encyclopedia synchronized ($successCount success, $errorCount errors)');
-    } catch (e) {
-      debugPrint('SYNC ERROR (Encyclopedia): $e');
-      rethrow;
-    }
-  }
 
   /// Sets up real-time subscriptions for all main content tables.
   void subscribeToRealtimeUpdates() {
@@ -575,6 +480,42 @@ class SyncService {
           debugPrint('SYNC ERROR: Could not push lot ${l.id}: $e');
         }
       }
+      
+      // 3. Sync User Brands (Upsert & Delete)
+      final brandsToSync = await (db.select(db.localizedBrands)..where((t) => t.isSynced.equals(false))).get();
+      for (final b in brandsToSync) {
+        try {
+          if (b.isDeletedLocal) {
+            await supabase!.from('user_brands').delete().eq('id', b.id).eq('user_id', userId);
+            await (db.delete(db.localizedBrands)..where((t) => t.id.equals(b.id))).go();
+            debugPrint('SYNC: Deleted brand ${b.id} from cloud');
+          } else {
+            await supabase!.from('user_brands').upsert({
+              'id': b.id,
+              'user_id': userId,
+              'name': b.name,
+              'logo_url': b.logoUrl,
+              'site_url': b.siteUrl,
+              'created_at': b.createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
+            });
+
+            final translations = await (db.select(db.localizedBrandTranslations)..where((t) => t.brandId.equals(b.id))).get();
+            for (final t in translations) {
+               await supabase!.from('user_brand_translations').upsert({
+                 'brand_id': t.brandId,
+                 'language_code': t.languageCode,
+                 'short_desc': t.shortDesc,
+                 'full_desc': t.fullDesc,
+                 'location': t.location,
+               });
+            }
+
+            await (db.update(db.localizedBrands)..where((t) => t.id.equals(b.id))).write(const LocalizedBrandsCompanion(isSynced: Value(true)));
+          }
+        } catch (e) {
+          debugPrint('SYNC ERROR: Could not push brand ${b.id}: $e');
+        }
+      }
     } catch (e) {
       debugPrint('SYNC ERROR (User Push): $e');
     }
@@ -672,7 +613,41 @@ class SyncService {
         await db.into(db.customRecipes).insertOnConflictUpdate(recipe);
       }
       
-      debugPrint('SYNC: User content pulled (${lotsData.length} lots, ${recipesData.length} recipes)');
+
+      // 3. Pull Brands
+      final brandsData = await supabase!.from('user_brands').select().eq('user_id', userId);
+      for (final item in brandsData) {
+        final id = item['id'] as int;
+        
+        final localBrand = await (db.select(db.localizedBrands)..where((t) => t.id.equals(id))).getSingleOrNull();
+        if (localBrand != null && (localBrand.isDeletedLocal || !localBrand.isSynced)) continue;
+
+        final brand = LocalizedBrandsCompanion(
+          id: Value(id),
+          userId: Value(userId),
+          name: Value(item['name'] as String),
+          logoUrl: Value(item['logo_url'] as String?),
+          siteUrl: Value(item['site_url'] as String?),
+          isSynced: const Value(true),
+          createdAt: Value(DateTime.tryParse(item['created_at'] ?? '')),
+        );
+        await db.into(db.localizedBrands).insertOnConflictUpdate(brand);
+
+        // Pull translations
+        final transData = await supabase!.from('user_brand_translations').select().eq('brand_id', id);
+        for (final t in transData) {
+          final trans = LocalizedBrandTranslationsCompanion(
+            brandId: Value(id),
+            languageCode: Value(t['language_code'] as String),
+            shortDesc: Value(t['short_desc'] as String?),
+            fullDesc: Value(t['full_desc'] as String?),
+            location: Value(t['location'] as String?),
+          );
+          await db.into(db.localizedBrandTranslations).insertOnConflictUpdate(trans);
+        }
+      }
+      
+      debugPrint('SYNC: User content pulled (${lotsData.length} lots, ${recipesData.length} recipes, ${brandsData.length} brands)');
     } catch (e) {
       debugPrint('SYNC ERROR (User Pull): $e');
     }
@@ -815,11 +790,16 @@ class SyncService {
         }
       }
 
-      // Cleanup: Delete local brands (and translations) missing from remote
       if (remoteIds.isNotEmpty) {
         await db.transaction(() async {
-          await (db.delete(db.localizedBrandTranslations)..where((t) => t.brandId.isIn(remoteIds).not())).go();
-          await (db.delete(db.localizedBrands)..where((t) => t.id.isIn(remoteIds).not())).go();
+          // Only delete brands that ARE NOT user-specific (userId is null) and are NOT in the remote list
+          final brandsToDelete = await (db.select(db.localizedBrands)..where((t) => t.id.isIn(remoteIds).not() & t.userId.isNull())).get();
+          final idsToDelete = brandsToDelete.map((b) => b.id).toList();
+          
+          if (idsToDelete.isNotEmpty) {
+            await (db.delete(db.localizedBrandTranslations)..where((t) => t.brandId.isIn(idsToDelete))).go();
+            await (db.delete(db.localizedBrands)..where((t) => t.id.isIn(idsToDelete))).go();
+          }
         });
       }
     } catch (e) {
@@ -951,11 +931,96 @@ class SyncService {
     }
   }
 
+  Future<void> syncEncyclopedia() async {
+    if (supabase == null) return;
+    try {
+      debugPrint('SYNC: Pulling encyclopedia from localized_beans...');
+      final data = await supabase!.from('localized_beans').select();
+      final remoteIds = data.map((item) => item['id'] as int).toList();
+
+      for (final item in data) {
+        int? id;
+        try {
+          id = item['id'] as int;
+          
+          String emoji = item['country_emoji'] as String? ?? '';
+          if (emoji.isEmpty || emoji.contains('planet')) {
+            final country = (item['country_uk'] as String? ?? item['country_en'] as String? ?? '').toLowerCase();
+            emoji = country.isNotEmpty ? '$flagsBucket${country.replaceAll(' ', '_')}.png' : '';
+          }
+
+          final bean = LocalizedBeansCompanion(
+            id: Value(id),
+            countryEmoji: Value(emoji),
+            altitudeMin: Value(item['altitude_min'] as int?),
+            altitudeMax: Value(item['altitude_max'] as int?),
+            lotNumber: Value(item['lot_number'] as String? ?? ''),
+            scaScore: Value(item['sca_score']?.toString() ?? '82+'),
+            cupsScore: Value((item['cups_score'] as num?)?.toDouble() ?? 82.0),
+            sensoryJson: Value(item['sensory_json']?.toString() ?? '{}'),
+            priceJson: Value(item['price_json']?.toString() ?? '{}'),
+            isPremium: Value(item['is_premium'] as bool? ?? false),
+            isDecaf: Value(item['is_decaf'] as bool? ?? false),
+            url: Value(item['url'] as String? ?? ''),
+            createdAt: Value(item['created_at'] != null ? DateTime.tryParse(item['created_at'] as String) : null),
+          );
+
+          // Translations
+          final transData = await supabase!.from('localized_bean_translations').select().eq('bean_id', id);
+          final List<LocalizedBeanTranslationsCompanion> translations = [];
+          for (final t in transData) {
+            translations.add(LocalizedBeanTranslationsCompanion(
+              beanId: Value(id),
+              languageCode: Value(t['language_code'] as String),
+              country: Value(t['country'] as String?),
+              region: Value(t['region'] as String?),
+              varieties: Value(t['varieties'] as String?),
+              flavorNotes: Value(t['flavor_notes']?.toString() ?? '[]'),
+              processMethod: Value(t['process_method'] as String?),
+              description: Value(ContentUtils.cleanCoffeeContent(t['description'] as String? ?? '')),
+              farmDescription: Value(ContentUtils.cleanCoffeeContent(t['farm_description'] as String? ?? '')),
+              roastLevel: Value(t['roast_level'] as String?),
+            ));
+          }
+
+          // Add 'uk' mapping if missing but existed in main table (legacy compatibility)
+          if (!translations.any((t) => t.languageCode.value == 'uk')) {
+             translations.add(LocalizedBeanTranslationsCompanion(
+              beanId: Value(id),
+              languageCode: const Value('uk'),
+              country: Value(item['country_uk'] as String? ?? item['country_en'] as String?),
+              region: Value(item['region_uk'] as String?),
+              varieties: Value(item['varieties_uk'] as String?),
+              flavorNotes: Value(item['flavor_notes_uk']?.toString() ?? '[]'),
+              processMethod: Value(item['process_method_uk'] as String?),
+              description: Value(ContentUtils.cleanCoffeeContent(item['description_uk'] as String? ?? item['description'] as String? ?? '')),
+              roastLevel: Value(item['roast_level_uk'] as String?),
+            ));
+          }
+
+          await db.smartUpsertBean(bean, translations);
+        } catch (e) {
+          debugPrint('SYNC ERROR for Encyclopedia entry $id: $e');
+        }
+      }
+
+      // Cleanup
+      if (remoteIds.isNotEmpty) {
+        await db.transaction(() async {
+          await (db.delete(db.localizedBeanTranslations)..where((t) => t.beanId.isIn(remoteIds).not())).go();
+          await (db.delete(db.localizedBeans)..where((t) => t.id.isIn(remoteIds).not())).go();
+        });
+      }
+    } catch (e) {
+      debugPrint('SYNC ERROR (Encyclopedia): $e');
+    }
+  }
+
   /// Syncs a single bean by ID.
   Future<void> syncSingleBean(int id) async {
     if (supabase == null) return;
     try {
-      final item = await supabase!.from('localized_beans').select().eq('id', id).maybeSingle();
+      final item = await supabase!.from('encyclopedia_entries').select().eq('id', id).maybeSingle();
       if (item == null) return;
 
       String emoji = item['country_emoji'] as String? ?? '';

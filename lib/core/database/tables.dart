@@ -1,4 +1,4 @@
-// ─── Schema version: 27 (Pure Localization & Schema Cleanup) ──────────────
+// ─── Schema version: 28 (Brand Favorite/Archive Support) ──────────────────
 // All legacy per-language columns removed from main tables.
 // System now relies exclusively on companion *Translations tables.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -79,6 +79,8 @@ class LocalizedBrands extends Table {
   DateTimeColumn get createdAt => dateTime().nullable()();
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
   BoolColumn get isDeletedLocal => boolean().withDefault(const Constant(false))();
+  BoolColumn get isFavorite => boolean().withDefault(const Constant(false))();
+  BoolColumn get isArchived => boolean().withDefault(const Constant(false))();
 }
 
 class LocalizedBrandTranslations extends Table {

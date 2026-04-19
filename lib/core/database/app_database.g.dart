@@ -73,6 +73,66 @@ class $LocalizedBrandsTable extends LocalizedBrands
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _isSyncedMeta = const VerificationMeta(
+    'isSynced',
+  );
+  @override
+  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
+    'is_synced',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_synced" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isDeletedLocalMeta = const VerificationMeta(
+    'isDeletedLocal',
+  );
+  @override
+  late final GeneratedColumn<bool> isDeletedLocal = GeneratedColumn<bool>(
+    'is_deleted_local',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_deleted_local" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isFavoriteMeta = const VerificationMeta(
+    'isFavorite',
+  );
+  @override
+  late final GeneratedColumn<bool> isFavorite = GeneratedColumn<bool>(
+    'is_favorite',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_favorite" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isArchivedMeta = const VerificationMeta(
+    'isArchived',
+  );
+  @override
+  late final GeneratedColumn<bool> isArchived = GeneratedColumn<bool>(
+    'is_archived',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_archived" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -81,6 +141,10 @@ class $LocalizedBrandsTable extends LocalizedBrands
     logoUrl,
     siteUrl,
     createdAt,
+    isSynced,
+    isDeletedLocal,
+    isFavorite,
+    isArchived,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -129,6 +193,33 @@ class $LocalizedBrandsTable extends LocalizedBrands
         createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
       );
     }
+    if (data.containsKey('is_synced')) {
+      context.handle(
+        _isSyncedMeta,
+        isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
+      );
+    }
+    if (data.containsKey('is_deleted_local')) {
+      context.handle(
+        _isDeletedLocalMeta,
+        isDeletedLocal.isAcceptableOrUnknown(
+          data['is_deleted_local']!,
+          _isDeletedLocalMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_favorite')) {
+      context.handle(
+        _isFavoriteMeta,
+        isFavorite.isAcceptableOrUnknown(data['is_favorite']!, _isFavoriteMeta),
+      );
+    }
+    if (data.containsKey('is_archived')) {
+      context.handle(
+        _isArchivedMeta,
+        isArchived.isAcceptableOrUnknown(data['is_archived']!, _isArchivedMeta),
+      );
+    }
     return context;
   }
 
@@ -162,6 +253,22 @@ class $LocalizedBrandsTable extends LocalizedBrands
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       ),
+      isSynced: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_synced'],
+      )!,
+      isDeletedLocal: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_deleted_local'],
+      )!,
+      isFavorite: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_favorite'],
+      )!,
+      isArchived: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_archived'],
+      )!,
     );
   }
 
@@ -178,6 +285,10 @@ class LocalizedBrand extends DataClass implements Insertable<LocalizedBrand> {
   final String? logoUrl;
   final String? siteUrl;
   final DateTime? createdAt;
+  final bool isSynced;
+  final bool isDeletedLocal;
+  final bool isFavorite;
+  final bool isArchived;
   const LocalizedBrand({
     required this.id,
     this.userId,
@@ -185,6 +296,10 @@ class LocalizedBrand extends DataClass implements Insertable<LocalizedBrand> {
     this.logoUrl,
     this.siteUrl,
     this.createdAt,
+    required this.isSynced,
+    required this.isDeletedLocal,
+    required this.isFavorite,
+    required this.isArchived,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -203,6 +318,10 @@ class LocalizedBrand extends DataClass implements Insertable<LocalizedBrand> {
     if (!nullToAbsent || createdAt != null) {
       map['created_at'] = Variable<DateTime>(createdAt);
     }
+    map['is_synced'] = Variable<bool>(isSynced);
+    map['is_deleted_local'] = Variable<bool>(isDeletedLocal);
+    map['is_favorite'] = Variable<bool>(isFavorite);
+    map['is_archived'] = Variable<bool>(isArchived);
     return map;
   }
 
@@ -222,6 +341,10 @@ class LocalizedBrand extends DataClass implements Insertable<LocalizedBrand> {
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
+      isSynced: Value(isSynced),
+      isDeletedLocal: Value(isDeletedLocal),
+      isFavorite: Value(isFavorite),
+      isArchived: Value(isArchived),
     );
   }
 
@@ -237,6 +360,10 @@ class LocalizedBrand extends DataClass implements Insertable<LocalizedBrand> {
       logoUrl: serializer.fromJson<String?>(json['logoUrl']),
       siteUrl: serializer.fromJson<String?>(json['siteUrl']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      isSynced: serializer.fromJson<bool>(json['isSynced']),
+      isDeletedLocal: serializer.fromJson<bool>(json['isDeletedLocal']),
+      isFavorite: serializer.fromJson<bool>(json['isFavorite']),
+      isArchived: serializer.fromJson<bool>(json['isArchived']),
     );
   }
   @override
@@ -249,6 +376,10 @@ class LocalizedBrand extends DataClass implements Insertable<LocalizedBrand> {
       'logoUrl': serializer.toJson<String?>(logoUrl),
       'siteUrl': serializer.toJson<String?>(siteUrl),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'isSynced': serializer.toJson<bool>(isSynced),
+      'isDeletedLocal': serializer.toJson<bool>(isDeletedLocal),
+      'isFavorite': serializer.toJson<bool>(isFavorite),
+      'isArchived': serializer.toJson<bool>(isArchived),
     };
   }
 
@@ -259,6 +390,10 @@ class LocalizedBrand extends DataClass implements Insertable<LocalizedBrand> {
     Value<String?> logoUrl = const Value.absent(),
     Value<String?> siteUrl = const Value.absent(),
     Value<DateTime?> createdAt = const Value.absent(),
+    bool? isSynced,
+    bool? isDeletedLocal,
+    bool? isFavorite,
+    bool? isArchived,
   }) => LocalizedBrand(
     id: id ?? this.id,
     userId: userId.present ? userId.value : this.userId,
@@ -266,6 +401,10 @@ class LocalizedBrand extends DataClass implements Insertable<LocalizedBrand> {
     logoUrl: logoUrl.present ? logoUrl.value : this.logoUrl,
     siteUrl: siteUrl.present ? siteUrl.value : this.siteUrl,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
+    isSynced: isSynced ?? this.isSynced,
+    isDeletedLocal: isDeletedLocal ?? this.isDeletedLocal,
+    isFavorite: isFavorite ?? this.isFavorite,
+    isArchived: isArchived ?? this.isArchived,
   );
   LocalizedBrand copyWithCompanion(LocalizedBrandsCompanion data) {
     return LocalizedBrand(
@@ -275,6 +414,16 @@ class LocalizedBrand extends DataClass implements Insertable<LocalizedBrand> {
       logoUrl: data.logoUrl.present ? data.logoUrl.value : this.logoUrl,
       siteUrl: data.siteUrl.present ? data.siteUrl.value : this.siteUrl,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      isDeletedLocal: data.isDeletedLocal.present
+          ? data.isDeletedLocal.value
+          : this.isDeletedLocal,
+      isFavorite: data.isFavorite.present
+          ? data.isFavorite.value
+          : this.isFavorite,
+      isArchived: data.isArchived.present
+          ? data.isArchived.value
+          : this.isArchived,
     );
   }
 
@@ -286,14 +435,28 @@ class LocalizedBrand extends DataClass implements Insertable<LocalizedBrand> {
           ..write('name: $name, ')
           ..write('logoUrl: $logoUrl, ')
           ..write('siteUrl: $siteUrl, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('isDeletedLocal: $isDeletedLocal, ')
+          ..write('isFavorite: $isFavorite, ')
+          ..write('isArchived: $isArchived')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, userId, name, logoUrl, siteUrl, createdAt);
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    name,
+    logoUrl,
+    siteUrl,
+    createdAt,
+    isSynced,
+    isDeletedLocal,
+    isFavorite,
+    isArchived,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -303,7 +466,11 @@ class LocalizedBrand extends DataClass implements Insertable<LocalizedBrand> {
           other.name == this.name &&
           other.logoUrl == this.logoUrl &&
           other.siteUrl == this.siteUrl &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.isSynced == this.isSynced &&
+          other.isDeletedLocal == this.isDeletedLocal &&
+          other.isFavorite == this.isFavorite &&
+          other.isArchived == this.isArchived);
 }
 
 class LocalizedBrandsCompanion extends UpdateCompanion<LocalizedBrand> {
@@ -313,6 +480,10 @@ class LocalizedBrandsCompanion extends UpdateCompanion<LocalizedBrand> {
   final Value<String?> logoUrl;
   final Value<String?> siteUrl;
   final Value<DateTime?> createdAt;
+  final Value<bool> isSynced;
+  final Value<bool> isDeletedLocal;
+  final Value<bool> isFavorite;
+  final Value<bool> isArchived;
   const LocalizedBrandsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
@@ -320,6 +491,10 @@ class LocalizedBrandsCompanion extends UpdateCompanion<LocalizedBrand> {
     this.logoUrl = const Value.absent(),
     this.siteUrl = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.isDeletedLocal = const Value.absent(),
+    this.isFavorite = const Value.absent(),
+    this.isArchived = const Value.absent(),
   });
   LocalizedBrandsCompanion.insert({
     this.id = const Value.absent(),
@@ -328,6 +503,10 @@ class LocalizedBrandsCompanion extends UpdateCompanion<LocalizedBrand> {
     this.logoUrl = const Value.absent(),
     this.siteUrl = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.isDeletedLocal = const Value.absent(),
+    this.isFavorite = const Value.absent(),
+    this.isArchived = const Value.absent(),
   }) : name = Value(name);
   static Insertable<LocalizedBrand> custom({
     Expression<int>? id,
@@ -336,6 +515,10 @@ class LocalizedBrandsCompanion extends UpdateCompanion<LocalizedBrand> {
     Expression<String>? logoUrl,
     Expression<String>? siteUrl,
     Expression<DateTime>? createdAt,
+    Expression<bool>? isSynced,
+    Expression<bool>? isDeletedLocal,
+    Expression<bool>? isFavorite,
+    Expression<bool>? isArchived,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -344,6 +527,10 @@ class LocalizedBrandsCompanion extends UpdateCompanion<LocalizedBrand> {
       if (logoUrl != null) 'logo_url': logoUrl,
       if (siteUrl != null) 'site_url': siteUrl,
       if (createdAt != null) 'created_at': createdAt,
+      if (isSynced != null) 'is_synced': isSynced,
+      if (isDeletedLocal != null) 'is_deleted_local': isDeletedLocal,
+      if (isFavorite != null) 'is_favorite': isFavorite,
+      if (isArchived != null) 'is_archived': isArchived,
     });
   }
 
@@ -354,6 +541,10 @@ class LocalizedBrandsCompanion extends UpdateCompanion<LocalizedBrand> {
     Value<String?>? logoUrl,
     Value<String?>? siteUrl,
     Value<DateTime?>? createdAt,
+    Value<bool>? isSynced,
+    Value<bool>? isDeletedLocal,
+    Value<bool>? isFavorite,
+    Value<bool>? isArchived,
   }) {
     return LocalizedBrandsCompanion(
       id: id ?? this.id,
@@ -362,6 +553,10 @@ class LocalizedBrandsCompanion extends UpdateCompanion<LocalizedBrand> {
       logoUrl: logoUrl ?? this.logoUrl,
       siteUrl: siteUrl ?? this.siteUrl,
       createdAt: createdAt ?? this.createdAt,
+      isSynced: isSynced ?? this.isSynced,
+      isDeletedLocal: isDeletedLocal ?? this.isDeletedLocal,
+      isFavorite: isFavorite ?? this.isFavorite,
+      isArchived: isArchived ?? this.isArchived,
     );
   }
 
@@ -386,6 +581,18 @@ class LocalizedBrandsCompanion extends UpdateCompanion<LocalizedBrand> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
+    if (isSynced.present) {
+      map['is_synced'] = Variable<bool>(isSynced.value);
+    }
+    if (isDeletedLocal.present) {
+      map['is_deleted_local'] = Variable<bool>(isDeletedLocal.value);
+    }
+    if (isFavorite.present) {
+      map['is_favorite'] = Variable<bool>(isFavorite.value);
+    }
+    if (isArchived.present) {
+      map['is_archived'] = Variable<bool>(isArchived.value);
+    }
     return map;
   }
 
@@ -397,7 +604,11 @@ class LocalizedBrandsCompanion extends UpdateCompanion<LocalizedBrand> {
           ..write('name: $name, ')
           ..write('logoUrl: $logoUrl, ')
           ..write('siteUrl: $siteUrl, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('isDeletedLocal: $isDeletedLocal, ')
+          ..write('isFavorite: $isFavorite, ')
+          ..write('isArchived: $isArchived')
           ..write(')'))
         .toString();
   }
@@ -10577,6 +10788,10 @@ typedef $$LocalizedBrandsTableCreateCompanionBuilder =
       Value<String?> logoUrl,
       Value<String?> siteUrl,
       Value<DateTime?> createdAt,
+      Value<bool> isSynced,
+      Value<bool> isDeletedLocal,
+      Value<bool> isFavorite,
+      Value<bool> isArchived,
     });
 typedef $$LocalizedBrandsTableUpdateCompanionBuilder =
     LocalizedBrandsCompanion Function({
@@ -10586,6 +10801,10 @@ typedef $$LocalizedBrandsTableUpdateCompanionBuilder =
       Value<String?> logoUrl,
       Value<String?> siteUrl,
       Value<DateTime?> createdAt,
+      Value<bool> isSynced,
+      Value<bool> isDeletedLocal,
+      Value<bool> isFavorite,
+      Value<bool> isArchived,
     });
 
 final class $$LocalizedBrandsTableReferences
@@ -10707,6 +10926,26 @@ class $$LocalizedBrandsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isDeletedLocal => $composableBuilder(
+    column: $table.isDeletedLocal,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isFavorite => $composableBuilder(
+    column: $table.isFavorite,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isArchived => $composableBuilder(
+    column: $table.isArchived,
+    builder: (column) => ColumnFilters(column),
+  );
+
   Expression<bool> localizedBeansRefs(
     Expression<bool> Function($$LocalizedBeansTableFilterComposer f) f,
   ) {
@@ -10823,6 +11062,26 @@ class $$LocalizedBrandsTableOrderingComposer
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isDeletedLocal => $composableBuilder(
+    column: $table.isDeletedLocal,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isFavorite => $composableBuilder(
+    column: $table.isFavorite,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isArchived => $composableBuilder(
+    column: $table.isArchived,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$LocalizedBrandsTableAnnotationComposer
@@ -10851,6 +11110,24 @@ class $$LocalizedBrandsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSynced =>
+      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+
+  GeneratedColumn<bool> get isDeletedLocal => $composableBuilder(
+    column: $table.isDeletedLocal,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isFavorite => $composableBuilder(
+    column: $table.isFavorite,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isArchived => $composableBuilder(
+    column: $table.isArchived,
+    builder: (column) => column,
+  );
 
   Expression<T> localizedBeansRefs<T extends Object>(
     Expression<T> Function($$LocalizedBeansTableAnnotationComposer a) f,
@@ -10972,6 +11249,10 @@ class $$LocalizedBrandsTableTableManager
                 Value<String?> logoUrl = const Value.absent(),
                 Value<String?> siteUrl = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<bool> isDeletedLocal = const Value.absent(),
+                Value<bool> isFavorite = const Value.absent(),
+                Value<bool> isArchived = const Value.absent(),
               }) => LocalizedBrandsCompanion(
                 id: id,
                 userId: userId,
@@ -10979,6 +11260,10 @@ class $$LocalizedBrandsTableTableManager
                 logoUrl: logoUrl,
                 siteUrl: siteUrl,
                 createdAt: createdAt,
+                isSynced: isSynced,
+                isDeletedLocal: isDeletedLocal,
+                isFavorite: isFavorite,
+                isArchived: isArchived,
               ),
           createCompanionCallback:
               ({
@@ -10988,6 +11273,10 @@ class $$LocalizedBrandsTableTableManager
                 Value<String?> logoUrl = const Value.absent(),
                 Value<String?> siteUrl = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<bool> isDeletedLocal = const Value.absent(),
+                Value<bool> isFavorite = const Value.absent(),
+                Value<bool> isArchived = const Value.absent(),
               }) => LocalizedBrandsCompanion.insert(
                 id: id,
                 userId: userId,
@@ -10995,6 +11284,10 @@ class $$LocalizedBrandsTableTableManager
                 logoUrl: logoUrl,
                 siteUrl: siteUrl,
                 createdAt: createdAt,
+                isSynced: isSynced,
+                isDeletedLocal: isDeletedLocal,
+                isFavorite: isFavorite,
+                isArchived: isArchived,
               ),
           withReferenceMapper: (p0) => p0
               .map(

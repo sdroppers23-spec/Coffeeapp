@@ -35,7 +35,7 @@ class SpecialtyEducationScreen extends ConsumerWidget {
         },
         loading: () => ListView.builder(
           padding: const EdgeInsets.all(16),
-          itemCount: 3,
+          itemCount: 6,
           itemBuilder: (_, _) => const Padding(
             padding: EdgeInsets.only(bottom: 24),
             child: SkeletonLoader(

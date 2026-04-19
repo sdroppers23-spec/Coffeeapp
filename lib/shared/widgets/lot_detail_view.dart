@@ -1,4 +1,4 @@
-﻿import 'dart:io';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -113,9 +113,9 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                       isScrollable: true,
                       labelStyle: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 12, letterSpacing: 1.2),
                       tabs: [
-                        Tab(text: isUk ? 'ІНФО' : 'INFO'),
-                        Tab(text: isUk ? 'ПРОФІЛЬ' : 'PROFILE'),
-                        Tab(text: isUk ? 'РЕЦЕПТИ' : 'RECIPES'),
+                        Tab(text: isUk ? 'Інфо' : 'Info'),
+                        Tab(text: isUk ? 'Профіль' : 'Profile'),
+                        Tab(text: isUk ? 'Рецепти' : 'Recipes'),
                       ],
                     ),
                     const SizedBox(height: 10),
@@ -139,7 +139,7 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                   backgroundColor: theme.colorScheme.primary,
                   foregroundColor: Colors.black,
                   label: Text(
-                    '+ ${ref.t("add_recipe").toUpperCase()}',
+                    ref.t("add_recipe"),
                     style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
                   ),
                   icon: const Icon(Icons.add_rounded, size: 24),
@@ -180,7 +180,7 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
             ),
             const SizedBox(height: 24),
             Text(
-              isUk ? 'ОБЕРІТЬ ТИП РЕЦЕПТУ' : 'SELECT RECIPE TYPE',
+              isUk ? 'Оберіть тип рецепту' : 'Select recipe type',
               style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.bold, color: const Color(0xFFC8A96E), letterSpacing: 2),
             ),
             const SizedBox(height: 24),
@@ -188,7 +188,7 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
               children: [
                 Expanded(
                   child: _RecipeTypeCard(
-                    title: isUk ? 'ФІЛЬТР' : 'FILTER',
+                    title: isUk ? 'Фільтр' : 'Filter',
                     icon: Icons.coffee_rounded,
                     count: filterCount,
                     isLimitReached: filterCount >= 10,
@@ -205,7 +205,7 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                 const SizedBox(width: 16),
                 Expanded(
                   child: _RecipeTypeCard(
-                    title: isUk ? 'ЕCПРЕСО' : 'ESPRESSO',
+                    title: isUk ? 'Еспресо' : 'Espresso',
                     icon: Icons.coffee_maker_rounded,
                     count: espressoCount,
                     isLimitReached: espressoCount >= 10,

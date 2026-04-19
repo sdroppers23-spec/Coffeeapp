@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../discovery_filter_provider.dart';
 import '../../../core/config/flag_constants.dart';
+import '../../../core/l10n/app_localizations.dart';
 
 class FilterSortSheet extends ConsumerWidget {
   final NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState>
@@ -46,29 +47,32 @@ class FilterSortSheet extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 24),
-            _buildSectionTitle('Сортувати за'),
+            _buildSectionTitle(ref.t('sort_by')),
             const SizedBox(height: 12),
             _buildSortGrid(ref),
             const SizedBox(height: 24),
-            _buildSectionTitle('Країни'),
+            _buildSectionTitle(ref.t('countries')),
             const SizedBox(height: 12),
             _buildFilterChips(
+              ref,
               availableCountries,
               state.selectedCountries,
               (val) => ref.read(filterProvider.notifier).toggleCountry(val),
             ),
             const SizedBox(height: 24),
-            _buildSectionTitle('Смаковий профіль'),
+            _buildSectionTitle(ref.t('flavor_profile')),
             const SizedBox(height: 12),
             _buildFilterChips(
+              ref,
               availableFlavors,
               state.selectedFlavorNotes,
               (val) => ref.read(filterProvider.notifier).toggleFlavorNote(val),
             ),
             const SizedBox(height: 24),
-            _buildSectionTitle('Обробка'),
+            _buildSectionTitle(ref.t('processing')),
             const SizedBox(height: 12),
             _buildFilterChips(
+              ref,
               availableProcesses,
               state.selectedProcesses,
               (val) => ref.read(filterProvider.notifier).toggleProcess(val),
@@ -93,7 +97,7 @@ class FilterSortSheet extends ConsumerWidget {
                         elevation: 0,
                       ),
                       child: Text(
-                        'Застосувати зміни',
+                        ref.t('apply_changes'),
                         style: GoogleFonts.outfit(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -108,7 +112,7 @@ class FilterSortSheet extends ConsumerWidget {
                       Navigator.pop(context);
                     },
                     child: Text(
-                      'Скинути все',
+                      ref.t('reset_all'),
                       style: GoogleFonts.outfit(
                         color: Colors.white54,
                         fontSize: 14,
@@ -144,37 +148,37 @@ class FilterSortSheet extends ConsumerWidget {
       runSpacing: 8,
       children: [
         _SortChip(
-          label: 'А-Я',
+          label: ref.t('sort_az'),
           type: SortType.alphabetAsc,
           current: state.sortType,
           provider: filterProvider,
         ),
         _SortChip(
-          label: 'Я-А',
+          label: ref.t('sort_za'),
           type: SortType.alphabetDesc,
           current: state.sortType,
           provider: filterProvider,
         ),
         _SortChip(
-          label: 'Вартість ↑',
+          label: ref.t('price_asc'),
           type: SortType.priceAsc,
           current: state.sortType,
           provider: filterProvider,
         ),
         _SortChip(
-          label: 'Вартість ↓',
+          label: ref.t('price_desc'),
           type: SortType.priceDesc,
           current: state.sortType,
           provider: filterProvider,
         ),
         _SortChip(
-          label: 'Спочатку нові',
+          label: ref.t('newest_first'),
           type: SortType.dateDesc,
           current: state.sortType,
           provider: filterProvider,
         ),
         _SortChip(
-          label: 'Спочатку старі',
+          label: ref.t('oldest_first'),
           type: SortType.dateAsc,
           current: state.sortType,
           provider: filterProvider,
@@ -184,14 +188,15 @@ class FilterSortSheet extends ConsumerWidget {
   }
 
   Widget _buildFilterChips(
+    WidgetRef ref,
     List<String> options,
     Set<String> selected,
     Function(String) onToggle,
   ) {
     if (options.isEmpty) {
-      return const Text(
-        'Варіанти відсутні',
-        style: TextStyle(color: Colors.white24, fontSize: 12),
+      return Text(
+        ref.t('no_options'),
+        style: const TextStyle(color: Colors.white24, fontSize: 12),
       );
     }
 

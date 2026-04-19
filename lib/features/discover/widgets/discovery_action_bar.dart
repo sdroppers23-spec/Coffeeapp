@@ -5,6 +5,7 @@ import '../discovery_filter_provider.dart';
 import 'filter_sort_sheet.dart';
 import '../../../shared/widgets/pressable_scale.dart';
 import '../../encyclopedia/encyclopedia_providers.dart';
+import '../../../core/l10n/app_localizations.dart';
 
 class DiscoveryActionBar extends ConsumerWidget {
   final NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState>

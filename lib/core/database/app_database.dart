@@ -787,14 +787,8 @@ class AppDatabase extends _$AppDatabase {
       final recipe = row.readTable(brewingRecipes);
       final translation = row.readTableOrNull(brewingRecipeTranslations);
       
-      final isUk = lang == 'uk';
-      String name = recipe.nameUk;
-      String desc = recipe.descriptionUk;
-      
-      if (!isUk && translation != null) {
-        name = translation.name ?? name;
-        desc = translation.description ?? desc;
-      }
+      final name = translation?.name ?? 'Unknown';
+      final desc = translation?.description ?? '';
       
       return BrewingRecipeDto(
         id: recipe.id,

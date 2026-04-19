@@ -1,23 +1,61 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final localeProvider = StateProvider<Locale>((ref) => const Locale('uk'));
+class LocaleNotifier extends Notifier<String> {
+  @override
+  String build() => 'uk';
+
+  void setLocale(String languageCode) {
+    state = languageCode;
+    LocaleService.currentLocale = languageCode;
+  }
+}
+
+final localeProvider = NotifierProvider<LocaleNotifier, String>(() => LocaleNotifier());
+
+// Compatibility layer for legacy code
+class LocaleService {
+  static String currentLocale = 'uk';
+}
 
 extension AppLocalizationsContext on BuildContext {
   String t(String key) {
-    final locale = ProviderScope.containerOf(this).read(localeProvider);
-    return AppLocalizations.get(key, locale.languageCode);
+    final languageCode = ProviderScope.containerOf(this).read(localeProvider);
+    LocaleService.currentLocale = languageCode;
+    return AppLocalizations.get(key, languageCode);
   }
 }
 
 extension AppLocalizationsRef on WidgetRef {
   String t(String key) {
-    final locale = watch(localeProvider);
-    return AppLocalizations.get(key, locale.languageCode);
+    final languageCode = watch(localeProvider);
+    LocaleService.currentLocale = languageCode;
+    return AppLocalizations.get(key, languageCode);
   }
 }
 
 class AppLocalizations {
+  final Locale? locale;
+  AppLocalizations([this.locale]);
+
+  static AppLocalizations of(BuildContext context) {
+    // Attempt to get locale from ProviderScope if possible, otherwise use legacy
+    try {
+      final languageCode = ProviderScope.containerOf(context).read(localeProvider);
+      return AppLocalizations(Locale(languageCode));
+    } catch (_) {
+      return AppLocalizations(Locale(LocaleService.currentLocale));
+    }
+  }
+
+  String translate(String key) {
+    final languageCode = locale?.languageCode ?? LocaleService.currentLocale;
+    return get(key, languageCode);
+  }
+
+  // Legacy alias
+  String t(String key) => translate(key);
+
   static String get(String key, String languageCode) {
     final map = _translations[languageCode] ?? _translations['en']!;
     return map[key] ?? key;

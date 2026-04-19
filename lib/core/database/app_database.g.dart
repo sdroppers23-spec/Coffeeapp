@@ -62,39 +62,6 @@ class $LocalizedBrandsTable extends LocalizedBrands
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _shortDescUkMeta = const VerificationMeta(
-    'shortDescUk',
-  );
-  @override
-  late final GeneratedColumn<String> shortDescUk = GeneratedColumn<String>(
-    'short_desc_uk',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _fullDescUkMeta = const VerificationMeta(
-    'fullDescUk',
-  );
-  @override
-  late final GeneratedColumn<String> fullDescUk = GeneratedColumn<String>(
-    'full_desc_uk',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _locationUkMeta = const VerificationMeta(
-    'locationUk',
-  );
-  @override
-  late final GeneratedColumn<String> locationUk = GeneratedColumn<String>(
-    'location_uk',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -113,9 +80,6 @@ class $LocalizedBrandsTable extends LocalizedBrands
     name,
     logoUrl,
     siteUrl,
-    shortDescUk,
-    fullDescUk,
-    locationUk,
     createdAt,
   ];
   @override
@@ -159,30 +123,6 @@ class $LocalizedBrandsTable extends LocalizedBrands
         siteUrl.isAcceptableOrUnknown(data['site_url']!, _siteUrlMeta),
       );
     }
-    if (data.containsKey('short_desc_uk')) {
-      context.handle(
-        _shortDescUkMeta,
-        shortDescUk.isAcceptableOrUnknown(
-          data['short_desc_uk']!,
-          _shortDescUkMeta,
-        ),
-      );
-    }
-    if (data.containsKey('full_desc_uk')) {
-      context.handle(
-        _fullDescUkMeta,
-        fullDescUk.isAcceptableOrUnknown(
-          data['full_desc_uk']!,
-          _fullDescUkMeta,
-        ),
-      );
-    }
-    if (data.containsKey('location_uk')) {
-      context.handle(
-        _locationUkMeta,
-        locationUk.isAcceptableOrUnknown(data['location_uk']!, _locationUkMeta),
-      );
-    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -218,18 +158,6 @@ class $LocalizedBrandsTable extends LocalizedBrands
         DriftSqlType.string,
         data['${effectivePrefix}site_url'],
       ),
-      shortDescUk: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}short_desc_uk'],
-      ),
-      fullDescUk: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}full_desc_uk'],
-      ),
-      locationUk: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}location_uk'],
-      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -249,9 +177,6 @@ class LocalizedBrand extends DataClass implements Insertable<LocalizedBrand> {
   final String name;
   final String? logoUrl;
   final String? siteUrl;
-  final String? shortDescUk;
-  final String? fullDescUk;
-  final String? locationUk;
   final DateTime? createdAt;
   const LocalizedBrand({
     required this.id,
@@ -259,9 +184,6 @@ class LocalizedBrand extends DataClass implements Insertable<LocalizedBrand> {
     required this.name,
     this.logoUrl,
     this.siteUrl,
-    this.shortDescUk,
-    this.fullDescUk,
-    this.locationUk,
     this.createdAt,
   });
   @override
@@ -277,15 +199,6 @@ class LocalizedBrand extends DataClass implements Insertable<LocalizedBrand> {
     }
     if (!nullToAbsent || siteUrl != null) {
       map['site_url'] = Variable<String>(siteUrl);
-    }
-    if (!nullToAbsent || shortDescUk != null) {
-      map['short_desc_uk'] = Variable<String>(shortDescUk);
-    }
-    if (!nullToAbsent || fullDescUk != null) {
-      map['full_desc_uk'] = Variable<String>(fullDescUk);
-    }
-    if (!nullToAbsent || locationUk != null) {
-      map['location_uk'] = Variable<String>(locationUk);
     }
     if (!nullToAbsent || createdAt != null) {
       map['created_at'] = Variable<DateTime>(createdAt);
@@ -306,15 +219,6 @@ class LocalizedBrand extends DataClass implements Insertable<LocalizedBrand> {
       siteUrl: siteUrl == null && nullToAbsent
           ? const Value.absent()
           : Value(siteUrl),
-      shortDescUk: shortDescUk == null && nullToAbsent
-          ? const Value.absent()
-          : Value(shortDescUk),
-      fullDescUk: fullDescUk == null && nullToAbsent
-          ? const Value.absent()
-          : Value(fullDescUk),
-      locationUk: locationUk == null && nullToAbsent
-          ? const Value.absent()
-          : Value(locationUk),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -332,9 +236,6 @@ class LocalizedBrand extends DataClass implements Insertable<LocalizedBrand> {
       name: serializer.fromJson<String>(json['name']),
       logoUrl: serializer.fromJson<String?>(json['logoUrl']),
       siteUrl: serializer.fromJson<String?>(json['siteUrl']),
-      shortDescUk: serializer.fromJson<String?>(json['shortDescUk']),
-      fullDescUk: serializer.fromJson<String?>(json['fullDescUk']),
-      locationUk: serializer.fromJson<String?>(json['locationUk']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
     );
   }
@@ -347,9 +248,6 @@ class LocalizedBrand extends DataClass implements Insertable<LocalizedBrand> {
       'name': serializer.toJson<String>(name),
       'logoUrl': serializer.toJson<String?>(logoUrl),
       'siteUrl': serializer.toJson<String?>(siteUrl),
-      'shortDescUk': serializer.toJson<String?>(shortDescUk),
-      'fullDescUk': serializer.toJson<String?>(fullDescUk),
-      'locationUk': serializer.toJson<String?>(locationUk),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
     };
   }
@@ -360,9 +258,6 @@ class LocalizedBrand extends DataClass implements Insertable<LocalizedBrand> {
     String? name,
     Value<String?> logoUrl = const Value.absent(),
     Value<String?> siteUrl = const Value.absent(),
-    Value<String?> shortDescUk = const Value.absent(),
-    Value<String?> fullDescUk = const Value.absent(),
-    Value<String?> locationUk = const Value.absent(),
     Value<DateTime?> createdAt = const Value.absent(),
   }) => LocalizedBrand(
     id: id ?? this.id,
@@ -370,9 +265,6 @@ class LocalizedBrand extends DataClass implements Insertable<LocalizedBrand> {
     name: name ?? this.name,
     logoUrl: logoUrl.present ? logoUrl.value : this.logoUrl,
     siteUrl: siteUrl.present ? siteUrl.value : this.siteUrl,
-    shortDescUk: shortDescUk.present ? shortDescUk.value : this.shortDescUk,
-    fullDescUk: fullDescUk.present ? fullDescUk.value : this.fullDescUk,
-    locationUk: locationUk.present ? locationUk.value : this.locationUk,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
   );
   LocalizedBrand copyWithCompanion(LocalizedBrandsCompanion data) {
@@ -382,15 +274,6 @@ class LocalizedBrand extends DataClass implements Insertable<LocalizedBrand> {
       name: data.name.present ? data.name.value : this.name,
       logoUrl: data.logoUrl.present ? data.logoUrl.value : this.logoUrl,
       siteUrl: data.siteUrl.present ? data.siteUrl.value : this.siteUrl,
-      shortDescUk: data.shortDescUk.present
-          ? data.shortDescUk.value
-          : this.shortDescUk,
-      fullDescUk: data.fullDescUk.present
-          ? data.fullDescUk.value
-          : this.fullDescUk,
-      locationUk: data.locationUk.present
-          ? data.locationUk.value
-          : this.locationUk,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -403,26 +286,14 @@ class LocalizedBrand extends DataClass implements Insertable<LocalizedBrand> {
           ..write('name: $name, ')
           ..write('logoUrl: $logoUrl, ')
           ..write('siteUrl: $siteUrl, ')
-          ..write('shortDescUk: $shortDescUk, ')
-          ..write('fullDescUk: $fullDescUk, ')
-          ..write('locationUk: $locationUk, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-    id,
-    userId,
-    name,
-    logoUrl,
-    siteUrl,
-    shortDescUk,
-    fullDescUk,
-    locationUk,
-    createdAt,
-  );
+  int get hashCode =>
+      Object.hash(id, userId, name, logoUrl, siteUrl, createdAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -432,9 +303,6 @@ class LocalizedBrand extends DataClass implements Insertable<LocalizedBrand> {
           other.name == this.name &&
           other.logoUrl == this.logoUrl &&
           other.siteUrl == this.siteUrl &&
-          other.shortDescUk == this.shortDescUk &&
-          other.fullDescUk == this.fullDescUk &&
-          other.locationUk == this.locationUk &&
           other.createdAt == this.createdAt);
 }
 
@@ -444,9 +312,6 @@ class LocalizedBrandsCompanion extends UpdateCompanion<LocalizedBrand> {
   final Value<String> name;
   final Value<String?> logoUrl;
   final Value<String?> siteUrl;
-  final Value<String?> shortDescUk;
-  final Value<String?> fullDescUk;
-  final Value<String?> locationUk;
   final Value<DateTime?> createdAt;
   const LocalizedBrandsCompanion({
     this.id = const Value.absent(),
@@ -454,9 +319,6 @@ class LocalizedBrandsCompanion extends UpdateCompanion<LocalizedBrand> {
     this.name = const Value.absent(),
     this.logoUrl = const Value.absent(),
     this.siteUrl = const Value.absent(),
-    this.shortDescUk = const Value.absent(),
-    this.fullDescUk = const Value.absent(),
-    this.locationUk = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   LocalizedBrandsCompanion.insert({
@@ -465,9 +327,6 @@ class LocalizedBrandsCompanion extends UpdateCompanion<LocalizedBrand> {
     required String name,
     this.logoUrl = const Value.absent(),
     this.siteUrl = const Value.absent(),
-    this.shortDescUk = const Value.absent(),
-    this.fullDescUk = const Value.absent(),
-    this.locationUk = const Value.absent(),
     this.createdAt = const Value.absent(),
   }) : name = Value(name);
   static Insertable<LocalizedBrand> custom({
@@ -476,9 +335,6 @@ class LocalizedBrandsCompanion extends UpdateCompanion<LocalizedBrand> {
     Expression<String>? name,
     Expression<String>? logoUrl,
     Expression<String>? siteUrl,
-    Expression<String>? shortDescUk,
-    Expression<String>? fullDescUk,
-    Expression<String>? locationUk,
     Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
@@ -487,9 +343,6 @@ class LocalizedBrandsCompanion extends UpdateCompanion<LocalizedBrand> {
       if (name != null) 'name': name,
       if (logoUrl != null) 'logo_url': logoUrl,
       if (siteUrl != null) 'site_url': siteUrl,
-      if (shortDescUk != null) 'short_desc_uk': shortDescUk,
-      if (fullDescUk != null) 'full_desc_uk': fullDescUk,
-      if (locationUk != null) 'location_uk': locationUk,
       if (createdAt != null) 'created_at': createdAt,
     });
   }
@@ -500,9 +353,6 @@ class LocalizedBrandsCompanion extends UpdateCompanion<LocalizedBrand> {
     Value<String>? name,
     Value<String?>? logoUrl,
     Value<String?>? siteUrl,
-    Value<String?>? shortDescUk,
-    Value<String?>? fullDescUk,
-    Value<String?>? locationUk,
     Value<DateTime?>? createdAt,
   }) {
     return LocalizedBrandsCompanion(
@@ -511,9 +361,6 @@ class LocalizedBrandsCompanion extends UpdateCompanion<LocalizedBrand> {
       name: name ?? this.name,
       logoUrl: logoUrl ?? this.logoUrl,
       siteUrl: siteUrl ?? this.siteUrl,
-      shortDescUk: shortDescUk ?? this.shortDescUk,
-      fullDescUk: fullDescUk ?? this.fullDescUk,
-      locationUk: locationUk ?? this.locationUk,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -536,15 +383,6 @@ class LocalizedBrandsCompanion extends UpdateCompanion<LocalizedBrand> {
     if (siteUrl.present) {
       map['site_url'] = Variable<String>(siteUrl.value);
     }
-    if (shortDescUk.present) {
-      map['short_desc_uk'] = Variable<String>(shortDescUk.value);
-    }
-    if (fullDescUk.present) {
-      map['full_desc_uk'] = Variable<String>(fullDescUk.value);
-    }
-    if (locationUk.present) {
-      map['location_uk'] = Variable<String>(locationUk.value);
-    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -559,9 +397,6 @@ class LocalizedBrandsCompanion extends UpdateCompanion<LocalizedBrand> {
           ..write('name: $name, ')
           ..write('logoUrl: $logoUrl, ')
           ..write('siteUrl: $siteUrl, ')
-          ..write('shortDescUk: $shortDescUk, ')
-          ..write('fullDescUk: $fullDescUk, ')
-          ..write('locationUk: $locationUk, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -587,16 +422,6 @@ class $LocalizedFarmersTable extends LocalizedFarmers
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
-  static const VerificationMeta _nameUkMeta = const VerificationMeta('nameUk');
-  @override
-  late final GeneratedColumn<String> nameUk = GeneratedColumn<String>(
-    'name_uk',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant('Тут має бути ім\'я'),
-  );
   static const VerificationMeta _imageUrlMeta = const VerificationMeta(
     'imageUrl',
   );
@@ -607,7 +432,7 @@ class $LocalizedFarmersTable extends LocalizedFarmers
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant('Тут має бути фото'),
+    defaultValue: const Constant(''),
   );
   static const VerificationMeta _flagUrlMeta = const VerificationMeta(
     'flagUrl',
@@ -619,53 +444,7 @@ class $LocalizedFarmersTable extends LocalizedFarmers
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant('Тут має бути прапор'),
-  );
-  static const VerificationMeta _descriptionHtmlUkMeta = const VerificationMeta(
-    'descriptionHtmlUk',
-  );
-  @override
-  late final GeneratedColumn<String> descriptionHtmlUk =
-      GeneratedColumn<String>(
-        'description_html_uk',
-        aliasedName,
-        false,
-        type: DriftSqlType.string,
-        requiredDuringInsert: false,
-        defaultValue: const Constant('Тут має бути опис'),
-      );
-  static const VerificationMeta _regionUkMeta = const VerificationMeta(
-    'regionUk',
-  );
-  @override
-  late final GeneratedColumn<String> regionUk = GeneratedColumn<String>(
-    'region_uk',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _countryUkMeta = const VerificationMeta(
-    'countryUk',
-  );
-  @override
-  late final GeneratedColumn<String> countryUk = GeneratedColumn<String>(
-    'country_uk',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _storyUkMeta = const VerificationMeta(
-    'storyUk',
-  );
-  @override
-  late final GeneratedColumn<String> storyUk = GeneratedColumn<String>(
-    'story_uk',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
   );
   static const VerificationMeta _latitudeMeta = const VerificationMeta(
     'latitude',
@@ -703,13 +482,8 @@ class $LocalizedFarmersTable extends LocalizedFarmers
   @override
   List<GeneratedColumn> get $columns => [
     id,
-    nameUk,
     imageUrl,
     flagUrl,
-    descriptionHtmlUk,
-    regionUk,
-    countryUk,
-    storyUk,
     latitude,
     longitude,
     createdAt,
@@ -729,12 +503,6 @@ class $LocalizedFarmersTable extends LocalizedFarmers
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    if (data.containsKey('name_uk')) {
-      context.handle(
-        _nameUkMeta,
-        nameUk.isAcceptableOrUnknown(data['name_uk']!, _nameUkMeta),
-      );
-    }
     if (data.containsKey('image_url')) {
       context.handle(
         _imageUrlMeta,
@@ -745,33 +513,6 @@ class $LocalizedFarmersTable extends LocalizedFarmers
       context.handle(
         _flagUrlMeta,
         flagUrl.isAcceptableOrUnknown(data['flag_url']!, _flagUrlMeta),
-      );
-    }
-    if (data.containsKey('description_html_uk')) {
-      context.handle(
-        _descriptionHtmlUkMeta,
-        descriptionHtmlUk.isAcceptableOrUnknown(
-          data['description_html_uk']!,
-          _descriptionHtmlUkMeta,
-        ),
-      );
-    }
-    if (data.containsKey('region_uk')) {
-      context.handle(
-        _regionUkMeta,
-        regionUk.isAcceptableOrUnknown(data['region_uk']!, _regionUkMeta),
-      );
-    }
-    if (data.containsKey('country_uk')) {
-      context.handle(
-        _countryUkMeta,
-        countryUk.isAcceptableOrUnknown(data['country_uk']!, _countryUkMeta),
-      );
-    }
-    if (data.containsKey('story_uk')) {
-      context.handle(
-        _storyUkMeta,
-        storyUk.isAcceptableOrUnknown(data['story_uk']!, _storyUkMeta),
       );
     }
     if (data.containsKey('latitude')) {
@@ -805,10 +546,6 @@ class $LocalizedFarmersTable extends LocalizedFarmers
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
-      nameUk: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}name_uk'],
-      )!,
       imageUrl: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}image_url'],
@@ -817,22 +554,6 @@ class $LocalizedFarmersTable extends LocalizedFarmers
         DriftSqlType.string,
         data['${effectivePrefix}flag_url'],
       )!,
-      descriptionHtmlUk: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}description_html_uk'],
-      )!,
-      regionUk: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}region_uk'],
-      ),
-      countryUk: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}country_uk'],
-      ),
-      storyUk: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}story_uk'],
-      ),
       latitude: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}latitude'],
@@ -856,25 +577,15 @@ class $LocalizedFarmersTable extends LocalizedFarmers
 
 class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
   final int id;
-  final String nameUk;
   final String imageUrl;
   final String flagUrl;
-  final String descriptionHtmlUk;
-  final String? regionUk;
-  final String? countryUk;
-  final String? storyUk;
   final double? latitude;
   final double? longitude;
   final DateTime? createdAt;
   const LocalizedFarmer({
     required this.id,
-    required this.nameUk,
     required this.imageUrl,
     required this.flagUrl,
-    required this.descriptionHtmlUk,
-    this.regionUk,
-    this.countryUk,
-    this.storyUk,
     this.latitude,
     this.longitude,
     this.createdAt,
@@ -883,19 +594,8 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    map['name_uk'] = Variable<String>(nameUk);
     map['image_url'] = Variable<String>(imageUrl);
     map['flag_url'] = Variable<String>(flagUrl);
-    map['description_html_uk'] = Variable<String>(descriptionHtmlUk);
-    if (!nullToAbsent || regionUk != null) {
-      map['region_uk'] = Variable<String>(regionUk);
-    }
-    if (!nullToAbsent || countryUk != null) {
-      map['country_uk'] = Variable<String>(countryUk);
-    }
-    if (!nullToAbsent || storyUk != null) {
-      map['story_uk'] = Variable<String>(storyUk);
-    }
     if (!nullToAbsent || latitude != null) {
       map['latitude'] = Variable<double>(latitude);
     }
@@ -911,19 +611,8 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
   LocalizedFarmersCompanion toCompanion(bool nullToAbsent) {
     return LocalizedFarmersCompanion(
       id: Value(id),
-      nameUk: Value(nameUk),
       imageUrl: Value(imageUrl),
       flagUrl: Value(flagUrl),
-      descriptionHtmlUk: Value(descriptionHtmlUk),
-      regionUk: regionUk == null && nullToAbsent
-          ? const Value.absent()
-          : Value(regionUk),
-      countryUk: countryUk == null && nullToAbsent
-          ? const Value.absent()
-          : Value(countryUk),
-      storyUk: storyUk == null && nullToAbsent
-          ? const Value.absent()
-          : Value(storyUk),
       latitude: latitude == null && nullToAbsent
           ? const Value.absent()
           : Value(latitude),
@@ -943,13 +632,8 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return LocalizedFarmer(
       id: serializer.fromJson<int>(json['id']),
-      nameUk: serializer.fromJson<String>(json['nameUk']),
       imageUrl: serializer.fromJson<String>(json['imageUrl']),
       flagUrl: serializer.fromJson<String>(json['flagUrl']),
-      descriptionHtmlUk: serializer.fromJson<String>(json['descriptionHtmlUk']),
-      regionUk: serializer.fromJson<String?>(json['regionUk']),
-      countryUk: serializer.fromJson<String?>(json['countryUk']),
-      storyUk: serializer.fromJson<String?>(json['storyUk']),
       latitude: serializer.fromJson<double?>(json['latitude']),
       longitude: serializer.fromJson<double?>(json['longitude']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
@@ -960,13 +644,8 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'nameUk': serializer.toJson<String>(nameUk),
       'imageUrl': serializer.toJson<String>(imageUrl),
       'flagUrl': serializer.toJson<String>(flagUrl),
-      'descriptionHtmlUk': serializer.toJson<String>(descriptionHtmlUk),
-      'regionUk': serializer.toJson<String?>(regionUk),
-      'countryUk': serializer.toJson<String?>(countryUk),
-      'storyUk': serializer.toJson<String?>(storyUk),
       'latitude': serializer.toJson<double?>(latitude),
       'longitude': serializer.toJson<double?>(longitude),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
@@ -975,25 +654,15 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
 
   LocalizedFarmer copyWith({
     int? id,
-    String? nameUk,
     String? imageUrl,
     String? flagUrl,
-    String? descriptionHtmlUk,
-    Value<String?> regionUk = const Value.absent(),
-    Value<String?> countryUk = const Value.absent(),
-    Value<String?> storyUk = const Value.absent(),
     Value<double?> latitude = const Value.absent(),
     Value<double?> longitude = const Value.absent(),
     Value<DateTime?> createdAt = const Value.absent(),
   }) => LocalizedFarmer(
     id: id ?? this.id,
-    nameUk: nameUk ?? this.nameUk,
     imageUrl: imageUrl ?? this.imageUrl,
     flagUrl: flagUrl ?? this.flagUrl,
-    descriptionHtmlUk: descriptionHtmlUk ?? this.descriptionHtmlUk,
-    regionUk: regionUk.present ? regionUk.value : this.regionUk,
-    countryUk: countryUk.present ? countryUk.value : this.countryUk,
-    storyUk: storyUk.present ? storyUk.value : this.storyUk,
     latitude: latitude.present ? latitude.value : this.latitude,
     longitude: longitude.present ? longitude.value : this.longitude,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
@@ -1001,15 +670,8 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
   LocalizedFarmer copyWithCompanion(LocalizedFarmersCompanion data) {
     return LocalizedFarmer(
       id: data.id.present ? data.id.value : this.id,
-      nameUk: data.nameUk.present ? data.nameUk.value : this.nameUk,
       imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
       flagUrl: data.flagUrl.present ? data.flagUrl.value : this.flagUrl,
-      descriptionHtmlUk: data.descriptionHtmlUk.present
-          ? data.descriptionHtmlUk.value
-          : this.descriptionHtmlUk,
-      regionUk: data.regionUk.present ? data.regionUk.value : this.regionUk,
-      countryUk: data.countryUk.present ? data.countryUk.value : this.countryUk,
-      storyUk: data.storyUk.present ? data.storyUk.value : this.storyUk,
       latitude: data.latitude.present ? data.latitude.value : this.latitude,
       longitude: data.longitude.present ? data.longitude.value : this.longitude,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
@@ -1020,13 +682,8 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
   String toString() {
     return (StringBuffer('LocalizedFarmer(')
           ..write('id: $id, ')
-          ..write('nameUk: $nameUk, ')
           ..write('imageUrl: $imageUrl, ')
           ..write('flagUrl: $flagUrl, ')
-          ..write('descriptionHtmlUk: $descriptionHtmlUk, ')
-          ..write('regionUk: $regionUk, ')
-          ..write('countryUk: $countryUk, ')
-          ..write('storyUk: $storyUk, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
           ..write('createdAt: $createdAt')
@@ -1035,31 +692,15 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
   }
 
   @override
-  int get hashCode => Object.hash(
-    id,
-    nameUk,
-    imageUrl,
-    flagUrl,
-    descriptionHtmlUk,
-    regionUk,
-    countryUk,
-    storyUk,
-    latitude,
-    longitude,
-    createdAt,
-  );
+  int get hashCode =>
+      Object.hash(id, imageUrl, flagUrl, latitude, longitude, createdAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is LocalizedFarmer &&
           other.id == this.id &&
-          other.nameUk == this.nameUk &&
           other.imageUrl == this.imageUrl &&
           other.flagUrl == this.flagUrl &&
-          other.descriptionHtmlUk == this.descriptionHtmlUk &&
-          other.regionUk == this.regionUk &&
-          other.countryUk == this.countryUk &&
-          other.storyUk == this.storyUk &&
           other.latitude == this.latitude &&
           other.longitude == this.longitude &&
           other.createdAt == this.createdAt);
@@ -1067,64 +708,39 @@ class LocalizedFarmer extends DataClass implements Insertable<LocalizedFarmer> {
 
 class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
   final Value<int> id;
-  final Value<String> nameUk;
   final Value<String> imageUrl;
   final Value<String> flagUrl;
-  final Value<String> descriptionHtmlUk;
-  final Value<String?> regionUk;
-  final Value<String?> countryUk;
-  final Value<String?> storyUk;
   final Value<double?> latitude;
   final Value<double?> longitude;
   final Value<DateTime?> createdAt;
   const LocalizedFarmersCompanion({
     this.id = const Value.absent(),
-    this.nameUk = const Value.absent(),
     this.imageUrl = const Value.absent(),
     this.flagUrl = const Value.absent(),
-    this.descriptionHtmlUk = const Value.absent(),
-    this.regionUk = const Value.absent(),
-    this.countryUk = const Value.absent(),
-    this.storyUk = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   LocalizedFarmersCompanion.insert({
     this.id = const Value.absent(),
-    this.nameUk = const Value.absent(),
     this.imageUrl = const Value.absent(),
     this.flagUrl = const Value.absent(),
-    this.descriptionHtmlUk = const Value.absent(),
-    this.regionUk = const Value.absent(),
-    this.countryUk = const Value.absent(),
-    this.storyUk = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   static Insertable<LocalizedFarmer> custom({
     Expression<int>? id,
-    Expression<String>? nameUk,
     Expression<String>? imageUrl,
     Expression<String>? flagUrl,
-    Expression<String>? descriptionHtmlUk,
-    Expression<String>? regionUk,
-    Expression<String>? countryUk,
-    Expression<String>? storyUk,
     Expression<double>? latitude,
     Expression<double>? longitude,
     Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (nameUk != null) 'name_uk': nameUk,
       if (imageUrl != null) 'image_url': imageUrl,
       if (flagUrl != null) 'flag_url': flagUrl,
-      if (descriptionHtmlUk != null) 'description_html_uk': descriptionHtmlUk,
-      if (regionUk != null) 'region_uk': regionUk,
-      if (countryUk != null) 'country_uk': countryUk,
-      if (storyUk != null) 'story_uk': storyUk,
       if (latitude != null) 'latitude': latitude,
       if (longitude != null) 'longitude': longitude,
       if (createdAt != null) 'created_at': createdAt,
@@ -1133,26 +749,16 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
 
   LocalizedFarmersCompanion copyWith({
     Value<int>? id,
-    Value<String>? nameUk,
     Value<String>? imageUrl,
     Value<String>? flagUrl,
-    Value<String>? descriptionHtmlUk,
-    Value<String?>? regionUk,
-    Value<String?>? countryUk,
-    Value<String?>? storyUk,
     Value<double?>? latitude,
     Value<double?>? longitude,
     Value<DateTime?>? createdAt,
   }) {
     return LocalizedFarmersCompanion(
       id: id ?? this.id,
-      nameUk: nameUk ?? this.nameUk,
       imageUrl: imageUrl ?? this.imageUrl,
       flagUrl: flagUrl ?? this.flagUrl,
-      descriptionHtmlUk: descriptionHtmlUk ?? this.descriptionHtmlUk,
-      regionUk: regionUk ?? this.regionUk,
-      countryUk: countryUk ?? this.countryUk,
-      storyUk: storyUk ?? this.storyUk,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       createdAt: createdAt ?? this.createdAt,
@@ -1165,26 +771,11 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (nameUk.present) {
-      map['name_uk'] = Variable<String>(nameUk.value);
-    }
     if (imageUrl.present) {
       map['image_url'] = Variable<String>(imageUrl.value);
     }
     if (flagUrl.present) {
       map['flag_url'] = Variable<String>(flagUrl.value);
-    }
-    if (descriptionHtmlUk.present) {
-      map['description_html_uk'] = Variable<String>(descriptionHtmlUk.value);
-    }
-    if (regionUk.present) {
-      map['region_uk'] = Variable<String>(regionUk.value);
-    }
-    if (countryUk.present) {
-      map['country_uk'] = Variable<String>(countryUk.value);
-    }
-    if (storyUk.present) {
-      map['story_uk'] = Variable<String>(storyUk.value);
     }
     if (latitude.present) {
       map['latitude'] = Variable<double>(latitude.value);
@@ -1202,13 +793,8 @@ class LocalizedFarmersCompanion extends UpdateCompanion<LocalizedFarmer> {
   String toString() {
     return (StringBuffer('LocalizedFarmersCompanion(')
           ..write('id: $id, ')
-          ..write('nameUk: $nameUk, ')
           ..write('imageUrl: $imageUrl, ')
           ..write('flagUrl: $flagUrl, ')
-          ..write('descriptionHtmlUk: $descriptionHtmlUk, ')
-          ..write('regionUk: $regionUk, ')
-          ..write('countryUk: $countryUk, ')
-          ..write('storyUk: $storyUk, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
           ..write('createdAt: $createdAt')
@@ -1473,96 +1059,6 @@ class $LocalizedBeansTable extends LocalizedBeans
     ),
     defaultValue: const Constant(false),
   );
-  static const VerificationMeta _countryUkMeta = const VerificationMeta(
-    'countryUk',
-  );
-  @override
-  late final GeneratedColumn<String> countryUk = GeneratedColumn<String>(
-    'country_uk',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _regionUkMeta = const VerificationMeta(
-    'regionUk',
-  );
-  @override
-  late final GeneratedColumn<String> regionUk = GeneratedColumn<String>(
-    'region_uk',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _varietiesUkMeta = const VerificationMeta(
-    'varietiesUk',
-  );
-  @override
-  late final GeneratedColumn<String> varietiesUk = GeneratedColumn<String>(
-    'varieties_uk',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _flavorNotesUkMeta = const VerificationMeta(
-    'flavorNotesUk',
-  );
-  @override
-  late final GeneratedColumn<String> flavorNotesUk = GeneratedColumn<String>(
-    'flavor_notes_uk',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant('[]'),
-  );
-  static const VerificationMeta _processMethodUkMeta = const VerificationMeta(
-    'processMethodUk',
-  );
-  @override
-  late final GeneratedColumn<String> processMethodUk = GeneratedColumn<String>(
-    'process_method_uk',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _descriptionUkMeta = const VerificationMeta(
-    'descriptionUk',
-  );
-  @override
-  late final GeneratedColumn<String> descriptionUk = GeneratedColumn<String>(
-    'description_uk',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _farmDescriptionUkMeta = const VerificationMeta(
-    'farmDescriptionUk',
-  );
-  @override
-  late final GeneratedColumn<String> farmDescriptionUk =
-      GeneratedColumn<String>(
-        'farm_description_uk',
-        aliasedName,
-        true,
-        type: DriftSqlType.string,
-        requiredDuringInsert: false,
-      );
-  static const VerificationMeta _roastLevelUkMeta = const VerificationMeta(
-    'roastLevelUk',
-  );
-  @override
-  late final GeneratedColumn<String> roastLevelUk = GeneratedColumn<String>(
-    'roast_level_uk',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
   static const VerificationMeta _farmMeta = const VerificationMeta('farm');
   @override
   late final GeneratedColumn<String> farm = GeneratedColumn<String>(
@@ -1665,14 +1161,6 @@ class $LocalizedBeansTable extends LocalizedBeans
     url,
     farmerId,
     isDecaf,
-    countryUk,
-    regionUk,
-    varietiesUk,
-    flavorNotesUk,
-    processMethodUk,
-    descriptionUk,
-    farmDescriptionUk,
-    roastLevelUk,
     farm,
     farmPhotosUrlCover,
     washStation,
@@ -1840,72 +1328,6 @@ class $LocalizedBeansTable extends LocalizedBeans
         isDecaf.isAcceptableOrUnknown(data['is_decaf']!, _isDecafMeta),
       );
     }
-    if (data.containsKey('country_uk')) {
-      context.handle(
-        _countryUkMeta,
-        countryUk.isAcceptableOrUnknown(data['country_uk']!, _countryUkMeta),
-      );
-    }
-    if (data.containsKey('region_uk')) {
-      context.handle(
-        _regionUkMeta,
-        regionUk.isAcceptableOrUnknown(data['region_uk']!, _regionUkMeta),
-      );
-    }
-    if (data.containsKey('varieties_uk')) {
-      context.handle(
-        _varietiesUkMeta,
-        varietiesUk.isAcceptableOrUnknown(
-          data['varieties_uk']!,
-          _varietiesUkMeta,
-        ),
-      );
-    }
-    if (data.containsKey('flavor_notes_uk')) {
-      context.handle(
-        _flavorNotesUkMeta,
-        flavorNotesUk.isAcceptableOrUnknown(
-          data['flavor_notes_uk']!,
-          _flavorNotesUkMeta,
-        ),
-      );
-    }
-    if (data.containsKey('process_method_uk')) {
-      context.handle(
-        _processMethodUkMeta,
-        processMethodUk.isAcceptableOrUnknown(
-          data['process_method_uk']!,
-          _processMethodUkMeta,
-        ),
-      );
-    }
-    if (data.containsKey('description_uk')) {
-      context.handle(
-        _descriptionUkMeta,
-        descriptionUk.isAcceptableOrUnknown(
-          data['description_uk']!,
-          _descriptionUkMeta,
-        ),
-      );
-    }
-    if (data.containsKey('farm_description_uk')) {
-      context.handle(
-        _farmDescriptionUkMeta,
-        farmDescriptionUk.isAcceptableOrUnknown(
-          data['farm_description_uk']!,
-          _farmDescriptionUkMeta,
-        ),
-      );
-    }
-    if (data.containsKey('roast_level_uk')) {
-      context.handle(
-        _roastLevelUkMeta,
-        roastLevelUk.isAcceptableOrUnknown(
-          data['roast_level_uk']!,
-          _roastLevelUkMeta,
-        ),
-      );
-    }
     if (data.containsKey('farm')) {
       context.handle(
         _farmMeta,
@@ -2053,38 +1475,6 @@ class $LocalizedBeansTable extends LocalizedBeans
         DriftSqlType.bool,
         data['${effectivePrefix}is_decaf'],
       )!,
-      countryUk: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}country_uk'],
-      ),
-      regionUk: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}region_uk'],
-      ),
-      varietiesUk: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}varieties_uk'],
-      ),
-      flavorNotesUk: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}flavor_notes_uk'],
-      )!,
-      processMethodUk: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}process_method_uk'],
-      ),
-      descriptionUk: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}description_uk'],
-      ),
-      farmDescriptionUk: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}farm_description_uk'],
-      ),
-      roastLevelUk: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}roast_level_uk'],
-      ),
       farm: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}farm'],
@@ -2144,14 +1534,6 @@ class LocalizedBean extends DataClass implements Insertable<LocalizedBean> {
   final String url;
   final int? farmerId;
   final bool isDecaf;
-  final String? countryUk;
-  final String? regionUk;
-  final String? varietiesUk;
-  final String flavorNotesUk;
-  final String? processMethodUk;
-  final String? descriptionUk;
-  final String? farmDescriptionUk;
-  final String? roastLevelUk;
   final String? farm;
   final String? farmPhotosUrlCover;
   final String? washStation;
@@ -2181,14 +1563,6 @@ class LocalizedBean extends DataClass implements Insertable<LocalizedBean> {
     required this.url,
     this.farmerId,
     required this.isDecaf,
-    this.countryUk,
-    this.regionUk,
-    this.varietiesUk,
-    required this.flavorNotesUk,
-    this.processMethodUk,
-    this.descriptionUk,
-    this.farmDescriptionUk,
-    this.roastLevelUk,
     this.farm,
     this.farmPhotosUrlCover,
     this.washStation,
@@ -2241,28 +1615,6 @@ class LocalizedBean extends DataClass implements Insertable<LocalizedBean> {
       map['farmer_id'] = Variable<int>(farmerId);
     }
     map['is_decaf'] = Variable<bool>(isDecaf);
-    if (!nullToAbsent || countryUk != null) {
-      map['country_uk'] = Variable<String>(countryUk);
-    }
-    if (!nullToAbsent || regionUk != null) {
-      map['region_uk'] = Variable<String>(regionUk);
-    }
-    if (!nullToAbsent || varietiesUk != null) {
-      map['varieties_uk'] = Variable<String>(varietiesUk);
-    }
-    map['flavor_notes_uk'] = Variable<String>(flavorNotesUk);
-    if (!nullToAbsent || processMethodUk != null) {
-      map['process_method_uk'] = Variable<String>(processMethodUk);
-    }
-    if (!nullToAbsent || descriptionUk != null) {
-      map['description_uk'] = Variable<String>(descriptionUk);
-    }
-    if (!nullToAbsent || farmDescriptionUk != null) {
-      map['farm_description_uk'] = Variable<String>(farmDescriptionUk);
-    }
-    if (!nullToAbsent || roastLevelUk != null) {
-      map['roast_level_uk'] = Variable<String>(roastLevelUk);
-    }
     if (!nullToAbsent || farm != null) {
       map['farm'] = Variable<String>(farm);
     }
@@ -2326,28 +1678,6 @@ class LocalizedBean extends DataClass implements Insertable<LocalizedBean> {
           ? const Value.absent()
           : Value(farmerId),
       isDecaf: Value(isDecaf),
-      countryUk: countryUk == null && nullToAbsent
-          ? const Value.absent()
-          : Value(countryUk),
-      regionUk: regionUk == null && nullToAbsent
-          ? const Value.absent()
-          : Value(regionUk),
-      varietiesUk: varietiesUk == null && nullToAbsent
-          ? const Value.absent()
-          : Value(varietiesUk),
-      flavorNotesUk: Value(flavorNotesUk),
-      processMethodUk: processMethodUk == null && nullToAbsent
-          ? const Value.absent()
-          : Value(processMethodUk),
-      descriptionUk: descriptionUk == null && nullToAbsent
-          ? const Value.absent()
-          : Value(descriptionUk),
-      farmDescriptionUk: farmDescriptionUk == null && nullToAbsent
-          ? const Value.absent()
-          : Value(farmDescriptionUk),
-      roastLevelUk: roastLevelUk == null && nullToAbsent
-          ? const Value.absent()
-          : Value(roastLevelUk),
       farm: farm == null && nullToAbsent ? const Value.absent() : Value(farm),
       farmPhotosUrlCover: farmPhotosUrlCover == null && nullToAbsent
           ? const Value.absent()
@@ -2401,16 +1731,6 @@ class LocalizedBean extends DataClass implements Insertable<LocalizedBean> {
       url: serializer.fromJson<String>(json['url']),
       farmerId: serializer.fromJson<int?>(json['farmerId']),
       isDecaf: serializer.fromJson<bool>(json['isDecaf']),
-      countryUk: serializer.fromJson<String?>(json['countryUk']),
-      regionUk: serializer.fromJson<String?>(json['regionUk']),
-      varietiesUk: serializer.fromJson<String?>(json['varietiesUk']),
-      flavorNotesUk: serializer.fromJson<String>(json['flavorNotesUk']),
-      processMethodUk: serializer.fromJson<String?>(json['processMethodUk']),
-      descriptionUk: serializer.fromJson<String?>(json['descriptionUk']),
-      farmDescriptionUk: serializer.fromJson<String?>(
-        json['farmDescriptionUk'],
-      ),
-      roastLevelUk: serializer.fromJson<String?>(json['roastLevelUk']),
       farm: serializer.fromJson<String?>(json['farm']),
       farmPhotosUrlCover: serializer.fromJson<String?>(
         json['farmPhotosUrlCover'],
@@ -2449,14 +1769,6 @@ class LocalizedBean extends DataClass implements Insertable<LocalizedBean> {
       'url': serializer.toJson<String>(url),
       'farmerId': serializer.toJson<int?>(farmerId),
       'isDecaf': serializer.toJson<bool>(isDecaf),
-      'countryUk': serializer.toJson<String?>(countryUk),
-      'regionUk': serializer.toJson<String?>(regionUk),
-      'varietiesUk': serializer.toJson<String?>(varietiesUk),
-      'flavorNotesUk': serializer.toJson<String>(flavorNotesUk),
-      'processMethodUk': serializer.toJson<String?>(processMethodUk),
-      'descriptionUk': serializer.toJson<String?>(descriptionUk),
-      'farmDescriptionUk': serializer.toJson<String?>(farmDescriptionUk),
-      'roastLevelUk': serializer.toJson<String?>(roastLevelUk),
       'farm': serializer.toJson<String?>(farm),
       'farmPhotosUrlCover': serializer.toJson<String?>(farmPhotosUrlCover),
       'washStation': serializer.toJson<String?>(washStation),
@@ -2489,14 +1801,6 @@ class LocalizedBean extends DataClass implements Insertable<LocalizedBean> {
     String? url,
     Value<int?> farmerId = const Value.absent(),
     bool? isDecaf,
-    Value<String?> countryUk = const Value.absent(),
-    Value<String?> regionUk = const Value.absent(),
-    Value<String?> varietiesUk = const Value.absent(),
-    String? flavorNotesUk,
-    Value<String?> processMethodUk = const Value.absent(),
-    Value<String?> descriptionUk = const Value.absent(),
-    Value<String?> farmDescriptionUk = const Value.absent(),
-    Value<String?> roastLevelUk = const Value.absent(),
     Value<String?> farm = const Value.absent(),
     Value<String?> farmPhotosUrlCover = const Value.absent(),
     Value<String?> washStation = const Value.absent(),
@@ -2529,20 +1833,6 @@ class LocalizedBean extends DataClass implements Insertable<LocalizedBean> {
     url: url ?? this.url,
     farmerId: farmerId.present ? farmerId.value : this.farmerId,
     isDecaf: isDecaf ?? this.isDecaf,
-    countryUk: countryUk.present ? countryUk.value : this.countryUk,
-    regionUk: regionUk.present ? regionUk.value : this.regionUk,
-    varietiesUk: varietiesUk.present ? varietiesUk.value : this.varietiesUk,
-    flavorNotesUk: flavorNotesUk ?? this.flavorNotesUk,
-    processMethodUk: processMethodUk.present
-        ? processMethodUk.value
-        : this.processMethodUk,
-    descriptionUk: descriptionUk.present
-        ? descriptionUk.value
-        : this.descriptionUk,
-    farmDescriptionUk: farmDescriptionUk.present
-        ? farmDescriptionUk.value
-        : this.farmDescriptionUk,
-    roastLevelUk: roastLevelUk.present ? roastLevelUk.value : this.roastLevelUk,
     farm: farm.present ? farm.value : this.farm,
     farmPhotosUrlCover: farmPhotosUrlCover.present
         ? farmPhotosUrlCover.value
@@ -2594,26 +1884,6 @@ class LocalizedBean extends DataClass implements Insertable<LocalizedBean> {
       url: data.url.present ? data.url.value : this.url,
       farmerId: data.farmerId.present ? data.farmerId.value : this.farmerId,
       isDecaf: data.isDecaf.present ? data.isDecaf.value : this.isDecaf,
-      countryUk: data.countryUk.present ? data.countryUk.value : this.countryUk,
-      regionUk: data.regionUk.present ? data.regionUk.value : this.regionUk,
-      varietiesUk: data.varietiesUk.present
-          ? data.varietiesUk.value
-          : this.varietiesUk,
-      flavorNotesUk: data.flavorNotesUk.present
-          ? data.flavorNotesUk.value
-          : this.flavorNotesUk,
-      processMethodUk: data.processMethodUk.present
-          ? data.processMethodUk.value
-          : this.processMethodUk,
-      descriptionUk: data.descriptionUk.present
-          ? data.descriptionUk.value
-          : this.descriptionUk,
-      farmDescriptionUk: data.farmDescriptionUk.present
-          ? data.farmDescriptionUk.value
-          : this.farmDescriptionUk,
-      roastLevelUk: data.roastLevelUk.present
-          ? data.roastLevelUk.value
-          : this.roastLevelUk,
       farm: data.farm.present ? data.farm.value : this.farm,
       farmPhotosUrlCover: data.farmPhotosUrlCover.present
           ? data.farmPhotosUrlCover.value
@@ -2658,14 +1928,6 @@ class LocalizedBean extends DataClass implements Insertable<LocalizedBean> {
           ..write('url: $url, ')
           ..write('farmerId: $farmerId, ')
           ..write('isDecaf: $isDecaf, ')
-          ..write('countryUk: $countryUk, ')
-          ..write('regionUk: $regionUk, ')
-          ..write('varietiesUk: $varietiesUk, ')
-          ..write('flavorNotesUk: $flavorNotesUk, ')
-          ..write('processMethodUk: $processMethodUk, ')
-          ..write('descriptionUk: $descriptionUk, ')
-          ..write('farmDescriptionUk: $farmDescriptionUk, ')
-          ..write('roastLevelUk: $roastLevelUk, ')
           ..write('farm: $farm, ')
           ..write('farmPhotosUrlCover: $farmPhotosUrlCover, ')
           ..write('washStation: $washStation, ')
@@ -2700,14 +1962,6 @@ class LocalizedBean extends DataClass implements Insertable<LocalizedBean> {
     url,
     farmerId,
     isDecaf,
-    countryUk,
-    regionUk,
-    varietiesUk,
-    flavorNotesUk,
-    processMethodUk,
-    descriptionUk,
-    farmDescriptionUk,
-    roastLevelUk,
     farm,
     farmPhotosUrlCover,
     washStation,
@@ -2741,14 +1995,6 @@ class LocalizedBean extends DataClass implements Insertable<LocalizedBean> {
           other.url == this.url &&
           other.farmerId == this.farmerId &&
           other.isDecaf == this.isDecaf &&
-          other.countryUk == this.countryUk &&
-          other.regionUk == this.regionUk &&
-          other.varietiesUk == this.varietiesUk &&
-          other.flavorNotesUk == this.flavorNotesUk &&
-          other.processMethodUk == this.processMethodUk &&
-          other.descriptionUk == this.descriptionUk &&
-          other.farmDescriptionUk == this.farmDescriptionUk &&
-          other.roastLevelUk == this.roastLevelUk &&
           other.farm == this.farm &&
           other.farmPhotosUrlCover == this.farmPhotosUrlCover &&
           other.washStation == this.washStation &&
@@ -2780,14 +2026,6 @@ class LocalizedBeansCompanion extends UpdateCompanion<LocalizedBean> {
   final Value<String> url;
   final Value<int?> farmerId;
   final Value<bool> isDecaf;
-  final Value<String?> countryUk;
-  final Value<String?> regionUk;
-  final Value<String?> varietiesUk;
-  final Value<String> flavorNotesUk;
-  final Value<String?> processMethodUk;
-  final Value<String?> descriptionUk;
-  final Value<String?> farmDescriptionUk;
-  final Value<String?> roastLevelUk;
   final Value<String?> farm;
   final Value<String?> farmPhotosUrlCover;
   final Value<String?> washStation;
@@ -2817,14 +2055,6 @@ class LocalizedBeansCompanion extends UpdateCompanion<LocalizedBean> {
     this.url = const Value.absent(),
     this.farmerId = const Value.absent(),
     this.isDecaf = const Value.absent(),
-    this.countryUk = const Value.absent(),
-    this.regionUk = const Value.absent(),
-    this.varietiesUk = const Value.absent(),
-    this.flavorNotesUk = const Value.absent(),
-    this.processMethodUk = const Value.absent(),
-    this.descriptionUk = const Value.absent(),
-    this.farmDescriptionUk = const Value.absent(),
-    this.roastLevelUk = const Value.absent(),
     this.farm = const Value.absent(),
     this.farmPhotosUrlCover = const Value.absent(),
     this.washStation = const Value.absent(),
@@ -2855,14 +2085,6 @@ class LocalizedBeansCompanion extends UpdateCompanion<LocalizedBean> {
     this.url = const Value.absent(),
     this.farmerId = const Value.absent(),
     this.isDecaf = const Value.absent(),
-    this.countryUk = const Value.absent(),
-    this.regionUk = const Value.absent(),
-    this.varietiesUk = const Value.absent(),
-    this.flavorNotesUk = const Value.absent(),
-    this.processMethodUk = const Value.absent(),
-    this.descriptionUk = const Value.absent(),
-    this.farmDescriptionUk = const Value.absent(),
-    this.roastLevelUk = const Value.absent(),
     this.farm = const Value.absent(),
     this.farmPhotosUrlCover = const Value.absent(),
     this.washStation = const Value.absent(),
@@ -2893,14 +2115,6 @@ class LocalizedBeansCompanion extends UpdateCompanion<LocalizedBean> {
     Expression<String>? url,
     Expression<int>? farmerId,
     Expression<bool>? isDecaf,
-    Expression<String>? countryUk,
-    Expression<String>? regionUk,
-    Expression<String>? varietiesUk,
-    Expression<String>? flavorNotesUk,
-    Expression<String>? processMethodUk,
-    Expression<String>? descriptionUk,
-    Expression<String>? farmDescriptionUk,
-    Expression<String>? roastLevelUk,
     Expression<String>? farm,
     Expression<String>? farmPhotosUrlCover,
     Expression<String>? washStation,
@@ -2934,14 +2148,6 @@ class LocalizedBeansCompanion extends UpdateCompanion<LocalizedBean> {
       if (url != null) 'url': url,
       if (farmerId != null) 'farmer_id': farmerId,
       if (isDecaf != null) 'is_decaf': isDecaf,
-      if (countryUk != null) 'country_uk': countryUk,
-      if (regionUk != null) 'region_uk': regionUk,
-      if (varietiesUk != null) 'varieties_uk': varietiesUk,
-      if (flavorNotesUk != null) 'flavor_notes_uk': flavorNotesUk,
-      if (processMethodUk != null) 'process_method_uk': processMethodUk,
-      if (descriptionUk != null) 'description_uk': descriptionUk,
-      if (farmDescriptionUk != null) 'farm_description_uk': farmDescriptionUk,
-      if (roastLevelUk != null) 'roast_level_uk': roastLevelUk,
       if (farm != null) 'farm': farm,
       if (farmPhotosUrlCover != null)
         'farm_photos_url_cover': farmPhotosUrlCover,
@@ -2975,14 +2181,6 @@ class LocalizedBeansCompanion extends UpdateCompanion<LocalizedBean> {
     Value<String>? url,
     Value<int?>? farmerId,
     Value<bool>? isDecaf,
-    Value<String?>? countryUk,
-    Value<String?>? regionUk,
-    Value<String?>? varietiesUk,
-    Value<String>? flavorNotesUk,
-    Value<String?>? processMethodUk,
-    Value<String?>? descriptionUk,
-    Value<String?>? farmDescriptionUk,
-    Value<String?>? roastLevelUk,
     Value<String?>? farm,
     Value<String?>? farmPhotosUrlCover,
     Value<String?>? washStation,
@@ -3015,14 +2213,6 @@ class LocalizedBeansCompanion extends UpdateCompanion<LocalizedBean> {
       url: url ?? this.url,
       farmerId: farmerId ?? this.farmerId,
       isDecaf: isDecaf ?? this.isDecaf,
-      countryUk: countryUk ?? this.countryUk,
-      regionUk: regionUk ?? this.regionUk,
-      varietiesUk: varietiesUk ?? this.varietiesUk,
-      flavorNotesUk: flavorNotesUk ?? this.flavorNotesUk,
-      processMethodUk: processMethodUk ?? this.processMethodUk,
-      descriptionUk: descriptionUk ?? this.descriptionUk,
-      farmDescriptionUk: farmDescriptionUk ?? this.farmDescriptionUk,
-      roastLevelUk: roastLevelUk ?? this.roastLevelUk,
       farm: farm ?? this.farm,
       farmPhotosUrlCover: farmPhotosUrlCover ?? this.farmPhotosUrlCover,
       washStation: washStation ?? this.washStation,
@@ -3105,30 +2295,6 @@ class LocalizedBeansCompanion extends UpdateCompanion<LocalizedBean> {
     if (isDecaf.present) {
       map['is_decaf'] = Variable<bool>(isDecaf.value);
     }
-    if (countryUk.present) {
-      map['country_uk'] = Variable<String>(countryUk.value);
-    }
-    if (regionUk.present) {
-      map['region_uk'] = Variable<String>(regionUk.value);
-    }
-    if (varietiesUk.present) {
-      map['varieties_uk'] = Variable<String>(varietiesUk.value);
-    }
-    if (flavorNotesUk.present) {
-      map['flavor_notes_uk'] = Variable<String>(flavorNotesUk.value);
-    }
-    if (processMethodUk.present) {
-      map['process_method_uk'] = Variable<String>(processMethodUk.value);
-    }
-    if (descriptionUk.present) {
-      map['description_uk'] = Variable<String>(descriptionUk.value);
-    }
-    if (farmDescriptionUk.present) {
-      map['farm_description_uk'] = Variable<String>(farmDescriptionUk.value);
-    }
-    if (roastLevelUk.present) {
-      map['roast_level_uk'] = Variable<String>(roastLevelUk.value);
-    }
     if (farm.present) {
       map['farm'] = Variable<String>(farm.value);
     }
@@ -3177,14 +2343,6 @@ class LocalizedBeansCompanion extends UpdateCompanion<LocalizedBean> {
           ..write('url: $url, ')
           ..write('farmerId: $farmerId, ')
           ..write('isDecaf: $isDecaf, ')
-          ..write('countryUk: $countryUk, ')
-          ..write('regionUk: $regionUk, ')
-          ..write('varietiesUk: $varietiesUk, ')
-          ..write('flavorNotesUk: $flavorNotesUk, ')
-          ..write('processMethodUk: $processMethodUk, ')
-          ..write('descriptionUk: $descriptionUk, ')
-          ..write('farmDescriptionUk: $farmDescriptionUk, ')
-          ..write('roastLevelUk: $roastLevelUk, ')
           ..write('farm: $farm, ')
           ..write('farmPhotosUrlCover: $farmPhotosUrlCover, ')
           ..write('washStation: $washStation, ')
@@ -5608,29 +4766,6 @@ class $SpecialtyArticlesTable extends SpecialtyArticles
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
-  static const VerificationMeta _titleUkMeta = const VerificationMeta(
-    'titleUk',
-  );
-  @override
-  late final GeneratedColumn<String> titleUk = GeneratedColumn<String>(
-    'title_uk',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant('Тут має бути заголовок'),
-  );
-  static const VerificationMeta _subtitleUkMeta = const VerificationMeta(
-    'subtitleUk',
-  );
-  @override
-  late final GeneratedColumn<String> subtitleUk = GeneratedColumn<String>(
-    'subtitle_uk',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
   static const VerificationMeta _imageUrlMeta = const VerificationMeta(
     'imageUrl',
   );
@@ -5641,7 +4776,7 @@ class $SpecialtyArticlesTable extends SpecialtyArticles
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant('Тут має бути лінк на бакет'),
+    defaultValue: const Constant(''),
   );
   static const VerificationMeta _flagUrlMeta = const VerificationMeta(
     'flagUrl',
@@ -5653,19 +4788,7 @@ class $SpecialtyArticlesTable extends SpecialtyArticles
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant('Тут має бути лінк на прапор'),
-  );
-  static const VerificationMeta _contentHtmlUkMeta = const VerificationMeta(
-    'contentHtmlUk',
-  );
-  @override
-  late final GeneratedColumn<String> contentHtmlUk = GeneratedColumn<String>(
-    'content_html_uk',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant('Тут має бути текст статті'),
+    defaultValue: const Constant(''),
   );
   static const VerificationMeta _readTimeMinMeta = const VerificationMeta(
     'readTimeMin',
@@ -5680,15 +4803,7 @@ class $SpecialtyArticlesTable extends SpecialtyArticles
     defaultValue: const Constant(5),
   );
   @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    titleUk,
-    subtitleUk,
-    imageUrl,
-    flagUrl,
-    contentHtmlUk,
-    readTimeMin,
-  ];
+  List<GeneratedColumn> get $columns => [id, imageUrl, flagUrl, readTimeMin];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -5704,18 +4819,6 @@ class $SpecialtyArticlesTable extends SpecialtyArticles
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    if (data.containsKey('title_uk')) {
-      context.handle(
-        _titleUkMeta,
-        titleUk.isAcceptableOrUnknown(data['title_uk']!, _titleUkMeta),
-      );
-    }
-    if (data.containsKey('subtitle_uk')) {
-      context.handle(
-        _subtitleUkMeta,
-        subtitleUk.isAcceptableOrUnknown(data['subtitle_uk']!, _subtitleUkMeta),
-      );
-    }
     if (data.containsKey('image_url')) {
       context.handle(
         _imageUrlMeta,
@@ -5726,15 +4829,6 @@ class $SpecialtyArticlesTable extends SpecialtyArticles
       context.handle(
         _flagUrlMeta,
         flagUrl.isAcceptableOrUnknown(data['flag_url']!, _flagUrlMeta),
-      );
-    }
-    if (data.containsKey('content_html_uk')) {
-      context.handle(
-        _contentHtmlUkMeta,
-        contentHtmlUk.isAcceptableOrUnknown(
-          data['content_html_uk']!,
-          _contentHtmlUkMeta,
-        ),
       );
     }
     if (data.containsKey('read_time_min')) {
@@ -5759,14 +4853,6 @@ class $SpecialtyArticlesTable extends SpecialtyArticles
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
-      titleUk: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}title_uk'],
-      )!,
-      subtitleUk: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}subtitle_uk'],
-      ),
       imageUrl: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}image_url'],
@@ -5774,10 +4860,6 @@ class $SpecialtyArticlesTable extends SpecialtyArticles
       flagUrl: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}flag_url'],
-      )!,
-      contentHtmlUk: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}content_html_uk'],
       )!,
       readTimeMin: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
@@ -5795,32 +4877,21 @@ class $SpecialtyArticlesTable extends SpecialtyArticles
 class SpecialtyArticle extends DataClass
     implements Insertable<SpecialtyArticle> {
   final int id;
-  final String titleUk;
-  final String? subtitleUk;
   final String imageUrl;
   final String flagUrl;
-  final String contentHtmlUk;
   final int readTimeMin;
   const SpecialtyArticle({
     required this.id,
-    required this.titleUk,
-    this.subtitleUk,
     required this.imageUrl,
     required this.flagUrl,
-    required this.contentHtmlUk,
     required this.readTimeMin,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    map['title_uk'] = Variable<String>(titleUk);
-    if (!nullToAbsent || subtitleUk != null) {
-      map['subtitle_uk'] = Variable<String>(subtitleUk);
-    }
     map['image_url'] = Variable<String>(imageUrl);
     map['flag_url'] = Variable<String>(flagUrl);
-    map['content_html_uk'] = Variable<String>(contentHtmlUk);
     map['read_time_min'] = Variable<int>(readTimeMin);
     return map;
   }
@@ -5828,13 +4899,8 @@ class SpecialtyArticle extends DataClass
   SpecialtyArticlesCompanion toCompanion(bool nullToAbsent) {
     return SpecialtyArticlesCompanion(
       id: Value(id),
-      titleUk: Value(titleUk),
-      subtitleUk: subtitleUk == null && nullToAbsent
-          ? const Value.absent()
-          : Value(subtitleUk),
       imageUrl: Value(imageUrl),
       flagUrl: Value(flagUrl),
-      contentHtmlUk: Value(contentHtmlUk),
       readTimeMin: Value(readTimeMin),
     );
   }
@@ -5846,11 +4912,8 @@ class SpecialtyArticle extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return SpecialtyArticle(
       id: serializer.fromJson<int>(json['id']),
-      titleUk: serializer.fromJson<String>(json['titleUk']),
-      subtitleUk: serializer.fromJson<String?>(json['subtitleUk']),
       imageUrl: serializer.fromJson<String>(json['imageUrl']),
       flagUrl: serializer.fromJson<String>(json['flagUrl']),
-      contentHtmlUk: serializer.fromJson<String>(json['contentHtmlUk']),
       readTimeMin: serializer.fromJson<int>(json['readTimeMin']),
     );
   }
@@ -5859,44 +4922,28 @@ class SpecialtyArticle extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'titleUk': serializer.toJson<String>(titleUk),
-      'subtitleUk': serializer.toJson<String?>(subtitleUk),
       'imageUrl': serializer.toJson<String>(imageUrl),
       'flagUrl': serializer.toJson<String>(flagUrl),
-      'contentHtmlUk': serializer.toJson<String>(contentHtmlUk),
       'readTimeMin': serializer.toJson<int>(readTimeMin),
     };
   }
 
   SpecialtyArticle copyWith({
     int? id,
-    String? titleUk,
-    Value<String?> subtitleUk = const Value.absent(),
     String? imageUrl,
     String? flagUrl,
-    String? contentHtmlUk,
     int? readTimeMin,
   }) => SpecialtyArticle(
     id: id ?? this.id,
-    titleUk: titleUk ?? this.titleUk,
-    subtitleUk: subtitleUk.present ? subtitleUk.value : this.subtitleUk,
     imageUrl: imageUrl ?? this.imageUrl,
     flagUrl: flagUrl ?? this.flagUrl,
-    contentHtmlUk: contentHtmlUk ?? this.contentHtmlUk,
     readTimeMin: readTimeMin ?? this.readTimeMin,
   );
   SpecialtyArticle copyWithCompanion(SpecialtyArticlesCompanion data) {
     return SpecialtyArticle(
       id: data.id.present ? data.id.value : this.id,
-      titleUk: data.titleUk.present ? data.titleUk.value : this.titleUk,
-      subtitleUk: data.subtitleUk.present
-          ? data.subtitleUk.value
-          : this.subtitleUk,
       imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
       flagUrl: data.flagUrl.present ? data.flagUrl.value : this.flagUrl,
-      contentHtmlUk: data.contentHtmlUk.present
-          ? data.contentHtmlUk.value
-          : this.contentHtmlUk,
       readTimeMin: data.readTimeMin.present
           ? data.readTimeMin.value
           : this.readTimeMin,
@@ -5907,101 +4954,66 @@ class SpecialtyArticle extends DataClass
   String toString() {
     return (StringBuffer('SpecialtyArticle(')
           ..write('id: $id, ')
-          ..write('titleUk: $titleUk, ')
-          ..write('subtitleUk: $subtitleUk, ')
           ..write('imageUrl: $imageUrl, ')
           ..write('flagUrl: $flagUrl, ')
-          ..write('contentHtmlUk: $contentHtmlUk, ')
           ..write('readTimeMin: $readTimeMin')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-    id,
-    titleUk,
-    subtitleUk,
-    imageUrl,
-    flagUrl,
-    contentHtmlUk,
-    readTimeMin,
-  );
+  int get hashCode => Object.hash(id, imageUrl, flagUrl, readTimeMin);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is SpecialtyArticle &&
           other.id == this.id &&
-          other.titleUk == this.titleUk &&
-          other.subtitleUk == this.subtitleUk &&
           other.imageUrl == this.imageUrl &&
           other.flagUrl == this.flagUrl &&
-          other.contentHtmlUk == this.contentHtmlUk &&
           other.readTimeMin == this.readTimeMin);
 }
 
 class SpecialtyArticlesCompanion extends UpdateCompanion<SpecialtyArticle> {
   final Value<int> id;
-  final Value<String> titleUk;
-  final Value<String?> subtitleUk;
   final Value<String> imageUrl;
   final Value<String> flagUrl;
-  final Value<String> contentHtmlUk;
   final Value<int> readTimeMin;
   const SpecialtyArticlesCompanion({
     this.id = const Value.absent(),
-    this.titleUk = const Value.absent(),
-    this.subtitleUk = const Value.absent(),
     this.imageUrl = const Value.absent(),
     this.flagUrl = const Value.absent(),
-    this.contentHtmlUk = const Value.absent(),
     this.readTimeMin = const Value.absent(),
   });
   SpecialtyArticlesCompanion.insert({
     this.id = const Value.absent(),
-    this.titleUk = const Value.absent(),
-    this.subtitleUk = const Value.absent(),
     this.imageUrl = const Value.absent(),
     this.flagUrl = const Value.absent(),
-    this.contentHtmlUk = const Value.absent(),
     this.readTimeMin = const Value.absent(),
   });
   static Insertable<SpecialtyArticle> custom({
     Expression<int>? id,
-    Expression<String>? titleUk,
-    Expression<String>? subtitleUk,
     Expression<String>? imageUrl,
     Expression<String>? flagUrl,
-    Expression<String>? contentHtmlUk,
     Expression<int>? readTimeMin,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (titleUk != null) 'title_uk': titleUk,
-      if (subtitleUk != null) 'subtitle_uk': subtitleUk,
       if (imageUrl != null) 'image_url': imageUrl,
       if (flagUrl != null) 'flag_url': flagUrl,
-      if (contentHtmlUk != null) 'content_html_uk': contentHtmlUk,
       if (readTimeMin != null) 'read_time_min': readTimeMin,
     });
   }
 
   SpecialtyArticlesCompanion copyWith({
     Value<int>? id,
-    Value<String>? titleUk,
-    Value<String?>? subtitleUk,
     Value<String>? imageUrl,
     Value<String>? flagUrl,
-    Value<String>? contentHtmlUk,
     Value<int>? readTimeMin,
   }) {
     return SpecialtyArticlesCompanion(
       id: id ?? this.id,
-      titleUk: titleUk ?? this.titleUk,
-      subtitleUk: subtitleUk ?? this.subtitleUk,
       imageUrl: imageUrl ?? this.imageUrl,
       flagUrl: flagUrl ?? this.flagUrl,
-      contentHtmlUk: contentHtmlUk ?? this.contentHtmlUk,
       readTimeMin: readTimeMin ?? this.readTimeMin,
     );
   }
@@ -6012,20 +5024,11 @@ class SpecialtyArticlesCompanion extends UpdateCompanion<SpecialtyArticle> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (titleUk.present) {
-      map['title_uk'] = Variable<String>(titleUk.value);
-    }
-    if (subtitleUk.present) {
-      map['subtitle_uk'] = Variable<String>(subtitleUk.value);
-    }
     if (imageUrl.present) {
       map['image_url'] = Variable<String>(imageUrl.value);
     }
     if (flagUrl.present) {
       map['flag_url'] = Variable<String>(flagUrl.value);
-    }
-    if (contentHtmlUk.present) {
-      map['content_html_uk'] = Variable<String>(contentHtmlUk.value);
     }
     if (readTimeMin.present) {
       map['read_time_min'] = Variable<int>(readTimeMin.value);
@@ -6037,11 +5040,8 @@ class SpecialtyArticlesCompanion extends UpdateCompanion<SpecialtyArticle> {
   String toString() {
     return (StringBuffer('SpecialtyArticlesCompanion(')
           ..write('id: $id, ')
-          ..write('titleUk: $titleUk, ')
-          ..write('subtitleUk: $subtitleUk, ')
           ..write('imageUrl: $imageUrl, ')
           ..write('flagUrl: $flagUrl, ')
-          ..write('contentHtmlUk: $contentHtmlUk, ')
           ..write('readTimeMin: $readTimeMin')
           ..write(')'))
         .toString();
@@ -8748,28 +7748,6 @@ class $BrewingRecipesTable extends BrewingRecipes
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
-  static const VerificationMeta _nameUkMeta = const VerificationMeta('nameUk');
-  @override
-  late final GeneratedColumn<String> nameUk = GeneratedColumn<String>(
-    'name_uk',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant('Назва методу'),
-  );
-  static const VerificationMeta _descriptionUkMeta = const VerificationMeta(
-    'descriptionUk',
-  );
-  @override
-  late final GeneratedColumn<String> descriptionUk = GeneratedColumn<String>(
-    'description_uk',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant('Тут має бути опис'),
-  );
   static const VerificationMeta _imageUrlMeta = const VerificationMeta(
     'imageUrl',
   );
@@ -8780,7 +7758,7 @@ class $BrewingRecipesTable extends BrewingRecipes
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant('Тут має бути лінк на фото'),
+    defaultValue: const Constant(''),
   );
   static const VerificationMeta _ratioGramsPerMlMeta = const VerificationMeta(
     'ratioGramsPerMl',
@@ -8867,8 +7845,6 @@ class $BrewingRecipesTable extends BrewingRecipes
   List<GeneratedColumn> get $columns => [
     id,
     methodKey,
-    nameUk,
-    descriptionUk,
     imageUrl,
     ratioGramsPerMl,
     tempC,
@@ -8900,21 +7876,6 @@ class $BrewingRecipesTable extends BrewingRecipes
       );
     } else if (isInserting) {
       context.missing(_methodKeyMeta);
-    }
-    if (data.containsKey('name_uk')) {
-      context.handle(
-        _nameUkMeta,
-        nameUk.isAcceptableOrUnknown(data['name_uk']!, _nameUkMeta),
-      );
-    }
-    if (data.containsKey('description_uk')) {
-      context.handle(
-        _descriptionUkMeta,
-        descriptionUk.isAcceptableOrUnknown(
-          data['description_uk']!,
-          _descriptionUkMeta,
-        ),
-      );
     }
     if (data.containsKey('image_url')) {
       context.handle(
@@ -8990,14 +7951,6 @@ class $BrewingRecipesTable extends BrewingRecipes
         DriftSqlType.string,
         data['${effectivePrefix}method_key'],
       )!,
-      nameUk: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}name_uk'],
-      )!,
-      descriptionUk: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}description_uk'],
-      )!,
       imageUrl: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}image_url'],
@@ -9042,8 +7995,6 @@ class $BrewingRecipesTable extends BrewingRecipes
 class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
   final int id;
   final String methodKey;
-  final String nameUk;
-  final String descriptionUk;
   final String imageUrl;
   final double ratioGramsPerMl;
   final double tempC;
@@ -9055,8 +8006,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
   const BrewingRecipe({
     required this.id,
     required this.methodKey,
-    required this.nameUk,
-    required this.descriptionUk,
     required this.imageUrl,
     required this.ratioGramsPerMl,
     required this.tempC,
@@ -9071,8 +8020,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['method_key'] = Variable<String>(methodKey);
-    map['name_uk'] = Variable<String>(nameUk);
-    map['description_uk'] = Variable<String>(descriptionUk);
     map['image_url'] = Variable<String>(imageUrl);
     map['ratio_grams_per_ml'] = Variable<double>(ratioGramsPerMl);
     map['temp_c'] = Variable<double>(tempC);
@@ -9090,8 +8037,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
     return BrewingRecipesCompanion(
       id: Value(id),
       methodKey: Value(methodKey),
-      nameUk: Value(nameUk),
-      descriptionUk: Value(descriptionUk),
       imageUrl: Value(imageUrl),
       ratioGramsPerMl: Value(ratioGramsPerMl),
       tempC: Value(tempC),
@@ -9113,8 +8058,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
     return BrewingRecipe(
       id: serializer.fromJson<int>(json['id']),
       methodKey: serializer.fromJson<String>(json['methodKey']),
-      nameUk: serializer.fromJson<String>(json['nameUk']),
-      descriptionUk: serializer.fromJson<String>(json['descriptionUk']),
       imageUrl: serializer.fromJson<String>(json['imageUrl']),
       ratioGramsPerMl: serializer.fromJson<double>(json['ratioGramsPerMl']),
       tempC: serializer.fromJson<double>(json['tempC']),
@@ -9131,8 +8074,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'methodKey': serializer.toJson<String>(methodKey),
-      'nameUk': serializer.toJson<String>(nameUk),
-      'descriptionUk': serializer.toJson<String>(descriptionUk),
       'imageUrl': serializer.toJson<String>(imageUrl),
       'ratioGramsPerMl': serializer.toJson<double>(ratioGramsPerMl),
       'tempC': serializer.toJson<double>(tempC),
@@ -9147,8 +8088,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
   BrewingRecipe copyWith({
     int? id,
     String? methodKey,
-    String? nameUk,
-    String? descriptionUk,
     String? imageUrl,
     double? ratioGramsPerMl,
     double? tempC,
@@ -9160,8 +8099,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
   }) => BrewingRecipe(
     id: id ?? this.id,
     methodKey: methodKey ?? this.methodKey,
-    nameUk: nameUk ?? this.nameUk,
-    descriptionUk: descriptionUk ?? this.descriptionUk,
     imageUrl: imageUrl ?? this.imageUrl,
     ratioGramsPerMl: ratioGramsPerMl ?? this.ratioGramsPerMl,
     tempC: tempC ?? this.tempC,
@@ -9175,10 +8112,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
     return BrewingRecipe(
       id: data.id.present ? data.id.value : this.id,
       methodKey: data.methodKey.present ? data.methodKey.value : this.methodKey,
-      nameUk: data.nameUk.present ? data.nameUk.value : this.nameUk,
-      descriptionUk: data.descriptionUk.present
-          ? data.descriptionUk.value
-          : this.descriptionUk,
       imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
       ratioGramsPerMl: data.ratioGramsPerMl.present
           ? data.ratioGramsPerMl.value
@@ -9203,8 +8136,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
     return (StringBuffer('BrewingRecipe(')
           ..write('id: $id, ')
           ..write('methodKey: $methodKey, ')
-          ..write('nameUk: $nameUk, ')
-          ..write('descriptionUk: $descriptionUk, ')
           ..write('imageUrl: $imageUrl, ')
           ..write('ratioGramsPerMl: $ratioGramsPerMl, ')
           ..write('tempC: $tempC, ')
@@ -9221,8 +8152,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
   int get hashCode => Object.hash(
     id,
     methodKey,
-    nameUk,
-    descriptionUk,
     imageUrl,
     ratioGramsPerMl,
     tempC,
@@ -9238,8 +8167,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
       (other is BrewingRecipe &&
           other.id == this.id &&
           other.methodKey == this.methodKey &&
-          other.nameUk == this.nameUk &&
-          other.descriptionUk == this.descriptionUk &&
           other.imageUrl == this.imageUrl &&
           other.ratioGramsPerMl == this.ratioGramsPerMl &&
           other.tempC == this.tempC &&
@@ -9253,8 +8180,6 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
 class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
   final Value<int> id;
   final Value<String> methodKey;
-  final Value<String> nameUk;
-  final Value<String> descriptionUk;
   final Value<String> imageUrl;
   final Value<double> ratioGramsPerMl;
   final Value<double> tempC;
@@ -9266,8 +8191,6 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
   const BrewingRecipesCompanion({
     this.id = const Value.absent(),
     this.methodKey = const Value.absent(),
-    this.nameUk = const Value.absent(),
-    this.descriptionUk = const Value.absent(),
     this.imageUrl = const Value.absent(),
     this.ratioGramsPerMl = const Value.absent(),
     this.tempC = const Value.absent(),
@@ -9280,8 +8203,6 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
   BrewingRecipesCompanion.insert({
     this.id = const Value.absent(),
     required String methodKey,
-    this.nameUk = const Value.absent(),
-    this.descriptionUk = const Value.absent(),
     this.imageUrl = const Value.absent(),
     this.ratioGramsPerMl = const Value.absent(),
     this.tempC = const Value.absent(),
@@ -9294,8 +8215,6 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
   static Insertable<BrewingRecipe> custom({
     Expression<int>? id,
     Expression<String>? methodKey,
-    Expression<String>? nameUk,
-    Expression<String>? descriptionUk,
     Expression<String>? imageUrl,
     Expression<double>? ratioGramsPerMl,
     Expression<double>? tempC,
@@ -9308,8 +8227,6 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (methodKey != null) 'method_key': methodKey,
-      if (nameUk != null) 'name_uk': nameUk,
-      if (descriptionUk != null) 'description_uk': descriptionUk,
       if (imageUrl != null) 'image_url': imageUrl,
       if (ratioGramsPerMl != null) 'ratio_grams_per_ml': ratioGramsPerMl,
       if (tempC != null) 'temp_c': tempC,
@@ -9324,8 +8241,6 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
   BrewingRecipesCompanion copyWith({
     Value<int>? id,
     Value<String>? methodKey,
-    Value<String>? nameUk,
-    Value<String>? descriptionUk,
     Value<String>? imageUrl,
     Value<double>? ratioGramsPerMl,
     Value<double>? tempC,
@@ -9338,8 +8253,6 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
     return BrewingRecipesCompanion(
       id: id ?? this.id,
       methodKey: methodKey ?? this.methodKey,
-      nameUk: nameUk ?? this.nameUk,
-      descriptionUk: descriptionUk ?? this.descriptionUk,
       imageUrl: imageUrl ?? this.imageUrl,
       ratioGramsPerMl: ratioGramsPerMl ?? this.ratioGramsPerMl,
       tempC: tempC ?? this.tempC,
@@ -9359,12 +8272,6 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
     }
     if (methodKey.present) {
       map['method_key'] = Variable<String>(methodKey.value);
-    }
-    if (nameUk.present) {
-      map['name_uk'] = Variable<String>(nameUk.value);
-    }
-    if (descriptionUk.present) {
-      map['description_uk'] = Variable<String>(descriptionUk.value);
     }
     if (imageUrl.present) {
       map['image_url'] = Variable<String>(imageUrl.value);
@@ -9398,8 +8305,6 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
     return (StringBuffer('BrewingRecipesCompanion(')
           ..write('id: $id, ')
           ..write('methodKey: $methodKey, ')
-          ..write('nameUk: $nameUk, ')
-          ..write('descriptionUk: $descriptionUk, ')
           ..write('imageUrl: $imageUrl, ')
           ..write('ratioGramsPerMl: $ratioGramsPerMl, ')
           ..write('tempC: $tempC, ')
@@ -11671,9 +10576,6 @@ typedef $$LocalizedBrandsTableCreateCompanionBuilder =
       required String name,
       Value<String?> logoUrl,
       Value<String?> siteUrl,
-      Value<String?> shortDescUk,
-      Value<String?> fullDescUk,
-      Value<String?> locationUk,
       Value<DateTime?> createdAt,
     });
 typedef $$LocalizedBrandsTableUpdateCompanionBuilder =
@@ -11683,9 +10585,6 @@ typedef $$LocalizedBrandsTableUpdateCompanionBuilder =
       Value<String> name,
       Value<String?> logoUrl,
       Value<String?> siteUrl,
-      Value<String?> shortDescUk,
-      Value<String?> fullDescUk,
-      Value<String?> locationUk,
       Value<DateTime?> createdAt,
     });
 
@@ -11800,21 +10699,6 @@ class $$LocalizedBrandsTableFilterComposer
 
   ColumnFilters<String> get siteUrl => $composableBuilder(
     column: $table.siteUrl,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get shortDescUk => $composableBuilder(
-    column: $table.shortDescUk,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get fullDescUk => $composableBuilder(
-    column: $table.fullDescUk,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get locationUk => $composableBuilder(
-    column: $table.locationUk,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -11935,21 +10819,6 @@ class $$LocalizedBrandsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get shortDescUk => $composableBuilder(
-    column: $table.shortDescUk,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get fullDescUk => $composableBuilder(
-    column: $table.fullDescUk,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get locationUk => $composableBuilder(
-    column: $table.locationUk,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -11979,21 +10848,6 @@ class $$LocalizedBrandsTableAnnotationComposer
 
   GeneratedColumn<String> get siteUrl =>
       $composableBuilder(column: $table.siteUrl, builder: (column) => column);
-
-  GeneratedColumn<String> get shortDescUk => $composableBuilder(
-    column: $table.shortDescUk,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get fullDescUk => $composableBuilder(
-    column: $table.fullDescUk,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get locationUk => $composableBuilder(
-    column: $table.locationUk,
-    builder: (column) => column,
-  );
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -12117,9 +10971,6 @@ class $$LocalizedBrandsTableTableManager
                 Value<String> name = const Value.absent(),
                 Value<String?> logoUrl = const Value.absent(),
                 Value<String?> siteUrl = const Value.absent(),
-                Value<String?> shortDescUk = const Value.absent(),
-                Value<String?> fullDescUk = const Value.absent(),
-                Value<String?> locationUk = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
               }) => LocalizedBrandsCompanion(
                 id: id,
@@ -12127,9 +10978,6 @@ class $$LocalizedBrandsTableTableManager
                 name: name,
                 logoUrl: logoUrl,
                 siteUrl: siteUrl,
-                shortDescUk: shortDescUk,
-                fullDescUk: fullDescUk,
-                locationUk: locationUk,
                 createdAt: createdAt,
               ),
           createCompanionCallback:
@@ -12139,9 +10987,6 @@ class $$LocalizedBrandsTableTableManager
                 required String name,
                 Value<String?> logoUrl = const Value.absent(),
                 Value<String?> siteUrl = const Value.absent(),
-                Value<String?> shortDescUk = const Value.absent(),
-                Value<String?> fullDescUk = const Value.absent(),
-                Value<String?> locationUk = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
               }) => LocalizedBrandsCompanion.insert(
                 id: id,
@@ -12149,9 +10994,6 @@ class $$LocalizedBrandsTableTableManager
                 name: name,
                 logoUrl: logoUrl,
                 siteUrl: siteUrl,
-                shortDescUk: shortDescUk,
-                fullDescUk: fullDescUk,
-                locationUk: locationUk,
                 createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0
@@ -12271,13 +11113,8 @@ typedef $$LocalizedBrandsTableProcessedTableManager =
 typedef $$LocalizedFarmersTableCreateCompanionBuilder =
     LocalizedFarmersCompanion Function({
       Value<int> id,
-      Value<String> nameUk,
       Value<String> imageUrl,
       Value<String> flagUrl,
-      Value<String> descriptionHtmlUk,
-      Value<String?> regionUk,
-      Value<String?> countryUk,
-      Value<String?> storyUk,
       Value<double?> latitude,
       Value<double?> longitude,
       Value<DateTime?> createdAt,
@@ -12285,13 +11122,8 @@ typedef $$LocalizedFarmersTableCreateCompanionBuilder =
 typedef $$LocalizedFarmersTableUpdateCompanionBuilder =
     LocalizedFarmersCompanion Function({
       Value<int> id,
-      Value<String> nameUk,
       Value<String> imageUrl,
       Value<String> flagUrl,
-      Value<String> descriptionHtmlUk,
-      Value<String?> regionUk,
-      Value<String?> countryUk,
-      Value<String?> storyUk,
       Value<double?> latitude,
       Value<double?> longitude,
       Value<DateTime?> createdAt,
@@ -12370,11 +11202,6 @@ class $$LocalizedFarmersTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get nameUk => $composableBuilder(
-    column: $table.nameUk,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get imageUrl => $composableBuilder(
     column: $table.imageUrl,
     builder: (column) => ColumnFilters(column),
@@ -12382,26 +11209,6 @@ class $$LocalizedFarmersTableFilterComposer
 
   ColumnFilters<String> get flagUrl => $composableBuilder(
     column: $table.flagUrl,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get descriptionHtmlUk => $composableBuilder(
-    column: $table.descriptionHtmlUk,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get regionUk => $composableBuilder(
-    column: $table.regionUk,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get countryUk => $composableBuilder(
-    column: $table.countryUk,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get storyUk => $composableBuilder(
-    column: $table.storyUk,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -12489,11 +11296,6 @@ class $$LocalizedFarmersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get nameUk => $composableBuilder(
-    column: $table.nameUk,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get imageUrl => $composableBuilder(
     column: $table.imageUrl,
     builder: (column) => ColumnOrderings(column),
@@ -12501,26 +11303,6 @@ class $$LocalizedFarmersTableOrderingComposer
 
   ColumnOrderings<String> get flagUrl => $composableBuilder(
     column: $table.flagUrl,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get descriptionHtmlUk => $composableBuilder(
-    column: $table.descriptionHtmlUk,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get regionUk => $composableBuilder(
-    column: $table.regionUk,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get countryUk => $composableBuilder(
-    column: $table.countryUk,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get storyUk => $composableBuilder(
-    column: $table.storyUk,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -12552,28 +11334,11 @@ class $$LocalizedFarmersTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get nameUk =>
-      $composableBuilder(column: $table.nameUk, builder: (column) => column);
-
   GeneratedColumn<String> get imageUrl =>
       $composableBuilder(column: $table.imageUrl, builder: (column) => column);
 
   GeneratedColumn<String> get flagUrl =>
       $composableBuilder(column: $table.flagUrl, builder: (column) => column);
-
-  GeneratedColumn<String> get descriptionHtmlUk => $composableBuilder(
-    column: $table.descriptionHtmlUk,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get regionUk =>
-      $composableBuilder(column: $table.regionUk, builder: (column) => column);
-
-  GeneratedColumn<String> get countryUk =>
-      $composableBuilder(column: $table.countryUk, builder: (column) => column);
-
-  GeneratedColumn<String> get storyUk =>
-      $composableBuilder(column: $table.storyUk, builder: (column) => column);
 
   GeneratedColumn<double> get latitude =>
       $composableBuilder(column: $table.latitude, builder: (column) => column);
@@ -12673,25 +11438,15 @@ class $$LocalizedFarmersTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                Value<String> nameUk = const Value.absent(),
                 Value<String> imageUrl = const Value.absent(),
                 Value<String> flagUrl = const Value.absent(),
-                Value<String> descriptionHtmlUk = const Value.absent(),
-                Value<String?> regionUk = const Value.absent(),
-                Value<String?> countryUk = const Value.absent(),
-                Value<String?> storyUk = const Value.absent(),
                 Value<double?> latitude = const Value.absent(),
                 Value<double?> longitude = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
               }) => LocalizedFarmersCompanion(
                 id: id,
-                nameUk: nameUk,
                 imageUrl: imageUrl,
                 flagUrl: flagUrl,
-                descriptionHtmlUk: descriptionHtmlUk,
-                regionUk: regionUk,
-                countryUk: countryUk,
-                storyUk: storyUk,
                 latitude: latitude,
                 longitude: longitude,
                 createdAt: createdAt,
@@ -12699,25 +11454,15 @@ class $$LocalizedFarmersTableTableManager
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                Value<String> nameUk = const Value.absent(),
                 Value<String> imageUrl = const Value.absent(),
                 Value<String> flagUrl = const Value.absent(),
-                Value<String> descriptionHtmlUk = const Value.absent(),
-                Value<String?> regionUk = const Value.absent(),
-                Value<String?> countryUk = const Value.absent(),
-                Value<String?> storyUk = const Value.absent(),
                 Value<double?> latitude = const Value.absent(),
                 Value<double?> longitude = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
               }) => LocalizedFarmersCompanion.insert(
                 id: id,
-                nameUk: nameUk,
                 imageUrl: imageUrl,
                 flagUrl: flagUrl,
-                descriptionHtmlUk: descriptionHtmlUk,
-                regionUk: regionUk,
-                countryUk: countryUk,
-                storyUk: storyUk,
                 latitude: latitude,
                 longitude: longitude,
                 createdAt: createdAt,
@@ -12835,14 +11580,6 @@ typedef $$LocalizedBeansTableCreateCompanionBuilder =
       Value<String> url,
       Value<int?> farmerId,
       Value<bool> isDecaf,
-      Value<String?> countryUk,
-      Value<String?> regionUk,
-      Value<String?> varietiesUk,
-      Value<String> flavorNotesUk,
-      Value<String?> processMethodUk,
-      Value<String?> descriptionUk,
-      Value<String?> farmDescriptionUk,
-      Value<String?> roastLevelUk,
       Value<String?> farm,
       Value<String?> farmPhotosUrlCover,
       Value<String?> washStation,
@@ -12874,14 +11611,6 @@ typedef $$LocalizedBeansTableUpdateCompanionBuilder =
       Value<String> url,
       Value<int?> farmerId,
       Value<bool> isDecaf,
-      Value<String?> countryUk,
-      Value<String?> regionUk,
-      Value<String?> varietiesUk,
-      Value<String> flavorNotesUk,
-      Value<String?> processMethodUk,
-      Value<String?> descriptionUk,
-      Value<String?> farmDescriptionUk,
-      Value<String?> roastLevelUk,
       Value<String?> farm,
       Value<String?> farmPhotosUrlCover,
       Value<String?> washStation,
@@ -13094,46 +11823,6 @@ class $$LocalizedBeansTableFilterComposer
 
   ColumnFilters<bool> get isDecaf => $composableBuilder(
     column: $table.isDecaf,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get countryUk => $composableBuilder(
-    column: $table.countryUk,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get regionUk => $composableBuilder(
-    column: $table.regionUk,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get varietiesUk => $composableBuilder(
-    column: $table.varietiesUk,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get flavorNotesUk => $composableBuilder(
-    column: $table.flavorNotesUk,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get processMethodUk => $composableBuilder(
-    column: $table.processMethodUk,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get descriptionUk => $composableBuilder(
-    column: $table.descriptionUk,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get farmDescriptionUk => $composableBuilder(
-    column: $table.farmDescriptionUk,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get roastLevelUk => $composableBuilder(
-    column: $table.roastLevelUk,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -13375,46 +12064,6 @@ class $$LocalizedBeansTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get countryUk => $composableBuilder(
-    column: $table.countryUk,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get regionUk => $composableBuilder(
-    column: $table.regionUk,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get varietiesUk => $composableBuilder(
-    column: $table.varietiesUk,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get flavorNotesUk => $composableBuilder(
-    column: $table.flavorNotesUk,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get processMethodUk => $composableBuilder(
-    column: $table.processMethodUk,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get descriptionUk => $composableBuilder(
-    column: $table.descriptionUk,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get farmDescriptionUk => $composableBuilder(
-    column: $table.farmDescriptionUk,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get roastLevelUk => $composableBuilder(
-    column: $table.roastLevelUk,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get farm => $composableBuilder(
     column: $table.farm,
     builder: (column) => ColumnOrderings(column),
@@ -13578,42 +12227,6 @@ class $$LocalizedBeansTableAnnotationComposer
 
   GeneratedColumn<bool> get isDecaf =>
       $composableBuilder(column: $table.isDecaf, builder: (column) => column);
-
-  GeneratedColumn<String> get countryUk =>
-      $composableBuilder(column: $table.countryUk, builder: (column) => column);
-
-  GeneratedColumn<String> get regionUk =>
-      $composableBuilder(column: $table.regionUk, builder: (column) => column);
-
-  GeneratedColumn<String> get varietiesUk => $composableBuilder(
-    column: $table.varietiesUk,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get flavorNotesUk => $composableBuilder(
-    column: $table.flavorNotesUk,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get processMethodUk => $composableBuilder(
-    column: $table.processMethodUk,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get descriptionUk => $composableBuilder(
-    column: $table.descriptionUk,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get farmDescriptionUk => $composableBuilder(
-    column: $table.farmDescriptionUk,
-    builder: (column) => column,
-  );
-
-  GeneratedColumn<String> get roastLevelUk => $composableBuilder(
-    column: $table.roastLevelUk,
-    builder: (column) => column,
-  );
 
   GeneratedColumn<String> get farm =>
       $composableBuilder(column: $table.farm, builder: (column) => column);
@@ -13802,14 +12415,6 @@ class $$LocalizedBeansTableTableManager
                 Value<String> url = const Value.absent(),
                 Value<int?> farmerId = const Value.absent(),
                 Value<bool> isDecaf = const Value.absent(),
-                Value<String?> countryUk = const Value.absent(),
-                Value<String?> regionUk = const Value.absent(),
-                Value<String?> varietiesUk = const Value.absent(),
-                Value<String> flavorNotesUk = const Value.absent(),
-                Value<String?> processMethodUk = const Value.absent(),
-                Value<String?> descriptionUk = const Value.absent(),
-                Value<String?> farmDescriptionUk = const Value.absent(),
-                Value<String?> roastLevelUk = const Value.absent(),
                 Value<String?> farm = const Value.absent(),
                 Value<String?> farmPhotosUrlCover = const Value.absent(),
                 Value<String?> washStation = const Value.absent(),
@@ -13839,14 +12444,6 @@ class $$LocalizedBeansTableTableManager
                 url: url,
                 farmerId: farmerId,
                 isDecaf: isDecaf,
-                countryUk: countryUk,
-                regionUk: regionUk,
-                varietiesUk: varietiesUk,
-                flavorNotesUk: flavorNotesUk,
-                processMethodUk: processMethodUk,
-                descriptionUk: descriptionUk,
-                farmDescriptionUk: farmDescriptionUk,
-                roastLevelUk: roastLevelUk,
                 farm: farm,
                 farmPhotosUrlCover: farmPhotosUrlCover,
                 washStation: washStation,
@@ -13878,14 +12475,6 @@ class $$LocalizedBeansTableTableManager
                 Value<String> url = const Value.absent(),
                 Value<int?> farmerId = const Value.absent(),
                 Value<bool> isDecaf = const Value.absent(),
-                Value<String?> countryUk = const Value.absent(),
-                Value<String?> regionUk = const Value.absent(),
-                Value<String?> varietiesUk = const Value.absent(),
-                Value<String> flavorNotesUk = const Value.absent(),
-                Value<String?> processMethodUk = const Value.absent(),
-                Value<String?> descriptionUk = const Value.absent(),
-                Value<String?> farmDescriptionUk = const Value.absent(),
-                Value<String?> roastLevelUk = const Value.absent(),
                 Value<String?> farm = const Value.absent(),
                 Value<String?> farmPhotosUrlCover = const Value.absent(),
                 Value<String?> washStation = const Value.absent(),
@@ -13915,14 +12504,6 @@ class $$LocalizedBeansTableTableManager
                 url: url,
                 farmerId: farmerId,
                 isDecaf: isDecaf,
-                countryUk: countryUk,
-                regionUk: regionUk,
-                varietiesUk: varietiesUk,
-                flavorNotesUk: flavorNotesUk,
-                processMethodUk: processMethodUk,
-                descriptionUk: descriptionUk,
-                farmDescriptionUk: farmDescriptionUk,
-                roastLevelUk: roastLevelUk,
                 farm: farm,
                 farmPhotosUrlCover: farmPhotosUrlCover,
                 washStation: washStation,
@@ -15982,21 +14563,15 @@ typedef $$SphereRegionTranslationsTableProcessedTableManager =
 typedef $$SpecialtyArticlesTableCreateCompanionBuilder =
     SpecialtyArticlesCompanion Function({
       Value<int> id,
-      Value<String> titleUk,
-      Value<String?> subtitleUk,
       Value<String> imageUrl,
       Value<String> flagUrl,
-      Value<String> contentHtmlUk,
       Value<int> readTimeMin,
     });
 typedef $$SpecialtyArticlesTableUpdateCompanionBuilder =
     SpecialtyArticlesCompanion Function({
       Value<int> id,
-      Value<String> titleUk,
-      Value<String?> subtitleUk,
       Value<String> imageUrl,
       Value<String> flagUrl,
-      Value<String> contentHtmlUk,
       Value<int> readTimeMin,
     });
 
@@ -16056,16 +14631,6 @@ class $$SpecialtyArticlesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get titleUk => $composableBuilder(
-    column: $table.titleUk,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get subtitleUk => $composableBuilder(
-    column: $table.subtitleUk,
-    builder: (column) => ColumnFilters(column),
-  );
-
   ColumnFilters<String> get imageUrl => $composableBuilder(
     column: $table.imageUrl,
     builder: (column) => ColumnFilters(column),
@@ -16073,11 +14638,6 @@ class $$SpecialtyArticlesTableFilterComposer
 
   ColumnFilters<String> get flagUrl => $composableBuilder(
     column: $table.flagUrl,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get contentHtmlUk => $composableBuilder(
-    column: $table.contentHtmlUk,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -16130,16 +14690,6 @@ class $$SpecialtyArticlesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get titleUk => $composableBuilder(
-    column: $table.titleUk,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get subtitleUk => $composableBuilder(
-    column: $table.subtitleUk,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get imageUrl => $composableBuilder(
     column: $table.imageUrl,
     builder: (column) => ColumnOrderings(column),
@@ -16147,11 +14697,6 @@ class $$SpecialtyArticlesTableOrderingComposer
 
   ColumnOrderings<String> get flagUrl => $composableBuilder(
     column: $table.flagUrl,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get contentHtmlUk => $composableBuilder(
-    column: $table.contentHtmlUk,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -16173,24 +14718,11 @@ class $$SpecialtyArticlesTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get titleUk =>
-      $composableBuilder(column: $table.titleUk, builder: (column) => column);
-
-  GeneratedColumn<String> get subtitleUk => $composableBuilder(
-    column: $table.subtitleUk,
-    builder: (column) => column,
-  );
-
   GeneratedColumn<String> get imageUrl =>
       $composableBuilder(column: $table.imageUrl, builder: (column) => column);
 
   GeneratedColumn<String> get flagUrl =>
       $composableBuilder(column: $table.flagUrl, builder: (column) => column);
-
-  GeneratedColumn<String> get contentHtmlUk => $composableBuilder(
-    column: $table.contentHtmlUk,
-    builder: (column) => column,
-  );
 
   GeneratedColumn<int> get readTimeMin => $composableBuilder(
     column: $table.readTimeMin,
@@ -16261,37 +14793,25 @@ class $$SpecialtyArticlesTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                Value<String> titleUk = const Value.absent(),
-                Value<String?> subtitleUk = const Value.absent(),
                 Value<String> imageUrl = const Value.absent(),
                 Value<String> flagUrl = const Value.absent(),
-                Value<String> contentHtmlUk = const Value.absent(),
                 Value<int> readTimeMin = const Value.absent(),
               }) => SpecialtyArticlesCompanion(
                 id: id,
-                titleUk: titleUk,
-                subtitleUk: subtitleUk,
                 imageUrl: imageUrl,
                 flagUrl: flagUrl,
-                contentHtmlUk: contentHtmlUk,
                 readTimeMin: readTimeMin,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                Value<String> titleUk = const Value.absent(),
-                Value<String?> subtitleUk = const Value.absent(),
                 Value<String> imageUrl = const Value.absent(),
                 Value<String> flagUrl = const Value.absent(),
-                Value<String> contentHtmlUk = const Value.absent(),
                 Value<int> readTimeMin = const Value.absent(),
               }) => SpecialtyArticlesCompanion.insert(
                 id: id,
-                titleUk: titleUk,
-                subtitleUk: subtitleUk,
                 imageUrl: imageUrl,
                 flagUrl: flagUrl,
-                contentHtmlUk: contentHtmlUk,
                 readTimeMin: readTimeMin,
               ),
           withReferenceMapper: (p0) => p0
@@ -17852,8 +16372,6 @@ typedef $$BrewingRecipesTableCreateCompanionBuilder =
     BrewingRecipesCompanion Function({
       Value<int> id,
       required String methodKey,
-      Value<String> nameUk,
-      Value<String> descriptionUk,
       Value<String> imageUrl,
       Value<double> ratioGramsPerMl,
       Value<double> tempC,
@@ -17867,8 +16385,6 @@ typedef $$BrewingRecipesTableUpdateCompanionBuilder =
     BrewingRecipesCompanion Function({
       Value<int> id,
       Value<String> methodKey,
-      Value<String> nameUk,
-      Value<String> descriptionUk,
       Value<String> imageUrl,
       Value<double> ratioGramsPerMl,
       Value<double> tempC,
@@ -17937,16 +16453,6 @@ class $$BrewingRecipesTableFilterComposer
 
   ColumnFilters<String> get methodKey => $composableBuilder(
     column: $table.methodKey,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get nameUk => $composableBuilder(
-    column: $table.nameUk,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get descriptionUk => $composableBuilder(
-    column: $table.descriptionUk,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -18037,16 +16543,6 @@ class $$BrewingRecipesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get nameUk => $composableBuilder(
-    column: $table.nameUk,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get descriptionUk => $composableBuilder(
-    column: $table.descriptionUk,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get imageUrl => $composableBuilder(
     column: $table.imageUrl,
     builder: (column) => ColumnOrderings(column),
@@ -18102,14 +16598,6 @@ class $$BrewingRecipesTableAnnotationComposer
 
   GeneratedColumn<String> get methodKey =>
       $composableBuilder(column: $table.methodKey, builder: (column) => column);
-
-  GeneratedColumn<String> get nameUk =>
-      $composableBuilder(column: $table.nameUk, builder: (column) => column);
-
-  GeneratedColumn<String> get descriptionUk => $composableBuilder(
-    column: $table.descriptionUk,
-    builder: (column) => column,
-  );
 
   GeneratedColumn<String> get imageUrl =>
       $composableBuilder(column: $table.imageUrl, builder: (column) => column);
@@ -18203,8 +16691,6 @@ class $$BrewingRecipesTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> methodKey = const Value.absent(),
-                Value<String> nameUk = const Value.absent(),
-                Value<String> descriptionUk = const Value.absent(),
                 Value<String> imageUrl = const Value.absent(),
                 Value<double> ratioGramsPerMl = const Value.absent(),
                 Value<double> tempC = const Value.absent(),
@@ -18216,8 +16702,6 @@ class $$BrewingRecipesTableTableManager
               }) => BrewingRecipesCompanion(
                 id: id,
                 methodKey: methodKey,
-                nameUk: nameUk,
-                descriptionUk: descriptionUk,
                 imageUrl: imageUrl,
                 ratioGramsPerMl: ratioGramsPerMl,
                 tempC: tempC,
@@ -18231,8 +16715,6 @@ class $$BrewingRecipesTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 required String methodKey,
-                Value<String> nameUk = const Value.absent(),
-                Value<String> descriptionUk = const Value.absent(),
                 Value<String> imageUrl = const Value.absent(),
                 Value<double> ratioGramsPerMl = const Value.absent(),
                 Value<double> tempC = const Value.absent(),
@@ -18244,8 +16726,6 @@ class $$BrewingRecipesTableTableManager
               }) => BrewingRecipesCompanion.insert(
                 id: id,
                 methodKey: methodKey,
-                nameUk: nameUk,
-                descriptionUk: descriptionUk,
                 imageUrl: imageUrl,
                 ratioGramsPerMl: ratioGramsPerMl,
                 tempC: tempC,

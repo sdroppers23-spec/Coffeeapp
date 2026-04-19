@@ -140,12 +140,6 @@ class SyncService {
             isPremium: Value(item['is_premium'] as bool? ?? false),
             isDecaf: Value(item['is_decaf'] as bool? ?? false),
             url: Value(item['url'] as String? ?? ''),
-            countryUk: Value(item['country_uk'] as String? ?? item['country'] as String?),
-            regionUk: Value(item['region_uk'] as String? ?? item['region'] as String?),
-            varietiesUk: Value(item['varieties_uk'] as String? ?? item['varieties'] as String?),
-            flavorNotesUk: Value(item['flavor_notes_uk']?.toString() ?? item['flavor_notes']?.toString() ?? '[]'),
-            processMethodUk: Value(item['process_method_uk'] as String? ?? item['process_method'] as String?),
-            descriptionUk: Value(ContentUtils.cleanCoffeeContent(item['description_uk'] as String? ?? item['description'] as String? ?? '')),
             createdAt: Value(
               item['created_at'] != null
                   ? DateTime.tryParse(item['created_at'] as String)
@@ -165,6 +159,20 @@ class SyncService {
             processMethod: Value(t['process_method'] as String?),
             description: Value(ContentUtils.cleanCoffeeContent(t['description'] as String? ?? '')),
           )).toList();
+
+          // Add 'uk' translation from main record if not present
+          if (!translations.any((t) => t.languageCode.value == 'uk')) {
+            translations.add(LocalizedBeanTranslationsCompanion(
+              beanId: Value(id),
+              languageCode: const Value('uk'),
+              country: Value(item['country_uk'] as String? ?? item['country'] as String?),
+              region: Value(item['region_uk'] as String? ?? item['region'] as String?),
+              varieties: Value(item['varieties_uk'] as String? ?? item['varieties'] as String?),
+              flavorNotes: Value(item['flavor_notes_uk']?.toString() ?? item['flavor_notes']?.toString() ?? '[]'),
+              processMethod: Value(item['process_method_uk'] as String? ?? item['process_method'] as String?),
+              description: Value(ContentUtils.cleanCoffeeContent(item['description_uk'] as String? ?? item['description'] as String? ?? '')),
+            ));
+          }
 
           await db.smartUpsertBean(bean, translations);
           successCount++;
@@ -324,11 +332,6 @@ class SyncService {
             flagUrl: Value(flagRaw.toString()),
             latitude: Value((item['latitude'] as num?)?.toDouble() ?? 0.0),
             longitude: Value((item['longitude'] as num?)?.toDouble() ?? 0.0),
-            nameUk: Value(nameRaw.toString()),
-            descriptionHtmlUk: Value(ContentUtils.cleanCoffeeContent(descRaw.toString())),
-            storyUk: Value(ContentUtils.cleanCoffeeContent(storyRaw.toString())),
-            regionUk: Value(regionRaw.toString()),
-            countryUk: Value(countryRaw.toString()),
           );
 
           // We also fetch translations if any (e.g. 'en')
@@ -340,7 +343,6 @@ class SyncService {
           final List<LocalizedFarmerTranslationsCompanion> translations = [];
           for (final t in translationsData) {
             final lang = t['language_code'] as String;
-            // Map legacy or current fields
             translations.add(LocalizedFarmerTranslationsCompanion(
               farmerId: Value(id),
               languageCode: Value(lang),
@@ -349,6 +351,19 @@ class SyncService {
               region: Value(t['region'] as String?),
               country: Value(t['country'] as String?),
               story: Value(ContentUtils.cleanCoffeeContent(t['story'] as String? ?? '')),
+            ));
+          }
+
+          // Add 'uk' translation from legacy fields in main record
+          if (!translations.any((t) => t.languageCode.value == 'uk')) {
+             translations.add(LocalizedFarmerTranslationsCompanion(
+              farmerId: Value(id),
+              languageCode: const Value('uk'),
+              name: Value(nameRaw.toString()),
+              descriptionHtml: Value(ContentUtils.cleanCoffeeContent(descRaw.toString())),
+              story: Value(ContentUtils.cleanCoffeeContent(storyRaw.toString())),
+              region: Value(regionRaw.toString()),
+              country: Value(countryRaw.toString()),
             ));
           }
 
@@ -406,9 +421,6 @@ class SyncService {
 
           final article = SpecialtyArticlesCompanion(
             id: Value(id),
-            titleUk: Value(ContentUtils.cleanCoffeeContent(item['title_uk'] as String? ?? item['title_en'] as String? ?? '')),
-            subtitleUk: Value(ContentUtils.cleanCoffeeContent(item['subtitle_uk'] as String? ?? '')),
-            contentHtmlUk: Value(ContentUtils.cleanCoffeeContent(item['content_html_uk'] as String? ?? item['content_uk'] as String? ?? '')),
             imageUrl: Value(imageUrl),
             readTimeMin: Value(item['read_time_min'] as int? ?? 5),
           );
@@ -430,6 +442,17 @@ class SyncService {
                 subtitle: Value(ContentUtils.cleanCoffeeContent(t['subtitle'] as String? ?? '')),
                 contentHtml: Value(ContentUtils.cleanCoffeeContent(t['content_html'] as String? ?? '')),
              ));
+          }
+
+          // Add 'uk' if missing
+          if (!translations.any((t) => t.languageCode.value == 'uk')) {
+            translations.add(SpecialtyArticleTranslationsCompanion(
+              articleId: Value(id),
+              languageCode: const Value('uk'),
+              title: Value(ContentUtils.cleanCoffeeContent(item['title_uk'] as String? ?? item['title_en'] as String? ?? '')),
+              subtitle: Value(ContentUtils.cleanCoffeeContent(item['subtitle_uk'] as String? ?? '')),
+              contentHtml: Value(ContentUtils.cleanCoffeeContent(item['content_html_uk'] as String? ?? item['content_uk'] as String? ?? '')),
+            ));
           }
 
           await db.smartUpsertArticle(article, translations);
@@ -679,8 +702,6 @@ class SyncService {
 
           final companion = BrewingRecipesCompanion(
             methodKey: Value(key),
-            nameUk: Value(item['name_uk'] as String? ?? item['name'] as String? ?? ''),
-            descriptionUk: Value(ContentUtils.cleanCoffeeContent(item['description_uk'] as String? ?? item['description'] as String? ?? '')),
             ratioGramsPerMl: Value((item['ratio_grams_per_ml'] as num?)?.toDouble() ?? 0.066),
             tempC: Value((item['temp_c'] as num?)?.toDouble() ?? 93.0),
             totalTimeSec: Value((item['total_time_sec'] as num?)?.toInt() ?? 180),
@@ -706,6 +727,16 @@ class SyncService {
               languageCode: Value(t['language_code'] as String),
               name: Value(ContentUtils.cleanCoffeeContent(t['name'] as String? ?? '')),
               description: Value(ContentUtils.cleanCoffeeContent(t['description'] as String? ?? '')),
+            ));
+          }
+
+          // Add 'uk' if missing
+          if (!translations.any((t) => t.languageCode.value == 'uk')) {
+            translations.add(BrewingRecipeTranslationsCompanion(
+              recipeKey: Value(key),
+              languageCode: const Value('uk'),
+              name: Value(item['name_uk'] as String? ?? item['name'] as String? ?? ''),
+              description: Value(ContentUtils.cleanCoffeeContent(item['description_uk'] as String? ?? item['description'] as String? ?? '')),
             ));
           }
 
@@ -748,9 +779,6 @@ class SyncService {
             name: Value(item['name'] as String? ?? ''),
             logoUrl: Value(item['logo_url'] as String?),
             siteUrl: Value(item['site_url'] as String?),
-            shortDescUk: Value(ContentUtils.cleanCoffeeContent(item['short_desc_uk'] as String? ?? item['short_desc_en'] as String? ?? '')),
-            fullDescUk: Value(ContentUtils.cleanCoffeeContent(item['full_desc_uk'] as String? ?? item['full_desc_en'] as String? ?? '')),
-            locationUk: Value(ContentUtils.cleanCoffeeContent(item['location_uk'] as String? ?? item['location_en'] as String? ?? '')),
           );
 
           // Get translations
@@ -767,6 +795,17 @@ class SyncService {
                shortDesc: Value(t['short_desc'] as String?),
                fullDesc: Value(t['full_desc'] as String?),
                location: Value(t['location'] as String?),
+             ));
+          }
+
+          // Add 'uk'
+          if (!translations.any((t) => t.languageCode.value == 'uk')) {
+             translations.add(LocalizedBrandTranslationsCompanion(
+               brandId: Value(id),
+               languageCode: const Value('uk'),
+               shortDesc: Value(ContentUtils.cleanCoffeeContent(item['short_desc_uk'] as String? ?? item['short_desc_en'] as String? ?? '')),
+               fullDesc: Value(ContentUtils.cleanCoffeeContent(item['full_desc_uk'] as String? ?? item['full_desc_en'] as String? ?? '')),
+               location: Value(ContentUtils.cleanCoffeeContent(item['location_uk'] as String? ?? item['location_en'] as String? ?? '')),
              ));
           }
 
@@ -832,11 +871,6 @@ class SyncService {
         flagUrl: Value((item['flag_url'] ?? item['country_emoji'] ?? '').toString()),
         latitude: Value((item['latitude'] as num?)?.toDouble() ?? 0.0),
         longitude: Value((item['longitude'] as num?)?.toDouble() ?? 0.0),
-        nameUk: Value((item['name_uk'] ?? item['name'] ?? '').toString()),
-        descriptionHtmlUk: Value(ContentUtils.cleanCoffeeContent((item['description_html_uk'] ?? item['description_uk'] ?? item['description'] ?? '').toString())),
-        storyUk: Value(ContentUtils.cleanCoffeeContent((item['story_uk'] ?? item['story'] ?? '').toString())),
-        regionUk: Value((item['region_uk'] ?? item['region'] ?? '').toString()),
-        countryUk: Value((item['country_uk'] ?? item['country'] ?? '').toString()),
       );
 
       final translationsData = await supabase!.from('localized_farmer_translations').select().eq('farmer_id', id);
@@ -847,7 +881,21 @@ class SyncService {
         descriptionHtml: Value(t['description_html'] as String? ?? t['description'] as String?),
         region: Value(t['region'] as String?),
         country: Value(t['country'] as String?),
+        story: Value(ContentUtils.cleanCoffeeContent(t['story'] as String? ?? '')),
       )).toList();
+
+      // Add 'uk' if missing
+      if (!translations.any((t) => t.languageCode.value == 'uk')) {
+        translations.add(LocalizedFarmerTranslationsCompanion(
+          farmerId: Value(id),
+          languageCode: const Value('uk'),
+          name: Value((item['name_uk'] ?? item['name'] ?? '').toString()),
+          descriptionHtml: Value(ContentUtils.cleanCoffeeContent((item['description_html_uk'] ?? item['description_uk'] ?? item['description'] ?? '').toString())),
+          story: Value(ContentUtils.cleanCoffeeContent((item['story_uk'] ?? item['story'] ?? '').toString())),
+          region: Value((item['region_uk'] ?? item['region'] ?? '').toString()),
+          country: Value((item['country_uk'] ?? item['country'] ?? '').toString()),
+        ));
+      }
 
       await db.smartUpsertFarmer(farmer, translations);
       _dataUpdateController.add(null);
@@ -871,9 +919,6 @@ class SyncService {
 
       final article = SpecialtyArticlesCompanion(
         id: Value(id),
-        titleUk: Value(ContentUtils.cleanCoffeeContent(item['title_uk'] as String? ?? item['title_en'] as String? ?? '')),
-        subtitleUk: Value(ContentUtils.cleanCoffeeContent(item['subtitle_uk'] as String? ?? '')),
-        contentHtmlUk: Value(ContentUtils.cleanCoffeeContent(item['content_html_uk'] as String? ?? item['content_uk'] as String? ?? '')),
         imageUrl: Value(imageUrl),
         readTimeMin: Value(item['read_time_min'] as int? ?? 5),
       );
@@ -886,6 +931,17 @@ class SyncService {
         subtitle: Value(ContentUtils.cleanCoffeeContent(t['subtitle'] as String? ?? '')),
         contentHtml: Value(ContentUtils.cleanCoffeeContent(t['content_html'] as String? ?? '')),
       )).toList();
+
+      // Add 'uk' if missing
+      if (!translations.any((t) => t.languageCode.value == 'uk')) {
+        translations.add(SpecialtyArticleTranslationsCompanion(
+          articleId: Value(id),
+          languageCode: const Value('uk'),
+          title: Value(ContentUtils.cleanCoffeeContent(item['title_uk'] as String? ?? item['title_en'] as String? ?? '')),
+          subtitle: Value(ContentUtils.cleanCoffeeContent(item['subtitle_uk'] as String? ?? '')),
+          contentHtml: Value(ContentUtils.cleanCoffeeContent(item['content_html_uk'] as String? ?? item['content_uk'] as String? ?? '')),
+        ));
+      }
 
       await db.smartUpsertArticle(article, translations);
       _dataUpdateController.add(null);
@@ -924,13 +980,6 @@ class SyncService {
         isPremium: Value(item['is_premium'] as bool? ?? false),
         isDecaf: Value(item['is_decaf'] as bool? ?? false),
         url: Value(item['url'] as String? ?? ''),
-        countryUk: Value(item['country_uk'] as String? ?? item['country_en'] as String?),
-        regionUk: Value(item['region_uk'] as String? ?? item['region_en'] as String?),
-        varietiesUk: Value(item['varieties_uk'] as String? ?? item['varieties_en'] as String?),
-        flavorNotesUk: Value(item['flavor_notes_uk']?.toString() ?? item['flavor_notes_en']?.toString() ?? '[]'),
-        processMethodUk: Value(item['process_method_uk'] as String? ?? item['process_method_en'] as String?),
-        descriptionUk: Value(ContentUtils.cleanCoffeeContent(item['description_uk'] as String? ?? item['description_en'] as String? ?? '')),
-        roastLevelUk: Value(item['roast_level_uk'] as String? ?? item['roast_level_en'] as String?),
         createdAt: Value(item['created_at'] != null ? DateTime.tryParse(item['created_at'] as String) : null),
       );
 
@@ -947,6 +996,21 @@ class SyncService {
         farmDescription: Value(ContentUtils.cleanCoffeeContent(t['farm_description'] as String? ?? '')),
         roastLevel: Value(t['roast_level'] as String?),
       )).toList();
+
+      // Add 'uk' if missing
+      if (!translations.any((t) => t.languageCode.value == 'uk')) {
+         translations.add(LocalizedBeanTranslationsCompanion(
+          beanId: Value(id),
+          languageCode: const Value('uk'),
+          country: Value(item['country_uk'] as String? ?? item['country_en'] as String?),
+          region: Value(item['region_uk'] as String? ?? item['region_en'] as String?),
+          varieties: Value(item['varieties_uk'] as String? ?? item['varieties_en'] as String?),
+          flavorNotes: Value(item['flavor_notes_uk']?.toString() ?? item['flavor_notes_en']?.toString() ?? '[]'),
+          processMethod: Value(item['process_method_uk'] as String? ?? item['process_method_en'] as String?),
+          description: Value(ContentUtils.cleanCoffeeContent(item['description_uk'] as String? ?? item['description_en'] as String? ?? '')),
+          roastLevel: Value(item['roast_level_uk'] as String? ?? item['roast_level_en'] as String?),
+        ));
+      }
 
       await db.smartUpsertBean(bean, translations);
       _dataUpdateController.add(null);
@@ -970,8 +1034,6 @@ class SyncService {
 
       final companion = BrewingRecipesCompanion(
         methodKey: Value(key),
-        nameUk: Value(item['name_uk'] as String? ?? item['name'] as String? ?? ''),
-        descriptionUk: Value(ContentUtils.cleanCoffeeContent(item['description_uk'] as String? ?? item['description'] as String? ?? '')),
         ratioGramsPerMl: Value((item['ratio_grams_per_ml'] as num?)?.toDouble() ?? 0.066),
         tempC: Value((item['temp_c'] as num?)?.toDouble() ?? 93.0),
         totalTimeSec: Value((item['total_time_sec'] as num?)?.toInt() ?? 180),
@@ -989,6 +1051,16 @@ class SyncService {
         name: Value(t['name'] as String?),
         description: Value(ContentUtils.cleanCoffeeContent(t['description'] as String? ?? '')),
       )).toList();
+
+      // Add 'uk' if missing
+      if (!translations.any((t) => t.languageCode.value == 'uk')) {
+        translations.add(BrewingRecipeTranslationsCompanion(
+          recipeKey: Value(key),
+          languageCode: const Value('uk'),
+          name: Value(item['name_uk'] as String? ?? item['name'] as String? ?? ''),
+          description: Value(ContentUtils.cleanCoffeeContent(item['description_uk'] as String? ?? item['description'] as String? ?? '')),
+        ));
+      }
 
       await db.smartUpsertBrewingRecipe(companion, translations);
       _dataUpdateController.add(null);

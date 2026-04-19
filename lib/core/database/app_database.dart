@@ -100,31 +100,15 @@ class AppDatabase extends _$AppDatabase {
       final farmer = row.readTable(localizedFarmers);
       final translation = row.readTableOrNull(localizedFarmerTranslations);
 
-      final isUk = lang == 'uk';
-      
-      String name = farmer.nameUk;
-      String desc = farmer.descriptionHtmlUk;
-      String? reg = farmer.regionUk;
-      String? cou = farmer.countryUk;
-      String? story = farmer.storyUk;
-
-      if (!isUk && translation != null) {
-        name = translation.name ?? name;
-        desc = translation.descriptionHtml ?? desc;
-        reg = translation.region ?? reg;
-        cou = translation.country ?? cou;
-        story = translation.story ?? story;
-      }
-
       return LocalizedFarmerDto(
         id: farmer.id,
         imageUrl: farmer.imageUrl,
         flagUrl: farmer.flagUrl,
-        name: name,
-        descriptionHtml: desc,
-        story: story ?? desc,
-        region: reg ?? '',
-        country: cou ?? '',
+        name: translation?.name ?? 'Unknown',
+        descriptionHtml: translation?.descriptionHtml ?? '',
+        story: translation?.story ?? translation?.descriptionHtml ?? '',
+        region: translation?.region ?? '',
+        country: translation?.country ?? '',
         latitude: farmer.latitude,
         longitude: farmer.longitude,
         createdAt: farmer.createdAt,
@@ -163,16 +147,14 @@ class AppDatabase extends _$AppDatabase {
       final brand = row.readTable(localizedBrands);
       final translation = row.readTableOrNull(localizedBrandTranslations);
       
-      final isUk = lang == 'uk';
-      
       return LocalizedBrandDto(
         id: brand.id,
         name: brand.name,
         logoUrl: brand.logoUrl ?? '',
         siteUrl: brand.siteUrl ?? '',
-        shortDesc: isUk ? (brand.shortDescUk ?? '') : (translation?.shortDesc ?? brand.shortDescUk ?? ''),
-        fullDesc: isUk ? (brand.fullDescUk ?? '') : (translation?.fullDesc ?? brand.fullDescUk ?? ''),
-        location: isUk ? (brand.locationUk ?? '') : (translation?.location ?? brand.locationUk ?? ''),
+        shortDesc: translation?.shortDesc ?? '',
+        fullDesc: translation?.fullDesc ?? '',
+        location: translation?.location ?? '',
       );
     }).toList();
   }
@@ -193,16 +175,14 @@ class AppDatabase extends _$AppDatabase {
     final brand = row.readTable(localizedBrands);
     final translation = row.readTableOrNull(localizedBrandTranslations);
     
-    final isUk = lang == 'uk';
-    
     return LocalizedBrandDto(
       id: brand.id,
       name: brand.name,
       logoUrl: brand.logoUrl ?? '',
       siteUrl: brand.siteUrl ?? '',
-      shortDesc: isUk ? (brand.shortDescUk ?? '') : (translation?.shortDesc ?? brand.shortDescUk ?? ''),
-      fullDesc: isUk ? (brand.fullDescUk ?? '') : (translation?.fullDesc ?? brand.fullDescUk ?? ''),
-      location: isUk ? (brand.locationUk ?? '') : (translation?.location ?? brand.locationUk ?? ''),
+      shortDesc: translation?.shortDesc ?? '',
+      fullDesc: translation?.fullDesc ?? '',
+      location: translation?.location ?? '',
     );
   }
 
@@ -349,60 +329,32 @@ class AppDatabase extends _$AppDatabase {
     LocalizedBeanTranslationsCompanion t,
   ) => into(localizedBeanTranslations).insertOnConflictUpdate(t);
 
-  Future<LocalizedBeanDto?> getBeanById(int id, String locale) async {
-    final query = select(localizedBeans)..where((t) => t.id.equals(id));
+  Future<LocalizedBeanDto?> getBeanById(int id, String lang) async {
+    final query = select(localizedBeans).join([
+      leftOuterJoin(
+        localizedBeanTranslations,
+        localizedBeanTranslations.beanId.equalsExp(localizedBeans.id) &
+            localizedBeanTranslations.languageCode.equals(lang),
+      ),
+    ])..where(localizedBeans.id.equals(id));
+
     final row = await query.getSingleOrNull();
     if (row == null) return null;
-    return _mapBeanToDto(row);
+    return _mapBeanRow(row, lang);
   }
 
-  Stream<LocalizedBeanDto?> watchBeanById(int id, String locale) {
-    return (select(localizedBeans)..where((t) => t.id.equals(id)))
-        .watchSingleOrNull()
-        .map((row) => row != null ? _mapBeanToDto(row) : null);
+  Stream<LocalizedBeanDto?> watchBeanById(int id, String lang) {
+    final query = select(localizedBeans).join([
+      leftOuterJoin(
+        localizedBeanTranslations,
+        localizedBeanTranslations.beanId.equalsExp(localizedBeans.id) &
+            localizedBeanTranslations.languageCode.equals(lang),
+      ),
+    ])..where(localizedBeans.id.equals(id));
+
+    return query.watchSingleOrNull().map((row) => row != null ? _mapBeanRow(row, lang) : null);
   }
 
-  LocalizedBeanDto _mapBeanToDto(LocalizedBean row) {
-    return LocalizedBeanDto(
-      id: row.id,
-      brandId: row.brandId,
-      countryEmoji: row.countryEmoji,
-      altitudeMin: row.altitudeMin,
-      altitudeMax: row.altitudeMax,
-      lotNumber: row.lotNumber,
-      scaScore: row.scaScore,
-      cupsScore: row.cupsScore,
-      sensoryPoints: _parseJson(row.sensoryJson),
-      pricing: _parseJson(row.priceJson),
-      plantationPhotos: _parseList(row.plantationPhotosUrl),
-      isPremium: row.isPremium,
-      detailedProcess: row.detailedProcessMarkdown,
-      url: row.url,
-      farmerId: row.farmerId,
-      isDecaf: row.isDecaf,
-      farm: row.farm,
-      farmPhotosUrlCover: row.farmPhotosUrlCover,
-      washStation: row.washStation,
-      retailPrice: row.retailPrice,
-      wholesalePrice: row.wholesalePrice,
-      harvestSeason: row.harvestSeason,
-      price: row.price,
-      weight: row.weight,
-      roastDate: row.roastDate,
-      processingMethodsJson: row.processingMethodsJson,
-      country: row.countryUk ?? '',
-      region: row.regionUk ?? '',
-      varieties: row.varietiesUk ?? '',
-      flavorNotes: _parseList(row.flavorNotesUk),
-      description: row.descriptionUk ?? '',
-      farmDescription: row.farmDescriptionUk ?? '',
-      roastLevel: row.roastLevelUk ?? '',
-      processMethod: row.processMethodUk ?? '',
-      isFavorite: row.isFavorite,
-      isArchived: false,
-      createdAt: row.createdAt,
-    );
-  }
 
   Future<LocalizedBeanTranslation?> getBeanTranslation(
     int beanId,
@@ -434,8 +386,6 @@ class AppDatabase extends _$AppDatabase {
     final bean = row.readTable(localizedBeans);
     final translation = row.readTableOrNull(localizedBeanTranslations);
 
-    final isUk = lang == 'uk';
-
     return LocalizedBeanDto(
       id: bean.id,
       brandId: bean.brandId,
@@ -463,15 +413,14 @@ class AppDatabase extends _$AppDatabase {
       weight: bean.weight,
       roastDate: bean.roastDate,
       processingMethodsJson: bean.processingMethodsJson,
-      // Priority: Main Record (_uk) for UK, or fallback if translation missing
-      country: isUk ? (bean.countryUk ?? '') : (translation?.country ?? bean.countryUk ?? ''),
-      region: isUk ? (bean.regionUk ?? '') : (translation?.region ?? bean.regionUk ?? ''),
-      varieties: isUk ? (bean.varietiesUk ?? '') : (translation?.varieties ?? bean.varietiesUk ?? ''),
-      flavorNotes: isUk ? _parseList<String>(bean.flavorNotesUk) : _parseList<String>(translation?.flavorNotes ?? bean.flavorNotesUk),
-      description: isUk ? (bean.descriptionUk ?? '') : (translation?.description ?? bean.descriptionUk ?? ''),
-      farmDescription: isUk ? (bean.descriptionUk ?? '') : (translation?.farmDescription ?? bean.descriptionUk ?? ''),
-      roastLevel: isUk ? (bean.roastLevelUk ?? '') : (translation?.roastLevel ?? bean.roastLevelUk ?? ''),
-      processMethod: isUk ? (bean.processMethodUk ?? '') : (translation?.processMethod ?? bean.processMethodUk ?? ''),
+      country: translation?.country ?? '',
+      region: translation?.region ?? '',
+      varieties: translation?.varieties ?? '',
+      flavorNotes: _parseList<String>(translation?.flavorNotes ?? '[]'),
+      description: translation?.description ?? '',
+      farmDescription: translation?.farmDescription ?? '',
+      roastLevel: translation?.roastLevel ?? '',
+      processMethod: translation?.processMethod ?? '',
       isFavorite: bean.isFavorite,
       createdAt: bean.createdAt,
     );
@@ -563,25 +512,14 @@ class AppDatabase extends _$AppDatabase {
       final article = row.readTable(specialtyArticles);
       final translation = row.readTableOrNull(specialtyArticleTranslations);
       
-      final isUk = lang == 'uk';
-      String title = article.titleUk;
-      String? subtitle = article.subtitleUk;
-      String content = article.contentHtmlUk;
-      
-      if (!isUk && translation != null) {
-        title = translation.title ?? title;
-        subtitle = translation.subtitle ?? subtitle;
-        content = translation.contentHtml ?? content;
-      }
-      
       return SpecialtyArticleDto(
         id: article.id,
-        title: title,
-        subtitle: subtitle ?? '',
+        title: translation?.title ?? 'Untitled',
+        subtitle: translation?.subtitle ?? '',
         imageUrl: article.imageUrl,
         flagUrl: article.flagUrl,
         readTimeMin: article.readTimeMin,
-        contentHtml: content,
+        contentHtml: translation?.contentHtml ?? '',
       );
     }).toList();
   }

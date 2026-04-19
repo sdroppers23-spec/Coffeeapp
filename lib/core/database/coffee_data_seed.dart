@@ -97,34 +97,31 @@ class CoffeeDataSeed {
       {
         'main': BrewingRecipesCompanion.insert(
           methodKey: 'v60',
-          nameUk: const Value('V60 Пур-овер'),
           imageUrl: const Value('p_v60.png'),
-          descriptionUk: const Value('Класичний метод для чистоти та солодкості.'),
         ),
         'trans': [
           BrewingRecipeTranslationsCompanion.insert(recipeKey: 'v60', languageCode: 'en', name: const Value('V60 Pour Over'), description: const Value('Classic pour-over method for clarity and sweetness.')),
+          BrewingRecipeTranslationsCompanion.insert(recipeKey: 'v60', languageCode: 'uk', name: const Value('V60 Пур-овер'), description: const Value('Класичний метод для чистоти та солодкості.')),
         ],
       },
       {
         'main': BrewingRecipesCompanion.insert(
           methodKey: 'chemex',
-          nameUk: const Value('Чемекс'),
           imageUrl: const Value('p_chemex.png'),
-          descriptionUk: const Value('Елегантний метод для найчистішого тіла напою.'),
         ),
         'trans': [
           BrewingRecipeTranslationsCompanion.insert(recipeKey: 'chemex', languageCode: 'en', name: const Value('Chemex'), description: const Value('Elegant glass brewer for a clean, tea-like body.')),
+          BrewingRecipeTranslationsCompanion.insert(recipeKey: 'chemex', languageCode: 'uk', name: const Value('Чемекс'), description: const Value('Елегантний метод для найчистішого тіла напою.')),
         ],
       },
       {
         'main': BrewingRecipesCompanion.insert(
           methodKey: 'aeropress',
-          nameUk: const Value('Аеропрес'),
           imageUrl: const Value('p_aeropress.png'),
-          descriptionUk: const Value('Універсальний та портативний ручний прес.'),
         ),
         'trans': [
           BrewingRecipeTranslationsCompanion.insert(recipeKey: 'aeropress', languageCode: 'en', name: const Value('AeroPress'), description: const Value('Versatile and portable pressure brewer.')),
+          BrewingRecipeTranslationsCompanion.insert(recipeKey: 'aeropress', languageCode: 'uk', name: const Value('Аеропрес'), description: const Value('Універсальний та портативний ручний прес.')),
         ],
       },
     ];

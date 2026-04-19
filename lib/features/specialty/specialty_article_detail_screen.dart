@@ -147,12 +147,12 @@ class _SpecialtyArticleDetailScreenState
                           border: Border.all(color: gold.withValues(alpha: 0.3)),
                         ),
                         child: Text(
-                          widget.moduleName.toUpperCase(),
+                          widget.moduleName,
                           style: GoogleFonts.poppins(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
                             color: gold,
-                            letterSpacing: 2.0,
+                            letterSpacing: 0.5,
                           ),
                         ),
                       ),

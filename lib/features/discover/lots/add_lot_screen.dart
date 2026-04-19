@@ -95,11 +95,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     _tabController.dispose();
     _roasteryController.dispose();
     _roasteryCountryController.dispose();
-    _coffeeNameController.dispose();
-    _originCountryController.dispose();
-    _regionController.dispose();
-    _altitudeController.dispose();
     _varietiesController.dispose();
+    _farmerController.dispose();
+    _washStationController.dispose();
     _processController.dispose();
     _flavorProfileController.dispose();
     _scaScoreController.dispose();
@@ -120,11 +118,12 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   // Controllers to prevent cursor jumps and fix focus
   late final TextEditingController _roasteryController;
   late final TextEditingController _roasteryCountryController;
-  late final TextEditingController _coffeeNameController;
   late final TextEditingController _originCountryController;
   late final TextEditingController _regionController;
   late final TextEditingController _altitudeController;
   late final TextEditingController _varietiesController;
+  late final TextEditingController _farmerController;
+  late final TextEditingController _washStationController;
   late final TextEditingController _processController;
   late final TextEditingController _flavorProfileController;
   late final TextEditingController _scaScoreController;
@@ -155,11 +154,12 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
 
     _roasteryController = TextEditingController(text: widget.initialLot?.roasteryName ?? '');
     _roasteryCountryController = TextEditingController(text: widget.initialLot?.roasteryCountry ?? 'Ukraine');
-    _coffeeNameController = TextEditingController(text: widget.initialLot?.coffeeName ?? '');
     _originCountryController = TextEditingController(text: widget.initialLot?.originCountry ?? '');
     _regionController = TextEditingController(text: widget.initialLot?.region ?? '');
     _altitudeController = TextEditingController(text: widget.initialLot?.altitude ?? '');
     _varietiesController = TextEditingController(text: widget.initialLot?.varieties ?? '');
+    _farmerController = TextEditingController(text: widget.initialLot?.farmer ?? '');
+    _washStationController = TextEditingController(text: widget.initialLot?.washStation ?? '');
     _processController = TextEditingController(text: widget.initialLot?.process ?? 'Washed');
     _flavorProfileController = TextEditingController(text: widget.initialLot?.flavorProfile ?? '');
     _scaScoreController = TextEditingController(text: widget.initialLot?.scaScore ?? '85');
@@ -268,7 +268,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
 
   bool get _canSave => 
       _roasteryController.text.trim().isNotEmpty && 
-      _coffeeNameController.text.trim().isNotEmpty && 
       _originCountryController.text.trim().isNotEmpty;
 
   Future<void> _saveLot() async {
@@ -355,7 +354,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           userId: Value(user.id),
           roasteryName: Value(_roasteryController.text),
           roasteryCountry: Value(_roasteryCountryController.text),
-          coffeeName: Value(_coffeeNameController.text),
+          coffeeName: Value(_originCountryController.text), // Fallback or clear
           originCountry: Value(_originCountryController.text),
           region: Value(_regionController.text),
           altitude: Value(_altitudeController.text),
@@ -366,6 +365,8 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           weight: Value(_weightController.text),
           lotNumber: Value(_lotNumberController.text),
           isDecaf: Value(_isDecaf),
+          farmer: Value(_farmerController.text),
+          washStation: Value(_washStationController.text),
           varieties: Value(_varietiesController.text),
           flavorProfile: Value(_flavorProfileController.text),
           scaScore: Value(_scaScoreController.text),
@@ -576,7 +577,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         
         _sectionLabel('Кава та лот'),
         _darkCard(children: [
-          _fieldRow(label: 'COFFEE NAME *', controller: _coffeeNameController),
+          _fieldRow(label: 'FARMER', controller: _farmerController),
+          _divider(),
+          _fieldRow(label: 'WASH STATION', controller: _washStationController),
           _divider(),
           _fieldRow(label: 'LOT NUMBER', controller: _lotNumberController, keyboardType: TextInputType.number),
           _divider(),

@@ -203,12 +203,12 @@ class _PremiumFarmerCard extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    'Докладно'.toUpperCase(),
+                    context.t('details'),
                     style: GoogleFonts.poppins(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
                       color: gold,
-                      letterSpacing: 1.2,
+                      letterSpacing: 0.5,
                     ),
                   ),
                   const SizedBox(width: 8),

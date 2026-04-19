@@ -41,15 +41,17 @@ class DiscoveryActionBar extends ConsumerWidget {
               child: Row(
                 children: [
                   _ActionButton(
-                    icon: Icons.sort_rounded,
-                    label: 'Фільтри',
+                    icon: Icons.filter_list_rounded,
+                    label: context.t('filters'),
                     isActive: state.hasActiveFilters,
                     onTap: () => _showSortSheet(context, ref),
                   ),
                   const SizedBox(width: 8),
                   _ActionButton(
                     icon: Icons.compare_arrows_rounded,
-                    label: selectedLots.isEmpty ? 'Порівняння' : 'Порівняння (${selectedLots.length})',
+                    label: selectedLots.isEmpty 
+                        ? context.t('compare') 
+                        : '${context.t('compare')} (${selectedLots.length})',
                     isActive: selectedLots.isNotEmpty,
                     onTap: onCompareTap,
                   ),
@@ -59,7 +61,7 @@ class DiscoveryActionBar extends ConsumerWidget {
                       icon: state.showFavoritesOnly
                           ? Icons.favorite_rounded
                           : Icons.favorite_border_rounded,
-                      label: 'Обране',
+                      label: context.t('favorites'),
                       isActive: state.showFavoritesOnly,
                       onTap: () => ref
                           .read(filterProvider.notifier)

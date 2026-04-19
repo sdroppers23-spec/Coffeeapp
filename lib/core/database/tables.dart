@@ -1,6 +1,6 @@
-// ─── Schema version: 26 (Localized Composite Keys & Recovery) ──────────────
-// Per-language columns removed from all main tables.
-// Each table now has a companion *Translations table.
+// ─── Schema version: 27 (Pure Localization & Schema Cleanup) ──────────────
+// All legacy per-language columns removed from main tables.
+// System now relies exclusively on companion *Translations tables.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import 'package:drift/drift.dart';
@@ -42,16 +42,6 @@ class LocalizedBeans extends Table {
       integer().nullable().references(LocalizedFarmers, #id)();
   BoolColumn get isDecaf => boolean().withDefault(const Constant(false))();
 
-  // PRIMARY CONTENT (UK)
-  TextColumn get countryUk => text().nullable()();
-  TextColumn get regionUk => text().nullable()();
-  TextColumn get varietiesUk => text().nullable()();
-  TextColumn get flavorNotesUk => text().withDefault(const Constant('[]'))();
-  TextColumn get processMethodUk => text().nullable()();
-  TextColumn get descriptionUk => text().nullable()();
-  TextColumn get farmDescriptionUk => text().nullable()();
-  TextColumn get roastLevelUk => text().nullable()();
-
   TextColumn get farm => text().nullable()();
   TextColumn get farmPhotosUrlCover => text().nullable()();
   TextColumn get washStation => text().nullable()();
@@ -87,11 +77,6 @@ class LocalizedBrands extends Table {
   TextColumn get logoUrl => text().nullable()();
   TextColumn get siteUrl => text().nullable()();
   
-  // PRIMARY CONTENT (UK)
-  TextColumn get shortDescUk => text().nullable()();
-  TextColumn get fullDescUk => text().nullable()();
-  TextColumn get locationUk => text().nullable()();
-
   DateTimeColumn get createdAt => dateTime().nullable()();
 }
 
@@ -112,16 +97,10 @@ class LocalizedBrandTranslations extends Table {
 class LocalizedFarmers extends Table {
   IntColumn get id => integer().autoIncrement()();
   
-  // PRIMARY (Ukrainian)
-  TextColumn get nameUk => text().withDefault(const Constant('Тут має бути ім\'я'))();
-  TextColumn get imageUrl => text().withDefault(const Constant('Тут має бути фото'))();
-  TextColumn get flagUrl => text().withDefault(const Constant('Тут має бути прапор'))();
-  TextColumn get descriptionHtmlUk => text().withDefault(const Constant('Тут має бути опис'))();
-  TextColumn get regionUk => text().nullable()();
-  TextColumn get countryUk => text().nullable()();
+  TextColumn get imageUrl => text().withDefault(const Constant(''))() ;
+  TextColumn get flagUrl => text().withDefault(const Constant(''))() ;
 
   // Coordinates & Metadata
-  TextColumn get storyUk => text().nullable()();
   RealColumn get latitude => real().nullable()();
   RealColumn get longitude => real().nullable()();
   DateTimeColumn get createdAt => dateTime().nullable()();
@@ -171,12 +150,8 @@ class SphereRegionTranslations extends Table {
 class SpecialtyArticles extends Table {
   IntColumn get id => integer().autoIncrement()();
   
-  // PRIMARY (Ukrainian)
-  TextColumn get titleUk => text().withDefault(const Constant('Тут має бути заголовок'))();
-  TextColumn get subtitleUk => text().nullable()();
-  TextColumn get imageUrl => text().withDefault(const Constant('Тут має бути лінк на бакет'))();
-  TextColumn get flagUrl => text().withDefault(const Constant('Тут має бути лінк на прапор'))();
-  TextColumn get contentHtmlUk => text().withDefault(const Constant('Тут має бути текст статті'))();
+  TextColumn get imageUrl => text().withDefault(const Constant(''))() ;
+  TextColumn get flagUrl => text().withDefault(const Constant(''))() ;
   IntColumn get readTimeMin => integer().withDefault(const Constant(5))();
 }
 
@@ -264,10 +239,7 @@ class BrewingRecipes extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get methodKey => text().unique()();
   
-  // PRIMARY CONTENT (UK)
-  TextColumn get nameUk => text().withDefault(const Constant('Назва методу'))();
-  TextColumn get descriptionUk => text().withDefault(const Constant('Тут має бути опис'))();
-  TextColumn get imageUrl => text().withDefault(const Constant('Тут має бути лінк на фото'))();
+  TextColumn get imageUrl => text().withDefault(const Constant(''))() ;
 
   // Settings
   RealColumn get ratioGramsPerMl => real().withDefault(const Constant(0.066))();

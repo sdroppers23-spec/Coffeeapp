@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/database/app_database.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
+import '../../core/l10n/app_localizations.dart';
 
 // ─── Pour entry (local model) ─────────────────────────────────────────────────
 class _PourEntry {
@@ -77,6 +78,7 @@ class _CustomRecipeFormScreenState
   late TextEditingController _notesCtrl;
   late TextEditingController _micronsCtrl;
   late TextEditingController _brewRatioCtrl;
+  late TextEditingController _shotTimeCtrl;
 
   String _selectedGrinder = 'Other';
   late String _recipeType;
@@ -121,6 +123,14 @@ class _CustomRecipeFormScreenState
     _selectedGrinder = r?.grinderName ?? 'Other';
     _recipeType = r?.recipeType ?? widget.recipeType;
 
+    // Load extraction time from pour schedule if espresso
+    String initialShotTime = '';
+    if (_recipeType == 'espresso' && r != null && r.pours.isNotEmpty) {
+      final firstPour = r.pours.first as Map<String, dynamic>;
+      initialShotTime = (firstPour['durationSec'] ?? '').toString();
+    }
+    _shotTimeCtrl = TextEditingController(text: initialShotTime);
+
     _rating = r?.rating ?? 0;
     _totalPours = r?.totalPours ?? 1;
 
@@ -128,6 +138,7 @@ class _CustomRecipeFormScreenState
     if (r == null && _recipeType == 'espresso') {
       _coffeeGCtrl.text = '18.0';
       _waterMlCtrl.text = '36.0';
+      _shotTimeCtrl.text = '30';
       _updateRatio();
     }
 
@@ -193,6 +204,7 @@ class _CustomRecipeFormScreenState
       _notesCtrl,
       _micronsCtrl,
       _brewRatioCtrl,
+      _shotTimeCtrl,
     ]) {
       c.dispose();
     }
@@ -235,48 +247,37 @@ class _CustomRecipeFormScreenState
     _readPourControllers();
     setState(() => _saving = true);
 
-    final db = ref.read(databaseProvider);
-    final now = DateTime.now();
-    final pourJson = jsonEncode(_pours.map((p) => p.toJson()).toList());
+    try {
+      final db = ref.read(databaseProvider);
+      final now = DateTime.now();
 
-    if (_recipeType == 'espresso') {
-      _totalPours = 1;
-    }
+      // For Espresso, we simplify the pours to a single "Extraction" event
+      if (_recipeType == 'espresso') {
+        _totalPours = 1;
+        final shotSec = int.tryParse(_shotTimeCtrl.text) ?? 30;
+        final yieldWater = double.tryParse(_waterMlCtrl.text.replaceAll(',', '.')) ?? 0;
+        _pours = [
+          _PourEntry(
+            pourNumber: 1,
+            waterMl: yieldWater,
+            atMinute: 0,
+            durationSec: shotSec,
+            notes: 'Extraction',
+          ),
+        ];
+      }
 
-    if (widget.existingRecipe != null) {
-      final updateCompanion = CustomRecipesCompanion(
-        id: Value(widget.existingRecipe!.id),
-        methodKey: Value(widget.methodKey),
-        name: Value(_nameCtrl.text.trim()),
-        createdAt: Value(widget.existingRecipe!.updatedAt ?? now),
-        updatedAt: Value(now),
-        coffeeGrams: Value(double.tryParse(_coffeeGCtrl.text.replaceAll(',', '.')) ?? 0),
-        totalWaterMl: Value(double.tryParse(_waterMlCtrl.text.replaceAll(',', '.')) ?? 0),
-        grindNumber: Value(int.tryParse(_grindCtrl.text) ?? 0),
-        comandanteClicks: Value(int.tryParse(_comandanteCtrl.text) ?? 0),
-        ek43Division: Value(int.tryParse(_ek43Ctrl.text) ?? 0),
-        totalPours: Value(_totalPours),
-        pourScheduleJson: Value(pourJson),
-        brewTempC: Value(double.tryParse(_tempCtrl.text.replaceAll(',', '.')) ?? 93.0),
-        notes: Value(_notesCtrl.text),
-        rating: Value(_rating),
-        userId: Value(''), 
-        recipeType: Value(_recipeType),
-        microns: Value(int.tryParse(_micronsCtrl.text)),
-        brewRatio: Value(double.tryParse(_brewRatioCtrl.text.replaceAll('1:', ''))),
-        grinderName: Value(_selectedGrinder),
-      );
-      await db.updateCustomRecipe(updateCompanion);
-    } else {
-      await db.insertCustomRecipe(
-        CustomRecipesCompanion.insert(
-          methodKey: widget.methodKey,
-          lotId: Value(widget.lotId),
-          name: _nameCtrl.text.trim(),
-          createdAt: Value(now),
+      final pourJson = jsonEncode(_pours.map((p) => p.toJson()).toList());
+
+      if (widget.existingRecipe != null) {
+        final updateCompanion = CustomRecipesCompanion(
+          id: Value(widget.existingRecipe!.id),
+          methodKey: Value(widget.methodKey),
+          name: Value(_nameCtrl.text.trim()),
+          createdAt: Value(widget.existingRecipe!.updatedAt ?? now),
           updatedAt: Value(now),
-          coffeeGrams: double.tryParse(_coffeeGCtrl.text.replaceAll(',', '.')) ?? 0,
-          totalWaterMl: double.tryParse(_waterMlCtrl.text.replaceAll(',', '.')) ?? 0,
+          coffeeGrams: Value(double.tryParse(_coffeeGCtrl.text.replaceAll(',', '.')) ?? 0),
+          totalWaterMl: Value(double.tryParse(_waterMlCtrl.text.replaceAll(',', '.')) ?? 0),
           grindNumber: Value(int.tryParse(_grindCtrl.text) ?? 0),
           comandanteClicks: Value(int.tryParse(_comandanteCtrl.text) ?? 0),
           ek43Division: Value(int.tryParse(_ek43Ctrl.text) ?? 0),
@@ -285,17 +286,57 @@ class _CustomRecipeFormScreenState
           brewTempC: Value(double.tryParse(_tempCtrl.text.replaceAll(',', '.')) ?? 93.0),
           notes: Value(_notesCtrl.text),
           rating: Value(_rating),
-          userId: '', 
+          userId: Value(''),
           recipeType: Value(_recipeType),
           microns: Value(int.tryParse(_micronsCtrl.text)),
           brewRatio: Value(double.tryParse(_brewRatioCtrl.text.replaceAll('1:', ''))),
           grinderName: Value(_selectedGrinder),
-        ),
-      );
-    }
+        );
+        await db.updateCustomRecipe(updateCompanion);
+      } else {
+        await db.insertCustomRecipe(
+          CustomRecipesCompanion.insert(
+            methodKey: widget.methodKey,
+            lotId: Value(widget.lotId),
+            name: _nameCtrl.text.trim(),
+            createdAt: Value(now),
+            updatedAt: Value(now),
+            coffeeGrams: double.tryParse(_coffeeGCtrl.text.replaceAll(',', '.')) ?? 0,
+            totalWaterMl: double.tryParse(_waterMlCtrl.text.replaceAll(',', '.')) ?? 0,
+            grindNumber: Value(int.tryParse(_grindCtrl.text) ?? 0),
+            comandanteClicks: Value(int.tryParse(_comandanteCtrl.text) ?? 0),
+            ek43Division: Value(int.tryParse(_ek43Ctrl.text) ?? 0),
+            totalPours: Value(_totalPours),
+            pourScheduleJson: Value(pourJson),
+            brewTempC: Value(double.tryParse(_tempCtrl.text.replaceAll(',', '.')) ?? 93.0),
+            notes: Value(_notesCtrl.text),
+            rating: Value(_rating),
+            userId: '',
+            recipeType: Value(_recipeType),
+            microns: Value(int.tryParse(_micronsCtrl.text)),
+            brewRatio: Value(double.tryParse(_brewRatioCtrl.text.replaceAll('1:', ''))),
+            grinderName: Value(_selectedGrinder),
+          ),
+        );
+      }
 
-    if (mounted) {
-      Navigator.of(context).pop();
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      debugPrint('Error saving recipe: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to save recipe: $e'),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _saving = false);
+      }
     }
   }
 
@@ -306,7 +347,7 @@ class _CustomRecipeFormScreenState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          isEdit ? 'Edit Recipe' : 'New Recipe',
+          isEdit ? context.t('edit_recipe') : context.t('new_recipe'),
           style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
         ),
         actions: [
@@ -338,12 +379,12 @@ class _CustomRecipeFormScreenState
           padding: const EdgeInsets.all(16),
           children: [
             // ── Name ──────────────────────────────────────────────────────────
-            _SectionHeader('General'),
+            _SectionHeader(context.t('general')),
             _Field(
               controller: _nameCtrl,
-              label: 'Recipe Name',
+              label: context.t('recipe_name'),
               hint: 'e.g. Morning V60 — Light & Bright',
-              validator: (v) => (v == null || v.isEmpty) ? 'Required' : null,
+              validator: (v) => (v == null || v.isEmpty) ? context.t('required') : null,
             ),
             const SizedBox(height: 12),
             // ── Rating ────────────────────────────────────────────────────────
@@ -354,32 +395,45 @@ class _CustomRecipeFormScreenState
             const SizedBox(height: 20),
 
             // ── Coffee & Water ─────────────────────────────────────────────────
-            _SectionHeader('Coffee & Water'),
+            _SectionHeader(_recipeType == 'espresso'
+                ? context.t('espresso_parameters')
+                : context.t('coffee_and_water')),
             Row(
               children: [
                 Expanded(
                   child: _Field(
                     controller: _coffeeGCtrl,
-                    label: 'Coffee (g)',
+                    label: '${context.t('coffee')} (g)',
                     hint: '18',
                     keyboardType: TextInputType.number,
                     validator: (v) =>
-                        (v == null || v.isEmpty) ? 'Required' : null,
+                        (v == null || v.isEmpty) ? context.t('required') : null,
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _Field(
                     controller: _waterMlCtrl,
-                    label: 'Total Water (ml)',
-                    hint: '300',
+                    label: _recipeType == 'espresso'
+                        ? '${context.t('yield')} (g/ml)'
+                        : '${context.t('total_water')} (ml)',
+                    hint: _recipeType == 'espresso' ? '36' : '300',
                     keyboardType: TextInputType.number,
                     validator: (v) =>
-                        (v == null || v.isEmpty) ? 'Required' : null,
+                        (v == null || v.isEmpty) ? context.t('required') : null,
                   ),
                 ),
               ],
             ),
+            if (_recipeType == 'espresso') ...[
+              const SizedBox(height: 12),
+              _Field(
+                controller: _shotTimeCtrl,
+                label: '${context.t('extraction_time')} (s)',
+                hint: '30',
+                keyboardType: TextInputType.number,
+              ),
+            ],
             const SizedBox(height: 12),
             _Field(
               controller: _tempCtrl,
@@ -476,12 +530,12 @@ class _CustomRecipeFormScreenState
 
             // ── Pour Schedule ──────────────────────────────────────────────────
             if (_recipeType != 'espresso') ...[
-              _SectionHeader('Pour Schedule'),
+              _SectionHeader(context.t('pour_schedule')),
               Row(
                 children: [
-                  const Text(
-                    'Number of pours:',
-                    style: TextStyle(color: Colors.white70),
+                  Text(
+                    '${context.t('number_of_pours')}:',
+                    style: const TextStyle(color: Colors.white70),
                   ),
                   const SizedBox(width: 16),
                   _CounterWidget(
@@ -505,10 +559,10 @@ class _CustomRecipeFormScreenState
             ],
 
             // ── Notes ─────────────────────────────────────────────────────────
-            _SectionHeader('Notes'),
+            _SectionHeader(context.t('notes')),
             _Field(
               controller: _notesCtrl,
-              label: 'Notes (taste, adjustments, etc.)',
+              label: context.t('notes_hint'),
               maxLines: 3,
             ),
             const SizedBox(height: 32),

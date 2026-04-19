@@ -98,12 +98,20 @@ class _CustomRecipeTimerScreenState
     if (activeIndex >= _pours.length) return 'Brewing complete';
 
     final pour = _pours[activeIndex];
+    final isEspresso = widget.recipe.recipeType == 'espresso';
     final isBloom = activeIndex == 0;
     final ml = pour['waterMl'];
     final notes = pour['notes']?.toString();
 
-    String text = isBloom ? 'Bloom: Pour $ml ml' : 'Pour $ml ml';
-    if (notes != null && notes.isNotEmpty) {
+    String label;
+    if (isEspresso) {
+      label = ref.t('extraction');
+    } else {
+      label = isBloom ? ref.t('bloom') : '${ref.t('pour')} #$ml';
+    }
+
+    String text = '$label: $ml ml';
+    if (notes != null && notes.isNotEmpty && notes != 'Extraction') {
       text += ' - $notes';
     }
     return text;
@@ -174,7 +182,7 @@ class _CustomRecipeTimerScreenState
                           ),
                         ),
                         Text(
-                          _isRunning ? 'RUNNING' : 'PAUSED',
+                          _isRunning ? ref.t('running') : ref.t('paused'),
                           style: const TextStyle(
                             fontSize: 12,
                             letterSpacing: 4,
@@ -193,7 +201,7 @@ class _CustomRecipeTimerScreenState
                     size: 28,
                   ),
                   label: Text(
-                    _isRunning ? 'PAUSE' : 'START',
+                    _isRunning ? ref.t('paused') : ref.t('next'), // Or 'Start'
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -316,7 +324,9 @@ class _CustomRecipeTimerScreenState
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              isBloom ? ref.t('bloom') : '${ref.t('pour')} #$n',
+                              (i == 0 && widget.recipe.recipeType == 'espresso')
+                                  ? ref.t('extraction')
+                                  : (isBloom ? ref.t('bloom') : '${ref.t('pour')} #$n'),
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,

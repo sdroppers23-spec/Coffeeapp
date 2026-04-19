@@ -169,13 +169,12 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                                 ),
                               ),
                               child: Text(
-                                '${widget.farmer.country}, ${widget.farmer.region}'
-                                    .toUpperCase(),
+                                '${widget.farmer.country}, ${widget.farmer.region}',
                                 style: GoogleFonts.poppins(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w700,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
                                   color: gold,
-                                  letterSpacing: 1.2,
+                                  letterSpacing: 0.5,
                                 ),
                               ),
                             ),

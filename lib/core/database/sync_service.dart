@@ -217,29 +217,18 @@ class SyncService {
             createdAt: Value(item['created_at'] != null ? DateTime.tryParse(item['created_at'] as String) : null),
           );
 
-          final transData = await supabase!.from('localized_farmer_translations').select().eq('farmer_id', id);
-          final List<LocalizedFarmerTranslationsV2Companion> translations = transData.map((t) => LocalizedFarmerTranslationsV2Companion(
-            farmerId: Value(id),
-            languageCode: Value(t['language_code'] as String),
-            name: Value(t['name'] as String?),
-            descriptionHtml: Value(t['description_html'] as String? ?? t['description'] as String?),
-            region: Value(t['region'] as String?),
-            country: Value(t['country'] as String?),
-            story: Value(ContentUtils.cleanCoffeeContent(t['story'] as String? ?? t['story_uk'] as String? ?? t['description_html'] as String? ?? '')),
-          )).toList();
-
-          // Fallback for 'uk' using legacy fields if translations table is empty or missing 'uk'
-          if (!translations.any((t) => t.languageCode.value == 'uk')) {
-            translations.add(LocalizedFarmerTranslationsV2Companion(
+          // localized_farmers has data in _uk fields directly — translation table is empty in Supabase
+          final List<LocalizedFarmerTranslationsV2Companion> translations = [
+            LocalizedFarmerTranslationsV2Companion(
               farmerId: Value(id),
               languageCode: const Value('uk'),
-              name: Value((item['name_uk'] ?? item['name'] ?? '').toString()),
-              descriptionHtml: Value(ContentUtils.cleanCoffeeContent((item['description_html_uk'] ?? item['description_uk'] ?? item['description'] ?? '').toString())),
-              story: Value(ContentUtils.cleanCoffeeContent((item['story_uk'] ?? item['story'] ?? '').toString())),
-              region: Value((item['region_uk'] ?? item['region'] ?? '').toString()),
-              country: Value((item['country_uk'] ?? item['country'] ?? '').toString()),
-            ));
-          }
+              name: Value(item['name_uk'] as String? ?? ''),
+              descriptionHtml: Value(ContentUtils.cleanCoffeeContent(item['description_html_uk'] as String? ?? '')),
+              story: Value(ContentUtils.cleanCoffeeContent(item['story_uk'] as String? ?? '')),
+              region: Value(item['region_uk'] as String? ?? ''),
+              country: Value(item['country_uk'] as String? ?? ''),
+            ),
+          ];
 
           await db.smartUpsertFarmerV2(farmer, translations);
         } catch (e) {
@@ -280,30 +269,21 @@ class SyncService {
           final article = SpecialtyArticlesV2Companion(
             id: Value(id),
             imageUrl: Value(imageUrl),
-            flagUrl: Value((item['flag_url'] ?? '').toString()),
+            flagUrl: const Value(''),
             readTimeMin: Value(item['read_time_min'] as int? ?? 5),
             createdAt: Value(item['created_at'] != null ? DateTime.tryParse(item['created_at'] as String) : null),
           );
 
-          final transData = await supabase!.from('specialty_article_translations').select().eq('article_id', id);
-          final List<SpecialtyArticleTranslationsV2Companion> translations = transData.map((t) => SpecialtyArticleTranslationsV2Companion(
-            articleId: Value(id),
-            languageCode: Value(t['language_code'] as String),
-            title: Value(ContentUtils.cleanCoffeeContent(t['title'] as String? ?? '')),
-            subtitle: Value(ContentUtils.cleanCoffeeContent(t['subtitle'] as String? ?? '')),
-            contentHtml: Value(ContentUtils.cleanCoffeeContent(t['content_html'] as String? ?? t['content'] as String? ?? '')),
-          )).toList();
-
-          // Fallback for 'uk' using legacy fields
-          if (!translations.any((t) => t.languageCode.value == 'uk')) {
-            translations.add(SpecialtyArticleTranslationsV2Companion(
+          // specialty_article_translations is empty in Supabase — read _uk fields directly from main row
+          final List<SpecialtyArticleTranslationsV2Companion> translations = [
+            SpecialtyArticleTranslationsV2Companion(
               articleId: Value(id),
               languageCode: const Value('uk'),
-              title: Value(ContentUtils.cleanCoffeeContent(item['title_uk'] as String? ?? item['title_en'] as String? ?? '')),
+              title: Value(ContentUtils.cleanCoffeeContent(item['title_uk'] as String? ?? '')),
               subtitle: Value(ContentUtils.cleanCoffeeContent(item['subtitle_uk'] as String? ?? '')),
-              contentHtml: Value(ContentUtils.cleanCoffeeContent(item['content_html_uk'] as String? ?? item['content_uk'] as String? ?? '')),
-            ));
-          }
+              contentHtml: Value(ContentUtils.cleanCoffeeContent(item['content_html_uk'] as String? ?? '')),
+            ),
+          ];
 
           await db.smartUpsertArticleV2(article, translations);
         } catch (e) {
@@ -621,26 +601,20 @@ class SyncService {
             stepsJson: Value(item['steps_json'] is List ? jsonEncode(item['steps_json']) : (item['steps_json']?.toString() ?? '[]')),
           );
 
-          // Force English for everything else as per user request
-          final transData = await supabase!.from('brewing_recipe_translations').select().eq('recipe_key', key);
-          
-          // Use 'en' as primary, fallback to 'uk' names if item actually doesn't have EN (unlikely for specialty)
-          final enTrans = transData.firstWhere((t) => t['language_code'] == 'en', orElse: () => transData.isNotEmpty ? transData.first : {});
-          
+          // brewing_recipe_translations is empty in Supabase — use name_uk/description_uk from main table
           final translations = [
              BrewingRecipeTranslationsV2Companion(
                 recipeKey: Value(key),
                 languageCode: const Value('en'),
-                name: Value(enTrans['name'] as String? ?? item['name'] as String? ?? 'Unknown'),
-                description: Value(ContentUtils.cleanCoffeeContent(enTrans['description'] as String? ?? item['description'] as String? ?? '')),
+                name: Value(item['name_uk'] as String? ?? item['name'] as String? ?? key),
+                description: Value(ContentUtils.cleanCoffeeContent(item['description_uk'] as String? ?? item['description'] as String? ?? '')),
              ),
-             // Also add as 'uk' but with English content
              BrewingRecipeTranslationsV2Companion(
                 recipeKey: Value(key),
                 languageCode: const Value('uk'),
-                name: Value(enTrans['name'] as String? ?? item['name'] as String? ?? 'Unknown'),
-                description: Value(ContentUtils.cleanCoffeeContent(enTrans['description'] as String? ?? item['description'] as String? ?? '')),
-             )
+                name: Value(item['name_uk'] as String? ?? item['name'] as String? ?? key),
+                description: Value(ContentUtils.cleanCoffeeContent(item['description_uk'] as String? ?? item['description'] as String? ?? '')),
+             ),
           ];
 
           await db.smartUpsertBrewingRecipeV2(recipe, translations);
@@ -858,8 +832,9 @@ class SyncService {
   Future<void> syncEncyclopedia() async {
     if (supabase == null) return;
     try {
-      debugPrint('SYNC: Pulling encyclopedia (V2)...');
-      final data = await supabase!.from('localized_beans').select();
+      debugPrint('SYNC: Pulling encyclopedia from encyclopedia_entries (V2)...');
+      // Use encyclopedia_entries — the correct table with 18 rows
+      final data = await supabase!.from('encyclopedia_entries').select();
       final remoteIds = data.map((item) => item['id'] as int).toList();
 
       for (final item in data) {
@@ -902,32 +877,22 @@ class SyncService {
             createdAt: Value(item['created_at'] != null ? DateTime.tryParse(item['created_at'] as String) : null),
           );
 
-          final transData = await supabase!.from('localized_bean_translations').select().eq('bean_id', id);
-          final List<LocalizedBeanTranslationsV2Companion> translations = transData.map((t) => LocalizedBeanTranslationsV2Companion(
-            beanId: Value(id),
-            languageCode: Value(t['language_code'] as String),
-            country: Value(t['country'] as String?),
-            region: Value(t['region'] as String?),
-            varieties: Value(t['varieties'] as String?),
-            flavorNotes: Value(t['flavor_notes']?.toString() ?? '[]'),
-            processMethod: Value(t['process_method'] as String?),
-            description: Value(ContentUtils.cleanCoffeeContent(t['description'] as String? ?? '')),
-            farmDescription: Value(ContentUtils.cleanCoffeeContent(t['farm_description'] as String? ?? '')),
-            roastLevel: Value(t['roast_level'] as String?),
-          )).toList();
+          // encyclopedia_entries has no separate translations table — data is in the main row
+          final List<LocalizedBeanTranslationsV2Companion> translations = [];
 
-          // Fallback for 'uk'
+          // encyclopedia_entries has data directly in the row — add 'uk' translation from main fields
           if (!translations.any((t) => t.languageCode.value == 'uk')) {
-             translations.add(LocalizedBeanTranslationsV2Companion(
+            translations.add(LocalizedBeanTranslationsV2Companion(
               beanId: Value(id),
               languageCode: const Value('uk'),
-              country: Value(item['country_uk'] as String? ?? item['country_en'] as String?),
-              region: Value(item['region_uk'] as String?),
-              varieties: Value(item['varieties_uk'] as String?),
-              flavorNotes: Value(item['flavor_notes_uk']?.toString() ?? '[]'),
-              processMethod: Value(item['process_method_uk'] as String?),
-              description: Value(ContentUtils.cleanCoffeeContent(item['description_uk'] as String? ?? item['description'] as String? ?? '')),
-              roastLevel: Value(item['roast_level_uk'] as String?),
+              country: Value(item['country'] as String?),
+              region: Value(item['region'] as String?),
+              varieties: Value(item['varieties'] as String?),
+              flavorNotes: Value(item['flavor_notes']?.toString() ?? '[]'),
+              processMethod: Value(item['process_method'] as String?),
+              description: Value(ContentUtils.cleanCoffeeContent(item['description'] as String? ?? '')),
+              farmDescription: Value(ContentUtils.cleanCoffeeContent(item['farm_description'] as String? ?? '')),
+              roastLevel: Value(item['roast_level'] as String?),
             ));
           }
 

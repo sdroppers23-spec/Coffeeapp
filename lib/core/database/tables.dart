@@ -76,8 +76,9 @@ class LocalizedBrands extends Table {
   TextColumn get name => text()();
   TextColumn get logoUrl => text().nullable()();
   TextColumn get siteUrl => text().nullable()();
-  
   DateTimeColumn get createdAt => dateTime().nullable()();
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+  BoolColumn get isDeletedLocal => boolean().withDefault(const Constant(false))();
 }
 
 class LocalizedBrandTranslations extends Table {

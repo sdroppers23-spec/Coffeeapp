@@ -31,7 +31,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? e]) : super(e ?? openConnection());
 
   @override
-  int get schemaVersion => 31;
+  int get schemaVersion => 32;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -65,6 +65,11 @@ class AppDatabase extends _$AppDatabase {
         await m.addColumn(customRecipes, customRecipes.brewRatio);
         await m.addColumn(customRecipes, customRecipes.grinderName);
         await m.addColumn(customRecipes, customRecipes.microns);
+      }
+      if (from < 32) {
+        // v32: Add sync flags to brands
+        await m.addColumn(localizedBrands, localizedBrands.isSynced);
+        await m.addColumn(localizedBrands, localizedBrands.isDeletedLocal);
       }
     },
     beforeOpen: (details) async {
@@ -133,14 +138,14 @@ class AppDatabase extends _$AppDatabase {
       smartUpsertFarmer(f, translations);
 
   // ── Brands ───────────────────────────────────────────────────────────────────
-  Future<List<LocalizedBrandDto>> getAllBrands([String lang = 'uk']) async {
+  Future<List<LocalizedBrandDto>> getAllBrands(String userId, [String lang = 'uk']) async {
     final query = select(localizedBrands).join([
       leftOuterJoin(
         localizedBrandTranslations,
         localizedBrandTranslations.brandId.equalsExp(localizedBrands.id) &
             localizedBrandTranslations.languageCode.equals(lang),
       ),
-    ]);
+    ])..where(localizedBrands.userId.equals(userId) & localizedBrands.isDeletedLocal.equals(false));
 
     final rows = await query.get();
     return rows.map((row) {
@@ -196,11 +201,13 @@ class AppDatabase extends _$AppDatabase {
     });
   }
 
-  Future<int> addBrand(String name, String location, String shortDesc) async {
+  Future<int> addBrand(String userId, String name, String location, String shortDesc) async {
     final res = await into(localizedBrands).insert(
       LocalizedBrandsCompanion.insert(
+        userId: Value(userId),
         name: name,
         createdAt: Value(DateTime.now()),
+        isSynced: const Value(false),
       ),
     );
 
@@ -245,7 +252,12 @@ class AppDatabase extends _$AppDatabase {
           .getSingleOrNull();
 
   Future<int> deleteBrand(int id) =>
-      (delete(localizedBrands)..where((t) => t.id.equals(id))).go();
+      (update(localizedBrands)..where((t) => t.id.equals(id))).write(
+        const LocalizedBrandsCompanion(
+          isDeletedLocal: Value(true),
+          isSynced: Value(false),
+        ),
+      );
 
   // Helper methods to clear data
   Future<void> clearFarmers() async {

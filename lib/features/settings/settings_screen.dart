@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../navigation/navigation_providers.dart';
 import '../../core/supabase/supabase_provider.dart';
 import '../../core/providers/settings_provider.dart';
+import '../../core/l10n/app_localizations.dart';
 // import '../../shared/widgets/premium_background.dart'; // Removed unused import
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -49,6 +50,61 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
   }
 
+  void _showLanguageDialog() {
+    final currentLocale = ref.read(localeProvider);
+    
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Text(
+                'Оберіть мову',
+                style: GoogleFonts.outfit(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            _buildLanguageOption('English', 'en', currentLocale == 'en'),
+            _buildLanguageOption('Українська', 'uk', currentLocale == 'uk'),
+            _buildLanguageOption('Русский', 'ru', currentLocale == 'ru'),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLanguageOption(String label, String code, bool isSelected) {
+    return ListTile(
+      onTap: () {
+        ref.read(localeProvider.notifier).setLocale(code);
+        Navigator.pop(context);
+        setState(() {}); // Refresh local UI
+      },
+      title: Text(
+        label,
+        style: GoogleFonts.outfit(
+          color: isSelected ? Theme.of(context).colorScheme.primary : null,
+          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+        ),
+      ),
+      trailing: isSelected 
+        ? Icon(Icons.check_circle_rounded, color: Theme.of(context).colorScheme.primary)
+        : null,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -86,7 +142,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             _buildCard(
               context,
               child: InkWell(
-                onTap: () {},
+                onTap: _showLanguageDialog,
                 borderRadius: BorderRadius.circular(16),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
@@ -100,7 +156,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'Українська',
+                          ref.watch(localeProvider) == 'uk' ? 'Українська' : 
+                          ref.watch(localeProvider) == 'en' ? 'English' : 'Русский',
                           style: GoogleFonts.outfit(
                             color: theme.colorScheme.onSurface,
                             fontSize: 16,

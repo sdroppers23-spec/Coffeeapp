@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'sca_flavor_wheel_data.dart';
+import '../../../core/l10n/app_localizations.dart';
+import '../../../core/l10n/sca_flavor_wheel_l10n.dart';
 
 class ScaFlavorWheel extends ConsumerStatefulWidget {
   final double size;
@@ -234,6 +236,8 @@ class _ScaWheelPainter extends CustomPainter {
     final r2 = fullRadius * 0.68; // Subcategory ring
     final r3 = fullRadius * 0.96; // Notes ring (pushed outer)
 
+    final currentLocale = ref.watch(localeProvider);
+
     double currentAngle = -math.pi / 2; // Start from top
 
     for (var cat in data) {
@@ -274,7 +278,7 @@ class _ScaWheelPainter extends CustomPainter {
       // Label for Cat
       _drawTextInsideArc(
         canvas,
-        cat.name,
+        ScaFlavorWheelL10n.translate(currentLocale, cat.name),
         center,
         currentAngle,
         catSweepAngle,
@@ -316,7 +320,7 @@ class _ScaWheelPainter extends CustomPainter {
         if (subSweepAngle > 0.05) {
             _drawTextInsideArc(
               canvas,
-              sub.name,
+              ScaFlavorWheelL10n.translate(currentLocale, sub.name),
               center,
               subStartAngle,
               subSweepAngle,
@@ -360,7 +364,7 @@ class _ScaWheelPainter extends CustomPainter {
             if (noteSweepAngle > 0.005) {
               _drawTextInsideArc(
                 canvas,
-                noteKey,
+                ScaFlavorWheelL10n.translate(currentLocale, noteKey),
                 center,
                 noteStartAngle,
                 noteSweepAngle,

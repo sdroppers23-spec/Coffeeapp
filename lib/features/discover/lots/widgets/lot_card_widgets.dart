@@ -913,7 +913,14 @@ class _LotPropertyGrid extends StatelessWidget {
           _InfoItem(label: isUk ? 'Рівень' : 'Roast Level', value: lot.roastLevel),
           _InfoItem(label: isUk ? 'Дата обсмажки' : 'Roast Date', value: lot.roastDate?.toString().split(' ')[0]),
           _InfoItem(label: isUk ? 'Відкрито' : 'Opened At', value: lot.openedAt?.toString().split(' ')[0]),
-          _InfoItem(label: isUk ? 'Ціна' : 'Price', value: lot.pricing['retail']?.toString()),
+          _InfoItem(label: isUk ? 'Ціна' : 'Price', value: (() {
+            final p1 = lot.pricing['retail'];
+            final p2 = lot.pricing['retail_1k'];
+            final val = (p1 != null && p1.toString().isNotEmpty) ? p1.toString() 
+                      : (p2 != null && p2.toString().isNotEmpty) ? p2.toString() : null;
+            if (val == null) return null;
+            return (val.contains('₴') || val.contains('\$') || val.contains('€') || val.toLowerCase().contains('uah')) ? val : '$val ₴';
+          })()),
           _InfoItem(label: isUk ? 'Вага' : 'Weight', value: lot.weight != null ? '${lot.weight}g' : null),
           _InfoItem(label: isUk ? 'ID Лоту' : 'Lot ID', value: lot.lotNumber),
         ]),

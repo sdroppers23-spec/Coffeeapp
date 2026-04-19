@@ -1,4 +1,4 @@
-import 'dart:io';
+﻿import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -139,7 +139,7 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                   backgroundColor: theme.colorScheme.primary,
                   foregroundColor: Colors.black,
                   label: Text(
-                    isUk ? '+ ДОДАТИ РЕЦЕПТ' : '+ ADD RECIPE',
+                    '+ ${ref.t("add_recipe").toUpperCase()}',
                     style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
                   ),
                   icon: const Icon(Icons.add_rounded, size: 24),

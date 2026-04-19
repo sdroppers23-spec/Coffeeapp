@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
+import '../../core/l10n/app_localizations.dart';
 import '../../shared/widgets/glass_container.dart';
 import 'custom_recipe_form.dart';
 import 'widgets/custom_recipe_card.dart';
@@ -47,7 +48,7 @@ class CustomRecipeListTab extends ConsumerWidget {
         },
         icon: const Icon(Icons.add_rounded),
         label: Text(
-          'New Recipe',
+          ref.t('add_recipe'),
           style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
         ),
         backgroundColor: const Color(0xFFC8A96E),
@@ -82,7 +83,7 @@ class CustomRecipeListTab extends ConsumerWidget {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'No custom recipes yet',
+                          ref.t('no_recipes_yet'),
                           style: GoogleFonts.poppins(
                             color: Colors.white,
                             fontSize: 18,
@@ -90,9 +91,9 @@ class CustomRecipeListTab extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        const Text(
-                          'Your perfect brew starts here.',
-                          style: TextStyle(color: Colors.white54, fontSize: 14),
+                        Text(
+                          ref.t('perfect_brew_starts_here'),
+                          style: const TextStyle(color: Colors.white54, fontSize: 14),
                         ),
                       ],
                     ),
@@ -151,7 +152,7 @@ class GlobalCustomRecipeList extends ConsumerWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'History is empty',
+                    ref.t('history_empty'),
                     style: GoogleFonts.poppins(
                       color: Colors.white38,
                       fontSize: 16,

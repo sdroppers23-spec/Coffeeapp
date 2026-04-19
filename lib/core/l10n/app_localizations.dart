@@ -189,6 +189,10 @@ class AppLocalizations {
       'newest_first': 'Newest first',
       'oldest_first': 'Oldest first',
       'no_options': 'No options available',
+      'add_recipe': 'Add Recipe',
+      'no_recipes_yet': 'No custom recipes yet',
+      'perfect_brew_starts_here': 'Your perfect brew starts here.',
+      'history_empty': 'History is empty',
     },
     'uk': {
       'discover': 'Відкриття',
@@ -317,6 +321,10 @@ class AppLocalizations {
       'newest_first': 'Спочатку нові',
       'oldest_first': 'Спочатку старі',
       'no_options': 'Варіанти відсутні',
+      'add_recipe': 'Додати рецепт',
+      'no_recipes_yet': 'Ще немає власних рецептів',
+      'perfect_brew_starts_here': 'Ваш ідеальний напій починається тут.',
+      'history_empty': 'Історія порожня',
     },
     'ru': {
       'discover': 'Открытия',
@@ -445,6 +453,10 @@ class AppLocalizations {
       'newest_first': 'Сначала новые',
       'oldest_first': 'Сначала старые',
       'no_options': 'Варианты отсутствуют',
+      'add_recipe': 'Добавить рецепт',
+      'no_recipes_yet': 'Пока нет собственных рецептов',
+      'perfect_brew_starts_here': 'Ваш идеальный напиток начинается здесь.',
+      'history_empty': 'История пуста',
     },
   };
 }

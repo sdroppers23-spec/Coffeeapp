@@ -10,6 +10,7 @@ import '../../shared/widgets/glass_container.dart';
 import '../../shared/widgets/premium_background.dart';
 import '../../shared/widgets/pressable_scale.dart';
 import '../../core/providers/settings_provider.dart';
+import '../../core/supabase/supabase_provider.dart';
 import 'brand_details_screen.dart';
 import '../../core/database/dtos.dart';
 import 'discovery_providers.dart';
@@ -31,9 +32,45 @@ class RoastersBody extends ConsumerWidget {
       data: (brands) {
         if (brands.isEmpty) {
           return Center(
-            child: Text(
-              ref.t('no_results'),
-              style: GoogleFonts.poppins(color: Colors.white38),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.storefront_outlined,
+                  size: 64,
+                  color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  ref.t('no_results'),
+                  style: GoogleFonts.poppins(
+                    color: Colors.white38,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 32),
+                PressableScale(
+                  onTap: () => RoastersScreen._showAddRoasterDialog(context, ref),
+                  child: GlassContainer(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    borderRadius: 16,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.add, color: Color(0xFFC8A96E), size: 18),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Додати обсмажчика',
+                          style: GoogleFonts.poppins(
+                            color: const Color(0xFFC8A96E),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           );
         }
@@ -62,7 +99,7 @@ class RoastersScreen extends ConsumerWidget {
           elevation: 0,
           centerTitle: true,
           title: Text(
-            'Artisan Roasters',
+            'Наші обсмажчики',
             style: GoogleFonts.poppins(
               fontWeight: FontWeight.bold,
               color: const Color(0xFFC8A96E),
@@ -97,7 +134,7 @@ class RoastersScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _showAddRoasterDialog(
+  static Future<void> _showAddRoasterDialog(
     BuildContext context,
     WidgetRef ref,
   ) async {
@@ -150,8 +187,9 @@ class RoastersScreen extends ConsumerWidget {
           TextButton(
             onPressed: () async {
               if (nameController.text.isNotEmpty) {
-                final db = ref.read(databaseProvider);
+                final user = ref.read(currentUserProvider);
                 await db.addBrand(
+                  user?.id ?? '',
                   nameController.text,
                   locationController.text,
                   shortDescController.text,

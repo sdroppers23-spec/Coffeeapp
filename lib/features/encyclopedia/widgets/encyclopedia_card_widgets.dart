@@ -495,4 +495,3 @@ class _SensoryFiveSegmentBarSmall extends StatelessWidget {
     );
   }
 }
-}

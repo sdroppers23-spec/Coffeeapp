@@ -25,13 +25,22 @@ part 'app_database.g.dart';
     BrewingRecipeTranslations,
     RecommendedRecipes,
     CustomRecipes,
+    // V2 Tables
+    LocalizedFarmersV2,
+    LocalizedFarmerTranslationsV2,
+    SpecialtyArticlesV2,
+    SpecialtyArticleTranslationsV2,
+    LocalizedBeansV2,
+    LocalizedBeanTranslationsV2,
+    BrewingRecipesV2,
+    BrewingRecipeTranslationsV2,
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? e]) : super(e ?? openConnection());
 
   @override
-  int get schemaVersion => 33;
+  int get schemaVersion => 34;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -75,6 +84,17 @@ class AppDatabase extends _$AppDatabase {
         // v33: Add favorite/archive support for brands
         await m.addColumn(localizedBrands, localizedBrands.isFavorite);
         await m.addColumn(localizedBrands, localizedBrands.isArchived);
+      }
+      if (from < 34) {
+        // v34: Create V2 tables
+        await m.createTable(localizedFarmersV2);
+        await m.createTable(localizedFarmerTranslationsV2);
+        await m.createTable(specialtyArticlesV2);
+        await m.createTable(specialtyArticleTranslationsV2);
+        await m.createTable(localizedBeansV2);
+        await m.createTable(localizedBeanTranslationsV2);
+        await m.createTable(brewingRecipesV2);
+        await m.createTable(brewingRecipeTranslationsV2);
       }
     },
     beforeOpen: (details) async {
@@ -141,6 +161,193 @@ class AppDatabase extends _$AppDatabase {
     List<LocalizedFarmerTranslationsCompanion> translations,
   ) =>
       smartUpsertFarmer(f, translations);
+
+  // ── V2 Methods ──────────────────────────────────────────────────────────────
+
+  Future<List<LocalizedFarmerDto>> getAllFarmersV2(String lang) async {
+    final query = select(localizedFarmersV2).join([
+      leftOuterJoin(
+        localizedFarmerTranslationsV2,
+        localizedFarmerTranslationsV2.farmerId.equalsExp(localizedFarmersV2.id) &
+            localizedFarmerTranslationsV2.languageCode.equals(lang),
+      ),
+    ]);
+
+    final rows = await query.get();
+    return rows.map((row) {
+      final f = row.readTable(localizedFarmersV2);
+      final t = row.readTableOrNull(localizedFarmerTranslationsV2);
+
+      return LocalizedFarmerDto(
+        id: f.id,
+        imageUrl: f.imageUrl,
+        flagUrl: f.flagUrl,
+        name: t?.name ?? 'Unknown',
+        region: t?.region ?? '',
+        country: t?.country ?? '',
+        descriptionHtml: t?.descriptionHtml ?? '',
+        story: t?.story ?? '',
+        latitude: f.latitude,
+        longitude: f.longitude,
+        createdAt: f.createdAt,
+      );
+    }).toList();
+  }
+
+  Future<void> smartUpsertFarmerV2(
+    LocalizedFarmersV2Companion f,
+    List<LocalizedFarmerTranslationsV2Companion> translations,
+  ) async {
+    await batch((batch) {
+      batch.insertAllOnConflictUpdate(localizedFarmersV2, [f]);
+      batch.insertAllOnConflictUpdate(localizedFarmerTranslationsV2, translations);
+    });
+  }
+
+  Future<List<SpecialtyArticleDto>> getAllArticlesV2(String lang) async {
+    final query = select(specialtyArticlesV2).join([
+      leftOuterJoin(
+        specialtyArticleTranslationsV2,
+        specialtyArticleTranslationsV2.articleId.equalsExp(specialtyArticlesV2.id) &
+            specialtyArticleTranslationsV2.languageCode.equals(lang),
+      ),
+    ]);
+
+    final rows = await query.get();
+    return rows.map((row) {
+      final a = row.readTable(specialtyArticlesV2);
+      final t = row.readTableOrNull(specialtyArticleTranslationsV2);
+
+      return SpecialtyArticleDto(
+        id: a.id,
+        title: t?.title ?? 'Untitled',
+        subtitle: t?.subtitle ?? '',
+        imageUrl: a.imageUrl,
+        flagUrl: a.flagUrl,
+        contentHtml: t?.contentHtml ?? '',
+        readTimeMin: a.readTimeMin,
+      );
+    }).toList();
+  }
+
+  Future<void> smartUpsertArticleV2(
+    SpecialtyArticlesV2Companion a,
+    List<SpecialtyArticleTranslationsV2Companion> translations,
+  ) async {
+    await batch((batch) {
+      batch.insertAllOnConflictUpdate(specialtyArticlesV2, [a]);
+      batch.insertAllOnConflictUpdate(specialtyArticleTranslationsV2, translations);
+    });
+  }
+
+  Future<List<LocalizedBeanDto>> getEncyclopediaV2(String lang) async {
+    final query = select(localizedBeansV2).join([
+      leftOuterJoin(
+        localizedBeanTranslationsV2,
+        localizedBeanTranslationsV2.beanId.equalsExp(localizedBeansV2.id) &
+            localizedBeanTranslationsV2.languageCode.equals(lang),
+      ),
+    ]);
+
+    final rows = await query.get();
+    return rows.map((row) => _mapBeanV2Row(row, lang)).toList();
+  }
+
+  LocalizedBeanDto _mapBeanV2Row(TypedResult row, String lang) {
+    final bean = row.readTable(localizedBeansV2);
+    final trans = row.readTableOrNull(localizedBeanTranslationsV2);
+
+    return LocalizedBeanDto(
+      id: bean.id,
+      brandId: bean.brandId,
+      countryEmoji: bean.countryEmoji,
+      altitudeMin: bean.altitudeMin,
+      altitudeMax: bean.altitudeMax,
+      lotNumber: bean.lotNumber,
+      scaScore: bean.scaScore,
+      cupsScore: bean.cupsScore,
+      sensoryPoints: _parseJson(bean.sensoryJson),
+      pricing: _parseJson(bean.priceJson),
+      plantationPhotos: _parseList<String>(bean.plantationPhotosUrl),
+      isPremium: bean.isPremium,
+      detailedProcess: bean.detailedProcessMarkdown,
+      url: bean.url,
+      farmerId: bean.farmerId,
+      isDecaf: bean.isDecaf,
+      farm: bean.farm,
+      farmPhotosUrlCover: bean.farmPhotosUrlCover,
+      washStation: bean.washStation,
+      retailPrice: bean.retailPrice,
+      wholesalePrice: bean.wholesalePrice,
+      harvestSeason: bean.harvestSeason,
+      price: bean.price,
+      weight: bean.weight,
+      roastDate: bean.roastDate,
+      processingMethodsJson: bean.processingMethodsJson,
+      country: trans?.country ?? 'Unknown',
+      region: trans?.region ?? '',
+      varieties: trans?.varieties ?? '',
+      flavorNotes: _parseList<String>(trans?.flavorNotes ?? '[]'),
+      description: trans?.description ?? '',
+      farmDescription: trans?.farmDescription ?? '',
+      roastLevel: trans?.roastLevel ?? '',
+      processMethod: trans?.processMethod ?? '',
+      isFavorite: bean.isFavorite,
+      isArchived: false,
+      createdAt: bean.createdAt,
+    );
+  }
+
+  Future<void> smartUpsertBeanV2(
+    LocalizedBeansV2Companion bean,
+    List<LocalizedBeanTranslationsV2Companion> translations,
+  ) async {
+    await batch((batch) {
+      batch.insertAllOnConflictUpdate(localizedBeansV2, [bean]);
+      batch.insertAllOnConflictUpdate(localizedBeanTranslationsV2, translations);
+    });
+  }
+
+  Future<void> smartUpsertBrewingRecipeV2(
+    BrewingRecipesV2Companion recipe,
+    List<BrewingRecipeTranslationsV2Companion> translations,
+  ) async {
+    await batch((batch) {
+      batch.insertAllOnConflictUpdate(brewingRecipesV2, [recipe]);
+      batch.insertAllOnConflictUpdate(brewingRecipeTranslationsV2, translations);
+    });
+  }
+
+  Future<List<BrewingRecipeDto>> getAllBrewingRecipesV2(String lang) async {
+    final query = select(brewingRecipesV2).join([
+      leftOuterJoin(
+        brewingRecipeTranslationsV2,
+        brewingRecipeTranslationsV2.recipeKey.equalsExp(brewingRecipesV2.methodKey) &
+            brewingRecipeTranslationsV2.languageCode.equals(lang),
+      ),
+    ]);
+
+    final rows = await query.get();
+    return rows.map((row) {
+      final recipe = row.readTable(brewingRecipesV2);
+      final translation = row.readTableOrNull(brewingRecipeTranslationsV2);
+
+      return BrewingRecipeDto(
+        id: recipe.id,
+        methodKey: recipe.methodKey,
+        name: translation?.name ?? 'Unknown',
+        description: translation?.description ?? '',
+        imageUrl: recipe.imageUrl,
+        ratioGramsPerMl: recipe.ratioGramsPerMl,
+        tempC: recipe.tempC,
+        totalTimeSec: recipe.totalTimeSec,
+        difficulty: recipe.difficulty,
+        stepsJson: recipe.stepsJson,
+        flavorProfile: recipe.flavorProfile,
+        iconName: recipe.iconName,
+      );
+    }).toList();
+  }
 
   // ── Brands ───────────────────────────────────────────────────────────────────
   Future<List<LocalizedBrandDto>> getAllBrands(String userId, [String lang = 'uk']) async {

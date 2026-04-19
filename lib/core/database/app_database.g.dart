@@ -10723,6 +10723,4809 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
   }
 }
 
+class $LocalizedFarmersV2Table extends LocalizedFarmersV2
+    with TableInfo<$LocalizedFarmersV2Table, LocalizedFarmersV2Data> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LocalizedFarmersV2Table(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
+    'imageUrl',
+  );
+  @override
+  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
+    'image_url',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _flagUrlMeta = const VerificationMeta(
+    'flagUrl',
+  );
+  @override
+  late final GeneratedColumn<String> flagUrl = GeneratedColumn<String>(
+    'flag_url',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _latitudeMeta = const VerificationMeta(
+    'latitude',
+  );
+  @override
+  late final GeneratedColumn<double> latitude = GeneratedColumn<double>(
+    'latitude',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _longitudeMeta = const VerificationMeta(
+    'longitude',
+  );
+  @override
+  late final GeneratedColumn<double> longitude = GeneratedColumn<double>(
+    'longitude',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    imageUrl,
+    flagUrl,
+    latitude,
+    longitude,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'localized_farmers_v2';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LocalizedFarmersV2Data> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('image_url')) {
+      context.handle(
+        _imageUrlMeta,
+        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
+      );
+    }
+    if (data.containsKey('flag_url')) {
+      context.handle(
+        _flagUrlMeta,
+        flagUrl.isAcceptableOrUnknown(data['flag_url']!, _flagUrlMeta),
+      );
+    }
+    if (data.containsKey('latitude')) {
+      context.handle(
+        _latitudeMeta,
+        latitude.isAcceptableOrUnknown(data['latitude']!, _latitudeMeta),
+      );
+    }
+    if (data.containsKey('longitude')) {
+      context.handle(
+        _longitudeMeta,
+        longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  LocalizedFarmersV2Data map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LocalizedFarmersV2Data(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      imageUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_url'],
+      )!,
+      flagUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}flag_url'],
+      )!,
+      latitude: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}latitude'],
+      ),
+      longitude: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}longitude'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      ),
+    );
+  }
+
+  @override
+  $LocalizedFarmersV2Table createAlias(String alias) {
+    return $LocalizedFarmersV2Table(attachedDatabase, alias);
+  }
+}
+
+class LocalizedFarmersV2Data extends DataClass
+    implements Insertable<LocalizedFarmersV2Data> {
+  final int id;
+  final String imageUrl;
+  final String flagUrl;
+  final double? latitude;
+  final double? longitude;
+  final DateTime? createdAt;
+  const LocalizedFarmersV2Data({
+    required this.id,
+    required this.imageUrl,
+    required this.flagUrl,
+    this.latitude,
+    this.longitude,
+    this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['image_url'] = Variable<String>(imageUrl);
+    map['flag_url'] = Variable<String>(flagUrl);
+    if (!nullToAbsent || latitude != null) {
+      map['latitude'] = Variable<double>(latitude);
+    }
+    if (!nullToAbsent || longitude != null) {
+      map['longitude'] = Variable<double>(longitude);
+    }
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    return map;
+  }
+
+  LocalizedFarmersV2Companion toCompanion(bool nullToAbsent) {
+    return LocalizedFarmersV2Companion(
+      id: Value(id),
+      imageUrl: Value(imageUrl),
+      flagUrl: Value(flagUrl),
+      latitude: latitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(latitude),
+      longitude: longitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(longitude),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+    );
+  }
+
+  factory LocalizedFarmersV2Data.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LocalizedFarmersV2Data(
+      id: serializer.fromJson<int>(json['id']),
+      imageUrl: serializer.fromJson<String>(json['imageUrl']),
+      flagUrl: serializer.fromJson<String>(json['flagUrl']),
+      latitude: serializer.fromJson<double?>(json['latitude']),
+      longitude: serializer.fromJson<double?>(json['longitude']),
+      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'imageUrl': serializer.toJson<String>(imageUrl),
+      'flagUrl': serializer.toJson<String>(flagUrl),
+      'latitude': serializer.toJson<double?>(latitude),
+      'longitude': serializer.toJson<double?>(longitude),
+      'createdAt': serializer.toJson<DateTime?>(createdAt),
+    };
+  }
+
+  LocalizedFarmersV2Data copyWith({
+    int? id,
+    String? imageUrl,
+    String? flagUrl,
+    Value<double?> latitude = const Value.absent(),
+    Value<double?> longitude = const Value.absent(),
+    Value<DateTime?> createdAt = const Value.absent(),
+  }) => LocalizedFarmersV2Data(
+    id: id ?? this.id,
+    imageUrl: imageUrl ?? this.imageUrl,
+    flagUrl: flagUrl ?? this.flagUrl,
+    latitude: latitude.present ? latitude.value : this.latitude,
+    longitude: longitude.present ? longitude.value : this.longitude,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+  );
+  LocalizedFarmersV2Data copyWithCompanion(LocalizedFarmersV2Companion data) {
+    return LocalizedFarmersV2Data(
+      id: data.id.present ? data.id.value : this.id,
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      flagUrl: data.flagUrl.present ? data.flagUrl.value : this.flagUrl,
+      latitude: data.latitude.present ? data.latitude.value : this.latitude,
+      longitude: data.longitude.present ? data.longitude.value : this.longitude,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalizedFarmersV2Data(')
+          ..write('id: $id, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('flagUrl: $flagUrl, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, imageUrl, flagUrl, latitude, longitude, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LocalizedFarmersV2Data &&
+          other.id == this.id &&
+          other.imageUrl == this.imageUrl &&
+          other.flagUrl == this.flagUrl &&
+          other.latitude == this.latitude &&
+          other.longitude == this.longitude &&
+          other.createdAt == this.createdAt);
+}
+
+class LocalizedFarmersV2Companion
+    extends UpdateCompanion<LocalizedFarmersV2Data> {
+  final Value<int> id;
+  final Value<String> imageUrl;
+  final Value<String> flagUrl;
+  final Value<double?> latitude;
+  final Value<double?> longitude;
+  final Value<DateTime?> createdAt;
+  const LocalizedFarmersV2Companion({
+    this.id = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.flagUrl = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  LocalizedFarmersV2Companion.insert({
+    this.id = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.flagUrl = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  static Insertable<LocalizedFarmersV2Data> custom({
+    Expression<int>? id,
+    Expression<String>? imageUrl,
+    Expression<String>? flagUrl,
+    Expression<double>? latitude,
+    Expression<double>? longitude,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (imageUrl != null) 'image_url': imageUrl,
+      if (flagUrl != null) 'flag_url': flagUrl,
+      if (latitude != null) 'latitude': latitude,
+      if (longitude != null) 'longitude': longitude,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  LocalizedFarmersV2Companion copyWith({
+    Value<int>? id,
+    Value<String>? imageUrl,
+    Value<String>? flagUrl,
+    Value<double?>? latitude,
+    Value<double?>? longitude,
+    Value<DateTime?>? createdAt,
+  }) {
+    return LocalizedFarmersV2Companion(
+      id: id ?? this.id,
+      imageUrl: imageUrl ?? this.imageUrl,
+      flagUrl: flagUrl ?? this.flagUrl,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
+    if (flagUrl.present) {
+      map['flag_url'] = Variable<String>(flagUrl.value);
+    }
+    if (latitude.present) {
+      map['latitude'] = Variable<double>(latitude.value);
+    }
+    if (longitude.present) {
+      map['longitude'] = Variable<double>(longitude.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalizedFarmersV2Companion(')
+          ..write('id: $id, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('flagUrl: $flagUrl, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LocalizedFarmerTranslationsV2Table extends LocalizedFarmerTranslationsV2
+    with
+        TableInfo<
+          $LocalizedFarmerTranslationsV2Table,
+          LocalizedFarmerTranslationsV2Data
+        > {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LocalizedFarmerTranslationsV2Table(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _farmerIdMeta = const VerificationMeta(
+    'farmerId',
+  );
+  @override
+  late final GeneratedColumn<int> farmerId = GeneratedColumn<int>(
+    'farmer_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES localized_farmers_v2 (id)',
+    ),
+  );
+  static const VerificationMeta _languageCodeMeta = const VerificationMeta(
+    'languageCode',
+  );
+  @override
+  late final GeneratedColumn<String> languageCode = GeneratedColumn<String>(
+    'language_code',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionHtmlMeta = const VerificationMeta(
+    'descriptionHtml',
+  );
+  @override
+  late final GeneratedColumn<String> descriptionHtml = GeneratedColumn<String>(
+    'description_html',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _storyMeta = const VerificationMeta('story');
+  @override
+  late final GeneratedColumn<String> story = GeneratedColumn<String>(
+    'story',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _regionMeta = const VerificationMeta('region');
+  @override
+  late final GeneratedColumn<String> region = GeneratedColumn<String>(
+    'region',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _countryMeta = const VerificationMeta(
+    'country',
+  );
+  @override
+  late final GeneratedColumn<String> country = GeneratedColumn<String>(
+    'country',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    farmerId,
+    languageCode,
+    name,
+    descriptionHtml,
+    story,
+    region,
+    country,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'localized_farmer_translations_v2';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LocalizedFarmerTranslationsV2Data> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('farmer_id')) {
+      context.handle(
+        _farmerIdMeta,
+        farmerId.isAcceptableOrUnknown(data['farmer_id']!, _farmerIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_farmerIdMeta);
+    }
+    if (data.containsKey('language_code')) {
+      context.handle(
+        _languageCodeMeta,
+        languageCode.isAcceptableOrUnknown(
+          data['language_code']!,
+          _languageCodeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_languageCodeMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    }
+    if (data.containsKey('description_html')) {
+      context.handle(
+        _descriptionHtmlMeta,
+        descriptionHtml.isAcceptableOrUnknown(
+          data['description_html']!,
+          _descriptionHtmlMeta,
+        ),
+      );
+    }
+    if (data.containsKey('story')) {
+      context.handle(
+        _storyMeta,
+        story.isAcceptableOrUnknown(data['story']!, _storyMeta),
+      );
+    }
+    if (data.containsKey('region')) {
+      context.handle(
+        _regionMeta,
+        region.isAcceptableOrUnknown(data['region']!, _regionMeta),
+      );
+    }
+    if (data.containsKey('country')) {
+      context.handle(
+        _countryMeta,
+        country.isAcceptableOrUnknown(data['country']!, _countryMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {farmerId, languageCode};
+  @override
+  LocalizedFarmerTranslationsV2Data map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LocalizedFarmerTranslationsV2Data(
+      farmerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}farmer_id'],
+      )!,
+      languageCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}language_code'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      ),
+      descriptionHtml: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description_html'],
+      ),
+      story: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}story'],
+      ),
+      region: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}region'],
+      ),
+      country: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}country'],
+      ),
+    );
+  }
+
+  @override
+  $LocalizedFarmerTranslationsV2Table createAlias(String alias) {
+    return $LocalizedFarmerTranslationsV2Table(attachedDatabase, alias);
+  }
+}
+
+class LocalizedFarmerTranslationsV2Data extends DataClass
+    implements Insertable<LocalizedFarmerTranslationsV2Data> {
+  final int farmerId;
+  final String languageCode;
+  final String? name;
+  final String? descriptionHtml;
+  final String? story;
+  final String? region;
+  final String? country;
+  const LocalizedFarmerTranslationsV2Data({
+    required this.farmerId,
+    required this.languageCode,
+    this.name,
+    this.descriptionHtml,
+    this.story,
+    this.region,
+    this.country,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['farmer_id'] = Variable<int>(farmerId);
+    map['language_code'] = Variable<String>(languageCode);
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
+    }
+    if (!nullToAbsent || descriptionHtml != null) {
+      map['description_html'] = Variable<String>(descriptionHtml);
+    }
+    if (!nullToAbsent || story != null) {
+      map['story'] = Variable<String>(story);
+    }
+    if (!nullToAbsent || region != null) {
+      map['region'] = Variable<String>(region);
+    }
+    if (!nullToAbsent || country != null) {
+      map['country'] = Variable<String>(country);
+    }
+    return map;
+  }
+
+  LocalizedFarmerTranslationsV2Companion toCompanion(bool nullToAbsent) {
+    return LocalizedFarmerTranslationsV2Companion(
+      farmerId: Value(farmerId),
+      languageCode: Value(languageCode),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      descriptionHtml: descriptionHtml == null && nullToAbsent
+          ? const Value.absent()
+          : Value(descriptionHtml),
+      story: story == null && nullToAbsent
+          ? const Value.absent()
+          : Value(story),
+      region: region == null && nullToAbsent
+          ? const Value.absent()
+          : Value(region),
+      country: country == null && nullToAbsent
+          ? const Value.absent()
+          : Value(country),
+    );
+  }
+
+  factory LocalizedFarmerTranslationsV2Data.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LocalizedFarmerTranslationsV2Data(
+      farmerId: serializer.fromJson<int>(json['farmerId']),
+      languageCode: serializer.fromJson<String>(json['languageCode']),
+      name: serializer.fromJson<String?>(json['name']),
+      descriptionHtml: serializer.fromJson<String?>(json['descriptionHtml']),
+      story: serializer.fromJson<String?>(json['story']),
+      region: serializer.fromJson<String?>(json['region']),
+      country: serializer.fromJson<String?>(json['country']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'farmerId': serializer.toJson<int>(farmerId),
+      'languageCode': serializer.toJson<String>(languageCode),
+      'name': serializer.toJson<String?>(name),
+      'descriptionHtml': serializer.toJson<String?>(descriptionHtml),
+      'story': serializer.toJson<String?>(story),
+      'region': serializer.toJson<String?>(region),
+      'country': serializer.toJson<String?>(country),
+    };
+  }
+
+  LocalizedFarmerTranslationsV2Data copyWith({
+    int? farmerId,
+    String? languageCode,
+    Value<String?> name = const Value.absent(),
+    Value<String?> descriptionHtml = const Value.absent(),
+    Value<String?> story = const Value.absent(),
+    Value<String?> region = const Value.absent(),
+    Value<String?> country = const Value.absent(),
+  }) => LocalizedFarmerTranslationsV2Data(
+    farmerId: farmerId ?? this.farmerId,
+    languageCode: languageCode ?? this.languageCode,
+    name: name.present ? name.value : this.name,
+    descriptionHtml: descriptionHtml.present
+        ? descriptionHtml.value
+        : this.descriptionHtml,
+    story: story.present ? story.value : this.story,
+    region: region.present ? region.value : this.region,
+    country: country.present ? country.value : this.country,
+  );
+  LocalizedFarmerTranslationsV2Data copyWithCompanion(
+    LocalizedFarmerTranslationsV2Companion data,
+  ) {
+    return LocalizedFarmerTranslationsV2Data(
+      farmerId: data.farmerId.present ? data.farmerId.value : this.farmerId,
+      languageCode: data.languageCode.present
+          ? data.languageCode.value
+          : this.languageCode,
+      name: data.name.present ? data.name.value : this.name,
+      descriptionHtml: data.descriptionHtml.present
+          ? data.descriptionHtml.value
+          : this.descriptionHtml,
+      story: data.story.present ? data.story.value : this.story,
+      region: data.region.present ? data.region.value : this.region,
+      country: data.country.present ? data.country.value : this.country,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalizedFarmerTranslationsV2Data(')
+          ..write('farmerId: $farmerId, ')
+          ..write('languageCode: $languageCode, ')
+          ..write('name: $name, ')
+          ..write('descriptionHtml: $descriptionHtml, ')
+          ..write('story: $story, ')
+          ..write('region: $region, ')
+          ..write('country: $country')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    farmerId,
+    languageCode,
+    name,
+    descriptionHtml,
+    story,
+    region,
+    country,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LocalizedFarmerTranslationsV2Data &&
+          other.farmerId == this.farmerId &&
+          other.languageCode == this.languageCode &&
+          other.name == this.name &&
+          other.descriptionHtml == this.descriptionHtml &&
+          other.story == this.story &&
+          other.region == this.region &&
+          other.country == this.country);
+}
+
+class LocalizedFarmerTranslationsV2Companion
+    extends UpdateCompanion<LocalizedFarmerTranslationsV2Data> {
+  final Value<int> farmerId;
+  final Value<String> languageCode;
+  final Value<String?> name;
+  final Value<String?> descriptionHtml;
+  final Value<String?> story;
+  final Value<String?> region;
+  final Value<String?> country;
+  final Value<int> rowid;
+  const LocalizedFarmerTranslationsV2Companion({
+    this.farmerId = const Value.absent(),
+    this.languageCode = const Value.absent(),
+    this.name = const Value.absent(),
+    this.descriptionHtml = const Value.absent(),
+    this.story = const Value.absent(),
+    this.region = const Value.absent(),
+    this.country = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LocalizedFarmerTranslationsV2Companion.insert({
+    required int farmerId,
+    required String languageCode,
+    this.name = const Value.absent(),
+    this.descriptionHtml = const Value.absent(),
+    this.story = const Value.absent(),
+    this.region = const Value.absent(),
+    this.country = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : farmerId = Value(farmerId),
+       languageCode = Value(languageCode);
+  static Insertable<LocalizedFarmerTranslationsV2Data> custom({
+    Expression<int>? farmerId,
+    Expression<String>? languageCode,
+    Expression<String>? name,
+    Expression<String>? descriptionHtml,
+    Expression<String>? story,
+    Expression<String>? region,
+    Expression<String>? country,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (farmerId != null) 'farmer_id': farmerId,
+      if (languageCode != null) 'language_code': languageCode,
+      if (name != null) 'name': name,
+      if (descriptionHtml != null) 'description_html': descriptionHtml,
+      if (story != null) 'story': story,
+      if (region != null) 'region': region,
+      if (country != null) 'country': country,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LocalizedFarmerTranslationsV2Companion copyWith({
+    Value<int>? farmerId,
+    Value<String>? languageCode,
+    Value<String?>? name,
+    Value<String?>? descriptionHtml,
+    Value<String?>? story,
+    Value<String?>? region,
+    Value<String?>? country,
+    Value<int>? rowid,
+  }) {
+    return LocalizedFarmerTranslationsV2Companion(
+      farmerId: farmerId ?? this.farmerId,
+      languageCode: languageCode ?? this.languageCode,
+      name: name ?? this.name,
+      descriptionHtml: descriptionHtml ?? this.descriptionHtml,
+      story: story ?? this.story,
+      region: region ?? this.region,
+      country: country ?? this.country,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (farmerId.present) {
+      map['farmer_id'] = Variable<int>(farmerId.value);
+    }
+    if (languageCode.present) {
+      map['language_code'] = Variable<String>(languageCode.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (descriptionHtml.present) {
+      map['description_html'] = Variable<String>(descriptionHtml.value);
+    }
+    if (story.present) {
+      map['story'] = Variable<String>(story.value);
+    }
+    if (region.present) {
+      map['region'] = Variable<String>(region.value);
+    }
+    if (country.present) {
+      map['country'] = Variable<String>(country.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalizedFarmerTranslationsV2Companion(')
+          ..write('farmerId: $farmerId, ')
+          ..write('languageCode: $languageCode, ')
+          ..write('name: $name, ')
+          ..write('descriptionHtml: $descriptionHtml, ')
+          ..write('story: $story, ')
+          ..write('region: $region, ')
+          ..write('country: $country, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SpecialtyArticlesV2Table extends SpecialtyArticlesV2
+    with TableInfo<$SpecialtyArticlesV2Table, SpecialtyArticlesV2Data> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SpecialtyArticlesV2Table(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
+    'imageUrl',
+  );
+  @override
+  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
+    'image_url',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _flagUrlMeta = const VerificationMeta(
+    'flagUrl',
+  );
+  @override
+  late final GeneratedColumn<String> flagUrl = GeneratedColumn<String>(
+    'flag_url',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _readTimeMinMeta = const VerificationMeta(
+    'readTimeMin',
+  );
+  @override
+  late final GeneratedColumn<int> readTimeMin = GeneratedColumn<int>(
+    'read_time_min',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(5),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    imageUrl,
+    flagUrl,
+    readTimeMin,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'specialty_articles_v2';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SpecialtyArticlesV2Data> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('image_url')) {
+      context.handle(
+        _imageUrlMeta,
+        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
+      );
+    }
+    if (data.containsKey('flag_url')) {
+      context.handle(
+        _flagUrlMeta,
+        flagUrl.isAcceptableOrUnknown(data['flag_url']!, _flagUrlMeta),
+      );
+    }
+    if (data.containsKey('read_time_min')) {
+      context.handle(
+        _readTimeMinMeta,
+        readTimeMin.isAcceptableOrUnknown(
+          data['read_time_min']!,
+          _readTimeMinMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SpecialtyArticlesV2Data map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SpecialtyArticlesV2Data(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      imageUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_url'],
+      )!,
+      flagUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}flag_url'],
+      )!,
+      readTimeMin: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}read_time_min'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      ),
+    );
+  }
+
+  @override
+  $SpecialtyArticlesV2Table createAlias(String alias) {
+    return $SpecialtyArticlesV2Table(attachedDatabase, alias);
+  }
+}
+
+class SpecialtyArticlesV2Data extends DataClass
+    implements Insertable<SpecialtyArticlesV2Data> {
+  final int id;
+  final String imageUrl;
+  final String flagUrl;
+  final int readTimeMin;
+  final DateTime? createdAt;
+  const SpecialtyArticlesV2Data({
+    required this.id,
+    required this.imageUrl,
+    required this.flagUrl,
+    required this.readTimeMin,
+    this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['image_url'] = Variable<String>(imageUrl);
+    map['flag_url'] = Variable<String>(flagUrl);
+    map['read_time_min'] = Variable<int>(readTimeMin);
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    return map;
+  }
+
+  SpecialtyArticlesV2Companion toCompanion(bool nullToAbsent) {
+    return SpecialtyArticlesV2Companion(
+      id: Value(id),
+      imageUrl: Value(imageUrl),
+      flagUrl: Value(flagUrl),
+      readTimeMin: Value(readTimeMin),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+    );
+  }
+
+  factory SpecialtyArticlesV2Data.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SpecialtyArticlesV2Data(
+      id: serializer.fromJson<int>(json['id']),
+      imageUrl: serializer.fromJson<String>(json['imageUrl']),
+      flagUrl: serializer.fromJson<String>(json['flagUrl']),
+      readTimeMin: serializer.fromJson<int>(json['readTimeMin']),
+      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'imageUrl': serializer.toJson<String>(imageUrl),
+      'flagUrl': serializer.toJson<String>(flagUrl),
+      'readTimeMin': serializer.toJson<int>(readTimeMin),
+      'createdAt': serializer.toJson<DateTime?>(createdAt),
+    };
+  }
+
+  SpecialtyArticlesV2Data copyWith({
+    int? id,
+    String? imageUrl,
+    String? flagUrl,
+    int? readTimeMin,
+    Value<DateTime?> createdAt = const Value.absent(),
+  }) => SpecialtyArticlesV2Data(
+    id: id ?? this.id,
+    imageUrl: imageUrl ?? this.imageUrl,
+    flagUrl: flagUrl ?? this.flagUrl,
+    readTimeMin: readTimeMin ?? this.readTimeMin,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+  );
+  SpecialtyArticlesV2Data copyWithCompanion(SpecialtyArticlesV2Companion data) {
+    return SpecialtyArticlesV2Data(
+      id: data.id.present ? data.id.value : this.id,
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      flagUrl: data.flagUrl.present ? data.flagUrl.value : this.flagUrl,
+      readTimeMin: data.readTimeMin.present
+          ? data.readTimeMin.value
+          : this.readTimeMin,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SpecialtyArticlesV2Data(')
+          ..write('id: $id, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('flagUrl: $flagUrl, ')
+          ..write('readTimeMin: $readTimeMin, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, imageUrl, flagUrl, readTimeMin, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SpecialtyArticlesV2Data &&
+          other.id == this.id &&
+          other.imageUrl == this.imageUrl &&
+          other.flagUrl == this.flagUrl &&
+          other.readTimeMin == this.readTimeMin &&
+          other.createdAt == this.createdAt);
+}
+
+class SpecialtyArticlesV2Companion
+    extends UpdateCompanion<SpecialtyArticlesV2Data> {
+  final Value<int> id;
+  final Value<String> imageUrl;
+  final Value<String> flagUrl;
+  final Value<int> readTimeMin;
+  final Value<DateTime?> createdAt;
+  const SpecialtyArticlesV2Companion({
+    this.id = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.flagUrl = const Value.absent(),
+    this.readTimeMin = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  SpecialtyArticlesV2Companion.insert({
+    this.id = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.flagUrl = const Value.absent(),
+    this.readTimeMin = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  static Insertable<SpecialtyArticlesV2Data> custom({
+    Expression<int>? id,
+    Expression<String>? imageUrl,
+    Expression<String>? flagUrl,
+    Expression<int>? readTimeMin,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (imageUrl != null) 'image_url': imageUrl,
+      if (flagUrl != null) 'flag_url': flagUrl,
+      if (readTimeMin != null) 'read_time_min': readTimeMin,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  SpecialtyArticlesV2Companion copyWith({
+    Value<int>? id,
+    Value<String>? imageUrl,
+    Value<String>? flagUrl,
+    Value<int>? readTimeMin,
+    Value<DateTime?>? createdAt,
+  }) {
+    return SpecialtyArticlesV2Companion(
+      id: id ?? this.id,
+      imageUrl: imageUrl ?? this.imageUrl,
+      flagUrl: flagUrl ?? this.flagUrl,
+      readTimeMin: readTimeMin ?? this.readTimeMin,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
+    if (flagUrl.present) {
+      map['flag_url'] = Variable<String>(flagUrl.value);
+    }
+    if (readTimeMin.present) {
+      map['read_time_min'] = Variable<int>(readTimeMin.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SpecialtyArticlesV2Companion(')
+          ..write('id: $id, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('flagUrl: $flagUrl, ')
+          ..write('readTimeMin: $readTimeMin, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SpecialtyArticleTranslationsV2Table
+    extends SpecialtyArticleTranslationsV2
+    with
+        TableInfo<
+          $SpecialtyArticleTranslationsV2Table,
+          SpecialtyArticleTranslationsV2Data
+        > {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SpecialtyArticleTranslationsV2Table(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _articleIdMeta = const VerificationMeta(
+    'articleId',
+  );
+  @override
+  late final GeneratedColumn<int> articleId = GeneratedColumn<int>(
+    'article_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES specialty_articles_v2 (id)',
+    ),
+  );
+  static const VerificationMeta _languageCodeMeta = const VerificationMeta(
+    'languageCode',
+  );
+  @override
+  late final GeneratedColumn<String> languageCode = GeneratedColumn<String>(
+    'language_code',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _subtitleMeta = const VerificationMeta(
+    'subtitle',
+  );
+  @override
+  late final GeneratedColumn<String> subtitle = GeneratedColumn<String>(
+    'subtitle',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _contentHtmlMeta = const VerificationMeta(
+    'contentHtml',
+  );
+  @override
+  late final GeneratedColumn<String> contentHtml = GeneratedColumn<String>(
+    'content_html',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    articleId,
+    languageCode,
+    title,
+    subtitle,
+    contentHtml,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'specialty_article_translations_v2';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SpecialtyArticleTranslationsV2Data> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('article_id')) {
+      context.handle(
+        _articleIdMeta,
+        articleId.isAcceptableOrUnknown(data['article_id']!, _articleIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_articleIdMeta);
+    }
+    if (data.containsKey('language_code')) {
+      context.handle(
+        _languageCodeMeta,
+        languageCode.isAcceptableOrUnknown(
+          data['language_code']!,
+          _languageCodeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_languageCodeMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    }
+    if (data.containsKey('subtitle')) {
+      context.handle(
+        _subtitleMeta,
+        subtitle.isAcceptableOrUnknown(data['subtitle']!, _subtitleMeta),
+      );
+    }
+    if (data.containsKey('content_html')) {
+      context.handle(
+        _contentHtmlMeta,
+        contentHtml.isAcceptableOrUnknown(
+          data['content_html']!,
+          _contentHtmlMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {articleId, languageCode};
+  @override
+  SpecialtyArticleTranslationsV2Data map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SpecialtyArticleTranslationsV2Data(
+      articleId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}article_id'],
+      )!,
+      languageCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}language_code'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      ),
+      subtitle: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}subtitle'],
+      ),
+      contentHtml: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content_html'],
+      ),
+    );
+  }
+
+  @override
+  $SpecialtyArticleTranslationsV2Table createAlias(String alias) {
+    return $SpecialtyArticleTranslationsV2Table(attachedDatabase, alias);
+  }
+}
+
+class SpecialtyArticleTranslationsV2Data extends DataClass
+    implements Insertable<SpecialtyArticleTranslationsV2Data> {
+  final int articleId;
+  final String languageCode;
+  final String? title;
+  final String? subtitle;
+  final String? contentHtml;
+  const SpecialtyArticleTranslationsV2Data({
+    required this.articleId,
+    required this.languageCode,
+    this.title,
+    this.subtitle,
+    this.contentHtml,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['article_id'] = Variable<int>(articleId);
+    map['language_code'] = Variable<String>(languageCode);
+    if (!nullToAbsent || title != null) {
+      map['title'] = Variable<String>(title);
+    }
+    if (!nullToAbsent || subtitle != null) {
+      map['subtitle'] = Variable<String>(subtitle);
+    }
+    if (!nullToAbsent || contentHtml != null) {
+      map['content_html'] = Variable<String>(contentHtml);
+    }
+    return map;
+  }
+
+  SpecialtyArticleTranslationsV2Companion toCompanion(bool nullToAbsent) {
+    return SpecialtyArticleTranslationsV2Companion(
+      articleId: Value(articleId),
+      languageCode: Value(languageCode),
+      title: title == null && nullToAbsent
+          ? const Value.absent()
+          : Value(title),
+      subtitle: subtitle == null && nullToAbsent
+          ? const Value.absent()
+          : Value(subtitle),
+      contentHtml: contentHtml == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contentHtml),
+    );
+  }
+
+  factory SpecialtyArticleTranslationsV2Data.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SpecialtyArticleTranslationsV2Data(
+      articleId: serializer.fromJson<int>(json['articleId']),
+      languageCode: serializer.fromJson<String>(json['languageCode']),
+      title: serializer.fromJson<String?>(json['title']),
+      subtitle: serializer.fromJson<String?>(json['subtitle']),
+      contentHtml: serializer.fromJson<String?>(json['contentHtml']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'articleId': serializer.toJson<int>(articleId),
+      'languageCode': serializer.toJson<String>(languageCode),
+      'title': serializer.toJson<String?>(title),
+      'subtitle': serializer.toJson<String?>(subtitle),
+      'contentHtml': serializer.toJson<String?>(contentHtml),
+    };
+  }
+
+  SpecialtyArticleTranslationsV2Data copyWith({
+    int? articleId,
+    String? languageCode,
+    Value<String?> title = const Value.absent(),
+    Value<String?> subtitle = const Value.absent(),
+    Value<String?> contentHtml = const Value.absent(),
+  }) => SpecialtyArticleTranslationsV2Data(
+    articleId: articleId ?? this.articleId,
+    languageCode: languageCode ?? this.languageCode,
+    title: title.present ? title.value : this.title,
+    subtitle: subtitle.present ? subtitle.value : this.subtitle,
+    contentHtml: contentHtml.present ? contentHtml.value : this.contentHtml,
+  );
+  SpecialtyArticleTranslationsV2Data copyWithCompanion(
+    SpecialtyArticleTranslationsV2Companion data,
+  ) {
+    return SpecialtyArticleTranslationsV2Data(
+      articleId: data.articleId.present ? data.articleId.value : this.articleId,
+      languageCode: data.languageCode.present
+          ? data.languageCode.value
+          : this.languageCode,
+      title: data.title.present ? data.title.value : this.title,
+      subtitle: data.subtitle.present ? data.subtitle.value : this.subtitle,
+      contentHtml: data.contentHtml.present
+          ? data.contentHtml.value
+          : this.contentHtml,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SpecialtyArticleTranslationsV2Data(')
+          ..write('articleId: $articleId, ')
+          ..write('languageCode: $languageCode, ')
+          ..write('title: $title, ')
+          ..write('subtitle: $subtitle, ')
+          ..write('contentHtml: $contentHtml')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(articleId, languageCode, title, subtitle, contentHtml);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SpecialtyArticleTranslationsV2Data &&
+          other.articleId == this.articleId &&
+          other.languageCode == this.languageCode &&
+          other.title == this.title &&
+          other.subtitle == this.subtitle &&
+          other.contentHtml == this.contentHtml);
+}
+
+class SpecialtyArticleTranslationsV2Companion
+    extends UpdateCompanion<SpecialtyArticleTranslationsV2Data> {
+  final Value<int> articleId;
+  final Value<String> languageCode;
+  final Value<String?> title;
+  final Value<String?> subtitle;
+  final Value<String?> contentHtml;
+  final Value<int> rowid;
+  const SpecialtyArticleTranslationsV2Companion({
+    this.articleId = const Value.absent(),
+    this.languageCode = const Value.absent(),
+    this.title = const Value.absent(),
+    this.subtitle = const Value.absent(),
+    this.contentHtml = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SpecialtyArticleTranslationsV2Companion.insert({
+    required int articleId,
+    required String languageCode,
+    this.title = const Value.absent(),
+    this.subtitle = const Value.absent(),
+    this.contentHtml = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : articleId = Value(articleId),
+       languageCode = Value(languageCode);
+  static Insertable<SpecialtyArticleTranslationsV2Data> custom({
+    Expression<int>? articleId,
+    Expression<String>? languageCode,
+    Expression<String>? title,
+    Expression<String>? subtitle,
+    Expression<String>? contentHtml,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (articleId != null) 'article_id': articleId,
+      if (languageCode != null) 'language_code': languageCode,
+      if (title != null) 'title': title,
+      if (subtitle != null) 'subtitle': subtitle,
+      if (contentHtml != null) 'content_html': contentHtml,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SpecialtyArticleTranslationsV2Companion copyWith({
+    Value<int>? articleId,
+    Value<String>? languageCode,
+    Value<String?>? title,
+    Value<String?>? subtitle,
+    Value<String?>? contentHtml,
+    Value<int>? rowid,
+  }) {
+    return SpecialtyArticleTranslationsV2Companion(
+      articleId: articleId ?? this.articleId,
+      languageCode: languageCode ?? this.languageCode,
+      title: title ?? this.title,
+      subtitle: subtitle ?? this.subtitle,
+      contentHtml: contentHtml ?? this.contentHtml,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (articleId.present) {
+      map['article_id'] = Variable<int>(articleId.value);
+    }
+    if (languageCode.present) {
+      map['language_code'] = Variable<String>(languageCode.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (subtitle.present) {
+      map['subtitle'] = Variable<String>(subtitle.value);
+    }
+    if (contentHtml.present) {
+      map['content_html'] = Variable<String>(contentHtml.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SpecialtyArticleTranslationsV2Companion(')
+          ..write('articleId: $articleId, ')
+          ..write('languageCode: $languageCode, ')
+          ..write('title: $title, ')
+          ..write('subtitle: $subtitle, ')
+          ..write('contentHtml: $contentHtml, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LocalizedBeansV2Table extends LocalizedBeansV2
+    with TableInfo<$LocalizedBeansV2Table, LocalizedBeansV2Data> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LocalizedBeansV2Table(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _brandIdMeta = const VerificationMeta(
+    'brandId',
+  );
+  @override
+  late final GeneratedColumn<int> brandId = GeneratedColumn<int>(
+    'brand_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES localized_brands (id)',
+    ),
+  );
+  static const VerificationMeta _countryEmojiMeta = const VerificationMeta(
+    'countryEmoji',
+  );
+  @override
+  late final GeneratedColumn<String> countryEmoji = GeneratedColumn<String>(
+    'country_emoji',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _altitudeMinMeta = const VerificationMeta(
+    'altitudeMin',
+  );
+  @override
+  late final GeneratedColumn<int> altitudeMin = GeneratedColumn<int>(
+    'altitude_min',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _altitudeMaxMeta = const VerificationMeta(
+    'altitudeMax',
+  );
+  @override
+  late final GeneratedColumn<int> altitudeMax = GeneratedColumn<int>(
+    'altitude_max',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _lotNumberMeta = const VerificationMeta(
+    'lotNumber',
+  );
+  @override
+  late final GeneratedColumn<String> lotNumber = GeneratedColumn<String>(
+    'lot_number',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _scaScoreMeta = const VerificationMeta(
+    'scaScore',
+  );
+  @override
+  late final GeneratedColumn<String> scaScore = GeneratedColumn<String>(
+    'sca_score',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('80-84'),
+  );
+  static const VerificationMeta _cupsScoreMeta = const VerificationMeta(
+    'cupsScore',
+  );
+  @override
+  late final GeneratedColumn<double> cupsScore = GeneratedColumn<double>(
+    'cups_score',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(82.0),
+  );
+  static const VerificationMeta _sensoryJsonMeta = const VerificationMeta(
+    'sensoryJson',
+  );
+  @override
+  late final GeneratedColumn<String> sensoryJson = GeneratedColumn<String>(
+    'sensory_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('{}'),
+  );
+  static const VerificationMeta _priceJsonMeta = const VerificationMeta(
+    'priceJson',
+  );
+  @override
+  late final GeneratedColumn<String> priceJson = GeneratedColumn<String>(
+    'price_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('{}'),
+  );
+  static const VerificationMeta _plantationPhotosUrlMeta =
+      const VerificationMeta('plantationPhotosUrl');
+  @override
+  late final GeneratedColumn<String> plantationPhotosUrl =
+      GeneratedColumn<String>(
+        'plantation_photos_url',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: const Constant('[]'),
+      );
+  static const VerificationMeta _harvestSeasonMeta = const VerificationMeta(
+    'harvestSeason',
+  );
+  @override
+  late final GeneratedColumn<String> harvestSeason = GeneratedColumn<String>(
+    'harvest_season',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _priceMeta = const VerificationMeta('price');
+  @override
+  late final GeneratedColumn<String> price = GeneratedColumn<String>(
+    'price',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _weightMeta = const VerificationMeta('weight');
+  @override
+  late final GeneratedColumn<String> weight = GeneratedColumn<String>(
+    'weight',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _roastDateMeta = const VerificationMeta(
+    'roastDate',
+  );
+  @override
+  late final GeneratedColumn<String> roastDate = GeneratedColumn<String>(
+    'roast_date',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _processingMethodsJsonMeta =
+      const VerificationMeta('processingMethodsJson');
+  @override
+  late final GeneratedColumn<String> processingMethodsJson =
+      GeneratedColumn<String>(
+        'processing_methods_json',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: const Constant('[]'),
+      );
+  static const VerificationMeta _isPremiumMeta = const VerificationMeta(
+    'isPremium',
+  );
+  @override
+  late final GeneratedColumn<bool> isPremium = GeneratedColumn<bool>(
+    'is_premium',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_premium" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _detailedProcessMarkdownMeta =
+      const VerificationMeta('detailedProcessMarkdown');
+  @override
+  late final GeneratedColumn<String> detailedProcessMarkdown =
+      GeneratedColumn<String>(
+        'detailed_process_markdown',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: const Constant(''),
+      );
+  static const VerificationMeta _urlMeta = const VerificationMeta('url');
+  @override
+  late final GeneratedColumn<String> url = GeneratedColumn<String>(
+    'url',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _farmerIdMeta = const VerificationMeta(
+    'farmerId',
+  );
+  @override
+  late final GeneratedColumn<int> farmerId = GeneratedColumn<int>(
+    'farmer_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES localized_farmers_v2 (id)',
+    ),
+  );
+  static const VerificationMeta _isDecafMeta = const VerificationMeta(
+    'isDecaf',
+  );
+  @override
+  late final GeneratedColumn<bool> isDecaf = GeneratedColumn<bool>(
+    'is_decaf',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_decaf" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _farmMeta = const VerificationMeta('farm');
+  @override
+  late final GeneratedColumn<String> farm = GeneratedColumn<String>(
+    'farm',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _farmPhotosUrlCoverMeta =
+      const VerificationMeta('farmPhotosUrlCover');
+  @override
+  late final GeneratedColumn<String> farmPhotosUrlCover =
+      GeneratedColumn<String>(
+        'farm_photos_url_cover',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _washStationMeta = const VerificationMeta(
+    'washStation',
+  );
+  @override
+  late final GeneratedColumn<String> washStation = GeneratedColumn<String>(
+    'wash_station',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _retailPriceMeta = const VerificationMeta(
+    'retailPrice',
+  );
+  @override
+  late final GeneratedColumn<String> retailPrice = GeneratedColumn<String>(
+    'retail_price',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _wholesalePriceMeta = const VerificationMeta(
+    'wholesalePrice',
+  );
+  @override
+  late final GeneratedColumn<String> wholesalePrice = GeneratedColumn<String>(
+    'wholesale_price',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isFavoriteMeta = const VerificationMeta(
+    'isFavorite',
+  );
+  @override
+  late final GeneratedColumn<bool> isFavorite = GeneratedColumn<bool>(
+    'is_favorite',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_favorite" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    brandId,
+    countryEmoji,
+    altitudeMin,
+    altitudeMax,
+    lotNumber,
+    scaScore,
+    cupsScore,
+    sensoryJson,
+    priceJson,
+    plantationPhotosUrl,
+    harvestSeason,
+    price,
+    weight,
+    roastDate,
+    processingMethodsJson,
+    isPremium,
+    detailedProcessMarkdown,
+    url,
+    farmerId,
+    isDecaf,
+    farm,
+    farmPhotosUrlCover,
+    washStation,
+    retailPrice,
+    wholesalePrice,
+    isFavorite,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'localized_beans_v2';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LocalizedBeansV2Data> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('brand_id')) {
+      context.handle(
+        _brandIdMeta,
+        brandId.isAcceptableOrUnknown(data['brand_id']!, _brandIdMeta),
+      );
+    }
+    if (data.containsKey('country_emoji')) {
+      context.handle(
+        _countryEmojiMeta,
+        countryEmoji.isAcceptableOrUnknown(
+          data['country_emoji']!,
+          _countryEmojiMeta,
+        ),
+      );
+    }
+    if (data.containsKey('altitude_min')) {
+      context.handle(
+        _altitudeMinMeta,
+        altitudeMin.isAcceptableOrUnknown(
+          data['altitude_min']!,
+          _altitudeMinMeta,
+        ),
+      );
+    }
+    if (data.containsKey('altitude_max')) {
+      context.handle(
+        _altitudeMaxMeta,
+        altitudeMax.isAcceptableOrUnknown(
+          data['altitude_max']!,
+          _altitudeMaxMeta,
+        ),
+      );
+    }
+    if (data.containsKey('lot_number')) {
+      context.handle(
+        _lotNumberMeta,
+        lotNumber.isAcceptableOrUnknown(data['lot_number']!, _lotNumberMeta),
+      );
+    }
+    if (data.containsKey('sca_score')) {
+      context.handle(
+        _scaScoreMeta,
+        scaScore.isAcceptableOrUnknown(data['sca_score']!, _scaScoreMeta),
+      );
+    }
+    if (data.containsKey('cups_score')) {
+      context.handle(
+        _cupsScoreMeta,
+        cupsScore.isAcceptableOrUnknown(data['cups_score']!, _cupsScoreMeta),
+      );
+    }
+    if (data.containsKey('sensory_json')) {
+      context.handle(
+        _sensoryJsonMeta,
+        sensoryJson.isAcceptableOrUnknown(
+          data['sensory_json']!,
+          _sensoryJsonMeta,
+        ),
+      );
+    }
+    if (data.containsKey('price_json')) {
+      context.handle(
+        _priceJsonMeta,
+        priceJson.isAcceptableOrUnknown(data['price_json']!, _priceJsonMeta),
+      );
+    }
+    if (data.containsKey('plantation_photos_url')) {
+      context.handle(
+        _plantationPhotosUrlMeta,
+        plantationPhotosUrl.isAcceptableOrUnknown(
+          data['plantation_photos_url']!,
+          _plantationPhotosUrlMeta,
+        ),
+      );
+    }
+    if (data.containsKey('harvest_season')) {
+      context.handle(
+        _harvestSeasonMeta,
+        harvestSeason.isAcceptableOrUnknown(
+          data['harvest_season']!,
+          _harvestSeasonMeta,
+        ),
+      );
+    }
+    if (data.containsKey('price')) {
+      context.handle(
+        _priceMeta,
+        price.isAcceptableOrUnknown(data['price']!, _priceMeta),
+      );
+    }
+    if (data.containsKey('weight')) {
+      context.handle(
+        _weightMeta,
+        weight.isAcceptableOrUnknown(data['weight']!, _weightMeta),
+      );
+    }
+    if (data.containsKey('roast_date')) {
+      context.handle(
+        _roastDateMeta,
+        roastDate.isAcceptableOrUnknown(data['roast_date']!, _roastDateMeta),
+      );
+    }
+    if (data.containsKey('processing_methods_json')) {
+      context.handle(
+        _processingMethodsJsonMeta,
+        processingMethodsJson.isAcceptableOrUnknown(
+          data['processing_methods_json']!,
+          _processingMethodsJsonMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_premium')) {
+      context.handle(
+        _isPremiumMeta,
+        isPremium.isAcceptableOrUnknown(data['is_premium']!, _isPremiumMeta),
+      );
+    }
+    if (data.containsKey('detailed_process_markdown')) {
+      context.handle(
+        _detailedProcessMarkdownMeta,
+        detailedProcessMarkdown.isAcceptableOrUnknown(
+          data['detailed_process_markdown']!,
+          _detailedProcessMarkdownMeta,
+        ),
+      );
+    }
+    if (data.containsKey('url')) {
+      context.handle(
+        _urlMeta,
+        url.isAcceptableOrUnknown(data['url']!, _urlMeta),
+      );
+    }
+    if (data.containsKey('farmer_id')) {
+      context.handle(
+        _farmerIdMeta,
+        farmerId.isAcceptableOrUnknown(data['farmer_id']!, _farmerIdMeta),
+      );
+    }
+    if (data.containsKey('is_decaf')) {
+      context.handle(
+        _isDecafMeta,
+        isDecaf.isAcceptableOrUnknown(data['is_decaf']!, _isDecafMeta),
+      );
+    }
+    if (data.containsKey('farm')) {
+      context.handle(
+        _farmMeta,
+        farm.isAcceptableOrUnknown(data['farm']!, _farmMeta),
+      );
+    }
+    if (data.containsKey('farm_photos_url_cover')) {
+      context.handle(
+        _farmPhotosUrlCoverMeta,
+        farmPhotosUrlCover.isAcceptableOrUnknown(
+          data['farm_photos_url_cover']!,
+          _farmPhotosUrlCoverMeta,
+        ),
+      );
+    }
+    if (data.containsKey('wash_station')) {
+      context.handle(
+        _washStationMeta,
+        washStation.isAcceptableOrUnknown(
+          data['wash_station']!,
+          _washStationMeta,
+        ),
+      );
+    }
+    if (data.containsKey('retail_price')) {
+      context.handle(
+        _retailPriceMeta,
+        retailPrice.isAcceptableOrUnknown(
+          data['retail_price']!,
+          _retailPriceMeta,
+        ),
+      );
+    }
+    if (data.containsKey('wholesale_price')) {
+      context.handle(
+        _wholesalePriceMeta,
+        wholesalePrice.isAcceptableOrUnknown(
+          data['wholesale_price']!,
+          _wholesalePriceMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_favorite')) {
+      context.handle(
+        _isFavoriteMeta,
+        isFavorite.isAcceptableOrUnknown(data['is_favorite']!, _isFavoriteMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  LocalizedBeansV2Data map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LocalizedBeansV2Data(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      brandId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}brand_id'],
+      ),
+      countryEmoji: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}country_emoji'],
+      ),
+      altitudeMin: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}altitude_min'],
+      ),
+      altitudeMax: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}altitude_max'],
+      ),
+      lotNumber: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}lot_number'],
+      )!,
+      scaScore: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sca_score'],
+      )!,
+      cupsScore: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}cups_score'],
+      )!,
+      sensoryJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sensory_json'],
+      )!,
+      priceJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}price_json'],
+      )!,
+      plantationPhotosUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}plantation_photos_url'],
+      )!,
+      harvestSeason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}harvest_season'],
+      ),
+      price: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}price'],
+      ),
+      weight: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}weight'],
+      ),
+      roastDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}roast_date'],
+      ),
+      processingMethodsJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}processing_methods_json'],
+      )!,
+      isPremium: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_premium'],
+      )!,
+      detailedProcessMarkdown: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}detailed_process_markdown'],
+      )!,
+      url: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}url'],
+      )!,
+      farmerId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}farmer_id'],
+      ),
+      isDecaf: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_decaf'],
+      )!,
+      farm: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}farm'],
+      ),
+      farmPhotosUrlCover: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}farm_photos_url_cover'],
+      ),
+      washStation: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}wash_station'],
+      ),
+      retailPrice: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}retail_price'],
+      ),
+      wholesalePrice: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}wholesale_price'],
+      ),
+      isFavorite: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_favorite'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      ),
+    );
+  }
+
+  @override
+  $LocalizedBeansV2Table createAlias(String alias) {
+    return $LocalizedBeansV2Table(attachedDatabase, alias);
+  }
+}
+
+class LocalizedBeansV2Data extends DataClass
+    implements Insertable<LocalizedBeansV2Data> {
+  final int id;
+  final int? brandId;
+  final String? countryEmoji;
+  final int? altitudeMin;
+  final int? altitudeMax;
+  final String lotNumber;
+  final String scaScore;
+  final double cupsScore;
+  final String sensoryJson;
+  final String priceJson;
+  final String plantationPhotosUrl;
+  final String? harvestSeason;
+  final String? price;
+  final String? weight;
+  final String? roastDate;
+  final String processingMethodsJson;
+  final bool isPremium;
+  final String detailedProcessMarkdown;
+  final String url;
+  final int? farmerId;
+  final bool isDecaf;
+  final String? farm;
+  final String? farmPhotosUrlCover;
+  final String? washStation;
+  final String? retailPrice;
+  final String? wholesalePrice;
+  final bool isFavorite;
+  final DateTime? createdAt;
+  const LocalizedBeansV2Data({
+    required this.id,
+    this.brandId,
+    this.countryEmoji,
+    this.altitudeMin,
+    this.altitudeMax,
+    required this.lotNumber,
+    required this.scaScore,
+    required this.cupsScore,
+    required this.sensoryJson,
+    required this.priceJson,
+    required this.plantationPhotosUrl,
+    this.harvestSeason,
+    this.price,
+    this.weight,
+    this.roastDate,
+    required this.processingMethodsJson,
+    required this.isPremium,
+    required this.detailedProcessMarkdown,
+    required this.url,
+    this.farmerId,
+    required this.isDecaf,
+    this.farm,
+    this.farmPhotosUrlCover,
+    this.washStation,
+    this.retailPrice,
+    this.wholesalePrice,
+    required this.isFavorite,
+    this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || brandId != null) {
+      map['brand_id'] = Variable<int>(brandId);
+    }
+    if (!nullToAbsent || countryEmoji != null) {
+      map['country_emoji'] = Variable<String>(countryEmoji);
+    }
+    if (!nullToAbsent || altitudeMin != null) {
+      map['altitude_min'] = Variable<int>(altitudeMin);
+    }
+    if (!nullToAbsent || altitudeMax != null) {
+      map['altitude_max'] = Variable<int>(altitudeMax);
+    }
+    map['lot_number'] = Variable<String>(lotNumber);
+    map['sca_score'] = Variable<String>(scaScore);
+    map['cups_score'] = Variable<double>(cupsScore);
+    map['sensory_json'] = Variable<String>(sensoryJson);
+    map['price_json'] = Variable<String>(priceJson);
+    map['plantation_photos_url'] = Variable<String>(plantationPhotosUrl);
+    if (!nullToAbsent || harvestSeason != null) {
+      map['harvest_season'] = Variable<String>(harvestSeason);
+    }
+    if (!nullToAbsent || price != null) {
+      map['price'] = Variable<String>(price);
+    }
+    if (!nullToAbsent || weight != null) {
+      map['weight'] = Variable<String>(weight);
+    }
+    if (!nullToAbsent || roastDate != null) {
+      map['roast_date'] = Variable<String>(roastDate);
+    }
+    map['processing_methods_json'] = Variable<String>(processingMethodsJson);
+    map['is_premium'] = Variable<bool>(isPremium);
+    map['detailed_process_markdown'] = Variable<String>(
+      detailedProcessMarkdown,
+    );
+    map['url'] = Variable<String>(url);
+    if (!nullToAbsent || farmerId != null) {
+      map['farmer_id'] = Variable<int>(farmerId);
+    }
+    map['is_decaf'] = Variable<bool>(isDecaf);
+    if (!nullToAbsent || farm != null) {
+      map['farm'] = Variable<String>(farm);
+    }
+    if (!nullToAbsent || farmPhotosUrlCover != null) {
+      map['farm_photos_url_cover'] = Variable<String>(farmPhotosUrlCover);
+    }
+    if (!nullToAbsent || washStation != null) {
+      map['wash_station'] = Variable<String>(washStation);
+    }
+    if (!nullToAbsent || retailPrice != null) {
+      map['retail_price'] = Variable<String>(retailPrice);
+    }
+    if (!nullToAbsent || wholesalePrice != null) {
+      map['wholesale_price'] = Variable<String>(wholesalePrice);
+    }
+    map['is_favorite'] = Variable<bool>(isFavorite);
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    return map;
+  }
+
+  LocalizedBeansV2Companion toCompanion(bool nullToAbsent) {
+    return LocalizedBeansV2Companion(
+      id: Value(id),
+      brandId: brandId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(brandId),
+      countryEmoji: countryEmoji == null && nullToAbsent
+          ? const Value.absent()
+          : Value(countryEmoji),
+      altitudeMin: altitudeMin == null && nullToAbsent
+          ? const Value.absent()
+          : Value(altitudeMin),
+      altitudeMax: altitudeMax == null && nullToAbsent
+          ? const Value.absent()
+          : Value(altitudeMax),
+      lotNumber: Value(lotNumber),
+      scaScore: Value(scaScore),
+      cupsScore: Value(cupsScore),
+      sensoryJson: Value(sensoryJson),
+      priceJson: Value(priceJson),
+      plantationPhotosUrl: Value(plantationPhotosUrl),
+      harvestSeason: harvestSeason == null && nullToAbsent
+          ? const Value.absent()
+          : Value(harvestSeason),
+      price: price == null && nullToAbsent
+          ? const Value.absent()
+          : Value(price),
+      weight: weight == null && nullToAbsent
+          ? const Value.absent()
+          : Value(weight),
+      roastDate: roastDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(roastDate),
+      processingMethodsJson: Value(processingMethodsJson),
+      isPremium: Value(isPremium),
+      detailedProcessMarkdown: Value(detailedProcessMarkdown),
+      url: Value(url),
+      farmerId: farmerId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(farmerId),
+      isDecaf: Value(isDecaf),
+      farm: farm == null && nullToAbsent ? const Value.absent() : Value(farm),
+      farmPhotosUrlCover: farmPhotosUrlCover == null && nullToAbsent
+          ? const Value.absent()
+          : Value(farmPhotosUrlCover),
+      washStation: washStation == null && nullToAbsent
+          ? const Value.absent()
+          : Value(washStation),
+      retailPrice: retailPrice == null && nullToAbsent
+          ? const Value.absent()
+          : Value(retailPrice),
+      wholesalePrice: wholesalePrice == null && nullToAbsent
+          ? const Value.absent()
+          : Value(wholesalePrice),
+      isFavorite: Value(isFavorite),
+      createdAt: createdAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdAt),
+    );
+  }
+
+  factory LocalizedBeansV2Data.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LocalizedBeansV2Data(
+      id: serializer.fromJson<int>(json['id']),
+      brandId: serializer.fromJson<int?>(json['brandId']),
+      countryEmoji: serializer.fromJson<String?>(json['countryEmoji']),
+      altitudeMin: serializer.fromJson<int?>(json['altitudeMin']),
+      altitudeMax: serializer.fromJson<int?>(json['altitudeMax']),
+      lotNumber: serializer.fromJson<String>(json['lotNumber']),
+      scaScore: serializer.fromJson<String>(json['scaScore']),
+      cupsScore: serializer.fromJson<double>(json['cupsScore']),
+      sensoryJson: serializer.fromJson<String>(json['sensoryJson']),
+      priceJson: serializer.fromJson<String>(json['priceJson']),
+      plantationPhotosUrl: serializer.fromJson<String>(
+        json['plantationPhotosUrl'],
+      ),
+      harvestSeason: serializer.fromJson<String?>(json['harvestSeason']),
+      price: serializer.fromJson<String?>(json['price']),
+      weight: serializer.fromJson<String?>(json['weight']),
+      roastDate: serializer.fromJson<String?>(json['roastDate']),
+      processingMethodsJson: serializer.fromJson<String>(
+        json['processingMethodsJson'],
+      ),
+      isPremium: serializer.fromJson<bool>(json['isPremium']),
+      detailedProcessMarkdown: serializer.fromJson<String>(
+        json['detailedProcessMarkdown'],
+      ),
+      url: serializer.fromJson<String>(json['url']),
+      farmerId: serializer.fromJson<int?>(json['farmerId']),
+      isDecaf: serializer.fromJson<bool>(json['isDecaf']),
+      farm: serializer.fromJson<String?>(json['farm']),
+      farmPhotosUrlCover: serializer.fromJson<String?>(
+        json['farmPhotosUrlCover'],
+      ),
+      washStation: serializer.fromJson<String?>(json['washStation']),
+      retailPrice: serializer.fromJson<String?>(json['retailPrice']),
+      wholesalePrice: serializer.fromJson<String?>(json['wholesalePrice']),
+      isFavorite: serializer.fromJson<bool>(json['isFavorite']),
+      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'brandId': serializer.toJson<int?>(brandId),
+      'countryEmoji': serializer.toJson<String?>(countryEmoji),
+      'altitudeMin': serializer.toJson<int?>(altitudeMin),
+      'altitudeMax': serializer.toJson<int?>(altitudeMax),
+      'lotNumber': serializer.toJson<String>(lotNumber),
+      'scaScore': serializer.toJson<String>(scaScore),
+      'cupsScore': serializer.toJson<double>(cupsScore),
+      'sensoryJson': serializer.toJson<String>(sensoryJson),
+      'priceJson': serializer.toJson<String>(priceJson),
+      'plantationPhotosUrl': serializer.toJson<String>(plantationPhotosUrl),
+      'harvestSeason': serializer.toJson<String?>(harvestSeason),
+      'price': serializer.toJson<String?>(price),
+      'weight': serializer.toJson<String?>(weight),
+      'roastDate': serializer.toJson<String?>(roastDate),
+      'processingMethodsJson': serializer.toJson<String>(processingMethodsJson),
+      'isPremium': serializer.toJson<bool>(isPremium),
+      'detailedProcessMarkdown': serializer.toJson<String>(
+        detailedProcessMarkdown,
+      ),
+      'url': serializer.toJson<String>(url),
+      'farmerId': serializer.toJson<int?>(farmerId),
+      'isDecaf': serializer.toJson<bool>(isDecaf),
+      'farm': serializer.toJson<String?>(farm),
+      'farmPhotosUrlCover': serializer.toJson<String?>(farmPhotosUrlCover),
+      'washStation': serializer.toJson<String?>(washStation),
+      'retailPrice': serializer.toJson<String?>(retailPrice),
+      'wholesalePrice': serializer.toJson<String?>(wholesalePrice),
+      'isFavorite': serializer.toJson<bool>(isFavorite),
+      'createdAt': serializer.toJson<DateTime?>(createdAt),
+    };
+  }
+
+  LocalizedBeansV2Data copyWith({
+    int? id,
+    Value<int?> brandId = const Value.absent(),
+    Value<String?> countryEmoji = const Value.absent(),
+    Value<int?> altitudeMin = const Value.absent(),
+    Value<int?> altitudeMax = const Value.absent(),
+    String? lotNumber,
+    String? scaScore,
+    double? cupsScore,
+    String? sensoryJson,
+    String? priceJson,
+    String? plantationPhotosUrl,
+    Value<String?> harvestSeason = const Value.absent(),
+    Value<String?> price = const Value.absent(),
+    Value<String?> weight = const Value.absent(),
+    Value<String?> roastDate = const Value.absent(),
+    String? processingMethodsJson,
+    bool? isPremium,
+    String? detailedProcessMarkdown,
+    String? url,
+    Value<int?> farmerId = const Value.absent(),
+    bool? isDecaf,
+    Value<String?> farm = const Value.absent(),
+    Value<String?> farmPhotosUrlCover = const Value.absent(),
+    Value<String?> washStation = const Value.absent(),
+    Value<String?> retailPrice = const Value.absent(),
+    Value<String?> wholesalePrice = const Value.absent(),
+    bool? isFavorite,
+    Value<DateTime?> createdAt = const Value.absent(),
+  }) => LocalizedBeansV2Data(
+    id: id ?? this.id,
+    brandId: brandId.present ? brandId.value : this.brandId,
+    countryEmoji: countryEmoji.present ? countryEmoji.value : this.countryEmoji,
+    altitudeMin: altitudeMin.present ? altitudeMin.value : this.altitudeMin,
+    altitudeMax: altitudeMax.present ? altitudeMax.value : this.altitudeMax,
+    lotNumber: lotNumber ?? this.lotNumber,
+    scaScore: scaScore ?? this.scaScore,
+    cupsScore: cupsScore ?? this.cupsScore,
+    sensoryJson: sensoryJson ?? this.sensoryJson,
+    priceJson: priceJson ?? this.priceJson,
+    plantationPhotosUrl: plantationPhotosUrl ?? this.plantationPhotosUrl,
+    harvestSeason: harvestSeason.present
+        ? harvestSeason.value
+        : this.harvestSeason,
+    price: price.present ? price.value : this.price,
+    weight: weight.present ? weight.value : this.weight,
+    roastDate: roastDate.present ? roastDate.value : this.roastDate,
+    processingMethodsJson: processingMethodsJson ?? this.processingMethodsJson,
+    isPremium: isPremium ?? this.isPremium,
+    detailedProcessMarkdown:
+        detailedProcessMarkdown ?? this.detailedProcessMarkdown,
+    url: url ?? this.url,
+    farmerId: farmerId.present ? farmerId.value : this.farmerId,
+    isDecaf: isDecaf ?? this.isDecaf,
+    farm: farm.present ? farm.value : this.farm,
+    farmPhotosUrlCover: farmPhotosUrlCover.present
+        ? farmPhotosUrlCover.value
+        : this.farmPhotosUrlCover,
+    washStation: washStation.present ? washStation.value : this.washStation,
+    retailPrice: retailPrice.present ? retailPrice.value : this.retailPrice,
+    wholesalePrice: wholesalePrice.present
+        ? wholesalePrice.value
+        : this.wholesalePrice,
+    isFavorite: isFavorite ?? this.isFavorite,
+    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+  );
+  LocalizedBeansV2Data copyWithCompanion(LocalizedBeansV2Companion data) {
+    return LocalizedBeansV2Data(
+      id: data.id.present ? data.id.value : this.id,
+      brandId: data.brandId.present ? data.brandId.value : this.brandId,
+      countryEmoji: data.countryEmoji.present
+          ? data.countryEmoji.value
+          : this.countryEmoji,
+      altitudeMin: data.altitudeMin.present
+          ? data.altitudeMin.value
+          : this.altitudeMin,
+      altitudeMax: data.altitudeMax.present
+          ? data.altitudeMax.value
+          : this.altitudeMax,
+      lotNumber: data.lotNumber.present ? data.lotNumber.value : this.lotNumber,
+      scaScore: data.scaScore.present ? data.scaScore.value : this.scaScore,
+      cupsScore: data.cupsScore.present ? data.cupsScore.value : this.cupsScore,
+      sensoryJson: data.sensoryJson.present
+          ? data.sensoryJson.value
+          : this.sensoryJson,
+      priceJson: data.priceJson.present ? data.priceJson.value : this.priceJson,
+      plantationPhotosUrl: data.plantationPhotosUrl.present
+          ? data.plantationPhotosUrl.value
+          : this.plantationPhotosUrl,
+      harvestSeason: data.harvestSeason.present
+          ? data.harvestSeason.value
+          : this.harvestSeason,
+      price: data.price.present ? data.price.value : this.price,
+      weight: data.weight.present ? data.weight.value : this.weight,
+      roastDate: data.roastDate.present ? data.roastDate.value : this.roastDate,
+      processingMethodsJson: data.processingMethodsJson.present
+          ? data.processingMethodsJson.value
+          : this.processingMethodsJson,
+      isPremium: data.isPremium.present ? data.isPremium.value : this.isPremium,
+      detailedProcessMarkdown: data.detailedProcessMarkdown.present
+          ? data.detailedProcessMarkdown.value
+          : this.detailedProcessMarkdown,
+      url: data.url.present ? data.url.value : this.url,
+      farmerId: data.farmerId.present ? data.farmerId.value : this.farmerId,
+      isDecaf: data.isDecaf.present ? data.isDecaf.value : this.isDecaf,
+      farm: data.farm.present ? data.farm.value : this.farm,
+      farmPhotosUrlCover: data.farmPhotosUrlCover.present
+          ? data.farmPhotosUrlCover.value
+          : this.farmPhotosUrlCover,
+      washStation: data.washStation.present
+          ? data.washStation.value
+          : this.washStation,
+      retailPrice: data.retailPrice.present
+          ? data.retailPrice.value
+          : this.retailPrice,
+      wholesalePrice: data.wholesalePrice.present
+          ? data.wholesalePrice.value
+          : this.wholesalePrice,
+      isFavorite: data.isFavorite.present
+          ? data.isFavorite.value
+          : this.isFavorite,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalizedBeansV2Data(')
+          ..write('id: $id, ')
+          ..write('brandId: $brandId, ')
+          ..write('countryEmoji: $countryEmoji, ')
+          ..write('altitudeMin: $altitudeMin, ')
+          ..write('altitudeMax: $altitudeMax, ')
+          ..write('lotNumber: $lotNumber, ')
+          ..write('scaScore: $scaScore, ')
+          ..write('cupsScore: $cupsScore, ')
+          ..write('sensoryJson: $sensoryJson, ')
+          ..write('priceJson: $priceJson, ')
+          ..write('plantationPhotosUrl: $plantationPhotosUrl, ')
+          ..write('harvestSeason: $harvestSeason, ')
+          ..write('price: $price, ')
+          ..write('weight: $weight, ')
+          ..write('roastDate: $roastDate, ')
+          ..write('processingMethodsJson: $processingMethodsJson, ')
+          ..write('isPremium: $isPremium, ')
+          ..write('detailedProcessMarkdown: $detailedProcessMarkdown, ')
+          ..write('url: $url, ')
+          ..write('farmerId: $farmerId, ')
+          ..write('isDecaf: $isDecaf, ')
+          ..write('farm: $farm, ')
+          ..write('farmPhotosUrlCover: $farmPhotosUrlCover, ')
+          ..write('washStation: $washStation, ')
+          ..write('retailPrice: $retailPrice, ')
+          ..write('wholesalePrice: $wholesalePrice, ')
+          ..write('isFavorite: $isFavorite, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    id,
+    brandId,
+    countryEmoji,
+    altitudeMin,
+    altitudeMax,
+    lotNumber,
+    scaScore,
+    cupsScore,
+    sensoryJson,
+    priceJson,
+    plantationPhotosUrl,
+    harvestSeason,
+    price,
+    weight,
+    roastDate,
+    processingMethodsJson,
+    isPremium,
+    detailedProcessMarkdown,
+    url,
+    farmerId,
+    isDecaf,
+    farm,
+    farmPhotosUrlCover,
+    washStation,
+    retailPrice,
+    wholesalePrice,
+    isFavorite,
+    createdAt,
+  ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LocalizedBeansV2Data &&
+          other.id == this.id &&
+          other.brandId == this.brandId &&
+          other.countryEmoji == this.countryEmoji &&
+          other.altitudeMin == this.altitudeMin &&
+          other.altitudeMax == this.altitudeMax &&
+          other.lotNumber == this.lotNumber &&
+          other.scaScore == this.scaScore &&
+          other.cupsScore == this.cupsScore &&
+          other.sensoryJson == this.sensoryJson &&
+          other.priceJson == this.priceJson &&
+          other.plantationPhotosUrl == this.plantationPhotosUrl &&
+          other.harvestSeason == this.harvestSeason &&
+          other.price == this.price &&
+          other.weight == this.weight &&
+          other.roastDate == this.roastDate &&
+          other.processingMethodsJson == this.processingMethodsJson &&
+          other.isPremium == this.isPremium &&
+          other.detailedProcessMarkdown == this.detailedProcessMarkdown &&
+          other.url == this.url &&
+          other.farmerId == this.farmerId &&
+          other.isDecaf == this.isDecaf &&
+          other.farm == this.farm &&
+          other.farmPhotosUrlCover == this.farmPhotosUrlCover &&
+          other.washStation == this.washStation &&
+          other.retailPrice == this.retailPrice &&
+          other.wholesalePrice == this.wholesalePrice &&
+          other.isFavorite == this.isFavorite &&
+          other.createdAt == this.createdAt);
+}
+
+class LocalizedBeansV2Companion extends UpdateCompanion<LocalizedBeansV2Data> {
+  final Value<int> id;
+  final Value<int?> brandId;
+  final Value<String?> countryEmoji;
+  final Value<int?> altitudeMin;
+  final Value<int?> altitudeMax;
+  final Value<String> lotNumber;
+  final Value<String> scaScore;
+  final Value<double> cupsScore;
+  final Value<String> sensoryJson;
+  final Value<String> priceJson;
+  final Value<String> plantationPhotosUrl;
+  final Value<String?> harvestSeason;
+  final Value<String?> price;
+  final Value<String?> weight;
+  final Value<String?> roastDate;
+  final Value<String> processingMethodsJson;
+  final Value<bool> isPremium;
+  final Value<String> detailedProcessMarkdown;
+  final Value<String> url;
+  final Value<int?> farmerId;
+  final Value<bool> isDecaf;
+  final Value<String?> farm;
+  final Value<String?> farmPhotosUrlCover;
+  final Value<String?> washStation;
+  final Value<String?> retailPrice;
+  final Value<String?> wholesalePrice;
+  final Value<bool> isFavorite;
+  final Value<DateTime?> createdAt;
+  const LocalizedBeansV2Companion({
+    this.id = const Value.absent(),
+    this.brandId = const Value.absent(),
+    this.countryEmoji = const Value.absent(),
+    this.altitudeMin = const Value.absent(),
+    this.altitudeMax = const Value.absent(),
+    this.lotNumber = const Value.absent(),
+    this.scaScore = const Value.absent(),
+    this.cupsScore = const Value.absent(),
+    this.sensoryJson = const Value.absent(),
+    this.priceJson = const Value.absent(),
+    this.plantationPhotosUrl = const Value.absent(),
+    this.harvestSeason = const Value.absent(),
+    this.price = const Value.absent(),
+    this.weight = const Value.absent(),
+    this.roastDate = const Value.absent(),
+    this.processingMethodsJson = const Value.absent(),
+    this.isPremium = const Value.absent(),
+    this.detailedProcessMarkdown = const Value.absent(),
+    this.url = const Value.absent(),
+    this.farmerId = const Value.absent(),
+    this.isDecaf = const Value.absent(),
+    this.farm = const Value.absent(),
+    this.farmPhotosUrlCover = const Value.absent(),
+    this.washStation = const Value.absent(),
+    this.retailPrice = const Value.absent(),
+    this.wholesalePrice = const Value.absent(),
+    this.isFavorite = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  LocalizedBeansV2Companion.insert({
+    this.id = const Value.absent(),
+    this.brandId = const Value.absent(),
+    this.countryEmoji = const Value.absent(),
+    this.altitudeMin = const Value.absent(),
+    this.altitudeMax = const Value.absent(),
+    this.lotNumber = const Value.absent(),
+    this.scaScore = const Value.absent(),
+    this.cupsScore = const Value.absent(),
+    this.sensoryJson = const Value.absent(),
+    this.priceJson = const Value.absent(),
+    this.plantationPhotosUrl = const Value.absent(),
+    this.harvestSeason = const Value.absent(),
+    this.price = const Value.absent(),
+    this.weight = const Value.absent(),
+    this.roastDate = const Value.absent(),
+    this.processingMethodsJson = const Value.absent(),
+    this.isPremium = const Value.absent(),
+    this.detailedProcessMarkdown = const Value.absent(),
+    this.url = const Value.absent(),
+    this.farmerId = const Value.absent(),
+    this.isDecaf = const Value.absent(),
+    this.farm = const Value.absent(),
+    this.farmPhotosUrlCover = const Value.absent(),
+    this.washStation = const Value.absent(),
+    this.retailPrice = const Value.absent(),
+    this.wholesalePrice = const Value.absent(),
+    this.isFavorite = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  static Insertable<LocalizedBeansV2Data> custom({
+    Expression<int>? id,
+    Expression<int>? brandId,
+    Expression<String>? countryEmoji,
+    Expression<int>? altitudeMin,
+    Expression<int>? altitudeMax,
+    Expression<String>? lotNumber,
+    Expression<String>? scaScore,
+    Expression<double>? cupsScore,
+    Expression<String>? sensoryJson,
+    Expression<String>? priceJson,
+    Expression<String>? plantationPhotosUrl,
+    Expression<String>? harvestSeason,
+    Expression<String>? price,
+    Expression<String>? weight,
+    Expression<String>? roastDate,
+    Expression<String>? processingMethodsJson,
+    Expression<bool>? isPremium,
+    Expression<String>? detailedProcessMarkdown,
+    Expression<String>? url,
+    Expression<int>? farmerId,
+    Expression<bool>? isDecaf,
+    Expression<String>? farm,
+    Expression<String>? farmPhotosUrlCover,
+    Expression<String>? washStation,
+    Expression<String>? retailPrice,
+    Expression<String>? wholesalePrice,
+    Expression<bool>? isFavorite,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (brandId != null) 'brand_id': brandId,
+      if (countryEmoji != null) 'country_emoji': countryEmoji,
+      if (altitudeMin != null) 'altitude_min': altitudeMin,
+      if (altitudeMax != null) 'altitude_max': altitudeMax,
+      if (lotNumber != null) 'lot_number': lotNumber,
+      if (scaScore != null) 'sca_score': scaScore,
+      if (cupsScore != null) 'cups_score': cupsScore,
+      if (sensoryJson != null) 'sensory_json': sensoryJson,
+      if (priceJson != null) 'price_json': priceJson,
+      if (plantationPhotosUrl != null)
+        'plantation_photos_url': plantationPhotosUrl,
+      if (harvestSeason != null) 'harvest_season': harvestSeason,
+      if (price != null) 'price': price,
+      if (weight != null) 'weight': weight,
+      if (roastDate != null) 'roast_date': roastDate,
+      if (processingMethodsJson != null)
+        'processing_methods_json': processingMethodsJson,
+      if (isPremium != null) 'is_premium': isPremium,
+      if (detailedProcessMarkdown != null)
+        'detailed_process_markdown': detailedProcessMarkdown,
+      if (url != null) 'url': url,
+      if (farmerId != null) 'farmer_id': farmerId,
+      if (isDecaf != null) 'is_decaf': isDecaf,
+      if (farm != null) 'farm': farm,
+      if (farmPhotosUrlCover != null)
+        'farm_photos_url_cover': farmPhotosUrlCover,
+      if (washStation != null) 'wash_station': washStation,
+      if (retailPrice != null) 'retail_price': retailPrice,
+      if (wholesalePrice != null) 'wholesale_price': wholesalePrice,
+      if (isFavorite != null) 'is_favorite': isFavorite,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  LocalizedBeansV2Companion copyWith({
+    Value<int>? id,
+    Value<int?>? brandId,
+    Value<String?>? countryEmoji,
+    Value<int?>? altitudeMin,
+    Value<int?>? altitudeMax,
+    Value<String>? lotNumber,
+    Value<String>? scaScore,
+    Value<double>? cupsScore,
+    Value<String>? sensoryJson,
+    Value<String>? priceJson,
+    Value<String>? plantationPhotosUrl,
+    Value<String?>? harvestSeason,
+    Value<String?>? price,
+    Value<String?>? weight,
+    Value<String?>? roastDate,
+    Value<String>? processingMethodsJson,
+    Value<bool>? isPremium,
+    Value<String>? detailedProcessMarkdown,
+    Value<String>? url,
+    Value<int?>? farmerId,
+    Value<bool>? isDecaf,
+    Value<String?>? farm,
+    Value<String?>? farmPhotosUrlCover,
+    Value<String?>? washStation,
+    Value<String?>? retailPrice,
+    Value<String?>? wholesalePrice,
+    Value<bool>? isFavorite,
+    Value<DateTime?>? createdAt,
+  }) {
+    return LocalizedBeansV2Companion(
+      id: id ?? this.id,
+      brandId: brandId ?? this.brandId,
+      countryEmoji: countryEmoji ?? this.countryEmoji,
+      altitudeMin: altitudeMin ?? this.altitudeMin,
+      altitudeMax: altitudeMax ?? this.altitudeMax,
+      lotNumber: lotNumber ?? this.lotNumber,
+      scaScore: scaScore ?? this.scaScore,
+      cupsScore: cupsScore ?? this.cupsScore,
+      sensoryJson: sensoryJson ?? this.sensoryJson,
+      priceJson: priceJson ?? this.priceJson,
+      plantationPhotosUrl: plantationPhotosUrl ?? this.plantationPhotosUrl,
+      harvestSeason: harvestSeason ?? this.harvestSeason,
+      price: price ?? this.price,
+      weight: weight ?? this.weight,
+      roastDate: roastDate ?? this.roastDate,
+      processingMethodsJson:
+          processingMethodsJson ?? this.processingMethodsJson,
+      isPremium: isPremium ?? this.isPremium,
+      detailedProcessMarkdown:
+          detailedProcessMarkdown ?? this.detailedProcessMarkdown,
+      url: url ?? this.url,
+      farmerId: farmerId ?? this.farmerId,
+      isDecaf: isDecaf ?? this.isDecaf,
+      farm: farm ?? this.farm,
+      farmPhotosUrlCover: farmPhotosUrlCover ?? this.farmPhotosUrlCover,
+      washStation: washStation ?? this.washStation,
+      retailPrice: retailPrice ?? this.retailPrice,
+      wholesalePrice: wholesalePrice ?? this.wholesalePrice,
+      isFavorite: isFavorite ?? this.isFavorite,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (brandId.present) {
+      map['brand_id'] = Variable<int>(brandId.value);
+    }
+    if (countryEmoji.present) {
+      map['country_emoji'] = Variable<String>(countryEmoji.value);
+    }
+    if (altitudeMin.present) {
+      map['altitude_min'] = Variable<int>(altitudeMin.value);
+    }
+    if (altitudeMax.present) {
+      map['altitude_max'] = Variable<int>(altitudeMax.value);
+    }
+    if (lotNumber.present) {
+      map['lot_number'] = Variable<String>(lotNumber.value);
+    }
+    if (scaScore.present) {
+      map['sca_score'] = Variable<String>(scaScore.value);
+    }
+    if (cupsScore.present) {
+      map['cups_score'] = Variable<double>(cupsScore.value);
+    }
+    if (sensoryJson.present) {
+      map['sensory_json'] = Variable<String>(sensoryJson.value);
+    }
+    if (priceJson.present) {
+      map['price_json'] = Variable<String>(priceJson.value);
+    }
+    if (plantationPhotosUrl.present) {
+      map['plantation_photos_url'] = Variable<String>(
+        plantationPhotosUrl.value,
+      );
+    }
+    if (harvestSeason.present) {
+      map['harvest_season'] = Variable<String>(harvestSeason.value);
+    }
+    if (price.present) {
+      map['price'] = Variable<String>(price.value);
+    }
+    if (weight.present) {
+      map['weight'] = Variable<String>(weight.value);
+    }
+    if (roastDate.present) {
+      map['roast_date'] = Variable<String>(roastDate.value);
+    }
+    if (processingMethodsJson.present) {
+      map['processing_methods_json'] = Variable<String>(
+        processingMethodsJson.value,
+      );
+    }
+    if (isPremium.present) {
+      map['is_premium'] = Variable<bool>(isPremium.value);
+    }
+    if (detailedProcessMarkdown.present) {
+      map['detailed_process_markdown'] = Variable<String>(
+        detailedProcessMarkdown.value,
+      );
+    }
+    if (url.present) {
+      map['url'] = Variable<String>(url.value);
+    }
+    if (farmerId.present) {
+      map['farmer_id'] = Variable<int>(farmerId.value);
+    }
+    if (isDecaf.present) {
+      map['is_decaf'] = Variable<bool>(isDecaf.value);
+    }
+    if (farm.present) {
+      map['farm'] = Variable<String>(farm.value);
+    }
+    if (farmPhotosUrlCover.present) {
+      map['farm_photos_url_cover'] = Variable<String>(farmPhotosUrlCover.value);
+    }
+    if (washStation.present) {
+      map['wash_station'] = Variable<String>(washStation.value);
+    }
+    if (retailPrice.present) {
+      map['retail_price'] = Variable<String>(retailPrice.value);
+    }
+    if (wholesalePrice.present) {
+      map['wholesale_price'] = Variable<String>(wholesalePrice.value);
+    }
+    if (isFavorite.present) {
+      map['is_favorite'] = Variable<bool>(isFavorite.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalizedBeansV2Companion(')
+          ..write('id: $id, ')
+          ..write('brandId: $brandId, ')
+          ..write('countryEmoji: $countryEmoji, ')
+          ..write('altitudeMin: $altitudeMin, ')
+          ..write('altitudeMax: $altitudeMax, ')
+          ..write('lotNumber: $lotNumber, ')
+          ..write('scaScore: $scaScore, ')
+          ..write('cupsScore: $cupsScore, ')
+          ..write('sensoryJson: $sensoryJson, ')
+          ..write('priceJson: $priceJson, ')
+          ..write('plantationPhotosUrl: $plantationPhotosUrl, ')
+          ..write('harvestSeason: $harvestSeason, ')
+          ..write('price: $price, ')
+          ..write('weight: $weight, ')
+          ..write('roastDate: $roastDate, ')
+          ..write('processingMethodsJson: $processingMethodsJson, ')
+          ..write('isPremium: $isPremium, ')
+          ..write('detailedProcessMarkdown: $detailedProcessMarkdown, ')
+          ..write('url: $url, ')
+          ..write('farmerId: $farmerId, ')
+          ..write('isDecaf: $isDecaf, ')
+          ..write('farm: $farm, ')
+          ..write('farmPhotosUrlCover: $farmPhotosUrlCover, ')
+          ..write('washStation: $washStation, ')
+          ..write('retailPrice: $retailPrice, ')
+          ..write('wholesalePrice: $wholesalePrice, ')
+          ..write('isFavorite: $isFavorite, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $LocalizedBeanTranslationsV2Table extends LocalizedBeanTranslationsV2
+    with
+        TableInfo<
+          $LocalizedBeanTranslationsV2Table,
+          LocalizedBeanTranslationsV2Data
+        > {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LocalizedBeanTranslationsV2Table(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _beanIdMeta = const VerificationMeta('beanId');
+  @override
+  late final GeneratedColumn<int> beanId = GeneratedColumn<int>(
+    'bean_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES localized_beans_v2 (id)',
+    ),
+  );
+  static const VerificationMeta _languageCodeMeta = const VerificationMeta(
+    'languageCode',
+  );
+  @override
+  late final GeneratedColumn<String> languageCode = GeneratedColumn<String>(
+    'language_code',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _countryMeta = const VerificationMeta(
+    'country',
+  );
+  @override
+  late final GeneratedColumn<String> country = GeneratedColumn<String>(
+    'country',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _regionMeta = const VerificationMeta('region');
+  @override
+  late final GeneratedColumn<String> region = GeneratedColumn<String>(
+    'region',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _varietiesMeta = const VerificationMeta(
+    'varieties',
+  );
+  @override
+  late final GeneratedColumn<String> varieties = GeneratedColumn<String>(
+    'varieties',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _flavorNotesMeta = const VerificationMeta(
+    'flavorNotes',
+  );
+  @override
+  late final GeneratedColumn<String> flavorNotes = GeneratedColumn<String>(
+    'flavor_notes',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('[]'),
+  );
+  static const VerificationMeta _processMethodMeta = const VerificationMeta(
+    'processMethod',
+  );
+  @override
+  late final GeneratedColumn<String> processMethod = GeneratedColumn<String>(
+    'process_method',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _farmDescriptionMeta = const VerificationMeta(
+    'farmDescription',
+  );
+  @override
+  late final GeneratedColumn<String> farmDescription = GeneratedColumn<String>(
+    'farm_description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _roastLevelMeta = const VerificationMeta(
+    'roastLevel',
+  );
+  @override
+  late final GeneratedColumn<String> roastLevel = GeneratedColumn<String>(
+    'roast_level',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    beanId,
+    languageCode,
+    country,
+    region,
+    varieties,
+    flavorNotes,
+    processMethod,
+    description,
+    farmDescription,
+    roastLevel,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'localized_bean_translations_v2';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LocalizedBeanTranslationsV2Data> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('bean_id')) {
+      context.handle(
+        _beanIdMeta,
+        beanId.isAcceptableOrUnknown(data['bean_id']!, _beanIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_beanIdMeta);
+    }
+    if (data.containsKey('language_code')) {
+      context.handle(
+        _languageCodeMeta,
+        languageCode.isAcceptableOrUnknown(
+          data['language_code']!,
+          _languageCodeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_languageCodeMeta);
+    }
+    if (data.containsKey('country')) {
+      context.handle(
+        _countryMeta,
+        country.isAcceptableOrUnknown(data['country']!, _countryMeta),
+      );
+    }
+    if (data.containsKey('region')) {
+      context.handle(
+        _regionMeta,
+        region.isAcceptableOrUnknown(data['region']!, _regionMeta),
+      );
+    }
+    if (data.containsKey('varieties')) {
+      context.handle(
+        _varietiesMeta,
+        varieties.isAcceptableOrUnknown(data['varieties']!, _varietiesMeta),
+      );
+    }
+    if (data.containsKey('flavor_notes')) {
+      context.handle(
+        _flavorNotesMeta,
+        flavorNotes.isAcceptableOrUnknown(
+          data['flavor_notes']!,
+          _flavorNotesMeta,
+        ),
+      );
+    }
+    if (data.containsKey('process_method')) {
+      context.handle(
+        _processMethodMeta,
+        processMethod.isAcceptableOrUnknown(
+          data['process_method']!,
+          _processMethodMeta,
+        ),
+      );
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('farm_description')) {
+      context.handle(
+        _farmDescriptionMeta,
+        farmDescription.isAcceptableOrUnknown(
+          data['farm_description']!,
+          _farmDescriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('roast_level')) {
+      context.handle(
+        _roastLevelMeta,
+        roastLevel.isAcceptableOrUnknown(data['roast_level']!, _roastLevelMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {beanId, languageCode};
+  @override
+  LocalizedBeanTranslationsV2Data map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LocalizedBeanTranslationsV2Data(
+      beanId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}bean_id'],
+      )!,
+      languageCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}language_code'],
+      )!,
+      country: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}country'],
+      ),
+      region: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}region'],
+      ),
+      varieties: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}varieties'],
+      ),
+      flavorNotes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}flavor_notes'],
+      )!,
+      processMethod: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}process_method'],
+      ),
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      farmDescription: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}farm_description'],
+      ),
+      roastLevel: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}roast_level'],
+      ),
+    );
+  }
+
+  @override
+  $LocalizedBeanTranslationsV2Table createAlias(String alias) {
+    return $LocalizedBeanTranslationsV2Table(attachedDatabase, alias);
+  }
+}
+
+class LocalizedBeanTranslationsV2Data extends DataClass
+    implements Insertable<LocalizedBeanTranslationsV2Data> {
+  final int beanId;
+  final String languageCode;
+  final String? country;
+  final String? region;
+  final String? varieties;
+  final String flavorNotes;
+  final String? processMethod;
+  final String? description;
+  final String? farmDescription;
+  final String? roastLevel;
+  const LocalizedBeanTranslationsV2Data({
+    required this.beanId,
+    required this.languageCode,
+    this.country,
+    this.region,
+    this.varieties,
+    required this.flavorNotes,
+    this.processMethod,
+    this.description,
+    this.farmDescription,
+    this.roastLevel,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['bean_id'] = Variable<int>(beanId);
+    map['language_code'] = Variable<String>(languageCode);
+    if (!nullToAbsent || country != null) {
+      map['country'] = Variable<String>(country);
+    }
+    if (!nullToAbsent || region != null) {
+      map['region'] = Variable<String>(region);
+    }
+    if (!nullToAbsent || varieties != null) {
+      map['varieties'] = Variable<String>(varieties);
+    }
+    map['flavor_notes'] = Variable<String>(flavorNotes);
+    if (!nullToAbsent || processMethod != null) {
+      map['process_method'] = Variable<String>(processMethod);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || farmDescription != null) {
+      map['farm_description'] = Variable<String>(farmDescription);
+    }
+    if (!nullToAbsent || roastLevel != null) {
+      map['roast_level'] = Variable<String>(roastLevel);
+    }
+    return map;
+  }
+
+  LocalizedBeanTranslationsV2Companion toCompanion(bool nullToAbsent) {
+    return LocalizedBeanTranslationsV2Companion(
+      beanId: Value(beanId),
+      languageCode: Value(languageCode),
+      country: country == null && nullToAbsent
+          ? const Value.absent()
+          : Value(country),
+      region: region == null && nullToAbsent
+          ? const Value.absent()
+          : Value(region),
+      varieties: varieties == null && nullToAbsent
+          ? const Value.absent()
+          : Value(varieties),
+      flavorNotes: Value(flavorNotes),
+      processMethod: processMethod == null && nullToAbsent
+          ? const Value.absent()
+          : Value(processMethod),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      farmDescription: farmDescription == null && nullToAbsent
+          ? const Value.absent()
+          : Value(farmDescription),
+      roastLevel: roastLevel == null && nullToAbsent
+          ? const Value.absent()
+          : Value(roastLevel),
+    );
+  }
+
+  factory LocalizedBeanTranslationsV2Data.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LocalizedBeanTranslationsV2Data(
+      beanId: serializer.fromJson<int>(json['beanId']),
+      languageCode: serializer.fromJson<String>(json['languageCode']),
+      country: serializer.fromJson<String?>(json['country']),
+      region: serializer.fromJson<String?>(json['region']),
+      varieties: serializer.fromJson<String?>(json['varieties']),
+      flavorNotes: serializer.fromJson<String>(json['flavorNotes']),
+      processMethod: serializer.fromJson<String?>(json['processMethod']),
+      description: serializer.fromJson<String?>(json['description']),
+      farmDescription: serializer.fromJson<String?>(json['farmDescription']),
+      roastLevel: serializer.fromJson<String?>(json['roastLevel']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'beanId': serializer.toJson<int>(beanId),
+      'languageCode': serializer.toJson<String>(languageCode),
+      'country': serializer.toJson<String?>(country),
+      'region': serializer.toJson<String?>(region),
+      'varieties': serializer.toJson<String?>(varieties),
+      'flavorNotes': serializer.toJson<String>(flavorNotes),
+      'processMethod': serializer.toJson<String?>(processMethod),
+      'description': serializer.toJson<String?>(description),
+      'farmDescription': serializer.toJson<String?>(farmDescription),
+      'roastLevel': serializer.toJson<String?>(roastLevel),
+    };
+  }
+
+  LocalizedBeanTranslationsV2Data copyWith({
+    int? beanId,
+    String? languageCode,
+    Value<String?> country = const Value.absent(),
+    Value<String?> region = const Value.absent(),
+    Value<String?> varieties = const Value.absent(),
+    String? flavorNotes,
+    Value<String?> processMethod = const Value.absent(),
+    Value<String?> description = const Value.absent(),
+    Value<String?> farmDescription = const Value.absent(),
+    Value<String?> roastLevel = const Value.absent(),
+  }) => LocalizedBeanTranslationsV2Data(
+    beanId: beanId ?? this.beanId,
+    languageCode: languageCode ?? this.languageCode,
+    country: country.present ? country.value : this.country,
+    region: region.present ? region.value : this.region,
+    varieties: varieties.present ? varieties.value : this.varieties,
+    flavorNotes: flavorNotes ?? this.flavorNotes,
+    processMethod: processMethod.present
+        ? processMethod.value
+        : this.processMethod,
+    description: description.present ? description.value : this.description,
+    farmDescription: farmDescription.present
+        ? farmDescription.value
+        : this.farmDescription,
+    roastLevel: roastLevel.present ? roastLevel.value : this.roastLevel,
+  );
+  LocalizedBeanTranslationsV2Data copyWithCompanion(
+    LocalizedBeanTranslationsV2Companion data,
+  ) {
+    return LocalizedBeanTranslationsV2Data(
+      beanId: data.beanId.present ? data.beanId.value : this.beanId,
+      languageCode: data.languageCode.present
+          ? data.languageCode.value
+          : this.languageCode,
+      country: data.country.present ? data.country.value : this.country,
+      region: data.region.present ? data.region.value : this.region,
+      varieties: data.varieties.present ? data.varieties.value : this.varieties,
+      flavorNotes: data.flavorNotes.present
+          ? data.flavorNotes.value
+          : this.flavorNotes,
+      processMethod: data.processMethod.present
+          ? data.processMethod.value
+          : this.processMethod,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      farmDescription: data.farmDescription.present
+          ? data.farmDescription.value
+          : this.farmDescription,
+      roastLevel: data.roastLevel.present
+          ? data.roastLevel.value
+          : this.roastLevel,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalizedBeanTranslationsV2Data(')
+          ..write('beanId: $beanId, ')
+          ..write('languageCode: $languageCode, ')
+          ..write('country: $country, ')
+          ..write('region: $region, ')
+          ..write('varieties: $varieties, ')
+          ..write('flavorNotes: $flavorNotes, ')
+          ..write('processMethod: $processMethod, ')
+          ..write('description: $description, ')
+          ..write('farmDescription: $farmDescription, ')
+          ..write('roastLevel: $roastLevel')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    beanId,
+    languageCode,
+    country,
+    region,
+    varieties,
+    flavorNotes,
+    processMethod,
+    description,
+    farmDescription,
+    roastLevel,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LocalizedBeanTranslationsV2Data &&
+          other.beanId == this.beanId &&
+          other.languageCode == this.languageCode &&
+          other.country == this.country &&
+          other.region == this.region &&
+          other.varieties == this.varieties &&
+          other.flavorNotes == this.flavorNotes &&
+          other.processMethod == this.processMethod &&
+          other.description == this.description &&
+          other.farmDescription == this.farmDescription &&
+          other.roastLevel == this.roastLevel);
+}
+
+class LocalizedBeanTranslationsV2Companion
+    extends UpdateCompanion<LocalizedBeanTranslationsV2Data> {
+  final Value<int> beanId;
+  final Value<String> languageCode;
+  final Value<String?> country;
+  final Value<String?> region;
+  final Value<String?> varieties;
+  final Value<String> flavorNotes;
+  final Value<String?> processMethod;
+  final Value<String?> description;
+  final Value<String?> farmDescription;
+  final Value<String?> roastLevel;
+  final Value<int> rowid;
+  const LocalizedBeanTranslationsV2Companion({
+    this.beanId = const Value.absent(),
+    this.languageCode = const Value.absent(),
+    this.country = const Value.absent(),
+    this.region = const Value.absent(),
+    this.varieties = const Value.absent(),
+    this.flavorNotes = const Value.absent(),
+    this.processMethod = const Value.absent(),
+    this.description = const Value.absent(),
+    this.farmDescription = const Value.absent(),
+    this.roastLevel = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LocalizedBeanTranslationsV2Companion.insert({
+    required int beanId,
+    required String languageCode,
+    this.country = const Value.absent(),
+    this.region = const Value.absent(),
+    this.varieties = const Value.absent(),
+    this.flavorNotes = const Value.absent(),
+    this.processMethod = const Value.absent(),
+    this.description = const Value.absent(),
+    this.farmDescription = const Value.absent(),
+    this.roastLevel = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : beanId = Value(beanId),
+       languageCode = Value(languageCode);
+  static Insertable<LocalizedBeanTranslationsV2Data> custom({
+    Expression<int>? beanId,
+    Expression<String>? languageCode,
+    Expression<String>? country,
+    Expression<String>? region,
+    Expression<String>? varieties,
+    Expression<String>? flavorNotes,
+    Expression<String>? processMethod,
+    Expression<String>? description,
+    Expression<String>? farmDescription,
+    Expression<String>? roastLevel,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (beanId != null) 'bean_id': beanId,
+      if (languageCode != null) 'language_code': languageCode,
+      if (country != null) 'country': country,
+      if (region != null) 'region': region,
+      if (varieties != null) 'varieties': varieties,
+      if (flavorNotes != null) 'flavor_notes': flavorNotes,
+      if (processMethod != null) 'process_method': processMethod,
+      if (description != null) 'description': description,
+      if (farmDescription != null) 'farm_description': farmDescription,
+      if (roastLevel != null) 'roast_level': roastLevel,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LocalizedBeanTranslationsV2Companion copyWith({
+    Value<int>? beanId,
+    Value<String>? languageCode,
+    Value<String?>? country,
+    Value<String?>? region,
+    Value<String?>? varieties,
+    Value<String>? flavorNotes,
+    Value<String?>? processMethod,
+    Value<String?>? description,
+    Value<String?>? farmDescription,
+    Value<String?>? roastLevel,
+    Value<int>? rowid,
+  }) {
+    return LocalizedBeanTranslationsV2Companion(
+      beanId: beanId ?? this.beanId,
+      languageCode: languageCode ?? this.languageCode,
+      country: country ?? this.country,
+      region: region ?? this.region,
+      varieties: varieties ?? this.varieties,
+      flavorNotes: flavorNotes ?? this.flavorNotes,
+      processMethod: processMethod ?? this.processMethod,
+      description: description ?? this.description,
+      farmDescription: farmDescription ?? this.farmDescription,
+      roastLevel: roastLevel ?? this.roastLevel,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (beanId.present) {
+      map['bean_id'] = Variable<int>(beanId.value);
+    }
+    if (languageCode.present) {
+      map['language_code'] = Variable<String>(languageCode.value);
+    }
+    if (country.present) {
+      map['country'] = Variable<String>(country.value);
+    }
+    if (region.present) {
+      map['region'] = Variable<String>(region.value);
+    }
+    if (varieties.present) {
+      map['varieties'] = Variable<String>(varieties.value);
+    }
+    if (flavorNotes.present) {
+      map['flavor_notes'] = Variable<String>(flavorNotes.value);
+    }
+    if (processMethod.present) {
+      map['process_method'] = Variable<String>(processMethod.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (farmDescription.present) {
+      map['farm_description'] = Variable<String>(farmDescription.value);
+    }
+    if (roastLevel.present) {
+      map['roast_level'] = Variable<String>(roastLevel.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalizedBeanTranslationsV2Companion(')
+          ..write('beanId: $beanId, ')
+          ..write('languageCode: $languageCode, ')
+          ..write('country: $country, ')
+          ..write('region: $region, ')
+          ..write('varieties: $varieties, ')
+          ..write('flavorNotes: $flavorNotes, ')
+          ..write('processMethod: $processMethod, ')
+          ..write('description: $description, ')
+          ..write('farmDescription: $farmDescription, ')
+          ..write('roastLevel: $roastLevel, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $BrewingRecipesV2Table extends BrewingRecipesV2
+    with TableInfo<$BrewingRecipesV2Table, BrewingRecipesV2Data> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BrewingRecipesV2Table(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _methodKeyMeta = const VerificationMeta(
+    'methodKey',
+  );
+  @override
+  late final GeneratedColumn<String> methodKey = GeneratedColumn<String>(
+    'method_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
+    'imageUrl',
+  );
+  @override
+  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
+    'image_url',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _ratioGramsPerMlMeta = const VerificationMeta(
+    'ratioGramsPerMl',
+  );
+  @override
+  late final GeneratedColumn<double> ratioGramsPerMl = GeneratedColumn<double>(
+    'ratio_grams_per_ml',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0.066),
+  );
+  static const VerificationMeta _tempCMeta = const VerificationMeta('tempC');
+  @override
+  late final GeneratedColumn<double> tempC = GeneratedColumn<double>(
+    'temp_c',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(93.0),
+  );
+  static const VerificationMeta _totalTimeSecMeta = const VerificationMeta(
+    'totalTimeSec',
+  );
+  @override
+  late final GeneratedColumn<int> totalTimeSec = GeneratedColumn<int>(
+    'total_time_sec',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(180),
+  );
+  static const VerificationMeta _difficultyMeta = const VerificationMeta(
+    'difficulty',
+  );
+  @override
+  late final GeneratedColumn<String> difficulty = GeneratedColumn<String>(
+    'difficulty',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('Intermediate'),
+  );
+  static const VerificationMeta _stepsJsonMeta = const VerificationMeta(
+    'stepsJson',
+  );
+  @override
+  late final GeneratedColumn<String> stepsJson = GeneratedColumn<String>(
+    'steps_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('[]'),
+  );
+  static const VerificationMeta _flavorProfileMeta = const VerificationMeta(
+    'flavorProfile',
+  );
+  @override
+  late final GeneratedColumn<String> flavorProfile = GeneratedColumn<String>(
+    'flavor_profile',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('Balanced'),
+  );
+  static const VerificationMeta _iconNameMeta = const VerificationMeta(
+    'iconName',
+  );
+  @override
+  late final GeneratedColumn<String> iconName = GeneratedColumn<String>(
+    'icon_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    methodKey,
+    imageUrl,
+    ratioGramsPerMl,
+    tempC,
+    totalTimeSec,
+    difficulty,
+    stepsJson,
+    flavorProfile,
+    iconName,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'brewing_recipes_v2';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<BrewingRecipesV2Data> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('method_key')) {
+      context.handle(
+        _methodKeyMeta,
+        methodKey.isAcceptableOrUnknown(data['method_key']!, _methodKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_methodKeyMeta);
+    }
+    if (data.containsKey('image_url')) {
+      context.handle(
+        _imageUrlMeta,
+        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
+      );
+    }
+    if (data.containsKey('ratio_grams_per_ml')) {
+      context.handle(
+        _ratioGramsPerMlMeta,
+        ratioGramsPerMl.isAcceptableOrUnknown(
+          data['ratio_grams_per_ml']!,
+          _ratioGramsPerMlMeta,
+        ),
+      );
+    }
+    if (data.containsKey('temp_c')) {
+      context.handle(
+        _tempCMeta,
+        tempC.isAcceptableOrUnknown(data['temp_c']!, _tempCMeta),
+      );
+    }
+    if (data.containsKey('total_time_sec')) {
+      context.handle(
+        _totalTimeSecMeta,
+        totalTimeSec.isAcceptableOrUnknown(
+          data['total_time_sec']!,
+          _totalTimeSecMeta,
+        ),
+      );
+    }
+    if (data.containsKey('difficulty')) {
+      context.handle(
+        _difficultyMeta,
+        difficulty.isAcceptableOrUnknown(data['difficulty']!, _difficultyMeta),
+      );
+    }
+    if (data.containsKey('steps_json')) {
+      context.handle(
+        _stepsJsonMeta,
+        stepsJson.isAcceptableOrUnknown(data['steps_json']!, _stepsJsonMeta),
+      );
+    }
+    if (data.containsKey('flavor_profile')) {
+      context.handle(
+        _flavorProfileMeta,
+        flavorProfile.isAcceptableOrUnknown(
+          data['flavor_profile']!,
+          _flavorProfileMeta,
+        ),
+      );
+    }
+    if (data.containsKey('icon_name')) {
+      context.handle(
+        _iconNameMeta,
+        iconName.isAcceptableOrUnknown(data['icon_name']!, _iconNameMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  BrewingRecipesV2Data map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return BrewingRecipesV2Data(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      methodKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}method_key'],
+      )!,
+      imageUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_url'],
+      )!,
+      ratioGramsPerMl: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}ratio_grams_per_ml'],
+      )!,
+      tempC: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}temp_c'],
+      )!,
+      totalTimeSec: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}total_time_sec'],
+      )!,
+      difficulty: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}difficulty'],
+      )!,
+      stepsJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}steps_json'],
+      )!,
+      flavorProfile: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}flavor_profile'],
+      )!,
+      iconName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}icon_name'],
+      ),
+    );
+  }
+
+  @override
+  $BrewingRecipesV2Table createAlias(String alias) {
+    return $BrewingRecipesV2Table(attachedDatabase, alias);
+  }
+}
+
+class BrewingRecipesV2Data extends DataClass
+    implements Insertable<BrewingRecipesV2Data> {
+  final int id;
+  final String methodKey;
+  final String imageUrl;
+  final double ratioGramsPerMl;
+  final double tempC;
+  final int totalTimeSec;
+  final String difficulty;
+  final String stepsJson;
+  final String flavorProfile;
+  final String? iconName;
+  const BrewingRecipesV2Data({
+    required this.id,
+    required this.methodKey,
+    required this.imageUrl,
+    required this.ratioGramsPerMl,
+    required this.tempC,
+    required this.totalTimeSec,
+    required this.difficulty,
+    required this.stepsJson,
+    required this.flavorProfile,
+    this.iconName,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['method_key'] = Variable<String>(methodKey);
+    map['image_url'] = Variable<String>(imageUrl);
+    map['ratio_grams_per_ml'] = Variable<double>(ratioGramsPerMl);
+    map['temp_c'] = Variable<double>(tempC);
+    map['total_time_sec'] = Variable<int>(totalTimeSec);
+    map['difficulty'] = Variable<String>(difficulty);
+    map['steps_json'] = Variable<String>(stepsJson);
+    map['flavor_profile'] = Variable<String>(flavorProfile);
+    if (!nullToAbsent || iconName != null) {
+      map['icon_name'] = Variable<String>(iconName);
+    }
+    return map;
+  }
+
+  BrewingRecipesV2Companion toCompanion(bool nullToAbsent) {
+    return BrewingRecipesV2Companion(
+      id: Value(id),
+      methodKey: Value(methodKey),
+      imageUrl: Value(imageUrl),
+      ratioGramsPerMl: Value(ratioGramsPerMl),
+      tempC: Value(tempC),
+      totalTimeSec: Value(totalTimeSec),
+      difficulty: Value(difficulty),
+      stepsJson: Value(stepsJson),
+      flavorProfile: Value(flavorProfile),
+      iconName: iconName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(iconName),
+    );
+  }
+
+  factory BrewingRecipesV2Data.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return BrewingRecipesV2Data(
+      id: serializer.fromJson<int>(json['id']),
+      methodKey: serializer.fromJson<String>(json['methodKey']),
+      imageUrl: serializer.fromJson<String>(json['imageUrl']),
+      ratioGramsPerMl: serializer.fromJson<double>(json['ratioGramsPerMl']),
+      tempC: serializer.fromJson<double>(json['tempC']),
+      totalTimeSec: serializer.fromJson<int>(json['totalTimeSec']),
+      difficulty: serializer.fromJson<String>(json['difficulty']),
+      stepsJson: serializer.fromJson<String>(json['stepsJson']),
+      flavorProfile: serializer.fromJson<String>(json['flavorProfile']),
+      iconName: serializer.fromJson<String?>(json['iconName']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'methodKey': serializer.toJson<String>(methodKey),
+      'imageUrl': serializer.toJson<String>(imageUrl),
+      'ratioGramsPerMl': serializer.toJson<double>(ratioGramsPerMl),
+      'tempC': serializer.toJson<double>(tempC),
+      'totalTimeSec': serializer.toJson<int>(totalTimeSec),
+      'difficulty': serializer.toJson<String>(difficulty),
+      'stepsJson': serializer.toJson<String>(stepsJson),
+      'flavorProfile': serializer.toJson<String>(flavorProfile),
+      'iconName': serializer.toJson<String?>(iconName),
+    };
+  }
+
+  BrewingRecipesV2Data copyWith({
+    int? id,
+    String? methodKey,
+    String? imageUrl,
+    double? ratioGramsPerMl,
+    double? tempC,
+    int? totalTimeSec,
+    String? difficulty,
+    String? stepsJson,
+    String? flavorProfile,
+    Value<String?> iconName = const Value.absent(),
+  }) => BrewingRecipesV2Data(
+    id: id ?? this.id,
+    methodKey: methodKey ?? this.methodKey,
+    imageUrl: imageUrl ?? this.imageUrl,
+    ratioGramsPerMl: ratioGramsPerMl ?? this.ratioGramsPerMl,
+    tempC: tempC ?? this.tempC,
+    totalTimeSec: totalTimeSec ?? this.totalTimeSec,
+    difficulty: difficulty ?? this.difficulty,
+    stepsJson: stepsJson ?? this.stepsJson,
+    flavorProfile: flavorProfile ?? this.flavorProfile,
+    iconName: iconName.present ? iconName.value : this.iconName,
+  );
+  BrewingRecipesV2Data copyWithCompanion(BrewingRecipesV2Companion data) {
+    return BrewingRecipesV2Data(
+      id: data.id.present ? data.id.value : this.id,
+      methodKey: data.methodKey.present ? data.methodKey.value : this.methodKey,
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      ratioGramsPerMl: data.ratioGramsPerMl.present
+          ? data.ratioGramsPerMl.value
+          : this.ratioGramsPerMl,
+      tempC: data.tempC.present ? data.tempC.value : this.tempC,
+      totalTimeSec: data.totalTimeSec.present
+          ? data.totalTimeSec.value
+          : this.totalTimeSec,
+      difficulty: data.difficulty.present
+          ? data.difficulty.value
+          : this.difficulty,
+      stepsJson: data.stepsJson.present ? data.stepsJson.value : this.stepsJson,
+      flavorProfile: data.flavorProfile.present
+          ? data.flavorProfile.value
+          : this.flavorProfile,
+      iconName: data.iconName.present ? data.iconName.value : this.iconName,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BrewingRecipesV2Data(')
+          ..write('id: $id, ')
+          ..write('methodKey: $methodKey, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('ratioGramsPerMl: $ratioGramsPerMl, ')
+          ..write('tempC: $tempC, ')
+          ..write('totalTimeSec: $totalTimeSec, ')
+          ..write('difficulty: $difficulty, ')
+          ..write('stepsJson: $stepsJson, ')
+          ..write('flavorProfile: $flavorProfile, ')
+          ..write('iconName: $iconName')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    methodKey,
+    imageUrl,
+    ratioGramsPerMl,
+    tempC,
+    totalTimeSec,
+    difficulty,
+    stepsJson,
+    flavorProfile,
+    iconName,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is BrewingRecipesV2Data &&
+          other.id == this.id &&
+          other.methodKey == this.methodKey &&
+          other.imageUrl == this.imageUrl &&
+          other.ratioGramsPerMl == this.ratioGramsPerMl &&
+          other.tempC == this.tempC &&
+          other.totalTimeSec == this.totalTimeSec &&
+          other.difficulty == this.difficulty &&
+          other.stepsJson == this.stepsJson &&
+          other.flavorProfile == this.flavorProfile &&
+          other.iconName == this.iconName);
+}
+
+class BrewingRecipesV2Companion extends UpdateCompanion<BrewingRecipesV2Data> {
+  final Value<int> id;
+  final Value<String> methodKey;
+  final Value<String> imageUrl;
+  final Value<double> ratioGramsPerMl;
+  final Value<double> tempC;
+  final Value<int> totalTimeSec;
+  final Value<String> difficulty;
+  final Value<String> stepsJson;
+  final Value<String> flavorProfile;
+  final Value<String?> iconName;
+  const BrewingRecipesV2Companion({
+    this.id = const Value.absent(),
+    this.methodKey = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.ratioGramsPerMl = const Value.absent(),
+    this.tempC = const Value.absent(),
+    this.totalTimeSec = const Value.absent(),
+    this.difficulty = const Value.absent(),
+    this.stepsJson = const Value.absent(),
+    this.flavorProfile = const Value.absent(),
+    this.iconName = const Value.absent(),
+  });
+  BrewingRecipesV2Companion.insert({
+    this.id = const Value.absent(),
+    required String methodKey,
+    this.imageUrl = const Value.absent(),
+    this.ratioGramsPerMl = const Value.absent(),
+    this.tempC = const Value.absent(),
+    this.totalTimeSec = const Value.absent(),
+    this.difficulty = const Value.absent(),
+    this.stepsJson = const Value.absent(),
+    this.flavorProfile = const Value.absent(),
+    this.iconName = const Value.absent(),
+  }) : methodKey = Value(methodKey);
+  static Insertable<BrewingRecipesV2Data> custom({
+    Expression<int>? id,
+    Expression<String>? methodKey,
+    Expression<String>? imageUrl,
+    Expression<double>? ratioGramsPerMl,
+    Expression<double>? tempC,
+    Expression<int>? totalTimeSec,
+    Expression<String>? difficulty,
+    Expression<String>? stepsJson,
+    Expression<String>? flavorProfile,
+    Expression<String>? iconName,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (methodKey != null) 'method_key': methodKey,
+      if (imageUrl != null) 'image_url': imageUrl,
+      if (ratioGramsPerMl != null) 'ratio_grams_per_ml': ratioGramsPerMl,
+      if (tempC != null) 'temp_c': tempC,
+      if (totalTimeSec != null) 'total_time_sec': totalTimeSec,
+      if (difficulty != null) 'difficulty': difficulty,
+      if (stepsJson != null) 'steps_json': stepsJson,
+      if (flavorProfile != null) 'flavor_profile': flavorProfile,
+      if (iconName != null) 'icon_name': iconName,
+    });
+  }
+
+  BrewingRecipesV2Companion copyWith({
+    Value<int>? id,
+    Value<String>? methodKey,
+    Value<String>? imageUrl,
+    Value<double>? ratioGramsPerMl,
+    Value<double>? tempC,
+    Value<int>? totalTimeSec,
+    Value<String>? difficulty,
+    Value<String>? stepsJson,
+    Value<String>? flavorProfile,
+    Value<String?>? iconName,
+  }) {
+    return BrewingRecipesV2Companion(
+      id: id ?? this.id,
+      methodKey: methodKey ?? this.methodKey,
+      imageUrl: imageUrl ?? this.imageUrl,
+      ratioGramsPerMl: ratioGramsPerMl ?? this.ratioGramsPerMl,
+      tempC: tempC ?? this.tempC,
+      totalTimeSec: totalTimeSec ?? this.totalTimeSec,
+      difficulty: difficulty ?? this.difficulty,
+      stepsJson: stepsJson ?? this.stepsJson,
+      flavorProfile: flavorProfile ?? this.flavorProfile,
+      iconName: iconName ?? this.iconName,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (methodKey.present) {
+      map['method_key'] = Variable<String>(methodKey.value);
+    }
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
+    if (ratioGramsPerMl.present) {
+      map['ratio_grams_per_ml'] = Variable<double>(ratioGramsPerMl.value);
+    }
+    if (tempC.present) {
+      map['temp_c'] = Variable<double>(tempC.value);
+    }
+    if (totalTimeSec.present) {
+      map['total_time_sec'] = Variable<int>(totalTimeSec.value);
+    }
+    if (difficulty.present) {
+      map['difficulty'] = Variable<String>(difficulty.value);
+    }
+    if (stepsJson.present) {
+      map['steps_json'] = Variable<String>(stepsJson.value);
+    }
+    if (flavorProfile.present) {
+      map['flavor_profile'] = Variable<String>(flavorProfile.value);
+    }
+    if (iconName.present) {
+      map['icon_name'] = Variable<String>(iconName.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BrewingRecipesV2Companion(')
+          ..write('id: $id, ')
+          ..write('methodKey: $methodKey, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('ratioGramsPerMl: $ratioGramsPerMl, ')
+          ..write('tempC: $tempC, ')
+          ..write('totalTimeSec: $totalTimeSec, ')
+          ..write('difficulty: $difficulty, ')
+          ..write('stepsJson: $stepsJson, ')
+          ..write('flavorProfile: $flavorProfile, ')
+          ..write('iconName: $iconName')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $BrewingRecipeTranslationsV2Table extends BrewingRecipeTranslationsV2
+    with
+        TableInfo<
+          $BrewingRecipeTranslationsV2Table,
+          BrewingRecipeTranslationsV2Data
+        > {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BrewingRecipeTranslationsV2Table(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _recipeKeyMeta = const VerificationMeta(
+    'recipeKey',
+  );
+  @override
+  late final GeneratedColumn<String> recipeKey = GeneratedColumn<String>(
+    'recipe_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES brewing_recipes_v2 (method_key)',
+    ),
+  );
+  static const VerificationMeta _languageCodeMeta = const VerificationMeta(
+    'languageCode',
+  );
+  @override
+  late final GeneratedColumn<String> languageCode = GeneratedColumn<String>(
+    'language_code',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    recipeKey,
+    languageCode,
+    name,
+    description,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'brewing_recipe_translations_v2';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<BrewingRecipeTranslationsV2Data> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('recipe_key')) {
+      context.handle(
+        _recipeKeyMeta,
+        recipeKey.isAcceptableOrUnknown(data['recipe_key']!, _recipeKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_recipeKeyMeta);
+    }
+    if (data.containsKey('language_code')) {
+      context.handle(
+        _languageCodeMeta,
+        languageCode.isAcceptableOrUnknown(
+          data['language_code']!,
+          _languageCodeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_languageCodeMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {recipeKey, languageCode};
+  @override
+  BrewingRecipeTranslationsV2Data map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return BrewingRecipeTranslationsV2Data(
+      recipeKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}recipe_key'],
+      )!,
+      languageCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}language_code'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      ),
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+    );
+  }
+
+  @override
+  $BrewingRecipeTranslationsV2Table createAlias(String alias) {
+    return $BrewingRecipeTranslationsV2Table(attachedDatabase, alias);
+  }
+}
+
+class BrewingRecipeTranslationsV2Data extends DataClass
+    implements Insertable<BrewingRecipeTranslationsV2Data> {
+  final String recipeKey;
+  final String languageCode;
+  final String? name;
+  final String? description;
+  const BrewingRecipeTranslationsV2Data({
+    required this.recipeKey,
+    required this.languageCode,
+    this.name,
+    this.description,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['recipe_key'] = Variable<String>(recipeKey);
+    map['language_code'] = Variable<String>(languageCode);
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    return map;
+  }
+
+  BrewingRecipeTranslationsV2Companion toCompanion(bool nullToAbsent) {
+    return BrewingRecipeTranslationsV2Companion(
+      recipeKey: Value(recipeKey),
+      languageCode: Value(languageCode),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+    );
+  }
+
+  factory BrewingRecipeTranslationsV2Data.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return BrewingRecipeTranslationsV2Data(
+      recipeKey: serializer.fromJson<String>(json['recipeKey']),
+      languageCode: serializer.fromJson<String>(json['languageCode']),
+      name: serializer.fromJson<String?>(json['name']),
+      description: serializer.fromJson<String?>(json['description']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'recipeKey': serializer.toJson<String>(recipeKey),
+      'languageCode': serializer.toJson<String>(languageCode),
+      'name': serializer.toJson<String?>(name),
+      'description': serializer.toJson<String?>(description),
+    };
+  }
+
+  BrewingRecipeTranslationsV2Data copyWith({
+    String? recipeKey,
+    String? languageCode,
+    Value<String?> name = const Value.absent(),
+    Value<String?> description = const Value.absent(),
+  }) => BrewingRecipeTranslationsV2Data(
+    recipeKey: recipeKey ?? this.recipeKey,
+    languageCode: languageCode ?? this.languageCode,
+    name: name.present ? name.value : this.name,
+    description: description.present ? description.value : this.description,
+  );
+  BrewingRecipeTranslationsV2Data copyWithCompanion(
+    BrewingRecipeTranslationsV2Companion data,
+  ) {
+    return BrewingRecipeTranslationsV2Data(
+      recipeKey: data.recipeKey.present ? data.recipeKey.value : this.recipeKey,
+      languageCode: data.languageCode.present
+          ? data.languageCode.value
+          : this.languageCode,
+      name: data.name.present ? data.name.value : this.name,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BrewingRecipeTranslationsV2Data(')
+          ..write('recipeKey: $recipeKey, ')
+          ..write('languageCode: $languageCode, ')
+          ..write('name: $name, ')
+          ..write('description: $description')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(recipeKey, languageCode, name, description);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is BrewingRecipeTranslationsV2Data &&
+          other.recipeKey == this.recipeKey &&
+          other.languageCode == this.languageCode &&
+          other.name == this.name &&
+          other.description == this.description);
+}
+
+class BrewingRecipeTranslationsV2Companion
+    extends UpdateCompanion<BrewingRecipeTranslationsV2Data> {
+  final Value<String> recipeKey;
+  final Value<String> languageCode;
+  final Value<String?> name;
+  final Value<String?> description;
+  final Value<int> rowid;
+  const BrewingRecipeTranslationsV2Companion({
+    this.recipeKey = const Value.absent(),
+    this.languageCode = const Value.absent(),
+    this.name = const Value.absent(),
+    this.description = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  BrewingRecipeTranslationsV2Companion.insert({
+    required String recipeKey,
+    required String languageCode,
+    this.name = const Value.absent(),
+    this.description = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : recipeKey = Value(recipeKey),
+       languageCode = Value(languageCode);
+  static Insertable<BrewingRecipeTranslationsV2Data> custom({
+    Expression<String>? recipeKey,
+    Expression<String>? languageCode,
+    Expression<String>? name,
+    Expression<String>? description,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (recipeKey != null) 'recipe_key': recipeKey,
+      if (languageCode != null) 'language_code': languageCode,
+      if (name != null) 'name': name,
+      if (description != null) 'description': description,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  BrewingRecipeTranslationsV2Companion copyWith({
+    Value<String>? recipeKey,
+    Value<String>? languageCode,
+    Value<String?>? name,
+    Value<String?>? description,
+    Value<int>? rowid,
+  }) {
+    return BrewingRecipeTranslationsV2Companion(
+      recipeKey: recipeKey ?? this.recipeKey,
+      languageCode: languageCode ?? this.languageCode,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (recipeKey.present) {
+      map['recipe_key'] = Variable<String>(recipeKey.value);
+    }
+    if (languageCode.present) {
+      map['language_code'] = Variable<String>(languageCode.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BrewingRecipeTranslationsV2Companion(')
+          ..write('recipeKey: $recipeKey, ')
+          ..write('languageCode: $languageCode, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -10756,6 +15559,24 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $RecommendedRecipesTable recommendedRecipes =
       $RecommendedRecipesTable(this);
   late final $CustomRecipesTable customRecipes = $CustomRecipesTable(this);
+  late final $LocalizedFarmersV2Table localizedFarmersV2 =
+      $LocalizedFarmersV2Table(this);
+  late final $LocalizedFarmerTranslationsV2Table localizedFarmerTranslationsV2 =
+      $LocalizedFarmerTranslationsV2Table(this);
+  late final $SpecialtyArticlesV2Table specialtyArticlesV2 =
+      $SpecialtyArticlesV2Table(this);
+  late final $SpecialtyArticleTranslationsV2Table
+  specialtyArticleTranslationsV2 = $SpecialtyArticleTranslationsV2Table(this);
+  late final $LocalizedBeansV2Table localizedBeansV2 = $LocalizedBeansV2Table(
+    this,
+  );
+  late final $LocalizedBeanTranslationsV2Table localizedBeanTranslationsV2 =
+      $LocalizedBeanTranslationsV2Table(this);
+  late final $BrewingRecipesV2Table brewingRecipesV2 = $BrewingRecipesV2Table(
+    this,
+  );
+  late final $BrewingRecipeTranslationsV2Table brewingRecipeTranslationsV2 =
+      $BrewingRecipeTranslationsV2Table(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -10777,6 +15598,14 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     brewingRecipeTranslations,
     recommendedRecipes,
     customRecipes,
+    localizedFarmersV2,
+    localizedFarmerTranslationsV2,
+    specialtyArticlesV2,
+    specialtyArticleTranslationsV2,
+    localizedBeansV2,
+    localizedBeanTranslationsV2,
+    brewingRecipesV2,
+    brewingRecipeTranslationsV2,
   ];
 }
 
@@ -10881,6 +15710,29 @@ final class $$LocalizedBrandsTableReferences
     ).filter((f) => f.brandId.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_coffeeLotsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$LocalizedBeansV2Table, List<LocalizedBeansV2Data>>
+  _localizedBeansV2RefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.localizedBeansV2,
+    aliasName: $_aliasNameGenerator(
+      db.localizedBrands.id,
+      db.localizedBeansV2.brandId,
+    ),
+  );
+
+  $$LocalizedBeansV2TableProcessedTableManager get localizedBeansV2Refs {
+    final manager = $$LocalizedBeansV2TableTableManager(
+      $_db,
+      $_db.localizedBeansV2,
+    ).filter((f) => f.brandId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _localizedBeansV2RefsTable($_db),
+    );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -11014,6 +15866,31 @@ class $$LocalizedBrandsTableFilterComposer
           }) => $$CoffeeLotsTableFilterComposer(
             $db: $db,
             $table: $db.coffeeLots,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> localizedBeansV2Refs(
+    Expression<bool> Function($$LocalizedBeansV2TableFilterComposer f) f,
+  ) {
+    final $$LocalizedBeansV2TableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.localizedBeansV2,
+      getReferencedColumn: (t) => t.brandId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LocalizedBeansV2TableFilterComposer(
+            $db: $db,
+            $table: $db.localizedBeansV2,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -11207,6 +16084,31 @@ class $$LocalizedBrandsTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> localizedBeansV2Refs<T extends Object>(
+    Expression<T> Function($$LocalizedBeansV2TableAnnotationComposer a) f,
+  ) {
+    final $$LocalizedBeansV2TableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.localizedBeansV2,
+      getReferencedColumn: (t) => t.brandId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LocalizedBeansV2TableAnnotationComposer(
+            $db: $db,
+            $table: $db.localizedBeansV2,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$LocalizedBrandsTableTableManager
@@ -11226,6 +16128,7 @@ class $$LocalizedBrandsTableTableManager
             bool localizedBeansRefs,
             bool localizedBrandTranslationsRefs,
             bool coffeeLotsRefs,
+            bool localizedBeansV2Refs,
           })
         > {
   $$LocalizedBrandsTableTableManager(
@@ -11302,6 +16205,7 @@ class $$LocalizedBrandsTableTableManager
                 localizedBeansRefs = false,
                 localizedBrandTranslationsRefs = false,
                 coffeeLotsRefs = false,
+                localizedBeansV2Refs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -11310,6 +16214,7 @@ class $$LocalizedBrandsTableTableManager
                     if (localizedBrandTranslationsRefs)
                       db.localizedBrandTranslations,
                     if (coffeeLotsRefs) db.coffeeLots,
+                    if (localizedBeansV2Refs) db.localizedBeansV2,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -11377,6 +16282,27 @@ class $$LocalizedBrandsTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (localizedBeansV2Refs)
+                        await $_getPrefetchedData<
+                          LocalizedBrand,
+                          $LocalizedBrandsTable,
+                          LocalizedBeansV2Data
+                        >(
+                          currentTable: table,
+                          referencedTable: $$LocalizedBrandsTableReferences
+                              ._localizedBeansV2RefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$LocalizedBrandsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).localizedBeansV2Refs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.brandId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -11401,6 +16327,7 @@ typedef $$LocalizedBrandsTableProcessedTableManager =
         bool localizedBeansRefs,
         bool localizedBrandTranslationsRefs,
         bool coffeeLotsRefs,
+        bool localizedBeansV2Refs,
       })
     >;
 typedef $$LocalizedFarmersTableCreateCompanionBuilder =
@@ -18412,6 +23339,3788 @@ typedef $$CustomRecipesTableProcessedTableManager =
       CustomRecipe,
       PrefetchHooks Function()
     >;
+typedef $$LocalizedFarmersV2TableCreateCompanionBuilder =
+    LocalizedFarmersV2Companion Function({
+      Value<int> id,
+      Value<String> imageUrl,
+      Value<String> flagUrl,
+      Value<double?> latitude,
+      Value<double?> longitude,
+      Value<DateTime?> createdAt,
+    });
+typedef $$LocalizedFarmersV2TableUpdateCompanionBuilder =
+    LocalizedFarmersV2Companion Function({
+      Value<int> id,
+      Value<String> imageUrl,
+      Value<String> flagUrl,
+      Value<double?> latitude,
+      Value<double?> longitude,
+      Value<DateTime?> createdAt,
+    });
+
+final class $$LocalizedFarmersV2TableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $LocalizedFarmersV2Table,
+          LocalizedFarmersV2Data
+        > {
+  $$LocalizedFarmersV2TableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static MultiTypedResultKey<
+    $LocalizedFarmerTranslationsV2Table,
+    List<LocalizedFarmerTranslationsV2Data>
+  >
+  _localizedFarmerTranslationsV2RefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.localizedFarmerTranslationsV2,
+        aliasName: $_aliasNameGenerator(
+          db.localizedFarmersV2.id,
+          db.localizedFarmerTranslationsV2.farmerId,
+        ),
+      );
+
+  $$LocalizedFarmerTranslationsV2TableProcessedTableManager
+  get localizedFarmerTranslationsV2Refs {
+    final manager = $$LocalizedFarmerTranslationsV2TableTableManager(
+      $_db,
+      $_db.localizedFarmerTranslationsV2,
+    ).filter((f) => f.farmerId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _localizedFarmerTranslationsV2RefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$LocalizedBeansV2Table, List<LocalizedBeansV2Data>>
+  _localizedBeansV2RefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.localizedBeansV2,
+    aliasName: $_aliasNameGenerator(
+      db.localizedFarmersV2.id,
+      db.localizedBeansV2.farmerId,
+    ),
+  );
+
+  $$LocalizedBeansV2TableProcessedTableManager get localizedBeansV2Refs {
+    final manager = $$LocalizedBeansV2TableTableManager(
+      $_db,
+      $_db.localizedBeansV2,
+    ).filter((f) => f.farmerId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _localizedBeansV2RefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$LocalizedFarmersV2TableFilterComposer
+    extends Composer<_$AppDatabase, $LocalizedFarmersV2Table> {
+  $$LocalizedFarmersV2TableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get flagUrl => $composableBuilder(
+    column: $table.flagUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get latitude => $composableBuilder(
+    column: $table.latitude,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get longitude => $composableBuilder(
+    column: $table.longitude,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> localizedFarmerTranslationsV2Refs(
+    Expression<bool> Function(
+      $$LocalizedFarmerTranslationsV2TableFilterComposer f,
+    )
+    f,
+  ) {
+    final $$LocalizedFarmerTranslationsV2TableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.localizedFarmerTranslationsV2,
+          getReferencedColumn: (t) => t.farmerId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$LocalizedFarmerTranslationsV2TableFilterComposer(
+                $db: $db,
+                $table: $db.localizedFarmerTranslationsV2,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<bool> localizedBeansV2Refs(
+    Expression<bool> Function($$LocalizedBeansV2TableFilterComposer f) f,
+  ) {
+    final $$LocalizedBeansV2TableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.localizedBeansV2,
+      getReferencedColumn: (t) => t.farmerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LocalizedBeansV2TableFilterComposer(
+            $db: $db,
+            $table: $db.localizedBeansV2,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$LocalizedFarmersV2TableOrderingComposer
+    extends Composer<_$AppDatabase, $LocalizedFarmersV2Table> {
+  $$LocalizedFarmersV2TableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get flagUrl => $composableBuilder(
+    column: $table.flagUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get latitude => $composableBuilder(
+    column: $table.latitude,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get longitude => $composableBuilder(
+    column: $table.longitude,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LocalizedFarmersV2TableAnnotationComposer
+    extends Composer<_$AppDatabase, $LocalizedFarmersV2Table> {
+  $$LocalizedFarmersV2TableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get imageUrl =>
+      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get flagUrl =>
+      $composableBuilder(column: $table.flagUrl, builder: (column) => column);
+
+  GeneratedColumn<double> get latitude =>
+      $composableBuilder(column: $table.latitude, builder: (column) => column);
+
+  GeneratedColumn<double> get longitude =>
+      $composableBuilder(column: $table.longitude, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  Expression<T> localizedFarmerTranslationsV2Refs<T extends Object>(
+    Expression<T> Function(
+      $$LocalizedFarmerTranslationsV2TableAnnotationComposer a,
+    )
+    f,
+  ) {
+    final $$LocalizedFarmerTranslationsV2TableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.localizedFarmerTranslationsV2,
+          getReferencedColumn: (t) => t.farmerId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$LocalizedFarmerTranslationsV2TableAnnotationComposer(
+                $db: $db,
+                $table: $db.localizedFarmerTranslationsV2,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> localizedBeansV2Refs<T extends Object>(
+    Expression<T> Function($$LocalizedBeansV2TableAnnotationComposer a) f,
+  ) {
+    final $$LocalizedBeansV2TableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.localizedBeansV2,
+      getReferencedColumn: (t) => t.farmerId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LocalizedBeansV2TableAnnotationComposer(
+            $db: $db,
+            $table: $db.localizedBeansV2,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$LocalizedFarmersV2TableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LocalizedFarmersV2Table,
+          LocalizedFarmersV2Data,
+          $$LocalizedFarmersV2TableFilterComposer,
+          $$LocalizedFarmersV2TableOrderingComposer,
+          $$LocalizedFarmersV2TableAnnotationComposer,
+          $$LocalizedFarmersV2TableCreateCompanionBuilder,
+          $$LocalizedFarmersV2TableUpdateCompanionBuilder,
+          (LocalizedFarmersV2Data, $$LocalizedFarmersV2TableReferences),
+          LocalizedFarmersV2Data,
+          PrefetchHooks Function({
+            bool localizedFarmerTranslationsV2Refs,
+            bool localizedBeansV2Refs,
+          })
+        > {
+  $$LocalizedFarmersV2TableTableManager(
+    _$AppDatabase db,
+    $LocalizedFarmersV2Table table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LocalizedFarmersV2TableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LocalizedFarmersV2TableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LocalizedFarmersV2TableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> imageUrl = const Value.absent(),
+                Value<String> flagUrl = const Value.absent(),
+                Value<double?> latitude = const Value.absent(),
+                Value<double?> longitude = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+              }) => LocalizedFarmersV2Companion(
+                id: id,
+                imageUrl: imageUrl,
+                flagUrl: flagUrl,
+                latitude: latitude,
+                longitude: longitude,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> imageUrl = const Value.absent(),
+                Value<String> flagUrl = const Value.absent(),
+                Value<double?> latitude = const Value.absent(),
+                Value<double?> longitude = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+              }) => LocalizedFarmersV2Companion.insert(
+                id: id,
+                imageUrl: imageUrl,
+                flagUrl: flagUrl,
+                latitude: latitude,
+                longitude: longitude,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$LocalizedFarmersV2TableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({
+                localizedFarmerTranslationsV2Refs = false,
+                localizedBeansV2Refs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (localizedFarmerTranslationsV2Refs)
+                      db.localizedFarmerTranslationsV2,
+                    if (localizedBeansV2Refs) db.localizedBeansV2,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (localizedFarmerTranslationsV2Refs)
+                        await $_getPrefetchedData<
+                          LocalizedFarmersV2Data,
+                          $LocalizedFarmersV2Table,
+                          LocalizedFarmerTranslationsV2Data
+                        >(
+                          currentTable: table,
+                          referencedTable: $$LocalizedFarmersV2TableReferences
+                              ._localizedFarmerTranslationsV2RefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$LocalizedFarmersV2TableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).localizedFarmerTranslationsV2Refs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.farmerId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (localizedBeansV2Refs)
+                        await $_getPrefetchedData<
+                          LocalizedFarmersV2Data,
+                          $LocalizedFarmersV2Table,
+                          LocalizedBeansV2Data
+                        >(
+                          currentTable: table,
+                          referencedTable: $$LocalizedFarmersV2TableReferences
+                              ._localizedBeansV2RefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$LocalizedFarmersV2TableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).localizedBeansV2Refs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.farmerId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$LocalizedFarmersV2TableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LocalizedFarmersV2Table,
+      LocalizedFarmersV2Data,
+      $$LocalizedFarmersV2TableFilterComposer,
+      $$LocalizedFarmersV2TableOrderingComposer,
+      $$LocalizedFarmersV2TableAnnotationComposer,
+      $$LocalizedFarmersV2TableCreateCompanionBuilder,
+      $$LocalizedFarmersV2TableUpdateCompanionBuilder,
+      (LocalizedFarmersV2Data, $$LocalizedFarmersV2TableReferences),
+      LocalizedFarmersV2Data,
+      PrefetchHooks Function({
+        bool localizedFarmerTranslationsV2Refs,
+        bool localizedBeansV2Refs,
+      })
+    >;
+typedef $$LocalizedFarmerTranslationsV2TableCreateCompanionBuilder =
+    LocalizedFarmerTranslationsV2Companion Function({
+      required int farmerId,
+      required String languageCode,
+      Value<String?> name,
+      Value<String?> descriptionHtml,
+      Value<String?> story,
+      Value<String?> region,
+      Value<String?> country,
+      Value<int> rowid,
+    });
+typedef $$LocalizedFarmerTranslationsV2TableUpdateCompanionBuilder =
+    LocalizedFarmerTranslationsV2Companion Function({
+      Value<int> farmerId,
+      Value<String> languageCode,
+      Value<String?> name,
+      Value<String?> descriptionHtml,
+      Value<String?> story,
+      Value<String?> region,
+      Value<String?> country,
+      Value<int> rowid,
+    });
+
+final class $$LocalizedFarmerTranslationsV2TableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $LocalizedFarmerTranslationsV2Table,
+          LocalizedFarmerTranslationsV2Data
+        > {
+  $$LocalizedFarmerTranslationsV2TableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $LocalizedFarmersV2Table _farmerIdTable(_$AppDatabase db) =>
+      db.localizedFarmersV2.createAlias(
+        $_aliasNameGenerator(
+          db.localizedFarmerTranslationsV2.farmerId,
+          db.localizedFarmersV2.id,
+        ),
+      );
+
+  $$LocalizedFarmersV2TableProcessedTableManager get farmerId {
+    final $_column = $_itemColumn<int>('farmer_id')!;
+
+    final manager = $$LocalizedFarmersV2TableTableManager(
+      $_db,
+      $_db.localizedFarmersV2,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_farmerIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$LocalizedFarmerTranslationsV2TableFilterComposer
+    extends Composer<_$AppDatabase, $LocalizedFarmerTranslationsV2Table> {
+  $$LocalizedFarmerTranslationsV2TableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get languageCode => $composableBuilder(
+    column: $table.languageCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get descriptionHtml => $composableBuilder(
+    column: $table.descriptionHtml,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get story => $composableBuilder(
+    column: $table.story,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get region => $composableBuilder(
+    column: $table.region,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get country => $composableBuilder(
+    column: $table.country,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$LocalizedFarmersV2TableFilterComposer get farmerId {
+    final $$LocalizedFarmersV2TableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.farmerId,
+      referencedTable: $db.localizedFarmersV2,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LocalizedFarmersV2TableFilterComposer(
+            $db: $db,
+            $table: $db.localizedFarmersV2,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$LocalizedFarmerTranslationsV2TableOrderingComposer
+    extends Composer<_$AppDatabase, $LocalizedFarmerTranslationsV2Table> {
+  $$LocalizedFarmerTranslationsV2TableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get languageCode => $composableBuilder(
+    column: $table.languageCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get descriptionHtml => $composableBuilder(
+    column: $table.descriptionHtml,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get story => $composableBuilder(
+    column: $table.story,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get region => $composableBuilder(
+    column: $table.region,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get country => $composableBuilder(
+    column: $table.country,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$LocalizedFarmersV2TableOrderingComposer get farmerId {
+    final $$LocalizedFarmersV2TableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.farmerId,
+      referencedTable: $db.localizedFarmersV2,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LocalizedFarmersV2TableOrderingComposer(
+            $db: $db,
+            $table: $db.localizedFarmersV2,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$LocalizedFarmerTranslationsV2TableAnnotationComposer
+    extends Composer<_$AppDatabase, $LocalizedFarmerTranslationsV2Table> {
+  $$LocalizedFarmerTranslationsV2TableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get languageCode => $composableBuilder(
+    column: $table.languageCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get descriptionHtml => $composableBuilder(
+    column: $table.descriptionHtml,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get story =>
+      $composableBuilder(column: $table.story, builder: (column) => column);
+
+  GeneratedColumn<String> get region =>
+      $composableBuilder(column: $table.region, builder: (column) => column);
+
+  GeneratedColumn<String> get country =>
+      $composableBuilder(column: $table.country, builder: (column) => column);
+
+  $$LocalizedFarmersV2TableAnnotationComposer get farmerId {
+    final $$LocalizedFarmersV2TableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.farmerId,
+          referencedTable: $db.localizedFarmersV2,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$LocalizedFarmersV2TableAnnotationComposer(
+                $db: $db,
+                $table: $db.localizedFarmersV2,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+}
+
+class $$LocalizedFarmerTranslationsV2TableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LocalizedFarmerTranslationsV2Table,
+          LocalizedFarmerTranslationsV2Data,
+          $$LocalizedFarmerTranslationsV2TableFilterComposer,
+          $$LocalizedFarmerTranslationsV2TableOrderingComposer,
+          $$LocalizedFarmerTranslationsV2TableAnnotationComposer,
+          $$LocalizedFarmerTranslationsV2TableCreateCompanionBuilder,
+          $$LocalizedFarmerTranslationsV2TableUpdateCompanionBuilder,
+          (
+            LocalizedFarmerTranslationsV2Data,
+            $$LocalizedFarmerTranslationsV2TableReferences,
+          ),
+          LocalizedFarmerTranslationsV2Data,
+          PrefetchHooks Function({bool farmerId})
+        > {
+  $$LocalizedFarmerTranslationsV2TableTableManager(
+    _$AppDatabase db,
+    $LocalizedFarmerTranslationsV2Table table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LocalizedFarmerTranslationsV2TableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$LocalizedFarmerTranslationsV2TableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$LocalizedFarmerTranslationsV2TableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> farmerId = const Value.absent(),
+                Value<String> languageCode = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<String?> descriptionHtml = const Value.absent(),
+                Value<String?> story = const Value.absent(),
+                Value<String?> region = const Value.absent(),
+                Value<String?> country = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LocalizedFarmerTranslationsV2Companion(
+                farmerId: farmerId,
+                languageCode: languageCode,
+                name: name,
+                descriptionHtml: descriptionHtml,
+                story: story,
+                region: region,
+                country: country,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int farmerId,
+                required String languageCode,
+                Value<String?> name = const Value.absent(),
+                Value<String?> descriptionHtml = const Value.absent(),
+                Value<String?> story = const Value.absent(),
+                Value<String?> region = const Value.absent(),
+                Value<String?> country = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LocalizedFarmerTranslationsV2Companion.insert(
+                farmerId: farmerId,
+                languageCode: languageCode,
+                name: name,
+                descriptionHtml: descriptionHtml,
+                story: story,
+                region: region,
+                country: country,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$LocalizedFarmerTranslationsV2TableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({farmerId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (farmerId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.farmerId,
+                                referencedTable:
+                                    $$LocalizedFarmerTranslationsV2TableReferences
+                                        ._farmerIdTable(db),
+                                referencedColumn:
+                                    $$LocalizedFarmerTranslationsV2TableReferences
+                                        ._farmerIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$LocalizedFarmerTranslationsV2TableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LocalizedFarmerTranslationsV2Table,
+      LocalizedFarmerTranslationsV2Data,
+      $$LocalizedFarmerTranslationsV2TableFilterComposer,
+      $$LocalizedFarmerTranslationsV2TableOrderingComposer,
+      $$LocalizedFarmerTranslationsV2TableAnnotationComposer,
+      $$LocalizedFarmerTranslationsV2TableCreateCompanionBuilder,
+      $$LocalizedFarmerTranslationsV2TableUpdateCompanionBuilder,
+      (
+        LocalizedFarmerTranslationsV2Data,
+        $$LocalizedFarmerTranslationsV2TableReferences,
+      ),
+      LocalizedFarmerTranslationsV2Data,
+      PrefetchHooks Function({bool farmerId})
+    >;
+typedef $$SpecialtyArticlesV2TableCreateCompanionBuilder =
+    SpecialtyArticlesV2Companion Function({
+      Value<int> id,
+      Value<String> imageUrl,
+      Value<String> flagUrl,
+      Value<int> readTimeMin,
+      Value<DateTime?> createdAt,
+    });
+typedef $$SpecialtyArticlesV2TableUpdateCompanionBuilder =
+    SpecialtyArticlesV2Companion Function({
+      Value<int> id,
+      Value<String> imageUrl,
+      Value<String> flagUrl,
+      Value<int> readTimeMin,
+      Value<DateTime?> createdAt,
+    });
+
+final class $$SpecialtyArticlesV2TableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $SpecialtyArticlesV2Table,
+          SpecialtyArticlesV2Data
+        > {
+  $$SpecialtyArticlesV2TableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static MultiTypedResultKey<
+    $SpecialtyArticleTranslationsV2Table,
+    List<SpecialtyArticleTranslationsV2Data>
+  >
+  _specialtyArticleTranslationsV2RefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.specialtyArticleTranslationsV2,
+        aliasName: $_aliasNameGenerator(
+          db.specialtyArticlesV2.id,
+          db.specialtyArticleTranslationsV2.articleId,
+        ),
+      );
+
+  $$SpecialtyArticleTranslationsV2TableProcessedTableManager
+  get specialtyArticleTranslationsV2Refs {
+    final manager = $$SpecialtyArticleTranslationsV2TableTableManager(
+      $_db,
+      $_db.specialtyArticleTranslationsV2,
+    ).filter((f) => f.articleId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _specialtyArticleTranslationsV2RefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$SpecialtyArticlesV2TableFilterComposer
+    extends Composer<_$AppDatabase, $SpecialtyArticlesV2Table> {
+  $$SpecialtyArticlesV2TableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get flagUrl => $composableBuilder(
+    column: $table.flagUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get readTimeMin => $composableBuilder(
+    column: $table.readTimeMin,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> specialtyArticleTranslationsV2Refs(
+    Expression<bool> Function(
+      $$SpecialtyArticleTranslationsV2TableFilterComposer f,
+    )
+    f,
+  ) {
+    final $$SpecialtyArticleTranslationsV2TableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.specialtyArticleTranslationsV2,
+          getReferencedColumn: (t) => t.articleId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$SpecialtyArticleTranslationsV2TableFilterComposer(
+                $db: $db,
+                $table: $db.specialtyArticleTranslationsV2,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$SpecialtyArticlesV2TableOrderingComposer
+    extends Composer<_$AppDatabase, $SpecialtyArticlesV2Table> {
+  $$SpecialtyArticlesV2TableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get flagUrl => $composableBuilder(
+    column: $table.flagUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get readTimeMin => $composableBuilder(
+    column: $table.readTimeMin,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SpecialtyArticlesV2TableAnnotationComposer
+    extends Composer<_$AppDatabase, $SpecialtyArticlesV2Table> {
+  $$SpecialtyArticlesV2TableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get imageUrl =>
+      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get flagUrl =>
+      $composableBuilder(column: $table.flagUrl, builder: (column) => column);
+
+  GeneratedColumn<int> get readTimeMin => $composableBuilder(
+    column: $table.readTimeMin,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  Expression<T> specialtyArticleTranslationsV2Refs<T extends Object>(
+    Expression<T> Function(
+      $$SpecialtyArticleTranslationsV2TableAnnotationComposer a,
+    )
+    f,
+  ) {
+    final $$SpecialtyArticleTranslationsV2TableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.specialtyArticleTranslationsV2,
+          getReferencedColumn: (t) => t.articleId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$SpecialtyArticleTranslationsV2TableAnnotationComposer(
+                $db: $db,
+                $table: $db.specialtyArticleTranslationsV2,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$SpecialtyArticlesV2TableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SpecialtyArticlesV2Table,
+          SpecialtyArticlesV2Data,
+          $$SpecialtyArticlesV2TableFilterComposer,
+          $$SpecialtyArticlesV2TableOrderingComposer,
+          $$SpecialtyArticlesV2TableAnnotationComposer,
+          $$SpecialtyArticlesV2TableCreateCompanionBuilder,
+          $$SpecialtyArticlesV2TableUpdateCompanionBuilder,
+          (SpecialtyArticlesV2Data, $$SpecialtyArticlesV2TableReferences),
+          SpecialtyArticlesV2Data,
+          PrefetchHooks Function({bool specialtyArticleTranslationsV2Refs})
+        > {
+  $$SpecialtyArticlesV2TableTableManager(
+    _$AppDatabase db,
+    $SpecialtyArticlesV2Table table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SpecialtyArticlesV2TableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SpecialtyArticlesV2TableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$SpecialtyArticlesV2TableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> imageUrl = const Value.absent(),
+                Value<String> flagUrl = const Value.absent(),
+                Value<int> readTimeMin = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+              }) => SpecialtyArticlesV2Companion(
+                id: id,
+                imageUrl: imageUrl,
+                flagUrl: flagUrl,
+                readTimeMin: readTimeMin,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> imageUrl = const Value.absent(),
+                Value<String> flagUrl = const Value.absent(),
+                Value<int> readTimeMin = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+              }) => SpecialtyArticlesV2Companion.insert(
+                id: id,
+                imageUrl: imageUrl,
+                flagUrl: flagUrl,
+                readTimeMin: readTimeMin,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$SpecialtyArticlesV2TableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({specialtyArticleTranslationsV2Refs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (specialtyArticleTranslationsV2Refs)
+                      db.specialtyArticleTranslationsV2,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (specialtyArticleTranslationsV2Refs)
+                        await $_getPrefetchedData<
+                          SpecialtyArticlesV2Data,
+                          $SpecialtyArticlesV2Table,
+                          SpecialtyArticleTranslationsV2Data
+                        >(
+                          currentTable: table,
+                          referencedTable: $$SpecialtyArticlesV2TableReferences
+                              ._specialtyArticleTranslationsV2RefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$SpecialtyArticlesV2TableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).specialtyArticleTranslationsV2Refs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.articleId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$SpecialtyArticlesV2TableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SpecialtyArticlesV2Table,
+      SpecialtyArticlesV2Data,
+      $$SpecialtyArticlesV2TableFilterComposer,
+      $$SpecialtyArticlesV2TableOrderingComposer,
+      $$SpecialtyArticlesV2TableAnnotationComposer,
+      $$SpecialtyArticlesV2TableCreateCompanionBuilder,
+      $$SpecialtyArticlesV2TableUpdateCompanionBuilder,
+      (SpecialtyArticlesV2Data, $$SpecialtyArticlesV2TableReferences),
+      SpecialtyArticlesV2Data,
+      PrefetchHooks Function({bool specialtyArticleTranslationsV2Refs})
+    >;
+typedef $$SpecialtyArticleTranslationsV2TableCreateCompanionBuilder =
+    SpecialtyArticleTranslationsV2Companion Function({
+      required int articleId,
+      required String languageCode,
+      Value<String?> title,
+      Value<String?> subtitle,
+      Value<String?> contentHtml,
+      Value<int> rowid,
+    });
+typedef $$SpecialtyArticleTranslationsV2TableUpdateCompanionBuilder =
+    SpecialtyArticleTranslationsV2Companion Function({
+      Value<int> articleId,
+      Value<String> languageCode,
+      Value<String?> title,
+      Value<String?> subtitle,
+      Value<String?> contentHtml,
+      Value<int> rowid,
+    });
+
+final class $$SpecialtyArticleTranslationsV2TableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $SpecialtyArticleTranslationsV2Table,
+          SpecialtyArticleTranslationsV2Data
+        > {
+  $$SpecialtyArticleTranslationsV2TableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $SpecialtyArticlesV2Table _articleIdTable(_$AppDatabase db) =>
+      db.specialtyArticlesV2.createAlias(
+        $_aliasNameGenerator(
+          db.specialtyArticleTranslationsV2.articleId,
+          db.specialtyArticlesV2.id,
+        ),
+      );
+
+  $$SpecialtyArticlesV2TableProcessedTableManager get articleId {
+    final $_column = $_itemColumn<int>('article_id')!;
+
+    final manager = $$SpecialtyArticlesV2TableTableManager(
+      $_db,
+      $_db.specialtyArticlesV2,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_articleIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$SpecialtyArticleTranslationsV2TableFilterComposer
+    extends Composer<_$AppDatabase, $SpecialtyArticleTranslationsV2Table> {
+  $$SpecialtyArticleTranslationsV2TableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get languageCode => $composableBuilder(
+    column: $table.languageCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get subtitle => $composableBuilder(
+    column: $table.subtitle,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get contentHtml => $composableBuilder(
+    column: $table.contentHtml,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$SpecialtyArticlesV2TableFilterComposer get articleId {
+    final $$SpecialtyArticlesV2TableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.articleId,
+      referencedTable: $db.specialtyArticlesV2,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SpecialtyArticlesV2TableFilterComposer(
+            $db: $db,
+            $table: $db.specialtyArticlesV2,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SpecialtyArticleTranslationsV2TableOrderingComposer
+    extends Composer<_$AppDatabase, $SpecialtyArticleTranslationsV2Table> {
+  $$SpecialtyArticleTranslationsV2TableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get languageCode => $composableBuilder(
+    column: $table.languageCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get subtitle => $composableBuilder(
+    column: $table.subtitle,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get contentHtml => $composableBuilder(
+    column: $table.contentHtml,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$SpecialtyArticlesV2TableOrderingComposer get articleId {
+    final $$SpecialtyArticlesV2TableOrderingComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.articleId,
+          referencedTable: $db.specialtyArticlesV2,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$SpecialtyArticlesV2TableOrderingComposer(
+                $db: $db,
+                $table: $db.specialtyArticlesV2,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+}
+
+class $$SpecialtyArticleTranslationsV2TableAnnotationComposer
+    extends Composer<_$AppDatabase, $SpecialtyArticleTranslationsV2Table> {
+  $$SpecialtyArticleTranslationsV2TableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get languageCode => $composableBuilder(
+    column: $table.languageCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get subtitle =>
+      $composableBuilder(column: $table.subtitle, builder: (column) => column);
+
+  GeneratedColumn<String> get contentHtml => $composableBuilder(
+    column: $table.contentHtml,
+    builder: (column) => column,
+  );
+
+  $$SpecialtyArticlesV2TableAnnotationComposer get articleId {
+    final $$SpecialtyArticlesV2TableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.articleId,
+          referencedTable: $db.specialtyArticlesV2,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$SpecialtyArticlesV2TableAnnotationComposer(
+                $db: $db,
+                $table: $db.specialtyArticlesV2,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+}
+
+class $$SpecialtyArticleTranslationsV2TableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SpecialtyArticleTranslationsV2Table,
+          SpecialtyArticleTranslationsV2Data,
+          $$SpecialtyArticleTranslationsV2TableFilterComposer,
+          $$SpecialtyArticleTranslationsV2TableOrderingComposer,
+          $$SpecialtyArticleTranslationsV2TableAnnotationComposer,
+          $$SpecialtyArticleTranslationsV2TableCreateCompanionBuilder,
+          $$SpecialtyArticleTranslationsV2TableUpdateCompanionBuilder,
+          (
+            SpecialtyArticleTranslationsV2Data,
+            $$SpecialtyArticleTranslationsV2TableReferences,
+          ),
+          SpecialtyArticleTranslationsV2Data,
+          PrefetchHooks Function({bool articleId})
+        > {
+  $$SpecialtyArticleTranslationsV2TableTableManager(
+    _$AppDatabase db,
+    $SpecialtyArticleTranslationsV2Table table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SpecialtyArticleTranslationsV2TableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$SpecialtyArticleTranslationsV2TableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$SpecialtyArticleTranslationsV2TableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> articleId = const Value.absent(),
+                Value<String> languageCode = const Value.absent(),
+                Value<String?> title = const Value.absent(),
+                Value<String?> subtitle = const Value.absent(),
+                Value<String?> contentHtml = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SpecialtyArticleTranslationsV2Companion(
+                articleId: articleId,
+                languageCode: languageCode,
+                title: title,
+                subtitle: subtitle,
+                contentHtml: contentHtml,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int articleId,
+                required String languageCode,
+                Value<String?> title = const Value.absent(),
+                Value<String?> subtitle = const Value.absent(),
+                Value<String?> contentHtml = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SpecialtyArticleTranslationsV2Companion.insert(
+                articleId: articleId,
+                languageCode: languageCode,
+                title: title,
+                subtitle: subtitle,
+                contentHtml: contentHtml,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$SpecialtyArticleTranslationsV2TableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({articleId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (articleId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.articleId,
+                                referencedTable:
+                                    $$SpecialtyArticleTranslationsV2TableReferences
+                                        ._articleIdTable(db),
+                                referencedColumn:
+                                    $$SpecialtyArticleTranslationsV2TableReferences
+                                        ._articleIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$SpecialtyArticleTranslationsV2TableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SpecialtyArticleTranslationsV2Table,
+      SpecialtyArticleTranslationsV2Data,
+      $$SpecialtyArticleTranslationsV2TableFilterComposer,
+      $$SpecialtyArticleTranslationsV2TableOrderingComposer,
+      $$SpecialtyArticleTranslationsV2TableAnnotationComposer,
+      $$SpecialtyArticleTranslationsV2TableCreateCompanionBuilder,
+      $$SpecialtyArticleTranslationsV2TableUpdateCompanionBuilder,
+      (
+        SpecialtyArticleTranslationsV2Data,
+        $$SpecialtyArticleTranslationsV2TableReferences,
+      ),
+      SpecialtyArticleTranslationsV2Data,
+      PrefetchHooks Function({bool articleId})
+    >;
+typedef $$LocalizedBeansV2TableCreateCompanionBuilder =
+    LocalizedBeansV2Companion Function({
+      Value<int> id,
+      Value<int?> brandId,
+      Value<String?> countryEmoji,
+      Value<int?> altitudeMin,
+      Value<int?> altitudeMax,
+      Value<String> lotNumber,
+      Value<String> scaScore,
+      Value<double> cupsScore,
+      Value<String> sensoryJson,
+      Value<String> priceJson,
+      Value<String> plantationPhotosUrl,
+      Value<String?> harvestSeason,
+      Value<String?> price,
+      Value<String?> weight,
+      Value<String?> roastDate,
+      Value<String> processingMethodsJson,
+      Value<bool> isPremium,
+      Value<String> detailedProcessMarkdown,
+      Value<String> url,
+      Value<int?> farmerId,
+      Value<bool> isDecaf,
+      Value<String?> farm,
+      Value<String?> farmPhotosUrlCover,
+      Value<String?> washStation,
+      Value<String?> retailPrice,
+      Value<String?> wholesalePrice,
+      Value<bool> isFavorite,
+      Value<DateTime?> createdAt,
+    });
+typedef $$LocalizedBeansV2TableUpdateCompanionBuilder =
+    LocalizedBeansV2Companion Function({
+      Value<int> id,
+      Value<int?> brandId,
+      Value<String?> countryEmoji,
+      Value<int?> altitudeMin,
+      Value<int?> altitudeMax,
+      Value<String> lotNumber,
+      Value<String> scaScore,
+      Value<double> cupsScore,
+      Value<String> sensoryJson,
+      Value<String> priceJson,
+      Value<String> plantationPhotosUrl,
+      Value<String?> harvestSeason,
+      Value<String?> price,
+      Value<String?> weight,
+      Value<String?> roastDate,
+      Value<String> processingMethodsJson,
+      Value<bool> isPremium,
+      Value<String> detailedProcessMarkdown,
+      Value<String> url,
+      Value<int?> farmerId,
+      Value<bool> isDecaf,
+      Value<String?> farm,
+      Value<String?> farmPhotosUrlCover,
+      Value<String?> washStation,
+      Value<String?> retailPrice,
+      Value<String?> wholesalePrice,
+      Value<bool> isFavorite,
+      Value<DateTime?> createdAt,
+    });
+
+final class $$LocalizedBeansV2TableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $LocalizedBeansV2Table,
+          LocalizedBeansV2Data
+        > {
+  $$LocalizedBeansV2TableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $LocalizedBrandsTable _brandIdTable(_$AppDatabase db) =>
+      db.localizedBrands.createAlias(
+        $_aliasNameGenerator(
+          db.localizedBeansV2.brandId,
+          db.localizedBrands.id,
+        ),
+      );
+
+  $$LocalizedBrandsTableProcessedTableManager? get brandId {
+    final $_column = $_itemColumn<int>('brand_id');
+    if ($_column == null) return null;
+    final manager = $$LocalizedBrandsTableTableManager(
+      $_db,
+      $_db.localizedBrands,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_brandIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $LocalizedFarmersV2Table _farmerIdTable(_$AppDatabase db) =>
+      db.localizedFarmersV2.createAlias(
+        $_aliasNameGenerator(
+          db.localizedBeansV2.farmerId,
+          db.localizedFarmersV2.id,
+        ),
+      );
+
+  $$LocalizedFarmersV2TableProcessedTableManager? get farmerId {
+    final $_column = $_itemColumn<int>('farmer_id');
+    if ($_column == null) return null;
+    final manager = $$LocalizedFarmersV2TableTableManager(
+      $_db,
+      $_db.localizedFarmersV2,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_farmerIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $LocalizedBeanTranslationsV2Table,
+    List<LocalizedBeanTranslationsV2Data>
+  >
+  _localizedBeanTranslationsV2RefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.localizedBeanTranslationsV2,
+        aliasName: $_aliasNameGenerator(
+          db.localizedBeansV2.id,
+          db.localizedBeanTranslationsV2.beanId,
+        ),
+      );
+
+  $$LocalizedBeanTranslationsV2TableProcessedTableManager
+  get localizedBeanTranslationsV2Refs {
+    final manager = $$LocalizedBeanTranslationsV2TableTableManager(
+      $_db,
+      $_db.localizedBeanTranslationsV2,
+    ).filter((f) => f.beanId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _localizedBeanTranslationsV2RefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$LocalizedBeansV2TableFilterComposer
+    extends Composer<_$AppDatabase, $LocalizedBeansV2Table> {
+  $$LocalizedBeansV2TableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get countryEmoji => $composableBuilder(
+    column: $table.countryEmoji,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get altitudeMin => $composableBuilder(
+    column: $table.altitudeMin,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get altitudeMax => $composableBuilder(
+    column: $table.altitudeMax,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lotNumber => $composableBuilder(
+    column: $table.lotNumber,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get scaScore => $composableBuilder(
+    column: $table.scaScore,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get cupsScore => $composableBuilder(
+    column: $table.cupsScore,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sensoryJson => $composableBuilder(
+    column: $table.sensoryJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get priceJson => $composableBuilder(
+    column: $table.priceJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get plantationPhotosUrl => $composableBuilder(
+    column: $table.plantationPhotosUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get harvestSeason => $composableBuilder(
+    column: $table.harvestSeason,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get price => $composableBuilder(
+    column: $table.price,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get weight => $composableBuilder(
+    column: $table.weight,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get roastDate => $composableBuilder(
+    column: $table.roastDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get processingMethodsJson => $composableBuilder(
+    column: $table.processingMethodsJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isPremium => $composableBuilder(
+    column: $table.isPremium,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get detailedProcessMarkdown => $composableBuilder(
+    column: $table.detailedProcessMarkdown,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get url => $composableBuilder(
+    column: $table.url,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isDecaf => $composableBuilder(
+    column: $table.isDecaf,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get farm => $composableBuilder(
+    column: $table.farm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get farmPhotosUrlCover => $composableBuilder(
+    column: $table.farmPhotosUrlCover,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get washStation => $composableBuilder(
+    column: $table.washStation,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get retailPrice => $composableBuilder(
+    column: $table.retailPrice,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get wholesalePrice => $composableBuilder(
+    column: $table.wholesalePrice,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isFavorite => $composableBuilder(
+    column: $table.isFavorite,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$LocalizedBrandsTableFilterComposer get brandId {
+    final $$LocalizedBrandsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.brandId,
+      referencedTable: $db.localizedBrands,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LocalizedBrandsTableFilterComposer(
+            $db: $db,
+            $table: $db.localizedBrands,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$LocalizedFarmersV2TableFilterComposer get farmerId {
+    final $$LocalizedFarmersV2TableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.farmerId,
+      referencedTable: $db.localizedFarmersV2,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LocalizedFarmersV2TableFilterComposer(
+            $db: $db,
+            $table: $db.localizedFarmersV2,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> localizedBeanTranslationsV2Refs(
+    Expression<bool> Function(
+      $$LocalizedBeanTranslationsV2TableFilterComposer f,
+    )
+    f,
+  ) {
+    final $$LocalizedBeanTranslationsV2TableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.localizedBeanTranslationsV2,
+          getReferencedColumn: (t) => t.beanId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$LocalizedBeanTranslationsV2TableFilterComposer(
+                $db: $db,
+                $table: $db.localizedBeanTranslationsV2,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$LocalizedBeansV2TableOrderingComposer
+    extends Composer<_$AppDatabase, $LocalizedBeansV2Table> {
+  $$LocalizedBeansV2TableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get countryEmoji => $composableBuilder(
+    column: $table.countryEmoji,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get altitudeMin => $composableBuilder(
+    column: $table.altitudeMin,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get altitudeMax => $composableBuilder(
+    column: $table.altitudeMax,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lotNumber => $composableBuilder(
+    column: $table.lotNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get scaScore => $composableBuilder(
+    column: $table.scaScore,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get cupsScore => $composableBuilder(
+    column: $table.cupsScore,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sensoryJson => $composableBuilder(
+    column: $table.sensoryJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get priceJson => $composableBuilder(
+    column: $table.priceJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get plantationPhotosUrl => $composableBuilder(
+    column: $table.plantationPhotosUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get harvestSeason => $composableBuilder(
+    column: $table.harvestSeason,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get price => $composableBuilder(
+    column: $table.price,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get weight => $composableBuilder(
+    column: $table.weight,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get roastDate => $composableBuilder(
+    column: $table.roastDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get processingMethodsJson => $composableBuilder(
+    column: $table.processingMethodsJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isPremium => $composableBuilder(
+    column: $table.isPremium,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get detailedProcessMarkdown => $composableBuilder(
+    column: $table.detailedProcessMarkdown,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get url => $composableBuilder(
+    column: $table.url,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isDecaf => $composableBuilder(
+    column: $table.isDecaf,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get farm => $composableBuilder(
+    column: $table.farm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get farmPhotosUrlCover => $composableBuilder(
+    column: $table.farmPhotosUrlCover,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get washStation => $composableBuilder(
+    column: $table.washStation,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get retailPrice => $composableBuilder(
+    column: $table.retailPrice,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get wholesalePrice => $composableBuilder(
+    column: $table.wholesalePrice,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isFavorite => $composableBuilder(
+    column: $table.isFavorite,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$LocalizedBrandsTableOrderingComposer get brandId {
+    final $$LocalizedBrandsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.brandId,
+      referencedTable: $db.localizedBrands,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LocalizedBrandsTableOrderingComposer(
+            $db: $db,
+            $table: $db.localizedBrands,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$LocalizedFarmersV2TableOrderingComposer get farmerId {
+    final $$LocalizedFarmersV2TableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.farmerId,
+      referencedTable: $db.localizedFarmersV2,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LocalizedFarmersV2TableOrderingComposer(
+            $db: $db,
+            $table: $db.localizedFarmersV2,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$LocalizedBeansV2TableAnnotationComposer
+    extends Composer<_$AppDatabase, $LocalizedBeansV2Table> {
+  $$LocalizedBeansV2TableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get countryEmoji => $composableBuilder(
+    column: $table.countryEmoji,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get altitudeMin => $composableBuilder(
+    column: $table.altitudeMin,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get altitudeMax => $composableBuilder(
+    column: $table.altitudeMax,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get lotNumber =>
+      $composableBuilder(column: $table.lotNumber, builder: (column) => column);
+
+  GeneratedColumn<String> get scaScore =>
+      $composableBuilder(column: $table.scaScore, builder: (column) => column);
+
+  GeneratedColumn<double> get cupsScore =>
+      $composableBuilder(column: $table.cupsScore, builder: (column) => column);
+
+  GeneratedColumn<String> get sensoryJson => $composableBuilder(
+    column: $table.sensoryJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get priceJson =>
+      $composableBuilder(column: $table.priceJson, builder: (column) => column);
+
+  GeneratedColumn<String> get plantationPhotosUrl => $composableBuilder(
+    column: $table.plantationPhotosUrl,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get harvestSeason => $composableBuilder(
+    column: $table.harvestSeason,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get price =>
+      $composableBuilder(column: $table.price, builder: (column) => column);
+
+  GeneratedColumn<String> get weight =>
+      $composableBuilder(column: $table.weight, builder: (column) => column);
+
+  GeneratedColumn<String> get roastDate =>
+      $composableBuilder(column: $table.roastDate, builder: (column) => column);
+
+  GeneratedColumn<String> get processingMethodsJson => $composableBuilder(
+    column: $table.processingMethodsJson,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isPremium =>
+      $composableBuilder(column: $table.isPremium, builder: (column) => column);
+
+  GeneratedColumn<String> get detailedProcessMarkdown => $composableBuilder(
+    column: $table.detailedProcessMarkdown,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get url =>
+      $composableBuilder(column: $table.url, builder: (column) => column);
+
+  GeneratedColumn<bool> get isDecaf =>
+      $composableBuilder(column: $table.isDecaf, builder: (column) => column);
+
+  GeneratedColumn<String> get farm =>
+      $composableBuilder(column: $table.farm, builder: (column) => column);
+
+  GeneratedColumn<String> get farmPhotosUrlCover => $composableBuilder(
+    column: $table.farmPhotosUrlCover,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get washStation => $composableBuilder(
+    column: $table.washStation,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get retailPrice => $composableBuilder(
+    column: $table.retailPrice,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get wholesalePrice => $composableBuilder(
+    column: $table.wholesalePrice,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isFavorite => $composableBuilder(
+    column: $table.isFavorite,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$LocalizedBrandsTableAnnotationComposer get brandId {
+    final $$LocalizedBrandsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.brandId,
+      referencedTable: $db.localizedBrands,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LocalizedBrandsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.localizedBrands,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$LocalizedFarmersV2TableAnnotationComposer get farmerId {
+    final $$LocalizedFarmersV2TableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.farmerId,
+          referencedTable: $db.localizedFarmersV2,
+          getReferencedColumn: (t) => t.id,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$LocalizedFarmersV2TableAnnotationComposer(
+                $db: $db,
+                $table: $db.localizedFarmersV2,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+
+  Expression<T> localizedBeanTranslationsV2Refs<T extends Object>(
+    Expression<T> Function(
+      $$LocalizedBeanTranslationsV2TableAnnotationComposer a,
+    )
+    f,
+  ) {
+    final $$LocalizedBeanTranslationsV2TableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.localizedBeanTranslationsV2,
+          getReferencedColumn: (t) => t.beanId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$LocalizedBeanTranslationsV2TableAnnotationComposer(
+                $db: $db,
+                $table: $db.localizedBeanTranslationsV2,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$LocalizedBeansV2TableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LocalizedBeansV2Table,
+          LocalizedBeansV2Data,
+          $$LocalizedBeansV2TableFilterComposer,
+          $$LocalizedBeansV2TableOrderingComposer,
+          $$LocalizedBeansV2TableAnnotationComposer,
+          $$LocalizedBeansV2TableCreateCompanionBuilder,
+          $$LocalizedBeansV2TableUpdateCompanionBuilder,
+          (LocalizedBeansV2Data, $$LocalizedBeansV2TableReferences),
+          LocalizedBeansV2Data,
+          PrefetchHooks Function({
+            bool brandId,
+            bool farmerId,
+            bool localizedBeanTranslationsV2Refs,
+          })
+        > {
+  $$LocalizedBeansV2TableTableManager(
+    _$AppDatabase db,
+    $LocalizedBeansV2Table table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LocalizedBeansV2TableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LocalizedBeansV2TableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LocalizedBeansV2TableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> brandId = const Value.absent(),
+                Value<String?> countryEmoji = const Value.absent(),
+                Value<int?> altitudeMin = const Value.absent(),
+                Value<int?> altitudeMax = const Value.absent(),
+                Value<String> lotNumber = const Value.absent(),
+                Value<String> scaScore = const Value.absent(),
+                Value<double> cupsScore = const Value.absent(),
+                Value<String> sensoryJson = const Value.absent(),
+                Value<String> priceJson = const Value.absent(),
+                Value<String> plantationPhotosUrl = const Value.absent(),
+                Value<String?> harvestSeason = const Value.absent(),
+                Value<String?> price = const Value.absent(),
+                Value<String?> weight = const Value.absent(),
+                Value<String?> roastDate = const Value.absent(),
+                Value<String> processingMethodsJson = const Value.absent(),
+                Value<bool> isPremium = const Value.absent(),
+                Value<String> detailedProcessMarkdown = const Value.absent(),
+                Value<String> url = const Value.absent(),
+                Value<int?> farmerId = const Value.absent(),
+                Value<bool> isDecaf = const Value.absent(),
+                Value<String?> farm = const Value.absent(),
+                Value<String?> farmPhotosUrlCover = const Value.absent(),
+                Value<String?> washStation = const Value.absent(),
+                Value<String?> retailPrice = const Value.absent(),
+                Value<String?> wholesalePrice = const Value.absent(),
+                Value<bool> isFavorite = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+              }) => LocalizedBeansV2Companion(
+                id: id,
+                brandId: brandId,
+                countryEmoji: countryEmoji,
+                altitudeMin: altitudeMin,
+                altitudeMax: altitudeMax,
+                lotNumber: lotNumber,
+                scaScore: scaScore,
+                cupsScore: cupsScore,
+                sensoryJson: sensoryJson,
+                priceJson: priceJson,
+                plantationPhotosUrl: plantationPhotosUrl,
+                harvestSeason: harvestSeason,
+                price: price,
+                weight: weight,
+                roastDate: roastDate,
+                processingMethodsJson: processingMethodsJson,
+                isPremium: isPremium,
+                detailedProcessMarkdown: detailedProcessMarkdown,
+                url: url,
+                farmerId: farmerId,
+                isDecaf: isDecaf,
+                farm: farm,
+                farmPhotosUrlCover: farmPhotosUrlCover,
+                washStation: washStation,
+                retailPrice: retailPrice,
+                wholesalePrice: wholesalePrice,
+                isFavorite: isFavorite,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int?> brandId = const Value.absent(),
+                Value<String?> countryEmoji = const Value.absent(),
+                Value<int?> altitudeMin = const Value.absent(),
+                Value<int?> altitudeMax = const Value.absent(),
+                Value<String> lotNumber = const Value.absent(),
+                Value<String> scaScore = const Value.absent(),
+                Value<double> cupsScore = const Value.absent(),
+                Value<String> sensoryJson = const Value.absent(),
+                Value<String> priceJson = const Value.absent(),
+                Value<String> plantationPhotosUrl = const Value.absent(),
+                Value<String?> harvestSeason = const Value.absent(),
+                Value<String?> price = const Value.absent(),
+                Value<String?> weight = const Value.absent(),
+                Value<String?> roastDate = const Value.absent(),
+                Value<String> processingMethodsJson = const Value.absent(),
+                Value<bool> isPremium = const Value.absent(),
+                Value<String> detailedProcessMarkdown = const Value.absent(),
+                Value<String> url = const Value.absent(),
+                Value<int?> farmerId = const Value.absent(),
+                Value<bool> isDecaf = const Value.absent(),
+                Value<String?> farm = const Value.absent(),
+                Value<String?> farmPhotosUrlCover = const Value.absent(),
+                Value<String?> washStation = const Value.absent(),
+                Value<String?> retailPrice = const Value.absent(),
+                Value<String?> wholesalePrice = const Value.absent(),
+                Value<bool> isFavorite = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+              }) => LocalizedBeansV2Companion.insert(
+                id: id,
+                brandId: brandId,
+                countryEmoji: countryEmoji,
+                altitudeMin: altitudeMin,
+                altitudeMax: altitudeMax,
+                lotNumber: lotNumber,
+                scaScore: scaScore,
+                cupsScore: cupsScore,
+                sensoryJson: sensoryJson,
+                priceJson: priceJson,
+                plantationPhotosUrl: plantationPhotosUrl,
+                harvestSeason: harvestSeason,
+                price: price,
+                weight: weight,
+                roastDate: roastDate,
+                processingMethodsJson: processingMethodsJson,
+                isPremium: isPremium,
+                detailedProcessMarkdown: detailedProcessMarkdown,
+                url: url,
+                farmerId: farmerId,
+                isDecaf: isDecaf,
+                farm: farm,
+                farmPhotosUrlCover: farmPhotosUrlCover,
+                washStation: washStation,
+                retailPrice: retailPrice,
+                wholesalePrice: wholesalePrice,
+                isFavorite: isFavorite,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$LocalizedBeansV2TableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({
+                brandId = false,
+                farmerId = false,
+                localizedBeanTranslationsV2Refs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (localizedBeanTranslationsV2Refs)
+                      db.localizedBeanTranslationsV2,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (brandId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.brandId,
+                                    referencedTable:
+                                        $$LocalizedBeansV2TableReferences
+                                            ._brandIdTable(db),
+                                    referencedColumn:
+                                        $$LocalizedBeansV2TableReferences
+                                            ._brandIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (farmerId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.farmerId,
+                                    referencedTable:
+                                        $$LocalizedBeansV2TableReferences
+                                            ._farmerIdTable(db),
+                                    referencedColumn:
+                                        $$LocalizedBeansV2TableReferences
+                                            ._farmerIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (localizedBeanTranslationsV2Refs)
+                        await $_getPrefetchedData<
+                          LocalizedBeansV2Data,
+                          $LocalizedBeansV2Table,
+                          LocalizedBeanTranslationsV2Data
+                        >(
+                          currentTable: table,
+                          referencedTable: $$LocalizedBeansV2TableReferences
+                              ._localizedBeanTranslationsV2RefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$LocalizedBeansV2TableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).localizedBeanTranslationsV2Refs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.beanId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$LocalizedBeansV2TableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LocalizedBeansV2Table,
+      LocalizedBeansV2Data,
+      $$LocalizedBeansV2TableFilterComposer,
+      $$LocalizedBeansV2TableOrderingComposer,
+      $$LocalizedBeansV2TableAnnotationComposer,
+      $$LocalizedBeansV2TableCreateCompanionBuilder,
+      $$LocalizedBeansV2TableUpdateCompanionBuilder,
+      (LocalizedBeansV2Data, $$LocalizedBeansV2TableReferences),
+      LocalizedBeansV2Data,
+      PrefetchHooks Function({
+        bool brandId,
+        bool farmerId,
+        bool localizedBeanTranslationsV2Refs,
+      })
+    >;
+typedef $$LocalizedBeanTranslationsV2TableCreateCompanionBuilder =
+    LocalizedBeanTranslationsV2Companion Function({
+      required int beanId,
+      required String languageCode,
+      Value<String?> country,
+      Value<String?> region,
+      Value<String?> varieties,
+      Value<String> flavorNotes,
+      Value<String?> processMethod,
+      Value<String?> description,
+      Value<String?> farmDescription,
+      Value<String?> roastLevel,
+      Value<int> rowid,
+    });
+typedef $$LocalizedBeanTranslationsV2TableUpdateCompanionBuilder =
+    LocalizedBeanTranslationsV2Companion Function({
+      Value<int> beanId,
+      Value<String> languageCode,
+      Value<String?> country,
+      Value<String?> region,
+      Value<String?> varieties,
+      Value<String> flavorNotes,
+      Value<String?> processMethod,
+      Value<String?> description,
+      Value<String?> farmDescription,
+      Value<String?> roastLevel,
+      Value<int> rowid,
+    });
+
+final class $$LocalizedBeanTranslationsV2TableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $LocalizedBeanTranslationsV2Table,
+          LocalizedBeanTranslationsV2Data
+        > {
+  $$LocalizedBeanTranslationsV2TableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $LocalizedBeansV2Table _beanIdTable(_$AppDatabase db) =>
+      db.localizedBeansV2.createAlias(
+        $_aliasNameGenerator(
+          db.localizedBeanTranslationsV2.beanId,
+          db.localizedBeansV2.id,
+        ),
+      );
+
+  $$LocalizedBeansV2TableProcessedTableManager get beanId {
+    final $_column = $_itemColumn<int>('bean_id')!;
+
+    final manager = $$LocalizedBeansV2TableTableManager(
+      $_db,
+      $_db.localizedBeansV2,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_beanIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$LocalizedBeanTranslationsV2TableFilterComposer
+    extends Composer<_$AppDatabase, $LocalizedBeanTranslationsV2Table> {
+  $$LocalizedBeanTranslationsV2TableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get languageCode => $composableBuilder(
+    column: $table.languageCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get country => $composableBuilder(
+    column: $table.country,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get region => $composableBuilder(
+    column: $table.region,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get varieties => $composableBuilder(
+    column: $table.varieties,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get flavorNotes => $composableBuilder(
+    column: $table.flavorNotes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get processMethod => $composableBuilder(
+    column: $table.processMethod,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get farmDescription => $composableBuilder(
+    column: $table.farmDescription,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get roastLevel => $composableBuilder(
+    column: $table.roastLevel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$LocalizedBeansV2TableFilterComposer get beanId {
+    final $$LocalizedBeansV2TableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.beanId,
+      referencedTable: $db.localizedBeansV2,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LocalizedBeansV2TableFilterComposer(
+            $db: $db,
+            $table: $db.localizedBeansV2,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$LocalizedBeanTranslationsV2TableOrderingComposer
+    extends Composer<_$AppDatabase, $LocalizedBeanTranslationsV2Table> {
+  $$LocalizedBeanTranslationsV2TableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get languageCode => $composableBuilder(
+    column: $table.languageCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get country => $composableBuilder(
+    column: $table.country,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get region => $composableBuilder(
+    column: $table.region,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get varieties => $composableBuilder(
+    column: $table.varieties,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get flavorNotes => $composableBuilder(
+    column: $table.flavorNotes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get processMethod => $composableBuilder(
+    column: $table.processMethod,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get farmDescription => $composableBuilder(
+    column: $table.farmDescription,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get roastLevel => $composableBuilder(
+    column: $table.roastLevel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$LocalizedBeansV2TableOrderingComposer get beanId {
+    final $$LocalizedBeansV2TableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.beanId,
+      referencedTable: $db.localizedBeansV2,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LocalizedBeansV2TableOrderingComposer(
+            $db: $db,
+            $table: $db.localizedBeansV2,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$LocalizedBeanTranslationsV2TableAnnotationComposer
+    extends Composer<_$AppDatabase, $LocalizedBeanTranslationsV2Table> {
+  $$LocalizedBeanTranslationsV2TableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get languageCode => $composableBuilder(
+    column: $table.languageCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get country =>
+      $composableBuilder(column: $table.country, builder: (column) => column);
+
+  GeneratedColumn<String> get region =>
+      $composableBuilder(column: $table.region, builder: (column) => column);
+
+  GeneratedColumn<String> get varieties =>
+      $composableBuilder(column: $table.varieties, builder: (column) => column);
+
+  GeneratedColumn<String> get flavorNotes => $composableBuilder(
+    column: $table.flavorNotes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get processMethod => $composableBuilder(
+    column: $table.processMethod,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get farmDescription => $composableBuilder(
+    column: $table.farmDescription,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get roastLevel => $composableBuilder(
+    column: $table.roastLevel,
+    builder: (column) => column,
+  );
+
+  $$LocalizedBeansV2TableAnnotationComposer get beanId {
+    final $$LocalizedBeansV2TableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.beanId,
+      referencedTable: $db.localizedBeansV2,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$LocalizedBeansV2TableAnnotationComposer(
+            $db: $db,
+            $table: $db.localizedBeansV2,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$LocalizedBeanTranslationsV2TableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LocalizedBeanTranslationsV2Table,
+          LocalizedBeanTranslationsV2Data,
+          $$LocalizedBeanTranslationsV2TableFilterComposer,
+          $$LocalizedBeanTranslationsV2TableOrderingComposer,
+          $$LocalizedBeanTranslationsV2TableAnnotationComposer,
+          $$LocalizedBeanTranslationsV2TableCreateCompanionBuilder,
+          $$LocalizedBeanTranslationsV2TableUpdateCompanionBuilder,
+          (
+            LocalizedBeanTranslationsV2Data,
+            $$LocalizedBeanTranslationsV2TableReferences,
+          ),
+          LocalizedBeanTranslationsV2Data,
+          PrefetchHooks Function({bool beanId})
+        > {
+  $$LocalizedBeanTranslationsV2TableTableManager(
+    _$AppDatabase db,
+    $LocalizedBeanTranslationsV2Table table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LocalizedBeanTranslationsV2TableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$LocalizedBeanTranslationsV2TableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$LocalizedBeanTranslationsV2TableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> beanId = const Value.absent(),
+                Value<String> languageCode = const Value.absent(),
+                Value<String?> country = const Value.absent(),
+                Value<String?> region = const Value.absent(),
+                Value<String?> varieties = const Value.absent(),
+                Value<String> flavorNotes = const Value.absent(),
+                Value<String?> processMethod = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String?> farmDescription = const Value.absent(),
+                Value<String?> roastLevel = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LocalizedBeanTranslationsV2Companion(
+                beanId: beanId,
+                languageCode: languageCode,
+                country: country,
+                region: region,
+                varieties: varieties,
+                flavorNotes: flavorNotes,
+                processMethod: processMethod,
+                description: description,
+                farmDescription: farmDescription,
+                roastLevel: roastLevel,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required int beanId,
+                required String languageCode,
+                Value<String?> country = const Value.absent(),
+                Value<String?> region = const Value.absent(),
+                Value<String?> varieties = const Value.absent(),
+                Value<String> flavorNotes = const Value.absent(),
+                Value<String?> processMethod = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String?> farmDescription = const Value.absent(),
+                Value<String?> roastLevel = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LocalizedBeanTranslationsV2Companion.insert(
+                beanId: beanId,
+                languageCode: languageCode,
+                country: country,
+                region: region,
+                varieties: varieties,
+                flavorNotes: flavorNotes,
+                processMethod: processMethod,
+                description: description,
+                farmDescription: farmDescription,
+                roastLevel: roastLevel,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$LocalizedBeanTranslationsV2TableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({beanId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (beanId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.beanId,
+                                referencedTable:
+                                    $$LocalizedBeanTranslationsV2TableReferences
+                                        ._beanIdTable(db),
+                                referencedColumn:
+                                    $$LocalizedBeanTranslationsV2TableReferences
+                                        ._beanIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$LocalizedBeanTranslationsV2TableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LocalizedBeanTranslationsV2Table,
+      LocalizedBeanTranslationsV2Data,
+      $$LocalizedBeanTranslationsV2TableFilterComposer,
+      $$LocalizedBeanTranslationsV2TableOrderingComposer,
+      $$LocalizedBeanTranslationsV2TableAnnotationComposer,
+      $$LocalizedBeanTranslationsV2TableCreateCompanionBuilder,
+      $$LocalizedBeanTranslationsV2TableUpdateCompanionBuilder,
+      (
+        LocalizedBeanTranslationsV2Data,
+        $$LocalizedBeanTranslationsV2TableReferences,
+      ),
+      LocalizedBeanTranslationsV2Data,
+      PrefetchHooks Function({bool beanId})
+    >;
+typedef $$BrewingRecipesV2TableCreateCompanionBuilder =
+    BrewingRecipesV2Companion Function({
+      Value<int> id,
+      required String methodKey,
+      Value<String> imageUrl,
+      Value<double> ratioGramsPerMl,
+      Value<double> tempC,
+      Value<int> totalTimeSec,
+      Value<String> difficulty,
+      Value<String> stepsJson,
+      Value<String> flavorProfile,
+      Value<String?> iconName,
+    });
+typedef $$BrewingRecipesV2TableUpdateCompanionBuilder =
+    BrewingRecipesV2Companion Function({
+      Value<int> id,
+      Value<String> methodKey,
+      Value<String> imageUrl,
+      Value<double> ratioGramsPerMl,
+      Value<double> tempC,
+      Value<int> totalTimeSec,
+      Value<String> difficulty,
+      Value<String> stepsJson,
+      Value<String> flavorProfile,
+      Value<String?> iconName,
+    });
+
+final class $$BrewingRecipesV2TableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $BrewingRecipesV2Table,
+          BrewingRecipesV2Data
+        > {
+  $$BrewingRecipesV2TableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static MultiTypedResultKey<
+    $BrewingRecipeTranslationsV2Table,
+    List<BrewingRecipeTranslationsV2Data>
+  >
+  _brewingRecipeTranslationsV2RefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.brewingRecipeTranslationsV2,
+        aliasName: $_aliasNameGenerator(
+          db.brewingRecipesV2.methodKey,
+          db.brewingRecipeTranslationsV2.recipeKey,
+        ),
+      );
+
+  $$BrewingRecipeTranslationsV2TableProcessedTableManager
+  get brewingRecipeTranslationsV2Refs {
+    final manager =
+        $$BrewingRecipeTranslationsV2TableTableManager(
+          $_db,
+          $_db.brewingRecipeTranslationsV2,
+        ).filter(
+          (f) => f.recipeKey.methodKey.sqlEquals(
+            $_itemColumn<String>('method_key')!,
+          ),
+        );
+
+    final cache = $_typedResult.readTableOrNull(
+      _brewingRecipeTranslationsV2RefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$BrewingRecipesV2TableFilterComposer
+    extends Composer<_$AppDatabase, $BrewingRecipesV2Table> {
+  $$BrewingRecipesV2TableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get methodKey => $composableBuilder(
+    column: $table.methodKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get ratioGramsPerMl => $composableBuilder(
+    column: $table.ratioGramsPerMl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get tempC => $composableBuilder(
+    column: $table.tempC,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get totalTimeSec => $composableBuilder(
+    column: $table.totalTimeSec,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get difficulty => $composableBuilder(
+    column: $table.difficulty,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get stepsJson => $composableBuilder(
+    column: $table.stepsJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get flavorProfile => $composableBuilder(
+    column: $table.flavorProfile,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get iconName => $composableBuilder(
+    column: $table.iconName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> brewingRecipeTranslationsV2Refs(
+    Expression<bool> Function(
+      $$BrewingRecipeTranslationsV2TableFilterComposer f,
+    )
+    f,
+  ) {
+    final $$BrewingRecipeTranslationsV2TableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.methodKey,
+          referencedTable: $db.brewingRecipeTranslationsV2,
+          getReferencedColumn: (t) => t.recipeKey,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$BrewingRecipeTranslationsV2TableFilterComposer(
+                $db: $db,
+                $table: $db.brewingRecipeTranslationsV2,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$BrewingRecipesV2TableOrderingComposer
+    extends Composer<_$AppDatabase, $BrewingRecipesV2Table> {
+  $$BrewingRecipesV2TableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get methodKey => $composableBuilder(
+    column: $table.methodKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get ratioGramsPerMl => $composableBuilder(
+    column: $table.ratioGramsPerMl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get tempC => $composableBuilder(
+    column: $table.tempC,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get totalTimeSec => $composableBuilder(
+    column: $table.totalTimeSec,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get difficulty => $composableBuilder(
+    column: $table.difficulty,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get stepsJson => $composableBuilder(
+    column: $table.stepsJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get flavorProfile => $composableBuilder(
+    column: $table.flavorProfile,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get iconName => $composableBuilder(
+    column: $table.iconName,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$BrewingRecipesV2TableAnnotationComposer
+    extends Composer<_$AppDatabase, $BrewingRecipesV2Table> {
+  $$BrewingRecipesV2TableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get methodKey =>
+      $composableBuilder(column: $table.methodKey, builder: (column) => column);
+
+  GeneratedColumn<String> get imageUrl =>
+      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
+  GeneratedColumn<double> get ratioGramsPerMl => $composableBuilder(
+    column: $table.ratioGramsPerMl,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get tempC =>
+      $composableBuilder(column: $table.tempC, builder: (column) => column);
+
+  GeneratedColumn<int> get totalTimeSec => $composableBuilder(
+    column: $table.totalTimeSec,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get difficulty => $composableBuilder(
+    column: $table.difficulty,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get stepsJson =>
+      $composableBuilder(column: $table.stepsJson, builder: (column) => column);
+
+  GeneratedColumn<String> get flavorProfile => $composableBuilder(
+    column: $table.flavorProfile,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get iconName =>
+      $composableBuilder(column: $table.iconName, builder: (column) => column);
+
+  Expression<T> brewingRecipeTranslationsV2Refs<T extends Object>(
+    Expression<T> Function(
+      $$BrewingRecipeTranslationsV2TableAnnotationComposer a,
+    )
+    f,
+  ) {
+    final $$BrewingRecipeTranslationsV2TableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.methodKey,
+          referencedTable: $db.brewingRecipeTranslationsV2,
+          getReferencedColumn: (t) => t.recipeKey,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$BrewingRecipeTranslationsV2TableAnnotationComposer(
+                $db: $db,
+                $table: $db.brewingRecipeTranslationsV2,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$BrewingRecipesV2TableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $BrewingRecipesV2Table,
+          BrewingRecipesV2Data,
+          $$BrewingRecipesV2TableFilterComposer,
+          $$BrewingRecipesV2TableOrderingComposer,
+          $$BrewingRecipesV2TableAnnotationComposer,
+          $$BrewingRecipesV2TableCreateCompanionBuilder,
+          $$BrewingRecipesV2TableUpdateCompanionBuilder,
+          (BrewingRecipesV2Data, $$BrewingRecipesV2TableReferences),
+          BrewingRecipesV2Data,
+          PrefetchHooks Function({bool brewingRecipeTranslationsV2Refs})
+        > {
+  $$BrewingRecipesV2TableTableManager(
+    _$AppDatabase db,
+    $BrewingRecipesV2Table table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$BrewingRecipesV2TableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$BrewingRecipesV2TableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$BrewingRecipesV2TableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> methodKey = const Value.absent(),
+                Value<String> imageUrl = const Value.absent(),
+                Value<double> ratioGramsPerMl = const Value.absent(),
+                Value<double> tempC = const Value.absent(),
+                Value<int> totalTimeSec = const Value.absent(),
+                Value<String> difficulty = const Value.absent(),
+                Value<String> stepsJson = const Value.absent(),
+                Value<String> flavorProfile = const Value.absent(),
+                Value<String?> iconName = const Value.absent(),
+              }) => BrewingRecipesV2Companion(
+                id: id,
+                methodKey: methodKey,
+                imageUrl: imageUrl,
+                ratioGramsPerMl: ratioGramsPerMl,
+                tempC: tempC,
+                totalTimeSec: totalTimeSec,
+                difficulty: difficulty,
+                stepsJson: stepsJson,
+                flavorProfile: flavorProfile,
+                iconName: iconName,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String methodKey,
+                Value<String> imageUrl = const Value.absent(),
+                Value<double> ratioGramsPerMl = const Value.absent(),
+                Value<double> tempC = const Value.absent(),
+                Value<int> totalTimeSec = const Value.absent(),
+                Value<String> difficulty = const Value.absent(),
+                Value<String> stepsJson = const Value.absent(),
+                Value<String> flavorProfile = const Value.absent(),
+                Value<String?> iconName = const Value.absent(),
+              }) => BrewingRecipesV2Companion.insert(
+                id: id,
+                methodKey: methodKey,
+                imageUrl: imageUrl,
+                ratioGramsPerMl: ratioGramsPerMl,
+                tempC: tempC,
+                totalTimeSec: totalTimeSec,
+                difficulty: difficulty,
+                stepsJson: stepsJson,
+                flavorProfile: flavorProfile,
+                iconName: iconName,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$BrewingRecipesV2TableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({brewingRecipeTranslationsV2Refs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (brewingRecipeTranslationsV2Refs)
+                  db.brewingRecipeTranslationsV2,
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (brewingRecipeTranslationsV2Refs)
+                    await $_getPrefetchedData<
+                      BrewingRecipesV2Data,
+                      $BrewingRecipesV2Table,
+                      BrewingRecipeTranslationsV2Data
+                    >(
+                      currentTable: table,
+                      referencedTable: $$BrewingRecipesV2TableReferences
+                          ._brewingRecipeTranslationsV2RefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$BrewingRecipesV2TableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).brewingRecipeTranslationsV2Refs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where(
+                            (e) => e.recipeKey == item.methodKey,
+                          ),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$BrewingRecipesV2TableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $BrewingRecipesV2Table,
+      BrewingRecipesV2Data,
+      $$BrewingRecipesV2TableFilterComposer,
+      $$BrewingRecipesV2TableOrderingComposer,
+      $$BrewingRecipesV2TableAnnotationComposer,
+      $$BrewingRecipesV2TableCreateCompanionBuilder,
+      $$BrewingRecipesV2TableUpdateCompanionBuilder,
+      (BrewingRecipesV2Data, $$BrewingRecipesV2TableReferences),
+      BrewingRecipesV2Data,
+      PrefetchHooks Function({bool brewingRecipeTranslationsV2Refs})
+    >;
+typedef $$BrewingRecipeTranslationsV2TableCreateCompanionBuilder =
+    BrewingRecipeTranslationsV2Companion Function({
+      required String recipeKey,
+      required String languageCode,
+      Value<String?> name,
+      Value<String?> description,
+      Value<int> rowid,
+    });
+typedef $$BrewingRecipeTranslationsV2TableUpdateCompanionBuilder =
+    BrewingRecipeTranslationsV2Companion Function({
+      Value<String> recipeKey,
+      Value<String> languageCode,
+      Value<String?> name,
+      Value<String?> description,
+      Value<int> rowid,
+    });
+
+final class $$BrewingRecipeTranslationsV2TableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $BrewingRecipeTranslationsV2Table,
+          BrewingRecipeTranslationsV2Data
+        > {
+  $$BrewingRecipeTranslationsV2TableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $BrewingRecipesV2Table _recipeKeyTable(_$AppDatabase db) =>
+      db.brewingRecipesV2.createAlias(
+        $_aliasNameGenerator(
+          db.brewingRecipeTranslationsV2.recipeKey,
+          db.brewingRecipesV2.methodKey,
+        ),
+      );
+
+  $$BrewingRecipesV2TableProcessedTableManager get recipeKey {
+    final $_column = $_itemColumn<String>('recipe_key')!;
+
+    final manager = $$BrewingRecipesV2TableTableManager(
+      $_db,
+      $_db.brewingRecipesV2,
+    ).filter((f) => f.methodKey.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_recipeKeyTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$BrewingRecipeTranslationsV2TableFilterComposer
+    extends Composer<_$AppDatabase, $BrewingRecipeTranslationsV2Table> {
+  $$BrewingRecipeTranslationsV2TableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get languageCode => $composableBuilder(
+    column: $table.languageCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$BrewingRecipesV2TableFilterComposer get recipeKey {
+    final $$BrewingRecipesV2TableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.recipeKey,
+      referencedTable: $db.brewingRecipesV2,
+      getReferencedColumn: (t) => t.methodKey,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BrewingRecipesV2TableFilterComposer(
+            $db: $db,
+            $table: $db.brewingRecipesV2,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$BrewingRecipeTranslationsV2TableOrderingComposer
+    extends Composer<_$AppDatabase, $BrewingRecipeTranslationsV2Table> {
+  $$BrewingRecipeTranslationsV2TableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get languageCode => $composableBuilder(
+    column: $table.languageCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$BrewingRecipesV2TableOrderingComposer get recipeKey {
+    final $$BrewingRecipesV2TableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.recipeKey,
+      referencedTable: $db.brewingRecipesV2,
+      getReferencedColumn: (t) => t.methodKey,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BrewingRecipesV2TableOrderingComposer(
+            $db: $db,
+            $table: $db.brewingRecipesV2,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$BrewingRecipeTranslationsV2TableAnnotationComposer
+    extends Composer<_$AppDatabase, $BrewingRecipeTranslationsV2Table> {
+  $$BrewingRecipeTranslationsV2TableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get languageCode => $composableBuilder(
+    column: $table.languageCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  $$BrewingRecipesV2TableAnnotationComposer get recipeKey {
+    final $$BrewingRecipesV2TableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.recipeKey,
+      referencedTable: $db.brewingRecipesV2,
+      getReferencedColumn: (t) => t.methodKey,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BrewingRecipesV2TableAnnotationComposer(
+            $db: $db,
+            $table: $db.brewingRecipesV2,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$BrewingRecipeTranslationsV2TableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $BrewingRecipeTranslationsV2Table,
+          BrewingRecipeTranslationsV2Data,
+          $$BrewingRecipeTranslationsV2TableFilterComposer,
+          $$BrewingRecipeTranslationsV2TableOrderingComposer,
+          $$BrewingRecipeTranslationsV2TableAnnotationComposer,
+          $$BrewingRecipeTranslationsV2TableCreateCompanionBuilder,
+          $$BrewingRecipeTranslationsV2TableUpdateCompanionBuilder,
+          (
+            BrewingRecipeTranslationsV2Data,
+            $$BrewingRecipeTranslationsV2TableReferences,
+          ),
+          BrewingRecipeTranslationsV2Data,
+          PrefetchHooks Function({bool recipeKey})
+        > {
+  $$BrewingRecipeTranslationsV2TableTableManager(
+    _$AppDatabase db,
+    $BrewingRecipeTranslationsV2Table table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$BrewingRecipeTranslationsV2TableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$BrewingRecipeTranslationsV2TableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$BrewingRecipeTranslationsV2TableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> recipeKey = const Value.absent(),
+                Value<String> languageCode = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => BrewingRecipeTranslationsV2Companion(
+                recipeKey: recipeKey,
+                languageCode: languageCode,
+                name: name,
+                description: description,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String recipeKey,
+                required String languageCode,
+                Value<String?> name = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => BrewingRecipeTranslationsV2Companion.insert(
+                recipeKey: recipeKey,
+                languageCode: languageCode,
+                name: name,
+                description: description,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$BrewingRecipeTranslationsV2TableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({recipeKey = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (recipeKey) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.recipeKey,
+                                referencedTable:
+                                    $$BrewingRecipeTranslationsV2TableReferences
+                                        ._recipeKeyTable(db),
+                                referencedColumn:
+                                    $$BrewingRecipeTranslationsV2TableReferences
+                                        ._recipeKeyTable(db)
+                                        .methodKey,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$BrewingRecipeTranslationsV2TableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $BrewingRecipeTranslationsV2Table,
+      BrewingRecipeTranslationsV2Data,
+      $$BrewingRecipeTranslationsV2TableFilterComposer,
+      $$BrewingRecipeTranslationsV2TableOrderingComposer,
+      $$BrewingRecipeTranslationsV2TableAnnotationComposer,
+      $$BrewingRecipeTranslationsV2TableCreateCompanionBuilder,
+      $$BrewingRecipeTranslationsV2TableUpdateCompanionBuilder,
+      (
+        BrewingRecipeTranslationsV2Data,
+        $$BrewingRecipeTranslationsV2TableReferences,
+      ),
+      BrewingRecipeTranslationsV2Data,
+      PrefetchHooks Function({bool recipeKey})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -18469,4 +27178,36 @@ class $AppDatabaseManager {
       $$RecommendedRecipesTableTableManager(_db, _db.recommendedRecipes);
   $$CustomRecipesTableTableManager get customRecipes =>
       $$CustomRecipesTableTableManager(_db, _db.customRecipes);
+  $$LocalizedFarmersV2TableTableManager get localizedFarmersV2 =>
+      $$LocalizedFarmersV2TableTableManager(_db, _db.localizedFarmersV2);
+  $$LocalizedFarmerTranslationsV2TableTableManager
+  get localizedFarmerTranslationsV2 =>
+      $$LocalizedFarmerTranslationsV2TableTableManager(
+        _db,
+        _db.localizedFarmerTranslationsV2,
+      );
+  $$SpecialtyArticlesV2TableTableManager get specialtyArticlesV2 =>
+      $$SpecialtyArticlesV2TableTableManager(_db, _db.specialtyArticlesV2);
+  $$SpecialtyArticleTranslationsV2TableTableManager
+  get specialtyArticleTranslationsV2 =>
+      $$SpecialtyArticleTranslationsV2TableTableManager(
+        _db,
+        _db.specialtyArticleTranslationsV2,
+      );
+  $$LocalizedBeansV2TableTableManager get localizedBeansV2 =>
+      $$LocalizedBeansV2TableTableManager(_db, _db.localizedBeansV2);
+  $$LocalizedBeanTranslationsV2TableTableManager
+  get localizedBeanTranslationsV2 =>
+      $$LocalizedBeanTranslationsV2TableTableManager(
+        _db,
+        _db.localizedBeanTranslationsV2,
+      );
+  $$BrewingRecipesV2TableTableManager get brewingRecipesV2 =>
+      $$BrewingRecipesV2TableTableManager(_db, _db.brewingRecipesV2);
+  $$BrewingRecipeTranslationsV2TableTableManager
+  get brewingRecipeTranslationsV2 =>
+      $$BrewingRecipeTranslationsV2TableTableManager(
+        _db,
+        _db.brewingRecipeTranslationsV2,
+      );
 }

@@ -74,7 +74,7 @@ class SyncService {
       
       onProgress?.call('Syncing Articles...', 0.8);
       _progressController.add(0.8);
-      await syncArticles(onProgress: onProgress);
+      await syncArticles();
       await Future.delayed(const Duration(milliseconds: 200));
       
       onProgress?.call('Syncing Brands...', 0.9);
@@ -195,163 +195,108 @@ class SyncService {
     if (supabase == null) return;
 
     try {
-      debugPrint('SYNC: Pulling farmers from Supabase...');
+      debugPrint('SYNC: Pulling farmers (V2)...');
+      final data = await supabase!.from('localized_farmers').select().order('id');
+      final remoteIds = data.map((item) => item['id'] as int).toList();
 
-      // Fetch main farmer records
-      final farmersData = await supabase!.from('localized_farmers').select().order('id');
-      
-      debugPrint('SYNC: Received ${farmersData.length} farmers from Supabase');
-
-      // Collect remote IDs for cleanup later
-      final remoteIds = farmersData.map((item) => item['id'] as int).toList();
-      
-      int successCount = 0;
-      int errorCount = 0;
-
-      for (final item in farmersData) {
+      for (final item in data) {
         try {
-          debugPrint('SYNC: Processing farmer ID: ${item['id']}');
           final id = item['id'] as int;
           
           String imageUrl = item['image_url'] as String? ?? '';
           if (imageUrl.isNotEmpty && !imageUrl.startsWith('http') && !imageUrl.startsWith('assets/')) {
-            final fileName = imageUrl.split('/').last;
-            imageUrl = '$farmersBucket$fileName';
+            imageUrl = '$farmersBucket${imageUrl.split('/').last}';
           }
 
-          // In "Main + Translation" architecture:
-          // LocalizedFarmers main table holds UK content in nameUk, descriptionHtmlUk, etc.
-          debugPrint('SYNC: Mapping farmer ID: $id (name: ${item['name_uk']})');
-
-          // Use safe conversion to string to avoid casting errors if Supabase types differ
-          final nameRaw = item['name_uk'] ?? item['name'] ?? '';
-          final descRaw = item['description_html_uk'] ?? item['description_uk'] ?? item['description'] ?? '';
-          final storyRaw = item['story_uk'] ?? item['story'] ?? '';
-          final countryRaw = item['country_uk'] ?? item['country'] ?? '';
-          final regionRaw = item['region_uk'] ?? item['region'] ?? '';
-          final flagRaw = item['flag_url'] ?? item['country_emoji'] ?? '';
-
-          final farmer = LocalizedFarmersCompanion(
+          final farmer = LocalizedFarmersV2Companion(
             id: Value(id),
             imageUrl: Value(imageUrl),
-            flagUrl: Value(flagRaw.toString()),
-            latitude: Value((item['latitude'] as num?)?.toDouble() ?? 0.0),
-            longitude: Value((item['longitude'] as num?)?.toDouble() ?? 0.0),
+            flagUrl: Value((item['flag_url'] ?? item['country_emoji'] ?? '').toString()),
+            latitude: Value((item['latitude'] as num?)?.toDouble()),
+            longitude: Value((item['longitude'] as num?)?.toDouble()),
+            createdAt: Value(item['created_at'] != null ? DateTime.tryParse(item['created_at'] as String) : null),
           );
 
-          // We also fetch translations if any (e.g. 'en')
-          final translationsData = await supabase!
-              .from('localized_farmer_translations')
-              .select()
-              .eq('farmer_id', id);
+          final transData = await supabase!.from('localized_farmer_translations').select().eq('farmer_id', id);
+          final List<LocalizedFarmerTranslationsV2Companion> translations = transData.map((t) => LocalizedFarmerTranslationsV2Companion(
+            farmerId: Value(id),
+            languageCode: Value(t['language_code'] as String),
+            name: Value(t['name'] as String?),
+            descriptionHtml: Value(t['description_html'] as String? ?? t['description'] as String?),
+            region: Value(t['region'] as String?),
+            country: Value(t['country'] as String?),
+            story: Value(ContentUtils.cleanCoffeeContent(t['story'] as String? ?? t['story_uk'] as String? ?? t['description_html'] as String? ?? '')),
+          )).toList();
 
-          final List<LocalizedFarmerTranslationsCompanion> translations = [];
-          for (final t in translationsData) {
-            final lang = t['language_code'] as String;
-            translations.add(LocalizedFarmerTranslationsCompanion(
-              farmerId: Value(id),
-              languageCode: Value(lang),
-              name: Value(ContentUtils.cleanCoffeeContent(t['name'] as String? ?? '')),
-              descriptionHtml: Value(ContentUtils.cleanCoffeeContent(t['description_html'] as String? ?? t['description'] as String? ?? '')),
-              region: Value(t['region'] as String?),
-              country: Value(t['country'] as String?),
-              story: Value(ContentUtils.cleanCoffeeContent(t['story'] as String? ?? '')),
-            ));
-          }
-
-          // Add 'uk' translation from legacy fields in main record
+          // Fallback for 'uk' using legacy fields if translations table is empty or missing 'uk'
           if (!translations.any((t) => t.languageCode.value == 'uk')) {
-             translations.add(LocalizedFarmerTranslationsCompanion(
+            translations.add(LocalizedFarmerTranslationsV2Companion(
               farmerId: Value(id),
               languageCode: const Value('uk'),
-              name: Value(nameRaw.toString()),
-              descriptionHtml: Value(ContentUtils.cleanCoffeeContent(descRaw.toString())),
-              story: Value(ContentUtils.cleanCoffeeContent(storyRaw.toString())),
-              region: Value(regionRaw.toString()),
-              country: Value(countryRaw.toString()),
+              name: Value((item['name_uk'] ?? item['name'] ?? '').toString()),
+              descriptionHtml: Value(ContentUtils.cleanCoffeeContent((item['description_html_uk'] ?? item['description_uk'] ?? item['description'] ?? '').toString())),
+              story: Value(ContentUtils.cleanCoffeeContent((item['story_uk'] ?? item['story'] ?? '').toString())),
+              region: Value((item['region_uk'] ?? item['region'] ?? '').toString()),
+              country: Value((item['country_uk'] ?? item['country'] ?? '').toString()),
             ));
           }
 
-          await db.smartUpsertFarmer(farmer, translations);
-          successCount++;
+          await db.smartUpsertFarmerV2(farmer, translations);
         } catch (e) {
-          debugPrint('SYNC ERROR for farmer ID ${item['id']}: $e');
-          errorCount++;
+          debugPrint('SYNC ERROR for Farmer ${item['id']}: $e');
         }
       }
-      // Cleanup: Delete local farmers (and translations) missing from remote
+
       if (remoteIds.isNotEmpty) {
         await db.transaction(() async {
-          await (db.delete(db.localizedFarmerTranslations)..where((t) => t.farmerId.isIn(remoteIds).not())).go();
-          await (db.delete(db.localizedFarmers)..where((t) => t.id.isIn(remoteIds).not())).go();
+          await (db.delete(db.localizedFarmerTranslationsV2)..where((t) => t.farmerId.isIn(remoteIds).not())).go();
+          await (db.delete(db.localizedFarmersV2)..where((t) => t.id.isIn(remoteIds).not())).go();
         });
       }
-
-      debugPrint('SYNC: Farmers synchronized ($successCount success, $errorCount errors)');
     } catch (e) {
-      debugPrint('SYNC ERROR (Farmers): $e');
-      rethrow;
+      debugPrint('SYNC CRITICAL ERROR (Farmers V2): $e');
     }
   }
 
   /// Pulls specialty articles from Supabase.
-  Future<void> syncArticles({Function(String, double)? onProgress}) async {
+  Future<void> syncArticles() async {
     if (supabase == null) return;
 
     try {
-      debugPrint('SYNC: Pulling articles from specialty_articles...');
+      debugPrint('SYNC: Pulling articles (V2)...');
       final data = await supabase!.from('specialty_articles').select().order('id');
-      
-      // Collect remote IDs for cleanup later
       final remoteIds = data.map((item) => item['id'] as int).toList();
 
-      int successCount = 0;
-      int errorCount = 0;
-      final total = data.length;
-
-      for (int i = 0; i < total; i++) {
+      for (int i = 0; i < data.length; i++) {
         final item = data[i];
-        final progress = 0.5 + (i / total * 0.5); // Articles are the second half of sync
-        onProgress?.call('Syncing Articles...', progress);
-
         try {
           final id = item['id'] as int;
-          debugPrint('SYNC: Processing article ID: $id');
-
+          
           String imageUrl = item['image_url'] as String? ?? '';
           if (imageUrl.isNotEmpty && !imageUrl.startsWith('http') && !imageUrl.startsWith('assets/')) {
-             final fileName = imageUrl.split('/').last;
-             imageUrl = '$articlesBucket$fileName';
+            imageUrl = '$articlesBucket${imageUrl.split('/').last}';
           }
 
-          final article = SpecialtyArticlesCompanion(
+          final article = SpecialtyArticlesV2Companion(
             id: Value(id),
             imageUrl: Value(imageUrl),
+            flagUrl: Value((item['flag_url'] ?? '').toString()),
             readTimeMin: Value(item['read_time_min'] as int? ?? 5),
+            createdAt: Value(item['created_at'] != null ? DateTime.tryParse(item['created_at'] as String) : null),
           );
 
-          // Sync translations
-          final translationsData = await supabase!
-              .from('specialty_article_translations')
-              .select()
-              .eq('article_id', id);
+          final transData = await supabase!.from('specialty_article_translations').select().eq('article_id', id);
+          final List<SpecialtyArticleTranslationsV2Companion> translations = transData.map((t) => SpecialtyArticleTranslationsV2Companion(
+            articleId: Value(id),
+            languageCode: Value(t['language_code'] as String),
+            title: Value(ContentUtils.cleanCoffeeContent(t['title'] as String? ?? '')),
+            subtitle: Value(ContentUtils.cleanCoffeeContent(t['subtitle'] as String? ?? '')),
+            contentHtml: Value(ContentUtils.cleanCoffeeContent(t['content_html'] as String? ?? t['content'] as String? ?? '')),
+          )).toList();
 
-          debugPrint('SYNC: Found ${translationsData.length} translations for article $id');
-
-          final List<SpecialtyArticleTranslationsCompanion> translations = [];
-          for (final t in translationsData) {
-             translations.add(SpecialtyArticleTranslationsCompanion(
-               articleId: Value(id),
-               languageCode: Value(t['language_code'] as String),
-                title: Value(ContentUtils.cleanCoffeeContent(t['title'] as String? ?? '')),
-                subtitle: Value(ContentUtils.cleanCoffeeContent(t['subtitle'] as String? ?? '')),
-                contentHtml: Value(ContentUtils.cleanCoffeeContent(t['content_html'] as String? ?? '')),
-             ));
-          }
-
-          // Add 'uk' if missing
+          // Fallback for 'uk' using legacy fields
           if (!translations.any((t) => t.languageCode.value == 'uk')) {
-            translations.add(SpecialtyArticleTranslationsCompanion(
+            translations.add(SpecialtyArticleTranslationsV2Companion(
               articleId: Value(id),
               languageCode: const Value('uk'),
               title: Value(ContentUtils.cleanCoffeeContent(item['title_uk'] as String? ?? item['title_en'] as String? ?? '')),
@@ -360,25 +305,20 @@ class SyncService {
             ));
           }
 
-          await db.smartUpsertArticle(article, translations);
-          successCount++;
+          await db.smartUpsertArticleV2(article, translations);
         } catch (e) {
-          debugPrint('SYNC ERROR for article ID ${item['id']}: $e');
-          errorCount++;
+          debugPrint('SYNC ERROR for Article ${item['id']}: $e');
         }
       }
-      // Cleanup: Delete local articles (and translations) missing from remote
+
       if (remoteIds.isNotEmpty) {
         await db.transaction(() async {
-          await (db.delete(db.specialtyArticleTranslations)..where((t) => t.articleId.isIn(remoteIds).not())).go();
-          await (db.delete(db.specialtyArticles)..where((t) => t.id.isIn(remoteIds).not())).go();
+          await (db.delete(db.specialtyArticleTranslationsV2)..where((t) => t.articleId.isIn(remoteIds).not())).go();
+          await (db.delete(db.specialtyArticlesV2)..where((t) => t.id.isIn(remoteIds).not())).go();
         });
       }
-
-      debugPrint('SYNC: Articles total - SUCCESS: $successCount, ERRORS: $errorCount');
     } catch (e) {
-      debugPrint('SYNC CRITICAL ERROR (Articles): $e');
-      rethrow;
+      debugPrint('SYNC CRITICAL ERROR (Articles V2): $e');
     }
   }
 
@@ -656,83 +596,67 @@ class SyncService {
   Future<void> syncBrewingRecipes() async {
     if (supabase == null) return;
     try {
-      debugPrint('SYNC: Pulling methods from brewing_recipes...');
-      int successCount = 0;
-      int errorCount = 0;
-
+      debugPrint('SYNC: Pulling methods (V2, EN-only)...');
       final data = await supabase!.from('brewing_recipes').select();
-      
-      // Collect remote keys for cleanup later
       final remoteKeys = data.map((item) => item['method_key'] as String).toList();
       
       for (final item in data) {
         try {
           final key = item['method_key'] as String;
-          debugPrint('SYNC: Processing brewing method: $key');
-
+          
           String methodImageUrl = item['image_url'] as String? ?? '';
           if (methodImageUrl.isNotEmpty && !methodImageUrl.startsWith('http') && !methodImageUrl.startsWith('assets/')) {
             methodImageUrl = '$methodsBucket${methodImageUrl.split('/').last}';
           }
 
-          final companion = BrewingRecipesCompanion(
+          final recipe = BrewingRecipesV2Companion(
             methodKey: Value(key),
+            imageUrl: Value(methodImageUrl),
             ratioGramsPerMl: Value((item['ratio_grams_per_ml'] as num?)?.toDouble() ?? 0.066),
             tempC: Value((item['temp_c'] as num?)?.toDouble() ?? 93.0),
             totalTimeSec: Value((item['total_time_sec'] as num?)?.toInt() ?? 180),
             difficulty: Value(item['difficulty'] as String? ?? 'Intermediate'),
             flavorProfile: Value(item['flavor_profile'] as String? ?? 'Balanced'),
             iconName: Value(item['icon_name'] as String?),
-            imageUrl: Value(methodImageUrl),
             stepsJson: Value(item['steps_json'] is List ? jsonEncode(item['steps_json']) : (item['steps_json']?.toString() ?? '[]')),
           );
 
-          // Get translations
-          final transData = await supabase!
-              .from('brewing_recipe_translations')
-              .select()
-              .eq('recipe_key', key);
+          // Force English for everything else as per user request
+          final transData = await supabase!.from('brewing_recipe_translations').select().eq('recipe_key', key);
+          
+          // Use 'en' as primary, fallback to 'uk' names if item actually doesn't have EN (unlikely for specialty)
+          final enTrans = transData.firstWhere((t) => t['language_code'] == 'en', orElse: () => transData.isNotEmpty ? transData.first : {});
+          
+          final translations = [
+             BrewingRecipeTranslationsV2Companion(
+                recipeKey: Value(key),
+                languageCode: const Value('en'),
+                name: Value(enTrans['name'] as String? ?? item['name'] as String? ?? 'Unknown'),
+                description: Value(ContentUtils.cleanCoffeeContent(enTrans['description'] as String? ?? item['description'] as String? ?? '')),
+             ),
+             // Also add as 'uk' but with English content
+             BrewingRecipeTranslationsV2Companion(
+                recipeKey: Value(key),
+                languageCode: const Value('uk'),
+                name: Value(enTrans['name'] as String? ?? item['name'] as String? ?? 'Unknown'),
+                description: Value(ContentUtils.cleanCoffeeContent(enTrans['description'] as String? ?? item['description'] as String? ?? '')),
+             )
+          ];
 
-          debugPrint('SYNC: Found ${transData.length} translations for method $key');
-
-          final List<BrewingRecipeTranslationsCompanion> translations = [];
-          for (final t in transData) {
-            translations.add(BrewingRecipeTranslationsCompanion(
-              recipeKey: Value(key),
-              languageCode: Value(t['language_code'] as String),
-              name: Value(ContentUtils.cleanCoffeeContent(t['name'] as String? ?? '')),
-              description: Value(ContentUtils.cleanCoffeeContent(t['description'] as String? ?? '')),
-            ));
-          }
-
-          // Add 'uk' if missing
-          if (!translations.any((t) => t.languageCode.value == 'uk')) {
-            translations.add(BrewingRecipeTranslationsCompanion(
-              recipeKey: Value(key),
-              languageCode: const Value('uk'),
-              name: Value(item['name_uk'] as String? ?? item['name'] as String? ?? ''),
-              description: Value(ContentUtils.cleanCoffeeContent(item['description_uk'] as String? ?? item['description'] as String? ?? '')),
-            ));
-          }
-
-          await db.smartUpsertBrewingRecipe(companion, translations);
-          successCount++;
+          await db.smartUpsertBrewingRecipeV2(recipe, translations);
         } catch (e) {
           debugPrint('SYNC ERROR for method ${item['method_key']}: $e');
-          errorCount++;
         }
       }
-      // Cleanup: Delete local methods (and translations) missing from remote
+
       if (remoteKeys.isNotEmpty) {
         await db.transaction(() async {
-          await (db.delete(db.brewingRecipeTranslations)..where((t) => t.recipeKey.isIn(remoteKeys).not())).go();
-          await (db.delete(db.brewingRecipes)..where((t) => t.methodKey.isIn(remoteKeys).not())).go();
+          await (db.delete(db.brewingRecipeTranslationsV2)..where((t) => t.recipeKey.isIn(remoteKeys).not())).go();
+          await (db.delete(db.brewingRecipesV2)..where((t) => t.methodKey.isIn(remoteKeys).not())).go();
         });
       }
-
-      debugPrint('SYNC: Brewing methods total - SUCCESS: $successCount, ERRORS: $errorCount');
     } catch (e) {
-      debugPrint('SYNC CRITICAL ERROR (Brewing Recipes): $e');
+      debugPrint('SYNC CRITICAL ERROR (Brewing Recipes V2): $e');
     }
   }
 
@@ -934,14 +858,13 @@ class SyncService {
   Future<void> syncEncyclopedia() async {
     if (supabase == null) return;
     try {
-      debugPrint('SYNC: Pulling encyclopedia from localized_beans...');
+      debugPrint('SYNC: Pulling encyclopedia (V2)...');
       final data = await supabase!.from('localized_beans').select();
       final remoteIds = data.map((item) => item['id'] as int).toList();
 
       for (final item in data) {
-        int? id;
         try {
-          id = item['id'] as int;
+          final id = item['id'] as int;
           
           String emoji = item['country_emoji'] as String? ?? '';
           if (emoji.isEmpty || emoji.contains('planet')) {
@@ -949,8 +872,9 @@ class SyncService {
             emoji = country.isNotEmpty ? '$flagsBucket${country.replaceAll(' ', '_')}.png' : '';
           }
 
-          final bean = LocalizedBeansCompanion(
+          final bean = LocalizedBeansV2Companion(
             id: Value(id),
+            brandId: Value(item['brand_id'] as int?),
             countryEmoji: Value(emoji),
             altitudeMin: Value(item['altitude_min'] as int?),
             altitudeMax: Value(item['altitude_max'] as int?),
@@ -959,33 +883,42 @@ class SyncService {
             cupsScore: Value((item['cups_score'] as num?)?.toDouble() ?? 82.0),
             sensoryJson: Value(item['sensory_json']?.toString() ?? '{}'),
             priceJson: Value(item['price_json']?.toString() ?? '{}'),
+            plantationPhotosUrl: Value(item['plantation_photos_url']?.toString() ?? '[]'),
+            harvestSeason: Value(item['harvest_season'] as String?),
+            price: Value(item['price'] as String?),
+            weight: Value(item['weight'] as String?),
+            roastDate: Value(item['roast_date'] as String?),
+            processingMethodsJson: Value(item['processing_methods_json']?.toString() ?? '[]'),
             isPremium: Value(item['is_premium'] as bool? ?? false),
-            isDecaf: Value(item['is_decaf'] as bool? ?? false),
+            detailedProcessMarkdown: Value(item['detailed_process_markdown'] as String? ?? ''),
             url: Value(item['url'] as String? ?? ''),
+            farmerId: Value(item['farmer_id'] as int?),
+            isDecaf: Value(item['is_decaf'] as bool? ?? false),
+            farm: Value(item['farm'] as String?),
+            farmPhotosUrlCover: Value(item['farm_photos_url_cover'] as String?),
+            washStation: Value(item['wash_station'] as String?),
+            retailPrice: Value(item['retail_price']?.toString()),
+            wholesalePrice: Value(item['wholesale_price']?.toString()),
             createdAt: Value(item['created_at'] != null ? DateTime.tryParse(item['created_at'] as String) : null),
           );
 
-          // Translations
           final transData = await supabase!.from('localized_bean_translations').select().eq('bean_id', id);
-          final List<LocalizedBeanTranslationsCompanion> translations = [];
-          for (final t in transData) {
-            translations.add(LocalizedBeanTranslationsCompanion(
-              beanId: Value(id),
-              languageCode: Value(t['language_code'] as String),
-              country: Value(t['country'] as String?),
-              region: Value(t['region'] as String?),
-              varieties: Value(t['varieties'] as String?),
-              flavorNotes: Value(t['flavor_notes']?.toString() ?? '[]'),
-              processMethod: Value(t['process_method'] as String?),
-              description: Value(ContentUtils.cleanCoffeeContent(t['description'] as String? ?? '')),
-              farmDescription: Value(ContentUtils.cleanCoffeeContent(t['farm_description'] as String? ?? '')),
-              roastLevel: Value(t['roast_level'] as String?),
-            ));
-          }
+          final List<LocalizedBeanTranslationsV2Companion> translations = transData.map((t) => LocalizedBeanTranslationsV2Companion(
+            beanId: Value(id),
+            languageCode: Value(t['language_code'] as String),
+            country: Value(t['country'] as String?),
+            region: Value(t['region'] as String?),
+            varieties: Value(t['varieties'] as String?),
+            flavorNotes: Value(t['flavor_notes']?.toString() ?? '[]'),
+            processMethod: Value(t['process_method'] as String?),
+            description: Value(ContentUtils.cleanCoffeeContent(t['description'] as String? ?? '')),
+            farmDescription: Value(ContentUtils.cleanCoffeeContent(t['farm_description'] as String? ?? '')),
+            roastLevel: Value(t['roast_level'] as String?),
+          )).toList();
 
-          // Add 'uk' mapping if missing but existed in main table (legacy compatibility)
+          // Fallback for 'uk'
           if (!translations.any((t) => t.languageCode.value == 'uk')) {
-             translations.add(LocalizedBeanTranslationsCompanion(
+             translations.add(LocalizedBeanTranslationsV2Companion(
               beanId: Value(id),
               languageCode: const Value('uk'),
               country: Value(item['country_uk'] as String? ?? item['country_en'] as String?),
@@ -998,21 +931,20 @@ class SyncService {
             ));
           }
 
-          await db.smartUpsertBean(bean, translations);
+          await db.smartUpsertBeanV2(bean, translations);
         } catch (e) {
-          debugPrint('SYNC ERROR for Encyclopedia entry $id: $e');
+          debugPrint('SYNC ERROR for Encyclopedia ID ${item['id']}: $e');
         }
       }
 
-      // Cleanup
       if (remoteIds.isNotEmpty) {
         await db.transaction(() async {
-          await (db.delete(db.localizedBeanTranslations)..where((t) => t.beanId.isIn(remoteIds).not())).go();
-          await (db.delete(db.localizedBeans)..where((t) => t.id.isIn(remoteIds).not())).go();
+          await (db.delete(db.localizedBeanTranslationsV2)..where((t) => t.beanId.isIn(remoteIds).not())).go();
+          await (db.delete(db.localizedBeansV2)..where((t) => t.id.isIn(remoteIds).not())).go();
         });
       }
     } catch (e) {
-      debugPrint('SYNC ERROR (Encyclopedia): $e');
+      debugPrint('SYNC ERROR (Encyclopedia V2): $e');
     }
   }
 
@@ -1134,5 +1066,4 @@ class SyncService {
       debugPrint('SYNC ERROR (Single Recipe $key): $e');
     }
   }
-
 }

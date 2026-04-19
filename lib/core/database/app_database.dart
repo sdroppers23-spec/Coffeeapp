@@ -115,36 +115,8 @@ class AppDatabase extends _$AppDatabase {
 
   // ── Farmers ──────────────────────────────────────────────────────────────────
   // ── Farmers (Wide Table) ───────────────────────────────────────────────────
-  Future<List<LocalizedFarmerDto>> getAllFarmers(String lang) async {
-    final query = select(localizedFarmers).join([
-      leftOuterJoin(
-        localizedFarmerTranslations,
-        localizedFarmerTranslations.farmerId.equalsExp(localizedFarmers.id) &
-            localizedFarmerTranslations.languageCode.equals(lang),
-      ),
-    ]);
-
-    final rows = await query.get();
-    
-    return rows.map((row) {
-      final farmer = row.readTable(localizedFarmers);
-      final translation = row.readTableOrNull(localizedFarmerTranslations);
-
-      return LocalizedFarmerDto(
-        id: farmer.id,
-        imageUrl: farmer.imageUrl,
-        flagUrl: farmer.flagUrl,
-        name: translation?.name ?? 'Unknown',
-        descriptionHtml: translation?.descriptionHtml ?? '',
-        story: translation?.story ?? translation?.descriptionHtml ?? '',
-        region: translation?.region ?? '',
-        country: translation?.country ?? '',
-        latitude: farmer.latitude,
-        longitude: farmer.longitude,
-        createdAt: farmer.createdAt,
-      );
-    }).toList();
-  }
+  /// Reads from V2 table (populated by SyncService V2).
+  Future<List<LocalizedFarmerDto>> getAllFarmers(String lang) => getAllFarmersV2(lang);
 
   Future<void> smartUpsertFarmer(
     LocalizedFarmersCompanion f,
@@ -503,37 +475,24 @@ class AppDatabase extends _$AppDatabase {
   }
 
   // ── Origins / Beans ──────────────────────────────────────────────────────────
-  Future<List<LocalizedBeanDto>> getAllOrigins(String lang) async {
-    final query = select(localizedBeans).join([
-      leftOuterJoin(
-        localizedBeanTranslations,
-        localizedBeanTranslations.beanId.equalsExp(localizedBeans.id) &
-            localizedBeanTranslations.languageCode.equals(lang),
-      ),
-    ]);
+  Future<List<LocalizedBeanDto>> getAllOrigins(String lang) => getEncyclopediaV2(lang);
 
-    final rows = await query.get();
-    return rows.map((row) => _mapBeanRow(row, lang)).toList();
-  }
-
+  /// Watches V2 table (populated by SyncService V2).
   Stream<List<LocalizedBeanDto>> watchAllEncyclopediaEntries(String lang) {
-    final query = select(localizedBeans).join([
+    final query = select(localizedBeansV2).join([
       leftOuterJoin(
-        localizedBeanTranslations,
-        localizedBeanTranslations.beanId.equalsExp(localizedBeans.id) &
-            localizedBeanTranslations.languageCode.equals(lang),
+        localizedBeanTranslationsV2,
+        localizedBeanTranslationsV2.beanId.equalsExp(localizedBeansV2.id) &
+            localizedBeanTranslationsV2.languageCode.equals(lang),
       ),
     ]);
-
     return query.watch().map(
-      (rows) => rows.map((row) => _mapBeanRow(row, lang)).toList(),
+      (rows) => rows.map((row) => _mapBeanV2Row(row, lang)).toList(),
     );
   }
 
-  Future<List<LocalizedBeanDto>> getAllBeans(String lang) =>
-      getAllOrigins(lang);
-  Future<List<LocalizedBeanDto>> getAllEncyclopediaEntries(String lang) =>
-      getAllOrigins(lang);
+  Future<List<LocalizedBeanDto>> getAllBeans(String lang) => getEncyclopediaV2(lang);
+  Future<List<LocalizedBeanDto>> getAllEncyclopediaEntries(String lang) => getEncyclopediaV2(lang);
 
   Future<List<LocalizedBeanDto>> getBeansByBrand(
     int brandId,
@@ -743,32 +702,8 @@ class AppDatabase extends _$AppDatabase {
     });
   }
 
-  Future<List<SpecialtyArticleDto>> getAllArticles(String lang) async {
-    final query = select(specialtyArticles).join([
-      leftOuterJoin(
-        specialtyArticleTranslations,
-        specialtyArticleTranslations.articleId.equalsExp(specialtyArticles.id) &
-            specialtyArticleTranslations.languageCode.equals(lang),
-      ),
-    ]);
-
-    final rows = await query.get();
-    
-    return rows.map((row) {
-      final article = row.readTable(specialtyArticles);
-      final translation = row.readTableOrNull(specialtyArticleTranslations);
-      
-      return SpecialtyArticleDto(
-        id: article.id,
-        title: translation?.title ?? 'Untitled',
-        subtitle: translation?.subtitle ?? '',
-        imageUrl: article.imageUrl,
-        flagUrl: article.flagUrl,
-        readTimeMin: article.readTimeMin,
-        contentHtml: translation?.contentHtml ?? '',
-      );
-    }).toList();
-  }
+  /// Reads from V2 table (populated by SyncService V2).
+  Future<List<SpecialtyArticleDto>> getAllArticles(String lang) => getAllArticlesV2(lang);
 
   Future<int> deleteBeansForBrand(int brandId) =>
       (delete(localizedBeans)..where((t) => t.brandId.equals(brandId))).go();
@@ -1024,40 +959,8 @@ class AppDatabase extends _$AppDatabase {
       (delete(customRecipes)..where((t) => t.id.equals(id))).go();
 
   // ── Brewing (Static Wide Table) ───────────────────────────────────────────
-  Future<List<BrewingRecipeDto>> getAllBrewingRecipes(String lang) async {
-    final query = select(brewingRecipes).join([
-      leftOuterJoin(
-        brewingRecipeTranslations,
-        brewingRecipeTranslations.recipeKey.equalsExp(brewingRecipes.methodKey) &
-            brewingRecipeTranslations.languageCode.equals(lang),
-      ),
-    ]);
-
-    final rows = await query.get();
-    
-    return rows.map((row) {
-      final recipe = row.readTable(brewingRecipes);
-      final translation = row.readTableOrNull(brewingRecipeTranslations);
-      
-      final name = translation?.name ?? 'Unknown';
-      final desc = translation?.description ?? '';
-      
-      return BrewingRecipeDto(
-        id: recipe.id,
-        methodKey: recipe.methodKey,
-        name: name,
-        description: desc,
-        imageUrl: recipe.imageUrl,
-        ratioGramsPerMl: recipe.ratioGramsPerMl,
-        tempC: recipe.tempC,
-        totalTimeSec: recipe.totalTimeSec,
-        difficulty: recipe.difficulty,
-        stepsJson: recipe.stepsJson,
-        flavorProfile: recipe.flavorProfile,
-        iconName: recipe.iconName,
-      );
-    }).toList();
-  }
+  /// Reads from V2 table (populated by SyncService V2). English-only for brewing methods.
+  Future<List<BrewingRecipeDto>> getAllBrewingRecipes(String lang) => getAllBrewingRecipesV2('en');
 
   Future<void> smartUpsertBrewingRecipe(
     BrewingRecipesCompanion recipe,

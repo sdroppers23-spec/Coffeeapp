@@ -20,7 +20,7 @@ class DiscoverScreen extends ConsumerStatefulWidget {
 }
 
 class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
-  String _selectedTabId = 'encyclopedia'; 
+  String _selectedTabId = ''; 
   final ScrollController _reorderController = ScrollController();
   late PageController _pageController;
   final Map<String, GlobalKey> _tabKeys = {};

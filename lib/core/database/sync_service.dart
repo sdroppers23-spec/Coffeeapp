@@ -148,21 +148,21 @@ class SyncService {
         )
         .subscribe();
 
-    // 3. Beans (Encyclopedia) Channel
+    // 3. Encyclopedia (Coffee Lots) Channel
     supabase!
-        .channel('public:localized_beans')
+        .channel('public:encyclopedia_entries')
         .onPostgresChanges(
           event: PostgresChangeEvent.all,
           schema: 'public',
-          table: 'localized_beans',
+          table: 'encyclopedia_entries',
           callback: (payload) async {
-            debugPrint('SYNC: Real-time event for Beans: ${payload.eventType}');
+            debugPrint('SYNC: Real-time event for Encyclopedia: ${payload.eventType}');
             if (payload.eventType == PostgresChangeEvent.delete) {
               final id = payload.oldRecord['id'] as int;
-              await (db.delete(db.localizedBeans)..where((t) => t.id.equals(id))).go();
+              await (db.delete(db.localizedBeansV2)..where((t) => t.id.equals(id))).go();
             } else {
               final id = payload.newRecord['id'] as int;
-              await syncSingleBean(id);
+              await syncSingleEncyclopediaEntryV2(id);
             }
           },
         )
@@ -857,66 +857,66 @@ class SyncService {
         try {
           final id = item['id'] as int;
           
-          String emoji = item['country_emoji'] as String? ?? '';
-          if (emoji.isEmpty || emoji.contains('planet')) {
-            final country = (item['country_uk'] as String? ?? item['country_en'] as String? ?? '').toLowerCase();
-            emoji = country.isNotEmpty ? '$flagsBucket${country.replaceAll(' ', '_')}.png' : '';
-          }
-
           final bean = LocalizedBeansV2Companion(
             id: Value(id),
             brandId: Value(item['brand_id'] as int?),
-            countryEmoji: Value(emoji),
+            countryEmoji: Value(item['country_emoji'] as String? ?? ''),
             altitudeMin: Value(item['altitude_min'] as int?),
             altitudeMax: Value(item['altitude_max'] as int?),
             lotNumber: Value(item['lot_number'] as String? ?? ''),
             scaScore: Value(item['sca_score']?.toString() ?? '82+'),
-            cupsScore: Value((item['cups_score'] as num?)?.toDouble() ?? 82.0),
+            cupsScore: Value(double.tryParse(item['cups_score']?.toString() ?? '82.0') ?? 82.0),
             sensoryJson: Value(item['sensory_json']?.toString() ?? '{}'),
             priceJson: Value(item['price_json']?.toString() ?? '{}'),
-            plantationPhotosUrl: Value(item['plantation_photos_url']?.toString() ?? '[]'),
-            harvestSeason: Value(item['harvest_season'] as String?),
-            price: Value(item['price'] as String?),
-            weight: Value(item['weight'] as String?),
-            roastDate: Value(item['roast_date'] as String?),
-            processingMethodsJson: Value(item['processing_methods_json']?.toString() ?? '[]'),
+            plantationPhotosUrl: Value(item['plantation_photos_url'] as String? ?? '[]'),
+            harvestSeason: Value(item['harvest_season'] as String? ?? ''),
+            price: Value(item['price'] as String? ?? ''),
+            weight: Value(item['weight'] as String? ?? ''),
+            roastDate: Value(item['roast_date'] as String? ?? ''),
+            processingMethodsJson: Value(item['processing_methods_json'] as String? ?? '[]'),
             isPremium: Value(item['is_premium'] as bool? ?? false),
             detailedProcessMarkdown: Value(item['detailed_process_markdown'] as String? ?? ''),
             url: Value(item['url'] as String? ?? ''),
-            farmerId: Value(item['farmer_id'] as int?),
+            farmerId: Value(item['farmer_id'] as int?), // May be null if not in table
             isDecaf: Value(item['is_decaf'] as bool? ?? false),
             farm: Value(item['farm'] as String?),
             farmPhotosUrlCover: Value(item['farm_photos_url_cover'] as String?),
             washStation: Value(item['wash_station'] as String?),
-            retailPrice: Value(item['retail_price']?.toString()),
-            wholesalePrice: Value(item['wholesale_price']?.toString()),
             createdAt: Value(item['created_at'] != null ? DateTime.tryParse(item['created_at'] as String) : null),
           );
 
-          // encyclopedia_entries has no separate translations table — data is in the main row
-          final List<LocalizedBeanTranslationsV2Companion> translations = [];
-
-          // encyclopedia_entries has data directly in the row — add both 'en' and 'uk' translation
-          if (!translations.any((t) => t.languageCode.value == 'uk')) {
-            final transData = LocalizedBeanTranslationsV2Companion(
+          // Table encyclopedia_entries stores data in 'country', 'region', etc.
+          // We provide fallback for both uk/en languages.
+          final List<LocalizedBeanTranslationsV2Companion> translations = [
+            LocalizedBeanTranslationsV2Companion(
               beanId: Value(id),
               languageCode: const Value('uk'),
-              country: Value(item['country'] as String?),
-              region: Value(item['region'] as String?),
-              varieties: Value(item['varieties'] as String?),
+              country: Value(item['country'] as String? ?? 'Unknown'),
+              region: Value(item['region'] as String? ?? ''),
+              varieties: Value(item['varieties'] as String? ?? ''),
               flavorNotes: Value(item['flavor_notes']?.toString() ?? '[]'),
-              processMethod: Value(item['process_method'] as String?),
+              processMethod: Value(item['process_method'] as String? ?? ''),
               description: Value(ContentUtils.cleanCoffeeContent(item['description'] as String? ?? '')),
               farmDescription: Value(ContentUtils.cleanCoffeeContent(item['farm_description'] as String? ?? '')),
-              roastLevel: Value(item['roast_level'] as String?),
-            );
-            translations.add(transData);
-            translations.add(transData.copyWith(languageCode: const Value('en')));
-          }
+              roastLevel: Value(item['roast_level'] as String? ?? ''),
+            ),
+            LocalizedBeanTranslationsV2Companion(
+              beanId: Value(id),
+              languageCode: const Value('en'),
+              country: Value(item['country'] as String? ?? 'Unknown'),
+              region: Value(item['region'] as String? ?? ''),
+              varieties: Value(item['varieties'] as String? ?? ''),
+              flavorNotes: Value(item['flavor_notes']?.toString() ?? '[]'),
+              processMethod: Value(item['process_method'] as String? ?? ''),
+              description: Value(ContentUtils.cleanCoffeeContent(item['description'] as String? ?? '')),
+              farmDescription: Value(ContentUtils.cleanCoffeeContent(item['farm_description'] as String? ?? '')),
+              roastLevel: Value(item['roast_level'] as String? ?? ''),
+            ),
+          ];
 
           await db.smartUpsertBeanV2(bean, translations);
         } catch (e) {
-          debugPrint('SYNC ERROR for Encyclopedia ID ${item['id']}: $e');
+          debugPrint('SYNC ERROR for Encyclopedia Entry ${item['id']}: $e');
         }
       }
 
@@ -927,7 +927,77 @@ class SyncService {
         });
       }
     } catch (e) {
-      debugPrint('SYNC ERROR (Encyclopedia V2): $e');
+      debugPrint('SYNC CRITICAL ERROR (Encyclopedia V2): $e');
+    }
+  }
+
+  /// Syncs a single encyclopedia entry by ID.
+  Future<void> syncSingleEncyclopediaEntryV2(int id) async {
+    if (supabase == null) return;
+    try {
+      final item = await supabase!.from('encyclopedia_entries').select().eq('id', id).maybeSingle();
+      if (item == null) return;
+
+      final bean = LocalizedBeansV2Companion(
+        id: Value(id),
+        brandId: Value(item['brand_id'] as int?),
+        countryEmoji: Value(item['country_emoji'] as String? ?? ''),
+        altitudeMin: Value(item['altitude_min'] as int?),
+        altitudeMax: Value(item['altitude_max'] as int?),
+        lotNumber: Value(item['lot_number'] as String? ?? ''),
+        scaScore: Value(item['sca_score']?.toString() ?? '82+'),
+        cupsScore: Value(double.tryParse(item['cups_score']?.toString() ?? '82.0') ?? 82.0),
+        sensoryJson: Value(item['sensory_json']?.toString() ?? '{}'),
+        priceJson: Value(item['price_json']?.toString() ?? '{}'),
+        plantationPhotosUrl: Value(item['plantation_photos_url'] as String? ?? '[]'),
+        harvestSeason: Value(item['harvest_season'] as String? ?? ''),
+        price: Value(item['price'] as String? ?? ''),
+        weight: Value(item['weight'] as String? ?? ''),
+        roastDate: Value(item['roast_date'] as String? ?? ''),
+        processingMethodsJson: Value(item['processing_methods_json'] as String? ?? '[]'),
+        isPremium: Value(item['is_premium'] as bool? ?? false),
+        detailedProcessMarkdown: Value(item['detailed_process_markdown'] as String? ?? ''),
+        url: Value(item['url'] as String? ?? ''),
+        farmerId: Value(item['farmer_id'] as int?),
+        isDecaf: Value(item['is_decaf'] as bool? ?? false),
+        farm: Value(item['farm'] as String?),
+        farmPhotosUrlCover: Value(item['farm_photos_url_cover'] as String?),
+        washStation: Value(item['wash_station'] as String?),
+        createdAt: Value(item['created_at'] != null ? DateTime.tryParse(item['created_at'] as String) : null),
+      );
+
+      final List<LocalizedBeanTranslationsV2Companion> translations = [
+        LocalizedBeanTranslationsV2Companion(
+          beanId: Value(id),
+          languageCode: const Value('uk'),
+          country: Value(item['country'] as String? ?? 'Unknown'),
+          region: Value(item['region'] as String? ?? ''),
+          varieties: Value(item['varieties'] as String? ?? ''),
+          flavorNotes: Value(item['flavor_notes']?.toString() ?? '[]'),
+          processMethod: Value(item['process_method'] as String? ?? ''),
+          description: Value(ContentUtils.cleanCoffeeContent(item['description'] as String? ?? '')),
+          farmDescription: Value(ContentUtils.cleanCoffeeContent(item['farm_description'] as String? ?? '')),
+          roastLevel: Value(item['roast_level'] as String? ?? ''),
+        ),
+        LocalizedBeanTranslationsV2Companion(
+          beanId: Value(id),
+          languageCode: const Value('en'),
+          country: Value(item['country'] as String? ?? 'Unknown'),
+          region: Value(item['region'] as String? ?? ''),
+          varieties: Value(item['varieties'] as String? ?? ''),
+          flavorNotes: Value(item['flavor_notes']?.toString() ?? '[]'),
+          processMethod: Value(item['process_method'] as String? ?? ''),
+          description: Value(ContentUtils.cleanCoffeeContent(item['description'] as String? ?? '')),
+          farmDescription: Value(ContentUtils.cleanCoffeeContent(item['farm_description'] as String? ?? '')),
+          roastLevel: Value(item['roast_level'] as String? ?? ''),
+        ),
+      ];
+
+      await db.smartUpsertBeanV2(bean, translations);
+      _dataUpdateController.add(null);
+      debugPrint('SYNC: Real-time update success for Encyclopedia Entry $id');
+    } catch (e) {
+      debugPrint('SYNC ERROR (Single Encyclopedia Entry $id): $e');
     }
   }
 

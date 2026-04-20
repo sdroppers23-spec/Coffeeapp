@@ -135,12 +135,12 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   late final TextEditingController _wholesalePrice1kController;
 
   // ─── Sensory (1-5) ────────────────────────────────────────────────
-  double _aroma = 3;
-  double _flavor = 3;
+  double _bitterness = 3;
   double _acidity = 3;
+  double _sweetness = 3;
   double _body = 3;
+  double _intensity = 3;
   double _aftertaste = 3;
-  double _balance = 3;
 
   // ─── Lifecycle ────────────────────────────────────────────────────
   @override
@@ -195,12 +195,12 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
 
       final sensory = lot.sensoryPoints;
       if (sensory.isNotEmpty) {
-        _aroma = (sensory['aroma'] ?? sensory['intensity'] ?? 3).toDouble();
-        _flavor = (sensory['flavor'] ?? sensory['sweetness'] ?? 3).toDouble();
+        _bitterness = (sensory['bitterness'] ?? sensory['aroma'] ?? 3).toDouble();
         _acidity = (sensory['acidity'] ?? 3).toDouble();
+        _sweetness = (sensory['sweetness'] ?? sensory['flavor'] ?? 3).toDouble();
         _body = (sensory['body'] ?? 3).toDouble();
-        _aftertaste = (sensory['aftertaste'] ?? sensory['bitterness'] ?? 3).toDouble();
-        _balance = (sensory['balance'] ?? sensory['intensity'] ?? 3).toDouble();
+        _intensity = (sensory['intensity'] ?? sensory['balance'] ?? 3).toDouble();
+        _aftertaste = (sensory['aftertaste'] ?? 3).toDouble();
       }
     });
   }
@@ -328,12 +328,12 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           : processStr;
 
       final sensoryMap = {
-        'aroma': _aroma.toInt(),
-        'flavor': _flavor.toInt(),
+        'bitterness': _bitterness.toInt(),
         'acidity': _acidity.toInt(),
+        'sweetness': _sweetness.toInt(),
         'body': _body.toInt(),
+        'intensity': _intensity.toInt(),
         'aftertaste': _aftertaste.toInt(),
-        'balance': _balance.toInt(),
       };
 
       final priceMap = {
@@ -972,17 +972,17 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       children: [
         _sectionLabel('Профіль смаку (1–5)'),
         _darkCard(children: [
-          _sensorySlider('AROMA', _aroma, (v) => setState(() => _aroma = v), theme: theme),
-          _divider(),
-          _sensorySlider('FLAVOR', _flavor, (v) => setState(() => _flavor = v), theme: theme),
+          _sensorySlider('BITTERNESS', _bitterness, (v) => setState(() => _bitterness = v), theme: theme),
           _divider(),
           _sensorySlider('ACIDITY', _acidity, (v) => setState(() => _acidity = v), theme: theme),
           _divider(),
+          _sensorySlider('SWEETNESS', _sweetness, (v) => setState(() => _sweetness = v), theme: theme),
+          _divider(),
           _sensorySlider('BODY', _body, (v) => setState(() => _body = v), theme: theme),
           _divider(),
-          _sensorySlider('AFTERTASTE', _aftertaste, (v) => setState(() => _aftertaste = v), theme: theme),
+          _sensorySlider('INTENSITY', _intensity, (v) => setState(() => _intensity = v), theme: theme),
           _divider(),
-          _sensorySlider('BALANCE', _balance, (v) => setState(() => _balance = v), theme: theme),
+          _sensorySlider('AFTERTASTE', _aftertaste, (v) => setState(() => _aftertaste = v), theme: theme),
         ]),
       ],
     );

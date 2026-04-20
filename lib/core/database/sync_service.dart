@@ -883,6 +883,7 @@ class SyncService {
             farmPhotosUrlCover: Value(item['farm_photos_url_cover'] as String?),
             washStation: Value(item['wash_station'] as String?),
             flagUrl: Value(item['image_url'] as String? ?? ''),
+            radarJson: Value(item['radar_json']?.toString() ?? '{}'),
             createdAt: Value(item['created_at'] != null ? DateTime.tryParse(item['created_at'] as String) : null),
           );
 
@@ -965,6 +966,7 @@ class SyncService {
         farmPhotosUrlCover: Value(item['farm_photos_url_cover'] as String?),
         washStation: Value(item['wash_station'] as String?),
         flagUrl: Value(item['image_url'] as String? ?? ''),
+        radarJson: Value(item['radar_json']?.toString() ?? '{}'),
         createdAt: Value(item['created_at'] != null ? DateTime.tryParse(item['created_at'] as String) : null),
       );
 

@@ -98,6 +98,7 @@ class LocalizedBeansV2 extends Table {
   TextColumn get wholesalePrice => text().nullable()();
   BoolColumn get isFavorite => boolean().withDefault(const Constant(false))();
   TextColumn get flagUrl => text().withDefault(const Constant(''))();
+  TextColumn get radarJson => text().withDefault(const Constant('{}'))();
   DateTimeColumn get createdAt => dateTime().nullable()();
 }
 

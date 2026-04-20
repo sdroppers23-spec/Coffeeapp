@@ -63,6 +63,7 @@ class LocalizedBeanDto {
   final bool isFavorite;
   final bool isArchived;
   final String flagUrl;
+  final Map<String, double> radarPoints;
   final DateTime? createdAt;
 
   LocalizedBeanDto({
@@ -103,6 +104,7 @@ class LocalizedBeanDto {
     required this.isFavorite,
     this.isArchived = false,
     this.flagUrl = '',
+    this.radarPoints = const {},
     this.createdAt,
   });
 

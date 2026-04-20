@@ -174,8 +174,8 @@ class _CoffeeLotDetailScreenState extends ConsumerState<CoffeeLotDetailScreen>
             TabBar(
               controller: _tabController,
               tabs: [
-                Tab(text: ref.t('tab_product')),
-                Tab(text: ref.t('tab_profile')),
+                Tab(text: ref.t('tab_info')),
+                Tab(text: ref.t('tab_sensory')),
                 Tab(text: ref.t('tab_recipes')),
               ],
               indicatorColor: theme.colorScheme.primary,
@@ -501,15 +501,9 @@ class _ProfileTab extends ConsumerWidget {
           height: 400,
           child: SensoryRadarChart(
             interactive: false,
-            staticValues: entry.sensoryPoints.map((k, v) {
-              final val = (v as num).toDouble();
-              // Round to 1-5 scale, then map to 0.2-1.0
-              final normalized = (val > 5 ? val / 2.0 : val).round().clamp(
-                1,
-                5,
-              );
-              return MapEntry(k, normalized / 5.0);
-            }),
+            staticValues: entry.radarPoints.isEmpty 
+              ? entry.sensoryPoints.map((k, v) => MapEntry(k, (v as num).toDouble() / 5.0))
+              : entry.radarPoints.map((k, v) => MapEntry(k, (v / 5.0))),
             height: 400,
           ),
         ),
@@ -526,7 +520,9 @@ class _ProfileTab extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: SensoryPreview(
-            points: entry.sensoryPoints.map((k, v) => MapEntry(k, v as num)),
+            points: entry.radarPoints.isEmpty 
+              ? entry.sensoryPoints.map((k, v) => MapEntry(k, v as num))
+              : entry.radarPoints.map((k, v) => MapEntry(k, v)),
             isGrid: true,
           ),
         ),

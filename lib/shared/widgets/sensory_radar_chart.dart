@@ -8,12 +8,12 @@ class FlavorValuesNotifier extends Notifier<Map<String, double>> {
   @override
   Map<String, double> build() {
     return {
-      'aroma': 0.7,
-      'flavor': 0.8,
+      'bitterness': 0.5,
       'acidity': 0.6,
+      'sweetness': 0.7,
       'body': 0.5,
+      'intensity': 0.6,
       'aftertaste': 0.7,
-      'balance': 0.8,
     };
   }
 
@@ -67,24 +67,24 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
             child: Row(
               children: [
                 _TemplateChip(ref.t('process_washed_label'), 'Clean & Bright', {
-                  'aroma': 0.8,
-                  'flavor': 0.7,
-                  'acidity': 0.9,
+                  'bitterness': 0.3,
+                  'acidity': 0.8,
+                  'sweetness': 0.6,
                   'body': 0.4,
+                  'intensity': 0.5,
                   'aftertaste': 0.6,
-                  'balance': 0.8,
                 }),
                 const SizedBox(width: 8),
                 _TemplateChip(
                   ref.t('process_natural_label'),
                   'Fruity & Sweet',
                   {
-                    'aroma': 0.9,
-                    'flavor': 0.9,
+                    'bitterness': 0.4,
                     'acidity': 0.5,
+                    'sweetness': 0.9,
                     'body': 0.7,
+                    'intensity': 0.8,
                     'aftertaste': 0.8,
-                    'balance': 0.6,
                   },
                 ),
                 const SizedBox(width: 8),
@@ -92,12 +92,12 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
                   ref.t('process_honey_label'),
                   'Sticky & Balanced',
                   {
-                    'aroma': 0.7,
-                    'flavor': 0.8,
+                    'bitterness': 0.5,
                     'acidity': 0.6,
+                    'sweetness': 0.8,
                     'body': 0.6,
+                    'intensity': 0.7,
                     'aftertaste': 0.7,
-                    'balance': 0.9,
                   },
                 ),
               ],

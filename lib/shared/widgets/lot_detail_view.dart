@@ -13,6 +13,8 @@ import '../../core/l10n/app_localizations.dart';
 import '../utils/sensory_utils.dart';
 import 'glass_container.dart';
 import 'sensory_radar_chart.dart';
+import 'sensory_preview.dart';
+import 'lot_detail_widgets.dart';
 import '../../features/brewing/widgets/custom_recipe_card.dart';
 
 class LotDetailView extends ConsumerStatefulWidget {
@@ -113,9 +115,9 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                       isScrollable: true,
                       labelStyle: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 12, letterSpacing: 1.2),
                       tabs: [
-                        Tab(text: isUk ? 'Інфо' : 'Info'),
-                        Tab(text: isUk ? 'Профіль' : 'Profile'),
-                        Tab(text: isUk ? 'Рецепти' : 'Recipes'),
+                        Tab(text: ref.t('tab_info')),
+                        Tab(text: ref.t('tab_sensory')),
+                        Tab(text: ref.t('tab_recipes')),
                       ],
                     ),
                     const SizedBox(height: 10),
@@ -503,6 +505,51 @@ class _InfoTab extends ConsumerWidget {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       children: [
+        // ── STATS GRID ────────────────────────────────────────────────────
+        GlassContainer(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: LotCompactStat(
+                      label: isUk ? 'Різновид' : 'Variety',
+                      value: lot?.varieties ?? bean?.varieties ?? 'N/A',
+                    ),
+                  ),
+                  Container(width: 1, height: 30, color: Colors.white10),
+                  Expanded(
+                    child: LotCompactStat(
+                      label: isUk ? 'Висота' : 'Altitude',
+                      value: lot?.altitude ?? (bean?.altitudeMin != null ? '${bean!.altitudeMin}-${bean!.altitudeMax}m' : 'N/A'),
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(height: 24, color: Colors.white10),
+              Row(
+                children: [
+                  Expanded(
+                    child: LotCompactStat(
+                      label: isUk ? 'Обробка' : 'Process',
+                      value: lot?.process ?? bean?.processMethod ?? 'N/A',
+                    ),
+                  ),
+                  Container(width: 1, height: 30, color: Colors.white10),
+                  Expanded(
+                    child: LotCompactStat(
+                      label: 'SCA SCORE',
+                      value: lot?.scaScore ?? bean?.scaScore ?? 'N/A',
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 24),
+
         // ── ORIGIN \u0026 FARM ─────────────────────────────────────────────
         _SectionTitle(title: isUk ? 'ПОХОДЖЕННЯ ТА ФЕРМА' : 'ORIGIN \u0026 FARM'),
         GlassContainer(
@@ -512,7 +559,6 @@ class _InfoTab extends ConsumerWidget {
               _InfoRow(label: isUk ? 'Назва кави' : 'Coffee Name', value: lot?.coffeeName ?? bean?.fullDisplayName),
               _InfoRow(label: isUk ? 'Країна' : 'Country', value: lot?.originCountry ?? bean?.country),
               _InfoRow(label: isUk ? 'Регіон' : 'Region', value: lot?.region ?? bean?.region),
-              _InfoRow(label: isUk ? 'Висота' : 'Altitude', value: lot?.altitude ?? (bean?.altitudeMin != null ? '${bean!.altitudeMin}-${bean!.altitudeMax}m' : null)),
               _InfoRow(label: isUk ? 'Ферма' : 'Farm', value: lot?.farm),
               _InfoRow(label: isUk ? 'Фермер' : 'Farmer', value: lot?.farmer),
               _InfoRow(label: isUk ? 'Станція' : 'Station', value: lot?.washStation),
@@ -563,12 +609,31 @@ class _InfoTab extends ConsumerWidget {
               _InfoRow(label: isUk ? 'Рівень' : 'Roast Level', value: lot?.roastLevel),
               _InfoRow(label: isUk ? 'Дата обсмажки' : 'Roast Date', value: lot?.roastDate?.toString().split(' ')[0]),
               _InfoRow(label: isUk ? 'Відкрито' : 'Opened At', value: lot?.openedAt?.toString().split(' ')[0]),
-              _InfoRow(label: isUk ? 'Ціна' : 'Price', value: lot?.pricing['retail']?.toString()),
               _InfoRow(label: isUk ? 'Вага' : 'Weight', value: lot?.weight != null ? (lot!.weight!.endsWith('g') ? lot!.weight : '${lot!.weight}g') : null),
               _InfoRow(label: 'ID Лоту', value: lot?.lotNumber),
             ],
           ),
         ),
+        const SizedBox(height: 12),
+        if (lot != null && lot!.pricing.isNotEmpty) ...[
+          _SectionTitle(title: isUk ? 'ЦІНИ' : 'PRICES'),
+          GlassContainer(
+            padding: EdgeInsets.zero,
+            child: Table(
+              children: [
+                TableRow(
+                  children: [
+                    _Cell(isUk ? 'Вага' : 'Weight', isHeader: true),
+                    _Cell(isUk ? 'Роздріб' : 'Retail', isHeader: true),
+                    _Cell(isUk ? 'Опт' : 'Wholesale', isHeader: true),
+                  ],
+                ),
+                _priceRow('250g', lot!.pricing['retail_250']?.toString(), lot!.pricing['wholesale_250']?.toString()),
+                _priceRow('1kg', lot!.pricing['retail_1k']?.toString(), lot!.pricing['wholesale_1k']?.toString()),
+              ],
+            ),
+          ),
+        ],
         const SizedBox(height: 24),
 
         // ── FLAVOR PROFILE ────────────────────────────────────────────────
@@ -617,7 +682,10 @@ class _SensoryTab extends StatelessWidget {
           ),
           const SizedBox(height: 30),
           _SectionTitle(title: isUk ? 'СЕНСОРНИЙ ПРОФІЛЬ' : 'SENSORY PROFILE'),
-          ...points.entries.map((e) => _SegmentedSensoryBar(label: _getLocalizedLabel(e.key, isUk), value: e.value)),
+          SensoryPreview(
+            points: points.map((k, v) => MapEntry(k, v)),
+            isGrid: true,
+          ),
           const SizedBox(height: 40),
         ],
       ),
@@ -626,15 +694,50 @@ class _SensoryTab extends StatelessWidget {
 
   String _getLocalizedLabel(String key, bool isUk) {
     switch (key) {
-      case 'aroma': return isUk ? 'Аромат' : 'Aroma';
-      case 'flavor': return isUk ? 'Смак' : 'Flavor';
+      case 'bitterness': return isUk ? 'Гіркота' : 'Bitterness';
       case 'acidity': return isUk ? 'Кислотність' : 'Acidity';
-      case 'body': return isUk ? 'Тіло' : 'Body';
-      case 'aftertaste': return isUk ? 'Післясмак' : 'Aftertaste';
-      case 'balance': return isUk ? 'Баланс' : 'Balance';
       case 'sweetness': return isUk ? 'Солодкість' : 'Sweetness';
+      case 'body': return isUk ? 'Тіло' : 'Body';
+      case 'intensity': return isUk ? 'Насиченість' : 'Intensity';
+      case 'aftertaste': return isUk ? 'Післясмак' : 'Aftertaste';
       default: return key.toUpperCase();
     }
+  }
+}
+
+TableRow _priceRow(String weight, String? retail, String? wholesale) {
+  if ((retail == null || retail == '---' || retail.isEmpty) &&
+      (wholesale == null || wholesale == '---' || wholesale.isEmpty)) {
+    return const TableRow(children: [SizedBox(), SizedBox(), SizedBox()]);
+  }
+  return TableRow(
+    children: [
+      _Cell(weight),
+      _Cell(retail != null && retail.isNotEmpty && retail != '---' ? '$retail ₴' : '---'),
+      _Cell(wholesale != null && wholesale.isNotEmpty && wholesale != '---' ? '$wholesale ₴' : '---'),
+    ],
+  );
+}
+
+class _Cell extends StatelessWidget {
+  final String label;
+  final bool isHeader;
+  const _Cell(this.label, {this.isHeader = false});
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: Text(
+        label,
+        textAlign: TextAlign.center,
+        style: GoogleFonts.outfit(
+          fontSize: isHeader ? 11 : 13,
+          fontWeight: isHeader ? FontWeight.bold : FontWeight.w500,
+          color: isHeader ? Colors.white38 : Colors.white,
+          letterSpacing: isHeader ? 1.0 : 0,
+        ),
+      ),
+    );
   }
 }
 

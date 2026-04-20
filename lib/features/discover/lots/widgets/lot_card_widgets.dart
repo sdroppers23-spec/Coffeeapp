@@ -43,109 +43,112 @@ class MyLotGridCard extends ConsumerWidget {
           onTap(lot.id);
         }
       },
-      child: GlassContainer(
-        padding: const EdgeInsets.all(12),
-        opacity: isSelected ? 0.35 : 0.20,
-        borderRadius: 24,
-        color: isSelected ? const Color(0xFFC8A96E) : Colors.white10,
-        borderColor: isSelected
-            ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
-            : Colors.white.withValues(alpha: 0.12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header Row: Avatar + Score and Favorite
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    // Circular Avatar
-                    Container(
-                      width: 48,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
-                        border: Border.all(
-                          color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
-                          width: 1,
-                        ),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(24),
-                        child: lot.imageUrl != null && lot.imageUrl!.isNotEmpty
-                            ? (lot.imageUrl!.startsWith('http')
-                                ? Image.network(lot.imageUrl!, fit: BoxFit.cover,
-                                    errorBuilder: (ctx, err, stack) => const Icon(Icons.coffee_rounded, size: 20, color: Color(0xFFC8A96E)))
-                                : Image.file(File(lot.imageUrl!), fit: BoxFit.cover,
-                                    errorBuilder: (ctx, err, stack) => const Icon(Icons.coffee_rounded, size: 20, color: Color(0xFFC8A96E))))
-                            : const Icon(Icons.coffee_rounded, size: 20, color: Color(0xFFC8A96E)),
-                      ),
-                    ),
-                    // Floating SCA Score Badge
-                    Positioned(
-                      bottom: -4,
-                      right: -4,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        clipBehavior: Clip.antiAlias,
+        child: GlassContainer(
+          padding: const EdgeInsets.all(12),
+          opacity: isSelected ? 0.35 : 0.20,
+          borderRadius: 24,
+          color: isSelected ? const Color(0xFFC8A96E) : Colors.white10,
+          borderColor: isSelected
+              ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
+              : Colors.white.withValues(alpha: 0.12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header Row: Avatar + Score and Favorite
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      // Circular Avatar
+                      Container(
+                        width: 48,
+                        height: 48,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF1A1714),
-                          borderRadius: BorderRadius.circular(8),
+                          shape: BoxShape.circle,
+                          color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
                           border: Border.all(
-                            color: const Color(0xFFC8A96E).withValues(alpha: 0.4),
+                            color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
                             width: 1,
                           ),
                         ),
-                        child: Text(
-                          lot.scaScore ?? '85',
-                          style: GoogleFonts.outfit(
-                            fontSize: 8,
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.primary,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(24),
+                          child: lot.imageUrl != null && lot.imageUrl!.isNotEmpty
+                              ? (lot.imageUrl!.startsWith('http')
+                                  ? Image.network(lot.imageUrl!, fit: BoxFit.cover,
+                                      errorBuilder: (ctx, err, stack) => const Icon(Icons.coffee_rounded, size: 20, color: Color(0xFFC8A96E)))
+                                  : Image.file(File(lot.imageUrl!), fit: BoxFit.cover,
+                                      errorBuilder: (ctx, err, stack) => const Icon(Icons.coffee_rounded, size: 20, color: Color(0xFFC8A96E))))
+                              : const Icon(Icons.coffee_rounded, size: 20, color: Color(0xFFC8A96E)),
+                        ),
+                      ),
+                      // Floating SCA Score Badge
+                      Positioned(
+                        bottom: -4,
+                        right: -4,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF1A1714),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: const Color(0xFFC8A96E).withValues(alpha: 0.4),
+                              width: 1,
+                            ),
+                          ),
+                          child: Text(
+                            lot.scaScore ?? '85',
+                            style: GoogleFonts.outfit(
+                              fontSize: 8,
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.primary,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                
-                // Favorite / Selection
-                if (isSelectionMode)
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: isSelected ? theme.colorScheme.primary : Colors.black45,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: isSelected ? theme.colorScheme.primary : Colors.white24,
-                        width: 1.5,
+                    ],
+                  ),
+                  
+                  // Favorite / Selection
+                  if (isSelectionMode)
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: isSelected ? theme.colorScheme.primary : Colors.black45,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: isSelected ? theme.colorScheme.primary : Colors.white24,
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Icon(
+                        Icons.check,
+                        size: 10,
+                        color: isSelected ? Colors.black : Colors.transparent,
+                      ),
+                    )
+                  else
+                    PressableScale(
+                      onTap: () {
+                        if (!kIsWeb && !Platform.isWindows) {
+                          Vibration.vibrate(duration: 40, amplitude: 100);
+                        }
+                        onFavoriteToggle(lot);
+                      },
+                      child: Icon(
+                        lot.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                        size: 20,
+                        color: lot.isFavorite ? Colors.redAccent : Colors.white24,
                       ),
                     ),
-                    child: Icon(
-                      Icons.check,
-                      size: 10,
-                      color: isSelected ? Colors.black : Colors.transparent,
-                    ),
-                  )
-                else
-                  PressableScale(
-                    onTap: () {
-                      if (!kIsWeb && !Platform.isWindows) {
-                        Vibration.vibrate(duration: 40, amplitude: 100);
-                      }
-                      onFavoriteToggle(lot);
-                    },
-                    child: Icon(
-                      lot.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                      size: 20,
-                      color: lot.isFavorite ? Colors.redAccent : Colors.white24,
-                    ),
-                  ),
-              ],
-            ),
+                ],
+              ),
             const SizedBox(height: 16),
             // Coffee Name
             Text(
@@ -217,8 +220,9 @@ class MyLotGridCard extends ConsumerWidget {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }
 
 class _SensoryFiveSegmentBarSmall extends StatelessWidget {
@@ -367,236 +371,240 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
           widget.onTap(lot.id);
         }
       },
-      child: GlassContainer(
-        padding: const EdgeInsets.all(16),
-        opacity: isSelected ? 0.25 : 0.20,
-        borderRadius: 20,
-        color: isSelected ? const Color(0xFFC8A96E) : Colors.white,
-        borderColor: isSelected
-            ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
-            : Colors.white.withValues(alpha: 0.12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header: Title, Subtitle, Heart + NEW: Expand Arrow
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        lot.coffeeName ?? 'Unnamed',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.outfit(
-                          color: const Color(0xFFC8A96E),
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      if (lot.roasteryName != null && lot.roasteryName!.isNotEmpty)
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        clipBehavior: Clip.antiAlias,
+        child: GlassContainer(
+          padding: const EdgeInsets.all(16),
+          opacity: isSelected ? 0.25 : 0.20,
+          borderRadius: 20,
+          color: isSelected ? const Color(0xFFC8A96E) : Colors.white,
+          borderColor: isSelected
+              ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
+              : Colors.white.withValues(alpha: 0.12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header: Title, Subtitle, Heart + NEW: Expand Arrow
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Text(
-                          lot.roasteryName!,
+                          lot.coffeeName ?? 'Unnamed',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.outfit(
-                            color: const Color(0xFFC8A96E).withValues(alpha: 0.38),
-                            fontSize: 12,
+                            color: const Color(0xFFC8A96E),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 8),
-                if (!isSelectionMode)
-                  PressableScale(
-                    onTap: () {
-                      if (!kIsWeb && !Platform.isWindows) {
-                        Vibration.vibrate(duration: 40, amplitude: 100);
-                      }
-                      widget.onFavoriteToggle(lot);
-                    },
-                    child: Icon(
-                      lot.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                      size: 20,
-                      color: lot.isFavorite ? Colors.redAccent : Colors.white24,
+                        if (lot.roasteryName != null && lot.roasteryName!.isNotEmpty)
+                          Text(
+                            lot.roasteryName!,
+                            style: GoogleFonts.outfit(
+                              color: const Color(0xFFC8A96E).withValues(alpha: 0.38),
+                              fontSize: 12,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            // Body: Score + Traits/Tags
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Stack(
-                  children: [
-                    if (lot.imageUrl != null && lot.imageUrl!.isNotEmpty)
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(24), // Circular-ish but consistent
-                        child: lot.imageUrl!.startsWith('http')
-                            ? Image.network(
-                                lot.imageUrl!,
-                                width: 54,
-                                height: 54,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) => Container(
-                                  width: 54,
-                                  height: 54,
-                                  color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                                  child: const Icon(Icons.coffee_rounded, color: Color(0xFFC8A96E), size: 18),
-                                ),
-                              )
-                            : Image.file(
-                                File(lot.imageUrl!),
-                                width: 54,
-                                height: 54,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) => Container(
-                                  width: 54,
-                                  height: 54,
-                                  color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                                  child: const Icon(Icons.coffee_rounded, color: Color(0xFFC8A96E), size: 18),
-                                ),
-                              ),
-                      )
-                    else
-                      Container(
-                        width: 54,
-                        height: 54,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: Text(
-                            lot.scaScore ?? '85',
-                            style: GoogleFonts.outfit(
-                              color: theme.colorScheme.primary,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
+                  const SizedBox(width: 8),
+                  if (!isSelectionMode)
+                    PressableScale(
+                      onTap: () {
+                        if (!kIsWeb && !Platform.isWindows) {
+                          Vibration.vibrate(duration: 40, amplitude: 100);
+                        }
+                        widget.onFavoriteToggle(lot);
+                      },
+                      child: Icon(
+                        lot.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                        size: 20,
+                        color: lot.isFavorite ? Colors.redAccent : Colors.white24,
                       ),
-                    
-                    // Small floating score if image is present
-                    if (lot.imageUrl != null && lot.imageUrl!.isNotEmpty)
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF1A1714),
-                            shape: BoxShape.circle,
-                            border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.4), width: 1),
-                          ),
-                          child: Text(
-                            lot.scaScore ?? '85',
-                            style: GoogleFonts.outfit(
-                              color: theme.colorScheme.primary,
-                              fontSize: 8,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-                const SizedBox(width: 16),
-                // Traits and Tags
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              // Body: Score + Traits/Tags
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Stack(
                     children: [
-                      Row(
-                        children: [
-                          Expanded(child: _HorizontalSensoryBar(label: isUk ? 'СМАК' : 'FLAVOR', value: (mappedSensory['flavor'] ?? 3).toDouble(), theme: theme)),
-                          const SizedBox(width: 8),
-                          Expanded(child: _HorizontalSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme)),
-                          const SizedBox(width: 8),
-                          Expanded(child: _HorizontalSensoryBar(label: isUk ? 'СОЛОДКІСТЬ' : 'SWEETNESS', value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme)),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      // Tags Row
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            if (lot.roastLevel != null && lot.roastLevel!.isNotEmpty)
-                              _TagChip(
-                                icon: Icons.local_fire_department_rounded, 
-                                text: lot.roastLevel!.toUpperCase(), 
-                                theme: theme,
-                                color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                      if (lot.imageUrl != null && lot.imageUrl!.isNotEmpty)
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(24), // Circular-ish but consistent
+                          child: lot.imageUrl!.startsWith('http')
+                              ? Image.network(
+                                  lot.imageUrl!,
+                                  width: 54,
+                                  height: 54,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) => Container(
+                                    width: 54,
+                                    height: 54,
+                                    color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                                    child: const Icon(Icons.coffee_rounded, color: Color(0xFFC8A96E), size: 18),
+                                  ),
+                                )
+                              : Image.file(
+                                  File(lot.imageUrl!),
+                                  width: 54,
+                                  height: 54,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) => Container(
+                                    width: 54,
+                                    height: 54,
+                                    color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                                    child: const Icon(Icons.coffee_rounded, color: Color(0xFFC8A96E), size: 18),
+                                  ),
+                                ),
+                        )
+                      else
+                        Container(
+                          width: 54,
+                          height: 54,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: Text(
+                              lot.scaScore ?? '85',
+                              style: GoogleFonts.outfit(
+                                color: theme.colorScheme.primary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
                               ),
-                            const SizedBox(width: 8),
-                            _TagChip(icon: Icons.location_on_outlined, text: lot.originCountry, theme: theme),
-                            const SizedBox(width: 8),
-                            if (lot.process != null && lot.process!.isNotEmpty)
-                              _TagChip(icon: Icons.water_drop_outlined, text: lot.process, theme: theme),
-                          ],
+                            ),
+                          ),
                         ),
-                      ),
+                      
+                      // Small floating score if image is present
+                      if (lot.imageUrl != null && lot.imageUrl!.isNotEmpty)
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF1A1714),
+                              shape: BoxShape.circle,
+                              border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.4), width: 1),
+                            ),
+                            child: Text(
+                              lot.scaScore ?? '85',
+                              style: GoogleFonts.outfit(
+                                color: theme.colorScheme.primary,
+                                fontSize: 8,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
                     ],
                   ),
-                ),
-              ],
-            ),
-            
-            // EXPANDABLE AREA
-            AnimatedCrossFade(
-              duration: const Duration(milliseconds: 300),
-              crossFadeState: _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-              firstChild: const SizedBox(width: double.infinity),
-              secondChild: Column(
-                children: [
-                  const SizedBox(height: 20),
-                  const Divider(color: Colors.white10),
-                  const SizedBox(height: 16),
-                  _LotPropertyGrid(lot: lot),
-                  const SizedBox(height: 24),
-                  SizedBox(
-                    height: 200,
-                    child: SensoryRadarChart(
-                      interactive: false,
-                      height: 200,
-                      staticValues: radarValues,
+                  const SizedBox(width: 16),
+                  // Traits and Tags
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(child: _HorizontalSensoryBar(label: isUk ? 'СМАК' : 'FLAVOR', value: (mappedSensory['flavor'] ?? 3).toDouble(), theme: theme)),
+                            const SizedBox(width: 8),
+                            Expanded(child: _HorizontalSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme)),
+                            const SizedBox(width: 8),
+                            Expanded(child: _HorizontalSensoryBar(label: isUk ? 'СОЛОДКІСТЬ' : 'SWEETNESS', value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme)),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        // Tags Row
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              if (lot.roastLevel != null && lot.roastLevel!.isNotEmpty)
+                                _TagChip(
+                                  icon: Icons.local_fire_department_rounded, 
+                                  text: lot.roastLevel!.toUpperCase(), 
+                                  theme: theme,
+                                  color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                                ),
+                              const SizedBox(width: 8),
+                              _TagChip(icon: Icons.location_on_outlined, text: lot.originCountry, theme: theme),
+                              const SizedBox(width: 8),
+                              if (lot.process != null && lot.process!.isNotEmpty)
+                                _TagChip(icon: Icons.water_drop_outlined, text: lot.process, theme: theme),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-            ),
-
-            const SizedBox(height: 16),
-            // Freshness Bar + Expand Arrow below
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                _FreshnessProgressBar(lot: lot, isUk: isUk, theme: theme),
-                if (!isSelectionMode)
-                  GestureDetector(
-                    onTap: _toggleExpanded,
-                    behavior: HitTestBehavior.opaque,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      child: AnimatedRotation(
-                        duration: const Duration(milliseconds: 300),
-                        turns: _isExpanded ? 0.5 : 0,
-                        child: Icon(
-                          Icons.keyboard_arrow_down_rounded,
-                          size: 24,
-                          color: theme.colorScheme.primary,
+              
+              // EXPANDABLE AREA
+              AnimatedCrossFade(
+                duration: const Duration(milliseconds: 300),
+                crossFadeState: _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                firstChild: const SizedBox(width: double.infinity),
+                secondChild: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    const Divider(color: Colors.white10),
+                    const SizedBox(height: 16),
+                    _LotPropertyGrid(lot: lot),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      height: 200,
+                      child: SensoryRadarChart(
+                        interactive: false,
+                        height: 200,
+                        staticValues: radarValues,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+  
+              const SizedBox(height: 16),
+              // Freshness Bar + Expand Arrow below
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  _FreshnessProgressBar(lot: lot, isUk: isUk, theme: theme),
+                  if (!isSelectionMode)
+                    GestureDetector(
+                      onTap: _toggleExpanded,
+                      behavior: HitTestBehavior.opaque,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        child: AnimatedRotation(
+                          duration: const Duration(milliseconds: 300),
+                          turns: _isExpanded ? 0.5 : 0,
+                          child: Icon(
+                            Icons.keyboard_arrow_down_rounded,
+                            size: 24,
+                            color: theme.colorScheme.primary,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -626,13 +634,14 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
         }
         return false;
       },
-      background: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+      background: Container(
+        color: Colors.transparent,
         child: Container(
           decoration: BoxDecoration(
             color: widget.onRestoreSwipe != null 
-              ? const Color(0xFFC8A96E).withValues(alpha: 0.8) 
-              : const Color(0xFF62D39F).withValues(alpha: 0.8),
+              ? const Color(0xFFC8A96E)
+              : const Color(0xFF62D39F),
+            borderRadius: BorderRadius.circular(20),
           ),
           alignment: Alignment.centerLeft,
           padding: const EdgeInsets.only(left: 20),
@@ -643,11 +652,12 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
           ),
         ),
       ),
-      secondaryBackground: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+      secondaryBackground: Container(
+        color: Colors.transparent,
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.redAccent.withValues(alpha: 0.8),
+            color: Colors.redAccent,
+            borderRadius: BorderRadius.circular(20),
           ),
           alignment: Alignment.centerRight,
           padding: const EdgeInsets.only(right: 20),

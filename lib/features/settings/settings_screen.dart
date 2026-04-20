@@ -77,7 +77,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
             _buildLanguageOption('English', 'en', currentLocale == 'en'),
             _buildLanguageOption('Українська', 'uk', currentLocale == 'uk'),
-            _buildLanguageOption('Русский', 'ru', currentLocale == 'ru'),
             const SizedBox(height: 20),
           ],
         ),
@@ -156,8 +155,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          ref.watch(localeProvider) == 'uk' ? 'Українська' : 
-                          ref.watch(localeProvider) == 'en' ? 'English' : 'Русский',
+                          ref.watch(localeProvider) == 'uk' ? 'Українська' : 'English',
                           style: GoogleFonts.outfit(
                             color: theme.colorScheme.onSurface,
                             fontSize: 16,

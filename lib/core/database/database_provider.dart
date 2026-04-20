@@ -5,6 +5,7 @@ import 'app_database.dart';
 import 'sync_service.dart';
 import 'coffee_data_seed.dart';
 import 'dtos.dart';
+import '../l10n/app_localizations.dart';
 
 final databaseProvider = Provider<AppDatabase>((ref) {
   final db = AppDatabase();
@@ -34,7 +35,8 @@ final syncServiceProvider = Provider<SyncService>((ref) {
 
 final beanProvider = StreamProvider.family<LocalizedBeanDto?, int>((ref, id) {
   final db = ref.watch(databaseProvider);
-  return db.watchBeanById(id, 'uk'); 
+  final lang = ref.watch(localeProvider);
+  return db.watchBeanById(id, lang); 
 });
 
 final lotProvider = StreamProvider.family<CoffeeLotDto?, String>((ref, id) {

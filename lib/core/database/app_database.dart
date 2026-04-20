@@ -556,29 +556,29 @@ class AppDatabase extends _$AppDatabase {
   ) => into(localizedBeanTranslations).insertOnConflictUpdate(t);
 
   Future<LocalizedBeanDto?> getBeanById(int id, String lang) async {
-    final query = select(localizedBeans).join([
+    final query = select(localizedBeansV2).join([
       leftOuterJoin(
-        localizedBeanTranslations,
-        localizedBeanTranslations.beanId.equalsExp(localizedBeans.id) &
-            localizedBeanTranslations.languageCode.equals(lang),
+        localizedBeanTranslationsV2,
+        localizedBeanTranslationsV2.beanId.equalsExp(localizedBeansV2.id) &
+            localizedBeanTranslationsV2.languageCode.equals(lang),
       ),
-    ])..where(localizedBeans.id.equals(id));
+    ])..where(localizedBeansV2.id.equals(id));
 
     final row = await query.getSingleOrNull();
     if (row == null) return null;
-    return _mapBeanRow(row, lang);
+    return _mapBeanV2Row(row, lang);
   }
 
   Stream<LocalizedBeanDto?> watchBeanById(int id, String lang) {
-    final query = select(localizedBeans).join([
+    final query = select(localizedBeansV2).join([
       leftOuterJoin(
-        localizedBeanTranslations,
-        localizedBeanTranslations.beanId.equalsExp(localizedBeans.id) &
-            localizedBeanTranslations.languageCode.equals(lang),
+        localizedBeanTranslationsV2,
+        localizedBeanTranslationsV2.beanId.equalsExp(localizedBeansV2.id) &
+            localizedBeanTranslationsV2.languageCode.equals(lang),
       ),
-    ])..where(localizedBeans.id.equals(id));
+    ])..where(localizedBeansV2.id.equals(id));
 
-    return query.watchSingleOrNull().map((row) => row != null ? _mapBeanRow(row, lang) : null);
+    return query.watchSingleOrNull().map((row) => row != null ? _mapBeanV2Row(row, lang) : null);
   }
 
 
@@ -592,8 +592,8 @@ class AppDatabase extends _$AppDatabase {
           .getSingleOrNull();
 
   Future<void> toggleFavorite(int beanId, bool isFavorite) async {
-    await into(localizedBeans).insertOnConflictUpdate(
-      LocalizedBeansCompanion(
+    await into(localizedBeansV2).insertOnConflictUpdate(
+      LocalizedBeansV2Companion(
         id: Value(beanId),
         isFavorite: Value(isFavorite),
       ),
@@ -601,10 +601,10 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Stream<Set<int>> watchFavoriteIds() {
-    final query = selectOnly(localizedBeans)
-      ..addColumns([localizedBeans.id])
-      ..where(localizedBeans.isFavorite.equals(true));
-    return query.watch().map((rows) => rows.map((r) => r.read(localizedBeans.id)!).toSet());
+    final query = selectOnly(localizedBeansV2)
+      ..addColumns([localizedBeansV2.id])
+      ..where(localizedBeansV2.isFavorite.equals(true));
+    return query.watch().map((rows) => rows.map((r) => r.read(localizedBeansV2.id)!).toSet());
   }
 
   LocalizedBeanDto _mapBeanRow(TypedResult row, String lang) {

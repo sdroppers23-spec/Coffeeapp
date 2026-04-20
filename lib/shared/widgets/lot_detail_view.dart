@@ -74,7 +74,8 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
             // Priority: Live Data -> Widget Extra (Fallback)
             final String coffeeName = liveLot?.coffeeName ?? liveBean?.varieties ?? widget.lot?.coffeeName ?? widget.entry?.fullDisplayName ?? 'Unnamed';
             final String roasteryName = liveLot?.roasteryName ?? 'Specialty Roaster';
-            // Priority: Live Lot Image -> Live Bean Image -> Entry Image
+            
+            // Priority: Live Lot Image -> Live Bean Image -> Entry Image -> Flag Fallback
             final String? imageUrl = liveLot?.imageUrl ?? liveBean?.farmPhotosUrlCover ?? widget.lot?.imageUrl ?? widget.entry?.imageUrl;
             
             // Map sensory points using the shared utility
@@ -106,9 +107,9 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                       onToggleFavorite: () async {
                         final db = ref.read(databaseProvider);
                         if (liveLot != null) {
-                          await db.toggleFavorite(liveLot.id);
+                          await db.toggleLotFavorite(liveLot.id, !liveLot.isFavorite);
                         } else if (liveBean != null) {
-                          await db.toggleBeanFavorite(liveBean.id);
+                          await db.toggleFavorite(liveBean.id, !liveBean.isFavorite);
                         }
                         if (!kIsWeb && !Platform.isWindows) {
                           await Vibration.vibrate(duration: 50);
@@ -141,7 +142,7 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                       child: TabBarView(
                         controller: _tabController,
                         children: [
-                          _InfoTab(lot: liveLot ?? widget.lot, bean: liveBean),
+                          _InfoTab(lot: liveLot ?? widget.lot, bean: liveBean ?? widget.entry),
                           _SensoryTab(points: mappedPoints, isUk: isUk),
                           _RecipesTab(lotId: liveLot?.id ?? widget.lot?.id ?? widget.entry?.lotNumber ?? ''),
                         ],
@@ -365,7 +366,7 @@ class _DetailHeader extends StatelessWidget {
             width: double.infinity,
             decoration: BoxDecoration(
               image: hasImage 
-                  ? (effectiveImageUrl!.startsWith('http') 
+                  ? (effectiveImageUrl.startsWith('http') 
                       ? DecorationImage(image: CachedNetworkImageProvider(effectiveImageUrl), fit: BoxFit.cover)
                       : DecorationImage(image: FileImage(File(effectiveImageUrl)), fit: BoxFit.cover))
                   : null,

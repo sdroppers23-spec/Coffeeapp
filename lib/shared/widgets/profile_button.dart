@@ -105,7 +105,6 @@ class _ProfileSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef innerRef) {
-    final currentLocale = innerRef.watch(localeProvider);
 
     return Container(
       margin: EdgeInsets.fromLTRB(16, 0, 16, 32 + bottomPad),
@@ -179,63 +178,7 @@ class _ProfileSheet extends ConsumerWidget {
           const Divider(color: Colors.white12),
           const SizedBox(height: 12),
 
-          // ── Мова ────────────────────────────────────────────────────────────
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.language,
-                    size: 18,
-                    color: theme.colorScheme.primary,
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    innerRef.t('language'),
-                    style: GoogleFonts.outfit(
-                      color: Colors.white70,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-              DropdownButton<String>(
-                value: currentLocale,
-                dropdownColor: const Color(0xFF1E1E1E),
-                underline: const SizedBox(),
-                icon: Icon(
-                  Icons.expand_more,
-                  color: theme.colorScheme.primary,
-                  size: 18,
-                ),
-                style: GoogleFonts.outfit(
-                  color: theme.colorScheme.primary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-                items: const [
-                  DropdownMenuItem(value: 'uk', child: Text('🇺🇦 UA')),
-                  DropdownMenuItem(value: 'en', child: Text('🇬🇧 EN')),
-                  DropdownMenuItem(value: 'ru', child: Text('🇷🇺 RU')),
-                  DropdownMenuItem(value: 'es', child: Text('🇪🇸 ES')),
-                  DropdownMenuItem(value: 'fr', child: Text('🇫🇷 FR')),
-                  DropdownMenuItem(value: 'de', child: Text('🇩🇪 DE')),
-                  DropdownMenuItem(value: 'it', child: Text('🇮🇹 IT')),
-                  DropdownMenuItem(value: 'pt', child: Text('🇵🇹 PT')),
-                  DropdownMenuItem(value: 'ja', child: Text('🇯🇵 JA')),
-                  DropdownMenuItem(value: 'zh', child: Text('🇨🇳 ZH')),
-                ],
-                onChanged: (val) {
-                  if (val != null) {
-                    innerRef.read(localeProvider.notifier).setLocale(val);
-                  }
-                },
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
 
           // ── Перейти до профілю ───────────────────────────────────────────────
           ListTile(

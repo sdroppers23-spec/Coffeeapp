@@ -100,8 +100,7 @@ class UserProfileAvatar extends ConsumerWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
-                _buildMenuItem(context, Icons.language, 'Мова', trailing: '🇺🇦 UA'),
+                const SizedBox(height: 12),
                 _buildMenuItem(context, Icons.person_outline, 'Редагувати профіль', onTap: () {
                   context.pop();
                   context.push('/profile');

@@ -290,9 +290,9 @@ class _CustomRecipeFormScreenState
           rating: Value(_rating),
           recipeType: Value(_recipeType),
           isSynced: const Value(false),
-          microns: Value(int.tryParse(_micronsCtrl.text)),
           brewRatio: Value(double.tryParse(_brewRatioCtrl.text.replaceAll('1:', ''))),
           grinderName: Value(_selectedGrinder),
+          userId: Value(ref.read(currentUserProvider)?.id ?? 'guest_user'),
         );
         await db.updateCustomRecipe(updateCompanion);
       } else {
@@ -313,7 +313,7 @@ class _CustomRecipeFormScreenState
             brewTempC: Value(double.tryParse(_tempCtrl.text.replaceAll(',', '.')) ?? 93.0),
             notes: Value(_notesCtrl.text),
             rating: Value(_rating),
-            userId: ref.read(currentUserProvider)?.id ?? '',
+            userId: ref.read(currentUserProvider)?.id ?? 'guest_user',
             recipeType: Value(_recipeType),
             microns: Value(int.tryParse(_micronsCtrl.text)),
             brewRatio: Value(double.tryParse(_brewRatioCtrl.text.replaceAll('1:', ''))),

@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/supabase/supabase_provider.dart';
 import '../../core/l10n/app_localizations.dart';
+import '../../core/database/database_provider.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
@@ -43,6 +44,11 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         );
       } else {
         await supabase.auth.signUp(email: email, password: password);
+      }
+
+      // Trigger immediate sync to pull user data (lots, recipes) after auth change
+      if (mounted) {
+        ref.read(syncServiceProvider).syncAll();
       }
     } on AuthException catch (e) {
       if (!mounted) return;

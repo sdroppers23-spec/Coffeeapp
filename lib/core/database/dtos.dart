@@ -403,6 +403,13 @@ class CoffeeLotDto {
   String get sensoryJson => jsonEncode(sensoryPoints);
   String get priceJson => jsonEncode(pricing);
   String get processMethod => process ?? '';
+  
+  String get effectiveFlagUrl {
+    // Fallback to name-based URL based on origin country
+    if (originCountry == null || originCountry!.isEmpty) return '';
+    final fileName = '${originCountry!.toLowerCase().replaceAll(' ', '_')}.png';
+    return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/Flags/$fileName';
+  }
 
   CoffeeLotDto copyWith({
     String? id,

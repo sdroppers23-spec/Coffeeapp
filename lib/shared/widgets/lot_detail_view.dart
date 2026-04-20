@@ -705,25 +705,9 @@ class _SensoryTab extends StatelessWidget {
       ),
     );
   }
-
-  String _getLocalizedLabel(String key, bool isUk) {
-    switch (key) {
-      case 'bitterness': return isUk ? 'Гіркота' : 'Bitterness';
-      case 'acidity': return isUk ? 'Кислотність' : 'Acidity';
-      case 'sweetness': return isUk ? 'Солодкість' : 'Sweetness';
-      case 'body': return isUk ? 'Тіло' : 'Body';
-      case 'intensity': return isUk ? 'Насиченість' : 'Intensity';
-      case 'aftertaste': return isUk ? 'Післясмак' : 'Aftertaste';
-      default: return key.toUpperCase();
-    }
-  }
 }
 
 TableRow _priceRow(String weight, String? retail, String? wholesale) {
-  if ((retail == null || retail == '---' || retail.isEmpty) &&
-      (wholesale == null || wholesale == '---' || wholesale.isEmpty)) {
-    return const TableRow(children: [SizedBox(), SizedBox(), SizedBox()]);
-  }
   return TableRow(
     children: [
       _Cell(weight),
@@ -755,58 +739,6 @@ class _Cell extends StatelessWidget {
   }
 }
 
-class _SegmentedSensoryBar extends StatelessWidget {
-  final String label;
-  final double value;
-
-  const _SegmentedSensoryBar({required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: GoogleFonts.outfit(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500)),
-          Row(
-            children: [
-              SizedBox(
-                width: 80,
-                child: Row(
-                  children: List.generate(5, (index) {
-                    final normalizedScore = (value / 10.0) * 5.0;
-                    final isFilled = index < normalizedScore.round();
-                    return Expanded(
-                      child: Container(
-                        height: 3,
-                        margin: EdgeInsets.only(right: index == 4 ? 0 : 3),
-                        decoration: BoxDecoration(
-                          color: isFilled ? theme.colorScheme.primary : const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                    );
-                  }),
-                ),
-              ),
-              const SizedBox(width: 12),
-              SizedBox(
-                width: 30,
-                child: Text(
-                  '${value.toInt()}',
-                  textAlign: TextAlign.right,
-                  style: GoogleFonts.outfit(fontSize: 12, color: Colors.white.withValues(alpha: 0.7), fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class _RecipesTab extends ConsumerWidget {
   final String lotId;

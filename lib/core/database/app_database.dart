@@ -283,7 +283,7 @@ class AppDatabase extends _$AppDatabase {
       isFavorite: bean.isFavorite,
       isArchived: false,
       flagUrl: bean.flagUrl,
-      radarPoints: _parseJson(bean.radarJson),
+      radarPoints: _parseJson(bean.radarJson).map((k, v) => MapEntry(k, (v as num).toDouble())),
       userPricing: _parseJson(bean.userPriceJson),
       createdAt: bean.createdAt,
     );

@@ -19,7 +19,6 @@ class SensoryUtils {
 
     // 2. Legacy "4 core + 2 extra" format (aroma, flavor, acidity, body, aftertaste, balance)
     if (points.containsKey('aroma') || points.containsKey('flavor') || points.containsKey('balance')) {
-      final aroma = (points['aroma'] as num?)?.toDouble() ?? 3.0;
       final flavor = (points['flavor'] as num?)?.toDouble() ?? 3.0;
       final acidity = (points['acidity'] as num?)?.toDouble() ?? 3.0;
       final body = (points['body'] as num?)?.toDouble() ?? 3.0;

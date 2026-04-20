@@ -12718,6 +12718,18 @@ class $LocalizedBeansV2Table extends LocalizedBeansV2
     requiredDuringInsert: false,
     defaultValue: const Constant('{}'),
   );
+  static const VerificationMeta _userPriceJsonMeta = const VerificationMeta(
+    'userPriceJson',
+  );
+  @override
+  late final GeneratedColumn<String> userPriceJson = GeneratedColumn<String>(
+    'user_price_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('{}'),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -12760,6 +12772,7 @@ class $LocalizedBeansV2Table extends LocalizedBeansV2
     isFavorite,
     flagUrl,
     radarJson,
+    userPriceJson,
     createdAt,
   ];
   @override
@@ -12981,6 +12994,15 @@ class $LocalizedBeansV2Table extends LocalizedBeansV2
         radarJson.isAcceptableOrUnknown(data['radar_json']!, _radarJsonMeta),
       );
     }
+    if (data.containsKey('user_price_json')) {
+      context.handle(
+        _userPriceJsonMeta,
+        userPriceJson.isAcceptableOrUnknown(
+          data['user_price_json']!,
+          _userPriceJsonMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -13112,6 +13134,10 @@ class $LocalizedBeansV2Table extends LocalizedBeansV2
         DriftSqlType.string,
         data['${effectivePrefix}radar_json'],
       )!,
+      userPriceJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_price_json'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -13156,6 +13182,7 @@ class LocalizedBeansV2Data extends DataClass
   final bool isFavorite;
   final String flagUrl;
   final String radarJson;
+  final String userPriceJson;
   final DateTime? createdAt;
   const LocalizedBeansV2Data({
     required this.id,
@@ -13187,6 +13214,7 @@ class LocalizedBeansV2Data extends DataClass
     required this.isFavorite,
     required this.flagUrl,
     required this.radarJson,
+    required this.userPriceJson,
     this.createdAt,
   });
   @override
@@ -13251,6 +13279,7 @@ class LocalizedBeansV2Data extends DataClass
     map['is_favorite'] = Variable<bool>(isFavorite);
     map['flag_url'] = Variable<String>(flagUrl);
     map['radar_json'] = Variable<String>(radarJson);
+    map['user_price_json'] = Variable<String>(userPriceJson);
     if (!nullToAbsent || createdAt != null) {
       map['created_at'] = Variable<DateTime>(createdAt);
     }
@@ -13314,6 +13343,7 @@ class LocalizedBeansV2Data extends DataClass
       isFavorite: Value(isFavorite),
       flagUrl: Value(flagUrl),
       radarJson: Value(radarJson),
+      userPriceJson: Value(userPriceJson),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -13363,6 +13393,7 @@ class LocalizedBeansV2Data extends DataClass
       isFavorite: serializer.fromJson<bool>(json['isFavorite']),
       flagUrl: serializer.fromJson<String>(json['flagUrl']),
       radarJson: serializer.fromJson<String>(json['radarJson']),
+      userPriceJson: serializer.fromJson<String>(json['userPriceJson']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
     );
   }
@@ -13401,6 +13432,7 @@ class LocalizedBeansV2Data extends DataClass
       'isFavorite': serializer.toJson<bool>(isFavorite),
       'flagUrl': serializer.toJson<String>(flagUrl),
       'radarJson': serializer.toJson<String>(radarJson),
+      'userPriceJson': serializer.toJson<String>(userPriceJson),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
     };
   }
@@ -13435,6 +13467,7 @@ class LocalizedBeansV2Data extends DataClass
     bool? isFavorite,
     String? flagUrl,
     String? radarJson,
+    String? userPriceJson,
     Value<DateTime?> createdAt = const Value.absent(),
   }) => LocalizedBeansV2Data(
     id: id ?? this.id,
@@ -13473,6 +13506,7 @@ class LocalizedBeansV2Data extends DataClass
     isFavorite: isFavorite ?? this.isFavorite,
     flagUrl: flagUrl ?? this.flagUrl,
     radarJson: radarJson ?? this.radarJson,
+    userPriceJson: userPriceJson ?? this.userPriceJson,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
   );
   LocalizedBeansV2Data copyWithCompanion(LocalizedBeansV2Companion data) {
@@ -13532,6 +13566,9 @@ class LocalizedBeansV2Data extends DataClass
           : this.isFavorite,
       flagUrl: data.flagUrl.present ? data.flagUrl.value : this.flagUrl,
       radarJson: data.radarJson.present ? data.radarJson.value : this.radarJson,
+      userPriceJson: data.userPriceJson.present
+          ? data.userPriceJson.value
+          : this.userPriceJson,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -13568,6 +13605,7 @@ class LocalizedBeansV2Data extends DataClass
           ..write('isFavorite: $isFavorite, ')
           ..write('flagUrl: $flagUrl, ')
           ..write('radarJson: $radarJson, ')
+          ..write('userPriceJson: $userPriceJson, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -13604,6 +13642,7 @@ class LocalizedBeansV2Data extends DataClass
     isFavorite,
     flagUrl,
     radarJson,
+    userPriceJson,
     createdAt,
   ]);
   @override
@@ -13639,6 +13678,7 @@ class LocalizedBeansV2Data extends DataClass
           other.isFavorite == this.isFavorite &&
           other.flagUrl == this.flagUrl &&
           other.radarJson == this.radarJson &&
+          other.userPriceJson == this.userPriceJson &&
           other.createdAt == this.createdAt);
 }
 
@@ -13672,6 +13712,7 @@ class LocalizedBeansV2Companion extends UpdateCompanion<LocalizedBeansV2Data> {
   final Value<bool> isFavorite;
   final Value<String> flagUrl;
   final Value<String> radarJson;
+  final Value<String> userPriceJson;
   final Value<DateTime?> createdAt;
   const LocalizedBeansV2Companion({
     this.id = const Value.absent(),
@@ -13703,6 +13744,7 @@ class LocalizedBeansV2Companion extends UpdateCompanion<LocalizedBeansV2Data> {
     this.isFavorite = const Value.absent(),
     this.flagUrl = const Value.absent(),
     this.radarJson = const Value.absent(),
+    this.userPriceJson = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   LocalizedBeansV2Companion.insert({
@@ -13735,6 +13777,7 @@ class LocalizedBeansV2Companion extends UpdateCompanion<LocalizedBeansV2Data> {
     this.isFavorite = const Value.absent(),
     this.flagUrl = const Value.absent(),
     this.radarJson = const Value.absent(),
+    this.userPriceJson = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   static Insertable<LocalizedBeansV2Data> custom({
@@ -13767,6 +13810,7 @@ class LocalizedBeansV2Companion extends UpdateCompanion<LocalizedBeansV2Data> {
     Expression<bool>? isFavorite,
     Expression<String>? flagUrl,
     Expression<String>? radarJson,
+    Expression<String>? userPriceJson,
     Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
@@ -13803,6 +13847,7 @@ class LocalizedBeansV2Companion extends UpdateCompanion<LocalizedBeansV2Data> {
       if (isFavorite != null) 'is_favorite': isFavorite,
       if (flagUrl != null) 'flag_url': flagUrl,
       if (radarJson != null) 'radar_json': radarJson,
+      if (userPriceJson != null) 'user_price_json': userPriceJson,
       if (createdAt != null) 'created_at': createdAt,
     });
   }
@@ -13837,6 +13882,7 @@ class LocalizedBeansV2Companion extends UpdateCompanion<LocalizedBeansV2Data> {
     Value<bool>? isFavorite,
     Value<String>? flagUrl,
     Value<String>? radarJson,
+    Value<String>? userPriceJson,
     Value<DateTime?>? createdAt,
   }) {
     return LocalizedBeansV2Companion(
@@ -13871,6 +13917,7 @@ class LocalizedBeansV2Companion extends UpdateCompanion<LocalizedBeansV2Data> {
       isFavorite: isFavorite ?? this.isFavorite,
       flagUrl: flagUrl ?? this.flagUrl,
       radarJson: radarJson ?? this.radarJson,
+      userPriceJson: userPriceJson ?? this.userPriceJson,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -13971,6 +14018,9 @@ class LocalizedBeansV2Companion extends UpdateCompanion<LocalizedBeansV2Data> {
     if (radarJson.present) {
       map['radar_json'] = Variable<String>(radarJson.value);
     }
+    if (userPriceJson.present) {
+      map['user_price_json'] = Variable<String>(userPriceJson.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -14009,6 +14059,7 @@ class LocalizedBeansV2Companion extends UpdateCompanion<LocalizedBeansV2Data> {
           ..write('isFavorite: $isFavorite, ')
           ..write('flagUrl: $flagUrl, ')
           ..write('radarJson: $radarJson, ')
+          ..write('userPriceJson: $userPriceJson, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -25005,6 +25056,7 @@ typedef $$LocalizedBeansV2TableCreateCompanionBuilder =
       Value<bool> isFavorite,
       Value<String> flagUrl,
       Value<String> radarJson,
+      Value<String> userPriceJson,
       Value<DateTime?> createdAt,
     });
 typedef $$LocalizedBeansV2TableUpdateCompanionBuilder =
@@ -25038,6 +25090,7 @@ typedef $$LocalizedBeansV2TableUpdateCompanionBuilder =
       Value<bool> isFavorite,
       Value<String> flagUrl,
       Value<String> radarJson,
+      Value<String> userPriceJson,
       Value<DateTime?> createdAt,
     });
 
@@ -25271,6 +25324,11 @@ class $$LocalizedBeansV2TableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get userPriceJson => $composableBuilder(
+    column: $table.userPriceJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
@@ -25496,6 +25554,11 @@ class $$LocalizedBeansV2TableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get userPriceJson => $composableBuilder(
+    column: $table.userPriceJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -25664,6 +25727,11 @@ class $$LocalizedBeansV2TableAnnotationComposer
   GeneratedColumn<String> get radarJson =>
       $composableBuilder(column: $table.radarJson, builder: (column) => column);
 
+  GeneratedColumn<String> get userPriceJson => $composableBuilder(
+    column: $table.userPriceJson,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -25807,6 +25875,7 @@ class $$LocalizedBeansV2TableTableManager
                 Value<bool> isFavorite = const Value.absent(),
                 Value<String> flagUrl = const Value.absent(),
                 Value<String> radarJson = const Value.absent(),
+                Value<String> userPriceJson = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
               }) => LocalizedBeansV2Companion(
                 id: id,
@@ -25838,6 +25907,7 @@ class $$LocalizedBeansV2TableTableManager
                 isFavorite: isFavorite,
                 flagUrl: flagUrl,
                 radarJson: radarJson,
+                userPriceJson: userPriceJson,
                 createdAt: createdAt,
               ),
           createCompanionCallback:
@@ -25871,6 +25941,7 @@ class $$LocalizedBeansV2TableTableManager
                 Value<bool> isFavorite = const Value.absent(),
                 Value<String> flagUrl = const Value.absent(),
                 Value<String> radarJson = const Value.absent(),
+                Value<String> userPriceJson = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
               }) => LocalizedBeansV2Companion.insert(
                 id: id,
@@ -25902,6 +25973,7 @@ class $$LocalizedBeansV2TableTableManager
                 isFavorite: isFavorite,
                 flagUrl: flagUrl,
                 radarJson: radarJson,
+                userPriceJson: userPriceJson,
                 createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0

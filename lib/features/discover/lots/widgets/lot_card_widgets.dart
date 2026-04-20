@@ -43,9 +43,10 @@ class MyLotGridCard extends ConsumerWidget {
           onTap(lot.id);
         }
       },
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        clipBehavior: Clip.antiAlias,
+      child: RepaintBoundary(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+        clipBehavior: Clip.antiAliasWithSaveLayer,
         child: GlassContainer(
           padding: const EdgeInsets.all(12),
           opacity: isSelected ? 0.35 : 0.20,
@@ -220,6 +221,7 @@ class MyLotGridCard extends ConsumerWidget {
           ],
         ),
       ),
+      ),
     ),
   );
 }
@@ -371,9 +373,10 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
           widget.onTap(lot.id);
         }
       },
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        clipBehavior: Clip.antiAlias,
+      child: RepaintBoundary(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+        clipBehavior: Clip.antiAliasWithSaveLayer,
         child: GlassContainer(
           padding: const EdgeInsets.all(16),
           opacity: isSelected ? 0.25 : 0.20,
@@ -607,7 +610,8 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
           ),
         ),
       ),
-    );
+    ),
+  );
 
     final dismissibleCard = isSelectionMode ? card : Dismissible(
       key: Key(lot.id),

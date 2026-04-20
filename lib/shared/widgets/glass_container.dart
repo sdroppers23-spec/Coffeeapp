@@ -76,28 +76,23 @@ class GlassContainer extends StatelessWidget {
                     ),
                   ],
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(effectiveBorderRadius),
-              clipBehavior: Clip.antiAlias,
-              child: Stack(
-                children: [
-                  // Layer 1: Base matte tint (Smoked Glass)
-                  Positioned.fill(
-                    child: Container(
-                      color: effectiveBaseColor,
-                    ),
-                  ),
-                  // Layer 2: Glass Blur
-                  Positioned.fill(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(
-                        sigmaX: (kIsWeb || !Platform.isWindows) ? effectiveBlur : effectiveBlur.clamp(0, 15),
-                        sigmaY: (kIsWeb || !Platform.isWindows) ? effectiveBlur : effectiveBlur.clamp(0, 15),
+            child: RepaintBoundary(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(effectiveBorderRadius),
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                child: Stack(
+                  children: [
+                    // Layer 1: Glass Blur with Smoked Matte Base merged in
+                    Positioned.fill(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(
+                          sigmaX: (kIsWeb || !Platform.isWindows) ? effectiveBlur : effectiveBlur.clamp(0, 15),
+                          sigmaY: (kIsWeb || !Platform.isWindows) ? effectiveBlur : effectiveBlur.clamp(0, 15),
+                        ),
+                        child: Container(color: effectiveBaseColor),
                       ),
-                      child: Container(color: Colors.transparent),
                     ),
-                  ),
-                  // Layer 3: Main decoration and content
+                    // Layer 2: Main decoration and content
                   Container(
                     padding: padding,
                     decoration: BoxDecoration(
@@ -137,7 +132,8 @@ class GlassContainer extends StatelessWidget {
               ),
             ),
           ),
-        );
+        ),
+      );
       },
     );
   }

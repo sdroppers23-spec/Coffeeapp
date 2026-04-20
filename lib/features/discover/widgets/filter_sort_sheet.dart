@@ -37,7 +37,10 @@ class _FilterSortSheetState extends ConsumerState<FilterSortSheet> {
 
   @override
   void dispose() {
-    ref.read(navBarVisibleProvider.notifier).show();
+    // Force show nav bar when sheet is closed
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(navBarVisibleProvider.notifier).show();
+    });
     super.dispose();
   }
 

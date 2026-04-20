@@ -6,6 +6,7 @@ import 'filter_sort_sheet.dart';
 import '../../../shared/widgets/pressable_scale.dart';
 import '../../encyclopedia/encyclopedia_providers.dart';
 import '../../../core/l10n/app_localizations.dart';
+import '../../navigation/navigation_providers.dart';
 
 class DiscoveryActionBar extends ConsumerWidget {
   final NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState>
@@ -108,7 +109,10 @@ class DiscoveryActionBar extends ConsumerWidget {
         availableFlavors: availableFlavors,
         availableProcesses: availableProcesses,
       ),
-    );
+    ).then((_) {
+      // Robustly restore nav bar when sheet is dismissed
+      ref.read(navBarVisibleProvider.notifier).show();
+    });
   }
 }
 

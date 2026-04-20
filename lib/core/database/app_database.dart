@@ -348,7 +348,7 @@ class AppDatabase extends _$AppDatabase {
         localizedBrandTranslations.brandId.equalsExp(localizedBrands.id) &
             localizedBrandTranslations.languageCode.equals(lang),
       ),
-    ])..where(localizedBrands.userId.equals(userId) | localizedBrands.userId.isNull() & localizedBrands.isDeletedLocal.equals(false));
+    ])..where((localizedBrands.userId.equals(userId) | localizedBrands.userId.isNull()) & localizedBrands.isDeletedLocal.equals(false));
 
     final rows = await query.get();
     return rows.map((row) {

@@ -98,6 +98,7 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                       roasteryName: roasteryName,
                       imageUrl: imageUrl,
                       lot: liveLot ?? widget.lot,
+                      entry: liveBean ?? widget.entry,
                       heroTag: widget.heroTag,
                       isImageVisible: _tabController.index < 2, // Hide on Recipes tab
                       onBack: () => Navigator.pop(context),
@@ -185,7 +186,7 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
             ),
             const SizedBox(height: 24),
             Text(
-              isUk ? 'Оберіть тип рецепту' : 'Select recipe type',
+              ref.t('select_recipe_type'),
               style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.bold, color: const Color(0xFFC8A96E), letterSpacing: 2),
             ),
             const SizedBox(height: 24),
@@ -193,7 +194,7 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
               children: [
                 Expanded(
                   child: _RecipeTypeCard(
-                    title: isUk ? 'Фільтр' : 'Filter',
+                    title: ref.t('filter'),
                     icon: Icons.coffee_rounded,
                     count: filterCount,
                     isLimitReached: filterCount >= 10,
@@ -210,7 +211,7 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                 const SizedBox(width: 16),
                 Expanded(
                   child: _RecipeTypeCard(
-                    title: isUk ? 'Еспресо' : 'Espresso',
+                    title: ref.t('espresso'),
                     icon: Icons.coffee_maker_rounded,
                     count: espressoCount,
                     isLimitReached: espressoCount >= 10,
@@ -294,7 +295,7 @@ class _RecipeTypeCard extends StatelessWidget {
             if (isLimitReached) ...[
               const SizedBox(height: 8),
               Text(
-                isUk ? 'ЛІМІТ' : 'LIMIT',
+                ref.t('limit_reached'),
                 style: GoogleFonts.outfit(fontSize: 10, color: Colors.redAccent, fontWeight: FontWeight.bold),
               ),
             ],
@@ -305,11 +306,12 @@ class _RecipeTypeCard extends StatelessWidget {
   }
 }
 
-class _DetailHeader extends StatelessWidget {
+class _DetailHeader extends ConsumerWidget {
   final String coffeeName;
   final String roasteryName;
   final String? imageUrl;
   final CoffeeLotDto? lot;
+  final EncyclopediaEntry? entry;
   final String? heroTag;
   final bool isImageVisible;
   final VoidCallback onBack;
@@ -320,6 +322,7 @@ class _DetailHeader extends StatelessWidget {
     required this.roasteryName,
     this.imageUrl,
     this.lot,
+    this.entry,
     this.heroTag,
     this.isImageVisible = true,
     required this.onBack,
@@ -327,21 +330,30 @@ class _DetailHeader extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final isFavorite = lot?.isFavorite ?? entry?.isFavorite ?? false;
+
+    // Use country flag as fallback for encyclopedia or if image is missing
+    final String? fallbackFlagUrl = lot?.originCountry != null 
+        ? 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/Flags/${lot!.originCountry!.toLowerCase().replaceAll(' ', '_')}.png'
+        : entry?.effectiveFlagUrl;
+
+    final String? effectiveImage = (imageUrl != null && imageUrl!.isNotEmpty) ? imageUrl : fallbackFlagUrl;
+
     return Stack(
       children: [
         Hero(
-          tag: heroTag ?? 'default_lot_hero_${lot?.id ?? coffeeName}',
+          tag: heroTag ?? 'default_lot_hero_${lot?.id ?? entry?.id ?? coffeeName}',
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             height: isImageVisible ? 320 : 160,
             width: double.infinity,
             decoration: BoxDecoration(
-              image: (isImageVisible && imageUrl != null && imageUrl!.isNotEmpty) 
-                  ? (imageUrl!.startsWith('http') 
-                      ? DecorationImage(image: CachedNetworkImageProvider(imageUrl!), fit: BoxFit.cover)
-                      : DecorationImage(image: FileImage(File(imageUrl!)), fit: BoxFit.cover))
+              image: (isImageVisible && effectiveImage != null && effectiveImage!.isNotEmpty) 
+                  ? (effectiveImage!.startsWith('http') 
+                      ? DecorationImage(image: CachedNetworkImageProvider(effectiveImage!), fit: imageUrl != null && imageUrl!.isNotEmpty ? BoxFit.cover : BoxFit.contain)
+                      : DecorationImage(image: FileImage(File(effectiveImage!)), fit: BoxFit.cover))
                   : null,
               color: Colors.black12,
             ),
@@ -369,24 +381,56 @@ class _DetailHeader extends StatelessWidget {
             ),
           ),
         ),
-        if (onEdit != null)
-          Positioned(
-            top: 50,
-            right: 20,
-            child: GestureDetector(
-              onTap: onEdit,
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.2),
-                  shape: BoxShape.circle,
-                  border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.3)),
+        Positioned(
+          top: 50,
+          right: 20,
+          child: Row(
+            children: [
+              if (onEdit != null)
+                GestureDetector(
+                  onTap: onEdit,
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    margin: const EdgeInsets.only(right: 12),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                      shape: BoxShape.circle,
+                      border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.3)),
+                    ),
+                    child: Icon(Icons.edit_rounded, color: theme.colorScheme.primary, size: 20),
+                  ),
                 ),
-                child: Icon(Icons.edit_rounded, color: theme.colorScheme.primary, size: 20),
+              GestureDetector(
+                onTap: () {
+                  if (!kIsWeb && !Platform.isWindows) {
+                    Vibration.vibrate(duration: 50);
+                  }
+                  final db = ref.read(databaseProvider);
+                  if (lot != null) {
+                    db.toggleLotFavorite(lot!.id, !isFavorite);
+                  } else if (entry != null) {
+                    db.toggleFavorite(entry!.id, !isFavorite);
+                  }
+                },
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.black45,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: isFavorite ? theme.colorScheme.primary.withValues(alpha: 0.5) : Colors.white10),
+                  ),
+                  child: Icon(
+                    isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                    color: isFavorite ? Colors.redAccent : Colors.white,
+                    size: 20,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
+        ),
         Positioned(
           bottom: 20,
           left: 20,
@@ -558,32 +602,32 @@ class _InfoTab extends ConsumerWidget {
         ),
         const SizedBox(height: 24),
 
-        // ── ORIGIN \u0026 FARM ─────────────────────────────────────────────
-        _SectionTitle(title: isUk ? 'ПОХОДЖЕННЯ ТА ФЕРМА' : 'ORIGIN \u0026 FARM'),
+        // ── ORIGIN & FARM ─────────────────────────────────────────────
+        _SectionTitle(title: ref.t('terroir_farm').toUpperCase()),
         GlassContainer(
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              _InfoRow(label: isUk ? 'Назва кави' : 'Coffee Name', value: lot?.coffeeName ?? bean?.fullDisplayName),
-              _InfoRow(label: isUk ? 'Країна' : 'Country', value: lot?.originCountry ?? bean?.country),
-              _InfoRow(label: isUk ? 'Регіон' : 'Region', value: lot?.region ?? bean?.region),
-              _InfoRow(label: isUk ? 'Ферма' : 'Farm', value: lot?.farm),
-              _InfoRow(label: isUk ? 'Фермер' : 'Farmer', value: lot?.farmer),
-              _InfoRow(label: isUk ? 'Станція' : 'Station', value: lot?.washStation),
+              _InfoRow(label: ref.t('coffee_name'), value: lot?.coffeeName ?? bean?.fullDisplayName),
+              _InfoRow(label: ref.t('country'), value: lot?.originCountry ?? bean?.country),
+              _InfoRow(label: ref.t('region'), value: lot?.region ?? bean?.region),
+              _InfoRow(label: ref.t('farm'), value: lot?.farm),
+              _InfoRow(label: ref.t('farmer'), value: lot?.farmer),
+              _InfoRow(label: ref.t('wash_station'), value: lot?.washStation),
             ],
           ),
         ),
         const SizedBox(height: 24),
 
         // ── COFFEE SPECS ───────────────────────────────────────────────────
-        _SectionTitle(title: isUk ? 'ХАРАКТЕРИСТИКИ КАВИ' : 'COFFEE SPECS'),
+        _SectionTitle(title: ref.t('coffee_specs').toUpperCase()),
         GlassContainer(
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              _InfoRow(label: isUk ? 'Сорт' : 'Variety', value: lot?.varieties ?? bean?.varieties),
+              _InfoRow(label: ref.t('variety'), value: lot?.varieties ?? bean?.varieties),
               _InfoRow(
-                label: isUk ? 'Обробка' : 'Process', 
+                label: ref.t('processing'), 
                 value: lot?.process ?? bean?.processMethod,
                 trailing: (lot?.process ?? bean?.processMethod) != null ? GestureDetector(
                   onTap: () => _showProcessInfoSheet(context, lot?.process ?? bean?.processMethod ?? ''),
@@ -598,42 +642,42 @@ class _InfoTab extends ConsumerWidget {
                   ),
                 ) : null,
               ),
-              _InfoRow(label: isUk ? 'Декаф' : 'Decaf', value: lot != null ? (lot!.isDecaf ? (isUk ? 'Так' : 'Yes') : (isUk ? 'Ні' : 'No')) : null),
-              _InfoRow(label: isUk ? 'Мелена' : 'Ground', value: lot != null ? (lot!.isGround ? (isUk ? 'Так' : 'Yes') : (isUk ? 'Ні' : 'No')) : null),
-              _InfoRow(label: 'SCA SCORE', value: lot?.scaScore ?? bean?.scaScore),
+              _InfoRow(label: ref.t('decaf'), value: lot != null ? (lot!.isDecaf ? ref.t('yes') : ref.t('no')) : null),
+              _InfoRow(label: ref.t('ground'), value: lot != null ? (lot!.isGround ? ref.t('yes') : ref.t('no')) : null),
+              _InfoRow(label: ref.t('sca_score'), value: lot?.scaScore ?? bean?.scaScore),
             ],
           ),
         ),
         const SizedBox(height: 24),
 
-        // ── ROAST \u0026 PURCHASE ───────────────────────────────────────────
-        _SectionTitle(title: isUk ? 'ОБСМАЖЕННЯ ТА КУПІВЛЯ' : 'ROAST \u0026 PURCHASE'),
+        // ── ROAST & PURCHASE ───────────────────────────────────────────
+        _SectionTitle(title: ref.t('roast_purchase').toUpperCase()),
         GlassContainer(
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              _InfoRow(label: isUk ? 'Ростерія' : 'Roastery', value: lot?.roasteryName),
-              _InfoRow(label: isUk ? 'Країна обсмажки' : 'Roast Country', value: lot?.roasteryCountry),
-              _InfoRow(label: isUk ? 'Рівень' : 'Roast Level', value: lot?.roastLevel),
-              _InfoRow(label: isUk ? 'Дата обсмажки' : 'Roast Date', value: lot?.roastDate?.toString().split(' ')[0]),
-              _InfoRow(label: isUk ? 'Відкрито' : 'Opened At', value: lot?.openedAt?.toString().split(' ')[0]),
-              _InfoRow(label: isUk ? 'Вага' : 'Weight', value: lot?.weight != null ? (lot!.weight!.endsWith('g') ? lot!.weight : '${lot!.weight}g') : null),
-              _InfoRow(label: 'ID Лоту', value: lot?.lotNumber),
+              _InfoRow(label: ref.t('roastery'), value: lot?.roasteryName),
+              _InfoRow(label: ref.t('roast_country'), value: lot?.roasteryCountry),
+              _InfoRow(label: ref.t('roast_level'), value: lot?.roastLevel),
+              _InfoRow(label: ref.t('roast_date'), value: lot?.roastDate?.toString().split(' ')[0]),
+              _InfoRow(label: ref.t('opened_at'), value: lot?.openedAt?.toString().split(' ')[0]),
+              _InfoRow(label: ref.t('weight'), value: lot?.weight != null ? (lot!.weight!.endsWith('g') ? lot!.weight : '${lot!.weight}g') : null),
+              _InfoRow(label: ref.t('lot_id'), value: lot?.lotNumber),
             ],
           ),
         ),
         const SizedBox(height: 12),
         if ((lot != null && lot!.pricing.isNotEmpty) || (bean != null && (bean!.userPricing.isNotEmpty || bean!.pricing.isNotEmpty))) ...[
-          _SectionTitle(title: isUk ? 'ЦІНИ' : 'PRICES'),
+          _SectionTitle(title: ref.t('prices').toUpperCase()),
           GlassContainer(
             padding: EdgeInsets.zero,
             child: Table(
               children: [
                 TableRow(
                   children: [
-                    _Cell(isUk ? 'Вага' : 'Weight', isHeader: true),
-                    _Cell(isUk ? 'Роздріб' : 'Retail', isHeader: true),
-                    _Cell(isUk ? 'Опт' : 'Wholesale', isHeader: true),
+                    _Cell(ref.t('weight_header'), isHeader: true),
+                    _Cell(ref.t('retail'), isHeader: true),
+                    _Cell(ref.t('wholesale'), isHeader: true),
                   ],
                 ),
                 _priceRow('250g', 
@@ -652,7 +696,7 @@ class _InfoTab extends ConsumerWidget {
 
         // ── FLAVOR PROFILE ────────────────────────────────────────────────
         if ((lot?.flavorProfile != null && lot!.flavorProfile!.isNotEmpty) || (bean?.description != null && bean!.description.isNotEmpty)) ...[
-          _SectionTitle(title: isUk ? 'ОПИС СМАКУ' : 'FLAVOR PROFILE'),
+          _SectionTitle(title: ref.t('flavor_profile').toUpperCase()),
           GlassContainer(
             padding: const EdgeInsets.all(20),
             child: Text(
@@ -695,7 +739,7 @@ class _SensoryTab extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 30),
-          _SectionTitle(title: isUk ? 'СЕНСОРНИЙ ПРОФІЛЬ' : 'SENSORY PROFILE'),
+          _SectionTitle(title: ref.t('sensory_grid').toUpperCase()),
           SensoryPreview(
             points: points.map((k, v) => MapEntry(k, v)),
             isGrid: true,

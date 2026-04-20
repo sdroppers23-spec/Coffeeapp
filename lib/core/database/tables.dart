@@ -99,6 +99,7 @@ class LocalizedBeansV2 extends Table {
   BoolColumn get isFavorite => boolean().withDefault(const Constant(false))();
   TextColumn get flagUrl => text().withDefault(const Constant(''))();
   TextColumn get radarJson => text().withDefault(const Constant('{}'))();
+  TextColumn get userPriceJson => text().withDefault(const Constant('{}'))();
   DateTimeColumn get createdAt => dateTime().nullable()();
 }
 

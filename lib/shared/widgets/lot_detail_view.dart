@@ -20,11 +20,13 @@ import '../../features/brewing/widgets/custom_recipe_card.dart';
 class LotDetailView extends ConsumerStatefulWidget {
   final CoffeeLotDto? lot;
   final EncyclopediaEntry? entry;
+  final String? heroTag;
 
   const LotDetailView({
     super.key,
     this.lot,
     this.entry,
+    this.heroTag,
   }) : assert(lot != null || entry != null, 'Either lot or entry must be provided');
 
   @override
@@ -96,6 +98,7 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                       roasteryName: roasteryName,
                       imageUrl: imageUrl,
                       lot: liveLot ?? widget.lot,
+                      heroTag: widget.heroTag,
                       isImageVisible: _tabController.index < 2, // Hide on Recipes tab
                       onBack: () => Navigator.pop(context),
                       onEdit: liveLot != null ? () {
@@ -307,6 +310,7 @@ class _DetailHeader extends StatelessWidget {
   final String roasteryName;
   final String? imageUrl;
   final CoffeeLotDto? lot;
+  final String? heroTag;
   final bool isImageVisible;
   final VoidCallback onBack;
   final VoidCallback? onEdit;
@@ -316,6 +320,7 @@ class _DetailHeader extends StatelessWidget {
     required this.roasteryName,
     this.imageUrl,
     this.lot,
+    this.heroTag,
     this.isImageVisible = true,
     required this.onBack,
     this.onEdit,
@@ -326,24 +331,27 @@ class _DetailHeader extends StatelessWidget {
     final theme = Theme.of(context);
     return Stack(
       children: [
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          height: isImageVisible ? 320 : 160,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            image: (isImageVisible && imageUrl != null && imageUrl!.isNotEmpty) 
-                ? (imageUrl!.startsWith('http') 
-                    ? DecorationImage(image: CachedNetworkImageProvider(imageUrl!), fit: BoxFit.cover)
-                    : DecorationImage(image: FileImage(File(imageUrl!)), fit: BoxFit.cover))
-                : null,
-            color: Colors.black12,
-          ),
-          child: Container(
+        Hero(
+          tag: heroTag ?? 'default_lot_hero_${lot?.id ?? coffeeName}',
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            height: isImageVisible ? 320 : 160,
+            width: double.infinity,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.black.withValues(alpha: 0.2), Colors.black],
+              image: (isImageVisible && imageUrl != null && imageUrl!.isNotEmpty) 
+                  ? (imageUrl!.startsWith('http') 
+                      ? DecorationImage(image: CachedNetworkImageProvider(imageUrl!), fit: BoxFit.cover)
+                      : DecorationImage(image: FileImage(File(imageUrl!)), fit: BoxFit.cover))
+                  : null,
+              color: Colors.black12,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.black.withValues(alpha: 0.2), Colors.black],
+                ),
               ),
             ),
           ),
@@ -615,7 +623,7 @@ class _InfoTab extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 12),
-        if (lot != null && lot!.pricing.isNotEmpty) ...[
+        if ((lot != null && lot!.pricing.isNotEmpty) || (bean != null && (bean!.userPricing.isNotEmpty || bean!.pricing.isNotEmpty))) ...[
           _SectionTitle(title: isUk ? 'ЦІНИ' : 'PRICES'),
           GlassContainer(
             padding: EdgeInsets.zero,
@@ -628,8 +636,14 @@ class _InfoTab extends ConsumerWidget {
                     _Cell(isUk ? 'Опт' : 'Wholesale', isHeader: true),
                   ],
                 ),
-                _priceRow('250g', lot!.pricing['retail_250']?.toString(), lot!.pricing['wholesale_250']?.toString()),
-                _priceRow('1kg', lot!.pricing['retail_1k']?.toString(), lot!.pricing['wholesale_1k']?.toString()),
+                _priceRow('250g', 
+                  (lot?.pricing['retail_250'] ?? bean?.userPricing['retail_250'] ?? bean?.pricing['retail_250'])?.toString(),
+                  (lot?.pricing['wholesale_250'] ?? bean?.userPricing['wholesale_250'] ?? bean?.pricing['wholesale_250'])?.toString()
+                ),
+                _priceRow('1kg', 
+                  (lot?.pricing['retail_1k'] ?? bean?.userPricing['retail_1k'] ?? bean?.pricing['retail_1k'])?.toString(),
+                  (lot?.pricing['wholesale_1k'] ?? bean?.userPricing['wholesale_1k'] ?? bean?.pricing['wholesale_1k'])?.toString()
+                ),
               ],
             ),
           ),

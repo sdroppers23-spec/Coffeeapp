@@ -12,7 +12,10 @@ import '../../shared/widgets/sensory_radar_chart.dart';
 import '../../shared/widgets/sensory_preview.dart';
 import '../../core/network/price_sync_service.dart';
 import '../brewing/custom_recipe_form.dart';
+import '../../shared/widgets/lot_detail_widgets.dart';
+import '../../shared/widgets/pressable_scale.dart';
 import '../navigation/navigation_providers.dart';
+import 'dart:io';
 
 class CoffeeLotDetailScreen extends ConsumerStatefulWidget {
   final LocalizedBeanDto entry;
@@ -77,7 +80,99 @@ class _CoffeeLotDetailScreenState extends ConsumerState<CoffeeLotDetailScreen>
         ),
         child: Column(
           children: [
-            const SizedBox(height: kToolbarHeight + 40),
+            // Image Header
+            Stack(
+              children: [
+                Hero(
+                  tag: 'lot_image_${entry.id}',
+                  child: Container(
+                    height: 320,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1A1714),
+                      image: entry.imageUrl.isNotEmpty
+                          ? DecorationImage(
+                              image: NetworkImage(entry.imageUrl),
+                              fit: BoxFit.cover,
+                            )
+                          : DecorationImage(
+                              image: NetworkImage(entry.effectiveFlagUrl),
+                              fit: BoxFit.cover,
+                            ),
+                    ),
+                    child: (entry.imageUrl.isEmpty && entry.effectiveFlagUrl.isEmpty)
+                        ? Center(
+                            child: Icon(
+                              Icons.coffee_rounded,
+                              size: 64,
+                              color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                            ),
+                          )
+                        : null,
+                  ),
+                ),
+                // Gradient Overlays
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withValues(alpha: 0.6),
+                          Colors.transparent,
+                          Colors.black.withValues(alpha: 1.0),
+                        ],
+                        stops: const [0.0, 0.5, 1.0],
+                      ),
+                    ),
+                  ),
+                ),
+                // Lot Info Overlay
+                Positioned(
+                  bottom: 20,
+                  left: 20,
+                  right: 20,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        entry.country.toUpperCase(),
+                        style: GoogleFonts.outfit(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 2,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        entry.region.toUpperCase(),
+                        style: GoogleFonts.outfit(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white,
+                          height: 1.1,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          LotBadge(label: '${entry.scaScore} SCA', theme: theme),
+                          const SizedBox(width: 8),
+                          LotBadge(
+                            label: entry.roastLevel.toUpperCase(), 
+                            theme: theme,
+                            isPrimary: true,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            
             TabBar(
               controller: _tabController,
               tabs: [
@@ -177,7 +272,7 @@ class _InfoTabState extends ConsumerState<_InfoTab> {
               Row(
                 children: [
                   Expanded(
-                    child: _CompactStat(
+                    child: LotCompactStat(
                       label: ref.t('varieties'),
                       value: entry.varieties,
                     ),
@@ -188,10 +283,10 @@ class _InfoTabState extends ConsumerState<_InfoTab> {
                     color: Colors.white.withValues(alpha: 0.05),
                   ),
                   Expanded(
-                    child: _CompactStat(
+                    child: LotCompactStat(
                       label: ref.t('altitude'),
                       value:
-                          '${entry.altitudeMin ?? '?'}-${entry.altitudeMax ?? '?'} m',
+                          '${entry.altitudeMin ?? 'N/A'}-${entry.altitudeMax ?? 'N/A'} m',
                     ),
                   ),
                 ],
@@ -200,7 +295,7 @@ class _InfoTabState extends ConsumerState<_InfoTab> {
               Row(
                 children: [
                   Expanded(
-                    child: _CompactStat(
+                    child: LotCompactStat(
                       label: ref.t('process'),
                       value: entry.processMethod,
                     ),
@@ -211,7 +306,7 @@ class _InfoTabState extends ConsumerState<_InfoTab> {
                     color: Colors.white.withValues(alpha: 0.05),
                   ),
                   Expanded(
-                    child: _CompactStat(
+                    child: LotCompactStat(
                       label: 'SCA SCORE',
                       value: entry.scaScore,
                     ),
@@ -220,10 +315,35 @@ class _InfoTabState extends ConsumerState<_InfoTab> {
               ),
               if (entry.region.isNotEmpty) ...[
                 const Divider(height: 24, color: Colors.white10),
-                _CompactStat(label: ref.t('region'), value: entry.region),
+                LotCompactStat(label: ref.t('region'), value: entry.region),
               ],
             ],
           ),
+        ),
+        const SizedBox(height: 24),
+
+        Text(
+          ref.t('lot_details').toUpperCase(),
+          style: GoogleFonts.outfit(
+            fontSize: 11,
+            fontWeight: FontWeight.bold,
+            color: theme.colorScheme.primary,
+            letterSpacing: 1.5,
+          ),
+        ),
+        const SizedBox(height: 12),
+        LotDetailRow(
+          label: ref.t('lot_number_label'),
+          value: entry.lotNumber,
+        ),
+        LotDetailRow(label: ref.t('farm'), value: entry.farm ?? 'N/A'),
+        LotDetailRow(label: ref.t('wash_station'), value: entry.washStation ?? 'N/A'),
+        LotDetailRow(label: ref.t('weight'), value: entry.weight ?? 'N/A'),
+        LotDetailRow(label: ref.t('harvest_season'), value: entry.harvestSeason ?? 'N/A'),
+        LotDetailRow(label: ref.t('roast_date'), value: entry.roastDate ?? 'N/A'),
+        LotDetailRow(
+          label: ref.t('is_decaf'),
+          value: entry.isDecaf ? ref.t('yes') : ref.t('no'),
         ),
         const SizedBox(height: 24),
         if (hasPrices) ...[
@@ -525,37 +645,7 @@ final recommendedRecipesForLotProvider =
       return db.getRecommendedRecipesForLot(lotId);
     });
 
-class _CompactStat extends StatelessWidget {
-  final String label;
-  final String value;
-  const _CompactStat({required this.label, required this.value});
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          label.toUpperCase(),
-          style: GoogleFonts.outfit(
-            fontSize: 9,
-            color: Colors.white38,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.5,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          textAlign: TextAlign.center,
-          style: GoogleFonts.outfit(
-            fontSize: 13,
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
-    );
-  }
-}
+// Local widget _CompactStat removed in favor of shared widgets
 
 class _Cell extends StatelessWidget {
   final String label;

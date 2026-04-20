@@ -7,6 +7,7 @@ import '../../core/database/app_database.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import '../../core/l10n/app_localizations.dart';
+import '../../core/supabase/supabase_provider.dart';
 
 // ─── Pour entry (local model) ─────────────────────────────────────────────────
 class _PourEntry {
@@ -243,6 +244,7 @@ class _CustomRecipeFormScreenState
   }
 
   Future<void> _save() async {
+    if (_saving) return;
     if (!_formKey.currentState!.validate()) return;
     _readPourControllers();
     setState(() => _saving = true);
@@ -311,7 +313,7 @@ class _CustomRecipeFormScreenState
             brewTempC: Value(double.tryParse(_tempCtrl.text.replaceAll(',', '.')) ?? 93.0),
             notes: Value(_notesCtrl.text),
             rating: Value(_rating),
-            userId: '',
+            userId: ref.read(currentUserProvider)?.id ?? '',
             recipeType: Value(_recipeType),
             microns: Value(int.tryParse(_micronsCtrl.text)),
             brewRatio: Value(double.tryParse(_brewRatioCtrl.text.replaceAll('1:', ''))),

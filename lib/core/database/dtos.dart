@@ -109,6 +109,7 @@ class LocalizedBeanDto {
   String get detailedProcessMarkdown => detailedProcess;
   String get sensoryJson => jsonEncode(sensoryPoints);
   String get priceJson => jsonEncode(pricing);
+  String get translatedCountry => country;
   String get imageUrl =>
       farmPhotosUrlCover ??
       (plantationPhotos.isNotEmpty ? plantationPhotos.first : '');

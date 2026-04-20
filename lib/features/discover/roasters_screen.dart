@@ -6,7 +6,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/database/database_provider.dart';
-import '../../shared/widgets/glass_container.dart';
 import '../../shared/widgets/premium_background.dart';
 import '../../shared/widgets/pressable_scale.dart';
 import '../../core/providers/settings_provider.dart';
@@ -282,8 +281,10 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
           ],
         ],
       ),
-      body: Column(
+      body: Stack(
         children: [
+          Column(
+            children: [
           // ── Sub-tabs ────────────────────────────────────────────────────
           Padding(
             padding:
@@ -339,8 +340,28 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
           Expanded(
             child: brandsAsync.when(
               loading: () => const Center(
-                child: CircularProgressIndicator(
-                    color: Color(0xFFC8A96E)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 40,
+                      height: 40,
+                      child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Color(0xFFC8A96E)),
+                        strokeWidth: 2,
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'Завантаження обсмажчиків...',
+                      style: TextStyle(
+                        color: Colors.white54,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               error: (e, _) => Center(
                   child: Text('Помилка: $e',
@@ -374,6 +395,8 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
           ),
         ],
       ),
+    ],
+  ),
       // ── FAB добавити обсмажчика ────────────────────────────────────────
       floatingActionButton: _isSelectionMode
           ? null
@@ -533,6 +556,24 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
     final isArchiveTab = _tabController.index == 2;
     final isFavoritesTab = _tabController.index == 1;
 
+    final String title = isArchiveTab
+        ? 'Архів порожній'
+        : isFavoritesTab
+            ? 'Жодного улюбленого'
+            : 'Немає обсмажчиків';
+
+    final String description = isArchiveTab
+        ? 'Заархівовані обсмажчики з\'являться тут'
+        : isFavoritesTab
+            ? 'Натисніть ❤️ на картці, щоб додати до улюблених'
+            : 'Додайте своїх улюблених обсмажчиків';
+
+    final IconData icon = isArchiveTab
+        ? Icons.archive_outlined
+        : isFavoritesTab
+            ? Icons.favorite_border_rounded
+            : Icons.store_rounded;
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -541,62 +582,60 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
             width: 100,
             height: 100,
             decoration: BoxDecoration(
-              color: const Color(0xFFC8A96E).withValues(alpha: 0.06),
               shape: BoxShape.circle,
-              border: Border.all(
-                  color: const Color(0xFFC8A96E).withValues(alpha: 0.15),
-                  width: 1.5),
+              color: Colors.white.withValues(alpha: 0.03),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
             ),
-            child: Icon(
-              isArchiveTab
-                  ? Icons.archive_outlined
-                  : isFavoritesTab
-                      ? Icons.favorite_border_rounded
-                      : Icons.storefront_outlined,
-              size: 44,
-              color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
-            ),
+            child: Icon(icon, color: const Color(0xFFC8A96E), size: 48),
           ),
           const SizedBox(height: 24),
           Text(
-            isArchiveTab
-                ? 'Архів порожній'
-                : isFavoritesTab
-                    ? 'Жодного улюбленого'
-                    : 'Немає обсмажчиків',
+            title,
             style: GoogleFonts.outfit(
-                color: Colors.white54,
-                fontSize: 18,
-                fontWeight: FontWeight.w600),
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           const SizedBox(height: 8),
-          Text(
-            isArchiveTab
-                ? 'Заархівовані обсмажчики з\'являться тут'
-                : isFavoritesTab
-                    ? 'Натисніть ❤️ на картці, щоб додати до улюблених'
-                    : 'Додайте своїх улюблених обсмажчиків',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.outfit(color: Colors.white30, fontSize: 13),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: Text(
+              description,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.white38, fontSize: 14),
+            ),
           ),
           if (!isArchiveTab && !isFavoritesTab) ...[
             const SizedBox(height: 32),
             PressableScale(
               onTap: () => _showAddRoasterDialog(context, ref),
-              child: GlassContainer(
+              child: Container(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                borderRadius: 50,
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFC8A96E),
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.add, color: Color(0xFFC8A96E), size: 18),
+                    const Icon(Icons.add, color: Colors.black, size: 20),
                     const SizedBox(width: 8),
                     Text(
-                      'Додати обсмажчика',
+                      'ДОДАТИ ОБСМАЖЧИКА',
                       style: GoogleFonts.outfit(
-                          color: const Color(0xFFC8A96E),
-                          fontWeight: FontWeight.w600),
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
                     ),
                   ],
                 ),

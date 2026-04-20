@@ -225,6 +225,10 @@ class AppDatabase extends _$AppDatabase {
     return rows.map((row) => _mapBeanV2Row(row, lang)).toList();
   }
 
+  // Alias methods for compatibility
+  Future<List<LocalizedBeanDto>> getAllBeans(String lang) => getEncyclopediaV2(lang);
+  Future<List<LocalizedBeanDto>> getAllEncyclopediaEntries(String lang) => getEncyclopediaV2(lang);
+
   LocalizedBeanDto _mapBeanV2Row(TypedResult row, String lang) {
     final bean = row.readTable(localizedBeansV2);
     final trans = row.readTableOrNull(localizedBeanTranslationsV2);
@@ -329,7 +333,7 @@ class AppDatabase extends _$AppDatabase {
         localizedBrandTranslations.brandId.equalsExp(localizedBrands.id) &
             localizedBrandTranslations.languageCode.equals(lang),
       ),
-    ])..where(localizedBrands.userId.equals(userId) & localizedBrands.isDeletedLocal.equals(false));
+    ])..where(localizedBrands.userId.equals(userId) | localizedBrands.userId.isNull() & localizedBrands.isDeletedLocal.equals(false));
 
     final rows = await query.get();
     return rows.map((row) {
@@ -479,6 +483,7 @@ class AppDatabase extends _$AppDatabase {
 
   /// Watches V2 table (populated by SyncService V2).
   Stream<List<LocalizedBeanDto>> watchAllEncyclopediaEntries(String lang) {
+    // Join with translations, fall back to "en" if current lang is not found
     final query = select(localizedBeansV2).join([
       leftOuterJoin(
         localizedBeanTranslationsV2,
@@ -486,13 +491,13 @@ class AppDatabase extends _$AppDatabase {
             localizedBeanTranslationsV2.languageCode.equals(lang),
       ),
     ]);
-    return query.watch().map(
-      (rows) => rows.map((row) => _mapBeanV2Row(row, lang)).toList(),
-    );
+    
+    return query.watch().map((rows) {
+      if (rows.isEmpty) return [];
+      return rows.map((row) => _mapBeanV2Row(row, lang)).toList();
+    });
   }
 
-  Future<List<LocalizedBeanDto>> getAllBeans(String lang) => getEncyclopediaV2(lang);
-  Future<List<LocalizedBeanDto>> getAllEncyclopediaEntries(String lang) => getEncyclopediaV2(lang);
 
   Future<List<LocalizedBeanDto>> getBeansByBrand(
     int brandId,
@@ -519,6 +524,7 @@ class AppDatabase extends _$AppDatabase {
       batch.insertAllOnConflictUpdate(localizedBeanTranslations, translations);
     });
   }
+
 
   Future<int> insertBean(LocalizedBeansCompanion b) =>
       into(localizedBeans).insertOnConflictUpdate(b);
@@ -579,12 +585,11 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
-  Future<Set<int>> getFavoriteIds() async {
+  Stream<Set<int>> watchFavoriteIds() {
     final query = selectOnly(localizedBeans)
       ..addColumns([localizedBeans.id])
       ..where(localizedBeans.isFavorite.equals(true));
-    final rows = await query.get();
-    return rows.map((r) => r.read(localizedBeans.id)!).toSet();
+    return query.watch().map((rows) => rows.map((r) => r.read(localizedBeans.id)!).toSet());
   }
 
   LocalizedBeanDto _mapBeanRow(TypedResult row, String lang) {
@@ -933,8 +938,8 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<String> upsertCustomRecipe(CustomRecipesCompanion r) async {
-    await into(customRecipes).insertOnConflictUpdate(r);
-    return r.id.value;
+    final row = await into(customRecipes).insertReturning(r, mode: InsertMode.insertOrReplace);
+    return row.id;
   }
 
   Future<String> insertCustomRecipe(CustomRecipesCompanion r) =>

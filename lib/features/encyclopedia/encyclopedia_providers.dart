@@ -118,7 +118,7 @@ int _comparePrice(String? a, String? b) {
 /// Provider that tracking locally favorited bean IDs
 final favoriteIdsProvider = StreamProvider<Set<int>>((ref) {
   final db = ref.watch(databaseProvider);
-  return Stream.fromFuture(db.getFavoriteIds());
+  return db.watchFavoriteIds();
 });
 
 /// Legacy compatibility - should be migrated to encyclopediaDataProvider

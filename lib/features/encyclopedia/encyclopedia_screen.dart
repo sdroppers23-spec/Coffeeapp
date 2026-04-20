@@ -9,6 +9,7 @@ import 'widgets/encyclopedia_card_widgets.dart';
 import 'coffee_lot_detail_screen.dart';
 import 'comparison_screen.dart'; 
 import '../../shared/widgets/premium_app_bar.dart';
+import '../../shared/widgets/premium_background.dart';
 import '../../shared/widgets/profile_button.dart';
 import '../../shared/widgets/scroll_to_top_button.dart';
 
@@ -40,8 +41,11 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
     final isUk = ref.watch(localeProvider) == 'uk';
     final originsAsync = ref.watch(encyclopediaDataProvider);
 
-    return Column(
-      children: [
+    return PremiumBackground(
+      child: Stack(
+        children: [
+        Column(
+          children: [
         // ── Premium Action Bar ─────────────────────────────────────────────
         DiscoveryActionBar(
           filterProvider: encyclopediaFilterProvider,
@@ -93,7 +97,11 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
             ],
           ),
         ),
-      ],
+          ],
+        ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -106,9 +114,31 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
 
     return originsAsync.when(
       loading: () => const Center(
-        child: CircularProgressIndicator(color: Color(0xFFC8A96E)),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(
+              color: Color(0xFFC8A96E),
+              strokeWidth: 2,
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Завантаження лотів...',
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 14,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ],
+        ),
       ),
-      error: (e, _) => Center(child: Text('Error: $e')),
+      error: (e, _) => Center(
+        child: Text(
+          'Error: $e',
+          style: const TextStyle(color: Colors.white70),
+        ),
+      ),
       data: (entries) {
         var filtered = entries;
         if (showFavoritesOnly) {

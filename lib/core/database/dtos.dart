@@ -62,6 +62,7 @@ class LocalizedBeanDto {
   final String processMethod;
   final bool isFavorite;
   final bool isArchived;
+  final String flagUrl;
   final DateTime? createdAt;
 
   LocalizedBeanDto({
@@ -101,6 +102,7 @@ class LocalizedBeanDto {
     required this.processMethod,
     required this.isFavorite,
     this.isArchived = false,
+    this.flagUrl = '',
     this.createdAt,
   });
 
@@ -118,7 +120,13 @@ class LocalizedBeanDto {
   String get processing => processMethod;
 
   String get effectiveFlagUrl {
-    // Corrected to use the specific 'Flags' bucket as per user feedback
+    if (flagUrl.isNotEmpty) {
+      if (flagUrl.startsWith('http')) return flagUrl;
+      if (flagUrl.startsWith('assets/')) return flagUrl;
+      return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/Flags/$flagUrl';
+    }
+    
+    // Fallback to name-based URL as per user feedback
     final fileName = '${country.toLowerCase().replaceAll(' ', '_')}.png';
     return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/Flags/$fileName';
   }

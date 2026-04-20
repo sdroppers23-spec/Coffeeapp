@@ -12694,6 +12694,18 @@ class $LocalizedBeansV2Table extends LocalizedBeansV2
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _flagUrlMeta = const VerificationMeta(
+    'flagUrl',
+  );
+  @override
+  late final GeneratedColumn<String> flagUrl = GeneratedColumn<String>(
+    'flag_url',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -12734,6 +12746,7 @@ class $LocalizedBeansV2Table extends LocalizedBeansV2
     retailPrice,
     wholesalePrice,
     isFavorite,
+    flagUrl,
     createdAt,
   ];
   @override
@@ -12943,6 +12956,12 @@ class $LocalizedBeansV2Table extends LocalizedBeansV2
         isFavorite.isAcceptableOrUnknown(data['is_favorite']!, _isFavoriteMeta),
       );
     }
+    if (data.containsKey('flag_url')) {
+      context.handle(
+        _flagUrlMeta,
+        flagUrl.isAcceptableOrUnknown(data['flag_url']!, _flagUrlMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -13066,6 +13085,10 @@ class $LocalizedBeansV2Table extends LocalizedBeansV2
         DriftSqlType.bool,
         data['${effectivePrefix}is_favorite'],
       )!,
+      flagUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}flag_url'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -13108,6 +13131,7 @@ class LocalizedBeansV2Data extends DataClass
   final String? retailPrice;
   final String? wholesalePrice;
   final bool isFavorite;
+  final String flagUrl;
   final DateTime? createdAt;
   const LocalizedBeansV2Data({
     required this.id,
@@ -13137,6 +13161,7 @@ class LocalizedBeansV2Data extends DataClass
     this.retailPrice,
     this.wholesalePrice,
     required this.isFavorite,
+    required this.flagUrl,
     this.createdAt,
   });
   @override
@@ -13199,6 +13224,7 @@ class LocalizedBeansV2Data extends DataClass
       map['wholesale_price'] = Variable<String>(wholesalePrice);
     }
     map['is_favorite'] = Variable<bool>(isFavorite);
+    map['flag_url'] = Variable<String>(flagUrl);
     if (!nullToAbsent || createdAt != null) {
       map['created_at'] = Variable<DateTime>(createdAt);
     }
@@ -13260,6 +13286,7 @@ class LocalizedBeansV2Data extends DataClass
           ? const Value.absent()
           : Value(wholesalePrice),
       isFavorite: Value(isFavorite),
+      flagUrl: Value(flagUrl),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
           : Value(createdAt),
@@ -13307,6 +13334,7 @@ class LocalizedBeansV2Data extends DataClass
       retailPrice: serializer.fromJson<String?>(json['retailPrice']),
       wholesalePrice: serializer.fromJson<String?>(json['wholesalePrice']),
       isFavorite: serializer.fromJson<bool>(json['isFavorite']),
+      flagUrl: serializer.fromJson<String>(json['flagUrl']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
     );
   }
@@ -13343,6 +13371,7 @@ class LocalizedBeansV2Data extends DataClass
       'retailPrice': serializer.toJson<String?>(retailPrice),
       'wholesalePrice': serializer.toJson<String?>(wholesalePrice),
       'isFavorite': serializer.toJson<bool>(isFavorite),
+      'flagUrl': serializer.toJson<String>(flagUrl),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
     };
   }
@@ -13375,6 +13404,7 @@ class LocalizedBeansV2Data extends DataClass
     Value<String?> retailPrice = const Value.absent(),
     Value<String?> wholesalePrice = const Value.absent(),
     bool? isFavorite,
+    String? flagUrl,
     Value<DateTime?> createdAt = const Value.absent(),
   }) => LocalizedBeansV2Data(
     id: id ?? this.id,
@@ -13411,6 +13441,7 @@ class LocalizedBeansV2Data extends DataClass
         ? wholesalePrice.value
         : this.wholesalePrice,
     isFavorite: isFavorite ?? this.isFavorite,
+    flagUrl: flagUrl ?? this.flagUrl,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
   );
   LocalizedBeansV2Data copyWithCompanion(LocalizedBeansV2Companion data) {
@@ -13468,6 +13499,7 @@ class LocalizedBeansV2Data extends DataClass
       isFavorite: data.isFavorite.present
           ? data.isFavorite.value
           : this.isFavorite,
+      flagUrl: data.flagUrl.present ? data.flagUrl.value : this.flagUrl,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -13502,6 +13534,7 @@ class LocalizedBeansV2Data extends DataClass
           ..write('retailPrice: $retailPrice, ')
           ..write('wholesalePrice: $wholesalePrice, ')
           ..write('isFavorite: $isFavorite, ')
+          ..write('flagUrl: $flagUrl, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -13536,6 +13569,7 @@ class LocalizedBeansV2Data extends DataClass
     retailPrice,
     wholesalePrice,
     isFavorite,
+    flagUrl,
     createdAt,
   ]);
   @override
@@ -13569,6 +13603,7 @@ class LocalizedBeansV2Data extends DataClass
           other.retailPrice == this.retailPrice &&
           other.wholesalePrice == this.wholesalePrice &&
           other.isFavorite == this.isFavorite &&
+          other.flagUrl == this.flagUrl &&
           other.createdAt == this.createdAt);
 }
 
@@ -13600,6 +13635,7 @@ class LocalizedBeansV2Companion extends UpdateCompanion<LocalizedBeansV2Data> {
   final Value<String?> retailPrice;
   final Value<String?> wholesalePrice;
   final Value<bool> isFavorite;
+  final Value<String> flagUrl;
   final Value<DateTime?> createdAt;
   const LocalizedBeansV2Companion({
     this.id = const Value.absent(),
@@ -13629,6 +13665,7 @@ class LocalizedBeansV2Companion extends UpdateCompanion<LocalizedBeansV2Data> {
     this.retailPrice = const Value.absent(),
     this.wholesalePrice = const Value.absent(),
     this.isFavorite = const Value.absent(),
+    this.flagUrl = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   LocalizedBeansV2Companion.insert({
@@ -13659,6 +13696,7 @@ class LocalizedBeansV2Companion extends UpdateCompanion<LocalizedBeansV2Data> {
     this.retailPrice = const Value.absent(),
     this.wholesalePrice = const Value.absent(),
     this.isFavorite = const Value.absent(),
+    this.flagUrl = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   static Insertable<LocalizedBeansV2Data> custom({
@@ -13689,6 +13727,7 @@ class LocalizedBeansV2Companion extends UpdateCompanion<LocalizedBeansV2Data> {
     Expression<String>? retailPrice,
     Expression<String>? wholesalePrice,
     Expression<bool>? isFavorite,
+    Expression<String>? flagUrl,
     Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
@@ -13723,6 +13762,7 @@ class LocalizedBeansV2Companion extends UpdateCompanion<LocalizedBeansV2Data> {
       if (retailPrice != null) 'retail_price': retailPrice,
       if (wholesalePrice != null) 'wholesale_price': wholesalePrice,
       if (isFavorite != null) 'is_favorite': isFavorite,
+      if (flagUrl != null) 'flag_url': flagUrl,
       if (createdAt != null) 'created_at': createdAt,
     });
   }
@@ -13755,6 +13795,7 @@ class LocalizedBeansV2Companion extends UpdateCompanion<LocalizedBeansV2Data> {
     Value<String?>? retailPrice,
     Value<String?>? wholesalePrice,
     Value<bool>? isFavorite,
+    Value<String>? flagUrl,
     Value<DateTime?>? createdAt,
   }) {
     return LocalizedBeansV2Companion(
@@ -13787,6 +13828,7 @@ class LocalizedBeansV2Companion extends UpdateCompanion<LocalizedBeansV2Data> {
       retailPrice: retailPrice ?? this.retailPrice,
       wholesalePrice: wholesalePrice ?? this.wholesalePrice,
       isFavorite: isFavorite ?? this.isFavorite,
+      flagUrl: flagUrl ?? this.flagUrl,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -13881,6 +13923,9 @@ class LocalizedBeansV2Companion extends UpdateCompanion<LocalizedBeansV2Data> {
     if (isFavorite.present) {
       map['is_favorite'] = Variable<bool>(isFavorite.value);
     }
+    if (flagUrl.present) {
+      map['flag_url'] = Variable<String>(flagUrl.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -13917,6 +13962,7 @@ class LocalizedBeansV2Companion extends UpdateCompanion<LocalizedBeansV2Data> {
           ..write('retailPrice: $retailPrice, ')
           ..write('wholesalePrice: $wholesalePrice, ')
           ..write('isFavorite: $isFavorite, ')
+          ..write('flagUrl: $flagUrl, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -24911,6 +24957,7 @@ typedef $$LocalizedBeansV2TableCreateCompanionBuilder =
       Value<String?> retailPrice,
       Value<String?> wholesalePrice,
       Value<bool> isFavorite,
+      Value<String> flagUrl,
       Value<DateTime?> createdAt,
     });
 typedef $$LocalizedBeansV2TableUpdateCompanionBuilder =
@@ -24942,6 +24989,7 @@ typedef $$LocalizedBeansV2TableUpdateCompanionBuilder =
       Value<String?> retailPrice,
       Value<String?> wholesalePrice,
       Value<bool> isFavorite,
+      Value<String> flagUrl,
       Value<DateTime?> createdAt,
     });
 
@@ -25165,6 +25213,11 @@ class $$LocalizedBeansV2TableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get flagUrl => $composableBuilder(
+    column: $table.flagUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
@@ -25380,6 +25433,11 @@ class $$LocalizedBeansV2TableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get flagUrl => $composableBuilder(
+    column: $table.flagUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -25542,6 +25600,9 @@ class $$LocalizedBeansV2TableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get flagUrl =>
+      $composableBuilder(column: $table.flagUrl, builder: (column) => column);
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -25683,6 +25744,7 @@ class $$LocalizedBeansV2TableTableManager
                 Value<String?> retailPrice = const Value.absent(),
                 Value<String?> wholesalePrice = const Value.absent(),
                 Value<bool> isFavorite = const Value.absent(),
+                Value<String> flagUrl = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
               }) => LocalizedBeansV2Companion(
                 id: id,
@@ -25712,6 +25774,7 @@ class $$LocalizedBeansV2TableTableManager
                 retailPrice: retailPrice,
                 wholesalePrice: wholesalePrice,
                 isFavorite: isFavorite,
+                flagUrl: flagUrl,
                 createdAt: createdAt,
               ),
           createCompanionCallback:
@@ -25743,6 +25806,7 @@ class $$LocalizedBeansV2TableTableManager
                 Value<String?> retailPrice = const Value.absent(),
                 Value<String?> wholesalePrice = const Value.absent(),
                 Value<bool> isFavorite = const Value.absent(),
+                Value<String> flagUrl = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
               }) => LocalizedBeansV2Companion.insert(
                 id: id,
@@ -25772,6 +25836,7 @@ class $$LocalizedBeansV2TableTableManager
                 retailPrice: retailPrice,
                 wholesalePrice: wholesalePrice,
                 isFavorite: isFavorite,
+                flagUrl: flagUrl,
                 createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0

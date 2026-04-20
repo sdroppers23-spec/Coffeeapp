@@ -40,7 +40,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? e]) : super(e ?? openConnection());
 
   @override
-  int get schemaVersion => 34;
+  int get schemaVersion => 35;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -95,6 +95,10 @@ class AppDatabase extends _$AppDatabase {
         await m.createTable(localizedBeanTranslationsV2);
         await m.createTable(brewingRecipesV2);
         await m.createTable(brewingRecipeTranslationsV2);
+      }
+      if (from < 35) {
+        // v35: Add flagUrl to encyclopedia beans
+        await m.addColumn(localizedBeansV2, localizedBeansV2.flagUrl);
       }
     },
     beforeOpen: (details) async {
@@ -270,6 +274,7 @@ class AppDatabase extends _$AppDatabase {
       processMethod: trans?.processMethod ?? '',
       isFavorite: bean.isFavorite,
       isArchived: false,
+      flagUrl: bean.flagUrl,
       createdAt: bean.createdAt,
     );
   }

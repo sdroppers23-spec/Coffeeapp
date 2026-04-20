@@ -422,10 +422,19 @@ class SyncService {
       for (final b in brandsToSync) {
         try {
           if (b.isDeletedLocal) {
-            await supabase!.from('user_brands').delete().eq('id', b.id).eq('user_id', userId);
+            debugPrint('SYNC: Deleting brand ${b.id} from cloud...');
+            final response = await supabase!.from('user_brands').delete().eq('id', b.id).eq('user_id', userId).select();
+            if (response.isEmpty) {
+              debugPrint('SYNC WARNING: Brand ${b.id} not found in cloud during delete. It might have been deleted already or ID mismatch.');
+            } else {
+              debugPrint('SYNC: Deleted brand ${b.id} from cloud successfully.');
+            }
             await (db.delete(db.localizedBrands)..where((t) => t.id.equals(b.id))).go();
-            debugPrint('SYNC: Deleted brand ${b.id} from cloud');
+            await (db.delete(db.localizedBrandTranslations)..where((t) => t.brandId.equals(b.id))).go();
+            debugPrint('SYNC: Purged brand ${b.id} from local DB.');
           } else {
+            // Upsert logic...
+            debugPrint('SYNC: Upserting brand ${b.id} (${b.name})');
             await supabase!.from('user_brands').upsert({
               'id': b.id,
               'user_id': userId,
@@ -447,6 +456,7 @@ class SyncService {
             }
 
             await (db.update(db.localizedBrands)..where((t) => t.id.equals(b.id))).write(const LocalizedBrandsCompanion(isSynced: Value(true)));
+            debugPrint('SYNC: Brand ${b.id} pushed successfully.');
           }
         } catch (e) {
           debugPrint('SYNC ERROR: Could not push brand ${b.id}: $e');

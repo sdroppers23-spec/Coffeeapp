@@ -5,8 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../discovery_filter_provider.dart';
 import '../../../core/config/flag_constants.dart';
 import '../../../core/l10n/app_localizations.dart';
+import '../../navigation/navigation_providers.dart';
 
-class FilterSortSheet extends ConsumerWidget {
+class FilterSortSheet extends ConsumerStatefulWidget {
   final NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState>
   filterProvider;
   final List<String> availableCountries;
@@ -22,8 +23,27 @@ class FilterSortSheet extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(filterProvider);
+  ConsumerState<FilterSortSheet> createState() => _FilterSortSheetState();
+}
+
+class _FilterSortSheetState extends ConsumerState<FilterSortSheet> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(navBarVisibleProvider.notifier).hide();
+    });
+  }
+
+  @override
+  void dispose() {
+    ref.read(navBarVisibleProvider.notifier).show();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(widget.filterProvider);
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
@@ -55,27 +75,27 @@ class FilterSortSheet extends ConsumerWidget {
             const SizedBox(height: 12),
             _buildFilterChips(
               ref,
-              availableCountries,
+              widget.availableCountries,
               state.selectedCountries,
-              (val) => ref.read(filterProvider.notifier).toggleCountry(val),
+              (val) => ref.read(widget.filterProvider.notifier).toggleCountry(val),
             ),
             const SizedBox(height: 24),
             _buildSectionTitle(ref.t('flavor_profile')),
             const SizedBox(height: 12),
             _buildFilterChips(
               ref,
-              availableFlavors,
+              widget.availableFlavors,
               state.selectedFlavorNotes,
-              (val) => ref.read(filterProvider.notifier).toggleFlavorNote(val),
+              (val) => ref.read(widget.filterProvider.notifier).toggleFlavorNote(val),
             ),
             const SizedBox(height: 24),
             _buildSectionTitle(ref.t('processing')),
             const SizedBox(height: 12),
             _buildFilterChips(
               ref,
-              availableProcesses,
+              widget.availableProcesses,
               state.selectedProcesses,
-              (val) => ref.read(filterProvider.notifier).toggleProcess(val),
+              (val) => ref.read(widget.filterProvider.notifier).toggleProcess(val),
             ),
             const SizedBox(height: 32),
             SafeArea(
@@ -108,7 +128,7 @@ class FilterSortSheet extends ConsumerWidget {
                   const SizedBox(height: 8),
                   TextButton(
                     onPressed: () {
-                      ref.read(filterProvider.notifier).clearFilters();
+                      ref.read(widget.filterProvider.notifier).clearFilters();
                       Navigator.pop(context);
                     },
                     child: Text(
@@ -142,7 +162,7 @@ class FilterSortSheet extends ConsumerWidget {
   }
 
   Widget _buildSortGrid(WidgetRef ref) {
-    final state = ref.watch(filterProvider);
+    final state = ref.watch(widget.filterProvider);
     return Wrap(
       spacing: 8,
       runSpacing: 8,
@@ -151,37 +171,37 @@ class FilterSortSheet extends ConsumerWidget {
           label: ref.t('sort_az'),
           type: SortType.alphabetAsc,
           current: state.sortType,
-          provider: filterProvider,
+          provider: widget.filterProvider,
         ),
         _SortChip(
           label: ref.t('sort_za'),
           type: SortType.alphabetDesc,
           current: state.sortType,
-          provider: filterProvider,
+          provider: widget.filterProvider,
         ),
         _SortChip(
           label: ref.t('price_asc'),
           type: SortType.priceAsc,
           current: state.sortType,
-          provider: filterProvider,
+          provider: widget.filterProvider,
         ),
         _SortChip(
           label: ref.t('price_desc'),
           type: SortType.priceDesc,
           current: state.sortType,
-          provider: filterProvider,
+          provider: widget.filterProvider,
         ),
         _SortChip(
           label: ref.t('newest_first'),
           type: SortType.dateDesc,
           current: state.sortType,
-          provider: filterProvider,
+          provider: widget.filterProvider,
         ),
         _SortChip(
           label: ref.t('oldest_first'),
           type: SortType.dateAsc,
           current: state.sortType,
-          provider: filterProvider,
+          provider: widget.filterProvider,
         ),
       ],
     );

@@ -274,6 +274,7 @@ class _CustomRecipeFormScreenState
       if (widget.existingRecipe != null) {
         final updateCompanion = CustomRecipesCompanion(
           id: Value(widget.existingRecipe!.id),
+          lotId: Value(widget.lotId),
           methodKey: Value(widget.methodKey),
           name: Value(_nameCtrl.text.trim()),
           createdAt: Value(widget.existingRecipe!.updatedAt ?? now),
@@ -289,7 +290,9 @@ class _CustomRecipeFormScreenState
           notes: Value(_notesCtrl.text),
           rating: Value(_rating),
           recipeType: Value(_recipeType),
+          microns: Value(int.tryParse(_micronsCtrl.text)),
           isSynced: const Value(false),
+          isDeletedLocal: const Value(false),
           brewRatio: Value(double.tryParse(_brewRatioCtrl.text.replaceAll('1:', ''))),
           grinderName: Value(_selectedGrinder),
           userId: Value(ref.read(currentUserProvider)?.id ?? 'guest_user'),

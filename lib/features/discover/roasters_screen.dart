@@ -371,51 +371,55 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                   return _buildSwipeableBrandCard(brand);
                 },
               ),
-            // FAB добавити обсмажчика
-            if (!_isSelectionMode)
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 70),
-                  child: GestureDetector(
-                    onTap: () => _showAddRoasterDialog(context, ref),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 28, vertical: 16),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFB8955A),
-                        borderRadius: BorderRadius.circular(50),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFFC8A96E)
-                                .withValues(alpha: 0.35),
-                            blurRadius: 20,
-                            spreadRadius: 2,
-                            offset: const Offset(0, 6),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.add_rounded,
-                              color: Colors.black87, size: 20),
-                          const SizedBox(width: 8),
-                          Text(
-                            'ДОДАТИ ОБСМАЖЧИКА',
-                            style: GoogleFonts.outfit(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 12,
-                              letterSpacing: 1.5,
-                              color: Colors.black87,
+            // FAB добавити обсмажчика - Shown only if list is empty
+            brandsAsync.whenData((brands) {
+              if (brands.isEmpty && !_isSelectionMode) {
+                return Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 90, right: 24),
+                    child: GestureDetector(
+                      onTap: () => _showAddRoasterDialog(context, ref),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 28, vertical: 16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFB8955A),
+                          borderRadius: BorderRadius.circular(50),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFFC8A96E)
+                                  .withValues(alpha: 0.35),
+                              blurRadius: 20,
+                              spreadRadius: 2,
+                              offset: const Offset(0, 6),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.add_rounded,
+                                color: Colors.black87, size: 20),
+                            const SizedBox(width: 8),
+                            Text(
+                              'ДОДАТИ ОБСМАЖЧИКА',
+                              style: GoogleFonts.outfit(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 12,
+                                letterSpacing: 1.5,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
+                );
+              }
+              return const SizedBox.shrink();
+            }).value ?? const SizedBox.shrink(),
           ],
         );
       },

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:go_router/go_router.dart';
 import '../../core/supabase/supabase_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../navigation/navigation_providers.dart';
@@ -74,32 +75,44 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         meta['avatar_url'] as String? ??
         'https://api.dicebear.com/7.x/adventurer/png?seed=${user.id}';
 
-    return Scaffold(
-        appBar: AppBar(
-        title: Text(
-          ref.t('profile'),
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-        ),
-        actions: [
-          if (_isLoading)
-            const Center(
-              child: Padding(
-                padding: EdgeInsets.only(right: 16),
-                child: SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
+    return PopScope(
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        ref.read(navBarVisibleProvider.notifier).show();
+      },
+      child: Scaffold(
+          appBar: AppBar(
+          title: Text(
+            ref.t('profile'),
+            style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: () {
+              ref.read(navBarVisibleProvider.notifier).show();
+              context.pop();
+            },
+          ),
+          actions: [
+            if (_isLoading)
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.only(right: 16),
+                  child: SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
                 ),
+              )
+            else
+              IconButton(
+                icon: const Icon(Icons.logout),
+                tooltip: 'Sign Out',
+                onPressed: _signOut,
               ),
-            )
-          else
-            IconButton(
-              icon: const Icon(Icons.logout),
-              tooltip: 'Sign Out',
-              onPressed: _signOut,
-            ),
-        ],
-      ),
+          ],
+        ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
         child: Column(
@@ -170,57 +183,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       _StatColumn(ref.t('badges'), '3'),
                     ],
                   ),
-                  const SizedBox(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        ref.t('language'),
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 16,
-                        ),
-                      ),
-                      DropdownButton<String>(
-                        value: ref.watch(localeProvider),
-                        dropdownColor: const Color(0xFF1E1E1E),
-                        underline: const SizedBox(),
-                        style: const TextStyle(
-                          color: Color(0xFFC8A96E),
-                          fontWeight: FontWeight.bold,
-                        ),
-                        items: const [
-                          DropdownMenuItem(value: 'en', child: Text('English')),
-                          DropdownMenuItem(
-                            value: 'uk',
-                            child: Text('Українська'),
-                          ),
-                          DropdownMenuItem(value: 'ru', child: Text('Русский')),
-                          DropdownMenuItem(value: 'es', child: Text('Español')),
-                          DropdownMenuItem(
-                            value: 'fr',
-                            child: Text('Français'),
-                          ),
-                          DropdownMenuItem(value: 'de', child: Text('Deutsch')),
-                          DropdownMenuItem(
-                            value: 'it',
-                            child: Text('Italiano'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'pt',
-                            child: Text('Português'),
-                          ),
-                          DropdownMenuItem(value: 'ja', child: Text('日本語')),
-                          DropdownMenuItem(value: 'zh', child: Text('中文')),
-                        ],
-                        onChanged: (val) {
-                          if (val != null) {
-                            ref.read(localeProvider.notifier).setLocale(val);
-                          }
-                        },
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
@@ -251,8 +213,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }
 
 class _StatColumn extends StatelessWidget {

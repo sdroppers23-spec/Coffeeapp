@@ -337,110 +337,87 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
             ),
           ),
           // ── List ────────────────────────────────────────────────────────
-          Expanded(
-            child: brandsAsync.when(
-              loading: () => const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 40,
-                      height: 40,
-                      child: CircularProgressIndicator(
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(Color(0xFFC8A96E)),
-                        strokeWidth: 2,
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      'Завантаження обсмажчиків...',
-                      style: TextStyle(
-                        color: Colors.white54,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              error: (e, _) => Center(
-                  child: Text('Помилка: $e',
-                      style: const TextStyle(color: Colors.red))),
-              data: (brands) {
-                final filtered = brands.where((b) {
-                  if (_pendingDeleteIds.contains(b.id)) return false;
-                  if (_tabController.index == 0) return !b.isArchived;
-                  if (_tabController.index == 1) {
-                    return b.isFavorite && !b.isArchived;
-                  }
-                  if (_tabController.index == 2) return b.isArchived;
-                  return !b.isArchived;
-                }).toList();
-
-                if (filtered.isEmpty) {
-                  return _buildEmptyState();
-                }
-
-                return ListView.builder(
-                  padding:
-                      const EdgeInsets.fromLTRB(16, 8, 16, 120),
-                  itemCount: filtered.length,
-                  itemBuilder: (context, index) {
-                    final brand = filtered[index];
-                    return _buildSwipeableBrandCard(brand);
-                  },
-                );
-              },
-            ),
-          ),
-        ],
+    return brandsAsync.when(
+      loading: () => const Center(
+        child: _PremiumPulsingLoader(
+          message: 'Завантаження обсмажчиків...',
+        ),
       ),
-    ],
-  ),
-      // ── FAB добавити обсмажчика ────────────────────────────────────────
-      floatingActionButton: _isSelectionMode
-          ? null
-          : Padding(
-              padding: const EdgeInsets.only(bottom: 70),
-              child: GestureDetector(
-                onTap: () => _showAddRoasterDialog(context, ref),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 28, vertical: 16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFB8955A),
-                    borderRadius: BorderRadius.circular(50),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFC8A96E)
-                            .withValues(alpha: 0.35),
-                        blurRadius: 20,
-                        spreadRadius: 2,
-                        offset: const Offset(0, 6),
+      error: (e, _) => Center(
+          child: Text('Помилка: $e',
+              style: const TextStyle(color: Colors.red))),
+      data: (brands) {
+        final filtered = brands.where((b) {
+          if (_pendingDeleteIds.contains(b.id)) return false;
+          if (_tabController.index == 0) return !b.isArchived;
+          if (_tabController.index == 1) {
+            return b.isFavorite && !b.isArchived;
+          }
+          if (_tabController.index == 2) return b.isArchived;
+          return !b.isArchived;
+        }).toList();
+
+        return Stack(
+          children: [
+            if (filtered.isEmpty)
+              _buildEmptyState()
+            else
+              ListView.builder(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
+                itemCount: filtered.length,
+                itemBuilder: (context, index) {
+                  final brand = filtered[index];
+                  return _buildSwipeableBrandCard(brand);
+                },
+              ),
+            // FAB добавити обсмажчика
+            if (!_isSelectionMode)
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 70),
+                  child: GestureDetector(
+                    onTap: () => _showAddRoasterDialog(context, ref),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 28, vertical: 16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFB8955A),
+                        borderRadius: BorderRadius.circular(50),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFFC8A96E)
+                                .withValues(alpha: 0.35),
+                            blurRadius: 20,
+                            spreadRadius: 2,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.add_rounded,
-                          color: Colors.black87, size: 20),
-                      const SizedBox(width: 8),
-                      Text(
-                        'ДОДАТИ ОБСМАЖЧИКА',
-                        style: GoogleFonts.outfit(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 12,
-                          letterSpacing: 1.5,
-                          color: Colors.black87,
-                        ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.add_rounded,
+                              color: Colors.black87, size: 20),
+                          const SizedBox(width: 8),
+                          Text(
+                            'ДОДАТИ ОБСМАЖЧИКА',
+                            style: GoogleFonts.outfit(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 12,
+                              letterSpacing: 1.5,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          ],
+        );
+      },
     );
   }
 
@@ -575,74 +552,58 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
             : Icons.store_rounded;
 
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white.withValues(alpha: 0.03),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
-            ),
-            child: Icon(icon, color: const Color(0xFFC8A96E), size: 48),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            title,
-            style: GoogleFonts.outfit(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Text(
-              description,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white38, fontSize: 14),
-            ),
-          ),
-          if (!isArchiveTab && !isFavoritesTab) ...[
-            const SizedBox(height: 32),
-            PressableScale(
-              onTap: () => _showAddRoasterDialog(context, ref),
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFC8A96E),
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(height: 40),
+            // Decorative Icon with Glow
+            Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
+                border: Border.all(
+                  color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                  width: 2,
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.add, color: Colors.black, size: 20),
-                    const SizedBox(width: 8),
-                    Text(
-                      'ДОДАТИ ОБСМАЖЧИКА',
-                      style: GoogleFonts.outfit(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                  ],
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
+                    blurRadius: 30,
+                    spreadRadius: 5,
+                  ),
+                ],
+              ),
+              child: Icon(icon, color: const Color(0xFFC8A96E), size: 54),
+            ),
+            const SizedBox(height: 32),
+            Text(
+              title,
+              style: GoogleFonts.cormorantGaramond(
+                color: const Color(0xFFC8A96E),
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 48),
+              child: Text(
+                description,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.outfit(
+                  color: Colors.white38,
+                  fontSize: 15,
+                  height: 1.5,
                 ),
               ),
             ),
+            const SizedBox(height: 60),
           ],
-        ],
+        ),
       ),
     );
   }
@@ -921,6 +882,95 @@ class _BrandLogo extends StatelessWidget {
       fit: BoxFit.contain,
       errorWidget: (_, _, _) =>
           const Icon(Icons.coffee_rounded, color: Colors.white24),
+    );
+  }
+}
+
+class _PremiumPulsingLoader extends StatefulWidget {
+  final String message;
+  const _PremiumPulsingLoader({required this.message});
+
+  @override
+  State<_PremiumPulsingLoader> createState() => _PremiumPulsingLoaderState();
+}
+
+class _PremiumPulsingLoaderState extends State<_PremiumPulsingLoader>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _opacityAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
+
+    _scaleAnimation = Tween<double>(begin: 0.85, end: 1.05).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+
+    _opacityAnimation = Tween<double>(begin: 0.3, end: 0.8).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) {
+            return Transform.scale(
+              scale: _scaleAnimation.value,
+              child: Opacity(
+                opacity: _opacityAnimation.value,
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                    border: Border.all(
+                      color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
+                      width: 2,
+                    ),
+                  ),
+                  child: const Icon(
+                    Icons.coffee_rounded,
+                    color: Color(0xFFC8A96E),
+                    size: 40,
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+        const SizedBox(height: 24),
+        ShaderMask(
+          shaderCallback: (bounds) => const LinearGradient(
+            colors: [Colors.white38, Colors.white, Colors.white38],
+          ).createShader(bounds),
+          child: Text(
+            widget.message,
+            style: GoogleFonts.outfit(
+              color: Colors.white,
+              fontSize: 14,
+              letterSpacing: 1,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

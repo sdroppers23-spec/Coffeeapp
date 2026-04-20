@@ -337,7 +337,8 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
             ),
           ),
           // ── List ────────────────────────────────────────────────────────
-    return brandsAsync.when(
+          Expanded(
+            child: brandsAsync.when(
       loading: () => const Center(
         child: _PremiumPulsingLoader(
           message: 'Завантаження обсмажчиків...',
@@ -418,8 +419,14 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
           ],
         );
       },
-    );
-  }
+    ),
+  ),
+],
+),
+],
+),
+);
+}
 
   // ─── Swipeable Card ────────────────────────────────────────────────────────
 

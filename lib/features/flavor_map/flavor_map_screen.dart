@@ -16,12 +16,12 @@ class FlavorValuesNotifier extends Notifier<Map<String, double>> {
   @override
   Map<String, double> build() {
     return {
-      'radar_aroma': 0.7,
-      'radar_flavor': 0.8,
-      'radar_acidity': 0.6,
-      'radar_body': 0.5,
-      'radar_aftertaste': 0.6,
-      'radar_balance': 0.8,
+      'АРОМАТ': 0.7,
+      'СМАК': 0.8,
+      'КИСЛОТНІСТЬ': 0.6,
+      'ТІЛО': 0.5,
+      'ПІСЛЯСМАК': 0.6,
+      'БАЛАНС': 0.8,
     };
   }
 
@@ -123,7 +123,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                     Expanded(
                       child: _TabOption(
                         icon: Icons.radar,
-                        label: ref.t('tab_radar'),
+                        label: 'Профіль',
                         isSelected: _selectedTab == 0,
                         onTap: () => _setTab(0),
                       ),
@@ -131,7 +131,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                     Expanded(
                       child: _TabOption(
                         icon: Icons.public,
-                        label: ref.t('tab_sphere'),
+                        label: 'Сфера',
                         isSelected: _selectedTab == 1,
                         onTap: () => _setTab(1),
                       ),
@@ -139,7 +139,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                     Expanded(
                       child: _TabOption(
                         icon: Icons.pie_chart_outline,
-                        label: ref.t('tab_wheel'),
+                        label: 'Коло смаків',
                         isSelected: _selectedTab == 2,
                         onTap: () => _setTab(2),
                       ),
@@ -172,7 +172,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                               children: [
                                 const SizedBox(height: 32),
                                 Text(
-                                  ref.t('radar_title'),
+                                  'СЕНСОРНИЙ ПРОФІЛЬ',
                                   style: GoogleFonts.poppins(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
@@ -229,11 +229,11 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _LegendItem(color: const Color(0xFFFFEB3B), label: ref.t('radar_acidity')),
+                      _LegendItem(color: const Color(0xFFFFEB3B), label: 'Кислотність'),
                       const SizedBox(width: 20),
-                      _LegendItem(color: const Color(0xFF8D6E63), label: ref.t('radar_body')),
+                      _LegendItem(color: const Color(0xFF8D6E63), label: 'Тіло'),
                       const SizedBox(width: 20),
-                      _LegendItem(color: const Color(0xFFE91E63), label: ref.t('radar_sweetness')),
+                      _LegendItem(color: const Color(0xFFE91E63), label: 'Солодкість'),
                     ],
                   ),
                 ),
@@ -471,40 +471,40 @@ class _InteractiveSpiderChartState
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _TemplateChip(
-                ref.t('process_washed_label'),
+              const _TemplateChip(
+                'Митий',
                 'Clean & Bright',
                 {
-                  'radar_aroma': 0.7,
-                  'radar_flavor': 0.8,
-                  'radar_acidity': 0.9,
-                  'radar_body': 0.4,
-                  'radar_aftertaste': 0.7,
-                  'radar_balance': 0.8,
+                  'АРОМАТ': 0.7,
+                  'СМАК': 0.8,
+                  'КИСЛОТНІСТЬ': 0.9,
+                  'ТІЛО': 0.4,
+                  'ПІСЛЯСМАК': 0.7,
+                  'БАЛАНС': 0.8,
                 },
               ),
-              _TemplateChip(
-                ref.t('process_natural_label'),
+              const _TemplateChip(
+                'Натуральний',
                 'Fruity & Sweet',
                 {
-                  'radar_aroma': 0.9,
-                  'radar_flavor': 0.9,
-                  'radar_acidity': 0.5,
-                  'radar_body': 0.7,
-                  'radar_aftertaste': 0.6,
-                  'radar_balance': 0.7,
+                  'АРОМАТ': 0.9,
+                  'СМАК': 0.9,
+                  'КИСЛОТНІСТЬ': 0.5,
+                  'ТІЛО': 0.7,
+                  'ПІСЛЯСМАК': 0.6,
+                  'БАЛАНС': 0.7,
                 },
               ),
-              _TemplateChip(
-                ref.t('process_honey_label'),
+              const _TemplateChip(
+                'Хані',
                 'Sticky & Balanced',
                 {
-                  'radar_aroma': 0.8,
-                  'radar_flavor': 0.8,
-                  'radar_acidity': 0.6,
-                  'radar_body': 0.6,
-                  'radar_aftertaste': 0.7,
-                  'radar_balance': 0.9,
+                  'АРОМАТ': 0.8,
+                  'СМАК': 0.8,
+                  'КИСЛОТНІСТЬ': 0.6,
+                  'ТІЛО': 0.6,
+                  'ПІСЛЯСМАК': 0.7,
+                  'БАЛАНС': 0.9,
                 },
               ),
             ],
@@ -538,7 +538,6 @@ class _InteractiveSpiderChartState
                       values: values,
                       primaryColor: const Color(0xFFC8A96E),
                       textColor: Colors.white54,
-                      ref: ref,
                     ),
                   ),
                 ),
@@ -594,13 +593,11 @@ class RadarPainter extends CustomPainter {
   final Map<String, double> values;
   final Color primaryColor;
   final Color textColor;
-  final WidgetRef ref;
 
   RadarPainter({
     required this.values,
     required this.primaryColor,
     required this.textColor,
-    required this.ref,
   });
 
   @override
@@ -684,7 +681,7 @@ class RadarPainter extends CustomPainter {
       canvas.drawCircle(point, 4, Paint()..color = primaryColor);
 
       // Handle text wrapping/splitting if too wide
-      final labelText = ref.t(labels[i]);
+      final labelText = labels[i];
       final maxLabelWidth = 65.0; // Restrict width to encourage wrapping
       
       textPainter.text = TextSpan(

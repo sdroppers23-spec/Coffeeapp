@@ -5,69 +5,56 @@ class FlavorDescriptions {
       'wheel_cat_floral': {
         'en': 'Delicate and aromatic notes reminiscent of blossoms. These flavors often come from high-altitude environments where slow maturation concentrates volatile aromatic compounds. Characteristic of Ethiopian heirlooms and Gesha varieties.',
         'uk': 'Делікатні та ароматні ноти, що нагадують цвітіння. Ці смаки часто виникають завдяки високогірним умовам, де повільне дозрівання концентрує летючі ароматичні сполуки. Характерно для ефіопської спадщини та сортів Гейша.',
-        'ru': 'Деликатные и ароматные ноты, напоминающие цветение. Эти вкусы часто возникают в высокогорных условиях, где медленное созревание концентрирует летучие ароматические соединения. Характерно для эфиопского наследия и сортов Гейша.',
       },
       'wheel_cat_fruity': {
         'en': 'A wide range of sweet and tart notes from berries to stone fruits. These are typically associated with organic acids like citric and malic, often enhanced by natural or anaerobic processing. Common in African and Central American coffees.',
         'uk': 'Широкий спектр солодких та кислих нот від ягід до кісточкових фруктів. Зазвичай вони пов\'язані з органічними кислотами, такими як лимонна та яблучна, часто посилюються натуральною або анаеробною обробкою. Типово для африканської та центральноамериканської кави.',
-        'ru': 'Широкий спектр сладких и кислых нот, от ягод до косточковых фруктов. Обычно они связаны с органическими кислотами, такими как лимонная и яблочная, часто усиливаются натуральной или анаэробной обработкой. Типично для африканского и центральноамериканского кофе.',
       },
       'wheel_cat_sour_fermented': {
         'en': 'Complex notes that can range from pleasant tangy acids to intense fermented funk. These flavors result from metabolic processes during coffee processing (like prolonged fermentation). Often found in experimental processing lots from Colombia and Costa Rica.',
         'uk': 'Комплексні ноти, що можуть варіюватися від приємних гострих кислот до інтенсивного ферментованого "фанку". Ці смаки є результатом метаболічних процесів під час обробки кави (наприклад, тривала ферментація). Часто зустрічається в лотах з експериментальною обробкою з Колумбії та Коста-Ріки.',
-        'ru': 'Комплексные ноты, варьирующиеся от приятных острых кислот до интенсивного ферментированного "фанка". Эти вкусы являются результатом метаболических процессов во время обработки кофе (например, длительная ферментация). Часто встречается в лотах с экспериментальной обработкой из Колумбии и Коста-Рики.',
       },
       'wheel_cat_green_veg': {
         'en': 'Herbal or vegetal notes that evoke fresh-cut grass or raw vegetables. These can indicate a lighter roast profile or specific varieties that retain "green" characteristics. Common in some Indonesian or under-roasted high-density beans.',
         'uk': 'Трав\'янисті або овочеві ноти, що нагадують свіжоскошену траву або сирі овочі. Вони можуть вказувати на світлий профіль обсмаження або специфічні сорти, що зберігають "зелені" характеристики. Зустрічається в деяких індонезійських лотах або при світлому обсмаженні щільних зерен.',
-        'ru': 'Травянистые или овощные ноты, напоминающие свежескошенную траву или сырые овощи. Могут указывать на светлый профиль обжарки или специфические сорта, сохраняющие "зеленые" характеристики. Встречается в некоторых индонезийских лотах или при светлой обжарке плотных зерен.',
       },
       'wheel_cat_roasted': {
         'en': 'Savory and deep notes resulting from the Maillard reaction and caramelization during roasting. These range from toasted bread to smoky accents. Typically associated with medium to dark roast profiles from Brazil or India.',
         'uk': 'Пікантні та глибокі ноти, що виникають внаслідок реакції Майяра та карамелізації під час обсмажування. Вони варіюються від підсмаженого хліба до димних акцентів. Зазвичай асоціюються з профілями середнього та темного обсмаження з Бразилії чи Індії.',
-        'ru': 'Пикантные и глубокие ноты, возникающие в результате реакции Майяра и карамелизации во время обжарки. Варьируются от поджаренного хлеба до дымных акцентов. Обычно ассоциируются с профилями средней и темной обжарки из Бразилии или Индии.',
       },
       'wheel_cat_spices': {
         'en': 'Warm, pungent, or sweet spice notes like pepper, clove, or cinnamon. These often emerge during the middle stages of roasting. Frequently found in Sumatran coffees or spicy varieties from Rwanda.',
         'uk': 'Теплі, гострі або солодкі пряні ноти, такі як перець, гвоздика або кориця. Вони часто проявляються на середніх етапах обсмажування. Часто зустрічаються в суматранській каві або пряних сортах з Руанди.',
-        'ru': 'Теплые, острые или сладкие пряные ноты, такие как перец, гвоздика или корица. Они часто проявляются на средних этапах обжарки. Часто встречаются в суматранском кофе или пряных сортах из Руанды.',
       },
       'wheel_cat_nutty_cocoa': {
         'en': 'Comforting notes of chocolate, nuts, and cocoa. These result from stable sugars and oils that develop early in the roast. The standard profile for many high-quality Arabicas from Brazil, Guatemala, and Vietnam.',
         'uk': 'Приємні ноти шоколаду, горіхів та какао. Вони виникають завдяки стабільним цукрам та оліям, що розвиваються на початку обсмаження. Звичайний профіль для багатьох високоякісних арабік з Бразилії, Гватемали та В\'єтнаму.',
-        'ru': 'Уютные ноты шоколада, орехов и какао. Они возникают благодаря стабильным сахарам и маслам, которые развиваются в начале обжарки. Стандартный профиль для многих высококачественных арабик из Бразилии, Гватемалы и Вьетнама.',
       },
       'wheel_cat_sweet': {
         'en': 'The foundational sweetness in coffee, ranging from white sugar to complex molasses. It comes from the breakdown of carbohydrates during roasting. Present in almost all balanced, specialty coffees.',
         'uk': 'Основна солодкість кави, від білого цукру до складних патокових відтінків. Вона походить від розпаду вуглеводів під час обсмажування. Присутня майже у всій збалансованій спешелті-каві.',
-        'ru': 'Основополагающая сладость кофе, от белого сахара до сложных оттенков патоки. Она возникает в результате распада углеводов во время обжарки. Присутствует почти во всем сбалансированном спешелти-кофе.',
       },
       'wheel_cat_others': {
         'en': 'A category for unique or unconventional notes that don\'t fit elsewhere, often reflecting rare chemical artifacts of processing or storage.',
         'uk': 'Категорія для унікальних або нетрадиційних нот, які не вписуються в інші розділи, часто відображаючи рідкісні хімічні особливості обробки або зберігання.',
-        'ru': 'Категория для уникальных или нетрадиционных нот, которые не вписываются в другие разделы, часто отражая редкие химические особенности обработки или хранения.',
       },
 
       // --- SUB-CATEGORIES ---
       'wheel_sub_berry': {
         'en': 'Vibrant and sweet-tart notes of small fruits. Derived from concentrated anthocyanins. Typical of Ethiopian natural coffees and Kenyan SL-varieties.',
         'uk': 'Яскраві солодкувато-кислі ноти дрібних плодів. Походять від концентрованих антоціанів. Типово для ефіопської кави натуральної обробки та кенійських сортів SL.',
-        'ru': 'Яркие сладко-кислые ноты мелких плодов. Происходят от концентрированных антоцианов. Типично для эфиопского кофе натуральной обработки и кенийских сортов SL.',
       },
       'wheel_sub_dried_fruit': {
         'en': 'Concentrated, jammy sweetness reminiscent of raisins or dates. Often the result of over-ripening or natural sun-drying. Common in Yemen Moka and processed lots from Brazil.',
         'uk': 'Концентрована, джемова солодкість, що нагадує родзинки або фініки. Часто є результатом перезрівання або натуральної сушки на сонці. Зустрічається в єменській каві Мока та оброблених лотах з Бразилії.',
-        'ru': 'Концентрированная, джемовая сладость, напоминающая изюм или финики. Часто является результатом перезревания или натуральной сушки на солнце. Встречается в йеменском кофе Мока и обработанных лотах из Бразилии.',
       },
       'wheel_sub_citrus': {
         'en': 'Zesty and acidic notes providing brightness and "sparkle". Linked to high citric acid content. Signature profile of high-grown Colombian and Honduran coffees.',
         'uk': 'Цедрові та кислі ноти, що забезпечують яскравість та "іскристість". Пов\'язані з високим вмістом лимонної кислоти. Фірмовий профіль високогірної колумбійської та гондураської кави.',
-        'ru': 'Цедровые и кислые ноты, обеспечивающие яркость и "игристость". Связаны с высоким содержанием лимонной кислоты. Фирменный профиль высокогорного колумбийского и гондурасского кофе.',
       },
       'wheel_sub_other_fruit': {
         'en': 'Tropical or temperate fruit notes like apple, pear, or mango. Represents intermediate acidity levels. Characteristic of Costa Rican and Salvadoran coffees.',
         'uk': 'Ноти тропічних або фруктів помірного клімату, таких як яблуко, груша або манго. Представляє середні рівні кислотності. Характерно для кави з Коста-Ріки та Сальвадору.',
-        'ru': 'Ноты тропических или фруктов умеренного климата, таких как яблоко, груша или манго. Представляют средние уровни кислотности. Характерно для кофе из Коста-Рики и Сальвадора.',
       },
       'wheel_sub_sour': {
         'en': 'Direct and sharp acidic notes. When balanced, it provides structure; when excessive, it indicates under-extraction or high organic acid concentration.',

@@ -13,6 +13,7 @@ import '../navigation/navigation_providers.dart';
 import '../../core/database/database_provider.dart';
 import '../../shared/widgets/add_recipe_dialog.dart';
 import '../../shared/widgets/pressable_scale.dart';
+import '../../shared/widgets/lot_detail_widgets.dart';
 import '../../core/providers/settings_provider.dart';
 
 class CustomLotDetailScreen extends ConsumerStatefulWidget {
@@ -168,10 +169,10 @@ class _CustomLotDetailScreenState extends ConsumerState<CustomLotDetailScreen>
                       Row(
                         children: [
                           if (lot.scaScore != null)
-                            _Badge(label: '${lot.scaScore} SCA', theme: theme),
+                            LotBadge(label: '${lot.scaScore} SCA', theme: theme),
                           if (lot.roastLevel != null) ...[
                             const SizedBox(width: 8),
-                            _Badge(
+                            LotBadge(
                               label: lot.roastLevel!.toUpperCase(), 
                               theme: theme,
                               isPrimary: true,
@@ -584,9 +585,9 @@ class _InfoTab extends ConsumerWidget {
               Row(
                 children: [
                   Expanded(
-                    child: _CompactStat(
+                    child: LotCompactStat(
                       label: ref.t('roastery'),
-                      value: lot.roasteryName ?? '—',
+                      value: lot.roasteryName ?? 'N/A',
                     ),
                   ),
                   Container(
@@ -595,9 +596,9 @@ class _InfoTab extends ConsumerWidget {
                     color: Colors.white.withValues(alpha: 0.05),
                   ),
                   Expanded(
-                    child: _CompactStat(
+                    child: LotCompactStat(
                       label: ref.t('origin'),
-                      value: lot.originCountry ?? '—',
+                      value: lot.originCountry ?? 'N/A',
                     ),
                   ),
                 ],
@@ -606,9 +607,9 @@ class _InfoTab extends ConsumerWidget {
               Row(
                 children: [
                   Expanded(
-                    child: _CompactStat(
+                    child: LotCompactStat(
                       label: ref.t('process'),
-                      value: lot.process ?? '—',
+                      value: lot.process ?? 'N/A',
                     ),
                   ),
                   Container(
@@ -617,24 +618,24 @@ class _InfoTab extends ConsumerWidget {
                     color: Colors.white.withValues(alpha: 0.05),
                   ),
                   Expanded(
-                    child: _CompactStat(
+                    child: LotCompactStat(
                       label: 'SCA SCORE',
-                      value: lot.scaScore ?? '—',
+                      value: lot.scaScore ?? 'N/A',
                     ),
                   ),
                 ],
               ),
               if (lot.region?.isNotEmpty ?? false) ...[
                 const Divider(height: 24, color: Colors.white10),
-                _CompactStat(label: ref.t('region'), value: lot.region!),
+                LotCompactStat(label: ref.t('region'), value: lot.region!),
               ],
               if (lot.altitude?.isNotEmpty ?? false) ...[
                 const Divider(height: 24, color: Colors.white10),
-                _CompactStat(label: ref.t('altitude'), value: lot.altitude!),
+                LotCompactStat(label: ref.t('altitude'), value: lot.altitude!),
               ],
               if (lot.varieties?.isNotEmpty ?? false) ...[
                 const Divider(height: 24, color: Colors.white10),
-                _CompactStat(label: ref.t('varieties'), value: lot.varieties!),
+                LotCompactStat(label: ref.t('varieties'), value: lot.varieties!),
               ],
             ],
           ),
@@ -672,15 +673,15 @@ class _InfoTab extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 12),
-        _DetailRow(
+        LotDetailRow(
           label: ref.t('lot_number_label'),
-          value: lot.lotNumber ?? '—',
+          value: lot.lotNumber ?? 'N/A',
         ),
-        _DetailRow(label: ref.t('weight'), value: lot.weight ?? '—'),
-        _DetailRow(label: ref.t('roast_level'), value: lot.roastLevel ?? '—'),
-        _DetailRow(label: ref.t('farm'), value: lot.farm ?? '—'),
-        _DetailRow(label: ref.t('wash_station'), value: lot.washStation ?? '—'),
-        _DetailRow(label: ref.t('farmer'), value: lot.farmer ?? '—'),
+        LotDetailRow(label: ref.t('weight'), value: lot.weight ?? 'N/A'),
+        LotDetailRow(label: ref.t('roast_level'), value: lot.roastLevel ?? 'N/A'),
+        LotDetailRow(label: ref.t('farm'), value: lot.farm ?? 'N/A'),
+        LotDetailRow(label: ref.t('wash_station'), value: lot.washStation ?? 'N/A'),
+        LotDetailRow(label: ref.t('farmer'), value: lot.farmer ?? 'N/A'),
       ],
     );
   }
@@ -732,98 +733,6 @@ class _ProfileTab extends ConsumerWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _CompactStat extends StatelessWidget {
-  final String label;
-  final String value;
-  const _CompactStat({required this.label, required this.value});
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          label.toUpperCase(),
-          style: GoogleFonts.outfit(
-            fontSize: 9,
-            color: Colors.white38,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.5,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          textAlign: TextAlign.center,
-          style: GoogleFonts.outfit(
-            fontSize: 13,
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _DetailRow extends StatelessWidget {
-  final String label;
-  final String value;
-  const _DetailRow({required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: GoogleFonts.outfit(fontSize: 13, color: Colors.white54),
-          ),
-          Text(
-            value,
-            style: GoogleFonts.outfit(
-              fontSize: 13,
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-class _Badge extends StatelessWidget {
-  final String label;
-  final ThemeData theme;
-  final bool isPrimary;
-
-  const _Badge({required this.label, required this.theme, this.isPrimary = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: isPrimary 
-            ? theme.colorScheme.primary.withValues(alpha: 0.9)
-            : Colors.white.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(10),
-        border: isPrimary ? null : Border.all(color: Colors.white10),
-      ),
-      child: Text(
-        label,
-        style: GoogleFonts.outfit(
-          fontSize: 9,
-          fontWeight: FontWeight.w900,
-          color: isPrimary ? Colors.black : Colors.white70,
-          letterSpacing: 0.5,
-        ),
-      ),
     );
   }
 }

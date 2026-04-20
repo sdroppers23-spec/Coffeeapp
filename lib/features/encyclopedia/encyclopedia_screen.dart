@@ -44,63 +44,60 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
     return PremiumBackground(
       child: Stack(
         children: [
-        Column(
-          children: [
-        // ── Premium Action Bar ─────────────────────────────────────────────
-        DiscoveryActionBar(
-          filterProvider: encyclopediaFilterProvider,
-          onCompareTap: () {
-            final selectedCount = ref.read(selectedLotIdsProvider).length;
-            if (selectedCount == 0) {
-              // Redirect to standard comparison if nothing selected
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const ComparisonScreen()),
-              );
-            } else if (selectedCount == 1) {
-              // Hint to select second
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(isUk ? 'Оберіть другий лот для порівняння' : 'Select a second lot to compare'),
-                  backgroundColor: const Color(0xFFC8A96E),
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
-            } else {
-              // Direct navigation to comparison with selected lots
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const ComparisonScreen()),
-              ).then((_) {
-                // Clear selection after returning if desired, or keep it.
-                // ref.read(selectedLotIdsProvider.notifier).clear();
-              });
-            }
-          },
-          availableCountries: ref.watch(availableEncyclopediaCountriesProvider),
-          availableFlavors: ref.watch(availableEncyclopediaFlavorsProvider),
-          availableProcesses: ref.watch(availableEncyclopediaProcessesProvider),
-          showFavoritesButton: true,
-        ),
-
-        const SizedBox(height: 8),
-
-        // ── Content ─────────────────────────────────────────────────────────
-        Expanded(
-          child: Stack(
+          Column(
             children: [
-              _buildList(originsAsync),
-              ScrollToTopButton(
-                scrollController: _scrollController,
-                threshold: 400,
+              // ── Premium Action Bar ─────────────────────────────────────────────
+              DiscoveryActionBar(
+                filterProvider: encyclopediaFilterProvider,
+                onCompareTap: () {
+                  final selectedCount = ref.read(selectedLotIdsProvider).length;
+                  if (selectedCount == 0) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const ComparisonScreen()),
+                    );
+                  } else if (selectedCount == 1) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(isUk
+                            ? 'Оберіть другий лот для порівняння'
+                            : 'Select a second lot to compare'),
+                        backgroundColor: const Color(0xFFC8A96E),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const ComparisonScreen()),
+                    );
+                  }
+                },
+                availableCountries:
+                    ref.watch(availableEncyclopediaCountriesProvider),
+                availableFlavors: ref.watch(availableEncyclopediaFlavorsProvider),
+                availableProcesses:
+                    ref.watch(availableEncyclopediaProcessesProvider),
+                showFavoritesButton: true,
+              ),
+
+              const SizedBox(height: 8),
+
+              // ── Content ─────────────────────────────────────────────────────────
+              Expanded(
+                child: Stack(
+                  children: [
+                    _buildList(originsAsync),
+                    ScrollToTopButton(
+                      scrollController: _scrollController,
+                      threshold: 400,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-        ),
-          ],
-        ),
-          ],
-        ),
+        ],
       ),
     );
   }

@@ -13,9 +13,7 @@ import '../../shared/widgets/sensory_preview.dart';
 import '../../core/network/price_sync_service.dart';
 import '../brewing/custom_recipe_form.dart';
 import '../../shared/widgets/lot_detail_widgets.dart';
-import '../../shared/widgets/pressable_scale.dart';
 import '../navigation/navigation_providers.dart';
-import 'dart:io';
 
 class CoffeeLotDetailScreen extends ConsumerStatefulWidget {
   final LocalizedBeanDto entry;

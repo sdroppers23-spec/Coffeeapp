@@ -98,9 +98,22 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                       roasteryName: roasteryName,
                       imageUrl: imageUrl,
                       lot: liveLot ?? widget.lot,
+                      bean: liveBean ?? widget.entry,
                       heroTag: widget.heroTag,
                       isImageVisible: _tabController.index < 2, // Hide on Recipes tab
                       onBack: () => Navigator.pop(context),
+                      isFavorite: liveLot?.isFavorite ?? liveBean?.isFavorite ?? false,
+                      onToggleFavorite: () async {
+                        final db = ref.read(databaseProvider);
+                        if (liveLot != null) {
+                          await db.toggleFavorite(liveLot.id);
+                        } else if (liveBean != null) {
+                          await db.toggleBeanFavorite(liveBean.id);
+                        }
+                        if (!kIsWeb && !Platform.isWindows) {
+                          await Vibration.vibrate(duration: 50);
+                        }
+                      },
                       onEdit: liveLot != null ? () {
                         if (!kIsWeb && !Platform.isWindows) {
                           Vibration.vibrate(duration: 50);
@@ -310,25 +323,38 @@ class _DetailHeader extends StatelessWidget {
   final String roasteryName;
   final String? imageUrl;
   final CoffeeLotDto? lot;
+  final LocalizedBeanDto? bean;
   final String? heroTag;
   final bool isImageVisible;
   final VoidCallback onBack;
   final VoidCallback? onEdit;
+  final bool isFavorite;
+  final VoidCallback? onToggleFavorite;
 
   const _DetailHeader({
     required this.coffeeName,
     required this.roasteryName,
     this.imageUrl,
     this.lot,
+    this.bean,
     this.heroTag,
     this.isImageVisible = true,
     required this.onBack,
     this.onEdit,
+    this.isFavorite = false,
+    this.onToggleFavorite,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    
+    // Flag fallback logic
+    final effectiveImageUrl = (imageUrl != null && imageUrl!.isNotEmpty) 
+        ? imageUrl 
+        : (lot?.effectiveFlagUrl ?? bean?.effectiveFlagUrl);
+    final hasImage = isImageVisible && effectiveImageUrl != null && effectiveImageUrl.isNotEmpty;
+
     return Stack(
       children: [
         Hero(
@@ -338,10 +364,10 @@ class _DetailHeader extends StatelessWidget {
             height: isImageVisible ? 320 : 160,
             width: double.infinity,
             decoration: BoxDecoration(
-              image: (isImageVisible && imageUrl != null && imageUrl!.isNotEmpty) 
-                  ? (imageUrl!.startsWith('http') 
-                      ? DecorationImage(image: CachedNetworkImageProvider(imageUrl!), fit: BoxFit.cover)
-                      : DecorationImage(image: FileImage(File(imageUrl!)), fit: BoxFit.cover))
+              image: hasImage 
+                  ? (effectiveImageUrl!.startsWith('http') 
+                      ? DecorationImage(image: CachedNetworkImageProvider(effectiveImageUrl), fit: BoxFit.cover)
+                      : DecorationImage(image: FileImage(File(effectiveImageUrl)), fit: BoxFit.cover))
                   : null,
               color: Colors.black12,
             ),
@@ -384,6 +410,28 @@ class _DetailHeader extends StatelessWidget {
                   border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.3)),
                 ),
                 child: Icon(Icons.edit_rounded, color: theme.colorScheme.primary, size: 20),
+              ),
+            ),
+          ),
+        if (onToggleFavorite != null)
+          Positioned(
+            top: 50,
+            right: onEdit != null ? 70 : 20,
+            child: GestureDetector(
+              onTap: onToggleFavorite,
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.black45,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: isFavorite ? Colors.red.withValues(alpha: 0.3) : Colors.white10),
+                ),
+                child: Icon(
+                  isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                  color: isFavorite ? Colors.red : Colors.white,
+                  size: 20,
+                ),
               ),
             ),
           ),

@@ -375,20 +375,25 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
         }
       },
       child: RepaintBoundary(
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        child: GlassContainer(
-          padding: const EdgeInsets.all(16),
-          opacity: isSelected ? 0.25 : 0.20,
-          borderRadius: 20,
-          color: isSelected ? const Color(0xFFC8A96E) : Colors.white.withValues(alpha: 0.1),
-          borderColor: isSelected
-              ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
-              : Colors.white.withValues(alpha: 0.1),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: GlassContainer(
+            padding: const EdgeInsets.all(16),
+            opacity: 1.0, 
+            blur: 10, 
+            borderRadius: 20,
+            color: isSelected 
+                ? const Color(0xFFC8A96E).withValues(alpha: 0.15) 
+                : Colors.white.withValues(alpha: 0.1),
+            borderColor: isSelected
+                ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
+                : Colors.white.withValues(alpha: 0.12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
               // Header: Title, Subtitle, Heart + NEW: Expand Arrow
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

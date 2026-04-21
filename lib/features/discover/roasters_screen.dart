@@ -440,64 +440,67 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
     final isArchiveTab = _tabController.index == 2;
     final isUk = LocaleService.currentLocale == 'uk';
 
-    return GlassSwipeWrapper(
-      dismissibleKey: ValueKey('brand_swipe_${brand.id}'),
-      leftAction: GlassSwipeAction(
-        icon: isArchiveTab ? Icons.unarchive_outlined : Icons.archive_outlined,
-        label: isArchiveTab 
-          ? (isUk ? 'Відновити' : 'Restore')
-          : (isUk ? 'Архів' : 'Archive'),
-        color: const Color(0xFF3A7BBF),
-        onTap: () async {
-          final db = ref.read(databaseProvider);
-          await db.toggleBrandArchive(brand.id, !isArchiveTab);
-          ref.invalidate(brandsProvider);
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(isArchiveTab
-                  ? '${brand.name} відновлено'
-                  : '${brand.name} архівовано'),
-              behavior: SnackBarBehavior.floating,
-              backgroundColor: const Color(0xFF2A2A2A),
-            ));
-          }
-        },
-      ),
-      rightAction: GlassSwipeAction(
-        icon: Icons.delete_outline_rounded,
-        label: isUk ? 'Видалити' : 'Delete',
-        color: Colors.redAccent,
-        onTap: () async {
-          final confirmed = await _confirmDeleteDialog(brand.name);
-          if (confirmed && mounted) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: GlassSwipeWrapper(
+        dismissibleKey: ValueKey('brand_swipe_${brand.id}'),
+        leftAction: GlassSwipeAction(
+          icon: isArchiveTab ? Icons.unarchive_outlined : Icons.archive_outlined,
+          label: isArchiveTab 
+            ? (isUk ? 'Відновити' : 'Restore')
+            : (isUk ? 'Архів' : 'Archive'),
+          color: const Color(0xFF3A7BBF),
+          onTap: () async {
             final db = ref.read(databaseProvider);
-            await db.deleteBrand(brand.id);
+            await db.toggleBrandArchive(brand.id, !isArchiveTab);
             ref.invalidate(brandsProvider);
-          }
-        },
-      ),
-      child: GestureDetector(
-        onLongPress: () => _toggleSelection(brand.id),
-        child: _PremiumRoasterCard(
-          brand: brand,
-          isSelected: _selectedIds.contains(brand.id),
-          isSelectionMode: _isSelectionMode,
-          onTap: () {
-            if (_isSelectionMode) {
-              _toggleSelection(brand.id);
-            } else {
-              ref.read(settingsProvider.notifier).triggerHaptic();
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (_) => BrandDetailsScreen(brand: brand)),
-              );
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(isArchiveTab
+                    ? '${brand.name} відновлено'
+                    : '${brand.name} архівовано'),
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: const Color(0xFF2A2A2A),
+              ));
             }
           },
-          onFavoriteToggle: () async {
-            final db = ref.read(databaseProvider);
-            await db.toggleBrandFavorite(brand.id, !brand.isFavorite);
-            ref.invalidate(brandsProvider);
+        ),
+        rightAction: GlassSwipeAction(
+          icon: Icons.delete_outline_rounded,
+          label: isUk ? 'Видалити' : 'Delete',
+          color: Colors.redAccent,
+          onTap: () async {
+            final confirmed = await _confirmDeleteDialog(brand.name);
+            if (confirmed && mounted) {
+              final db = ref.read(databaseProvider);
+              await db.deleteBrand(brand.id);
+              ref.invalidate(brandsProvider);
+            }
           },
+        ),
+        child: GestureDetector(
+          onLongPress: () => _toggleSelection(brand.id),
+          child: _PremiumRoasterCard(
+            brand: brand,
+            isSelected: _selectedIds.contains(brand.id),
+            isSelectionMode: _isSelectionMode,
+            onTap: () {
+              if (_isSelectionMode) {
+                _toggleSelection(brand.id);
+              } else {
+                ref.read(settingsProvider.notifier).triggerHaptic();
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (_) => BrandDetailsScreen(brand: brand)),
+                );
+              }
+            },
+            onFavoriteToggle: () async {
+              final db = ref.read(databaseProvider);
+              await db.toggleBrandFavorite(brand.id, !brand.isFavorite);
+              ref.invalidate(brandsProvider);
+            },
+          ),
         ),
       ),
     );
@@ -704,10 +707,14 @@ class _PremiumRoasterCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: PressableScale(
-        onTap: onTap,
+    return PressableScale(
+      onTap: onTap,
+      child: Container(
+        // БАЗА: Чорний для преміального контрасту (палітра тест 20-21)
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(20),
+        ),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
@@ -718,14 +725,14 @@ class _PremiumRoasterCard extends StatelessWidget {
             border: Border.all(
               color: isSelected
                   ? const Color(0xFFC8A96E).withValues(alpha: 0.5)
-                  : Colors.white.withValues(alpha: 0.1),
+                  : Colors.white.withValues(alpha: 0.12),
               width: isSelected ? 1.5 : 1,
             ),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Row(

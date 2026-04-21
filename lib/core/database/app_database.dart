@@ -70,20 +70,20 @@ class AppDatabase extends _$AppDatabase {
       }
       if (from < 31) {
         // v31: Add advanced recipe columns
-        await m.addColumn(customRecipes, customRecipes.recipeType);
-        await m.addColumn(customRecipes, customRecipes.brewRatio);
-        await m.addColumn(customRecipes, customRecipes.grinderName);
-        await m.addColumn(customRecipes, customRecipes.microns);
+        await _safeAddColumn(m, customRecipes, customRecipes.recipeType);
+        await _safeAddColumn(m, customRecipes, customRecipes.brewRatio);
+        await _safeAddColumn(m, customRecipes, customRecipes.grinderName);
+        await _safeAddColumn(m, customRecipes, customRecipes.microns);
       }
       if (from < 32) {
         // v32: Add sync flags to brands
-        await m.addColumn(localizedBrands, localizedBrands.isSynced);
-        await m.addColumn(localizedBrands, localizedBrands.isDeletedLocal);
+        await _safeAddColumn(m, localizedBrands, localizedBrands.isSynced);
+        await _safeAddColumn(m, localizedBrands, localizedBrands.isDeletedLocal);
       }
       if (from < 33) {
         // v33: Add favorite/archive support for brands
-        await m.addColumn(localizedBrands, localizedBrands.isFavorite);
-        await m.addColumn(localizedBrands, localizedBrands.isArchived);
+        await _safeAddColumn(m, localizedBrands, localizedBrands.isFavorite);
+        await _safeAddColumn(m, localizedBrands, localizedBrands.isArchived);
       }
       if (from < 34) {
         // v34: Create V2 tables
@@ -98,15 +98,15 @@ class AppDatabase extends _$AppDatabase {
       }
       if (from < 35) {
         // v35: Add flagUrl to encyclopedia beans
-        await m.addColumn(localizedBeansV2, localizedBeansV2.flagUrl);
+        await _safeAddColumn(m, localizedBeansV2, localizedBeansV2.flagUrl);
       }
       if (from < 36) {
         // v36: Add radarJson to encyclopedia beans
-        await m.addColumn(localizedBeansV2, localizedBeansV2.radarJson);
+        await _safeAddColumn(m, localizedBeansV2, localizedBeansV2.radarJson);
       }
       if (from < 37) {
         // v37: Add userPriceJson for manual price entry
-        await m.addColumn(localizedBeansV2, localizedBeansV2.userPriceJson);
+        await _safeAddColumn(m, localizedBeansV2, localizedBeansV2.userPriceJson);
       }
     },
     beforeOpen: (details) async {
@@ -1005,6 +1005,20 @@ class AppDatabase extends _$AppDatabase {
       return list.cast<T>();
     } catch (_) {
       return <T>[];
+    }
+  }
+
+  /// Safely adds a column to a table, ignoring "duplicate column name" errors.
+  /// This is essential for Windows/Emulators where migrations might be triggered redundantly.
+  Future<void> _safeAddColumn(Migrator m, TableInfo table, GeneratedColumn column) async {
+    try {
+      await m.addColumn(table, column);
+    } catch (e) {
+      final msg = e.toString().toLowerCase();
+      if (msg.contains('duplicate column name') || msg.contains('already exists')) {
+        return; // Safe to ignore
+      }
+      rethrow;
     }
   }
 }

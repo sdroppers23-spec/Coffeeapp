@@ -144,24 +144,116 @@ final availableEncyclopediaProcessesProvider = Provider<List<String>>((ref) {
 // ─── Comparison Selection ────────────────────────────────────────────────────
 
 final selectedLotIdsProvider =
-    NotifierProvider<ComparisonSelectionNotifier, Set<int>>(() {
+    NotifierProvider<ComparisonSelectionNotifier, Set<String>>(() {
       return ComparisonSelectionNotifier();
     });
 
-class ComparisonSelectionNotifier extends Notifier<Set<int>> {
+class ComparisonSelectionNotifier extends Notifier<Set<String>> {
   @override
-  Set<int> build() => {};
+  Set<String> build() => {};
 
-  void toggle(int id) {
+  void toggle(String id) {
     if (state.contains(id)) {
       state = Set.from(state)..remove(id);
     } else {
-      if (state.length < 2) {
+      if (state.length < 3) {
         state = Set.from(state)..add(id);
       }
     }
   }
 
+  void add(String id) {
+    if (!state.contains(id) && state.length < 3) {
+      state = Set.from(state)..add(id);
+    }
+  }
+
+  void remove(String id) {
+    if (state.contains(id)) {
+      state = Set.from(state)..remove(id);
+    }
+  }
+
   void clear() => state = {};
 }
+
+/// Unified model for comparison that works for both Encyclopedia entries and User Lots
+class ComparableCoffee {
+  final String id;
+  final String name;
+  final String country;
+  final String? countryEmoji;
+  final String region;
+  final String score;
+  final String altitude;
+  final String varieties;
+  final String process;
+  final String harvest;
+  final String flavorNotes;
+  final bool isEncyclopedia;
+
+  ComparableCoffee({
+    required this.id,
+    required this.name,
+    required this.country,
+    this.countryEmoji,
+    required this.region,
+    required this.score,
+    required this.altitude,
+    required this.varieties,
+    required this.process,
+    required this.harvest,
+    required this.flavorNotes,
+    required this.isEncyclopedia,
+  });
+
+  factory ComparableCoffee.fromEncyclopedia(LocalizedBeanDto entry) {
+    return ComparableCoffee(
+      id: entry.id.toString(),
+      name: entry.country,
+      country: entry.country,
+      countryEmoji: entry.countryEmoji,
+      region: entry.region,
+      score: entry.cupsScore.toString(),
+      altitude: '${entry.altitudeMin}-${entry.altitudeMax}m',
+      varieties: entry.varieties,
+      process: entry.processMethod,
+      harvest: entry.harvestSeason ?? 'N/A',
+      flavorNotes: entry.flavorNotes.join(', '),
+      isEncyclopedia: true,
+    );
+  }
+
+  factory ComparableCoffee.fromUserLot(CoffeeLotDto lot) {
+    return ComparableCoffee(
+      id: lot.id,
+      name: lot.coffeeName ?? 'Unnamed',
+      country: lot.originCountry ?? 'N/A',
+      region: lot.region ?? 'N/A',
+      score: lot.scaScore ?? 'N/A',
+      altitude: lot.altitude ?? 'N/A',
+      varieties: lot.varieties ?? 'N/A',
+      process: lot.process ?? 'N/A',
+      harvest: lot.roastDate?.toIso8601String() ?? 'N/A',
+      flavorNotes: lot.flavorProfile ?? '',
+      isEncyclopedia: false,
+    );
+  }
+}
+
+final allComparableCoffeesProvider = FutureProvider<List<ComparableCoffee>>((ref) async {
+  final db = ref.watch(databaseProvider);
+  final lang = ref.watch(localeProvider);
+  
+  // Fetch from both sources
+  final encyclopediaEntries = await db.getAllEncyclopediaEntries(lang);
+  final userLots = await db.getAllCoffeeLots();
+  
+  final combined = [
+    ...encyclopediaEntries.map((e) => ComparableCoffee.fromEncyclopedia(e)),
+    ...userLots.map((l) => ComparableCoffee.fromUserLot(l)),
+  ];
+  
+  return combined;
+});
 

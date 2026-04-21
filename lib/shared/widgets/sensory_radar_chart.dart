@@ -223,12 +223,12 @@ class RadarPainter extends CustomPainter {
     final angleStep = 2 * pi / labels.length;
 
     final gridPaint = Paint()
-      ..color = textColor.withValues(alpha: 0.25)
+      ..color = Colors.white.withValues(alpha: 0.15) // Force subtle white for grid
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
     final axisPaint = Paint()
-      ..color = textColor.withValues(alpha: 0.45)
+      ..color = Colors.white.withValues(alpha: 0.3) // Force visible white for axes
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
@@ -253,7 +253,7 @@ class RadarPainter extends CustomPainter {
 
     // 2. Localized Labels at Axes Tips
     final labelStyle = GoogleFonts.outfit(
-      color: textColor.withValues(alpha: 0.5),
+      color: const Color(0xFFC8A96E), // Premium gold for labels
       fontSize: labelFontSize,
       fontWeight: FontWeight.bold,
       letterSpacing: 0.5,

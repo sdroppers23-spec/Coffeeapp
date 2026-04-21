@@ -3,17 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../navigation/navigation_providers.dart';
-import '../../core/database/database_provider.dart';
 import '../../core/l10n/app_localizations.dart';
-import '../../core/database/dtos.dart';
 import '../../shared/widgets/premium_app_bar.dart';
 import '../../shared/widgets/premium_background.dart';
 import 'encyclopedia_providers.dart';
-
-final allOriginsProvider = FutureProvider<List<LocalizedBeanDto>>((ref) {
-  final lang = ref.watch(localeProvider);
-  return ref.watch(databaseProvider).getAllEncyclopediaEntries(lang);
-});
 
 class ComparisonScreen extends ConsumerStatefulWidget {
   const ComparisonScreen({super.key});
@@ -23,8 +16,8 @@ class ComparisonScreen extends ConsumerStatefulWidget {
 }
 
 class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
-  LocalizedBeanDto? _coffeeA;
-  LocalizedBeanDto? _coffeeB;
+  ComparableCoffee? _coffeeA;
+  ComparableCoffee? _coffeeB;
 
   @override
   void initState() {
@@ -42,7 +35,7 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final asyncOrigins = ref.watch(allOriginsProvider);
+    final asyncComparable = ref.watch(allComparableCoffeesProvider);
 
     return Scaffold(
         extendBodyBehindAppBar: true,
@@ -50,11 +43,11 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
           title: ref.t('compare_coffees'),
         ),
         body: PremiumBackground(
-          child: asyncOrigins.when(
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (e, _) => Center(child: Text('Error: $e')),
-            data: (origins) {
-              if (origins.isEmpty) {
+          child: asyncComparable.when(
+            loading: () => const Center(child: CircularProgressIndicator(color: Color(0xFFC8A96E))),
+            error: (e, _) => Center(child: Text('Error: $e', style: const TextStyle(color: Colors.white70))),
+            data: (coffees) {
+              if (coffees.isEmpty) {
                 return Center(
                   child: Text(
                     'No coffees available to compare.',
@@ -69,16 +62,16 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
               if (_coffeeA == null && _coffeeB == null) {
                 if (selectedIds.isNotEmpty) {
                   final list = selectedIds.toList();
-                  _coffeeA = origins.firstWhere((e) => e.id == list[0], orElse: () => origins.first);
+                  _coffeeA = coffees.firstWhere((e) => e.id == list[0], orElse: () => coffees.first);
                   if (list.length > 1) {
-                    _coffeeB = origins.firstWhere((e) => e.id == list[1], orElse: () => origins.length > 1 ? origins[1] : origins.first);
+                    _coffeeB = coffees.firstWhere((e) => e.id == list[1], orElse: () => coffees.length > 1 ? coffees[1] : coffees.first);
                   } else {
-                    _coffeeB = origins.firstWhere((e) => e.id != _coffeeA?.id, orElse: () => origins.first);
+                    _coffeeB = coffees.firstWhere((e) => e.id != _coffeeA?.id, orElse: () => coffees.first);
                   }
                 } else {
                   // Default selections if none selected
-                  _coffeeA = origins.isNotEmpty ? origins.first : null;
-                  _coffeeB = origins.length > 1 ? origins[1] : (origins.isNotEmpty ? origins.first : null);
+                  _coffeeA = coffees.isNotEmpty ? coffees.first : null;
+                  _coffeeB = coffees.length > 1 ? coffees[1] : (coffees.isNotEmpty ? coffees.first : null);
                 }
               }
 
@@ -93,7 +86,7 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
                         Expanded(
                           child: _CoffeeSelector(
                             value: _coffeeA,
-                            items: origins,
+                            items: coffees,
                             onChanged: (val) => setState(() => _coffeeA = val),
                             color: Colors.white.withValues(alpha: 0.1),
                             borderColor: const Color(0xFFC8A96E).withValues(alpha: 0.5),
@@ -103,7 +96,7 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
                         Expanded(
                           child: _CoffeeSelector(
                             value: _coffeeB,
-                            items: origins,
+                            items: coffees,
                             onChanged: (val) => setState(() => _coffeeB = val),
                             color: Colors.white.withValues(alpha: 0.1),
                             borderColor: const Color(0xFFC8A96E).withValues(alpha: 0.5),
@@ -129,8 +122,8 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
                             children: [
                               _CompareRow(
                                 ref.t('score_sca'),
-                                '${_coffeeA!.cupsScore}',
-                                '${_coffeeB!.cupsScore}',
+                                _coffeeA!.score,
+                                _coffeeB!.score,
                                 highlightWinner: true,
                               ),
                               _CompareRow(
@@ -145,8 +138,8 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
                               ),
                               _CompareRow(
                                 ref.t('altitude'),
-                                '${_coffeeA!.altitudeMin}-${_coffeeA!.altitudeMax}m',
-                                '${_coffeeB!.altitudeMin}-${_coffeeB!.altitudeMax}m',
+                                _coffeeA!.altitude,
+                                _coffeeB!.altitude,
                               ),
                               _CompareRow(
                                 ref.t('varieties'),
@@ -156,18 +149,18 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
                               ),
                               _CompareRow(
                                 ref.t('process'),
-                                _coffeeA!.processMethod,
-                                _coffeeB!.processMethod,
+                                _coffeeA!.process,
+                                _coffeeB!.process,
                               ),
                               _CompareRow(
                                 ref.t('harvest'),
-                                _coffeeA!.harvestSeason ?? "N/A",
-                                _coffeeB!.harvestSeason ?? "N/A",
+                                _coffeeA!.harvest,
+                                _coffeeB!.harvest,
                               ),
                               _CompareRow(
                                 ref.t('flavor_notes'),
-                                _getFlavors(_coffeeA!),
-                                _getFlavors(_coffeeB!),
+                                _coffeeA!.flavorNotes,
+                                _coffeeB!.flavorNotes,
                                 isTextHeavy: true,
                                 isLast: true,
                               ),
@@ -183,16 +176,12 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
         ),
       );
   }
-
-  String _getFlavors(LocalizedBeanDto entry) {
-    return entry.flavorNotes.join(', ');
-  }
 }
 
 class _CoffeeSelector extends StatelessWidget {
-  final LocalizedBeanDto? value;
-  final List<LocalizedBeanDto> items;
-  final ValueChanged<LocalizedBeanDto?> onChanged;
+  final ComparableCoffee? value;
+  final List<ComparableCoffee> items;
+  final ValueChanged<ComparableCoffee?> onChanged;
   final Color color;
   final Color borderColor;
 
@@ -214,7 +203,7 @@ class _CoffeeSelector extends StatelessWidget {
         border: Border.all(color: borderColor),
       ),
       child: DropdownButtonHideUnderline(
-        child: DropdownButton<LocalizedBeanDto>(
+        child: DropdownButton<ComparableCoffee>(
           isExpanded: true,
           dropdownColor: const Color(0xFF1E1E1E),
           icon: Icon(Icons.keyboard_arrow_down, color: borderColor),
@@ -223,7 +212,7 @@ class _CoffeeSelector extends StatelessWidget {
             return DropdownMenuItem(
               value: e,
               child: Text(
-                '${e.countryEmoji ?? ""} ${e.country}',
+                '${e.countryEmoji ?? ""} ${e.name}',
                 style: GoogleFonts.outfit(
                   color: Colors.white,
                   fontSize: 13,

@@ -168,8 +168,8 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                                   vertical: 1,
                                   horizontal: 6,
                                 ),
-                                blur: isDark ? 120 : 80,
-                                opacity: isDark ? 0.1 : 0.6,
+                                blur: 20,
+                                opacity: isDark ? 0.12 : 0.6,
                                 backgroundGradient: LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
@@ -231,18 +231,18 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                                 ref.read(navBarVisibleProvider.notifier).show();
                               }
                             },
-                              child: GlassContainer(
-                                width: 52,
-                                height: 52,
-                                borderRadius: 26,
-                                blur: isDark ? 120 : 80,
-                                opacity: isDark ? 0.1 : 0.6,
-                                backgroundGradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: isDark
-                                      ? [
-                                          Colors.white.withValues(alpha: 0.25),
+                          child: GlassContainer(
+                            width: 52,
+                            height: 52,
+                            borderRadius: 26,
+                            blur: 25,
+                            opacity: isDark ? 0.15 : 0.6,
+                            backgroundGradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: isDark
+                                  ? [
+                                      Colors.white.withValues(alpha: 0.25),
                                           const Color(0xFFFFF9E3).withValues(alpha: 0.12),
                                         ]
                                       : [

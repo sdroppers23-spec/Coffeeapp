@@ -288,8 +288,8 @@ class _FlavorInfoCard extends ConsumerWidget {
     return GlassContainer(
       padding: const EdgeInsets.all(20),
       borderRadius: 24,
-      blur: 80,
-      opacity: 0.2,
+      blur: 25,
+      opacity: 0.15,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,

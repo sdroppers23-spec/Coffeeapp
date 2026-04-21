@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/supabase/supabase_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../navigation/navigation_providers.dart';
+import '../../shared/widgets/glass_container.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -46,8 +48,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   void _editProfile(User user) {
     showDialog(
       context: context,
-      builder: (context) =>
-          _EditProfileDialog(user: user, supabase: ref.read(supabaseProvider)),
+      barrierColor: Colors.black.withValues(alpha: 0.3),
+      builder: (context) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: _EditProfileDialog(user: user, supabase: ref.read(supabaseProvider)),
+      ),
     ).then((_) => setState(() {})); // refresh UI
   }
 
@@ -379,87 +384,132 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: const Color(0xFF1E1E1E),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
-      ),
-      title: Text(
-        'Edit Profile',
-        style: GoogleFonts.poppins(color: Colors.white),
-      ),
-      content: SingleChildScrollView(
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      child: GlassContainer(
+        borderRadius: 24,
+        blur: 20,
+        opacity: 0.15,
+        borderColor: Colors.white.withValues(alpha: 0.1),
+        padding: const EdgeInsets.all(24),
+        backgroundGradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.white.withValues(alpha: 0.1),
+            Colors.white.withValues(alpha: 0.05),
+          ],
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
-              controller: _nameController,
-              style: const TextStyle(color: Colors.white),
-              decoration: const InputDecoration(
-                labelText: 'Display Name',
-                labelStyle: TextStyle(color: Colors.white54),
+            Text(
+              'Edit Profile',
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _avatarUrlController,
-                    style: const TextStyle(color: Colors.white, fontSize: 13),
-                    decoration: const InputDecoration(
-                      labelText: 'Avatar URL',
-                      labelStyle: TextStyle(color: Colors.white54),
+            const SizedBox(height: 24),
+            SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: _nameController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: 'Display Name',
+                      labelStyle: const TextStyle(color: Colors.white54),
+                      filled: true,
+                      fillColor: Colors.white.withValues(alpha: 0.05),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                   ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _avatarUrlController,
+                          style: const TextStyle(color: Colors.white, fontSize: 13),
+                          decoration: InputDecoration(
+                            labelText: 'Avatar URL',
+                            labelStyle: const TextStyle(color: Colors.white54),
+                            filled: true,
+                            fillColor: Colors.white.withValues(alpha: 0.05),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      IconButton(
+                        icon: _isUploading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Color(0xFFC8A96E),
+                                ),
+                              )
+                            : const Icon(
+                                Icons.photo_library,
+                                color: Color(0xFFC8A96E),
+                              ),
+                        tooltip: 'Upload from Gallery',
+                        onPressed: _isUploading ? null : _pickAndUploadImage,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 32),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Cancel', style: TextStyle(color: Colors.white54)),
                 ),
-                const SizedBox(width: 8),
-                IconButton(
-                  icon: _isUploading
+                const SizedBox(width: 12),
+                ElevatedButton(
+                  onPressed: _isSaving ? null : _save,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFC8A96E),
+                    foregroundColor: Colors.black,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  ),
+                  child: _isSaving
                       ? const SizedBox(
-                          width: 20,
-                          height: 20,
+                          width: 16,
+                          height: 16,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: Color(0xFFC8A96E),
+                            color: Colors.black,
                           ),
                         )
-                      : const Icon(
-                          Icons.photo_library,
-                          color: Color(0xFFC8A96E),
-                        ),
-                  tooltip: 'Upload from Gallery',
-                  onPressed: _isUploading ? null : _pickAndUploadImage,
+                      : const Text('Save', style: TextStyle(fontWeight: FontWeight.bold)),
                 ),
               ],
             ),
           ],
         ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel', style: TextStyle(color: Colors.white54)),
-        ),
-        ElevatedButton(
-          onPressed: _isSaving ? null : _save,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFC8A96E),
-            foregroundColor: Colors.black,
-          ),
-          child: _isSaving
-              ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.black,
-                  ),
-                )
-              : const Text('Save'),
-        ),
-      ],
     );
   }
 }

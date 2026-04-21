@@ -27,16 +27,16 @@ class EncyclopediaLotGridCard extends ConsumerWidget {
     final isUk = LocaleService.currentLocale == 'uk';
 
     final selectedIds = ref.watch(selectedLotIdsProvider);
-    final isSelected = selectedIds.contains(entry.id);
+    final isSelected = selectedIds.contains(entry.id.toString());
     final isSelectionMode = selectedIds.isNotEmpty;
 
     return PressableScale(
       onTap: isSelectionMode
-          ? () => ref.read(selectedLotIdsProvider.notifier).toggle(entry.id)
+          ? () => ref.read(selectedLotIdsProvider.notifier).toggle(entry.id.toString())
           : onTap,
       onLongPress: () {
         ref.read(settingsProvider.notifier).triggerVibrate();
-        ref.read(selectedLotIdsProvider.notifier).toggle(entry.id);
+        ref.read(selectedLotIdsProvider.notifier).toggle(entry.id.toString());
       },
       child: GlassContainer(
         padding: const EdgeInsets.all(12),
@@ -229,18 +229,18 @@ class EncyclopediaLotListCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
 
     final selectedIds = ref.watch(selectedLotIdsProvider);
-    final isSelected = selectedIds.contains(entry.id);
+    final isSelected = selectedIds.contains(entry.id.toString());
     final isSelectionMode = selectedIds.isNotEmpty;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: PressableScale(
         onTap: isSelectionMode
-            ? () => ref.read(selectedLotIdsProvider.notifier).toggle(entry.id)
+            ? () => ref.read(selectedLotIdsProvider.notifier).toggle(entry.id.toString())
             : onTap,
         onLongPress: () {
           ref.read(settingsProvider.notifier).triggerVibrate();
-          ref.read(selectedLotIdsProvider.notifier).toggle(entry.id);
+          ref.read(selectedLotIdsProvider.notifier).toggle(entry.id.toString());
         },
         child: GlassContainer(
           padding: const EdgeInsets.all(16),

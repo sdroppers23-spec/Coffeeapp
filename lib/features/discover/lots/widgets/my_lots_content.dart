@@ -9,6 +9,7 @@ import '../../../../core/database/dtos.dart';
 import '../../../../shared/widgets/modern_undo_timer.dart';
 import '../../../../shared/widgets/scroll_to_top_button.dart';
 import '../../discovery_filter_provider.dart';
+import '../../../encyclopedia/encyclopedia_providers.dart';
 import '../lots_providers.dart';
 import 'lot_card_widgets.dart';
 import '../../widgets/discovery_action_bar.dart';
@@ -23,11 +24,11 @@ class MyLotsContent extends ConsumerStatefulWidget {
 
 class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTickerProviderStateMixin {
   late TabController _subTabController;
-  final Set<String> _selectedLotIds = {};
+  // Remove local _selectedLotIds to use global provider
   final Set<String> _pendingDeleteIds = {};
   bool _isUndoVisible = false;
   
-  bool get _isSelectionMode => _selectedLotIds.isNotEmpty;
+  bool get _isSelectionMode => ref.watch(selectedLotIdsProvider).isNotEmpty;
   late final ScrollController _scrollController;
 
 
@@ -237,23 +238,24 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
   }
 
   void _toggleLotSelection(String id) {
-    setState(() {
-      if (_selectedLotIds.contains(id)) {
-        _selectedLotIds.remove(id);
-      } else {
-        _selectedLotIds.add(id);
-      }
-    });
+    ref.read(selectedLotIdsProvider.notifier).toggle(id);
   }
 
   void _selectAll(List<CoffeeLotDto> visibleLots) {
-    setState(() {
-      if (_selectedLotIds.length == visibleLots.length) {
-        _selectedLotIds.clear();
-      } else {
-        _selectedLotIds.addAll(visibleLots.map((l) => l.id));
+    final currentSelected = ref.read(selectedLotIdsProvider);
+    final visibleIds = visibleLots.map((l) => l.id).toSet();
+    
+    // If all visible are already in global selection, remove them
+    // (This is a simplified logic, matches encyclopedia behavior)
+    if (visibleIds.every((id) => currentSelected.contains(id))) {
+      for (final id in visibleIds) {
+        ref.read(selectedLotIdsProvider.notifier).remove(id);
       }
-    });
+    } else {
+      for (final id in visibleIds) {
+        ref.read(selectedLotIdsProvider.notifier).add(id);
+      }
+    }
   }
 
   @override
@@ -267,7 +269,10 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
           children: [
             DiscoveryActionBar(
               filterProvider: myLotsFilterProvider,
-              onCompareTap: () => context.push('/comparison'),
+              onCompareTap: () {
+                ref.read(settingsProvider.notifier).triggerHaptic();
+                context.push('/compare');
+              },
               availableCountries: const [],
               availableFlavors: const [],
               availableProcesses: const [],
@@ -338,7 +343,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  _selectedLotIds.length == visibleLots.length
+                  visibleLots.every((l) => ref.watch(selectedLotIdsProvider).contains(l.id))
                       ? Icons.deselect_rounded
                       : Icons.select_all_rounded,
                   color: const Color(0xFFC8A96E),
@@ -437,12 +442,19 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
             itemCount: filteredLots.length,
             itemBuilder: (context, index) {
               final lot = filteredLots[index];
+              final isSelected = ref.watch(selectedLotIdsProvider).contains(lot.id);
               return MyLotGridCard(
                 lot: lot,
-                isSelected: _selectedLotIds.contains(lot.id),
+                isSelected: isSelected,
                 isSelectionMode: _isSelectionMode,
                 onLongPress: (id) => _toggleLotSelection(id),
-                onTap: (id) => context.push('/lot_details', extra: {'lot': lot}),
+                onTap: (id) {
+                  if (_isSelectionMode) {
+                    _toggleLotSelection(id);
+                  } else {
+                    context.push('/lot_details', extra: {'lot': lot});
+                  }
+                },
                 onFavoriteToggle: (lot) async {
                   ref.read(settingsProvider.notifier).triggerHaptic();
                   final db = ref.read(databaseProvider);
@@ -460,15 +472,22 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
           itemCount: filteredLots.length,
           itemBuilder: (context, index) {
             final lot = filteredLots[index];
+            final isSelected = ref.watch(selectedLotIdsProvider).contains(lot.id);
               return MyLotListCard(
                 lot: lot,
-                isSelected: _selectedLotIds.contains(lot.id),
+                isSelected: isSelected,
                 isSelectionMode: _isSelectionMode,
                 onExpansionChanged: (isExpanded) {
                   setState(() {});
                 },
                 onLongPress: (id) => _toggleLotSelection(id),
-                onTap: (id) => context.push('/lot_details', extra: {'lot': lot}),
+                onTap: (id) {
+                  if (_isSelectionMode) {
+                    _toggleLotSelection(id);
+                  } else {
+                    context.push('/lot_details', extra: {'lot': lot});
+                  }
+                },
                 onFavoriteToggle: (lot) async {
                   ref.read(settingsProvider.notifier).triggerSelectionVibrate();
                   final db = ref.read(databaseProvider);
@@ -598,10 +617,11 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                   Colors.redAccent,
                   () async {
                     final db = ref.read(databaseProvider);
-                    for (var id in _selectedLotIds) {
+                    final idsToClear = Set<String>.from(ref.read(selectedLotIdsProvider));
+                    for (var id in idsToClear) {
                       await db.toggleLotFavorite(id, true);
+                      ref.read(selectedLotIdsProvider.notifier).remove(id);
                     }
-                    setState(() => _selectedLotIds.clear());
                     ref.invalidate(userLotsProvider);
                   },
                 ),
@@ -614,8 +634,10 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                   () async {
                     final db = ref.read(databaseProvider);
                     final activeTab = _subTabController.index;
-                    for (var id in _selectedLotIds) {
+                    final idsToClear = Set<String>.from(ref.read(selectedLotIdsProvider));
+                    for (var id in idsToClear) {
                       await db.toggleLotArchive(id, activeTab != 2);
+                      ref.read(selectedLotIdsProvider.notifier).remove(id);
                     }
 
                     if (mounted) {
@@ -627,7 +649,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                         ),
                       );
                     }
-                    setState(() => _selectedLotIds.clear());
+                    setState(() {});
                     ref.invalidate(userLotsProvider);
                   },
                 ),
@@ -686,7 +708,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                                         ),
                                         const SizedBox(height: 12),
                                         Text(
-                                          'Ви впевнені, що хочете видалити ${_selectedLotIds.length} вибраних документів?',
+                                          'Ви впевнені, що хочете видалити ${ref.read(selectedLotIdsProvider).length} вибраних документів?',
                                           textAlign: TextAlign.center,
                                           style: GoogleFonts.outfit(
                                             color: Colors.white70,
@@ -758,10 +780,14 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                     );
 
                     if (confirm == true) {
-                      final selectedLots = (lotsAsync.value ?? []).where((l) => _selectedLotIds.contains(l.id)).toList();
+                      final selectedIdsSnapshot = Set<String>.from(ref.read(selectedLotIdsProvider));
+                      final selectedLots = (lotsAsync.value ?? []).where((l) => selectedIdsSnapshot.contains(l.id)).toList();
                       final isArchive = _subTabController.index == 2;
                       
-                      setState(() => _selectedLotIds.clear());
+                      for (final id in selectedIdsSnapshot) {
+                        ref.read(selectedLotIdsProvider.notifier).remove(id);
+                      }
+                      
                       if (mounted) {
                         _showModernUndo(selectedLots, context, ref, isArchive: isArchive);
                       }
@@ -789,7 +815,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
   }
 
   String get _selectionCountText {
-    final count = _selectedLotIds.length;
+    final count = ref.watch(selectedLotIdsProvider).length;
     // Simple declension for "Обрано X лотів/лоти/лот"
     if (count % 10 == 1 && count % 100 != 11) {
       return 'Обрано $count лот';

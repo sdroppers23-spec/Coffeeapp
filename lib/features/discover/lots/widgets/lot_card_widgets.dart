@@ -180,24 +180,29 @@ class MyLotGridCard extends ConsumerWidget {
             const SizedBox(height: 12),
             // Sensory Info
             Expanded(
-              child: Column(
-                children: [
-                  _SensoryFiveSegmentBarSmall(
-                    label: isUk ? 'Смак' : 'Flavor',
-                    value: (lot.sensoryPoints['flavor'] ?? 3).toDouble(),
-                    theme: theme,
-                  ),
-                  _SensoryFiveSegmentBarSmall(
-                    label: isUk ? 'Кислотність' : 'Acidity',
-                    value: (lot.sensoryPoints['acidity'] ?? 3).toDouble(),
-                    theme: theme,
-                  ),
-                  _SensoryFiveSegmentBarSmall(
-                    label: isUk ? 'Солодкість' : 'Sweetness',
-                    value: (lot.sensoryPoints['sweetness'] ?? 3).toDouble(),
-                    theme: theme,
-                  ),
-                ],
+              child: Builder(
+                builder: (context) {
+                  final mapped = SensoryUtils.map4To6Axis(lot.sensoryPoints);
+                  return Column(
+                    children: [
+                      _SensoryFiveSegmentBarSmall(
+                        label: isUk ? 'Гіркота' : 'Bitterness',
+                        value: (mapped['bitterness'] ?? 3).toDouble(),
+                        theme: theme,
+                      ),
+                      _SensoryFiveSegmentBarSmall(
+                        label: isUk ? 'Кислотність' : 'Acidity',
+                        value: (mapped['acidity'] ?? 3).toDouble(),
+                        theme: theme,
+                      ),
+                      _SensoryFiveSegmentBarSmall(
+                        label: isUk ? 'Солодкість' : 'Sweetness',
+                        value: (mapped['sweetness'] ?? 3).toDouble(),
+                        theme: theme,
+                      ),
+                    ],
+                  );
+                }
               ),
             ),
             
@@ -524,7 +529,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                       children: [
                         Row(
                           children: [
-                            Expanded(child: _HorizontalSensoryBar(label: isUk ? 'СМАК' : 'FLAVOR', value: (mappedSensory['flavor'] ?? 3).toDouble(), theme: theme)),
+                            Expanded(child: _HorizontalSensoryBar(label: isUk ? 'ГІРКОТА' : 'BITTERNESS', value: (mappedSensory['bitterness'] ?? 3).toDouble(), theme: theme)),
                             const SizedBox(width: 8),
                             Expanded(child: _HorizontalSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme)),
                             const SizedBox(width: 8),

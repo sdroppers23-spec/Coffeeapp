@@ -792,6 +792,12 @@ class AppDatabase extends _$AppDatabase {
     return query.watch().map((rows) => rows.map((r) => _mapLotRow(r)).toList());
   }
 
+  Future<List<CoffeeLotDto>> getAllCoffeeLots() async {
+    final query = select(coffeeLots)..where((t) => t.isDeletedLocal.equals(false));
+    final rows = await query.get();
+    return rows.map((r) => _mapLotRow(r)).toList();
+  }
+
   Future<CoffeeLotDto?> findConflictLot(String id) async {
     final row = await (select(
       coffeeLots,

@@ -19,10 +19,13 @@ class LotDesignConfig {
   // Specific overrides
   final double navBarOpacity;
   final double navBarBlur;
+  final double navBarBaseOpacity;
   final double flavorCardOpacity;
   final double flavorCardBlur;
+  final double flavorCardBaseOpacity;
   final double profileOpacity;
   final double profileBlur;
+  final double profileBaseOpacity;
 
   const LotDesignConfig({
     required this.baseColor,
@@ -40,10 +43,13 @@ class LotDesignConfig {
     this.isDebugMode = true,
     this.navBarOpacity = 0.12,
     this.navBarBlur = 20.0,
+    this.navBarBaseOpacity = 0.1,
     this.flavorCardOpacity = 0.15,
     this.flavorCardBlur = 25.0,
+    this.flavorCardBaseOpacity = 0.1,
     this.profileOpacity = 0.15,
     this.profileBlur = 20.0,
+    this.profileBaseOpacity = 0.1,
   });
 
   LotDesignConfig copyWith({
@@ -62,10 +68,13 @@ class LotDesignConfig {
     bool? isDebugMode,
     double? navBarOpacity,
     double? navBarBlur,
+    double? navBarBaseOpacity,
     double? flavorCardOpacity,
     double? flavorCardBlur,
+    double? flavorCardBaseOpacity,
     double? profileOpacity,
     double? profileBlur,
+    double? profileBaseOpacity,
   }) {
     return LotDesignConfig(
       baseColor: baseColor ?? this.baseColor,
@@ -83,16 +92,19 @@ class LotDesignConfig {
       isDebugMode: isDebugMode ?? this.isDebugMode,
       navBarOpacity: navBarOpacity ?? this.navBarOpacity,
       navBarBlur: navBarBlur ?? this.navBarBlur,
+      navBarBaseOpacity: navBarBaseOpacity ?? this.navBarBaseOpacity,
       flavorCardOpacity: flavorCardOpacity ?? this.flavorCardOpacity,
       flavorCardBlur: flavorCardBlur ?? this.flavorCardBlur,
+      flavorCardBaseOpacity: flavorCardBaseOpacity ?? this.flavorCardBaseOpacity,
       profileOpacity: profileOpacity ?? this.profileOpacity,
       profileBlur: profileBlur ?? this.profileBlur,
+      profileBaseOpacity: profileBaseOpacity ?? this.profileBaseOpacity,
     );
   }
 
   static const defaultWhiteGlass = LotDesignConfig(
     baseColor: Colors.black,
-    baseOpacity: 0.5,
+    baseOpacity: 0.1,
     blur: 15.0,
     tintColor: Colors.white,
     tintOpacity: 0.1,
@@ -106,10 +118,13 @@ class LotDesignConfig {
     isDebugMode: true,
     navBarOpacity: 0.12,
     navBarBlur: 20.0,
+    navBarBaseOpacity: 0.1,
     flavorCardOpacity: 0.15,
     flavorCardBlur: 25.0,
+    flavorCardBaseOpacity: 0.1,
     profileOpacity: 0.15,
     profileBlur: 20.0,
+    profileBaseOpacity: 0.1,
   );
 }
 
@@ -121,16 +136,16 @@ class LotDesignDebugNotifier extends Notifier<LotDesignConfig> {
     state = config;
   }
 
-  void updateNavBar(double opacity, double blur) {
-    state = state.copyWith(navBarOpacity: opacity, navBarBlur: blur);
+  void updateNavBar(double tintOpacity, double blur, double baseOpacity) {
+    state = state.copyWith(navBarOpacity: tintOpacity, navBarBlur: blur, navBarBaseOpacity: baseOpacity);
   }
 
-  void updateFlavorCard(double opacity, double blur) {
-    state = state.copyWith(flavorCardOpacity: opacity, flavorCardBlur: blur);
+  void updateFlavorCard(double tintOpacity, double blur, double baseOpacity) {
+    state = state.copyWith(flavorCardOpacity: tintOpacity, flavorCardBlur: blur, flavorCardBaseOpacity: baseOpacity);
   }
 
-  void updateProfile(double opacity, double blur) {
-    state = state.copyWith(profileOpacity: opacity, profileBlur: blur);
+  void updateProfile(double tintOpacity, double blur, double baseOpacity) {
+    state = state.copyWith(profileOpacity: tintOpacity, profileBlur: blur, profileBaseOpacity: baseOpacity);
   }
 
   void reset() {

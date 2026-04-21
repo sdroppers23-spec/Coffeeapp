@@ -55,17 +55,21 @@ class GlassContainer extends ConsumerWidget {
 
     double effectiveBlur = useDebug ? debugConfig.blur : blur;
     double effectiveOpacity = useDebug ? debugConfig.tintOpacity : opacity;
+    double effectiveBaseOpacity = useDebug ? debugConfig.baseOpacity : 0.5;
 
     if (useDebug && debugKey != null) {
       if (debugKey == 'navBar') {
         effectiveBlur = debugConfig.navBarBlur;
         effectiveOpacity = debugConfig.navBarOpacity;
+        effectiveBaseOpacity = debugConfig.navBarBaseOpacity;
       } else if (debugKey == 'flavorCard') {
         effectiveBlur = debugConfig.flavorCardBlur;
         effectiveOpacity = debugConfig.flavorCardOpacity;
+        effectiveBaseOpacity = debugConfig.flavorCardBaseOpacity;
       } else if (debugKey == 'profileDialog') {
         effectiveBlur = debugConfig.profileBlur;
         effectiveOpacity = debugConfig.profileOpacity;
+        effectiveBaseOpacity = debugConfig.profileBaseOpacity;
       }
     }
     final effectiveBorderRadius = useDebug ? debugConfig.borderRadius : borderRadius;
@@ -73,7 +77,7 @@ class GlassContainer extends ConsumerWidget {
         ? debugConfig.borderColor.withValues(alpha: debugConfig.borderOpacity)
         : (borderColor ?? Colors.white.withValues(alpha: 0.12));
     final effectiveBaseColor = useDebug
-        ? debugConfig.baseColor.withValues(alpha: debugConfig.baseOpacity)
+        ? debugConfig.baseColor.withValues(alpha: effectiveBaseOpacity)
         : Colors.black.withValues(alpha: 0.5);
     final effectiveTintColor = useDebug ? debugConfig.tintColor : (color ?? Colors.white);
 
@@ -83,15 +87,18 @@ class GlassContainer extends ConsumerWidget {
       clipBehavior: Clip.antiAlias,
       child: Stack(
         children: [
-          // Layer 1: Glass Blur (Pure backdrop filter)
+          // Layer 1: Glass Blur (Pure backdrop filter with Windows hack)
           if (enableBlur && effectiveBlur > 0)
             Positioned.fill(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(
-                  sigmaX: effectiveBlur,
-                  sigmaY: effectiveBlur,
+              child: Opacity(
+                opacity: 0.999, // Hack to force BackdropFilter visibility on Windows
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(
+                    sigmaX: effectiveBlur,
+                    sigmaY: effectiveBlur,
+                  ),
+                  child: const SizedBox.shrink(),
                 ),
-                child: const SizedBox.shrink(),
               ),
             ),
           
@@ -151,11 +158,12 @@ class GlassContainer extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
-                        'B:${effectiveBlur.toInt()}',
+                        'B:${effectiveBlur.toInt()} T:${effectiveOpacity.toStringAsFixed(2)} O:${effectiveBaseOpacity.toStringAsFixed(2)}',
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 9,
+                          fontSize: 8,
                           fontWeight: FontWeight.bold,
+                          fontFamily: 'monospace',
                         ),
                       ),
                     ),

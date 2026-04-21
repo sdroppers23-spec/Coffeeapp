@@ -153,10 +153,10 @@ class GlassContainer extends ConsumerWidget {
                     right: 2,
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-                      decoration: BoxDecoration(
-                        color: Colors.red.withOpacity(0.8),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
+                    decoration: BoxDecoration(
+                      color: Colors.red.withValues(alpha: 0.8),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
                       child: Text(
                         'B:${effectiveBlur.toInt()} T:${effectiveOpacity.toStringAsFixed(2)} O:${effectiveBaseOpacity.toStringAsFixed(2)}',
                         style: const TextStyle(

@@ -43,7 +43,7 @@ class GlassContainer extends ConsumerWidget {
     this.color,
     this.enableBlur = true,
     this.enableShadow = true,
-    this.enableRepaintBoundary = true,
+    this.enableRepaintBoundary = false,
     this.useOuterClip = true,
     this.debugKey,
   });
@@ -85,7 +85,7 @@ class GlassContainer extends ConsumerWidget {
         children: [
           // Layer 1: Glass Blur
           Positioned.fill(
-            child: (enableBlur) 
+            child: (enableBlur && effectiveBlur > 0) 
               ? BackdropFilter(
                   filter: ImageFilter.blur(
                     sigmaX: effectiveBlur,

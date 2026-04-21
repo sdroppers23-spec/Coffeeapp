@@ -622,6 +622,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
     final dismissibleCard = isSelectionMode 
       ? card 
       : GlassSwipeWrapper(
+          isSwipeEnabled: !_isExpanded,
           dismissibleKey: Key('glass_swipe_${lot.id}'),
           leftAction: widget.onRestoreSwipe != null
             ? GlassSwipeAction(

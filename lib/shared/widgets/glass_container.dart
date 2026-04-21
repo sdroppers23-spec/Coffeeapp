@@ -80,22 +80,27 @@ class GlassContainer extends ConsumerWidget {
     // Layer 1 & 2 combined into a clipped stack
     Widget mainContent = ClipRRect(
       borderRadius: BorderRadius.circular(effectiveBorderRadius),
-      clipBehavior: Clip.antiAliasWithSaveLayer,
+      clipBehavior: Clip.antiAlias,
       child: Stack(
         children: [
-          // Layer 1: Glass Blur
+          // Layer 1: Glass Blur (Pure backdrop filter)
+          if (enableBlur && effectiveBlur > 0)
+            Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(
+                  sigmaX: effectiveBlur,
+                  sigmaY: effectiveBlur,
+                ),
+                child: const SizedBox.shrink(),
+              ),
+            ),
+          
+          // Layer 2: Base Backdrop Color/Tint
           Positioned.fill(
-            child: (enableBlur && effectiveBlur > 0) 
-              ? BackdropFilter(
-                  filter: ImageFilter.blur(
-                    sigmaX: effectiveBlur,
-                    sigmaY: effectiveBlur,
-                  ),
-                  child: Container(color: effectiveBaseColor),
-                )
-              : Container(color: effectiveBaseColor),
+            child: Container(color: effectiveBaseColor),
           ),
-          // Layer 2: Main decoration and content
+
+          // Layer 3: Main decoration and content
           Container(
             padding: padding,
             decoration: BoxDecoration(
@@ -131,7 +136,32 @@ class GlassContainer extends ConsumerWidget {
                         ],
                       )),
             ),
-            child: child,
+            child: Stack(
+              children: [
+                child,
+                // Debug values overlay
+                if (useDebug && debugKey != null)
+                  Positioned(
+                    top: 2,
+                    right: 2,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withOpacity(0.8),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        'B:${effectiveBlur.toInt()}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 9,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ],
       ),

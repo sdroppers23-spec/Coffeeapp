@@ -13,6 +13,8 @@ import '../../../encyclopedia/encyclopedia_providers.dart';
 import '../lots_providers.dart';
 import 'lot_card_widgets.dart';
 import '../../widgets/discovery_action_bar.dart';
+import '../../../../core/l10n/app_localizations.dart';
+import '../../../../shared/services/toast_service.dart';
 
 
 class MyLotsContent extends ConsumerStatefulWidget {
@@ -504,12 +506,9 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                   ref.invalidate(userLotsProvider);
                   
                   if (!context.mounted) return;
-                  final isUk = Localizations.localeOf(context).languageCode == 'uk';
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(isUk ? 'Лот відновлено' : 'Lot restored'),
-                      behavior: SnackBarBehavior.floating,
-                    ),
+                  ToastService.showSuccess(
+                    context, 
+                    context.t('toast_lot_restored')
                   );
                 } : null,
                 onDeleteSwipe: (lot) async {
@@ -642,12 +641,9 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                     }
 
                     if (mounted) {
-                      final isUk = Localizations.localeOf(context).languageCode == 'uk';
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(isUk ? 'Зміни збережено' : 'Changes saved'),
-                          duration: const Duration(seconds: 2),
-                        ),
+                      ToastService.showSuccess(
+                        context, 
+                        context.t('toast_changes_saved')
                       );
                     }
                     setState(() {});

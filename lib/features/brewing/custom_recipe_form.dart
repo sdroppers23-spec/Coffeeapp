@@ -8,6 +8,7 @@ import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/supabase/supabase_provider.dart';
+import '../../shared/services/toast_service.dart';
 
 // ─── Pour entry (local model) ─────────────────────────────────────────────────
 class _PourEntry {
@@ -326,16 +327,20 @@ class _CustomRecipeFormScreenState
       }
 
       if (mounted) {
+        ToastService.showSuccess(
+          context, 
+          widget.existingRecipe != null 
+            ? context.t('toast_recipe_updated')
+            : context.t('toast_recipe_saved')
+        );
         Navigator.of(context).pop();
       }
     } catch (e) {
       debugPrint('Error saving recipe: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to save recipe: $e'),
-            backgroundColor: Colors.redAccent,
-          ),
+        ToastService.showError(
+          context, 
+          'Failed to save recipe: $e'
         );
       }
     } finally {

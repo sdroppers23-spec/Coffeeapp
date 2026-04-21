@@ -30,7 +30,12 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
   void initState() {
     super.initState();
     // Measure nav bar after first frame
-    WidgetsBinding.instance.addPostFrameCallback((_) => _updateNavBarHeight());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _updateNavBarHeight();
+        ref.read(navBarVisibleProvider.notifier).show();
+      }
+    });
 
     // Auto-show nav bar when switching tabs
     // This fixes the issue where full-screen pages might leave it hidden
@@ -60,7 +65,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
     if (widget.navigationShell.currentIndex !=
         oldWidget.navigationShell.currentIndex) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(navBarVisibleProvider.notifier).show();
+        if (mounted) ref.read(navBarVisibleProvider.notifier).show();
       });
     }
   }

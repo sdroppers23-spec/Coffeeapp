@@ -9,6 +9,8 @@ import '../../../core/database/dtos.dart';
 import '../../../shared/widgets/glass_container.dart';
 import '../custom_recipe_timer_screen.dart';
 import '../custom_recipe_list.dart';
+import '../../../core/l10n/app_localizations.dart';
+import '../../../shared/services/toast_service.dart';
 
 class CustomRecipeCard extends StatelessWidget {
   final CustomRecipeDto recipe;
@@ -140,6 +142,12 @@ class CustomRecipeCard extends StatelessWidget {
                                 Navigator.pop(context);
                                 final db = ref.read(databaseProvider);
                                 await db.deleteCustomRecipe(recipe.id);
+                                if (context.mounted) {
+                                  ToastService.showInfo(
+                                    context, 
+                                    context.t('toast_recipe_deleted')
+                                  );
+                                }
                                 ref.invalidate(
                                   customRecipesForMethodProvider(methodKey),
                                 );

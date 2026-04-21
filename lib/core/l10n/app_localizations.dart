@@ -345,6 +345,7 @@ class AppLocalizations {
       'process_koji_character': 'Umami, Deep Sweetness, Depth',
       'process_wet_hulled_character': 'Earthy, Spicy, Thick Body',
 
+
       'process_natural_desc': '### Step 1: Sorting\nWhole cherries are spread on African beds.\n### Step 2: Drying\nTakes 2-4 weeks. The cherry dries, transferring sugars to the bean.\n### Step 3: Hulling\nDry skin is removed only after full drying. Gives a sweet cup with low acidity.',
       'process_washed_desc': '### Step 1: Depulping\nSkin and pulp are removed mechanically.\n### Step 2: Fermentation\nBeans in mucilage are submerged in water for 12-48 hours.\n### Step 3: Washing & Drying\nBeans are washed with clean water and dried. Gives a clean taste with bright acidity.',
       'process_honey_desc': '### Hybrid Method\nSkin is removed, but some mucilage is left on the bean during drying.\n### Categories\nWhite, Gold, Red, Black Honey depending on mucilage amount. Gives a sweet and syrupy cup.',
@@ -378,6 +379,20 @@ class AppLocalizations {
       'desc_earthy': 'Earthy and savory notes often found in Indonesian or some Brazilian coffees.',
       'desc_note_forest': 'Resinous, woody, and damp soil notes.',
       'desc_note_tobacco': 'Dry, smoky, and slightly sweet herbal notes.',
+
+      // Toasts
+      'toast_added_to_favorites': 'Added to favorites',
+      'toast_removed_from_favorites': 'Removed from favorites',
+      'toast_recipe_deleted': 'Recipe deleted',
+      'toast_recipe_saved': 'Recipe saved',
+      'toast_recipe_updated': 'Recipe updated',
+      'toast_lot_archived': 'Lot archived',
+      'toast_lot_restored': 'Lot restored',
+      'toast_roasters_archived': 'Roasters archived',
+      'toast_roasters_restored': 'Roasters restored',
+      'toast_changes_saved': 'Changes saved',
+      'toast_roaster_archived': 'Roaster archived',
+      'toast_roaster_restored': 'Roaster restored',
     },
     'uk': {
       'discover': 'Відкриття',
@@ -664,12 +679,13 @@ class AppLocalizations {
       'process_koji_character': 'Умамі, Лубока солодкість, Глибина',
       'process_wet_hulled_character': 'Землистість, Спеції, Щільне тіло',
 
+
       'process_natural_desc': '### Етап 1: Сортування\nЦілі ягоди розкладають на африканських ліжках.\n### Етап 2: Сушка у ягоді\nТриває 2-4 тижні. Ягода засихає, віддаючи всі цукри зерну всередині.\n### Етап 3: Халлінг\nСуха оболонка знімається лише після повної сушки. Дає солодку чашку з низькою кислотністю.',
       'process_washed_desc': '### Етап 1: Депульпація\nЗнімається шкірка та м\'якоть механічним способом.\n### Етап 2: Ферментація\nЗерна у слизу занурюються у воду на 12-48 годин для очищення ферментами.\n### Етап 3: Промивка та Сушка\nЗерно промивають чистою водою та сушать до вологості 11-12%. Дає чистий смак з яскравою кислотністю.',
       'process_honey_desc': '### Гібридний метод\nШкірку знімають, але частину м\'якоті (мусіляж) залишають на зерні при сушці.\n### Категорії\nWhite, Gold, Red, Black Honey. Дає дуже солодку і маслянисту чашку.',
-      'process_anaerobic_desc': '### Етап 1: Герметизація\nЯгоди або депульповане зерно завантажують у бочки без доступу кисню.\n### Етап 2: Ферментація\nТриває 48-120 годин. Відсутність кисню стимулює специфічні мікроорганізми, що створюють складний \"фанкі\" смак тропіків.',
+      'process_anaerobic_desc': '### Етап 1: Герметизація\nЯгоди або депульповане зерно завантажують у бочки без доступу кисню.\n### Етап 2: Ферментація\nТриває 48-120 годин. Відсутність кисню стимулює специфічні мікроорганізми, що створюють складний "фанкі" смак тропіків.',
       'process_carbonic_desc': '### Техніка з виноробства\nЦілі ягоди завантажуються в герметичні резервуари, які заповнюють вуглекислим газом.\n### Результат\nВуглець витісняє кисень, сповільнюючи розклад цукрів. Смак виходить дуже чистим, структурованим, часто з винними нотами.',
-      'process_thermal_desc': '### Етап 1: Гарячий шок\nПромивання ягід водою 40°C для розкриття пор зерна.\n### Етап 2: Холодний шок\nРізке охолодження водою 12°C для \"запечатування\" смакових сполук усередині. Дуже інтенсивний та яскравий профіль.',
+      'process_thermal_desc': '### Етап 1: Гарячий шок\nПромивання ягід водою 40°C для розкриття пор зерна.\n### Етап 2: Холодний шок\nРізке охолодження водою 12°C для "запечатування" смакових сполук усередині. Дуже інтенсивний та яскравий профіль.',
       'process_lactic_desc': '### Молочнокисла ферментація\nФокус на розвитку молочнокислих бактерій (Lactobacillus).\n### Результат\nСтворюється висока концентрація молочної кислоти. У чашці це дає неймовірно шовковисте, вершкове тіло та ноти йогурту.',
       'process_yeast_desc': '### Контрольована ферментація\nДодавання спеціальних штамів дріжджів (винних або спеціально виведених для кави).\n### Результат\nПовний контроль над процесом. Дріжджі підкреслюють конкретні аромати, роблячи смак чистішим.',
       'process_koji_desc': '### Японська технологія\nВикористання благородної плісняви Aspergillus oryzae (Коджі).\n### Результат\nКоджі розщеплює складні вуглеводи та білки. Дає надзвичайну солодкість, глибину та легкий умамі-присмак.',
@@ -695,8 +711,22 @@ class AppLocalizations {
       'note_forest': 'Лісові / Хвоя',
       'note_tobacco': 'Тютюн',
       'desc_earthy': 'Землисті та пікантні ноти, які часто зустрічаються в індонезійській або деякій бразильській каві.',
-      'desc_note_forest': 'Смолисті, деревні ноти та аромати вологого грунту.',
+      'desc_note_forest': 'Смолисті, деревні та ноти вологого ґрунту.',
       'desc_note_tobacco': 'Сухі, димні та злегка солодкі трав\'яні ноти.',
+
+      // Toasts
+      'toast_added_to_favorites': 'Додано до обраного',
+      'toast_removed_from_favorites': 'Видалено з обраного',
+      'toast_recipe_deleted': 'Рецепт видалено',
+      'toast_recipe_saved': 'Рецепт збережено',
+      'toast_recipe_updated': 'Рецепт оновлено',
+      'toast_lot_archived': 'Лот архівовано',
+      'toast_lot_restored': 'Лот відновлено',
+      'toast_roasters_archived': 'Обсмажчики архівовані',
+      'toast_roasters_restored': 'Обсмажчики відновлені',
+      'toast_changes_saved': 'Зміни збережено',
+      'toast_roaster_archived': 'Обсмажчик архівований',
+      'toast_roaster_restored': 'Обсмажчик відновлений',
     },
   };
 }

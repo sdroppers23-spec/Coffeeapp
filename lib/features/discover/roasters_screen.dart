@@ -15,6 +15,7 @@ import '../../shared/widgets/glass_swipe_wrapper.dart';
 import '../../shared/widgets/glass_container.dart';
 import '../../core/database/dtos.dart';
 import 'discovery_providers.dart';
+import '../../shared/services/toast_service.dart';
 
 class RoastersScreen extends StatelessWidget {
   const RoastersScreen({super.key});
@@ -214,25 +215,26 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
           if (_isSelectionMode) ...[
             // Масовий архів
             brandsAsync.whenData((brands) {
-              final activeTab = _tabController.index;
               return IconButton(
                 onPressed: () async {
-                  final messenger = ScaffoldMessenger.of(context);
                   final db = ref.read(databaseProvider);
-                  final isArchiving = activeTab != 2;
+                  final l10n = AppLocalizations.of(context);
+                  final isArchiving = _tabController.index != 2;
+                  
                   for (final id in _selectedIds) {
                     await db.toggleBrandArchive(id, isArchiving);
                   }
+                  
                   _clearSelection();
                   ref.invalidate(brandsProvider);
-                  if (mounted) {
-                    messenger.showSnackBar(SnackBar(
-                      content: Text(isArchiving
-                          ? 'Обсмажчики архівовані'
-                          : 'Обсмажчики відновлені'),
-                      behavior: SnackBarBehavior.floating,
-                      backgroundColor: const Color(0xFF2A2A2A),
-                    ));
+                  
+                  if (context.mounted) {
+                    ToastService.showSuccess(
+                      context, 
+                      isArchiving 
+                        ? l10n.translate('toast_roasters_archived')
+                        : l10n.translate('toast_roasters_restored')
+                    );
                   }
                 },
                 icon: Icon(
@@ -453,13 +455,12 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
             await db.toggleBrandArchive(brand.id, !isArchiveTab);
             ref.invalidate(brandsProvider);
             if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(isArchiveTab
-                    ? '${brand.name} відновлено'
-                    : '${brand.name} архівовано'),
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: const Color(0xFF2A2A2A),
-              ));
+              ToastService.showSuccess(
+                context, 
+                isArchiveTab
+                  ? context.t('toast_roaster_restored')
+                  : context.t('toast_roaster_archived')
+              );
             }
           },
         ),
@@ -495,7 +496,16 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
             },
             onFavoriteToggle: () async {
               final db = ref.read(databaseProvider);
-              await db.toggleBrandFavorite(brand.id, !brand.isFavorite);
+              final currentlyFavorite = brand.isFavorite;
+              await db.toggleBrandFavorite(brand.id, !currentlyFavorite);
+              
+              if (mounted) {
+                if (!currentlyFavorite) {
+                  ToastService.showSuccess(context, context.t('toast_added_to_favorites'));
+                } else {
+                  ToastService.showInfo(context, context.t('toast_removed_from_favorites'));
+                }
+              }
               ref.invalidate(brandsProvider);
             },
           ),

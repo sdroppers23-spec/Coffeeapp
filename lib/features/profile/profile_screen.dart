@@ -40,8 +40,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   void dispose() {
-    // Restore nav bar when leaving profile
-    ref.read(navBarVisibleProvider.notifier).show();
+    // Nav bar restoration is handled by PopScope for immediate feedback, 
+    // but we keep a fallback here.
     super.dispose();
   }
 

@@ -17,6 +17,8 @@ import 'sensory_preview.dart';
 import 'lot_detail_widgets.dart';
 import '../../features/brewing/widgets/custom_recipe_card.dart';
 import '../../shared/models/processing_methods_repository.dart';
+import '../../features/navigation/navigation_providers.dart';
+import '../services/toast_service.dart';
 
 class LotDetailView extends ConsumerStatefulWidget {
   final CoffeeLotDto? lot;
@@ -43,6 +45,10 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(() {
+      // Force visibility immediately and when branch changes
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) ref.read(navBarVisibleProvider.notifier).show();
+      });
       if (_tabController.indexIsChanging || !_tabController.indexIsChanging) {
         setState(() {}); // Required to update header based on tab
       }
@@ -80,7 +86,11 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
             final String? imageUrl = liveLot?.imageUrl ?? liveBean?.farmPhotosUrlCover ?? widget.lot?.imageUrl ?? widget.entry?.imageUrl;
             
             // Map sensory points using the shared utility
-            final rawPoints = liveLot?.sensoryPoints ?? liveBean?.sensoryPoints ?? widget.lot?.sensoryPoints ?? widget.entry?.sensoryPoints ?? {};
+            final Map<String, dynamic> rawPoints = liveLot?.sensoryPoints ?? 
+                liveBean?.sensoryPoints ?? 
+                (widget.entry?.radarPoints != null && widget.entry!.radarPoints.isNotEmpty ? widget.entry!.radarPoints : null) ??
+                widget.lot?.sensoryPoints ?? 
+                widget.entry?.sensoryPoints ?? {};
             final mappedPoints = SensoryUtils.map4To6Axis(rawPoints);
 
             return Scaffold(
@@ -107,11 +117,23 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                       isFavorite: liveLot?.isFavorite ?? liveBean?.isFavorite ?? false,
                       onToggleFavorite: () async {
                         final db = ref.read(databaseProvider);
+                        bool currentlyFavorite = liveLot?.isFavorite ?? liveBean?.isFavorite ?? false;
+                        
                         if (liveLot != null) {
-                          await db.toggleLotFavorite(liveLot.id, !liveLot.isFavorite);
+                          await db.toggleLotFavorite(liveLot.id, !currentlyFavorite);
                         } else if (liveBean != null) {
-                          await db.toggleFavorite(liveBean.id, !liveBean.isFavorite);
+                          await db.toggleFavorite(liveBean.id, !currentlyFavorite);
                         }
+
+                        if (!context.mounted) return;
+                        if (mounted) {
+                          if (!currentlyFavorite) {
+                            ToastService.showSuccess(context, context.t('toast_added_to_favorites'));
+                          } else {
+                            ToastService.showInfo(context, context.t('toast_removed_from_favorites'));
+                          }
+                        }
+
                         if (!kIsWeb && !Platform.isWindows) {
                           await Vibration.vibrate(duration: 50);
                         }
@@ -738,7 +760,7 @@ class _InfoTab extends ConsumerWidget {
           const SizedBox(height: 24),
         ],
 
-        const SizedBox(height: 100),
+        const SizedBox(height: 140),
       ],
     );
   }
@@ -777,7 +799,7 @@ class _SensoryTab extends StatelessWidget {
             points: points.map((k, v) => MapEntry(k, v)),
             isGrid: true,
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 140),
         ],
       ),
     );
@@ -854,7 +876,7 @@ class _RecipesTab extends ConsumerWidget {
           itemCount: recipes.length + 1,
           itemBuilder: (context, index) {
             if (index == recipes.length) {
-              return const SizedBox.shrink(); // Using FAB now
+              return const SizedBox(height: 140); 
             }
             return Padding(
               padding: const EdgeInsets.only(bottom: 12),

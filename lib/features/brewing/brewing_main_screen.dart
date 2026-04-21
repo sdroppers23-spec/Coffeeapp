@@ -52,6 +52,7 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
     final accentColor = theme.colorScheme.secondary;
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
       appBar: PremiumAppBar(
         title: ref.t('alternative'),

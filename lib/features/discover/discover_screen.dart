@@ -102,7 +102,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.black, // Pure black background
+      backgroundColor: Colors.transparent, // Sync with global background
       floatingActionButton: null,
       body: SafeArea(
         child: Column(

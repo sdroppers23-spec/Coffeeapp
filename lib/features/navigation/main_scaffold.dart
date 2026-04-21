@@ -168,24 +168,24 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                                   vertical: 1,
                                   horizontal: 6,
                                 ),
-                                blur: isDark ? 60 : 40,
+                                blur: isDark ? 120 : 80,
                                 opacity: isDark ? 0.1 : 0.6,
                                 backgroundGradient: LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: isDark
                                       ? [
-                                          Colors.white.withValues(alpha: 0.15),
-                                          const Color(0xFFFFF9E3).withValues(alpha: 0.08),
+                                          Colors.white.withValues(alpha: 0.25),
+                                          const Color(0xFFFFF9E3).withValues(alpha: 0.12),
                                         ]
                                       : [
-                                          Colors.white.withValues(alpha: 0.9),
-                                          theme.colorScheme.surface.withValues(alpha: 0.7),
+                                          Colors.white.withValues(alpha: 0.95),
+                                          theme.colorScheme.surface.withValues(alpha: 0.8),
                                         ],
                                 ),
                                 borderColor: isDark
-                                    ? Colors.white.withValues(alpha: 0.15)
-                                    : theme.colorScheme.primary.withValues(alpha: 0.1),
+                                    ? Colors.white.withValues(alpha: 0.25)
+                                    : theme.colorScheme.primary.withValues(alpha: 0.2),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -235,24 +235,24 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                                 width: 52,
                                 height: 52,
                                 borderRadius: 26,
-                                blur: isDark ? 60 : 40,
+                                blur: isDark ? 120 : 80,
                                 opacity: isDark ? 0.1 : 0.6,
                                 backgroundGradient: LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: isDark
                                       ? [
-                                          Colors.white.withValues(alpha: 0.15),
-                                          const Color(0xFFFFF9E3).withValues(alpha: 0.08),
+                                          Colors.white.withValues(alpha: 0.25),
+                                          const Color(0xFFFFF9E3).withValues(alpha: 0.12),
                                         ]
                                       : [
-                                          Colors.white.withValues(alpha: 0.9),
-                                          theme.colorScheme.surface.withValues(alpha: 0.7),
+                                          Colors.white.withValues(alpha: 0.95),
+                                          theme.colorScheme.surface.withValues(alpha: 0.8),
                                         ],
                                 ),
                                 borderColor: isDark
-                                    ? Colors.white.withValues(alpha: 0.15)
-                                    : theme.colorScheme.primary.withValues(alpha: 0.1),
+                                    ? Colors.white.withValues(alpha: 0.25)
+                                    : theme.colorScheme.primary.withValues(alpha: 0.2),
                               child: Center(
                                 child: Icon(
                                   Icons.settings_rounded,

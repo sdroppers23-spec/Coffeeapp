@@ -81,6 +81,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ref.read(navBarVisibleProvider.notifier).show();
       },
       child: Scaffold(
+        backgroundColor: Colors.transparent,
         appBar: AppBar(
           title: Text(
             ref.t('profile'),

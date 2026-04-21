@@ -17,7 +17,6 @@ import 'sensory_preview.dart';
 import 'lot_detail_widgets.dart';
 import '../../features/brewing/widgets/custom_recipe_card.dart';
 import '../../shared/models/processing_methods_repository.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 
 class LotDetailView extends ConsumerStatefulWidget {
   final CoffeeLotDto? lot;
@@ -145,7 +144,11 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                         controller: _tabController,
                         children: [
                           _InfoTab(lot: liveLot ?? widget.lot, bean: liveBean ?? widget.entry),
-                          _SensoryTab(points: mappedPoints, isUk: isUk),
+                          _SensoryTab(
+                            points: mappedPoints, 
+                            isUk: isUk, 
+                            lotId: liveLot?.id ?? widget.lot?.id ?? widget.entry?.lotNumber
+                          ),
                           _RecipesTab(lotId: liveLot?.id ?? widget.lot?.id ?? widget.entry?.lotNumber ?? ''),
                         ],
                       ),
@@ -476,7 +479,7 @@ class _InfoTab extends ConsumerWidget {
   final CoffeeLotDto? lot;
   final LocalizedBeanDto? bean;
 
-  const _InfoTab({super.key, this.lot, this.bean});
+  const _InfoTab({this.lot, this.bean});
 
   void _showProcessInfoSheet(BuildContext context, WidgetRef ref, String process) {
     final isUk = LocaleService.currentLocale == 'uk';
@@ -574,7 +577,6 @@ class _InfoTab extends ConsumerWidget {
       ),
     );
   }
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -613,9 +615,13 @@ class _InfoTab extends ConsumerWidget {
                     child: LotCompactStat(
                       label: isUk ? 'Обробка' : 'Process',
                       value: lot?.process ?? bean?.processMethod ?? 'N/A',
-                      onTap: (lot?.process ?? bean?.processMethod) != null 
-                        ? () => _showProcessInfoSheet(context, ref, lot?.process ?? bean?.processMethod ?? '')
-                        : null,
+                      onTap: () {
+                        final processName = (lot?.process ?? bean?.processMethod ?? '').toLowerCase();
+                        final recognizedMethod = ProcessingMethodsRepository.getByMatchingName(processName);
+                        if (recognizedMethod != null && recognizedMethod.extendedInfoKey != null) {
+                           _showProcessInfoSheet(context, ref, lot?.process ?? bean?.processMethod ?? '');
+                        }
+                      },
                     ),
                   ),
                   Container(width: 1, height: 30, color: Colors.white10),
@@ -741,8 +747,9 @@ class _InfoTab extends ConsumerWidget {
 class _SensoryTab extends StatelessWidget {
   final Map<String, double> points;
   final bool isUk;
+  final String? lotId;
 
-  const _SensoryTab({required this.points, required this.isUk});
+  const _SensoryTab({required this.points, required this.isUk, this.lotId});
 
   @override
   Widget build(BuildContext context) {
@@ -753,11 +760,15 @@ class _SensoryTab extends StatelessWidget {
           const SizedBox(height: 10),
           SizedBox(
             height: 350,
-            child: SensoryRadarChart(
-              interactive: false,
-              height: 350,
-              staticValues: points,
-            ),
+            child: () {
+              final isCustomLot = lotId != null && !lotId!.startsWith('encyclopedia_');
+              return SensoryRadarChart(
+                interactive: isCustomLot,
+                isLocked: !isCustomLot,
+                height: 350,
+                staticValues: points,
+              );
+            }(),
           ),
           const SizedBox(height: 30),
           _SectionTitle(title: isUk ? 'СЕНСОРНИЙ ПРОФІЛЬ' : 'SENSORY PROFILE'),
@@ -875,15 +886,14 @@ class _SectionTitle extends StatelessWidget {
 class _InfoRow extends StatelessWidget {
   final String label;
   final String? value;
-  final Widget? trailing;
   final VoidCallback? onTap;
 
-  const _InfoRow({required this.label, this.value, this.trailing, this.onTap});
+  const _InfoRow({required this.label, this.value, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     final v = value;
-    final t = trailing;
+                // ignore: use_null_aware_elements
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -916,7 +926,6 @@ class _InfoRow extends StatelessWidget {
                   ),
                 ],
                 // ignore: use_null_aware_elements
-                if (t != null) t,
               ],
             ),
           ],

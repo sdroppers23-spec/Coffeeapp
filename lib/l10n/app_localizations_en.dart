@@ -165,7 +165,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get process_honey => 'Honey';
 
   @override
-  String get process_wet_hulled => 'Wet-Hulled';
+  String get process_wet_hulled => 'Wet Hulled';
 
   @override
   String get process_anaerobic => 'Anaerobic';
@@ -174,56 +174,56 @@ class AppLocalizationsEn extends AppLocalizations {
   String get process_carbonic => 'Carbonic Maceration';
 
   @override
-  String get process_lactic => 'Lactic/Acetic';
+  String get process_lactic => 'Lactic Fermentation';
 
   @override
   String get process_thermal => 'Thermal Shock';
 
   @override
-  String get process_cofermentation => 'Co-fermentation';
+  String get process_yeast => 'Yeast Inoculation';
 
   @override
-  String get process_koji => 'Koji / Yeast';
+  String get process_koji => 'Koji Fermentation';
 
   @override
   String get process_natural_desc =>
-      '### How it works\nThe oldest and simplest method. The whole coffee cherry is dried with skin and pulp on patios or raised beds under the sun.\n### In the cup\nHeavy body, low acidity, and high sweetness. Often features notes of dried fruits, chocolate, ripe berries, and wine.';
+      '### Stage 1: Sorting\nOnly ripe cherries are selected and spread out on African beds or patios.\n### Stage 2: Drying\nThe whole fruit dries for 2-4 weeks, allowing sugars to concentrate inside the bean.\n### Stage 3: Hulling\nThe dried husk is removed only after reaching 11-12% moisture. Produces sweet cups with low acidity.';
 
   @override
   String get process_washed_desc =>
-      '### How it works\nFruit and pulp are removed immediately (depulping). Beans in sticky mucilage ferment in water for 12–36 hours, then rinsed and dried.\n### In the cup\nThe cleanest profile. Bright, sparkling acidity and light to medium body. Clear terroir notes like citrus, florals, and green tea.';
+      '### Stage 1: Depulping\nThe skin and pulp are removed mechanically. The sticky mucilage stays on the parchment.\n### Stage 2: Fermentation\nBeans soak in water tanks for 12-48 hours where bacteria break down the mucilage.\n### Stage 3: Washing & Drying\nBeans are washed with clean water and dried on patios. Produces a very clean flavor with bright acidity.';
 
   @override
   String get process_honey_desc =>
-      '### How it works\nA hybrid method where the skin is removed but some mucilage remains during drying. Color varies (White to Black) based on remaining pulp.\n### In the cup\nSweeter than washed but cleaner than natural. Honey-like sweetness, creamy body, and balanced acidity of ripe fruits.';
+      '### Hybrid Method\nThe skin is removed, but part of the sticky mucilage stays on the bean during drying.\n### Categories\nDepending on how much mucilage remains, it ranges from White to Black Honey. Produces very sweet, syrupy and buttery cups.';
 
   @override
   String get process_wet_hulled_desc =>
-      '### How it works\nTraditional Indonesian method (Giling Basah). Parchment is removed while beans are still very wet (30-50%). Drying finishes without the protective layer.\n### In the cup\nVery heavy, syrupy body with minimal acidity. Distinctive notes of cedar, spices, earth, tobacco, and dark chocolate.';
+      '### Traditional Indonesian Method (Giling Basah)\nThe skin is removed at very high moisture content (30-40%).\n### Result\nThe bean dries without its protective parchment. This creates a unique profile: low acidity, heavy earthy body, and notes of spice or chocolate.';
 
   @override
   String get process_anaerobic_desc =>
-      '### How it works\nFermentation takes place in localized, airtight tanks without oxygen. This allows specific bacteria to thrive, drastically changing the bean chemistry.\n### In the cup\nIntense, \"funky\" aroma. High sweetness, complex acidity, and flavors of tropical fruits and boozy notes (rum, whiskey).';
+      '### Stage 1: Sealing\nCherries or depulped beans are placed in airtight tanks where oxygen is replaced with CO2 or simply removed.\n### Stage 2: Fermentation\nLasts 48-120 hours. This stimulates specific microbes that create complex \"funky\" tropical flavor profiles.';
 
   @override
   String get process_carbonic_desc =>
-      '### How it works\nAdapted from winemaking. Tanks are filled with CO2 to displace oxygen. Fermentation happens under pressure, often at controlled temperatures.\n### In the cup\nExceptional complexity. Red berry notes (strawberry, raspberry), candy-like sweetness, and sparkling acidity. Very clean yet multi-layered.';
+      '### Wine-making Technique\nWhole cherries are loaded into sealed containers which are then filled with CO2 gas.\n### Result\nCarbon dioxide slows down sugar breakdown. The resulting flavor is very clean, structured, and often has distinct winey notes.';
 
   @override
   String get process_lactic_desc =>
-      '### How it works\nEncourages the growth of lactic acid bacteria. Producers control pH, temperature, and sugar content for specific bacterial activity.\n### In the cup\nYogurt-like or creamy body. Soft, rounded acidity. Often reminds of peach, ripe pineapple, or creamy desserts.';
+      '### Lactic Fermentation\nA focus on the development of lactic acid bacteria (Lactobacillus).\n### Result\nCreates high concentrations of lactic acid. In the cup, this results in an incredibly silky, creamy body with notes of yogurt or dairy.';
 
   @override
   String get process_thermal_desc =>
-      '### How it works\nA drastic temperature change during fermentation. Beans are shocked with hot water to open pores, then quickly chilled with cold water to \"seal\" flavors inside.\n### In the cup\nIncredible intensity of aroma and flavor. A precision and clarity impossible with normal fermentation. Feels like a fruit and floral explosion.';
+      '### Stage 1: Hot Shock\nBeans are rinsed with 40°C water to expand pores and absorb fermentation compounds.\n### Stage 2: Cold Shock\nImmediate rinse with 12°C water to \"lock\" intense flavors inside. Extremely vibrant and intense profile.';
 
   @override
-  String get process_cofermentation_desc =>
-      '### How it works\nFruits, berries, herbs, or essential oils are added during fermentation. The coffee absorbs these aromas at a cellular level.\n### In the cup\nVery clear, sometimes perfume-like flavor of the added ingredient. For example, intense cinnamon or pink grapefruit notes.';
+  String get process_yeast_desc =>
+      '### Controlled Fermentation\nSpecific yeast strains (wine or specially developed coffee yeast) are added to the fermentation tank.\n### Result\nFull control over the process. Yeast highlights precise floral or berry aromas, leading to a much cleaner and more predictable flavor.';
 
   @override
   String get process_koji_desc =>
-      '### How it works\nUses Aspergillus oryzae (Koji) fungus to break down starches faster than normal yeast, or specific wine yeasts are introduced.\n### In the cup\nEnhanced umami, deep sweetness, and velvet body. Exceptionally balanced and sweet with tropical fruit and biscuit notes.';
+      '### Japanese Technology\nUses Aspergillus oryzae (Koji) mold, commonly used in sake and soy sauce production.\n### Result\nKoji breaks down complex carbohydrates and proteins that normal yeast cannot. Results in extreme sweetness, depth, and a subtle umami finish.';
 
   @override
   String get shop_coffee => 'SHOP THIS COFFEE';

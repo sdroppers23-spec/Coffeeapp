@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 class ProcessingMethodInfo {
   final String id;
   final String nameKey;
@@ -122,7 +120,6 @@ class ProcessingMethodsRepository {
       traits: ['Explosive', 'Vibrant', 'Complex'],
     ),
 
-    // Additional methods (legacy/experimental)
     ProcessingMethodInfo(
       id: 'wet_hulled',
       nameKey: 'process_wet_hulled',
@@ -136,6 +133,54 @@ class ProcessingMethodsRepository {
         'aftertaste': 3.0,
       },
       traits: ['Earthy', 'Thick Body', 'Spicy'],
+    ),
+    ProcessingMethodInfo(
+      id: 'lactic',
+      nameKey: 'process_lactic',
+      descKey: 'process_lactic_desc',
+      extendedInfoKey: 'process_lactic_extended',
+      characterKey: 'process_lactic_character',
+      sensoryPreset: {
+        'bitterness': 1.5,
+        'acidity': 4.0,
+        'sweetness': 4.0,
+        'body': 5.0,
+        'intensity': 4.0,
+        'aftertaste': 4.5,
+      },
+      traits: ['Silky', 'Creamy', 'Yogurt'],
+    ),
+    ProcessingMethodInfo(
+      id: 'yeast',
+      nameKey: 'process_yeast',
+      descKey: 'process_yeast_desc',
+      extendedInfoKey: 'process_yeast_extended',
+      characterKey: 'process_yeast_character',
+      sensoryPreset: {
+        'bitterness': 1.5,
+        'acidity': 3.5,
+        'sweetness': 4.0,
+        'body': 3.0,
+        'intensity': 3.5,
+        'aftertaste': 4.0,
+      },
+      traits: ['Clean', 'Aromatic', 'Refined'],
+    ),
+    ProcessingMethodInfo(
+      id: 'koji',
+      nameKey: 'process_koji',
+      descKey: 'process_koji_desc',
+      extendedInfoKey: 'process_koji_extended',
+      characterKey: 'process_koji_character',
+      sensoryPreset: {
+        'bitterness': 1.0,
+        'acidity': 3.0,
+        'sweetness': 5.0,
+        'body': 4.5,
+        'intensity': 4.5,
+        'aftertaste': 5.0,
+      },
+      traits: ['Umami', 'Deep Sweet', 'Complex'],
     ),
   ];
 
@@ -160,6 +205,9 @@ class ProcessingMethodsRepository {
     if (lower.contains('thermal') || lower.contains('термал')) return getById('thermal');
     if (lower.contains('wet hull') || lower.contains('giling') || lower.contains('вет-халд')) return getById('wet_hulled');
     if (lower.contains('carbonic') || lower.contains('вуглекисл')) return getById('carbonic');
+    if (lower.contains('lactic') || lower.contains('молочн')) return getById('lactic');
+    if (lower.contains('yeast') || lower.contains('дріждж')) return getById('yeast');
+    if (lower.contains('koji') || lower.contains('коджі')) return getById('koji');
     
     return null;
   }

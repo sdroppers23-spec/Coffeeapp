@@ -12,6 +12,7 @@ import '../../core/l10n/app_localizations.dart';
 import '../../core/l10n/flavor_descriptions.dart';
 import '../navigation/navigation_providers.dart';
 import '../../shared/widgets/sensory_radar_chart.dart';
+import '../../shared/models/processing_methods_repository.dart';
 
 class FlavorValuesNotifier extends Notifier<Map<String, double>> {
   @override
@@ -48,6 +49,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
   String? _selectedFlavorKey;
   Color? _selectedFlavorColor;
   List<String>? _selectedFlavorItems;
+  String _selectedMethodId = 'natural'; // Default to natural
 
   @override
   void initState() {
@@ -78,6 +80,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final values = ref.watch(flavorValuesProvider);
     return Scaffold(
         backgroundColor: Colors.transparent,
         body: SafeArea(
@@ -181,15 +184,35 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                                     letterSpacing: 1.5,
                                   ),
                                 ),
-                                const SizedBox(height: 20),
-                                  Expanded(
-                                    child: SensoryRadarChart(
+                                const SizedBox(height: 16),
+                                
+                                // Process Selection chips
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      _buildMethodChip('natural'),
+                                      const SizedBox(width: 8),
+                                      _buildMethodChip('washed'),
+                                      const SizedBox(width: 8),
+                                      _buildMethodChip('honey'),
+                                    ],
+                                  ),
+                                ),
+                                
+                                const SizedBox(height: 10),
+                                Expanded(
+                                  child: (() {
+                                    final method = ProcessingMethodsRepository.getById(_selectedMethodId);
+                                    return SensoryRadarChart(
                                       interactive: true,
                                       isLocked: true, // Educational locking
-                                      staticValues: values,
+                                      staticValues: method?.sensoryPreset ?? values,
                                       height: 380,
-                                    ),
-                                  ),
+                                    );
+                                  })(),
+                                ),
                                 const SizedBox(height: 32),
                               ],
                             ),
@@ -249,6 +272,40 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
             ],
           ),
         ),
+    );
+  }
+
+  Widget _buildMethodChip(String id) {
+    final isSelected = _selectedMethodId == id;
+    final method = ProcessingMethodsRepository.getById(id);
+    final label = method != null ? ref.t(method.nameKey) : id;
+
+    return ChoiceChip(
+      label: Text(
+        label,
+        style: GoogleFonts.poppins(
+          fontSize: 12,
+          color: isSelected ? Colors.black : Colors.white70,
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      selected: isSelected,
+      onSelected: (selected) {
+        if (selected) {
+          setState(() {
+            _selectedMethodId = id;
+          });
+        }
+      },
+      selectedColor: const Color(0xFFC8A96E),
+      backgroundColor: Colors.white.withValues(alpha: 0.05),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(
+          color: isSelected ? const Color(0xFFC8A96E) : Colors.white10,
+        ),
+      ),
+      showCheckmark: false,
     );
   }
 }

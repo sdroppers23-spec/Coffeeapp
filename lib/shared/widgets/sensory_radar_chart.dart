@@ -109,6 +109,7 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
         ],
         SizedBox(
           height: widget.height - (widget.interactive ? 60 : 0),
+          child: LayoutBuilder(
             builder: (context, constraints) {
               final center = Offset(
                 constraints.maxWidth / 2,

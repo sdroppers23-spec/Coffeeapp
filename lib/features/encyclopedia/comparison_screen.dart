@@ -9,7 +9,12 @@ import '../../shared/widgets/premium_background.dart';
 import 'encyclopedia_providers.dart';
 
 class ComparisonScreen extends ConsumerStatefulWidget {
-  const ComparisonScreen({super.key});
+  final ComparisonSource source;
+
+  const ComparisonScreen({
+    super.key,
+    this.source = ComparisonSource.encyclopedia,
+  });
 
   @override
   ConsumerState<ComparisonScreen> createState() => _ComparisonScreenState();
@@ -35,7 +40,7 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final asyncComparable = ref.watch(allComparableCoffeesProvider);
+    final asyncComparable = ref.watch(allComparableCoffeesProvider(widget.source));
 
     return Scaffold(
         extendBodyBehindAppBar: true,
@@ -57,7 +62,10 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
               }
 
               // Use selected IDs if they exist
-              final selectedIds = ref.watch(selectedLotIdsProvider);
+              final selectedIdsProvider = widget.source == ComparisonSource.encyclopedia
+                  ? encyclopediaSelectedIdsProvider
+                  : myLotsSelectedIdsProvider;
+              final selectedIds = ref.watch(selectedIdsProvider);
               
               if (_coffeeA == null && _coffeeB == null) {
                 if (selectedIds.isNotEmpty) {
@@ -87,7 +95,18 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
                           child: _CoffeeSelector(
                             value: _coffeeA,
                             items: coffees,
-                            onChanged: (val) => setState(() => _coffeeA = val),
+                            onChanged: (val) {
+                              setState(() {
+                                _coffeeA = val;
+                                // Prevent self-comparison
+                                if (_coffeeA?.id == _coffeeB?.id) {
+                                  _coffeeB = coffees.firstWhere(
+                                    (e) => e.id != _coffeeA?.id,
+                                    orElse: () => coffees.first,
+                                  );
+                                }
+                              });
+                            },
                             color: Colors.white.withValues(alpha: 0.1),
                             borderColor: const Color(0xFFC8A96E).withValues(alpha: 0.5),
                           ),
@@ -97,7 +116,18 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
                           child: _CoffeeSelector(
                             value: _coffeeB,
                             items: coffees,
-                            onChanged: (val) => setState(() => _coffeeB = val),
+                            onChanged: (val) {
+                              setState(() {
+                                _coffeeB = val;
+                                // Prevent self-comparison
+                                if (_coffeeB?.id == _coffeeA?.id) {
+                                  _coffeeA = coffees.firstWhere(
+                                    (e) => e.id != _coffeeB?.id,
+                                    orElse: () => coffees.first,
+                                  );
+                                }
+                              });
+                            },
                             color: Colors.white.withValues(alpha: 0.1),
                             borderColor: const Color(0xFFC8A96E).withValues(alpha: 0.5),
                           ),

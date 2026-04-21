@@ -143,10 +143,20 @@ final availableEncyclopediaProcessesProvider = Provider<List<String>>((ref) {
 
 // ─── Comparison Selection ────────────────────────────────────────────────────
 
-final selectedLotIdsProvider =
+enum ComparisonSource { encyclopedia, myLots }
+
+final encyclopediaSelectedIdsProvider =
     NotifierProvider<ComparisonSelectionNotifier, Set<String>>(() {
       return ComparisonSelectionNotifier();
     });
+
+final myLotsSelectedIdsProvider =
+    NotifierProvider<ComparisonSelectionNotifier, Set<String>>(() {
+      return ComparisonSelectionNotifier();
+    });
+
+// Legacy support if needed, but we should migrate calls
+final selectedLotIdsProvider = encyclopediaSelectedIdsProvider;
 
 class ComparisonSelectionNotifier extends Notifier<Set<String>> {
   @override
@@ -241,19 +251,16 @@ class ComparableCoffee {
   }
 }
 
-final allComparableCoffeesProvider = FutureProvider<List<ComparableCoffee>>((ref) async {
+final allComparableCoffeesProvider = FutureProvider.family<List<ComparableCoffee>, ComparisonSource>((ref, source) async {
   final db = ref.watch(databaseProvider);
   final lang = ref.watch(localeProvider);
   
-  // Fetch from both sources
-  final encyclopediaEntries = await db.getAllEncyclopediaEntries(lang);
-  final userLots = await db.getAllCoffeeLots();
-  
-  final combined = [
-    ...encyclopediaEntries.map((e) => ComparableCoffee.fromEncyclopedia(e)),
-    ...userLots.map((l) => ComparableCoffee.fromUserLot(l)),
-  ];
-  
-  return combined;
+  if (source == ComparisonSource.encyclopedia) {
+    final encyclopediaEntries = await db.getAllEncyclopediaEntries(lang);
+    return encyclopediaEntries.map((e) => ComparableCoffee.fromEncyclopedia(e)).toList();
+  } else {
+    final userLots = await db.getAllCoffeeLots();
+    return userLots.map((l) => ComparableCoffee.fromUserLot(l)).toList();
+  }
 });
 

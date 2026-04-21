@@ -49,12 +49,17 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
               // ── Premium Action Bar ─────────────────────────────────────────────
               DiscoveryActionBar(
                 filterProvider: encyclopediaFilterProvider,
+                selectionProvider: encyclopediaSelectedIdsProvider,
                 onCompareTap: () {
-                  final selectedCount = ref.read(selectedLotIdsProvider).length;
+                  final selectedCount = ref.read(encyclopediaSelectedIdsProvider).length;
                   if (selectedCount == 0) {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const ComparisonScreen()),
+                      MaterialPageRoute(
+                        builder: (_) => const ComparisonScreen(
+                          source: ComparisonSource.encyclopedia,
+                        ),
+                      ),
                     );
                   } else if (selectedCount == 1) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -69,7 +74,11 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
                   } else {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const ComparisonScreen()),
+                      MaterialPageRoute(
+                        builder: (_) => const ComparisonScreen(
+                          source: ComparisonSource.encyclopedia,
+                        ),
+                      ),
                     );
                   }
                 },

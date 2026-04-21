@@ -28,7 +28,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
   final Set<String> _pendingDeleteIds = {};
   bool _isUndoVisible = false;
   
-  bool get _isSelectionMode => ref.watch(selectedLotIdsProvider).isNotEmpty;
+  bool get _isSelectionMode => ref.watch(myLotsSelectedIdsProvider).isNotEmpty;
   late final ScrollController _scrollController;
 
 
@@ -238,22 +238,22 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
   }
 
   void _toggleLotSelection(String id) {
-    ref.read(selectedLotIdsProvider.notifier).toggle(id);
+    ref.read(myLotsSelectedIdsProvider.notifier).toggle(id);
   }
 
   void _selectAll(List<CoffeeLotDto> visibleLots) {
-    final currentSelected = ref.read(selectedLotIdsProvider);
+    final currentSelected = ref.read(myLotsSelectedIdsProvider);
     final visibleIds = visibleLots.map((l) => l.id).toSet();
     
     // If all visible are already in global selection, remove them
     // (This is a simplified logic, matches encyclopedia behavior)
     if (visibleIds.every((id) => currentSelected.contains(id))) {
       for (final id in visibleIds) {
-        ref.read(selectedLotIdsProvider.notifier).remove(id);
+        ref.read(myLotsSelectedIdsProvider.notifier).remove(id);
       }
     } else {
       for (final id in visibleIds) {
-        ref.read(selectedLotIdsProvider.notifier).add(id);
+        ref.read(myLotsSelectedIdsProvider.notifier).add(id);
       }
     }
   }
@@ -269,9 +269,10 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
           children: [
             DiscoveryActionBar(
               filterProvider: myLotsFilterProvider,
+              selectionProvider: myLotsSelectedIdsProvider,
               onCompareTap: () {
                 ref.read(settingsProvider.notifier).triggerHaptic();
-                context.push('/compare');
+                context.push('/compare', extra: ComparisonSource.myLots);
               },
               availableCountries: const [],
               availableFlavors: const [],
@@ -343,7 +344,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  visibleLots.every((l) => ref.watch(selectedLotIdsProvider).contains(l.id))
+                  visibleLots.every((l) => ref.watch(myLotsSelectedIdsProvider).contains(l.id))
                       ? Icons.deselect_rounded
                       : Icons.select_all_rounded,
                   color: const Color(0xFFC8A96E),
@@ -442,7 +443,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
             itemCount: filteredLots.length,
             itemBuilder: (context, index) {
               final lot = filteredLots[index];
-              final isSelected = ref.watch(selectedLotIdsProvider).contains(lot.id);
+              final isSelected = ref.watch(myLotsSelectedIdsProvider).contains(lot.id);
               return MyLotGridCard(
                 lot: lot,
                 isSelected: isSelected,
@@ -472,7 +473,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
           itemCount: filteredLots.length,
           itemBuilder: (context, index) {
             final lot = filteredLots[index];
-            final isSelected = ref.watch(selectedLotIdsProvider).contains(lot.id);
+            final isSelected = ref.watch(myLotsSelectedIdsProvider).contains(lot.id);
               return MyLotListCard(
                 lot: lot,
                 isSelected: isSelected,
@@ -617,10 +618,10 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                   Colors.redAccent,
                   () async {
                     final db = ref.read(databaseProvider);
-                    final idsToClear = Set<String>.from(ref.read(selectedLotIdsProvider));
+                    final idsToClear = Set<String>.from(ref.read(myLotsSelectedIdsProvider));
                     for (var id in idsToClear) {
                       await db.toggleLotFavorite(id, true);
-                      ref.read(selectedLotIdsProvider.notifier).remove(id);
+                      ref.read(myLotsSelectedIdsProvider.notifier).remove(id);
                     }
                     ref.invalidate(userLotsProvider);
                   },
@@ -634,10 +635,10 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                   () async {
                     final db = ref.read(databaseProvider);
                     final activeTab = _subTabController.index;
-                    final idsToClear = Set<String>.from(ref.read(selectedLotIdsProvider));
+                    final idsToClear = Set<String>.from(ref.read(myLotsSelectedIdsProvider));
                     for (var id in idsToClear) {
                       await db.toggleLotArchive(id, activeTab != 2);
-                      ref.read(selectedLotIdsProvider.notifier).remove(id);
+                      ref.read(myLotsSelectedIdsProvider.notifier).remove(id);
                     }
 
                     if (mounted) {
@@ -708,7 +709,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                                         ),
                                         const SizedBox(height: 12),
                                         Text(
-                                          'Ви впевнені, що хочете видалити ${ref.read(selectedLotIdsProvider).length} вибраних документів?',
+                                          'Ви впевнені, що хочете видалити ${ref.read(myLotsSelectedIdsProvider).length} вибраних документів?',
                                           textAlign: TextAlign.center,
                                           style: GoogleFonts.outfit(
                                             color: Colors.white70,
@@ -780,12 +781,12 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                     );
 
                     if (confirm == true) {
-                      final selectedIdsSnapshot = Set<String>.from(ref.read(selectedLotIdsProvider));
+                      final selectedIdsSnapshot = Set<String>.from(ref.read(myLotsSelectedIdsProvider));
                       final selectedLots = (lotsAsync.value ?? []).where((l) => selectedIdsSnapshot.contains(l.id)).toList();
                       final isArchive = _subTabController.index == 2;
                       
                       for (final id in selectedIdsSnapshot) {
-                        ref.read(selectedLotIdsProvider.notifier).remove(id);
+                        ref.read(myLotsSelectedIdsProvider.notifier).remove(id);
                       }
                       
                       if (mounted) {
@@ -815,7 +816,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
   }
 
   String get _selectionCountText {
-    final count = ref.watch(selectedLotIdsProvider).length;
+    final count = ref.watch(myLotsSelectedIdsProvider).length;
     // Simple declension for "Обрано X лотів/лоти/лот"
     if (count % 10 == 1 && count % 100 != 11) {
       return 'Обрано $count лот';

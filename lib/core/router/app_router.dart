@@ -7,6 +7,7 @@ import '../../features/auth/auth_screen.dart';
 import '../../features/discover/discover_screen.dart';
 import '../../features/profile/profile_screen.dart';
 import '../../features/brewing/brewing_guide_screen.dart';
+import '../../features/encyclopedia/encyclopedia_providers.dart';
 import '../../features/encyclopedia/comparison_screen.dart';
 import '../../features/specialty/specialty_screen.dart';
 import '../../features/settings/settings_screen.dart';
@@ -93,7 +94,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/compare',
-        builder: (context, state) => const ComparisonScreen(),
+        builder: (context, state) {
+          final source = state.extra as ComparisonSource? ?? ComparisonSource.encyclopedia;
+          return ComparisonScreen(source: source);
+        },
       ),
       GoRoute(
         path: '/specialty',

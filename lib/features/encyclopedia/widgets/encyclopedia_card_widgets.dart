@@ -26,17 +26,17 @@ class EncyclopediaLotGridCard extends ConsumerWidget {
     final theme = Theme.of(context);
     final isUk = LocaleService.currentLocale == 'uk';
 
-    final selectedIds = ref.watch(selectedLotIdsProvider);
+    final selectedIds = ref.watch(encyclopediaSelectedIdsProvider);
     final isSelected = selectedIds.contains(entry.id.toString());
     final isSelectionMode = selectedIds.isNotEmpty;
 
     return PressableScale(
       onTap: isSelectionMode
-          ? () => ref.read(selectedLotIdsProvider.notifier).toggle(entry.id.toString())
+          ? () => ref.read(encyclopediaSelectedIdsProvider.notifier).toggle(entry.id.toString())
           : onTap,
       onLongPress: () {
         ref.read(settingsProvider.notifier).triggerVibrate();
-        ref.read(selectedLotIdsProvider.notifier).toggle(entry.id.toString());
+        ref.read(encyclopediaSelectedIdsProvider.notifier).toggle(entry.id.toString());
       },
       child: GlassContainer(
         padding: const EdgeInsets.all(12),

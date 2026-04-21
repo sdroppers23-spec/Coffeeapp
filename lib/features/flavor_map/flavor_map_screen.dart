@@ -11,7 +11,6 @@ import '../../shared/widgets/sync_indicator.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/l10n/flavor_descriptions.dart';
 import '../navigation/navigation_providers.dart';
-import '../discover/lots/providers/lot_design_debug_provider.dart';
 
 class FlavorValuesNotifier extends Notifier<Map<String, double>> {
   @override

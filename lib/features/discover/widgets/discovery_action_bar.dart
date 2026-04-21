@@ -9,8 +9,8 @@ import '../../../core/l10n/app_localizations.dart';
 import '../../navigation/navigation_providers.dart';
 
 class DiscoveryActionBar extends ConsumerWidget {
-  final NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState>
-  filterProvider;
+  final NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState> filterProvider;
+  final NotifierProvider<ComparisonSelectionNotifier, Set<String>> selectionProvider;
   final VoidCallback onCompareTap;
   final List<String> availableCountries;
   final List<String> availableFlavors;
@@ -19,6 +19,7 @@ class DiscoveryActionBar extends ConsumerWidget {
   const DiscoveryActionBar({
     super.key,
     required this.filterProvider,
+    required this.selectionProvider,
     required this.onCompareTap,
     this.availableCountries = const [],
     this.availableFlavors = const [],
@@ -31,7 +32,7 @@ class DiscoveryActionBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(filterProvider);
-    final selectedLots = ref.watch(selectedLotIdsProvider);
+    final selectedLots = ref.watch(selectionProvider);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),

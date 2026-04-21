@@ -28,8 +28,8 @@ class GlassContainer extends ConsumerWidget {
   const GlassContainer({
     super.key,
     required this.child,
-    this.blur = 15,
-    this.opacity = 0.08,
+    this.blur = 25.8,
+    this.opacity = 0.03,
     this.padding,
     this.margin,
     this.borderRadius = 24,
@@ -55,7 +55,7 @@ class GlassContainer extends ConsumerWidget {
 
     double effectiveBlur = useDebug ? debugConfig.blur : blur;
     double effectiveOpacity = useDebug ? debugConfig.tintOpacity : opacity;
-    double effectiveBaseOpacity = useDebug ? debugConfig.baseOpacity : 0.5;
+    double effectiveBaseOpacity = useDebug ? debugConfig.baseOpacity : 0.4;
 
     if (useDebug && debugKey != null) {
       if (debugKey == 'navBar') {
@@ -78,7 +78,7 @@ class GlassContainer extends ConsumerWidget {
         : (borderColor ?? Colors.white.withValues(alpha: 0.12));
     final effectiveBaseColor = useDebug
         ? debugConfig.baseColor.withValues(alpha: effectiveBaseOpacity)
-        : Colors.black.withValues(alpha: 0.5);
+        : Colors.black.withValues(alpha: 0.4);
     final effectiveTintColor = useDebug ? debugConfig.tintColor : (color ?? Colors.white);
 
     // Layer 1 & 2 combined into a clipped stack

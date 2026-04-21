@@ -104,10 +104,10 @@ class LotDesignConfig {
 
   static const defaultWhiteGlass = LotDesignConfig(
     baseColor: Colors.black,
-    baseOpacity: 0.51,
+    baseOpacity: 0.4,
     blur: 25.8,
     tintColor: Colors.white,
-    tintOpacity: 0.05,
+    tintOpacity: 0.03,
     borderRadius: 20.0,
     borderColor: Colors.white,
     borderOpacity: 0.12,
@@ -116,15 +116,15 @@ class LotDesignConfig {
     shadowSpread: 0.0,
     shadowOffsetY: 4.0,
     isDebugMode: false,
-    navBarOpacity: 0.05,
+    navBarOpacity: 0.03,
     navBarBlur: 25.8,
-    navBarBaseOpacity: 0.51,
-    flavorCardOpacity: 0.05,
+    navBarBaseOpacity: 0.4,
+    flavorCardOpacity: 0.03,
     flavorCardBlur: 25.8,
-    flavorCardBaseOpacity: 0.51,
-    profileOpacity: 0.05,
+    flavorCardBaseOpacity: 0.4,
+    profileOpacity: 0.03,
     profileBlur: 25.8,
-    profileBaseOpacity: 0.51,
+    profileBaseOpacity: 0.4,
   );
 }
 

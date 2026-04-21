@@ -51,7 +51,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       barrierColor: Colors.black.withValues(alpha: 0.3),
       builder: (context) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: _EditProfileDialog(user: user, supabase: ref.read(supabaseProvider)),
+        child: _EditProfileDialog(
+          user: user,
+          supabase: ref.read(supabaseProvider),
+        ),
       ),
     ).then((_) => setState(() {})); // refresh UI
   }
@@ -174,26 +177,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ),
               const SizedBox(height: 40),
 
-              // Stats / Bio Area
-              Container(
+              // Stats Area
+              GlassContainer(
                 padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.05),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.1),
-                  ),
-                ),
-                child: Column(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _StatColumn(ref.t('recipes'), '12'),
-                        _StatColumn(ref.t('scans'), '4'),
-                        _StatColumn(ref.t('badges'), '3'),
-                      ],
-                    ),
+                    _StatColumn(ref.t('recipes'), '12'),
+                    _StatColumn(ref.t('scans'), '4'),
+                    _StatColumn(ref.t('badges'), '3'),
                   ],
                 ),
               ),
@@ -385,18 +377,7 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
       child: GlassContainer(
         debugKey: 'profileDialog',
         borderRadius: 24,
-        blur: 20,
-        opacity: 0.15,
-        borderColor: Colors.white.withValues(alpha: 0.1),
         padding: const EdgeInsets.all(24),
-        backgroundGradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Colors.white.withValues(alpha: 0.1),
-            Colors.white.withValues(alpha: 0.05),
-          ],
-        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -434,7 +415,10 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
                       Expanded(
                         child: TextField(
                           controller: _avatarUrlController,
-                          style: const TextStyle(color: Colors.white, fontSize: 13),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                          ),
                           decoration: InputDecoration(
                             labelText: 'Avatar URL',
                             labelStyle: const TextStyle(color: Colors.white54),
@@ -476,7 +460,10 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
               children: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Cancel', style: TextStyle(color: Colors.white54)),
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.white54),
+                  ),
                 ),
                 const SizedBox(width: 12),
                 ElevatedButton(
@@ -488,7 +475,10 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
                   ),
                   child: _isSaving
                       ? const SizedBox(
@@ -499,7 +489,10 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
                             color: Colors.black,
                           ),
                         )
-                      : const Text('Save', style: TextStyle(fontWeight: FontWeight.bold)),
+                      : const Text(
+                          'Save',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                 ),
               ],
             ),

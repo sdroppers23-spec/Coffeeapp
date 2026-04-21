@@ -162,26 +162,68 @@ class AppLocalizationsIt extends AppLocalizations {
   String get process_washed => 'Lavato';
 
   @override
-  String get process_anaerobic => 'Anaerobico';
-
-  @override
   String get process_honey => 'Honey';
 
   @override
-  String get process_washed_desc =>
-      '### Fase 1: Depulpatura\nLa buccia e la polpa vengono rimosse meccanicamente. Il mucillagine appiccicoso rimane sulla pergamena.\n### Fase 2: Fermentazione\nI chicchi vengono immersi in vasche d\'acqua per 12–48 ore dove i batteri scompongono il mucillagine.\n### Fase 3: Lavaggio e asciugatura\nI chicchi vengono lavati con acqua pulita e asciugati su patio o letti per 1–2 settimane.';
+  String get process_wet_hulled => 'Wet-Hulled';
+
+  @override
+  String get process_anaerobic => 'Anaerobico';
+
+  @override
+  String get process_carbonic => 'Carbonic Maceration';
+
+  @override
+  String get process_lactic => 'Lactic/Acetic';
+
+  @override
+  String get process_thermal => 'Thermal Shock';
+
+  @override
+  String get process_cofermentation => 'Co-fermentation';
+
+  @override
+  String get process_koji => 'Koji / Yeast';
 
   @override
   String get process_natural_desc =>
       '### Fase 1: Selezione\nSolo le ciliegie mature vengono selezionate e stese su letti africani o patio.\n### Fase 2: Asciugatura\nIl frutto intero si asciuga per 2–4 settimane, permettendo agli zuccheri di concentrarsi nel chicco.\n### Fase 3: Discarturatura\nIl guscio secco viene rimosso solo dopo aver raggiunto l\'11–12% di umidità.';
 
   @override
+  String get process_washed_desc =>
+      '### Fase 1: Depulpatura\nLa buccia e la polpa vengono rimosse meccanicamente. Il mucillagine appiccicoso rimane sulla pergamena.\n### Fase 2: Fermentazione\nI chicchi vengono immersi in vasche d\'acqua per 12–48 ore dove i batteri scompongono il mucillagine.\n### Fase 3: Lavaggio e asciugatura\nI chicchi vengono lavati con acqua pulita e asciugati su patio o letti per 1–2 settimane.';
+
+  @override
+  String get process_honey_desc =>
+      '### How it works\nA hybrid method where the skin is removed but some mucilage remains during drying. Color varies (White to Black) based on remaining pulp.\n### In the cup\nSweeter than washed but cleaner than natural. Honey-like sweetness, creamy body, and balanced acidity of ripe fruits.';
+
+  @override
+  String get process_wet_hulled_desc =>
+      '### How it works\nTraditional Indonesian method (Giling Basah). Parchment is removed while beans are still very wet (30-50%). Drying finishes without the protective layer.\n### In the cup\nVery heavy, syrupy body with minimal acidity. Distinctive notes of cedar, spices, earth, tobacco, and dark chocolate.';
+
+  @override
   String get process_anaerobic_desc =>
       '### Fase 1: Chiusura\nLe ciliegie vengono poste in serbatoi ermetici da cui l\'ossigeno viene rimosso.\n### Fase 2: Fermentazione controllata\nI batteri dell\'acido lattico prosperano per 48–120 ore creando profili aromatici complessi.';
 
   @override
+  String get process_carbonic_desc =>
+      '### How it works\nAdapted from winemaking. Tanks are filled with CO2 to displace oxygen. Fermentation happens under pressure, often at controlled temperatures.\n### In the cup\nExceptional complexity. Red berry notes (strawberry, raspberry), candy-like sweetness, and sparkling acidity. Very clean yet multi-layered.';
+
+  @override
+  String get process_lactic_desc =>
+      '### How it works\nEncourages the growth of lactic acid bacteria. Producers control pH, temperature, and sugar content for specific bacterial activity.\n### In the cup\nYogurt-like or creamy body. Soft, rounded acidity. Often reminds of peach, ripe pineapple, or creamy desserts.';
+
+  @override
   String get process_thermal_desc =>
       '### Fase 1: Shock caldo\nI chicchi vengono lavati con acqua a 40°C per aprire i pori e assorbire i prodotti di fermentazione.\n### Fase 2: Shock freddo\nRisciacquati immediatamente con acqua a 12°C per \'bloccare\' i sapori intensi nel chicco.';
+
+  @override
+  String get process_cofermentation_desc =>
+      '### How it works\nFruits, berries, herbs, or essential oils are added during fermentation. The coffee absorbs these aromas at a cellular level.\n### In the cup\nVery clear, sometimes perfume-like flavor of the added ingredient. For example, intense cinnamon or pink grapefruit notes.';
+
+  @override
+  String get process_koji_desc =>
+      '### How it works\nUses Aspergillus oryzae (Koji) fungus to break down starches faster than normal yeast, or specific wine yeasts are introduced.\n### In the cup\nEnhanced umami, deep sweetness, and velvet body. Exceptionally balanced and sweet with tropical fruit and biscuit notes.';
 
   @override
   String get shop_coffee => 'ACQUISTA QUESTO CAFFÈ';

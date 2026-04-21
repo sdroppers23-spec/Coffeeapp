@@ -14,7 +14,6 @@ import '../../core/database/database_provider.dart';
 import '../../shared/widgets/add_recipe_dialog.dart';
 import '../../shared/widgets/pressable_scale.dart';
 import '../../shared/widgets/lot_detail_widgets.dart';
-import '../../shared/models/processing_methods_data.dart';
 import '../../core/providers/settings_provider.dart';
 
 class CustomLotDetailScreen extends ConsumerStatefulWidget {
@@ -66,12 +65,7 @@ class _CustomLotDetailScreenState extends ConsumerState<CustomLotDetailScreen>
             color: Colors.white,
             size: 20,
           ),
-          onPressed: () {
-            if (mounted) {
-              // Pop loading
-              Navigator.of(context).pop();
-            }
-          },
+          onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
           (lot.coffeeName ?? lot.id).toUpperCase(),
@@ -647,8 +641,6 @@ class _InfoTab extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 24),
-        _buildProcessDetailsButton(context, ref),
-        const SizedBox(height: 24),
         if (lot.flavorProfile?.isNotEmpty ?? false) ...[
           Text(
             ref.t('flavor_profile').toUpperCase(),
@@ -693,126 +685,6 @@ class _InfoTab extends ConsumerWidget {
       ],
     );
   }
-
-  Widget _buildProcessDetailsButton(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final processName = lot.process ?? '';
-    final method = ProcessingMethod.all.cast<ProcessingMethod?>().firstWhere(
-      (m) => m!.id.toLowerCase() == processName.toLowerCase(),
-      orElse: () => null,
-    );
-
-    if (method == null) return const SizedBox.shrink();
-
-    return Center(
-      child: PressableScale(
-        onTap: () => _showProcessDetails(context, ref, method),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primary.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: theme.colorScheme.primary.withValues(alpha: 0.2),
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.info_outline_rounded, size: 16, color: theme.colorScheme.primary),
-              const SizedBox(width: 8),
-              Text(
-                ref.t('process_details').toUpperCase(),
-                style: GoogleFonts.outfit(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.primary,
-                  letterSpacing: 1,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showProcessDetails(BuildContext context, WidgetRef ref, ProcessingMethod method) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.7,
-        maxChildSize: 0.9,
-        minChildSize: 0.4,
-        builder: (_, controller) => GlassContainer(
-          borderRadius: 32,
-          padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
-          child: Column(
-            children: [
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.white24,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                ref.t(method.nameKey).toUpperCase(),
-                style: GoogleFonts.outfit(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w900,
-                  color: Theme.of(context).colorScheme.primary,
-                  letterSpacing: 2,
-                ),
-              ),
-              const Divider(height: 32, color: Colors.white10),
-              Expanded(
-                child: ListView(
-                  controller: controller,
-                  children: [
-                    _buildSection('HOW IT WORKS', ref.t(method.howItWorksKey)),
-                    const SizedBox(height: 24),
-                    _buildSection('IN THE CUP', ref.t(method.inTheCupKey)),
-                    const SizedBox(height: 40),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSection(String title, String content) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: GoogleFonts.outfit(
-            fontSize: 11,
-            fontWeight: FontWeight.bold,
-            color: Colors.white38,
-            letterSpacing: 1.5,
-          ),
-        ),
-        const SizedBox(height: 12),
-        Text(
-          content.replaceAll('### ', '').replaceAll('How it works\n', '').replaceAll('In the cup\n', ''),
-          style: GoogleFonts.outfit(
-            fontSize: 14,
-            height: 1.6,
-            color: Colors.white.withValues(alpha: 0.8),
-          ),
-        ),
-      ],
-    );
-  }
 }
 
 class _ProfileTab extends ConsumerWidget {
@@ -833,7 +705,12 @@ class _ProfileTab extends ConsumerWidget {
             interactive: false,
             staticValues: lot.sensoryPoints.map((k, v) {
               final val = (v as num).toDouble();
-              return MapEntry(k, val / 5.0);
+              // Round to 1-5 scale, then map to 0.2-1.0
+              final normalized = (val > 5 ? val / 2.0 : val).round().clamp(
+                1,
+                5,
+              );
+              return MapEntry(k, normalized / 5.0);
             }),
             height: 400,
           ),

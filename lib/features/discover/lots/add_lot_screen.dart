@@ -20,9 +20,9 @@ import '../../../core/database/app_database.dart';
 import '../../../core/database/dtos.dart';
 import '../../../core/l10n/app_localizations.dart';
 import '../../../core/utils/local_file_manager.dart';
-import '../../../shared/models/processing_methods_data.dart';
-import '../../../shared/widgets/sensory_radar_chart.dart';
 import 'lots_providers.dart';
+import '../../../shared/models/processing_methods_repository.dart';
+import '../../../shared/widgets/sensory_radar_chart.dart';
 
 class AddLotScreen extends ConsumerStatefulWidget {
   final CoffeeLotDto? initialLot;
@@ -59,7 +59,16 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   String? _currentImageUrl;
 
   final List<String> _processingMethods = [
-    ...ProcessingMethod.all.map((e) => e.id),
+    'Washed',
+    'Natural',
+    'Honey',
+    'Wet Hulled',
+    'Anaerobic',
+    'Carbonic Maceration',
+    'Lactic',
+    'Thermal Shock',
+    'Yeast Inoculation',
+    'Koji Fermentation',
     'Other'
   ];
 
@@ -85,6 +94,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   String? _selectedProcess;
   bool _isOtherProcess = false;
   bool _isOtherDecaf = false;
+  bool _isSensoryLocked = true; // Default to locked if using presets
 
   @override
   void dispose() {
@@ -137,7 +147,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   double _body = 3;
   double _intensity = 3;
   double _aftertaste = 3;
-  bool _isSensoryLocked = false;
 
   // ─── Lifecycle ────────────────────────────────────────────────────
   @override
@@ -212,45 +221,22 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       _decafProcess = parts[1].replaceAll(')', '').trim();
     }
 
-    if (ProcessingMethod.all.any((e) => e.id == process)) {
+    if (_processingMethods.contains(process)) {
       _selectedProcess = process;
       _isOtherProcess = false;
-      _isSensoryLocked = true;
     } else if (process.isNotEmpty) {
       _selectedProcess = 'Other';
       _isOtherProcess = true;
       _processController.text = process;
-      _isSensoryLocked = false;
     } else {
-      _selectedProcess = ProcessingMethod.all.first.id;
+      _selectedProcess = 'Washed';
       _isOtherProcess = false;
-      _isSensoryLocked = true;
     }
 
     if (!_decafMethods.contains(_decafProcess) && _isDecaf) {
       _isOtherDecaf = true;
       // We can use a separate controller if needed, but for now we use _decafProcess as is
     }
-  }
-
-  void _updateSensoryFromProcess(String? processId) {
-    if (processId == null || processId == 'Other') {
-      setState(() {
-        _isSensoryLocked = false;
-      });
-      return;
-    }
-
-    final method = ProcessingMethod.all.firstWhere((e) => e.id == processId);
-    setState(() {
-      _isSensoryLocked = true;
-      _bitterness = method.sensoryProfile['bitterness'] ?? 3;
-      _acidity = method.sensoryProfile['acidity'] ?? 3;
-      _sweetness = method.sensoryProfile['sweetness'] ?? 3;
-      _body = method.sensoryProfile['body'] ?? 3;
-      _intensity = method.sensoryProfile['intensity'] ?? 3;
-      _aftertaste = method.sensoryProfile['aftertaste'] ?? 3;
-    });
   }
 
   Future<void> _pickImage() async {
@@ -881,11 +867,23 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             value: _selectedProcess,
             items: _processingMethods,
             onChanged: (val) {
-              _updateSensoryFromProcess(val);
               setState(() {
                 _selectedProcess = val;
                 _isOtherProcess = val == 'Other';
-                if (!_isOtherProcess) _processController.clear();
+                if (!_isOtherProcess) {
+                  _processController.clear();
+                  // Apply sensory preset
+                  final match = ProcessingMethodsRepository.getByMatchingName(val ?? '');
+                  if (match != null) {
+                    _bitterness = match.sensoryPreset['bitterness'] ?? 3.0;
+                    _acidity = match.sensoryPreset['acidity'] ?? 3.0;
+                    _sweetness = match.sensoryPreset['sweetness'] ?? 3.0;
+                    _body = match.sensoryPreset['body'] ?? 3.0;
+                    _intensity = match.sensoryPreset['intensity'] ?? 3.0;
+                    _aftertaste = match.sensoryPreset['aftertaste'] ?? 3.0;
+                    _isSensoryLocked = true;
+                  }
+                }
               });
             },
           ),
@@ -973,16 +971,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 value: value,
                 isExpanded: true,
                 dropdownColor: const Color(0xFF1A1714),
-                icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFFC8A96E)),
-                underline: const SizedBox.shrink(),
-                items: items.map((e) {
-                  String display = e;
-                  if (label == 'METHOD' && e != 'Other') {
-                    final method = ProcessingMethod.all.firstWhere((m) => m.id == e);
-                    display = ref.t(method.nameKey);
-                  }
-                  return DropdownMenuItem(value: e, child: Text(display));
-                }).toList(),
+                icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFFC8A96E), size: 18),
+                style: GoogleFonts.outfit(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+                items: items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
                 onChanged: onChanged,
               ),
             ),
@@ -998,51 +989,48 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
       children: [
-        Center(
-          child: Container(
-            margin: const EdgeInsets.only(bottom: 24),
+        _sectionLabel('Профіль смаку (1–5)'),
+        _darkCard(children: [
+          _sensorySlider('BITTERNESS', _bitterness, (v) => setState(() => _bitterness = v), theme: theme, enabled: !_isSensoryLocked),
+          _divider(),
+          _sensorySlider('ACIDITY', _acidity, (v) => setState(() => _acidity = v), theme: theme, enabled: !_isSensoryLocked),
+          _divider(),
+          _sensorySlider('SWEETNESS', _sweetness, (v) => setState(() => _sweetness = v), theme: theme, enabled: !_isSensoryLocked),
+          _divider(),
+          _sensorySlider('BODY', _body, (v) => setState(() => _body = v), theme: theme, enabled: !_isSensoryLocked),
+          _divider(),
+          _sensorySlider('INTENSITY', _intensity, (v) => setState(() => _intensity = v), theme: theme, enabled: !_isSensoryLocked),
+          _divider(),
+          _sensorySlider('AFTERTASTE', _aftertaste, (v) => setState(() => _aftertaste = v), theme: theme, enabled: !_isSensoryLocked),
+        ]),
+        const SizedBox(height: 16),
+        _sectionLabel('Візуалізація профілю'),
+        Container(
+          height: 300,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xFFC8A96E).withValues(alpha: 0.04),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: SensoryRadarChart(
+            interactive: false,
             height: 280,
-            child: SensoryRadarChart(
-              interactive: !_isSensoryLocked,
-              isReadOnly: _isSensoryLocked,
-              staticValues: {
-                'bitterness': _bitterness,
-                'acidity': _acidity,
-                'sweetness': _sweetness,
-                'body': _body,
-                'intensity': _intensity,
-                'aftertaste': _aftertaste,
-              },
-            ),
+            staticValues: {
+              'bitterness': _bitterness,
+              'acidity': _acidity,
+              'sweetness': _sweetness,
+              'body': _body,
+              'intensity': _intensity,
+              'aftertaste': _aftertaste,
+            },
           ),
         ),
-        _sectionLabel(ref.t('sensory_profile_header')),
-        _darkCard(children: [
-          _sensorySlider('BITTERNESS', _bitterness, _isSensoryLocked ? null : (v) => setState(() => _bitterness = v), theme: theme),
-          _divider(),
-          _sensorySlider('ACIDITY', _acidity, _isSensoryLocked ? null : (v) => setState(() => _acidity = v), theme: theme),
-          _divider(),
-          _sensorySlider('SWEETNESS', _sweetness, _isSensoryLocked ? null : (v) => setState(() => _sweetness = v), theme: theme),
-          _divider(),
-          _sensorySlider('BODY', _body, _isSensoryLocked ? null : (v) => setState(() => _body = v), theme: theme),
-          _divider(),
-          _sensorySlider('INTENSITY', _intensity, _isSensoryLocked ? null : (v) => setState(() => _intensity = v), theme: theme),
-          _divider(),
-          _sensorySlider('AFTERTASTE', _aftertaste, _isSensoryLocked ? null : (v) => setState(() => _aftertaste = v), theme: theme),
-        ]),
-        if (_isSensoryLocked)
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              'Цей профіль автоматично підібраний під метод обробки. Оберіть "Other" в методах обробки, щоб редагувати вручну.',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.outfit(
-                fontSize: 11,
-                color: const Color(0xFFC8A96E).withValues(alpha: 0.6),
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-          ),
+        const SizedBox(height: 12),
+        _toggleButton(
+          label: _isSensoryLocked ? 'РОЗБЛОКУВАТИ ДЛЯ РЕДАГУВАННЯ' : 'ЗАБЛОКУВАТИ СЕНСОРИКУ',
+          active: !_isSensoryLocked,
+          onTap: () => setState(() => _isSensoryLocked = !_isSensoryLocked),
+        ),
       ],
     );
   }
@@ -1142,7 +1130,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     );
   }
 
-
   Widget _dateRow({
     required String label,
     DateTime? date,
@@ -1203,55 +1190,59 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     );
   }
 
-  Widget _sensorySlider(String label, double value, void Function(double)? onChanged, {required ThemeData theme}) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget _sensorySlider(String label, double value, Function(double) onChanged, {required ThemeData theme, bool enabled = true}) {
+    return IgnorePointer(
+      ignoring: !enabled,
+      child: Opacity(
+        opacity: enabled ? 1.0 : 0.4,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label,
-                  style: GoogleFonts.outfit(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 1.0)),
-              Text(value.toInt().toString(),
-                  style: GoogleFonts.outfit(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold)),
-            ],
-          ),
-          SliderTheme(
-            data: SliderTheme.of(context).copyWith(
-              activeTrackColor: Colors.white,
-              inactiveTrackColor: Colors.white.withValues(alpha: 0.1),
-              thumbColor: Colors.white,
-              overlayColor: Colors.white.withValues(alpha: 0.2),
-              trackHeight: 2,
-              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
-            ),
-            child: Slider(
-              value: value,
-              min: 1,
-              max: 5,
-              divisions: 4,
-              onChanged: onChanged == null 
-                ? null 
-                : (v) {
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(label,
+                      style: GoogleFonts.outfit(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 1.0)),
+                  Text(value.toInt().toString(),
+                      style: GoogleFonts.outfit(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold)),
+                ],
+              ),
+              SliderTheme(
+                data: SliderTheme.of(context).copyWith(
+                  activeTrackColor: Colors.white,
+                  inactiveTrackColor: Colors.white.withValues(alpha: 0.1),
+                  thumbColor: Colors.white,
+                  overlayColor: Colors.white.withValues(alpha: 0.2),
+                  trackHeight: 2,
+                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
+                ),
+                child: Slider(
+                  value: value,
+                  min: 1,
+                  max: 5,
+                  divisions: 4,
+                  onChanged: (v) {
                     ref.read(settingsProvider.notifier).triggerSelectionVibrate();
                     onChanged(v);
                   },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(
-                5,
-                (i) => Text('${i + 1}',
-                    style: GoogleFonts.outfit(fontSize: 8, color: Colors.white24, fontWeight: FontWeight.bold)),
+                ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.generate(
+                    5,
+                    (i) => Text('${i + 1}',
+                        style: GoogleFonts.outfit(fontSize: 8, color: Colors.white24, fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

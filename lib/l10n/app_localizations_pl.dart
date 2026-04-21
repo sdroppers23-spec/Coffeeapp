@@ -162,26 +162,68 @@ class AppLocalizationsPl extends AppLocalizations {
   String get process_washed => 'Myta';
 
   @override
-  String get process_anaerobic => 'Anaerobowa';
-
-  @override
   String get process_honey => 'Honey';
 
   @override
-  String get process_washed_desc =>
-      '### Etap 1: Depulpowanie\nSkórka i miąższ są usuwane mechanicznie. Lepki śluz pozostaje na pergaminie.\n### Etap 2: Fermentacja\nZiarna moczą się w zbiornikach z wodą przez 12-48 godzin, gdzie bakterie rozkładają śluz.\n### Etap 3: Mycie i Suszenie\nZiarna są myte czystą wodą i suszone na patio lub łóżkach przez 1-2 tygodnie.';
+  String get process_wet_hulled => 'Wet-Hulled';
+
+  @override
+  String get process_anaerobic => 'Anaerobowa';
+
+  @override
+  String get process_carbonic => 'Carbonic Maceration';
+
+  @override
+  String get process_lactic => 'Lactic/Acetic';
+
+  @override
+  String get process_thermal => 'Thermal Shock';
+
+  @override
+  String get process_cofermentation => 'Co-fermentation';
+
+  @override
+  String get process_koji => 'Koji / Yeast';
 
   @override
   String get process_natural_desc =>
       '### Etap 1: Sortowanie\nTylko dojrzałe owoce są wybierane i rozkładane na afrykańskich łóżkach lub patio.\n### Etap 2: Suszenie\nCały owoc schnie przez 2-4 tygodnie, co pozwala cukrom skoncentrować się wewnątrz ziarna.\n### Etap 3: Łuszczenie\nSuszona skorupa jest usuwana dopiero po osiągnięciu 11-12% wilgotności.';
 
   @override
+  String get process_washed_desc =>
+      '### Etap 1: Depulpowanie\nSkórka i miąższ są usuwane mechanicznie. Lepki śluz pozostaje na pergaminie.\n### Etap 2: Fermentacja\nZiarna moczą się w zbiornikach z wodą przez 12-48 godzin, gdzie bakterie rozkładają śluz.\n### Etap 3: Mycie i Suszenie\nZiarna są myte czystą wodą i suszone na patio lub łóżkach przez 1-2 tygodnie.';
+
+  @override
+  String get process_honey_desc =>
+      '### How it works\nA hybrid method where the skin is removed but some mucilage remains during drying. Color varies (White to Black) based on remaining pulp.\n### In the cup\nSweeter than washed but cleaner than natural. Honey-like sweetness, creamy body, and balanced acidity of ripe fruits.';
+
+  @override
+  String get process_wet_hulled_desc =>
+      '### How it works\nTraditional Indonesian method (Giling Basah). Parchment is removed while beans are still very wet (30-50%). Drying finishes without the protective layer.\n### In the cup\nVery heavy, syrupy body with minimal acidity. Distinctive notes of cedar, spices, earth, tobacco, and dark chocolate.';
+
+  @override
   String get process_anaerobic_desc =>
       '### Etap 1: Uszczelnianie\nOwoce są umieszczane w hermetycznych zbiornikach, z których usuwany jest tlen.\n### Etap 2: Kontrolowana Fermentacja\nBakterie kwasu mlekowego rozwijają się przez 48-120 godzin, tworząc złożone profile smakowe.';
 
   @override
+  String get process_carbonic_desc =>
+      '### How it works\nAdapted from winemaking. Tanks are filled with CO2 to displace oxygen. Fermentation happens under pressure, often at controlled temperatures.\n### In the cup\nExceptional complexity. Red berry notes (strawberry, raspberry), candy-like sweetness, and sparkling acidity. Very clean yet multi-layered.';
+
+  @override
+  String get process_lactic_desc =>
+      '### How it works\nEncourages the growth of lactic acid bacteria. Producers control pH, temperature, and sugar content for specific bacterial activity.\n### In the cup\nYogurt-like or creamy body. Soft, rounded acidity. Often reminds of peach, ripe pineapple, or creamy desserts.';
+
+  @override
   String get process_thermal_desc =>
       '### Etap 1: Szok termiczny (Gorący)\nZiarna są myte wodą o temp. 40°C, aby rozszerzyć pory i wchłonąć produkty fermentacji.\n### Etap 2: Szok termiczny (Zimny)\nNatychmiast płukane wodą o temp. 12°C, aby \"zamknąć\" intensywne smaki wewnątrz ziarna.';
+
+  @override
+  String get process_cofermentation_desc =>
+      '### How it works\nFruits, berries, herbs, or essential oils are added during fermentation. The coffee absorbs these aromas at a cellular level.\n### In the cup\nVery clear, sometimes perfume-like flavor of the added ingredient. For example, intense cinnamon or pink grapefruit notes.';
+
+  @override
+  String get process_koji_desc =>
+      '### How it works\nUses Aspergillus oryzae (Koji) fungus to break down starches faster than normal yeast, or specific wine yeasts are introduced.\n### In the cup\nEnhanced umami, deep sweetness, and velvet body. Exceptionally balanced and sweet with tropical fruit and biscuit notes.';
 
   @override
   String get shop_coffee => 'KUP TĘ KAWĘ';

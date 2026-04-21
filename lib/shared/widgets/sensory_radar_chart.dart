@@ -8,12 +8,12 @@ class FlavorValuesNotifier extends Notifier<Map<String, double>> {
   @override
   Map<String, double> build() {
     return {
-      'bitterness': 3.0,
-      'acidity': 3.0,
-      'sweetness': 3.0,
-      'body': 3.0,
-      'intensity': 3.0,
-      'aftertaste': 3.0,
+      'bitterness': 1.0,
+      'acidity': 1.0,
+      'sweetness': 1.0,
+      'body': 1.0,
+      'intensity': 1.0,
+      'aftertaste': 1.0,
     };
   }
 
@@ -32,8 +32,8 @@ final flavorValuesProvider =
     });
 
 class SensoryRadarChart extends ConsumerStatefulWidget {
-  final bool isReadOnly;
   final bool interactive;
+  final bool isLocked;
   final Map<String, double>? staticValues;
   final double height;
   final double labelFontSize;
@@ -41,7 +41,7 @@ class SensoryRadarChart extends ConsumerStatefulWidget {
   const SensoryRadarChart({
     super.key,
     this.interactive = true,
-    this.isReadOnly = false,
+    this.isLocked = false,
     this.staticValues,
     this.height = 350,
     this.labelFontSize = 9,
@@ -56,14 +56,55 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
 
   @override
   Widget build(BuildContext context) {
-    final bool canEdit = widget.interactive && !widget.isReadOnly && widget.staticValues == null;
+    final Map<String, double> values =
+        widget.staticValues ?? ref.watch(flavorValuesProvider);
     final theme = Theme.of(context);
-    final Map<String, double> values = widget.staticValues ?? ref.watch(flavorValuesProvider);
 
     return Column(
       children: [
-        if (canEdit) ...[
-          // Educational templates (Removed in favor of unified processing selection)
+        if (widget.interactive && widget.staticValues == null) ...[
+          // Educational templates
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                _TemplateChip(ref.t('process_washed_label'), 'Clean & Bright', {
+                  'bitterness': 0.3,
+                  'acidity': 0.8,
+                  'sweetness': 0.6,
+                  'body': 0.4,
+                  'intensity': 0.5,
+                  'aftertaste': 0.6,
+                }),
+                const SizedBox(width: 8),
+                _TemplateChip(
+                  ref.t('process_natural_label'),
+                  'Fruity & Sweet',
+                  {
+                    'bitterness': 0.4,
+                    'acidity': 0.5,
+                    'sweetness': 0.9,
+                    'body': 0.7,
+                    'intensity': 0.8,
+                    'aftertaste': 0.8,
+                  },
+                ),
+                const SizedBox(width: 8),
+                _TemplateChip(
+                  ref.t('process_honey_label'),
+                  'Sticky & Balanced',
+                  {
+                    'bitterness': 0.5,
+                    'acidity': 0.6,
+                    'sweetness': 0.8,
+                    'body': 0.6,
+                    'intensity': 0.7,
+                    'aftertaste': 0.7,
+                  },
+                ),
+              ],
+            ),
+          ),
           const SizedBox(height: 16),
         ],
         SizedBox(
@@ -79,7 +120,10 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
                   60; // Increased padding
 
               return GestureDetector(
-                onPanStart: canEdit
+              final bool canInteract = widget.interactive && !widget.isLocked;
+
+              return GestureDetector(
+                onPanStart: canInteract
                     ? (details) => _handleDragStart(
                         details.localPosition,
                         center,
@@ -87,14 +131,14 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
                         values,
                       )
                     : null,
-                onPanUpdate: canEdit
+                onPanUpdate: canInteract
                     ? (details) => _handleDragUpdate(
                         details.localPosition,
                         center,
                         radius,
                       )
                     : null,
-                onPanEnd: canEdit
+                onPanEnd: canInteract
                     ? (_) => setState(() => _draggingLabel = null)
                     : null,
                 child: CustomPaint(
@@ -180,7 +224,8 @@ class RadarPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     // Adjust padding for labels to prevent clipping
     final maxRadius = min(size.width, size.height) / 2 - 48;
-    // Use ordered keys to maintain same axis positions
+    
+    // STRICT ORDER of the 6 axes
     final labels = [
       'bitterness',
       'acidity',
@@ -296,49 +341,53 @@ class RadarPainter extends CustomPainter {
     canvas.drawPath(dataPath, fillPaint);
     canvas.drawPath(dataPath, strokePaint);
 
-    // 4. Vertex dots and Labels
+    // 4. Vertex dots for better visibility
     final dotPaint = Paint()..color = primaryColor;
-    for (int i = 0; i < labels.length; i++) {
-      final angle = angleStep * i - pi / 2;
-      final point = points[i];
+    for (var point in points) {
       canvas.drawCircle(point, 3, dotPaint);
-
-      // Draw Label Text
-      final labelText = _getLabelText(labels[i]);
-      final textPainter = TextPainter(
-        text: TextSpan(
-          text: labelText.toUpperCase(),
-          style: GoogleFonts.outfit(
-            color: Colors.white,
-            fontSize: labelFontSize,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.5,
-          ),
-        ),
-        textDirection: TextDirection.ltr,
-      );
-      textPainter.layout();
-
-      // Position label outside the radius
-      final labelRadius = maxRadius + 20;
-      final lx = center.dx + labelRadius * cos(angle) - textPainter.width / 2;
-      final ly = center.dy + labelRadius * sin(angle) - textPainter.height / 2;
-      textPainter.paint(canvas, Offset(lx, ly));
-    }
-  }
-
-  String _getLabelText(String key) {
-    switch (key) {
-      case 'bitterness': return ref.t('bitterness');
-      case 'acidity': return ref.t('acidity');
-      case 'sweetness': return ref.t('sweetness');
-      case 'body': return ref.t('body');
-      case 'intensity': return ref.t('intensity');
-      case 'aftertaste': return ref.t('aftertaste');
-      default: return key;
     }
   }
 
   @override
   bool shouldRepaint(covariant RadarPainter oldDelegate) => true;
+}
+
+class _TemplateChip extends ConsumerWidget {
+  final String title;
+  final String subtitle;
+  final Map<String, double> values;
+  const _TemplateChip(this.title, this.subtitle, this.values);
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return InkWell(
+      onTap: () => ref.read(flavorValuesProvider.notifier).setValues(values),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.05),
+          border: Border.all(
+            color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color(0xFFC8A96E),
+                fontSize: 12,
+              ),
+            ),
+            Text(
+              subtitle,
+              style: const TextStyle(fontSize: 9, color: Colors.white38),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

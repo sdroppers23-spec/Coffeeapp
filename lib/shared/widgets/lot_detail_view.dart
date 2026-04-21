@@ -16,6 +16,8 @@ import 'sensory_radar_chart.dart';
 import 'sensory_preview.dart';
 import 'lot_detail_widgets.dart';
 import '../../features/brewing/widgets/custom_recipe_card.dart';
+import '../../shared/models/processing_methods_repository.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 class LotDetailView extends ConsumerStatefulWidget {
   final CoffeeLotDto? lot;
@@ -474,62 +476,96 @@ class _InfoTab extends ConsumerWidget {
   final CoffeeLotDto? lot;
   final LocalizedBeanDto? bean;
 
-  const _InfoTab({this.lot, this.bean});
-
-  void _showProcessInfoSheet(BuildContext context, String process) {
-    // Basic local dictionary for process info
+  const _  void _showProcessInfoSheet(BuildContext context, String process) {
     final isUk = LocaleService.currentLocale == 'uk';
-    String title = process;
-    String description = isUk 
-      ? 'Детальна інформація про цей метод обробки поки відсутня в нашому довіднику.'
-      : 'Detailed information about this process is not yet available in our guide.';
-
-    final pLower = process.toLowerCase();
-    if (pLower.contains('wash') || pLower.contains('мит')) {
-      title = isUk ? 'Митий метод (Washed)' : 'Washed Process';
-      description = isUk 
-        ? 'Плоди депульпують (знімають шкірку та частину м’якоті), після чого зерна ферментують у воді та ретельно промивають. Цей метод підкреслює чистоту смаку, кислотність та терруар.' 
-        : 'The fruit is pulped, fermented in water, and then washed clean. This method highlights flavor clarity, acidity, and terroir characteristics.';
-    } else if (pLower.contains('natural') || pLower.contains('натур')) {
-      title = isUk ? 'Натуральний метод (Natural)' : 'Natural Process';
-      description = isUk 
-        ? 'Зерна сушать всередині цілої ягоди. Це надає каві виражену солодкість, насичене тіло та інтенсивні фруктові ноти.' 
-        : 'The fruit is dried whole with the beans inside. This imparts heavy sweetness, a full body, and intense fruity notes to the coffee.';
-    } else if (pLower.contains('honey') || pLower.contains('хані')) {
-      title = isUk ? 'Метод Хані (Honey)' : 'Honey Process';
-      description = isUk 
-        ? 'Проміжний метод, де шкірку знімають, але залишають частину м’якоті (клейковини) під час сушіння. Кава виходить збалансованою та солодкою.' 
-        : 'A middle ground where the skin is removed but some mucilage is left on the bean during drying. Results in a balanced and sweet cup.';
-    } else if (pLower.contains('anaerobic') || pLower.contains('анаероб')) {
-      title = isUk ? 'Анаеробний метод (Anaerobic)' : 'Anaerobic Process';
-      description = isUk 
-        ? 'Ферментація відбувається у герметичних ємностях без доступу кисню. Це дозволяє контролювати бактеріальні процеси, створюючи надзвичайно складні, часто "алкогольні" смакові профілі.' 
-        : 'Fermentation takes place in sealed tanks without oxygen. This creates highly complex, sometimes boozy, and unique flavor profiles.';
-    }
+    
+    // Use repository to find the method
+    final method = ProcessingMethodsRepository.getByMatchingName(process);
+    
+    final String title = method != null 
+        ? ref.t(method.nameKey) 
+        : process;
+        
+    final String description = method != null 
+        ? ref.t(method.descKey)
+        : (isUk 
+            ? 'Детальна інформація про цей метод обробки поки відсутня в нашому довіднику.'
+            : 'Detailed information about this process is not yet available in our guide.');
 
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (context) => GlassContainer(
-        padding: const EdgeInsets.all(24),
-        borderRadius: 32,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.white24,
-                borderRadius: BorderRadius.circular(2),
+      isScrollControlled: true,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.5,
+        minChildSize: 0.4,
+        maxChildSize: 0.8,
+        expand: false,
+        builder: (context, scrollController) => GlassContainer(
+          padding: const EdgeInsets.all(24),
+          borderRadius: 32,
+          child: Column(
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 24),
+                decoration: BoxDecoration(
+                  color: Colors.white24,
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              title.toUpperCase(),
-              style: GoogleFonts.outfit(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+              Text(
+                title.toUpperCase(),
+                style: GoogleFonts.outfit(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFFC8A96E),
+                  letterSpacing: 2,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              if (method != null) ...[
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: method.traits.map((trait) => Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.2)),
+                    ),
+                    child: Text(
+                      trait.toUpperCase(),
+                      style: GoogleFonts.outfit(fontSize: 8, fontWeight: FontWeight.bold, color: const Color(0xFFC8A96E)),
+                    ),
+                  )).toList(),
+                ),
+              ],
+              const SizedBox(height: 16),
+              const Divider(color: Colors.white10),
+              const SizedBox(height: 16),
+              Expanded(
+                child: Markdown(
+                  controller: scrollController,
+                  data: description,
+                  padding: EdgeInsets.zero,
+                  styleSheet: MarkdownStyleSheet(
+                    p: GoogleFonts.outfit(fontSize: 14, height: 1.6, color: Colors.white70),
+                    h3: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.bold, color: const Color(0xFFC8A96E), height: 2),
+                    listBullet: GoogleFonts.outfit(color: const Color(0xFFC8A96E)),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
+        ),
+      ),
+    );
+  }ontWeight: FontWeight.bold,
                 color: const Color(0xFFC8A96E),
                 letterSpacing: 2,
               ),
@@ -591,6 +627,9 @@ class _InfoTab extends ConsumerWidget {
                     child: LotCompactStat(
                       label: isUk ? 'Обробка' : 'Process',
                       value: lot?.process ?? bean?.processMethod ?? 'N/A',
+                      onTap: (lot?.process ?? bean?.processMethod) != null 
+                        ? () => _showProcessInfoSheet(context, lot?.process ?? bean?.processMethod ?? '')
+                        : null,
                     ),
                   ),
                   Container(width: 1, height: 30, color: Colors.white10),
@@ -634,18 +673,9 @@ class _InfoTab extends ConsumerWidget {
               _InfoRow(
                 label: isUk ? 'Обробка' : 'Process', 
                 value: lot?.process ?? bean?.processMethod,
-                trailing: (lot?.process ?? bean?.processMethod) != null ? GestureDetector(
-                  onTap: () => _showProcessInfoSheet(context, lot?.process ?? bean?.processMethod ?? ''),
-                  child: Container(
-                    margin: const EdgeInsets.only(left: 8),
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.5)),
-                    ),
-                    child: const Icon(Icons.info_outline_rounded, size: 10, color: Color(0xFFC8A96E)),
-                  ),
-                ) : null,
+                onTap: (lot?.process ?? bean?.processMethod) != null 
+                  ? () => _showProcessInfoSheet(context, lot?.process ?? bean?.processMethod ?? '')
+                  : null,
               ),
               _InfoRow(label: isUk ? 'Декаф' : 'Decaf', value: lot != null ? (lot!.isDecaf ? (isUk ? 'Так' : 'Yes') : (isUk ? 'Ні' : 'No')) : null),
               _InfoRow(label: isUk ? 'Мелена' : 'Ground', value: lot != null ? (lot!.isGround ? (isUk ? 'Так' : 'Yes') : (isUk ? 'Ні' : 'No')) : null),
@@ -860,38 +890,51 @@ class _InfoRow extends StatelessWidget {
   final String label;
   final String? value;
   final Widget? trailing;
+  final VoidCallback? onTap;
 
-  const _InfoRow({required this.label, this.value, this.trailing});
+  const _InfoRow({required this.label, this.value, this.trailing, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     final v = value;
     final t = trailing;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: GoogleFonts.outfit(color: Colors.white38, fontSize: 13),
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                (v == null || v.isEmpty) ? 'N/A' : v,
-                style: GoogleFonts.outfit(
-                  color: Colors.white,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              label,
+              style: GoogleFonts.outfit(color: Colors.white38, fontSize: 13),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  (v == null || v.isEmpty) ? 'N/A' : v,
+                  style: GoogleFonts.outfit(
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-              // ignore: use_null_aware_elements
-              if (t != null) t,
-            ],
-          ),
-        ],
+                if (onTap != null) ...[
+                  const SizedBox(width: 6),
+                  Icon(
+                    Icons.info_outline_rounded,
+                    size: 12,
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.5),
+                  ),
+                ],
+                // ignore: use_null_aware_elements
+                if (t != null) t,
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

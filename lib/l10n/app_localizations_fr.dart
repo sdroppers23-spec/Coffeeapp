@@ -162,26 +162,68 @@ class AppLocalizationsFr extends AppLocalizations {
   String get process_washed => 'Lavé';
 
   @override
-  String get process_anaerobic => 'Anaérobie';
-
-  @override
   String get process_honey => 'Honey';
 
   @override
-  String get process_washed_desc =>
-      '### Étape 1 : Dépulpage\nLa peau et la pulpe sont retirées mécaniquement. Le mucilage collant reste sur le parchemin.\n### Étape 2 : Fermentation\nLes grains trempent dans des réservoirs d\'eau pendant 12–48 heures où les bactéries décomposent le mucilage.\n### Étape 3 : Lavage et séchage\nLes grains sont lavés à l\'eau propre et séchés sur des patios ou des lits pendant 1–2 semaines.';
+  String get process_wet_hulled => 'Wet-Hulled';
+
+  @override
+  String get process_anaerobic => 'Anaérobie';
+
+  @override
+  String get process_carbonic => 'Carbonic Maceration';
+
+  @override
+  String get process_lactic => 'Lactic/Acetic';
+
+  @override
+  String get process_thermal => 'Thermal Shock';
+
+  @override
+  String get process_cofermentation => 'Co-fermentation';
+
+  @override
+  String get process_koji => 'Koji / Yeast';
 
   @override
   String get process_natural_desc =>
       '### Étape 1 : Tri\nSeules les cerises mûres sont sélectionnées et étalées sur des lits africains ou des patios.\n### Étape 2 : Séchage\nLe fruit entier sèche pendant 2–4 semaines, permettant aux sucres de se concentrer dans le grain.\n### Étape 3 : Décorticage\nL\'enveloppe sèche est retirée seulement après avoir atteint 11–12% d\'humidité.';
 
   @override
+  String get process_washed_desc =>
+      '### Étape 1 : Dépulpage\nLa peau et la pulpe sont retirées mécaniquement. Le mucilage collant reste sur le parchemin.\n### Étape 2 : Fermentation\nLes grains trempent dans des réservoirs d\'eau pendant 12–48 heures où les bactéries décomposent le mucilage.\n### Étape 3 : Lavage et séchage\nLes grains sont lavés à l\'eau propre et séchés sur des patios ou des lits pendant 1–2 semaines.';
+
+  @override
+  String get process_honey_desc =>
+      '### How it works\nA hybrid method where the skin is removed but some mucilage remains during drying. Color varies (White to Black) based on remaining pulp.\n### In the cup\nSweeter than washed but cleaner than natural. Honey-like sweetness, creamy body, and balanced acidity of ripe fruits.';
+
+  @override
+  String get process_wet_hulled_desc =>
+      '### How it works\nTraditional Indonesian method (Giling Basah). Parchment is removed while beans are still very wet (30-50%). Drying finishes without the protective layer.\n### In the cup\nVery heavy, syrupy body with minimal acidity. Distinctive notes of cedar, spices, earth, tobacco, and dark chocolate.';
+
+  @override
   String get process_anaerobic_desc =>
       '### Étape 1 : Scellage\nLes cerises sont placées dans des cuves hermétiques dont l\'oxygène est retiré.\n### Étape 2 : Fermentation contrôlée\nLes bactéries lactiques prospèrent pendant 48–120 heures créant des profils aromatiques complexes.';
 
   @override
+  String get process_carbonic_desc =>
+      '### How it works\nAdapted from winemaking. Tanks are filled with CO2 to displace oxygen. Fermentation happens under pressure, often at controlled temperatures.\n### In the cup\nExceptional complexity. Red berry notes (strawberry, raspberry), candy-like sweetness, and sparkling acidity. Very clean yet multi-layered.';
+
+  @override
+  String get process_lactic_desc =>
+      '### How it works\nEncourages the growth of lactic acid bacteria. Producers control pH, temperature, and sugar content for specific bacterial activity.\n### In the cup\nYogurt-like or creamy body. Soft, rounded acidity. Often reminds of peach, ripe pineapple, or creamy desserts.';
+
+  @override
   String get process_thermal_desc =>
       '### Étape 1 : Choc chaud\nLes grains sont lavés avec de l\'eau à 40°C pour ouvrir les pores et absorber les produits de fermentation.\n### Étape 2 : Choc froid\nRincés immédiatement avec de l\'eau à 12°C pour \'fixer\' les saveurs intenses dans le grain.';
+
+  @override
+  String get process_cofermentation_desc =>
+      '### How it works\nFruits, berries, herbs, or essential oils are added during fermentation. The coffee absorbs these aromas at a cellular level.\n### In the cup\nVery clear, sometimes perfume-like flavor of the added ingredient. For example, intense cinnamon or pink grapefruit notes.';
+
+  @override
+  String get process_koji_desc =>
+      '### How it works\nUses Aspergillus oryzae (Koji) fungus to break down starches faster than normal yeast, or specific wine yeasts are introduced.\n### In the cup\nEnhanced umami, deep sweetness, and velvet body. Exceptionally balanced and sweet with tropical fruit and biscuit notes.';
 
   @override
   String get shop_coffee => 'ACHETER CE CAFÉ';

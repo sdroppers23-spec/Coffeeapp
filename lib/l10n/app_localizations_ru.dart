@@ -162,26 +162,68 @@ class AppLocalizationsRu extends AppLocalizations {
   String get process_washed => 'Мытая';
 
   @override
-  String get process_anaerobic => 'Анаэробная';
-
-  @override
   String get process_honey => 'Хани';
 
   @override
-  String get process_washed_desc =>
-      '### Этап 1: Депульпация\nСнимается кожица и мякоть механическим способом.\n### Этап 2: Ферментация\nЗерна в слизи погружаются в воду на 12-48 часов для очистки ферментами.\n### Этап 3: Промивка и Сушка\nЗерно промывают чистой водой и сушат на солнце до влажности 11-12%.';
+  String get process_wet_hulled => 'Wet-Hulled';
+
+  @override
+  String get process_anaerobic => 'Анаэробная';
+
+  @override
+  String get process_carbonic => 'Carbonic Maceration';
+
+  @override
+  String get process_lactic => 'Lactic/Acetic';
+
+  @override
+  String get process_thermal => 'Thermal Shock';
+
+  @override
+  String get process_cofermentation => 'Co-fermentation';
+
+  @override
+  String get process_koji => 'Koji / Yeast';
 
   @override
   String get process_natural_desc =>
       '### Этап 1: Сортировка\nЦелые ягоды раскладывают на африканских кроватях.\n### Этап 2: Сушка в ягоде\nДлится 2-4 недели. Ягода засыхает, отдавая все сахара зерну внутри.\n### Этап 3: Халлинг\nСухая оболонка снимается только после полной сушки.';
 
   @override
+  String get process_washed_desc =>
+      '### Этап 1: Депульпация\nСнимается кожица и мякоть механическим способом.\n### Этап 2: Ферментация\nЗерна в слизи погружаются в воду на 12-48 часов для очистки ферментами.\n### Этап 3: Промивка и Сушка\nЗерно промывают чистой водой и сушат на солнце до влажности 11-12%.';
+
+  @override
+  String get process_honey_desc =>
+      '### How it works\nA hybrid method where the skin is removed but some mucilage remains during drying. Color varies (White to Black) based on remaining pulp.\n### In the cup\nSweeter than washed but cleaner than natural. Honey-like sweetness, creamy body, and balanced acidity of ripe fruits.';
+
+  @override
+  String get process_wet_hulled_desc =>
+      '### How it works\nTraditional Indonesian method (Giling Basah). Parchment is removed while beans are still very wet (30-50%). Drying finishes without the protective layer.\n### In the cup\nVery heavy, syrupy body with minimal acidity. Distinctive notes of cedar, spices, earth, tobacco, and dark chocolate.';
+
+  @override
   String get process_anaerobic_desc =>
       '### Этап 1: Герметизация\nЯгоды загружают в бочки без доступа кислорода.\n### Этап 2: Анаэробная ферментация\nДлится 48-120 часов, создавая сложный \"фанки\" вкус.';
 
   @override
+  String get process_carbonic_desc =>
+      '### How it works\nAdapted from winemaking. Tanks are filled with CO2 to displace oxygen. Fermentation happens under pressure, often at controlled temperatures.\n### In the cup\nExceptional complexity. Red berry notes (strawberry, raspberry), candy-like sweetness, and sparkling acidity. Very clean yet multi-layered.';
+
+  @override
+  String get process_lactic_desc =>
+      '### How it works\nEncourages the growth of lactic acid bacteria. Producers control pH, temperature, and sugar content for specific bacterial activity.\n### In the cup\nYogurt-like or creamy body. Soft, rounded acidity. Often reminds of peach, ripe pineapple, or creamy desserts.';
+
+  @override
   String get process_thermal_desc =>
       '### Этап 1: Горячий шок\nПромивка водой 40°C для открытия пор.\n### Этап 2: Холодный шок\nРезкое охолодження водой 12°C для \"запечатывания\" вкуса.';
+
+  @override
+  String get process_cofermentation_desc =>
+      '### How it works\nFruits, berries, herbs, or essential oils are added during fermentation. The coffee absorbs these aromas at a cellular level.\n### In the cup\nVery clear, sometimes perfume-like flavor of the added ingredient. For example, intense cinnamon or pink grapefruit notes.';
+
+  @override
+  String get process_koji_desc =>
+      '### How it works\nUses Aspergillus oryzae (Koji) fungus to break down starches faster than normal yeast, or specific wine yeasts are introduced.\n### In the cup\nEnhanced umami, deep sweetness, and velvet body. Exceptionally balanced and sweet with tropical fruit and biscuit notes.';
 
   @override
   String get shop_coffee => 'КУПИТЬ ЭТОТ КОФЕ';

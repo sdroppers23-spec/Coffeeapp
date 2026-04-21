@@ -162,26 +162,68 @@ class AppLocalizationsPt extends AppLocalizations {
   String get process_washed => 'Lavado';
 
   @override
-  String get process_anaerobic => 'Anaeróbico';
-
-  @override
   String get process_honey => 'Honey';
 
   @override
-  String get process_washed_desc =>
-      '### Etapa 1: Despolpamento\nA casca e a polpa são removidas mecanicamente. O mucilagem pegajoso permanece no pergaminho.\n### Etapa 2: Fermentação\nOs grãos ficam de molho em tanques de água por 12–48 horas onde as bactérias decompõem o mucilagem.\n### Etapa 3: Lavagem e secagem\nOs grãos são lavados com água limpa e secos em pátios ou camas por 1–2 semanas.';
+  String get process_wet_hulled => 'Wet-Hulled';
+
+  @override
+  String get process_anaerobic => 'Anaeróbico';
+
+  @override
+  String get process_carbonic => 'Carbonic Maceration';
+
+  @override
+  String get process_lactic => 'Lactic/Acetic';
+
+  @override
+  String get process_thermal => 'Thermal Shock';
+
+  @override
+  String get process_cofermentation => 'Co-fermentation';
+
+  @override
+  String get process_koji => 'Koji / Yeast';
 
   @override
   String get process_natural_desc =>
       '### Etapa 1: Seleção\nApenas cerejas maduras são selecionadas e espalhadas em camas africanas ou pátios.\n### Etapa 2: Secagem\nO fruto inteiro seca por 2–4 semanas, permitindo que os açúcares se concentrem dentro do grão.\n### Etapa 3: Descasque\nA casca seca é removida apenas após atingir 11–12% de umidade.';
 
   @override
+  String get process_washed_desc =>
+      '### Etapa 1: Despolpamento\nA casca e a polpa são removidas mecanicamente. O mucilagem pegajoso permanece no pergaminho.\n### Etapa 2: Fermentação\nOs grãos ficam de molho em tanques de água por 12–48 horas onde as bactérias decompõem o mucilagem.\n### Etapa 3: Lavagem e secagem\nOs grãos são lavados com água limpa e secos em pátios ou camas por 1–2 semanas.';
+
+  @override
+  String get process_honey_desc =>
+      '### How it works\nA hybrid method where the skin is removed but some mucilage remains during drying. Color varies (White to Black) based on remaining pulp.\n### In the cup\nSweeter than washed but cleaner than natural. Honey-like sweetness, creamy body, and balanced acidity of ripe fruits.';
+
+  @override
+  String get process_wet_hulled_desc =>
+      '### How it works\nTraditional Indonesian method (Giling Basah). Parchment is removed while beans are still very wet (30-50%). Drying finishes without the protective layer.\n### In the cup\nVery heavy, syrupy body with minimal acidity. Distinctive notes of cedar, spices, earth, tobacco, and dark chocolate.';
+
+  @override
   String get process_anaerobic_desc =>
       '### Etapa 1: Selagem\nAs cerejas são colocadas em tanques herméticos dos quais o oxigênio é removido.\n### Etapa 2: Fermentação controlada\nAs bactérias do ácido lático prosperam por 48–120 horas criando perfis de sabor complexos.';
 
   @override
+  String get process_carbonic_desc =>
+      '### How it works\nAdapted from winemaking. Tanks are filled with CO2 to displace oxygen. Fermentation happens under pressure, often at controlled temperatures.\n### In the cup\nExceptional complexity. Red berry notes (strawberry, raspberry), candy-like sweetness, and sparkling acidity. Very clean yet multi-layered.';
+
+  @override
+  String get process_lactic_desc =>
+      '### How it works\nEncourages the growth of lactic acid bacteria. Producers control pH, temperature, and sugar content for specific bacterial activity.\n### In the cup\nYogurt-like or creamy body. Soft, rounded acidity. Often reminds of peach, ripe pineapple, or creamy desserts.';
+
+  @override
   String get process_thermal_desc =>
       '### Etapa 1: Choque térmico quente\nOs grãos são lavados com água a 40°C para abrir poros e absorver produtos de fermentação.\n### Etapa 2: Choque frio\nEnxaguados imediatamente com água a 12°C para \'travar\' os sabores intensos dentro do grão.';
+
+  @override
+  String get process_cofermentation_desc =>
+      '### How it works\nFruits, berries, herbs, or essential oils are added during fermentation. The coffee absorbs these aromas at a cellular level.\n### In the cup\nVery clear, sometimes perfume-like flavor of the added ingredient. For example, intense cinnamon or pink grapefruit notes.';
+
+  @override
+  String get process_koji_desc =>
+      '### How it works\nUses Aspergillus oryzae (Koji) fungus to break down starches faster than normal yeast, or specific wine yeasts are introduced.\n### In the cup\nEnhanced umami, deep sweetness, and velvet body. Exceptionally balanced and sweet with tropical fruit and biscuit notes.';
 
   @override
   String get shop_coffee => 'COMPRAR ESTE CAFÉ';

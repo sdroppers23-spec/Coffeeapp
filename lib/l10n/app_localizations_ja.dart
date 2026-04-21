@@ -162,26 +162,68 @@ class AppLocalizationsJa extends AppLocalizations {
   String get process_washed => 'ウォッシュド';
 
   @override
-  String get process_anaerobic => 'アナエロビック';
-
-  @override
   String get process_honey => 'ハニー';
 
   @override
-  String get process_washed_desc =>
-      '### ステップ1：果肉除去\n皮と果肉が機械的に除去されます。粘性のムシラージはパーチメントに残ります。\n### ステップ2：発酵\n豆は水槽に12〜48時間浸され、バクテリアがムシラージを分解します。\n### ステップ3：洗浄と乾燥\n豆は清潔な水で洗浄され、パティオまたはベッドで1〜2週間乾燥されます。';
+  String get process_wet_hulled => 'Wet-Hulled';
+
+  @override
+  String get process_anaerobic => 'アナエロビック';
+
+  @override
+  String get process_carbonic => 'Carbonic Maceration';
+
+  @override
+  String get process_lactic => 'Lactic/Acetic';
+
+  @override
+  String get process_thermal => 'Thermal Shock';
+
+  @override
+  String get process_cofermentation => 'Co-fermentation';
+
+  @override
+  String get process_koji => 'Koji / Yeast';
 
   @override
   String get process_natural_desc =>
       '### ステップ1：選別\n完熟チェリーのみが選ばれ、アフリカンベッドやパティオに広げられます。\n### ステップ2：乾燥\n果実全体が2〜4週間乾燥し、豆の中に糖分が凝縮されます。\n### ステップ3：脱穀\n乾燥した「干しぶどう状」の外皮は、水分11〜12%に達した後にのみ除去されます。';
 
   @override
+  String get process_washed_desc =>
+      '### ステップ1：果肉除去\n皮と果肉が機械的に除去されます。粘性のムシラージはパーチメントに残ります。\n### ステップ2：発酵\n豆は水槽に12〜48時間浸され、バクテリアがムシラージを分解します。\n### ステップ3：洗浄と乾燥\n豆は清潔な水で洗浄され、パティオまたはベッドで1〜2週間乾燥されます。';
+
+  @override
+  String get process_honey_desc =>
+      '### How it works\nA hybrid method where the skin is removed but some mucilage remains during drying. Color varies (White to Black) based on remaining pulp.\n### In the cup\nSweeter than washed but cleaner than natural. Honey-like sweetness, creamy body, and balanced acidity of ripe fruits.';
+
+  @override
+  String get process_wet_hulled_desc =>
+      '### How it works\nTraditional Indonesian method (Giling Basah). Parchment is removed while beans are still very wet (30-50%). Drying finishes without the protective layer.\n### In the cup\nVery heavy, syrupy body with minimal acidity. Distinctive notes of cedar, spices, earth, tobacco, and dark chocolate.';
+
+  @override
   String get process_anaerobic_desc =>
       '### ステップ1：密封\nチェリーは酸素が除去された密封タンクに入れられます。\n### ステップ2：制御発酵\n乳酸菌が48〜120時間繁殖し、複雑で独特な風味プロファイルを生み出します。';
 
   @override
+  String get process_carbonic_desc =>
+      '### How it works\nAdapted from winemaking. Tanks are filled with CO2 to displace oxygen. Fermentation happens under pressure, often at controlled temperatures.\n### In the cup\nExceptional complexity. Red berry notes (strawberry, raspberry), candy-like sweetness, and sparkling acidity. Very clean yet multi-layered.';
+
+  @override
+  String get process_lactic_desc =>
+      '### How it works\nEncourages the growth of lactic acid bacteria. Producers control pH, temperature, and sugar content for specific bacterial activity.\n### In the cup\nYogurt-like or creamy body. Soft, rounded acidity. Often reminds of peach, ripe pineapple, or creamy desserts.';
+
+  @override
   String get process_thermal_desc =>
       '### ステップ1：熱ショック\n豆を40°Cのお湯で洗浄し、毛穴を開いて発酵産物を吸収させます。\n### ステップ2：冷ショック\n直ちに12°Cの水でリンスし、豆の中に強烈な風味を「閉じ込め」ます。';
+
+  @override
+  String get process_cofermentation_desc =>
+      '### How it works\nFruits, berries, herbs, or essential oils are added during fermentation. The coffee absorbs these aromas at a cellular level.\n### In the cup\nVery clear, sometimes perfume-like flavor of the added ingredient. For example, intense cinnamon or pink grapefruit notes.';
+
+  @override
+  String get process_koji_desc =>
+      '### How it works\nUses Aspergillus oryzae (Koji) fungus to break down starches faster than normal yeast, or specific wine yeasts are introduced.\n### In the cup\nEnhanced umami, deep sweetness, and velvet body. Exceptionally balanced and sweet with tropical fruit and biscuit notes.';
 
   @override
   String get shop_coffee => 'このコーヒーを購入';

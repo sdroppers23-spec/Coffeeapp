@@ -162,26 +162,68 @@ class AppLocalizationsZh extends AppLocalizations {
   String get process_washed => '水洗法';
 
   @override
-  String get process_anaerobic => '厌氧发酵';
-
-  @override
   String get process_honey => '蜜处理';
 
   @override
-  String get process_washed_desc =>
-      '### 第1阶段：去果皮\n果皮和果肉通过机械方式去除。粘性黏液留在羊皮纸上。\n### 第2阶段：发酵\n豆子在水槽中浸泡12-48小时，细菌分解黏液。\n### 第3阶段：清洗和干燥\n豆子用清水清洗，在庭院或床上干燥1-2周。';
+  String get process_wet_hulled => 'Wet-Hulled';
+
+  @override
+  String get process_anaerobic => '厌氧发酵';
+
+  @override
+  String get process_carbonic => 'Carbonic Maceration';
+
+  @override
+  String get process_lactic => 'Lactic/Acetic';
+
+  @override
+  String get process_thermal => 'Thermal Shock';
+
+  @override
+  String get process_cofermentation => 'Co-fermentation';
+
+  @override
+  String get process_koji => 'Koji / Yeast';
 
   @override
   String get process_natural_desc =>
       '### 第1阶段：筛选\n只选择成熟的樱桃，摊开在非洲床或庭院上。\n### 第2阶段：干燥\n整颗果实干燥2-4周，使糖分在豆子内部浓缩。\n### 第3阶段：脱壳\n干燥的\\\"葡萄干状\\\"外壳仅在达到11-12%含水量后才去除。';
 
   @override
+  String get process_washed_desc =>
+      '### 第1阶段：去果皮\n果皮和果肉通过机械方式去除。粘性黏液留在羊皮纸上。\n### 第2阶段：发酵\n豆子在水槽中浸泡12-48小时，细菌分解黏液。\n### 第3阶段：清洗和干燥\n豆子用清水清洗，在庭院或床上干燥1-2周。';
+
+  @override
+  String get process_honey_desc =>
+      '### How it works\nA hybrid method where the skin is removed but some mucilage remains during drying. Color varies (White to Black) based on remaining pulp.\n### In the cup\nSweeter than washed but cleaner than natural. Honey-like sweetness, creamy body, and balanced acidity of ripe fruits.';
+
+  @override
+  String get process_wet_hulled_desc =>
+      '### How it works\nTraditional Indonesian method (Giling Basah). Parchment is removed while beans are still very wet (30-50%). Drying finishes without the protective layer.\n### In the cup\nVery heavy, syrupy body with minimal acidity. Distinctive notes of cedar, spices, earth, tobacco, and dark chocolate.';
+
+  @override
   String get process_anaerobic_desc =>
       '### 第1阶段：密封\n樱桃被放入去除氧气的密封罐中。\n### 第2阶段：控制发酵\n乳酸菌繁殖48-120小时，形成复杂、独特的风味。';
 
   @override
+  String get process_carbonic_desc =>
+      '### How it works\nAdapted from winemaking. Tanks are filled with CO2 to displace oxygen. Fermentation happens under pressure, often at controlled temperatures.\n### In the cup\nExceptional complexity. Red berry notes (strawberry, raspberry), candy-like sweetness, and sparkling acidity. Very clean yet multi-layered.';
+
+  @override
+  String get process_lactic_desc =>
+      '### How it works\nEncourages the growth of lactic acid bacteria. Producers control pH, temperature, and sugar content for specific bacterial activity.\n### In the cup\nYogurt-like or creamy body. Soft, rounded acidity. Often reminds of peach, ripe pineapple, or creamy desserts.';
+
+  @override
   String get process_thermal_desc =>
       '### 第1阶段：热冲击\n用40°C水清洗豆子，打开毛孔并吸收发酵产物。\n### 第2阶段：冷冲击\n立即用12°C水冲洗，将强烈风味\"锁定\"在豆子内部。';
+
+  @override
+  String get process_cofermentation_desc =>
+      '### How it works\nFruits, berries, herbs, or essential oils are added during fermentation. The coffee absorbs these aromas at a cellular level.\n### In the cup\nVery clear, sometimes perfume-like flavor of the added ingredient. For example, intense cinnamon or pink grapefruit notes.';
+
+  @override
+  String get process_koji_desc =>
+      '### How it works\nUses Aspergillus oryzae (Koji) fungus to break down starches faster than normal yeast, or specific wine yeasts are introduced.\n### In the cup\nEnhanced umami, deep sweetness, and velvet body. Exceptionally balanced and sweet with tropical fruit and biscuit notes.';
 
   @override
   String get shop_coffee => '购买此咖啡';

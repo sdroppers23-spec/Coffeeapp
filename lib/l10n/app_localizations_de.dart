@@ -162,26 +162,68 @@ class AppLocalizationsDe extends AppLocalizations {
   String get process_washed => 'Gewaschen';
 
   @override
-  String get process_anaerobic => 'Anaerob';
-
-  @override
   String get process_honey => 'Honey';
 
   @override
-  String get process_washed_desc =>
-      '### Stufe 1: Entpulpen\nDie Schale und das Fruchtfleisch werden mechanisch entfernt. Der klebrige Schleim bleibt auf dem Pergament.\n### Stufe 2: Fermentation\nBohnen werden 12–48 Stunden in Wassertanks eingeweicht, wo Bakterien den Schleim abbauen.\n### Stufe 3: Waschen & Trocknen\nBohnen werden mit sauberem Wasser gewaschen und 1–2 Wochen auf Patios oder Betten getrocknet.';
+  String get process_wet_hulled => 'Wet-Hulled';
+
+  @override
+  String get process_anaerobic => 'Anaerob';
+
+  @override
+  String get process_carbonic => 'Carbonic Maceration';
+
+  @override
+  String get process_lactic => 'Lactic/Acetic';
+
+  @override
+  String get process_thermal => 'Thermal Shock';
+
+  @override
+  String get process_cofermentation => 'Co-fermentation';
+
+  @override
+  String get process_koji => 'Koji / Yeast';
 
   @override
   String get process_natural_desc =>
       '### Stufe 1: Sortierung\nNur reife Kirschen werden ausgewählt und auf afrikanischen Betten oder Patios ausgelegt.\n### Stufe 2: Trocknung\nDie ganze Frucht trocknet 2–4 Wochen, damit sich die Zucker in der Bohne konzentrieren.\n### Stufe 3: Enthülsung\nDie getrocknete \'rosinenähnliche\' Schale wird erst nach Erreichen von 11–12% Feuchte entfernt.';
 
   @override
+  String get process_washed_desc =>
+      '### Stufe 1: Entpulpen\nDie Schale und das Fruchtfleisch werden mechanisch entfernt. Der klebrige Schleim bleibt auf dem Pergament.\n### Stufe 2: Fermentation\nBohnen werden 12–48 Stunden in Wassertanks eingeweicht, wo Bakterien den Schleim abbauen.\n### Stufe 3: Waschen & Trocknen\nBohnen werden mit sauberem Wasser gewaschen und 1–2 Wochen auf Patios oder Betten getrocknet.';
+
+  @override
+  String get process_honey_desc =>
+      '### How it works\nA hybrid method where the skin is removed but some mucilage remains during drying. Color varies (White to Black) based on remaining pulp.\n### In the cup\nSweeter than washed but cleaner than natural. Honey-like sweetness, creamy body, and balanced acidity of ripe fruits.';
+
+  @override
+  String get process_wet_hulled_desc =>
+      '### How it works\nTraditional Indonesian method (Giling Basah). Parchment is removed while beans are still very wet (30-50%). Drying finishes without the protective layer.\n### In the cup\nVery heavy, syrupy body with minimal acidity. Distinctive notes of cedar, spices, earth, tobacco, and dark chocolate.';
+
+  @override
   String get process_anaerobic_desc =>
       '### Stufe 1: Versiegeln\nKirschen werden in luftdichte Tanks gelegt, aus denen Sauerstoff entfernt wird.\n### Stufe 2: Kontrollierte Fermentation\nMilchsäurebakterien gedeihen 48–120 Stunden und erzeugen komplexe, einzigartige Geschmacksprofile.';
 
   @override
+  String get process_carbonic_desc =>
+      '### How it works\nAdapted from winemaking. Tanks are filled with CO2 to displace oxygen. Fermentation happens under pressure, often at controlled temperatures.\n### In the cup\nExceptional complexity. Red berry notes (strawberry, raspberry), candy-like sweetness, and sparkling acidity. Very clean yet multi-layered.';
+
+  @override
+  String get process_lactic_desc =>
+      '### How it works\nEncourages the growth of lactic acid bacteria. Producers control pH, temperature, and sugar content for specific bacterial activity.\n### In the cup\nYogurt-like or creamy body. Soft, rounded acidity. Often reminds of peach, ripe pineapple, or creamy desserts.';
+
+  @override
   String get process_thermal_desc =>
       '### Stufe 1: Heißer Schock\nBohnen werden mit 40°C heißem Wasser gewaschen, um Poren zu öffnen und Fermentationsprodukte aufzunehmen.\n### Stufe 2: Kalter Schock\nSofort mit 12°C kaltem Wasser gespült, um die intensiven Aromen in der Bohne zu \'fixieren\'.';
+
+  @override
+  String get process_cofermentation_desc =>
+      '### How it works\nFruits, berries, herbs, or essential oils are added during fermentation. The coffee absorbs these aromas at a cellular level.\n### In the cup\nVery clear, sometimes perfume-like flavor of the added ingredient. For example, intense cinnamon or pink grapefruit notes.';
+
+  @override
+  String get process_koji_desc =>
+      '### How it works\nUses Aspergillus oryzae (Koji) fungus to break down starches faster than normal yeast, or specific wine yeasts are introduced.\n### In the cup\nEnhanced umami, deep sweetness, and velvet body. Exceptionally balanced and sweet with tropical fruit and biscuit notes.';
 
   @override
   String get shop_coffee => 'DIESEN KAFFEE KAUFEN';

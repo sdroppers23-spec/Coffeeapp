@@ -82,35 +82,58 @@ class LotDetailRow extends StatelessWidget {
 class LotCompactStat extends StatelessWidget {
   final String label;
   final String value;
+  final VoidCallback? onTap;
 
-  const LotCompactStat({super.key, required this.label, required this.value});
+  const LotCompactStat({
+    super.key,
+    required this.label,
+    required this.value,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     final displayValue = (value.trim().isEmpty) ? "N/A" : value;
 
-    return Column(
-      children: [
-        Text(
-          label.toUpperCase(),
-          style: GoogleFonts.outfit(
-            fontSize: 9,
-            color: Colors.white38,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.5,
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Column(
+        children: [
+          Text(
+            label.toUpperCase(),
+            style: GoogleFonts.outfit(
+              fontSize: 9,
+              color: Colors.white38,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.5,
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          displayValue,
-          textAlign: TextAlign.center,
-          style: GoogleFonts.outfit(
-            fontSize: 13,
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
+          const SizedBox(height: 4),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                displayValue,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.outfit(
+                  fontSize: 13,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              if (onTap != null) ...[
+                const SizedBox(width: 4),
+                Icon(
+                  Icons.info_outline_rounded,
+                  size: 10,
+                  color: const Color(0xFFC8A96E).withValues(alpha: 0.5),
+                ),
+              ],
+            ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

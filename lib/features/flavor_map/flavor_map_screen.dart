@@ -11,17 +11,18 @@ import '../../shared/widgets/sync_indicator.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/l10n/flavor_descriptions.dart';
 import '../navigation/navigation_providers.dart';
+import '../../shared/widgets/sensory_radar_chart.dart';
 
 class FlavorValuesNotifier extends Notifier<Map<String, double>> {
   @override
   Map<String, double> build() {
     return {
-      'radar_aroma': 0.7,
-      'radar_flavor': 0.8,
-      'radar_acidity': 0.6,
-      'radar_body': 0.5,
-      'radar_aftertaste': 0.6,
-      'radar_balance': 0.8,
+      'bitterness': 0.3,
+      'acidity': 0.6,
+      'sweetness': 0.8,
+      'body': 0.5,
+      'intensity': 0.7,
+      'aftertaste': 0.6,
     };
   }
 
@@ -181,7 +182,14 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 20),
-                                const Expanded(child: InteractiveSpiderChart()),
+                                  Expanded(
+                                    child: SensoryRadarChart(
+                                      interactive: true,
+                                      isLocked: true, // Educational locking
+                                      staticValues: values,
+                                      height: 380,
+                                    ),
+                                  ),
                                 const SizedBox(height: 32),
                               ],
                             ),
@@ -230,11 +238,11 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _LegendItem(color: const Color(0xFFFFEB3B), label: ref.t('radar_acidity')),
+                      _LegendItem(color: const Color(0xFFFFEB3B), label: ref.t('acidity')),
                       const SizedBox(width: 20),
-                      _LegendItem(color: const Color(0xFF8D6E63), label: ref.t('radar_body')),
+                      _LegendItem(color: const Color(0xFF8D6E63), label: ref.t('body')),
                       const SizedBox(width: 20),
-                      _LegendItem(color: const Color(0xFFE91E63), label: ref.t('radar_sweetness')),
+                      _LegendItem(color: const Color(0xFFE91E63), label: ref.t('sweetness')),
                     ],
                   ),
                 ),
@@ -479,36 +487,36 @@ class _InteractiveSpiderChartState
                 ref.t('process_washed_label'),
                 'Clean & Bright',
                 {
-                  'radar_aroma': 0.7,
-                  'radar_flavor': 0.8,
-                  'radar_acidity': 0.9,
-                  'radar_body': 0.4,
-                  'radar_aftertaste': 0.7,
-                  'radar_balance': 0.8,
+                  'bitterness': 0.2,
+                  'acidity': 0.9,
+                  'sweetness': 0.4,
+                  'body': 0.3,
+                  'intensity': 0.4,
+                  'aftertaste': 0.7,
                 },
               ),
               _TemplateChip(
                 ref.t('process_natural_label'),
                 'Fruity & Sweet',
                 {
-                  'radar_aroma': 0.9,
-                  'radar_flavor': 0.9,
-                  'radar_acidity': 0.5,
-                  'radar_body': 0.7,
-                  'radar_aftertaste': 0.6,
-                  'radar_balance': 0.7,
+                  'bitterness': 0.4,
+                  'acidity': 0.4,
+                  'sweetness': 0.9,
+                  'body': 0.8,
+                  'intensity': 0.8,
+                  'aftertaste': 0.7,
                 },
               ),
               _TemplateChip(
                 ref.t('process_honey_label'),
                 'Sticky & Balanced',
                 {
-                  'radar_aroma': 0.8,
-                  'radar_flavor': 0.8,
-                  'radar_acidity': 0.6,
-                  'radar_body': 0.6,
-                  'radar_aftertaste': 0.7,
-                  'radar_balance': 0.9,
+                  'bitterness': 0.3,
+                  'acidity': 0.6,
+                  'sweetness': 0.8,
+                  'body': 0.6,
+                  'intensity': 0.6,
+                  'aftertaste': 0.7,
                 },
               ),
             ],

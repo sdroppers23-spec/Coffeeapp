@@ -109,17 +109,14 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
         ],
         SizedBox(
           height: widget.height - (widget.interactive ? 60 : 0),
-          child: LayoutBuilder(
             builder: (context, constraints) {
               final center = Offset(
                 constraints.maxWidth / 2,
                 constraints.maxHeight / 2,
               );
               final radius =
-                  min(constraints.maxWidth, constraints.maxHeight) / 2 -
-                  60; // Increased padding
+                  min(constraints.maxWidth, constraints.maxHeight) / 2 - 60;
 
-              return GestureDetector(
               final bool canInteract = widget.interactive && !widget.isLocked;
 
               return GestureDetector(
@@ -166,12 +163,20 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
     double maxRadius,
     Map<String, double> values,
   ) {
-    final labels = values.keys.toList();
+    // STRICT ORDER
+    final labels = [
+      'bitterness',
+      'acidity',
+      'sweetness',
+      'body',
+      'intensity',
+      'aftertaste',
+    ];
     final angleStep = 2 * pi / labels.length;
 
     for (int i = 0; i < labels.length; i++) {
       final angle = angleStep * i - pi / 2;
-      final val = values[labels[i]]!;
+      final val = values[labels[i]] ?? 0.0;
       final pointX = center.dx + maxRadius * val * cos(angle);
       final pointY = center.dy + maxRadius * val * sin(angle);
 
@@ -193,7 +198,7 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
     double newValue = ((distance / maxRadius * 5).round() / 5.0).clamp(
       0.2,
       1.0,
-    ); // Minimum 1/5
+    ); 
     ref
         .read(flavorValuesProvider.notifier)
         .updateValue(_draggingLabel!, newValue);
@@ -222,7 +227,6 @@ class RadarPainter extends CustomPainter {
     if (values.isEmpty) return;
 
     final center = Offset(size.width / 2, size.height / 2);
-    // Adjust padding for labels to prevent clipping
     final maxRadius = min(size.width, size.height) / 2 - 48;
     
     // STRICT ORDER of the 6 axes

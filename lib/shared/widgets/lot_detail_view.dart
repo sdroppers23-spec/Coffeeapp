@@ -476,30 +476,34 @@ class _InfoTab extends ConsumerWidget {
   final CoffeeLotDto? lot;
   final LocalizedBeanDto? bean;
 
-  const _  void _showProcessInfoSheet(BuildContext context, String process) {
+  const _InfoTab({super.key, this.lot, this.bean});
+
+  void _showProcessInfoSheet(BuildContext context, WidgetRef ref, String process) {
     final isUk = LocaleService.currentLocale == 'uk';
-    
-    // Use repository to find the method
     final method = ProcessingMethodsRepository.getByMatchingName(process);
     
     final String title = method != null 
         ? ref.t(method.nameKey) 
         : process;
         
-    final String description = method != null 
-        ? ref.t(method.descKey)
-        : (isUk 
+    final String description = method?.extendedInfoKey != null
+        ? ref.t(method!.extendedInfoKey!)
+        : (method != null ? ref.t(method.descKey) : (isUk 
             ? 'Детальна інформація про цей метод обробки поки відсутня в нашому довіднику.'
-            : 'Detailed information about this process is not yet available in our guide.');
+            : 'Detailed information about this process is not yet available in our guide.'));
+
+    final String? characters = method?.characterKey != null
+        ? ref.t(method!.characterKey!)
+        : null;
 
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.5,
+        initialChildSize: 0.6,
         minChildSize: 0.4,
-        maxChildSize: 0.8,
+        maxChildSize: 0.9,
         expand: false,
         builder: (context, scrollController) => GlassContainer(
           padding: const EdgeInsets.all(24),
@@ -525,37 +529,41 @@ class _InfoTab extends ConsumerWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              if (method != null) ...[
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: method.traits.map((trait) => Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.2)),
+              if (characters != null) ...[
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.1)),
+                  ),
+                  child: Text(
+                    characters.toUpperCase(),
+                    style: GoogleFonts.outfit(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFFC8A96E),
+                      letterSpacing: 1.5,
                     ),
-                    child: Text(
-                      trait.toUpperCase(),
-                      style: GoogleFonts.outfit(fontSize: 8, fontWeight: FontWeight.bold, color: const Color(0xFFC8A96E)),
-                    ),
-                  )).toList(),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ],
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
               const Divider(color: Colors.white10),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
               Expanded(
-                child: Markdown(
+                child: SingleChildScrollView(
                   controller: scrollController,
-                  data: description,
-                  padding: EdgeInsets.zero,
-                  styleSheet: MarkdownStyleSheet(
-                    p: GoogleFonts.outfit(fontSize: 14, height: 1.6, color: Colors.white70),
-                    h3: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.bold, color: const Color(0xFFC8A96E), height: 2),
-                    listBullet: GoogleFonts.outfit(color: const Color(0xFFC8A96E)),
+                  child: Text(
+                    description,
+                    style: GoogleFonts.outfit(
+                      fontSize: 15,
+                      height: 1.6,
+                      color: Colors.white.withValues(alpha: 0.8),
+                    ),
+                    textAlign: TextAlign.start,
                   ),
                 ),
               ),
@@ -565,29 +573,7 @@ class _InfoTab extends ConsumerWidget {
         ),
       ),
     );
-  }ontWeight: FontWeight.bold,
-                color: const Color(0xFFC8A96E),
-                letterSpacing: 2,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            const Divider(color: Colors.white10),
-            const SizedBox(height: 16),
-            Text(
-              description,
-              style: GoogleFonts.outfit(
-                fontSize: 14,
-                height: 1.6,
-                color: Colors.white70,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 32),
-          ],
-        ),
-      ),
-    );
+  }
   }
 
   @override
@@ -628,7 +614,7 @@ class _InfoTab extends ConsumerWidget {
                       label: isUk ? 'Обробка' : 'Process',
                       value: lot?.process ?? bean?.processMethod ?? 'N/A',
                       onTap: (lot?.process ?? bean?.processMethod) != null 
-                        ? () => _showProcessInfoSheet(context, lot?.process ?? bean?.processMethod ?? '')
+                        ? () => _showProcessInfoSheet(context, ref, lot?.process ?? bean?.processMethod ?? '')
                         : null,
                     ),
                   ),
@@ -674,7 +660,7 @@ class _InfoTab extends ConsumerWidget {
                 label: isUk ? 'Обробка' : 'Process', 
                 value: lot?.process ?? bean?.processMethod,
                 onTap: (lot?.process ?? bean?.processMethod) != null 
-                  ? () => _showProcessInfoSheet(context, lot?.process ?? bean?.processMethod ?? '')
+                  ? () => _showProcessInfoSheet(context, ref, lot?.process ?? bean?.processMethod ?? '')
                   : null,
               ),
               _InfoRow(label: isUk ? 'Декаф' : 'Decaf', value: lot != null ? (lot!.isDecaf ? (isUk ? 'Так' : 'Yes') : (isUk ? 'Ні' : 'No')) : null),

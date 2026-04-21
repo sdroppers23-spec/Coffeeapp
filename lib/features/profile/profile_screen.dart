@@ -115,11 +115,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               )
             else ...[
               IconButton(
-                icon: const Icon(Icons.settings_outlined),
-                tooltip: 'Lot Design Lab',
-                onPressed: () => context.push('/profile/debug-lab'),
-              ),
-              IconButton(
                 icon: const Icon(Icons.logout),
                 tooltip: 'Sign Out',
                 onPressed: _signOut,

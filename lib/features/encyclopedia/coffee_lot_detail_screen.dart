@@ -13,6 +13,7 @@ import '../../shared/widgets/sensory_preview.dart';
 import '../../core/network/price_sync_service.dart';
 import '../brewing/custom_recipe_form.dart';
 import '../../shared/widgets/lot_detail_widgets.dart';
+import '../../shared/models/processing_methods_data.dart';
 import '../navigation/navigation_providers.dart';
 
 class CoffeeLotDetailScreen extends ConsumerStatefulWidget {
@@ -454,57 +455,96 @@ class _ProfileTab extends ConsumerWidget {
         initialChildSize: 0.6,
         maxChildSize: 0.9,
         minChildSize: 0.4,
-        builder: (_, controller) => GlassContainer(
-          borderRadius: 32,
-          padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
-          child: Column(
-            children: [
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.white24,
-                  borderRadius: BorderRadius.circular(2),
+        builder: (_, controller) {
+          final processName = entry.processMethod;
+          final method = ProcessingMethod.all.cast<ProcessingMethod?>().firstWhere(
+            (m) => m!.id.toLowerCase() == processName.toLowerCase(),
+            orElse: () => null,
+          );
+
+          return GlassContainer(
+            borderRadius: 32,
+            padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+            child: Column(
+              children: [
+                Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.white24,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                ref.t('process_detail').toUpperCase(),
-                style: GoogleFonts.outfit(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
-                  letterSpacing: 2,
+                const SizedBox(height: 24),
+                Text(
+                  (method != null ? ref.t(method.nameKey) : processName).toUpperCase(),
+                  style: GoogleFonts.outfit(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary,
+                    letterSpacing: 2,
+                  ),
                 ),
-              ),
-              const Divider(height: 32, color: Colors.white10),
-              Expanded(
-                child: ListView(
-                  controller: controller,
-                  children: [
-                    MarkdownBody(
-                      data: entry.detailedProcess,
-                      extensionSet: md.ExtensionSet.gitHubWeb,
-                      styleSheet: MarkdownStyleSheet(
-                        p: GoogleFonts.outfit(
-                          fontSize: 14,
-                          height: 1.6,
-                          color: Colors.white70,
+                const Divider(height: 32, color: Colors.white10),
+                Expanded(
+                  child: ListView(
+                    controller: controller,
+                    children: [
+                      if (method != null) ...[
+                        _buildProcessSection('HOW IT WORKS', ref.t(method.howItWorksKey)),
+                        const SizedBox(height: 24),
+                        _buildProcessSection('IN THE CUP', ref.t(method.inTheCupKey)),
+                      ] else
+                        MarkdownBody(
+                          data: entry.detailedProcess,
+                          extensionSet: md.ExtensionSet.gitHubWeb,
+                          styleSheet: MarkdownStyleSheet(
+                            p: GoogleFonts.outfit(
+                              fontSize: 14,
+                              height: 1.6,
+                              color: Colors.white70,
+                            ),
+                            strong: GoogleFonts.outfit(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
-                        strong: GoogleFonts.outfit(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                  ],
+                      const SizedBox(height: 40),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  static Widget _buildProcessSection(String title, String content) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: GoogleFonts.outfit(
+            fontSize: 11,
+            fontWeight: FontWeight.bold,
+            color: Colors.white38,
+            letterSpacing: 1.5,
           ),
         ),
-      ),
+        const SizedBox(height: 12),
+        Text(
+          content.replaceAll('### ', '').replaceAll('How it works\n', '').replaceAll('In the cup\n', ''),
+          style: GoogleFonts.outfit(
+            fontSize: 14,
+            height: 1.6,
+            color: Colors.white.withValues(alpha: 0.8),
+          ),
+        ),
+      ],
     );
   }
 

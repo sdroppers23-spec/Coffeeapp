@@ -163,6 +163,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                             child: ConstrainedBox(
                               constraints: const BoxConstraints(maxWidth: 330),
                               child: GlassContainer(
+                                debugKey: 'navBar',
                                 borderRadius: 40,
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 1,
@@ -231,11 +232,12 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                                 ref.read(navBarVisibleProvider.notifier).show();
                               }
                             },
-                          child: GlassContainer(
-                            width: 52,
-                            height: 52,
-                            borderRadius: 26,
-                            blur: 25,
+                            child: GlassContainer(
+                              debugKey: 'navBar',
+                              width: 52,
+                              height: 52,
+                              borderRadius: 26,
+                              blur: 25,
                             opacity: isDark ? 0.15 : 0.6,
                             backgroundGradient: LinearGradient(
                               begin: Alignment.topLeft,

@@ -11,6 +11,7 @@ import '../../shared/widgets/sync_indicator.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/l10n/flavor_descriptions.dart';
 import '../navigation/navigation_providers.dart';
+import '../discover/lots/providers/lot_design_debug_provider.dart';
 
 class FlavorValuesNotifier extends Notifier<Map<String, double>> {
   @override
@@ -103,6 +104,10 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                           const SyncIndicator(),
                         ],
                       ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.settings_rounded, color: Colors.white70),
+                      onPressed: () => _showGlassSettings(context, ref),
                     ),
                     const UserProfileAvatar(radius: 17),
                   ],
@@ -207,6 +212,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
 
                     if (_selectedFlavorKey != null && _selectedTab == 2)
                       Positioned(
+                        key: const Key('flavorCard'),
                         left: 16,
                         right: 16,
                         bottom: 140, // Above bottom nav
@@ -286,6 +292,7 @@ class _FlavorInfoCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GlassContainer(
+      debugKey: 'flavorCard',
       padding: const EdgeInsets.all(20),
       borderRadius: 24,
       blur: 25,
@@ -762,3 +769,133 @@ class _TemplateChip extends ConsumerWidget {
     );
   }
 }
+
+  void _showGlassSettings(BuildContext context, WidgetRef ref) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => Consumer(
+        builder: (context, ref, _) {
+          final config = ref.watch(lotDesignDebugProvider);
+          final notifier = ref.read(lotDesignDebugProvider.notifier);
+
+          return GlassContainer(
+            borderRadius: 30,
+            blur: 40,
+            opacity: 0.2,
+            margin: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Налаштування скла',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Switch(
+                      value: config.isDebugMode,
+                      onChanged: (val) => notifier.toggleDebug(val),
+                      activeThumbColor: Colors.amber,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                const Divider(color: Colors.white24),
+                
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        _buildGlassSection(
+                          title: 'Нижня навігація',
+                          opacity: config.navBarOpacity,
+                          blur: config.navBarBlur,
+                          onOpacityChanged: (val) => notifier.updateNavBar(val, config.navBarBlur),
+                          onBlurChanged: (val) => notifier.updateNavBar(config.navBarOpacity, val),
+                        ),
+                        _buildGlassSection(
+                          title: 'Картка смаків',
+                          opacity: config.flavorCardOpacity,
+                          blur: config.flavorCardBlur,
+                          onOpacityChanged: (val) => notifier.updateFlavorCard(val, config.flavorCardBlur),
+                          onBlurChanged: (val) => notifier.updateFlavorCard(config.flavorCardOpacity, val),
+                        ),
+                        _buildGlassSection(
+                          title: 'Діалоги профілю',
+                          opacity: config.profileOpacity,
+                          blur: config.profileBlur,
+                          onOpacityChanged: (val) => notifier.updateProfile(val, config.profileBlur),
+                          onBlurChanged: (val) => notifier.updateProfile(config.profileOpacity, val),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                
+                const SizedBox(height: 16),
+                TextButton(
+                  onPressed: () => notifier.reset(),
+                  child: const Text('Скинути все', style: TextStyle(color: Colors.white54)),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildGlassSection({
+    required String title,
+    required double opacity,
+    required double blur,
+    required ValueChanged<double> onOpacityChanged,
+    required ValueChanged<double> onBlurChanged,
+  }) {
+    return Theme(
+      data: ThemeData.dark().copyWith(dividerColor: Colors.transparent),
+      child: ExpansionTile(
+        title: Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+        childrenPadding: const EdgeInsets.only(bottom: 16, left: 8, right: 8),
+        children: [
+          Row(
+            children: [
+              const Text('Прозорість:', style: TextStyle(color: Colors.white70, fontSize: 13)),
+              const Spacer(),
+              Text(opacity.toStringAsFixed(2), style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          Slider(
+            value: opacity,
+            min: 0.0,
+            max: 1.0,
+            onChanged: onOpacityChanged,
+            activeColor: Colors.amber,
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              const Text('Блюр:', style: TextStyle(color: Colors.white70, fontSize: 13)),
+              const Spacer(),
+              Text(blur.toStringAsFixed(1), style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          Slider(
+            value: blur,
+            min: 0.0,
+            max: 50.0,
+            onChanged: onBlurChanged,
+            activeColor: Colors.amber,
+          ),
+        ],
+      ),
+    );
+  }

@@ -388,6 +388,7 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
       backgroundColor: Colors.transparent,
       elevation: 0,
       child: GlassContainer(
+        debugKey: 'profileDialog',
         borderRadius: 24,
         blur: 20,
         opacity: 0.15,

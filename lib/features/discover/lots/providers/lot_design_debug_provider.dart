@@ -16,6 +16,14 @@ class LotDesignConfig {
   final double shadowOffsetY;
   final bool isDebugMode;
 
+  // Specific overrides
+  final double navBarOpacity;
+  final double navBarBlur;
+  final double flavorCardOpacity;
+  final double flavorCardBlur;
+  final double profileOpacity;
+  final double profileBlur;
+
   const LotDesignConfig({
     required this.baseColor,
     required this.baseOpacity,
@@ -30,6 +38,12 @@ class LotDesignConfig {
     required this.shadowSpread,
     required this.shadowOffsetY,
     this.isDebugMode = false,
+    this.navBarOpacity = 0.12,
+    this.navBarBlur = 20.0,
+    this.flavorCardOpacity = 0.15,
+    this.flavorCardBlur = 25.0,
+    this.profileOpacity = 0.15,
+    this.profileBlur = 20.0,
   });
 
   LotDesignConfig copyWith({
@@ -46,6 +60,12 @@ class LotDesignConfig {
     double? shadowSpread,
     double? shadowOffsetY,
     bool? isDebugMode,
+    double? navBarOpacity,
+    double? navBarBlur,
+    double? flavorCardOpacity,
+    double? flavorCardBlur,
+    double? profileOpacity,
+    double? profileBlur,
   }) {
     return LotDesignConfig(
       baseColor: baseColor ?? this.baseColor,
@@ -61,6 +81,12 @@ class LotDesignConfig {
       shadowSpread: shadowSpread ?? this.shadowSpread,
       shadowOffsetY: shadowOffsetY ?? this.shadowOffsetY,
       isDebugMode: isDebugMode ?? this.isDebugMode,
+      navBarOpacity: navBarOpacity ?? this.navBarOpacity,
+      navBarBlur: navBarBlur ?? this.navBarBlur,
+      flavorCardOpacity: flavorCardOpacity ?? this.flavorCardOpacity,
+      flavorCardBlur: flavorCardBlur ?? this.flavorCardBlur,
+      profileOpacity: profileOpacity ?? this.profileOpacity,
+      profileBlur: profileBlur ?? this.profileBlur,
     );
   }
 
@@ -78,6 +104,12 @@ class LotDesignConfig {
     shadowSpread: 0.0,
     shadowOffsetY: 4.0,
     isDebugMode: false,
+    navBarOpacity: 0.12,
+    navBarBlur: 20.0,
+    flavorCardOpacity: 0.15,
+    flavorCardBlur: 25.0,
+    profileOpacity: 0.15,
+    profileBlur: 20.0,
   );
 }
 
@@ -87,6 +119,18 @@ class LotDesignDebugNotifier extends Notifier<LotDesignConfig> {
 
   void updateConfig(LotDesignConfig config) {
     state = config;
+  }
+
+  void updateNavBar(double opacity, double blur) {
+    state = state.copyWith(navBarOpacity: opacity, navBarBlur: blur);
+  }
+
+  void updateFlavorCard(double opacity, double blur) {
+    state = state.copyWith(flavorCardOpacity: opacity, flavorCardBlur: blur);
+  }
+
+  void updateProfile(double opacity, double blur) {
+    state = state.copyWith(profileOpacity: opacity, profileBlur: blur);
   }
 
   void reset() {

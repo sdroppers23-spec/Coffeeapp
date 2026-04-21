@@ -25,6 +25,7 @@ class GlassContainer extends StatelessWidget {
   final bool enableShadow;
   final bool enableRepaintBoundary;
   final bool useOuterClip;
+  final String? debugKey;
 
   const GlassContainer({
     super.key,
@@ -46,6 +47,7 @@ class GlassContainer extends StatelessWidget {
     this.enableShadow = true,
     this.enableRepaintBoundary = true,
     this.useOuterClip = true,
+    this.debugKey,
   });
 
   @override
@@ -55,8 +57,21 @@ class GlassContainer extends StatelessWidget {
         final debugConfig = ref.watch(lotDesignDebugProvider);
         final useDebug = debugConfig.isDebugMode;
 
-        final effectiveBlur = useDebug ? debugConfig.blur : blur;
-        final effectiveOpacity = useDebug ? debugConfig.tintOpacity : opacity;
+        double effectiveBlur = useDebug ? debugConfig.blur : blur;
+        double effectiveOpacity = useDebug ? debugConfig.tintOpacity : opacity;
+
+        if (useDebug && debugKey != null) {
+          if (debugKey == 'navBar') {
+            effectiveBlur = debugConfig.navBarBlur;
+            effectiveOpacity = debugConfig.navBarOpacity;
+          } else if (debugKey == 'flavorCard') {
+            effectiveBlur = debugConfig.flavorCardBlur;
+            effectiveOpacity = debugConfig.flavorCardOpacity;
+          } else if (debugKey == 'profileDialog') {
+            effectiveBlur = debugConfig.profileBlur;
+            effectiveOpacity = debugConfig.profileOpacity;
+          }
+        }
         final effectiveBorderRadius = useDebug ? debugConfig.borderRadius : borderRadius;
         final effectiveBorderColor = useDebug
             ? debugConfig.borderColor.withValues(alpha: debugConfig.borderOpacity)

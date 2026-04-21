@@ -770,6 +770,7 @@ class _TemplateChip extends ConsumerWidget {
   }
 }
 
+
   void _showGlassSettings(BuildContext context, WidgetRef ref) {
     showModalBottomSheet(
       context: context,
@@ -814,6 +815,14 @@ class _TemplateChip extends ConsumerWidget {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
+                        _buildGlassSection(
+                          title: 'ЗАГАЛЬНІ (Увесь додаток)',
+                          opacity: config.tintOpacity,
+                          blur: config.blur,
+                          onOpacityChanged: (val) => notifier.updateConfig(config.copyWith(tintOpacity: val)),
+                          onBlurChanged: (val) => notifier.updateConfig(config.copyWith(blur: val)),
+                        ),
+                        const Divider(color: Colors.white10),
                         _buildGlassSection(
                           title: 'Нижня навігація',
                           opacity: config.navBarOpacity,

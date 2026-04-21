@@ -17,6 +17,7 @@ import '../../core/database/dtos.dart';
 import '../../features/navigation/main_scaffold.dart';
 import '../../features/brewing/brewing_main_screen.dart';
 import '../../shared/widgets/lot_detail_view.dart';
+import '../../features/profile/lot_design_debug_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorSpecialtyKey = GlobalKey<NavigatorState>(
@@ -134,6 +135,10 @@ final routerProvider = Provider<GoRouter>((ref) {
             entry: extra['entry'] as EncyclopediaEntry?,
           );
         },
+      ),
+      GoRoute(
+        path: '/profile/debug-lab',
+        builder: (context, state) => const LotDesignDebugScreen(),
       ),
     ],
   );

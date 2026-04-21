@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'pressable_scale.dart';
 
 class LotBadge extends StatelessWidget {
   final String label;

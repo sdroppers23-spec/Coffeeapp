@@ -11,6 +11,8 @@ import '../../shared/widgets/pressable_scale.dart';
 import '../../core/providers/settings_provider.dart';
 import '../../core/supabase/supabase_provider.dart';
 import 'brand_details_screen.dart';
+import '../../core/l10n/app_localizations.dart';
+import '../../shared/widgets/glass_swipe_wrapper.dart';
 import '../../core/database/dtos.dart';
 import 'discovery_providers.dart';
 
@@ -436,26 +438,17 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
 
   Widget _buildSwipeableBrandCard(LocalizedBrandDto brand) {
     final isArchiveTab = _tabController.index == 2;
+    final isUk = LocaleService.currentLocale == 'uk';
 
-    return Dismissible(
-      key: ValueKey(brand.id),
-      background: _buildSwipeBackground(
-        icon: isArchiveTab
-            ? Icons.unarchive_outlined
-            : Icons.archive_outlined,
+    return GlassSwipeWrapper(
+      dismissibleKey: ValueKey('brand_swipe_${brand.id}'),
+      leftAction: GlassSwipeAction(
+        icon: isArchiveTab ? Icons.unarchive_outlined : Icons.archive_outlined,
+        label: isArchiveTab 
+          ? (isUk ? 'Відновити' : 'Restore')
+          : (isUk ? 'Архів' : 'Archive'),
         color: const Color(0xFF3A7BBF),
-        label: isArchiveTab ? 'Відновити' : 'Архів',
-        alignment: Alignment.centerLeft,
-      ),
-      secondaryBackground: _buildSwipeBackground(
-        icon: Icons.delete_outline_rounded,
-        color: Colors.redAccent,
-        label: 'Видалити',
-        alignment: Alignment.centerRight,
-      ),
-      confirmDismiss: (direction) async {
-        if (direction == DismissDirection.startToEnd) {
-          // Архів / відновлення
+        onTap: () async {
           final db = ref.read(databaseProvider);
           await db.toggleBrandArchive(brand.id, !isArchiveTab);
           ref.invalidate(brandsProvider);
@@ -468,19 +461,21 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
               backgroundColor: const Color(0xFF2A2A2A),
             ));
           }
-          return false; // не видаляємо з UI одразу — провайдер оновиться
-        } else {
-          // Видалення
-          return _confirmDeleteDialog(brand.name);
-        }
-      },
-      onDismissed: (direction) async {
-        if (direction == DismissDirection.endToStart) {
-          final db = ref.read(databaseProvider);
-          await db.deleteBrand(brand.id);
-          ref.invalidate(brandsProvider);
-        }
-      },
+        },
+      ),
+      rightAction: GlassSwipeAction(
+        icon: Icons.delete_outline_rounded,
+        label: isUk ? 'Видалити' : 'Delete',
+        color: Colors.redAccent,
+        onTap: () async {
+          final confirmed = await _confirmDeleteDialog(brand.name);
+          if (confirmed && mounted) {
+            final db = ref.read(databaseProvider);
+            await db.deleteBrand(brand.id);
+            ref.invalidate(brandsProvider);
+          }
+        },
+      ),
       child: GestureDetector(
         onLongPress: () => _toggleSelection(brand.id),
         child: _PremiumRoasterCard(
@@ -504,36 +499,6 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
             ref.invalidate(brandsProvider);
           },
         ),
-      ),
-    );
-  }
-
-  Widget _buildSwipeBackground({
-    required IconData icon,
-    required Color color,
-    required String label,
-    required AlignmentGeometry alignment,
-  }) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
-      ),
-      alignment: alignment,
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: color, size: 26),
-          const SizedBox(height: 4),
-          Text(label,
-              style: GoogleFonts.outfit(
-                  color: color,
-                  fontSize: 11,
-                  fontWeight: FontWeight.bold)),
-        ],
       ),
     );
   }
@@ -749,11 +714,11 @@ class _PremiumRoasterCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             color: isSelected
                 ? const Color(0xFFC8A96E).withValues(alpha: 0.15)
-                : Colors.white.withValues(alpha: 0.04),
+                : Colors.white.withValues(alpha: 0.1),
             border: Border.all(
               color: isSelected
                   ? const Color(0xFFC8A96E).withValues(alpha: 0.5)
-                  : Colors.white.withValues(alpha: 0.06),
+                  : Colors.white.withValues(alpha: 0.1),
               width: isSelected ? 1.5 : 1,
             ),
           ),

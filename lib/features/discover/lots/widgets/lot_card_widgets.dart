@@ -10,6 +10,7 @@ import '../../../../shared/widgets/pressable_scale.dart';
 import '../../../../shared/widgets/sensory_radar_chart.dart';
 import '../../../../shared/utils/sensory_utils.dart';
 import 'package:vibration/vibration.dart';
+import '../../../../shared/widgets/glass_swipe_wrapper.dart';
 
 class MyLotGridCard extends ConsumerWidget {
   final CoffeeLotDto lot;
@@ -381,10 +382,10 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
           padding: const EdgeInsets.all(16),
           opacity: isSelected ? 0.25 : 0.20,
           borderRadius: 20,
-          color: isSelected ? const Color(0xFFC8A96E) : Colors.white,
+          color: isSelected ? const Color(0xFFC8A96E) : Colors.white.withValues(alpha: 0.1),
           borderColor: isSelected
               ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
-              : Colors.white.withValues(alpha: 0.12),
+              : Colors.white.withValues(alpha: 0.1),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -613,63 +614,35 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
     ),
   );
 
-    final dismissibleCard = isSelectionMode ? card : Dismissible(
-      key: Key(lot.id),
-      direction: _isExpanded ? DismissDirection.none : DismissDirection.horizontal,
-      onDismissed: (_) {
-        // The actual state update happens via confirmDismiss -> onDeleteSwipe -> _showModernUndo -> setState
-      },
-      confirmDismiss: (direction) async {
-        if (direction == DismissDirection.endToStart) {
-          // Delete
-          if (widget.onDeleteSwipe != null) {
-            return await widget.onDeleteSwipe!(lot);
-          }
-        } else if (direction == DismissDirection.startToEnd) {
-          // Restore or Edit
-          if (widget.onRestoreSwipe != null) {
-            await widget.onRestoreSwipe!(lot);
-            return true;
-          }
-          if (widget.onEditSwipe != null) {
-            widget.onEditSwipe!(lot);
-          }
-          return false; // Don't actually dismiss the item off screen for info edits
-        }
-        return false;
-      },
-      background: Container(
-        color: Colors.transparent,
-        child: Container(
-          decoration: BoxDecoration(
-            color: widget.onRestoreSwipe != null 
-              ? const Color(0xFFC8A96E)
-              : const Color(0xFF62D39F),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.only(left: 20),
-          child: Icon(
-            widget.onRestoreSwipe != null ? Icons.unarchive_outlined : Icons.edit_rounded, 
-            color: Colors.black, 
-            size: 32
-          ),
-        ),
-      ),
-      secondaryBackground: Container(
-        color: Colors.transparent,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.redAccent,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          alignment: Alignment.centerRight,
-          padding: const EdgeInsets.only(right: 20),
-          child: const Icon(Icons.delete_outline_rounded, color: Colors.white, size: 32),
-        ),
-      ),
-      child: card,
-    );
+    final dismissibleCard = isSelectionMode 
+      ? card 
+      : GlassSwipeWrapper(
+          dismissibleKey: Key('glass_swipe_${lot.id}'),
+          leftAction: widget.onRestoreSwipe != null
+            ? GlassSwipeAction(
+                icon: Icons.unarchive_outlined,
+                label: isUk ? 'Відновити' : 'Restore',
+                color: const Color(0xFF3A7BBF),
+                onTap: () => widget.onRestoreSwipe!(lot),
+              )
+            : widget.onEditSwipe != null
+              ? GlassSwipeAction(
+                  icon: Icons.edit_outlined,
+                  label: isUk ? 'Редагувати' : 'Edit',
+                  color: const Color(0xFF39FF14),
+                  onTap: () => widget.onEditSwipe!(lot),
+                )
+              : null,
+          rightAction: widget.onDeleteSwipe != null
+            ? GlassSwipeAction(
+                icon: Icons.delete_outline_rounded,
+                label: isUk ? 'Видалити' : 'Delete',
+                color: Colors.redAccent,
+                onTap: () => widget.onDeleteSwipe!(lot),
+              )
+            : null,
+          child: card,
+        );
 
     if (isSelectionMode) {
       return Padding(

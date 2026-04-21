@@ -81,7 +81,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ref.read(navBarVisibleProvider.notifier).show();
       },
       child: Scaffold(
-          appBar: AppBar(
+        appBar: AppBar(
           title: Text(
             ref.t('profile'),
             style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
@@ -105,117 +105,125 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ),
                 ),
               )
-            else
+            else ...[
+              IconButton(
+                icon: const Icon(Icons.settings_outlined),
+                tooltip: 'Lot Design Lab',
+                onPressed: () => context.push('/profile/debug-lab'),
+              ),
               IconButton(
                 icon: const Icon(Icons.logout),
                 tooltip: 'Sign Out',
                 onPressed: _signOut,
               ),
+            ],
           ],
         ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-        child: Column(
-          children: [
-            // Avatar
-            Center(
-              child: Stack(
-                alignment: Alignment.bottomRight,
-                children: [
-                  CircleAvatar(
-                    radius: 60,
-                    backgroundColor: Colors.white12,
-                    backgroundImage: NetworkImage(avatarUrl),
-                    onBackgroundImageError: (_, _) => const Icon(
-                      Icons.person,
-                      size: 60,
-                      color: Colors.white54,
-                    ),
-                  ),
-                  Container(
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFC8A96E),
-                      shape: BoxShape.circle,
-                    ),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.edit,
-                        color: Colors.black,
-                        size: 20,
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          child: Column(
+            children: [
+              // Avatar
+              Center(
+                child: Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    CircleAvatar(
+                      radius: 60,
+                      backgroundColor: Colors.white12,
+                      backgroundImage: NetworkImage(avatarUrl),
+                      onBackgroundImageError: (_, _) => const Icon(
+                        Icons.person,
+                        size: 60,
+                        color: Colors.white54,
                       ),
-                      onPressed: () => _editProfile(user),
+                    ),
+                    Container(
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFC8A96E),
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Colors.black,
+                          size: 20,
+                        ),
+                        onPressed: () => _editProfile(user),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                displayName,
+                style: GoogleFonts.poppins(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                user.email ?? '',
+                style: const TextStyle(fontSize: 14, color: Colors.white54),
+              ),
+              const SizedBox(height: 40),
+
+              // Stats / Bio Area
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.05),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.1),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _StatColumn(ref.t('recipes'), '12'),
+                        _StatColumn(ref.t('scans'), '4'),
+                        _StatColumn(ref.t('badges'), '3'),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 40),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton.icon(
+                  onPressed: () => _editProfile(user),
+                  icon: const Icon(Icons.settings),
+                  label: Text(
+                    ref.t('edit_profile'),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
                     ),
                   ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              displayName,
-              style: GoogleFonts.poppins(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              user.email ?? '',
-              style: const TextStyle(fontSize: 14, color: Colors.white54),
-            ),
-            const SizedBox(height: 40),
-
-            // Stats / Bio Area
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.05),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _StatColumn(ref.t('recipes'), '12'),
-                      _StatColumn(ref.t('scans'), '4'),
-                      _StatColumn(ref.t('badges'), '3'),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 40),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton.icon(
-                onPressed: () => _editProfile(user),
-                icon: const Icon(Icons.settings),
-                label: Text(
-                  ref.t('edit_profile'),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFC8A96E),
-                  foregroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFC8A96E),
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }
 
 class _StatColumn extends StatelessWidget {

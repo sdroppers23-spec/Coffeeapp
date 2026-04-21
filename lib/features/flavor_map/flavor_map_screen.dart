@@ -186,20 +186,34 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                                 ),
                                 const SizedBox(height: 16),
                                 
-                                // Process Selection chips
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      _buildMethodChip('natural'),
-                                      const SizedBox(width: 8),
-                                      _buildMethodChip('washed'),
-                                      const SizedBox(width: 8),
-                                      _buildMethodChip('honey'),
-                                    ],
+                                  // Process Selection chips - All 10 methods
+                                  SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                                    child: Row(
+                                      children: [
+                                        _buildMethodChip('natural'),
+                                        const SizedBox(width: 8),
+                                        _buildMethodChip('washed'),
+                                        const SizedBox(width: 8),
+                                        _buildMethodChip('honey'),
+                                        const SizedBox(width: 8),
+                                        _buildMethodChip('anaerobic'),
+                                        const SizedBox(width: 8),
+                                        _buildMethodChip('carbonic'),
+                                        const SizedBox(width: 8),
+                                        _buildMethodChip('thermal'),
+                                        const SizedBox(width: 8),
+                                        _buildMethodChip('lactic'),
+                                        const SizedBox(width: 8),
+                                        _buildMethodChip('yeast'),
+                                        const SizedBox(width: 8),
+                                        _buildMethodChip('koji'),
+                                        const SizedBox(width: 8),
+                                        _buildMethodChip('wet_hulled'),
+                                      ],
+                                    ),
                                   ),
-                                ),
                                 
                                 const SizedBox(height: 10),
                                 Expanded(

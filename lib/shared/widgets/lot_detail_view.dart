@@ -761,10 +761,11 @@ class _SensoryTab extends StatelessWidget {
           SizedBox(
             height: 350,
             child: () {
-              final isCustomLot = lotId != null && !lotId!.startsWith('encyclopedia_');
+              // Only lock if it's explicitly an encyclopedia entry
+              final isEncyclopedia = lotId != null && lotId!.startsWith('encyclopedia_');
               return SensoryRadarChart(
-                interactive: isCustomLot,
-                isLocked: !isCustomLot,
+                interactive: !isEncyclopedia,
+                isLocked: isEncyclopedia,
                 height: 350,
                 staticValues: points,
               );

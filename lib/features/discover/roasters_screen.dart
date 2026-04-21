@@ -6,13 +6,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/database/database_provider.dart';
-import '../../shared/widgets/premium_background.dart';
 import '../../shared/widgets/pressable_scale.dart';
 import '../../core/providers/settings_provider.dart';
 import '../../core/supabase/supabase_provider.dart';
 import 'brand_details_screen.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../shared/widgets/glass_swipe_wrapper.dart';
+import '../../shared/widgets/glass_container.dart';
 import '../../core/database/dtos.dart';
 import 'discovery_providers.dart';
 
@@ -21,11 +21,9 @@ class RoastersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const PremiumBackground(
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: RoastersBody(),
-      ),
+    return const Scaffold(
+      backgroundColor: Colors.transparent,
+      body: RoastersBody(),
     );
   }
 }
@@ -709,34 +707,18 @@ class _PremiumRoasterCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return PressableScale(
       onTap: onTap,
-      child: Container(
-        // БАЗА: Чорний для преміального контрасту (палітра тест 20-21)
-        decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: isSelected
-                ? const Color(0xFFC8A96E).withValues(alpha: 0.15)
-                : Colors.white.withValues(alpha: 0.1),
-            border: Border.all(
-              color: isSelected
-                  ? const Color(0xFFC8A96E).withValues(alpha: 0.5)
-                  : Colors.white.withValues(alpha: 0.12),
-              width: isSelected ? 1.5 : 1,
-            ),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
+      child: GlassContainer(
+        borderRadius: 20,
+        opacity: isSelected ? 0.35 : 0.15,
+        blur: 30,
+        color: isSelected ? const Color(0xFFC8A96E) : Colors.white,
+        borderColor: isSelected
+            ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
+            : Colors.white.withValues(alpha: 0.12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
                     // Checkbox або Лого
                     if (isSelectionMode)
                       AnimatedContainer(
@@ -835,12 +817,9 @@ class _PremiumRoasterCard extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+          );
+        }
+      }
 
 // ─── Brand Logo ───────────────────────────────────────────────────────────────
 

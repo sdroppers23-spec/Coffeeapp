@@ -83,6 +83,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
           title: Text(
             ref.t('profile'),
             style: GoogleFonts.poppins(fontWeight: FontWeight.w600),

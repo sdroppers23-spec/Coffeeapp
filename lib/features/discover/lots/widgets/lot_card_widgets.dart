@@ -375,22 +375,17 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
         }
       },
       child: RepaintBoundary(
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.black,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: GlassContainer(
-            padding: const EdgeInsets.all(16),
-            opacity: 1.0, 
-            blur: 10, 
-            borderRadius: 20,
-            color: isSelected 
-                ? const Color(0xFFC8A96E).withValues(alpha: 0.15) 
-                : Colors.white.withValues(alpha: 0.1),
-            borderColor: isSelected
-                ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
-                : Colors.white.withValues(alpha: 0.12),
+        child: GlassContainer(
+          padding: const EdgeInsets.all(16),
+          opacity: 0.15,
+          blur: 30, // Increased blur for better readability on busy backgrounds
+          borderRadius: 20,
+          color: isSelected
+              ? const Color(0xFFC8A96E)
+              : Colors.white,
+          borderColor: isSelected
+              ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
+              : Colors.white.withValues(alpha: 0.12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -612,12 +607,11 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                     ),
                 ],
               ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    ),
-  );
+      );
 
     final dismissibleCard = isSelectionMode 
       ? card 

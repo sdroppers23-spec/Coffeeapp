@@ -163,7 +163,7 @@ class GlassContainer extends ConsumerWidget {
       child: useOuterClip 
         ? ClipRRect(
             borderRadius: BorderRadius.circular(effectiveBorderRadius),
-            clipBehavior: Clip.antiAliasWithSaveLayer,
+            clipBehavior: Clip.antiAlias,
             child: mainContent,
           )
         : mainContent,

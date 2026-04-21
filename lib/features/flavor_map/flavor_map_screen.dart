@@ -872,13 +872,20 @@ class _TemplateChip extends ConsumerWidget {
     return Theme(
       data: ThemeData.dark().copyWith(dividerColor: Colors.transparent),
       child: ExpansionTile(
-        title: Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
-        childrenPadding: const EdgeInsets.only(bottom: 16, left: 8, right: 8),
+        title: Text(
+          title,
+          style: GoogleFonts.outfit(
+            color: Colors.amber,
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        childrenPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Прозорість:', style: TextStyle(color: Colors.white70, fontSize: 13)),
-              const Spacer(),
+              const Text('Прозорість', style: TextStyle(color: Colors.white70, fontSize: 13)),
               Text(opacity.toStringAsFixed(2), style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold)),
             ],
           ),
@@ -886,14 +893,14 @@ class _TemplateChip extends ConsumerWidget {
             value: opacity,
             min: 0.0,
             max: 1.0,
-            onChanged: onOpacityChanged,
             activeColor: Colors.amber,
+            onChanged: onOpacityChanged,
           ),
           const SizedBox(height: 8),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Блюр:', style: TextStyle(color: Colors.white70, fontSize: 13)),
-              const Spacer(),
+              const Text('Блюр', style: TextStyle(color: Colors.white70, fontSize: 13)),
               Text(blur.toStringAsFixed(1), style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold)),
             ],
           ),
@@ -901,8 +908,8 @@ class _TemplateChip extends ConsumerWidget {
             value: blur,
             min: 0.0,
             max: 50.0,
-            onChanged: onBlurChanged,
             activeColor: Colors.amber,
+            onChanged: onBlurChanged,
           ),
         ],
       ),

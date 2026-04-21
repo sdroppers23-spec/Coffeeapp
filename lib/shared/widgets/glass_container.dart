@@ -143,33 +143,7 @@ class GlassContainer extends ConsumerWidget {
                         ],
                       )),
             ),
-            child: Stack(
-              children: [
-                child,
-                // Debug values overlay
-                if (useDebug && debugKey != null)
-                  Positioned(
-                    top: 2,
-                    right: 2,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-                    decoration: BoxDecoration(
-                      color: Colors.red.withValues(alpha: 0.8),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                      child: Text(
-                        'B:${effectiveBlur.toInt()} T:${effectiveOpacity.toStringAsFixed(2)} O:${effectiveBaseOpacity.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 8,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'monospace',
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
+            child: child,
           ),
         ],
       ),

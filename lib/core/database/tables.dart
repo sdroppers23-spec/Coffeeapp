@@ -348,6 +348,7 @@ class BrewingRecipes extends Table {
   TextColumn get stepsJson => text().withDefault(const Constant('[]'))();
   TextColumn get flavorProfile => text().withDefault(const Constant('Balanced'))();
   TextColumn get iconName => text().nullable()();
+  TextColumn get category => text().withDefault(const Constant('filter'))();
 }
 
 class BrewingRecipeTranslations extends Table {
@@ -372,6 +373,7 @@ class BrewingRecipesV2 extends Table {
   TextColumn get stepsJson => text().withDefault(const Constant('[]'))();
   TextColumn get flavorProfile => text().withDefault(const Constant('Balanced'))();
   TextColumn get iconName => text().nullable()();
+  TextColumn get category => text().withDefault(const Constant('filter'))();
   
   // For V2, we also have translations but user specified it's EN-only for now
 }

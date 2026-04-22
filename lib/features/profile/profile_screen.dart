@@ -288,6 +288,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ),
                 ),
               ),
+              const SizedBox(height: 120), // Bottom padding for nav bar clearance
             ],
           ),
         ),

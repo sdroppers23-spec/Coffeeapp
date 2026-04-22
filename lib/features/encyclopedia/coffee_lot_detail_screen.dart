@@ -13,7 +13,9 @@ import '../../shared/widgets/pressable_scale.dart';
 import '../../shared/widgets/lot_detail_widgets.dart';
 import '../../shared/widgets/sensory_radar_chart.dart';
 import '../../shared/widgets/glass_container.dart';
+import '../../shared/utils/sensory_utils.dart';
 import '../navigation/navigation_providers.dart';
+import '../encyclopedia/encyclopedia_providers.dart';
 
 class CoffeeLotDetailScreen extends ConsumerStatefulWidget {
   final LocalizedBeanDto entry;
@@ -67,6 +69,44 @@ class _CoffeeLotDetailScreenState extends ConsumerState<CoffeeLotDetailScreen>
             color: Colors.white,
           ),
         ),
+        actions: [
+          Consumer(
+            builder: (context, ref, child) {
+              final favoritesAsync = ref.watch(favoriteIdsProvider);
+              return favoritesAsync.maybeWhen(
+                data: (ids) {
+                  final isFavorite = ids.contains(entry.id);
+                  return IconButton(
+                    icon: Icon(
+                      isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                      color: isFavorite ? Colors.redAccent : Colors.white70,
+                    ),
+                    onPressed: () async {
+                      ref.read(databaseProvider).toggleFavorite(entry.id, !isFavorite);
+                      if (context.mounted) {
+                        final isUk = LocaleService.currentLocale == 'uk';
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              isFavorite 
+                                ? (isUk ? 'Видалено з обраного' : 'Removed from favorites')
+                                : (isUk ? 'Додано в обране' : 'Added to favorites')
+                            ),
+                            backgroundColor: const Color(0xFFC8A96E),
+                            behavior: SnackBarBehavior.floating,
+                            duration: const Duration(seconds: 1),
+                          ),
+                        );
+                      }
+                    },
+                  );
+                },
+                orElse: () => const SizedBox.shrink(),
+              );
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -513,6 +553,8 @@ class _ProfileTab extends ConsumerWidget {
     final theme = Theme.of(context);
     final navHeight = ref.watch(navBarHeightProvider);
 
+    final mappedSensory = SensoryUtils.map4To6Axis(entry.sensoryPoints);
+
     return ListView(
       padding: EdgeInsets.fromLTRB(20, 0, 20, navHeight + 100),
       children: [
@@ -521,12 +563,12 @@ class _ProfileTab extends ConsumerWidget {
           child: SensoryRadarChart(
             interactive: false,
             staticValues: <String, double>{
-              'bitterness': (entry.radarPoints['bitterness'] ?? entry.sensoryPoints['bitterness'] ?? 1.0).toDouble() / 5.0,
-              'acidity': (entry.radarPoints['acidity'] ?? entry.sensoryPoints['acidity'] ?? 1.0).toDouble() / 5.0,
-              'sweetness': (entry.radarPoints['sweetness'] ?? entry.sensoryPoints['sweetness'] ?? 1.0).toDouble() / 5.0,
-              'body': (entry.radarPoints['body'] ?? entry.sensoryPoints['body'] ?? 1.0).toDouble() / 5.0,
-              'intensity': (entry.radarPoints['intensity'] ?? entry.sensoryPoints['intensity'] ?? 1.0).toDouble() / 5.0,
-              'aftertaste': (entry.radarPoints['aftertaste'] ?? entry.sensoryPoints['aftertaste'] ?? 1.0).toDouble() / 5.0,
+              'bitterness': (mappedSensory['bitterness'] ?? 1.0) / 5.0,
+              'acidity': (mappedSensory['acidity'] ?? 1.0) / 5.0,
+              'sweetness': (mappedSensory['sweetness'] ?? 1.0) / 5.0,
+              'body': (mappedSensory['body'] ?? 1.0) / 5.0,
+              'intensity': (mappedSensory['intensity'] ?? 1.0) / 5.0,
+              'aftertaste': (mappedSensory['aftertaste'] ?? 1.0) / 5.0,
             },
             height: 400,
           ),
@@ -543,32 +585,32 @@ class _ProfileTab extends ConsumerWidget {
         const SizedBox(height: 16),
         SensoryIndicator(
           label: ref.t('bitterness'),
-          value: (entry.radarPoints['bitterness'] ?? entry.sensoryPoints['bitterness'] ?? 1.0) / 5.0,
+          value: (mappedSensory['bitterness'] ?? 1.0) / 5.0,
           color: const Color(0xFFC8A96E),
         ),
         SensoryIndicator(
           label: ref.t('acidity'),
-          value: (entry.radarPoints['acidity'] ?? entry.sensoryPoints['acidity'] ?? 1.0) / 5.0,
+          value: (mappedSensory['acidity'] ?? 1.0) / 5.0,
           color: const Color(0xFFC8A96E),
         ),
         SensoryIndicator(
           label: ref.t('sweetness'),
-          value: (entry.radarPoints['sweetness'] ?? entry.sensoryPoints['sweetness'] ?? 1.0) / 5.0,
+          value: (mappedSensory['sweetness'] ?? 1.0) / 5.0,
           color: const Color(0xFFC8A96E),
         ),
         SensoryIndicator(
           label: ref.t('body'),
-          value: (entry.radarPoints['body'] ?? entry.sensoryPoints['body'] ?? 1.0) / 5.0,
+          value: (mappedSensory['body'] ?? 1.0) / 5.0,
           color: const Color(0xFFC8A96E),
         ),
         SensoryIndicator(
           label: ref.t('intensity'),
-          value: (entry.radarPoints['intensity'] ?? entry.sensoryPoints['intensity'] ?? 1.0) / 5.0,
+          value: (mappedSensory['intensity'] ?? 1.0) / 5.0,
           color: const Color(0xFFC8A96E),
         ),
         SensoryIndicator(
           label: ref.t('aftertaste'),
-          value: (entry.radarPoints['aftertaste'] ?? entry.sensoryPoints['aftertaste'] ?? 1.0) / 5.0,
+          value: (mappedSensory['aftertaste'] ?? 1.0) / 5.0,
           color: const Color(0xFFC8A96E),
         ),
         if (entry.detailedProcess.isNotEmpty) ...[

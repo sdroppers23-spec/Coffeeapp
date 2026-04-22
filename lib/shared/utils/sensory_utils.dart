@@ -1,5 +1,12 @@
 class SensoryUtils {
   static Map<String, double> map4To6Axis(Map<String, dynamic> points) {
+    double parseNum(dynamic value) {
+      if (value == null) return 3.0;
+      if (value is num) return value.toDouble();
+      if (value is String) return double.tryParse(value) ?? 3.0;
+      return 3.0;
+    }
+
     // 1. Direct hit: check if the original 6 core keys already exist
     if (points.containsKey('bitterness') &&
         points.containsKey('acidity') &&
@@ -8,30 +15,30 @@ class SensoryUtils {
         points.containsKey('intensity') &&
         points.containsKey('aftertaste')) {
       return {
-        'bitterness': (points['bitterness'] as num?)?.toDouble() ?? 3.0,
-        'acidity': (points['acidity'] as num?)?.toDouble() ?? 3.0,
-        'sweetness': (points['sweetness'] as num?)?.toDouble() ?? 3.0,
-        'body': (points['body'] as num?)?.toDouble() ?? 3.0,
-        'intensity': (points['intensity'] as num?)?.toDouble() ?? 3.0,
-        'aftertaste': (points['aftertaste'] as num?)?.toDouble() ?? 3.0,
+        'bitterness': parseNum(points['bitterness']),
+        'acidity': parseNum(points['acidity']),
+        'sweetness': parseNum(points['sweetness']),
+        'body': parseNum(points['body']),
+        'intensity': parseNum(points['intensity']),
+        'aftertaste': parseNum(points['aftertaste']),
       };
     }
 
     // 2. Map new keys (aroma, flavor, balance) back to original if needed
-    final bitterness = (points['bitterness'] ?? points['aroma'] ?? 3.0) as num;
-    final sweetness = (points['sweetness'] ?? points['flavor'] ?? 3.0) as num;
-    final acidity = (points['acidity'] ?? 3.0) as num;
-    final body = (points['body'] ?? 3.0) as num;
-    final aftertaste = (points['aftertaste'] ?? 3.0) as num;
-    final intensity = (points['intensity'] ?? points['balance'] ?? 3.0) as num;
+    final bitterness = parseNum(points['bitterness'] ?? points['aroma']);
+    final sweetness = parseNum(points['sweetness'] ?? points['flavor']);
+    final acidity = parseNum(points['acidity']);
+    final body = parseNum(points['body']);
+    final aftertaste = parseNum(points['aftertaste']);
+    final intensity = parseNum(points['intensity'] ?? points['balance']);
 
     return {
-      'bitterness': bitterness.toDouble(),
-      'acidity': acidity.toDouble(),
-      'sweetness': sweetness.toDouble(),
-      'body': body.toDouble(),
-      'intensity': intensity.toDouble(),
-      'aftertaste': aftertaste.toDouble(),
+      'bitterness': bitterness,
+      'acidity': acidity,
+      'sweetness': sweetness,
+      'body': body,
+      'intensity': intensity,
+      'aftertaste': aftertaste,
     };
   }
 }

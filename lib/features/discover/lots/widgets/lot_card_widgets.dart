@@ -11,6 +11,7 @@ import '../../../../shared/widgets/sensory_radar_chart.dart';
 import '../../../../shared/utils/sensory_utils.dart';
 import 'package:vibration/vibration.dart';
 import '../../../../shared/widgets/glass_swipe_wrapper.dart';
+import '../../../../shared/widgets/lot_detail_widgets.dart';
 
 class MyLotGridCard extends ConsumerWidget {
   final CoffeeLotDto lot;
@@ -180,12 +181,14 @@ class MyLotGridCard extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             // Sensory Bars
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _HorizontalSensoryBar(label: isUk ? 'ГІРКОТА' : 'BITTERNESS', value: (mappedSensory['bitterness'] ?? 3).toDouble(), theme: theme),
-                _HorizontalSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme),
-                _HorizontalSensoryBar(label: isUk ? 'СОЛОДКІСТЬ' : 'SWEETNESS', value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme),
+                CompactSensoryBar(label: isUk ? 'ГІРКОТА' : 'BITTERNESS', value: (mappedSensory['bitterness'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
+                const SizedBox(height: 6),
+                CompactSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
+                const SizedBox(height: 6),
+                CompactSensoryBar(label: isUk ? 'СОЛОДКІСТЬ' : 'SWEETNESS', value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
               ],
             ),
             const SizedBox(height: 12),
@@ -456,11 +459,11 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _HorizontalSensoryBar(label: isUk ? 'ГІРКОТА' : 'BITTERNESS', value: (mappedSensory['bitterness'] ?? 3).toDouble(), theme: theme),
+                            CompactSensoryBar(label: isUk ? 'ГІРКОТА' : 'BITTERNESS', value: (mappedSensory['bitterness'] ?? 3).toDouble(), theme: theme),
                             const SizedBox(width: 8),
-                            _HorizontalSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme),
+                            CompactSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme),
                             const SizedBox(width: 8),
-                            _HorizontalSensoryBar(label: isUk ? 'СОЛОДКІСТЬ' : 'SWEETNESS', value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme),
+                            CompactSensoryBar(label: isUk ? 'СОЛОДКІСТЬ' : 'SWEETNESS', value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme),
                           ],
                         ),
                         const SizedBox(height: 12),
@@ -613,44 +616,6 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
   }
 }
 
-class _HorizontalSensoryBar extends StatelessWidget {
-  final String label;
-  final double value;
-  final ThemeData theme;
-
-  const _HorizontalSensoryBar({required this.label, required this.value, required this.theme});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          maxLines: 1,
-          overflow: TextOverflow.clip,
-          style: GoogleFonts.outfit(fontSize: 8, color: const Color(0xFFC8A96E).withValues(alpha: 0.38), fontWeight: FontWeight.bold, letterSpacing: 0.5),
-        ),
-        const SizedBox(height: 4),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: List.generate(5, (index) {
-            final isFilled = index < value.toInt();
-            return Container(
-              width: 7,
-              height: 2,
-              margin: const EdgeInsets.only(right: 1.5),
-              decoration: BoxDecoration(
-                color: isFilled ? theme.colorScheme.primary : const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(1),
-              ),
-            );
-          }),
-        ),
-      ],
-    );
-  }
-}
 
 class _TagChip extends StatelessWidget {
   final IconData icon;

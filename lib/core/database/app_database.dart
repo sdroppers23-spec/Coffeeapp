@@ -346,6 +346,7 @@ class AppDatabase extends _$AppDatabase {
         stepsJson: recipe.stepsJson,
         flavorProfile: recipe.flavorProfile,
         iconName: recipe.iconName,
+        category: recipe.category,
       );
     }).toList();
   }

@@ -8,6 +8,9 @@ import '../../../shared/widgets/glass_container.dart';
 import '../../../shared/widgets/pressable_scale.dart';
 import '../encyclopedia_providers.dart';
 import '../../../core/providers/settings_provider.dart';
+import '../../../core/l10n/app_localizations.dart';
+import '../../../shared/widgets/lot_detail_widgets.dart';
+import '../../../shared/utils/sensory_utils.dart';
 
 // ─── Grid Card ────────────────────────────────────────────────────────────────
 class EncyclopediaLotGridCard extends ConsumerWidget {
@@ -151,6 +154,23 @@ class EncyclopediaLotGridCard extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 12),
+            // Sensory Bars
+            Builder(builder: (context) {
+              final isUk = LocaleService.currentLocale == 'uk';
+              final theme = Theme.of(context);
+              final mappedSensory = SensoryUtils.map4To6Axis(entry.sensoryPoints);
+              
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CompactSensoryBar(label: isUk ? 'ГІРКОТА' : 'BITTERNESS', value: (mappedSensory['bitterness'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
+                  const SizedBox(height: 6),
+                  CompactSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
+                  const SizedBox(height: 6),
+                  CompactSensoryBar(label: isUk ? 'СОЛОДКІСТЬ' : 'SWEETNESS', value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
+                ],
+              );
+            }),
             const Spacer(),
             // Bottom Traits
             Container(
@@ -315,7 +335,23 @@ class EncyclopediaLotListCard extends ConsumerWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 12),
+                    // Sensory Bars
+                    Builder(builder: (context) {
+                      final isUk = LocaleService.currentLocale == 'uk';
+                      final theme = Theme.of(context);
+                      final mappedSensory = SensoryUtils.map4To6Axis(entry.sensoryPoints);
+                      
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CompactSensoryBar(label: isUk ? 'ГІРКОТА' : 'BITTERNESS', value: (mappedSensory['bitterness'] ?? 3).toDouble(), theme: theme),
+                          CompactSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme),
+                          CompactSensoryBar(label: isUk ? 'СОЛОДКІСТЬ' : 'SWEETNESS', value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme),
+                        ],
+                      );
+                    }),
+                    const SizedBox(height: 12),
                     Row(
                       children: [
                         _TraitBadge(text: entry.processMethod),
@@ -358,6 +394,47 @@ class _FavoriteIcon extends ConsumerWidget {
       onTap: () {
         ref.read(settingsProvider.notifier).triggerSelectionVibrate();
         ref.read(databaseProvider).toggleFavorite(bean.id, !bean.isFavorite);
+        if (context.mounted) {
+          final isUk = LocaleService.currentLocale == 'uk';
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content: GlassContainer(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  borderRadius: 16,
+                  color: Colors.black.withValues(alpha: 0.6),
+                  borderColor: const Color(0xFFC8A96E).withValues(alpha: 0.3),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        bean.isFavorite ? Icons.heart_broken_rounded : Icons.favorite_rounded,
+                        color: const Color(0xFFC8A96E),
+                        size: 18,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        bean.isFavorite 
+                          ? (isUk ? 'Видалено з обраного' : 'Removed from favorites')
+                          : (isUk ? 'Додано в обране' : 'Added to favorites'),
+                        style: GoogleFonts.outfit(
+                          color: const Color(0xFFC8A96E),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                behavior: SnackBarBehavior.floating,
+                duration: const Duration(seconds: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              ),
+            );
+        }
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),

@@ -288,6 +288,7 @@ class BrewingRecipeDto {
   final String? stepsJson;
   final String? flavorProfile;
   final String? iconName;
+  final String category; // 'filter' or 'espresso'
 
   BrewingRecipeDto({
     required this.id,
@@ -302,6 +303,7 @@ class BrewingRecipeDto {
     this.stepsJson,
     this.flavorProfile,
     this.iconName,
+    this.category = 'filter',
   });
 }
 

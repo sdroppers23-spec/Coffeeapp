@@ -187,7 +187,7 @@ class SensoryIndicator extends StatelessWidget {
               final isFilled = index < score;
               return Expanded(
                 child: Container(
-                  height: 3,
+                  height: 1.8,
                   margin: EdgeInsets.only(
                     right: index == 4 ? 0 : 6,
                   ),
@@ -212,6 +212,57 @@ class SensoryIndicator extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class CompactSensoryBar extends StatelessWidget {
+  final String label;
+  final double value;
+  final ThemeData theme;
+  final double barHeight;
+
+  const CompactSensoryBar({
+    super.key,
+    required this.label,
+    required this.value,
+    required this.theme,
+    this.barHeight = 2.0,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          maxLines: 1,
+          overflow: TextOverflow.clip,
+          style: GoogleFonts.outfit(
+            fontSize: 8,
+            color: const Color(0xFFC8A96E).withValues(alpha: 0.38),
+            fontWeight: FontWeight.bold,
+            letterSpacing: 0.5,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: List.generate(5, (index) {
+            final isFilled = index < value.toInt();
+            return Container(
+              width: 7,
+              height: barHeight,
+              margin: const EdgeInsets.only(right: 1.5),
+              decoration: BoxDecoration(
+                color: isFilled ? theme.colorScheme.primary : const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(1),
+              ),
+            );
+          }),
+        ),
+      ],
     );
   }
 }

@@ -8052,6 +8052,18 @@ class $BrewingRecipesTable extends BrewingRecipes
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _categoryMeta = const VerificationMeta(
+    'category',
+  );
+  @override
+  late final GeneratedColumn<String> category = GeneratedColumn<String>(
+    'category',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('filter'),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -8064,6 +8076,7 @@ class $BrewingRecipesTable extends BrewingRecipes
     stepsJson,
     flavorProfile,
     iconName,
+    category,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -8145,6 +8158,12 @@ class $BrewingRecipesTable extends BrewingRecipes
         iconName.isAcceptableOrUnknown(data['icon_name']!, _iconNameMeta),
       );
     }
+    if (data.containsKey('category')) {
+      context.handle(
+        _categoryMeta,
+        category.isAcceptableOrUnknown(data['category']!, _categoryMeta),
+      );
+    }
     return context;
   }
 
@@ -8194,6 +8213,10 @@ class $BrewingRecipesTable extends BrewingRecipes
         DriftSqlType.string,
         data['${effectivePrefix}icon_name'],
       ),
+      category: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category'],
+      )!,
     );
   }
 
@@ -8214,6 +8237,7 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
   final String stepsJson;
   final String flavorProfile;
   final String? iconName;
+  final String category;
   const BrewingRecipe({
     required this.id,
     required this.methodKey,
@@ -8225,6 +8249,7 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
     required this.stepsJson,
     required this.flavorProfile,
     this.iconName,
+    required this.category,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -8241,6 +8266,7 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
     if (!nullToAbsent || iconName != null) {
       map['icon_name'] = Variable<String>(iconName);
     }
+    map['category'] = Variable<String>(category);
     return map;
   }
 
@@ -8258,6 +8284,7 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
       iconName: iconName == null && nullToAbsent
           ? const Value.absent()
           : Value(iconName),
+      category: Value(category),
     );
   }
 
@@ -8277,6 +8304,7 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
       stepsJson: serializer.fromJson<String>(json['stepsJson']),
       flavorProfile: serializer.fromJson<String>(json['flavorProfile']),
       iconName: serializer.fromJson<String?>(json['iconName']),
+      category: serializer.fromJson<String>(json['category']),
     );
   }
   @override
@@ -8293,6 +8321,7 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
       'stepsJson': serializer.toJson<String>(stepsJson),
       'flavorProfile': serializer.toJson<String>(flavorProfile),
       'iconName': serializer.toJson<String?>(iconName),
+      'category': serializer.toJson<String>(category),
     };
   }
 
@@ -8307,6 +8336,7 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
     String? stepsJson,
     String? flavorProfile,
     Value<String?> iconName = const Value.absent(),
+    String? category,
   }) => BrewingRecipe(
     id: id ?? this.id,
     methodKey: methodKey ?? this.methodKey,
@@ -8318,6 +8348,7 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
     stepsJson: stepsJson ?? this.stepsJson,
     flavorProfile: flavorProfile ?? this.flavorProfile,
     iconName: iconName.present ? iconName.value : this.iconName,
+    category: category ?? this.category,
   );
   BrewingRecipe copyWithCompanion(BrewingRecipesCompanion data) {
     return BrewingRecipe(
@@ -8339,6 +8370,7 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
           ? data.flavorProfile.value
           : this.flavorProfile,
       iconName: data.iconName.present ? data.iconName.value : this.iconName,
+      category: data.category.present ? data.category.value : this.category,
     );
   }
 
@@ -8354,7 +8386,8 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
           ..write('difficulty: $difficulty, ')
           ..write('stepsJson: $stepsJson, ')
           ..write('flavorProfile: $flavorProfile, ')
-          ..write('iconName: $iconName')
+          ..write('iconName: $iconName, ')
+          ..write('category: $category')
           ..write(')'))
         .toString();
   }
@@ -8371,6 +8404,7 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
     stepsJson,
     flavorProfile,
     iconName,
+    category,
   );
   @override
   bool operator ==(Object other) =>
@@ -8385,7 +8419,8 @@ class BrewingRecipe extends DataClass implements Insertable<BrewingRecipe> {
           other.difficulty == this.difficulty &&
           other.stepsJson == this.stepsJson &&
           other.flavorProfile == this.flavorProfile &&
-          other.iconName == this.iconName);
+          other.iconName == this.iconName &&
+          other.category == this.category);
 }
 
 class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
@@ -8399,6 +8434,7 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
   final Value<String> stepsJson;
   final Value<String> flavorProfile;
   final Value<String?> iconName;
+  final Value<String> category;
   const BrewingRecipesCompanion({
     this.id = const Value.absent(),
     this.methodKey = const Value.absent(),
@@ -8410,6 +8446,7 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
     this.stepsJson = const Value.absent(),
     this.flavorProfile = const Value.absent(),
     this.iconName = const Value.absent(),
+    this.category = const Value.absent(),
   });
   BrewingRecipesCompanion.insert({
     this.id = const Value.absent(),
@@ -8422,6 +8459,7 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
     this.stepsJson = const Value.absent(),
     this.flavorProfile = const Value.absent(),
     this.iconName = const Value.absent(),
+    this.category = const Value.absent(),
   }) : methodKey = Value(methodKey);
   static Insertable<BrewingRecipe> custom({
     Expression<int>? id,
@@ -8434,6 +8472,7 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
     Expression<String>? stepsJson,
     Expression<String>? flavorProfile,
     Expression<String>? iconName,
+    Expression<String>? category,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -8446,6 +8485,7 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
       if (stepsJson != null) 'steps_json': stepsJson,
       if (flavorProfile != null) 'flavor_profile': flavorProfile,
       if (iconName != null) 'icon_name': iconName,
+      if (category != null) 'category': category,
     });
   }
 
@@ -8460,6 +8500,7 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
     Value<String>? stepsJson,
     Value<String>? flavorProfile,
     Value<String?>? iconName,
+    Value<String>? category,
   }) {
     return BrewingRecipesCompanion(
       id: id ?? this.id,
@@ -8472,6 +8513,7 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
       stepsJson: stepsJson ?? this.stepsJson,
       flavorProfile: flavorProfile ?? this.flavorProfile,
       iconName: iconName ?? this.iconName,
+      category: category ?? this.category,
     );
   }
 
@@ -8508,6 +8550,9 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
     if (iconName.present) {
       map['icon_name'] = Variable<String>(iconName.value);
     }
+    if (category.present) {
+      map['category'] = Variable<String>(category.value);
+    }
     return map;
   }
 
@@ -8523,7 +8568,8 @@ class BrewingRecipesCompanion extends UpdateCompanion<BrewingRecipe> {
           ..write('difficulty: $difficulty, ')
           ..write('stepsJson: $stepsJson, ')
           ..write('flavorProfile: $flavorProfile, ')
-          ..write('iconName: $iconName')
+          ..write('iconName: $iconName, ')
+          ..write('category: $category')
           ..write(')'))
         .toString();
   }
@@ -14849,6 +14895,18 @@ class $BrewingRecipesV2Table extends BrewingRecipesV2
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _categoryMeta = const VerificationMeta(
+    'category',
+  );
+  @override
+  late final GeneratedColumn<String> category = GeneratedColumn<String>(
+    'category',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('filter'),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -14861,6 +14919,7 @@ class $BrewingRecipesV2Table extends BrewingRecipesV2
     stepsJson,
     flavorProfile,
     iconName,
+    category,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -14942,6 +15001,12 @@ class $BrewingRecipesV2Table extends BrewingRecipesV2
         iconName.isAcceptableOrUnknown(data['icon_name']!, _iconNameMeta),
       );
     }
+    if (data.containsKey('category')) {
+      context.handle(
+        _categoryMeta,
+        category.isAcceptableOrUnknown(data['category']!, _categoryMeta),
+      );
+    }
     return context;
   }
 
@@ -14991,6 +15056,10 @@ class $BrewingRecipesV2Table extends BrewingRecipesV2
         DriftSqlType.string,
         data['${effectivePrefix}icon_name'],
       ),
+      category: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category'],
+      )!,
     );
   }
 
@@ -15012,6 +15081,7 @@ class BrewingRecipesV2Data extends DataClass
   final String stepsJson;
   final String flavorProfile;
   final String? iconName;
+  final String category;
   const BrewingRecipesV2Data({
     required this.id,
     required this.methodKey,
@@ -15023,6 +15093,7 @@ class BrewingRecipesV2Data extends DataClass
     required this.stepsJson,
     required this.flavorProfile,
     this.iconName,
+    required this.category,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -15039,6 +15110,7 @@ class BrewingRecipesV2Data extends DataClass
     if (!nullToAbsent || iconName != null) {
       map['icon_name'] = Variable<String>(iconName);
     }
+    map['category'] = Variable<String>(category);
     return map;
   }
 
@@ -15056,6 +15128,7 @@ class BrewingRecipesV2Data extends DataClass
       iconName: iconName == null && nullToAbsent
           ? const Value.absent()
           : Value(iconName),
+      category: Value(category),
     );
   }
 
@@ -15075,6 +15148,7 @@ class BrewingRecipesV2Data extends DataClass
       stepsJson: serializer.fromJson<String>(json['stepsJson']),
       flavorProfile: serializer.fromJson<String>(json['flavorProfile']),
       iconName: serializer.fromJson<String?>(json['iconName']),
+      category: serializer.fromJson<String>(json['category']),
     );
   }
   @override
@@ -15091,6 +15165,7 @@ class BrewingRecipesV2Data extends DataClass
       'stepsJson': serializer.toJson<String>(stepsJson),
       'flavorProfile': serializer.toJson<String>(flavorProfile),
       'iconName': serializer.toJson<String?>(iconName),
+      'category': serializer.toJson<String>(category),
     };
   }
 
@@ -15105,6 +15180,7 @@ class BrewingRecipesV2Data extends DataClass
     String? stepsJson,
     String? flavorProfile,
     Value<String?> iconName = const Value.absent(),
+    String? category,
   }) => BrewingRecipesV2Data(
     id: id ?? this.id,
     methodKey: methodKey ?? this.methodKey,
@@ -15116,6 +15192,7 @@ class BrewingRecipesV2Data extends DataClass
     stepsJson: stepsJson ?? this.stepsJson,
     flavorProfile: flavorProfile ?? this.flavorProfile,
     iconName: iconName.present ? iconName.value : this.iconName,
+    category: category ?? this.category,
   );
   BrewingRecipesV2Data copyWithCompanion(BrewingRecipesV2Companion data) {
     return BrewingRecipesV2Data(
@@ -15137,6 +15214,7 @@ class BrewingRecipesV2Data extends DataClass
           ? data.flavorProfile.value
           : this.flavorProfile,
       iconName: data.iconName.present ? data.iconName.value : this.iconName,
+      category: data.category.present ? data.category.value : this.category,
     );
   }
 
@@ -15152,7 +15230,8 @@ class BrewingRecipesV2Data extends DataClass
           ..write('difficulty: $difficulty, ')
           ..write('stepsJson: $stepsJson, ')
           ..write('flavorProfile: $flavorProfile, ')
-          ..write('iconName: $iconName')
+          ..write('iconName: $iconName, ')
+          ..write('category: $category')
           ..write(')'))
         .toString();
   }
@@ -15169,6 +15248,7 @@ class BrewingRecipesV2Data extends DataClass
     stepsJson,
     flavorProfile,
     iconName,
+    category,
   );
   @override
   bool operator ==(Object other) =>
@@ -15183,7 +15263,8 @@ class BrewingRecipesV2Data extends DataClass
           other.difficulty == this.difficulty &&
           other.stepsJson == this.stepsJson &&
           other.flavorProfile == this.flavorProfile &&
-          other.iconName == this.iconName);
+          other.iconName == this.iconName &&
+          other.category == this.category);
 }
 
 class BrewingRecipesV2Companion extends UpdateCompanion<BrewingRecipesV2Data> {
@@ -15197,6 +15278,7 @@ class BrewingRecipesV2Companion extends UpdateCompanion<BrewingRecipesV2Data> {
   final Value<String> stepsJson;
   final Value<String> flavorProfile;
   final Value<String?> iconName;
+  final Value<String> category;
   const BrewingRecipesV2Companion({
     this.id = const Value.absent(),
     this.methodKey = const Value.absent(),
@@ -15208,6 +15290,7 @@ class BrewingRecipesV2Companion extends UpdateCompanion<BrewingRecipesV2Data> {
     this.stepsJson = const Value.absent(),
     this.flavorProfile = const Value.absent(),
     this.iconName = const Value.absent(),
+    this.category = const Value.absent(),
   });
   BrewingRecipesV2Companion.insert({
     this.id = const Value.absent(),
@@ -15220,6 +15303,7 @@ class BrewingRecipesV2Companion extends UpdateCompanion<BrewingRecipesV2Data> {
     this.stepsJson = const Value.absent(),
     this.flavorProfile = const Value.absent(),
     this.iconName = const Value.absent(),
+    this.category = const Value.absent(),
   }) : methodKey = Value(methodKey);
   static Insertable<BrewingRecipesV2Data> custom({
     Expression<int>? id,
@@ -15232,6 +15316,7 @@ class BrewingRecipesV2Companion extends UpdateCompanion<BrewingRecipesV2Data> {
     Expression<String>? stepsJson,
     Expression<String>? flavorProfile,
     Expression<String>? iconName,
+    Expression<String>? category,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -15244,6 +15329,7 @@ class BrewingRecipesV2Companion extends UpdateCompanion<BrewingRecipesV2Data> {
       if (stepsJson != null) 'steps_json': stepsJson,
       if (flavorProfile != null) 'flavor_profile': flavorProfile,
       if (iconName != null) 'icon_name': iconName,
+      if (category != null) 'category': category,
     });
   }
 
@@ -15258,6 +15344,7 @@ class BrewingRecipesV2Companion extends UpdateCompanion<BrewingRecipesV2Data> {
     Value<String>? stepsJson,
     Value<String>? flavorProfile,
     Value<String?>? iconName,
+    Value<String>? category,
   }) {
     return BrewingRecipesV2Companion(
       id: id ?? this.id,
@@ -15270,6 +15357,7 @@ class BrewingRecipesV2Companion extends UpdateCompanion<BrewingRecipesV2Data> {
       stepsJson: stepsJson ?? this.stepsJson,
       flavorProfile: flavorProfile ?? this.flavorProfile,
       iconName: iconName ?? this.iconName,
+      category: category ?? this.category,
     );
   }
 
@@ -15306,6 +15394,9 @@ class BrewingRecipesV2Companion extends UpdateCompanion<BrewingRecipesV2Data> {
     if (iconName.present) {
       map['icon_name'] = Variable<String>(iconName.value);
     }
+    if (category.present) {
+      map['category'] = Variable<String>(category.value);
+    }
     return map;
   }
 
@@ -15321,7 +15412,8 @@ class BrewingRecipesV2Companion extends UpdateCompanion<BrewingRecipesV2Data> {
           ..write('difficulty: $difficulty, ')
           ..write('stepsJson: $stepsJson, ')
           ..write('flavorProfile: $flavorProfile, ')
-          ..write('iconName: $iconName')
+          ..write('iconName: $iconName, ')
+          ..write('category: $category')
           ..write(')'))
         .toString();
   }
@@ -21743,6 +21835,7 @@ typedef $$BrewingRecipesTableCreateCompanionBuilder =
       Value<String> stepsJson,
       Value<String> flavorProfile,
       Value<String?> iconName,
+      Value<String> category,
     });
 typedef $$BrewingRecipesTableUpdateCompanionBuilder =
     BrewingRecipesCompanion Function({
@@ -21756,6 +21849,7 @@ typedef $$BrewingRecipesTableUpdateCompanionBuilder =
       Value<String> stepsJson,
       Value<String> flavorProfile,
       Value<String?> iconName,
+      Value<String> category,
     });
 
 final class $$BrewingRecipesTableReferences
@@ -21859,6 +21953,11 @@ class $$BrewingRecipesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnFilters(column),
+  );
+
   Expression<bool> brewingRecipeTranslationsRefs(
     Expression<bool> Function($$BrewingRecipeTranslationsTableFilterComposer f)
     f,
@@ -21945,6 +22044,11 @@ class $$BrewingRecipesTableOrderingComposer
     column: $table.iconName,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$BrewingRecipesTableAnnotationComposer
@@ -21993,6 +22097,9 @@ class $$BrewingRecipesTableAnnotationComposer
 
   GeneratedColumn<String> get iconName =>
       $composableBuilder(column: $table.iconName, builder: (column) => column);
+
+  GeneratedColumn<String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => column);
 
   Expression<T> brewingRecipeTranslationsRefs<T extends Object>(
     Expression<T> Function($$BrewingRecipeTranslationsTableAnnotationComposer a)
@@ -22062,6 +22169,7 @@ class $$BrewingRecipesTableTableManager
                 Value<String> stepsJson = const Value.absent(),
                 Value<String> flavorProfile = const Value.absent(),
                 Value<String?> iconName = const Value.absent(),
+                Value<String> category = const Value.absent(),
               }) => BrewingRecipesCompanion(
                 id: id,
                 methodKey: methodKey,
@@ -22073,6 +22181,7 @@ class $$BrewingRecipesTableTableManager
                 stepsJson: stepsJson,
                 flavorProfile: flavorProfile,
                 iconName: iconName,
+                category: category,
               ),
           createCompanionCallback:
               ({
@@ -22086,6 +22195,7 @@ class $$BrewingRecipesTableTableManager
                 Value<String> stepsJson = const Value.absent(),
                 Value<String> flavorProfile = const Value.absent(),
                 Value<String?> iconName = const Value.absent(),
+                Value<String> category = const Value.absent(),
               }) => BrewingRecipesCompanion.insert(
                 id: id,
                 methodKey: methodKey,
@@ -22097,6 +22207,7 @@ class $$BrewingRecipesTableTableManager
                 stepsJson: stepsJson,
                 flavorProfile: flavorProfile,
                 iconName: iconName,
+                category: category,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -26563,6 +26674,7 @@ typedef $$BrewingRecipesV2TableCreateCompanionBuilder =
       Value<String> stepsJson,
       Value<String> flavorProfile,
       Value<String?> iconName,
+      Value<String> category,
     });
 typedef $$BrewingRecipesV2TableUpdateCompanionBuilder =
     BrewingRecipesV2Companion Function({
@@ -26576,6 +26688,7 @@ typedef $$BrewingRecipesV2TableUpdateCompanionBuilder =
       Value<String> stepsJson,
       Value<String> flavorProfile,
       Value<String?> iconName,
+      Value<String> category,
     });
 
 final class $$BrewingRecipesV2TableReferences
@@ -26684,6 +26797,11 @@ class $$BrewingRecipesV2TableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnFilters(column),
+  );
+
   Expression<bool> brewingRecipeTranslationsV2Refs(
     Expression<bool> Function(
       $$BrewingRecipeTranslationsV2TableFilterComposer f,
@@ -26772,6 +26890,11 @@ class $$BrewingRecipesV2TableOrderingComposer
     column: $table.iconName,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$BrewingRecipesV2TableAnnotationComposer
@@ -26820,6 +26943,9 @@ class $$BrewingRecipesV2TableAnnotationComposer
 
   GeneratedColumn<String> get iconName =>
       $composableBuilder(column: $table.iconName, builder: (column) => column);
+
+  GeneratedColumn<String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => column);
 
   Expression<T> brewingRecipeTranslationsV2Refs<T extends Object>(
     Expression<T> Function(
@@ -26891,6 +27017,7 @@ class $$BrewingRecipesV2TableTableManager
                 Value<String> stepsJson = const Value.absent(),
                 Value<String> flavorProfile = const Value.absent(),
                 Value<String?> iconName = const Value.absent(),
+                Value<String> category = const Value.absent(),
               }) => BrewingRecipesV2Companion(
                 id: id,
                 methodKey: methodKey,
@@ -26902,6 +27029,7 @@ class $$BrewingRecipesV2TableTableManager
                 stepsJson: stepsJson,
                 flavorProfile: flavorProfile,
                 iconName: iconName,
+                category: category,
               ),
           createCompanionCallback:
               ({
@@ -26915,6 +27043,7 @@ class $$BrewingRecipesV2TableTableManager
                 Value<String> stepsJson = const Value.absent(),
                 Value<String> flavorProfile = const Value.absent(),
                 Value<String?> iconName = const Value.absent(),
+                Value<String> category = const Value.absent(),
               }) => BrewingRecipesV2Companion.insert(
                 id: id,
                 methodKey: methodKey,
@@ -26926,6 +27055,7 @@ class $$BrewingRecipesV2TableTableManager
                 stepsJson: stepsJson,
                 flavorProfile: flavorProfile,
                 iconName: iconName,
+                category: category,
               ),
           withReferenceMapper: (p0) => p0
               .map(

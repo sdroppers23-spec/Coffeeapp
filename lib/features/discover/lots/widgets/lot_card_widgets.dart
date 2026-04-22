@@ -32,6 +32,9 @@ class MyLotGridCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final mappedSensory = SensoryUtils.map4To6Axis(lot.sensoryPoints);
+    final theme = Theme.of(context);
+    final isUk = LocaleService.currentLocale == 'uk';
 
     return PressableScale(
       onLongPress: () => onLongPress(lot.id),
@@ -176,6 +179,17 @@ class MyLotGridCard extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 12),
+            // Sensory Bars
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _HorizontalSensoryBar(label: isUk ? 'ГІРКОТА' : 'BITTERNESS', value: (mappedSensory['bitterness'] ?? 3).toDouble(), theme: theme),
+                _HorizontalSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme),
+                _HorizontalSensoryBar(label: isUk ? 'СОЛОДКІСТЬ' : 'SWEETNESS', value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme),
+              ],
+            ),
+            const SizedBox(height: 12),
+
             const Spacer(),
             
             // Bottom Traits
@@ -440,12 +454,13 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(child: _HorizontalSensoryBar(label: isUk ? 'ГІРКОТА' : 'BITTERNESS', value: (mappedSensory['bitterness'] ?? 3).toDouble(), theme: theme)),
+                            _HorizontalSensoryBar(label: isUk ? 'ГІРКОТА' : 'BITTERNESS', value: (mappedSensory['bitterness'] ?? 3).toDouble(), theme: theme),
                             const SizedBox(width: 8),
-                            Expanded(child: _HorizontalSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme)),
+                            _HorizontalSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme),
                             const SizedBox(width: 8),
-                            Expanded(child: _HorizontalSensoryBar(label: isUk ? 'СОЛОДКІСТЬ' : 'SWEETNESS', value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme)),
+                            _HorizontalSensoryBar(label: isUk ? 'СОЛОДКІСТЬ' : 'SWEETNESS', value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme),
                           ],
                         ),
                         const SizedBox(height: 12),
@@ -618,16 +633,16 @@ class _HorizontalSensoryBar extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Row(
+          mainAxisSize: MainAxisSize.min,
           children: List.generate(5, (index) {
             final isFilled = index < value.toInt();
-            return Expanded(
-              child: Container(
-                height: 2.5,
-                margin: const EdgeInsets.only(right: 2),
-                decoration: BoxDecoration(
-                  color: isFilled ? theme.colorScheme.primary : const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(1),
-                ),
+            return Container(
+              width: 7,
+              height: 2,
+              margin: const EdgeInsets.only(right: 1.5),
+              decoration: BoxDecoration(
+                color: isFilled ? theme.colorScheme.primary : const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(1),
               ),
             );
           }),

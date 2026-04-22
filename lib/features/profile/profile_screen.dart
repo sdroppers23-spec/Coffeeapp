@@ -5,10 +5,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter/services.dart';
 import '../../core/supabase/supabase_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../navigation/navigation_providers.dart';
 import '../../shared/widgets/glass_container.dart';
+import '../../shared/widgets/premium_background.dart';
+import '../discover/lots/lots_providers.dart';
+import '../brewing/custom_recipe_list.dart';
+import 'package:intl/intl.dart';
+
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -83,16 +89,29 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         meta['avatar_url'] as String? ??
         'https://api.dicebear.com/7.x/adventurer/png?seed=${user.id}';
 
-    return PopScope(
-      onPopInvokedWithResult: (didPop, _) {
-        if (didPop) return;
-        ref.read(navBarVisibleProvider.notifier).show();
-      },
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
+    final isUk = LocaleService.currentLocale == 'uk';
+    final recipesAsync = ref.watch(globalCustomRecipesProvider);
+    final lotsAsync = ref.watch(userLotsStreamProvider);
+    final favoritesAsync = ref.watch(favoriteLotsStreamProvider);
+
+    final recipesCount = recipesAsync.when(data: (d) => d.length, loading: () => 0, error: (e, s) => 0);
+    final lotsCount = lotsAsync.when(data: (d) => d.length, loading: () => 0, error: (e, s) => 0);
+    final favoritesCount = favoritesAsync.when(data: (d) => d.length, loading: () => 0, error: (e, s) => 0);
+
+    final createdAt = user.createdAt;
+    final joinDate = DateFormat('dd.MM.yyyy').format(DateTime.parse(createdAt));
+
+    return PremiumBackground(
+      child: PopScope(
+        onPopInvokedWithResult: (didPop, _) {
+          if (didPop) return;
+          ref.read(navBarVisibleProvider.notifier).show();
+        },
+        child: Scaffold(
           backgroundColor: Colors.transparent,
-          elevation: 0,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
           title: Text(
             ref.t('profile'),
             style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
@@ -138,7 +157,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       radius: 60,
                       backgroundColor: Colors.white12,
                       backgroundImage: NetworkImage(avatarUrl),
-                      onBackgroundImageError: (_, _) => const Icon(
+                      onBackgroundImageError: (e, s) => const Icon(
                         Icons.person,
                         size: 60,
                         color: Colors.white54,
@@ -183,10 +202,66 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _StatColumn(ref.t('recipes'), '12'),
-                    _StatColumn(ref.t('scans'), '4'),
-                    _StatColumn(ref.t('badges'), '3'),
+                    _StatColumn(ref.t('recipes'), recipesCount.toString(), Icons.receipt_long_rounded),
+                    _StatColumn(ref.t('lots'), lotsCount.toString(), Icons.inventory_2_rounded),
+                    _StatColumn(ref.t('favorites'), favoritesCount.toString(), Icons.favorite_rounded),
                   ],
+                ),
+              ),
+
+              const SizedBox(height: 32),
+              
+              // Account Details
+              GlassContainer(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    _InfoRow(
+                      label: isUk ? 'ID акаунту' : 'Account ID',
+                      value: '${user.id.substring(0, 8)}...',
+                      icon: Icons.fingerprint_rounded,
+                      onTap: () {
+                        Clipboard.setData(ClipboardData(text: user.id));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(isUk ? 'ID скопійовано' : 'ID copied')),
+                        );
+                      },
+                    ),
+                    const Divider(color: Colors.white12, height: 24),
+                    _InfoRow(
+                      label: isUk ? 'Дата приєднання' : 'Join Date',
+                      value: joinDate,
+                      icon: Icons.calendar_today_rounded,
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 32),
+              TextButton(
+                onPressed: () async {
+                   try {
+                    await Supabase.instance.client.auth.resetPasswordForEmail(user.email!);
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(isUk ? 'Інструкції надіслано на пошту' : 'Instructions sent to email')),
+                      );
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(e.toString())),
+                      );
+                    }
+                  }
+                },
+                child: Text(
+                  isUk ? 'Забули пароль?' : 'Forgot Password?',
+                  style: GoogleFonts.outfit(
+                    color: const Color(0xFFC8A96E),
+                    fontWeight: FontWeight.w600,
+                    decoration: TextDecoration.underline,
+                  ),
                 ),
               ),
 
@@ -217,33 +292,85 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }
 
 class _StatColumn extends StatelessWidget {
   final String label;
   final String val;
-  const _StatColumn(this.label, this.val);
+  final IconData icon;
+  const _StatColumn(this.label, this.val, this.icon);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Icon(icon, color: const Color(0xFFC8A96E), size: 20),
+        const SizedBox(height: 8),
         Text(
           val,
           style: GoogleFonts.poppins(
             fontSize: 22,
             fontWeight: FontWeight.bold,
-            color: const Color(0xFFC8A96E),
+            color: Colors.white,
           ),
         ),
         const SizedBox(height: 4),
         Text(
           label,
-          style: const TextStyle(fontSize: 12, color: Colors.white60),
+          style: const TextStyle(fontSize: 10, color: Colors.white60),
         ),
       ],
+    );
+  }
+}
+
+class _InfoRow extends StatelessWidget {
+  final String label;
+  final String value;
+  final IconData icon;
+  final VoidCallback? onTap;
+
+  const _InfoRow({
+    required this.label,
+    required this.value,
+    required this.icon,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+        child: Row(
+          children: [
+            Icon(icon, size: 18, color: const Color(0xFFC8A96E)),
+            const SizedBox(width: 12),
+            Text(
+              label,
+              style: GoogleFonts.outfit(fontSize: 14, color: Colors.white70),
+            ),
+            const Spacer(),
+            Text(
+              value,
+              style: GoogleFonts.outfit(
+                fontSize: 14,
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            if (onTap != null) ...[
+              const SizedBox(width: 8),
+              const Icon(Icons.copy_rounded, size: 14, color: Colors.white38),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }

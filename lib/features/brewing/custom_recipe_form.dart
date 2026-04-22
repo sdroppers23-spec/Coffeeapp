@@ -778,14 +778,14 @@ class _Field extends StatelessWidget {
             ? const EdgeInsets.symmetric(horizontal: 12, vertical: 10)
             : null,
         filled: true,
-        fillColor: Colors.white.withOpacity(0.07),
+        fillColor: Colors.white.withValues(alpha: 0.07),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
+          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

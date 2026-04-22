@@ -119,15 +119,15 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
     final showFavoritesOnly = filterState.showFavoritesOnly;
 
     return originsAsync.when(
-      loading: () => const Center(
+      loading: () => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(
+            const CircularProgressIndicator(
               color: Color(0xFFC8A96E),
               strokeWidth: 2,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               context.t('loading_lots'),
               style: const TextStyle(

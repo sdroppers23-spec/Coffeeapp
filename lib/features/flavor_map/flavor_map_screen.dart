@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -217,7 +216,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                           children: [
                             const SizedBox(height: 10),
                             Image.asset(
-                              isUk ? 'assets/images/flavor_wheel_logo_uk.png' : 'assets/images/flavor_wheel_logo_en.png',
+                              ref.watch(localeProvider) == 'uk' ? 'assets/images/flavor_wheel_logo_uk.png' : 'assets/images/flavor_wheel_logo_en.png',
                               height: 60,
                               fit: BoxFit.contain,
                             ),
@@ -293,31 +292,6 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
   }
 }
 
-class _LegendItem extends StatelessWidget {
-  final Color color;
-  final String label;
-
-  const _LegendItem({required this.color, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 8,
-          height: 8,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-        ),
-        const SizedBox(width: 8),
-        Text(
-          label,
-          style: GoogleFonts.poppins(color: Colors.white70, fontSize: 12),
-        ),
-      ],
-    );
-  }
-}
 
 class _FlavorInfoCard extends ConsumerWidget {
   final String flavorKey;
@@ -508,12 +482,10 @@ class InteractiveSpiderChart extends ConsumerStatefulWidget {
 
 class _InteractiveSpiderChartState
     extends ConsumerState<InteractiveSpiderChart> {
-  String? _draggingLabel;
 
   @override
   Widget build(BuildContext context) {
     // Watch these exact labels to match screenshot
-    final values = ref.watch(flavorValuesProvider);
 
     return Column(
       children: [

@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/database/dtos.dart';
 import '../../../core/database/database_provider.dart';
-import '../../../core/l10n/app_localizations.dart';
 import '../../../shared/widgets/glass_container.dart';
 import '../../../shared/widgets/pressable_scale.dart';
 import '../encyclopedia_providers.dart';
@@ -23,8 +22,6 @@ class EncyclopediaLotGridCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final isUk = LocaleService.currentLocale == 'uk';
 
     final selectedIds = ref.watch(encyclopediaSelectedIdsProvider);
     final isSelected = selectedIds.contains(entry.id.toString());
@@ -404,65 +401,3 @@ class _TraitBadge extends StatelessWidget {
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-class _SensoryFiveSegmentBarSmall extends StatelessWidget {
-  final String label;
-  final double value;
-  final ThemeData theme;
-
-  const _SensoryFiveSegmentBarSmall({
-    required this.label,
-    required this.value,
-    required this.theme,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 60,
-            child: Text(
-              label,
-              style: GoogleFonts.outfit(
-                fontSize: 9,
-                color: const Color(0xFFC8A96E).withValues(alpha: 0.4),
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Row(
-              children: List.generate(5, (index) {
-                final isFilled = index < value.toInt();
-                return Expanded(
-                  child: Container(
-                    height: 4,
-                    margin: const EdgeInsets.only(right: 2.5),
-                    decoration: BoxDecoration(
-                      color: isFilled
-                          ? const Color(0xFFC8A96E)
-                          : Colors.white10,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                );
-              }),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            value.toInt().toString(),
-            style: GoogleFonts.outfit(
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFFC8A96E),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

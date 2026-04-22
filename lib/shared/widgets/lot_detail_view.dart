@@ -13,7 +13,6 @@ import '../../core/l10n/app_localizations.dart';
 import '../utils/sensory_utils.dart';
 import 'glass_container.dart';
 import 'sensory_radar_chart.dart';
-import 'sensory_preview.dart';
 import 'lot_detail_widgets.dart';
 import '../../features/brewing/widgets/custom_recipe_card.dart';
 import '../../shared/models/processing_methods_repository.dart';
@@ -793,7 +792,7 @@ class _SensoryTab extends StatelessWidget {
               );
             }(),
           ),
-          _SectionTitle(title: ref.t('sensory_grid').toUpperCase()),
+          _SectionTitle(title: context.t('sensory_grid').toUpperCase()),
           const SizedBox(height: 160),
         ],
       ),

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'dart:ui';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/providers/settings_provider.dart';
+import '../../core/l10n/app_localizations.dart';
 
 class ModernUndoTimer extends ConsumerStatefulWidget {
   final String message;

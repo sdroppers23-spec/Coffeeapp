@@ -9,7 +9,6 @@ import '../../core/database/dtos.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../shared/widgets/glass_container.dart';
 import '../../shared/widgets/sensory_radar_chart.dart';
-import '../../shared/widgets/sensory_preview.dart';
 import '../../core/network/price_sync_service.dart';
 import '../brewing/custom_recipe_form.dart';
 import '../../shared/widgets/lot_detail_widgets.dart';

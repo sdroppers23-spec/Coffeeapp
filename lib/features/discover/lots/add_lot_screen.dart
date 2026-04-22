@@ -23,6 +23,7 @@ import '../../../core/utils/local_file_manager.dart';
 import 'lots_providers.dart';
 import '../../../shared/models/processing_methods_repository.dart';
 import '../../../shared/widgets/sensory_radar_chart.dart';
+import '../../../shared/services/toast_service.dart';
 
 class AddLotScreen extends ConsumerStatefulWidget {
   final CoffeeLotDto? initialLot;
@@ -292,8 +293,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     final db = ref.read(databaseProvider);
     final lotId = widget.initialLot?.id ?? const Uuid().v4();
 
-    final messenger = ScaffoldMessenger.of(context);
-    final isUk = LocaleService.currentLocale == 'uk';
 
     String finalImageUrl = _currentImageUrl ?? '';
 

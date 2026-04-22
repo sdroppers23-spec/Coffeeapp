@@ -32,8 +32,6 @@ class MyLotGridCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final isUk = LocaleService.currentLocale == 'uk';
 
     return PressableScale(
       onLongPress: () => onLongPress(lot.id),
@@ -109,7 +107,7 @@ class MyLotGridCard extends ConsumerWidget {
                             style: GoogleFonts.outfit(
                               fontSize: 8,
                               fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.primary,
+                              color: const Color(0xFFC8A96E),
                             ),
                           ),
                         ),
@@ -122,10 +120,10 @@ class MyLotGridCard extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
-                        color: isSelected ? theme.colorScheme.primary : Colors.black45,
+                        color: isSelected ? const Color(0xFFC8A96E) : Colors.black45,
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: isSelected ? theme.colorScheme.primary : Colors.white24,
+                          color: isSelected ? const Color(0xFFC8A96E) : Colors.white24,
                           width: 1.5,
                         ),
                       ),
@@ -207,66 +205,6 @@ class MyLotGridCard extends ConsumerWidget {
 }
 }
 
-class _SensoryFiveSegmentBarSmall extends StatelessWidget {
-  final String label;
-  final double value;
-  final ThemeData theme;
-
-  const _SensoryFiveSegmentBarSmall({
-    required this.label,
-    required this.value,
-    required this.theme,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 55,
-            child: Text(
-              label,
-              style: GoogleFonts.outfit(
-                fontSize: 8.5,
-                color: const Color(0xFFC8A96E).withValues(alpha: 0.38),
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          const SizedBox(width: 6),
-          Expanded(
-            child: Row(
-              children: List.generate(5, (index) {
-                final isFilled = index < value.toInt();
-                return Expanded(
-                  child: Container(
-                    height: 3.5,
-                    margin: const EdgeInsets.only(right: 2),
-                    decoration: BoxDecoration(
-                      color: isFilled ? theme.colorScheme.primary : const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(1),
-                    ),
-                  ),
-                );
-              }),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            value.toInt().toString(),
-            style: GoogleFonts.outfit(
-              fontSize: 9,
-              fontWeight: FontWeight.bold,
-              color: theme.colorScheme.primary,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class MyLotListCard extends ConsumerStatefulWidget {
   final CoffeeLotDto lot;

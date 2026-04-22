@@ -181,7 +181,6 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
 
   void _showModernUndo(List<CoffeeLotDto> lots, BuildContext context, WidgetRef ref, {bool isArchive = false}) {
     if (lots.isEmpty) return;
-    final isUk = Localizations.localeOf(context).languageCode == 'uk';
     String message;
     
     final ids = lots.map((l) => l.id).toSet();
@@ -583,7 +582,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
             const Icon(Icons.add_rounded, color: Colors.black87, size: 20),
             const SizedBox(width: 8),
             Text(
-              'ДОДАТИ НОВИЙ ЛОТ',
+              context.t('add_new_lot').toUpperCase(),
               style: GoogleFonts.outfit(
                 fontWeight: FontWeight.w800,
                 fontSize: 12,

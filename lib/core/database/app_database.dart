@@ -245,6 +245,16 @@ class AppDatabase extends _$AppDatabase {
     final bean = row.readTable(localizedBeansV2);
     final trans = row.readTableOrNull(localizedBeanTranslationsV2);
 
+    final sensoryRaw = _parseJson(bean.sensoryJson);
+    final Map<String, dynamic> flattenedSensory = {};
+    if (sensoryRaw.containsKey('indicators')) {
+      final indicators = sensoryRaw['indicators'];
+      if (indicators is Map<String, dynamic>) {
+        flattenedSensory.addAll(indicators);
+      }
+    }
+    flattenedSensory.addAll(sensoryRaw);
+
     return LocalizedBeanDto(
       id: bean.id,
       brandId: bean.brandId,
@@ -254,7 +264,7 @@ class AppDatabase extends _$AppDatabase {
       lotNumber: bean.lotNumber,
       scaScore: bean.scaScore,
       cupsScore: bean.cupsScore,
-      sensoryPoints: _parseJson(bean.sensoryJson),
+      sensoryPoints: flattenedSensory,
       pricing: _parseJson(bean.priceJson),
       plantationPhotos: _parseList<String>(bean.plantationPhotosUrl),
       isPremium: bean.isPremium,

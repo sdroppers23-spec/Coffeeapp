@@ -364,6 +364,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get region_asia_pacific => 'Asia Pacific';
 
   @override
+  String get flavor_map_title => 'Flavor Map';
+
+  @override
+  String get tab_profile => 'Profile';
+
+  @override
+  String get tab_sphere => 'Sphere';
+
+  @override
+  String get tab_wheel => 'Flavor Wheel';
+
+  @override
+  String get tab_steps => 'Steps';
+
+  @override
+  String get tab_custom => 'My Versions';
+
+  @override
+  String get tab_recommended => 'Recommended';
+
+  @override
   String get tap_wheel_to_explore => 'Tap segments to explore flavors';
 
   @override
@@ -517,18 +538,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sync_failed => 'Action failed';
-
-  @override
-  String get flavor_map_title => 'Flavor Map';
-
-  @override
-  String get tab_profile => 'Profile';
-
-  @override
-  String get tab_sphere => 'Sphere';
-
-  @override
-  String get tab_wheel => 'Wheel';
 
   @override
   String get sensory_profile => 'Sensory Profile';

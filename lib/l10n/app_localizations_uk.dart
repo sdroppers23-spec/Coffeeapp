@@ -364,6 +364,27 @@ class AppLocalizationsUk extends AppLocalizations {
   String get region_asia_pacific => 'Азійсько-Тихоокеанський регіон';
 
   @override
+  String get flavor_map_title => 'Мапа смаків';
+
+  @override
+  String get tab_profile => 'Профіль';
+
+  @override
+  String get tab_sphere => 'Сфера';
+
+  @override
+  String get tab_wheel => 'Коло смаків';
+
+  @override
+  String get tab_steps => 'Кроки';
+
+  @override
+  String get tab_custom => 'Мої версії';
+
+  @override
+  String get tab_recommended => 'Рекомендовано';
+
+  @override
   String get tap_wheel_to_explore =>
       'Натисніть на сегменти, щоб дослідити смаки';
 
@@ -518,18 +539,6 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get sync_failed => 'Дія не вдалася';
-
-  @override
-  String get flavor_map_title => 'Мапа смаків';
-
-  @override
-  String get tab_profile => 'Профіль';
-
-  @override
-  String get tab_sphere => 'Сфера';
-
-  @override
-  String get tab_wheel => 'Коло смаків';
 
   @override
   String get sensory_profile => 'Сенсорний профіль';

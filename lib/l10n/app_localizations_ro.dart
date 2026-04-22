@@ -365,6 +365,27 @@ class AppLocalizationsRo extends AppLocalizations {
   String get region_asia_pacific => 'Asia Pacific';
 
   @override
+  String get flavor_map_title => 'Harta Aromelor';
+
+  @override
+  String get tab_profile => 'Profil senzorial';
+
+  @override
+  String get tab_sphere => 'Sferă';
+
+  @override
+  String get tab_wheel => 'Roată';
+
+  @override
+  String get tab_steps => 'Steps';
+
+  @override
+  String get tab_custom => 'My Versions';
+
+  @override
+  String get tab_recommended => 'Recommended';
+
+  @override
   String get tap_wheel_to_explore => 'Atinge segmentele pentru a explora';
 
   @override
@@ -518,18 +539,6 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get sync_failed => 'Acțiune eșuată';
-
-  @override
-  String get flavor_map_title => 'Harta Aromelor';
-
-  @override
-  String get tab_profile => 'Profil senzorial';
-
-  @override
-  String get tab_sphere => 'Sferă';
-
-  @override
-  String get tab_wheel => 'Roată';
 
   @override
   String get sensory_profile => 'Profil senzorial';

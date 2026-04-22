@@ -355,6 +355,27 @@ class AppLocalizationsZh extends AppLocalizations {
   String get region_asia_pacific => '亚太地区';
 
   @override
+  String get flavor_map_title => '风味地图';
+
+  @override
+  String get tab_profile => '感官档案';
+
+  @override
+  String get tab_sphere => '球体';
+
+  @override
+  String get tab_wheel => '风味轮';
+
+  @override
+  String get tab_steps => 'Steps';
+
+  @override
+  String get tab_custom => 'My Versions';
+
+  @override
+  String get tab_recommended => 'Recommended';
+
+  @override
   String get tap_wheel_to_explore => '点击区段探索风味';
 
   @override
@@ -503,18 +524,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get sync_failed => '操作失败';
-
-  @override
-  String get flavor_map_title => '风味地图';
-
-  @override
-  String get tab_profile => '感官档案';
-
-  @override
-  String get tab_sphere => '球体';
-
-  @override
-  String get tab_wheel => '风味轮';
 
   @override
   String get sensory_profile => '感官档案';

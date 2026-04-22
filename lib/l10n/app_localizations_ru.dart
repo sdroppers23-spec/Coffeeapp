@@ -364,6 +364,27 @@ class AppLocalizationsRu extends AppLocalizations {
   String get region_asia_pacific => 'Азиатско-Тихоокеанский регион';
 
   @override
+  String get flavor_map_title => 'Карта вкусов';
+
+  @override
+  String get tab_profile => 'Профиль';
+
+  @override
+  String get tab_sphere => 'Сфера';
+
+  @override
+  String get tab_wheel => 'Колесо';
+
+  @override
+  String get tab_steps => 'Steps';
+
+  @override
+  String get tab_custom => 'My Versions';
+
+  @override
+  String get tab_recommended => 'Recommended';
+
+  @override
   String get tap_wheel_to_explore => 'Нажмите на сегменты, чтобы изучить вкусы';
 
   @override
@@ -517,18 +538,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get sync_failed => 'Действие не выполнено';
-
-  @override
-  String get flavor_map_title => 'Карта вкусов';
-
-  @override
-  String get tab_profile => 'Профиль';
-
-  @override
-  String get tab_sphere => 'Сфера';
-
-  @override
-  String get tab_wheel => 'Колесо';
 
   @override
   String get sensory_profile => 'Сенсорный профиль';

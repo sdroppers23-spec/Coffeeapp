@@ -366,6 +366,27 @@ class AppLocalizationsPt extends AppLocalizations {
   String get region_asia_pacific => 'Ásia-Pacífico';
 
   @override
+  String get flavor_map_title => 'Mapa de sabores';
+
+  @override
+  String get tab_profile => 'Perfil sensorial';
+
+  @override
+  String get tab_sphere => 'Esfera';
+
+  @override
+  String get tab_wheel => 'Roda de sabores';
+
+  @override
+  String get tab_steps => 'Steps';
+
+  @override
+  String get tab_custom => 'My Versions';
+
+  @override
+  String get tab_recommended => 'Recommended';
+
+  @override
   String get tap_wheel_to_explore =>
       'Toque nos segmentos para explorar sabores';
 
@@ -520,18 +541,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get sync_failed => 'Ação falhada';
-
-  @override
-  String get flavor_map_title => 'Mapa de sabores';
-
-  @override
-  String get tab_profile => 'Perfil sensorial';
-
-  @override
-  String get tab_sphere => 'Esfera';
-
-  @override
-  String get tab_wheel => 'Roda de sabores';
 
   @override
   String get sensory_profile => 'Perfil sensorial';

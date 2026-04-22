@@ -724,6 +724,37 @@ class _ProfileTab extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 16),
+        SensoryIndicator(
+          label: ref.t('bitterness'),
+          value: lot.sensoryPoints['bitterness'] != null ? (lot.sensoryPoints['bitterness'] as num).toDouble() / 5.0 : 0.2,
+          color: const Color(0xFFC8A96E),
+        ),
+        SensoryIndicator(
+          label: ref.t('acidity'),
+          value: lot.sensoryPoints['acidity'] != null ? (lot.sensoryPoints['acidity'] as num).toDouble() / 5.0 : 0.2,
+          color: const Color(0xFFC8A96E),
+        ),
+        SensoryIndicator(
+          label: ref.t('sweetness'),
+          value: lot.sensoryPoints['sweetness'] != null ? (lot.sensoryPoints['sweetness'] as num).toDouble() / 5.0 : 0.2,
+          color: const Color(0xFFC8A96E),
+        ),
+        SensoryIndicator(
+          label: ref.t('body'),
+          value: lot.sensoryPoints['body'] != null ? (lot.sensoryPoints['body'] as num).toDouble() / 5.0 : 0.2,
+          color: const Color(0xFFC8A96E),
+        ),
+        SensoryIndicator(
+          label: ref.t('intensity'),
+          value: lot.sensoryPoints['intensity'] != null ? (lot.sensoryPoints['intensity'] as num).toDouble() / 5.0 : 0.2,
+          color: const Color(0xFFC8A96E),
+        ),
+        SensoryIndicator(
+          label: ref.t('aftertaste'),
+          value: lot.sensoryPoints['aftertaste'] != null ? (lot.sensoryPoints['aftertaste'] as num).toDouble() / 5.0 : 0.2,
+          color: const Color(0xFFC8A96E),
+        ),
+        const SizedBox(height: 16),
       ],
     );
   }

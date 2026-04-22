@@ -176,6 +176,11 @@ class _CustomRecipeFormScreenState
   }
 
   void _syncPourRows() {
+    // CRITICAL: Read current values before clearing controllers to prevent data loss
+    if (_pourCtrlsList.isNotEmpty) {
+      _readPourControllers();
+    }
+
     // Expand or trim _pours to match _totalPours
     while (_pours.length < _totalPours) {
       _pours.add(_PourEntry(pourNumber: _pours.length + 1));
@@ -190,22 +195,61 @@ class _CustomRecipeFormScreenState
         c.dispose();
       }
     }
-    _pourCtrlsList
-      ..clear()
-      ..addAll(
-        List.generate(_totalPours, (i) {
-          final p = _pours[i];
-          final timeStr = '${p.atMin ?? 0}:${(p.atSec ?? 0).toString().padLeft(2, '0')}';
-          return {
-            'waterMl': TextEditingController(text: p.waterMl?.toString() ?? ''),
-            'atTime': TextEditingController(text: timeStr),
-            'durationSec': TextEditingController(
-              text: p.durationSec?.toString() ?? '',
-            ),
-            'notes': TextEditingController(text: p.notes),
-          };
-        }),
-      );
+    _pourCtrlsList.clear();
+
+    for (int i = 0; i < _totalPours; i++) {
+      final p = _pours[i];
+      final minCtrl = TextEditingController(text: (p.atMin ?? 0).toString());
+      final secCtrl = TextEditingController(text: (p.atSec ?? 0).toString());
+
+      // Auto-correction logic for seconds
+      void checkOverflow() {
+        final mStr = minCtrl.text;
+        final sStr = secCtrl.text;
+        int m = int.tryParse(mStr) ?? 0;
+        int s = int.tryParse(sStr) ?? 0;
+
+        bool changed = false;
+        if (s >= 60) {
+          m += s ~/ 60;
+          s = s % 60;
+          changed = true;
+        }
+        if (m > 59) {
+          m = 59;
+          changed = true;
+        }
+        if (s > 59 && m == 59) {
+          s = 59;
+          changed = true;
+        }
+
+        if (changed) {
+          minCtrl.text = m.toString();
+          secCtrl.text = s.toString();
+          // Maintain cursor position at the end
+          minCtrl.selection = TextSelection.fromPosition(
+            TextPosition(offset: minCtrl.text.length),
+          );
+          secCtrl.selection = TextSelection.fromPosition(
+            TextPosition(offset: secCtrl.text.length),
+          );
+        }
+      }
+
+      secCtrl.addListener(checkOverflow);
+      minCtrl.addListener(checkOverflow);
+
+      _pourCtrlsList.add({
+        'waterMl': TextEditingController(text: p.waterMl?.toString() ?? ''),
+        'atMin': minCtrl,
+        'atSec': secCtrl,
+        'durationSec': TextEditingController(
+          text: p.durationSec?.toString() ?? '',
+        ),
+        'notes': TextEditingController(text: p.notes),
+      });
+    }
   }
 
   @override
@@ -251,24 +295,11 @@ class _CustomRecipeFormScreenState
     for (int i = 0; i < _totalPours; i++) {
       final ctrls = _pourCtrlsList[i];
       
-      // Parse time string (m:ss or ss)
-      final timeParts = ctrls['atTime']!.text.split(':');
-      int m = 0;
-      int s = 0;
-      if (timeParts.length >= 2) {
-        m = int.tryParse(timeParts[0]) ?? 0;
-        s = int.tryParse(timeParts[1]) ?? 0;
-      } else if (timeParts.length == 1) {
-        final total = int.tryParse(timeParts[0]) ?? 0;
-        m = total ~/ 60;
-        s = total % 60;
-      }
-
       _pours[i]
         ..pourNumber = i + 1
         ..waterMl = double.tryParse(ctrls['waterMl']!.text.replaceAll(',', '.'))
-        ..atMin = m
-        ..atSec = s
+        ..atMin = int.tryParse(ctrls['atMin']!.text) ?? 0
+        ..atSec = int.tryParse(ctrls['atSec']!.text) ?? 0
         ..durationSec = int.tryParse(ctrls['durationSec']!.text)
         ..notes = ctrls['notes']!.text;
     }
@@ -674,12 +705,23 @@ class _PourRow extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Expanded(
-                flex: 2,
+                flex: 1,
                 child: _Field(
-                  controller: ctrls['atTime']!,
-                  label: '${context.t('timer')} (m:ss)',
-                  hint: '0:30',
-                  keyboardType: TextInputType.datetime,
+                  controller: ctrls['atMin']!,
+                  label: 'Min',
+                  hint: '0',
+                  keyboardType: TextInputType.number,
+                  dense: true,
+                ),
+              ),
+              const SizedBox(width: 4),
+              Expanded(
+                flex: 1,
+                child: _Field(
+                  controller: ctrls['atSec']!,
+                  label: 'Sec',
+                  hint: '30',
+                  keyboardType: TextInputType.number,
                   dense: true,
                 ),
               ),

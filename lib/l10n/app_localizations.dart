@@ -792,6 +792,48 @@ abstract class AppLocalizations {
   /// **'Asia Pacific'**
   String get region_asia_pacific;
 
+  /// No description provided for @flavor_map_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Flavor Map'**
+  String get flavor_map_title;
+
+  /// No description provided for @tab_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get tab_profile;
+
+  /// No description provided for @tab_sphere.
+  ///
+  /// In en, this message translates to:
+  /// **'Sphere'**
+  String get tab_sphere;
+
+  /// No description provided for @tab_wheel.
+  ///
+  /// In en, this message translates to:
+  /// **'Flavor Wheel'**
+  String get tab_wheel;
+
+  /// No description provided for @tab_steps.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps'**
+  String get tab_steps;
+
+  /// No description provided for @tab_custom.
+  ///
+  /// In en, this message translates to:
+  /// **'My Versions'**
+  String get tab_custom;
+
+  /// No description provided for @tab_recommended.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended'**
+  String get tab_recommended;
+
   /// No description provided for @tap_wheel_to_explore.
   ///
   /// In en, this message translates to:
@@ -1091,30 +1133,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Action failed'**
   String get sync_failed;
-
-  /// No description provided for @flavor_map_title.
-  ///
-  /// In en, this message translates to:
-  /// **'Flavor Map'**
-  String get flavor_map_title;
-
-  /// No description provided for @tab_profile.
-  ///
-  /// In en, this message translates to:
-  /// **'Profile'**
-  String get tab_profile;
-
-  /// No description provided for @tab_sphere.
-  ///
-  /// In en, this message translates to:
-  /// **'Sphere'**
-  String get tab_sphere;
-
-  /// No description provided for @tab_wheel.
-  ///
-  /// In en, this message translates to:
-  /// **'Wheel'**
-  String get tab_wheel;
 
   /// No description provided for @sensory_profile.
   ///

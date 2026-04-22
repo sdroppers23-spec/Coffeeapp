@@ -7,10 +7,12 @@ import 'package:markdown/markdown.dart' as md;
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import '../../core/l10n/app_localizations.dart';
-import '../../shared/widgets/glass_container.dart';
-import '../../shared/widgets/sensory_radar_chart.dart';
 import '../../core/network/price_sync_service.dart';
+import '../../shared/widgets/add_recipe_dialog.dart';
+import '../../shared/widgets/pressable_scale.dart';
 import '../../shared/widgets/lot_detail_widgets.dart';
+import '../../shared/widgets/sensory_radar_chart.dart';
+import '../../shared/widgets/glass_container.dart';
 import '../navigation/navigation_providers.dart';
 
 class CoffeeLotDetailScreen extends ConsumerStatefulWidget {
@@ -545,6 +547,36 @@ class _ProfileTab extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 16),
+        SensoryIndicator(
+          label: ref.t('bitterness'),
+          value: entry.radarPoints['bitterness'] != null ? (entry.radarPoints['bitterness']! / 5.0) : (entry.sensoryPoints['bitterness'] != null ? (entry.sensoryPoints['bitterness'] as num).toDouble() / 5.0 : 0.2),
+          color: const Color(0xFFC8A96E),
+        ),
+        SensoryIndicator(
+          label: ref.t('acidity'),
+          value: entry.radarPoints['acidity'] != null ? (entry.radarPoints['acidity']! / 5.0) : (entry.sensoryPoints['acidity'] != null ? (entry.sensoryPoints['acidity'] as num).toDouble() / 5.0 : 0.2),
+          color: const Color(0xFFC8A96E),
+        ),
+        SensoryIndicator(
+          label: ref.t('sweetness'),
+          value: entry.radarPoints['sweetness'] != null ? (entry.radarPoints['sweetness']! / 5.0) : (entry.sensoryPoints['sweetness'] != null ? (entry.sensoryPoints['sweetness'] as num).toDouble() / 5.0 : 0.2),
+          color: const Color(0xFFC8A96E),
+        ),
+        SensoryIndicator(
+          label: ref.t('body'),
+          value: entry.radarPoints['body'] != null ? (entry.radarPoints['body']! / 5.0) : (entry.sensoryPoints['body'] != null ? (entry.sensoryPoints['body'] as num).toDouble() / 5.0 : 0.2),
+          color: const Color(0xFFC8A96E),
+        ),
+        SensoryIndicator(
+          label: ref.t('intensity'),
+          value: entry.radarPoints['intensity'] != null ? (entry.radarPoints['intensity']! / 5.0) : (entry.sensoryPoints['intensity'] != null ? (entry.sensoryPoints['intensity'] as num).toDouble() / 5.0 : 0.2),
+          color: const Color(0xFFC8A96E),
+        ),
+        SensoryIndicator(
+          label: ref.t('aftertaste'),
+          value: entry.radarPoints['aftertaste'] != null ? (entry.radarPoints['aftertaste']! / 5.0) : (entry.sensoryPoints['aftertaste'] != null ? (entry.sensoryPoints['aftertaste'] as num).toDouble() / 5.0 : 0.2),
+          color: const Color(0xFFC8A96E),
+        ),
         if (entry.detailedProcess.isNotEmpty) ...[
           const SizedBox(height: 32),
           Center(
@@ -614,26 +646,57 @@ class _ProfileTab extends ConsumerWidget {
         // Custom User Recipes Section
         customRecipesAsync.when(
           data: (recipes) {
-            if (recipes.isEmpty) {
-              if (recommendedAsync.value?.isEmpty ?? true) {
-                return Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(40),
-                    child: Text(
-                      ref.t('no_recipes_for_lot'),
-                      style: const TextStyle(color: Colors.white24, fontSize: 13),
-                    ),
-                  ),
-                );
-              }
-              return const SizedBox.shrink();
-            }
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _SectionHeader(ref.t('my_recipes')),
-                const SizedBox(height: 12),
-                ...recipes.map((r) => _CustomRecipeCardWrapper(recipe: r)),
+                if (recipes.isNotEmpty) ...[
+                  _SectionHeader(ref.t('my_recipes')),
+                  const SizedBox(height: 12),
+                  ...recipes.map((r) => _CustomRecipeCardWrapper(recipe: r)),
+                  const SizedBox(height: 24),
+                ],
+                
+                // Add Recipe Button
+                SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: PressableScale(
+                    onTap: () async {
+                      await showDialog(
+                        context: context,
+                        builder: (context) => AddRecipeDialog(
+                          lotId: entry.id.toString(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFC8A96E),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Center(
+                        child: Text(
+                          ref.t('add_recipe').toUpperCase(),
+                          style: GoogleFonts.outfit(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 2,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                if (recipes.isEmpty && (recommendedAsync.value?.isEmpty ?? true))
+                  Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: Center(
+                      child: Text(
+                        ref.t('no_recipes_for_lot'),
+                        style: const TextStyle(color: Colors.white24, fontSize: 13),
+                      ),
+                    ),
+                  ),
               ],
             );
           },

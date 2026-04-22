@@ -364,6 +364,27 @@ class AppLocalizationsTr extends AppLocalizations {
   String get region_asia_pacific => 'Asya Pasifik';
 
   @override
+  String get flavor_map_title => 'Aroma Haritası';
+
+  @override
+  String get tab_profile => 'Sensöryel Profil';
+
+  @override
+  String get tab_sphere => 'Küre';
+
+  @override
+  String get tab_wheel => 'Çark';
+
+  @override
+  String get tab_steps => 'Steps';
+
+  @override
+  String get tab_custom => 'My Versions';
+
+  @override
+  String get tab_recommended => 'Recommended';
+
+  @override
   String get tap_wheel_to_explore =>
       'Aromaları keşfetmek için bölümlere dokunun';
 
@@ -518,18 +539,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get sync_failed => 'İşlem başarısız';
-
-  @override
-  String get flavor_map_title => 'Aroma Haritası';
-
-  @override
-  String get tab_profile => 'Sensöryel Profil';
-
-  @override
-  String get tab_sphere => 'Küre';
-
-  @override
-  String get tab_wheel => 'Çark';
 
   @override
   String get sensory_profile => 'Sensöryel Profil';

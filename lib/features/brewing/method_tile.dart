@@ -123,7 +123,7 @@ class MethodTile extends StatelessWidget {
                     stops: const [0.35, 1.0],
                     colors: [
                       Colors.transparent,
-                      Colors.black.withOpacity(0.88),
+                      Colors.black.withValues(alpha: 0.88),
                     ],
                   ),
                 ),
@@ -139,7 +139,7 @@ class MethodTile extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: gold.withOpacity(0.85),
+                    color: gold.withValues(alpha: 0.85),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
@@ -224,10 +224,10 @@ class _RecipeCountChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.12),
+        color: Colors.white.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: Colors.white.withOpacity(0.15),
+          color: Colors.white.withValues(alpha: 0.15),
           width: 0.5,
         ),
       ),
@@ -241,7 +241,7 @@ class _RecipeCountChip extends StatelessWidget {
             style: GoogleFonts.outfit(
               fontSize: 10,
               fontWeight: FontWeight.w500,
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
             ),
           ),
         ],

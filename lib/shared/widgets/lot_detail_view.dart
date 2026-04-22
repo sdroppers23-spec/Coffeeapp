@@ -299,19 +299,19 @@ class _RecipeTypeCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 24),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.05),
+          color: Colors.white.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
             color: isLimitReached 
-              ? Colors.red.withOpacity(0.3)
-              : theme.colorScheme.primary.withOpacity(0.2),
+              ? Colors.red.withValues(alpha: 0.3)
+              : theme.colorScheme.primary.withValues(alpha: 0.2),
           ),
         ),
         child: Column(
           children: [
             Icon(
               icon, 
-              color: isLimitReached ? Colors.red.withOpacity(0.5) : theme.colorScheme.primary, 
+              color: isLimitReached ? Colors.red.withValues(alpha: 0.5) : theme.colorScheme.primary, 
               size: 32
             ),
             const SizedBox(height: 12),
@@ -403,7 +403,7 @@ class _DetailHeader extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [Colors.black.withOpacity(0.2), Colors.black],
+                  colors: [Colors.black.withValues(alpha: 0.2), Colors.black],
                 ),
               ),
             ),
@@ -432,9 +432,9 @@ class _DetailHeader extends StatelessWidget {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withOpacity(0.2),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
-                  border: Border.all(color: theme.colorScheme.primary.withOpacity(0.3)),
+                  border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.3)),
                 ),
                 child: Icon(Icons.edit_rounded, color: theme.colorScheme.primary, size: 20),
               ),
@@ -452,7 +452,7 @@ class _DetailHeader extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.black45,
                   shape: BoxShape.circle,
-                  border: Border.all(color: isFavorite ? Colors.red.withOpacity(0.3) : Colors.white10),
+                  border: Border.all(color: isFavorite ? Colors.red.withValues(alpha: 0.3) : Colors.white10),
                 ),
                 child: Icon(
                   isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
@@ -472,7 +472,7 @@ class _DetailHeader extends StatelessWidget {
               Text(
                 roasteryName.toUpperCase(),
                 style: GoogleFonts.outfit(
-                  color: theme.colorScheme.primary.withOpacity(0.6), 
+                  color: theme.colorScheme.primary.withValues(alpha: 0.6), 
                   fontSize: 12, 
                   fontWeight: FontWeight.bold, 
                   letterSpacing: 2
@@ -558,9 +558,9 @@ class _InfoTab extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFC8A96E).withOpacity(0.05),
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFFC8A96E).withOpacity(0.1)),
+                    border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.1)),
                   ),
                   child: Text(
                     characters.toUpperCase(),
@@ -585,7 +585,7 @@ class _InfoTab extends ConsumerWidget {
                     style: GoogleFonts.outfit(
                       fontSize: 15,
                       height: 1.6,
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withValues(alpha: 0.8),
                     ),
                     textAlign: TextAlign.start,
                   ),
@@ -939,7 +939,7 @@ class _InfoRow extends StatelessWidget {
                   Icon(
                     Icons.info_outline_rounded,
                     size: 12,
-                    color: const Color(0xFFC8A96E).withOpacity(0.5),
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.5),
                   ),
                 ],
                 // ignore: use_null_aware_elements

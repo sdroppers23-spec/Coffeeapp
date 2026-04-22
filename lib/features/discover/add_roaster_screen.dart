@@ -322,7 +322,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
           child: Text(
             label,
             style: GoogleFonts.poppins(
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.white.withValues(alpha: 0.5),
               fontSize: 12,
               fontWeight: FontWeight.w500,
               letterSpacing: 0.5,
@@ -368,7 +368,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                const Color(0xFFC8A96E).withOpacity(0.1),
+                const Color(0xFFC8A96E).withValues(alpha: 0.1),
                 const Color(0xFF0F172A),
               ],
             ),
@@ -536,12 +536,12 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
         decoration: BoxDecoration(
           color: _logoFile != null
               ? const Color(0xFFC8A96E)
-              : Colors.white.withOpacity(0.05),
+              : Colors.white.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: _logoFile != null
                 ? Colors.transparent
-                : Colors.white.withOpacity(0.1),
+                : Colors.white.withValues(alpha: 0.1),
           ),
         ),
         child: Icon(
@@ -572,13 +572,13 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
           duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
             color: isSelected
-                ? const Color(0xFFC8A96E).withOpacity(0.1)
-                : Colors.white.withOpacity(0.03),
+                ? const Color(0xFFC8A96E).withValues(alpha: 0.1)
+                : Colors.white.withValues(alpha: 0.03),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: isSelected
                   ? const Color(0xFFC8A96E)
-                  : Colors.white.withOpacity(0.05),
+                  : Colors.white.withValues(alpha: 0.05),
               width: 1,
             ),
           ),
@@ -589,7 +589,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.black.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Center(

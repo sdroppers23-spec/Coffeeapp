@@ -64,9 +64,9 @@ class SpecialtyArticleCard extends StatelessWidget {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: gold.withOpacity(0.15),
+                        color: gold.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(100),
-                        border: Border.all(color: gold.withOpacity(0.3)),
+                        border: Border.all(color: gold.withValues(alpha: 0.3)),
                       ),
                       child: Text(
                         '${moduleName.toUpperCase()} • #$index',
@@ -83,7 +83,7 @@ class SpecialtyArticleCard extends StatelessWidget {
                       style: GoogleFonts.poppins(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
-                        color: Colors.white.withOpacity(0.6),
+                        color: Colors.white.withValues(alpha: 0.6),
                         letterSpacing: 1.0,
                       ),
                     ),
@@ -113,7 +113,7 @@ class SpecialtyArticleCard extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     height: 1.6,
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withValues(alpha: 0.7),
                   ),
                 ),
                 

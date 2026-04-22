@@ -270,7 +270,7 @@ class _ScaFlavorWheelChartState extends ConsumerState<ScaFlavorWheelChart> {
           const SizedBox(height: 16),
           GlassContainer(
             padding: const EdgeInsets.all(20),
-            borderColor: _selectedNode!.color.withOpacity(0.5),
+            borderColor: _selectedNode!.color.withValues(alpha: 0.5),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -284,7 +284,7 @@ class _ScaFlavorWheelChartState extends ConsumerState<ScaFlavorWheelChart> {
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: _selectedNode!.color.withOpacity(0.5),
+                            color: _selectedNode!.color.withValues(alpha: 0.5),
                             blurRadius: 6,
                           ),
                         ],
@@ -370,11 +370,11 @@ class _ScaWheelPainter extends CustomPainter {
       final alpha = isSelected ? 1.0 : (selectedNode == null ? 0.9 : 0.4);
 
       final paint = Paint()
-        ..color = baseNode.color.withOpacity(alpha)
+        ..color = baseNode.color.withValues(alpha: alpha)
         ..style = PaintingStyle.fill;
 
       final borderPaint = Paint()
-        ..color = Colors.black.withOpacity(0.5)
+        ..color = Colors.black.withValues(alpha: 0.5)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.5;
 
@@ -425,7 +425,7 @@ class _ScaWheelPainter extends CustomPainter {
             cAngle,
             childSweep,
             true,
-            Paint()..color = child.color.withOpacity(cAlpha),
+            Paint()..color = child.color.withValues(alpha: cAlpha),
           );
           canvas.drawArc(
             rect,
@@ -477,7 +477,7 @@ class _ScaWheelPainter extends CustomPainter {
         currentAngle,
         sweepAngle,
         true,
-        Paint()..color = baseNode.color.withOpacity(alpha),
+        Paint()..color = baseNode.color.withValues(alpha: alpha),
       );
       canvas.drawArc(
         rect,

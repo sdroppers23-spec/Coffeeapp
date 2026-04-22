@@ -200,9 +200,9 @@ class SyncIndicator extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: color.withOpacity(0.3)),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -215,7 +215,7 @@ class SyncIndicator extends ConsumerWidget {
                   strokeWidth: 2,
                   color: const Color(0xFFC8A96E),
                   value: syncData.currentProgress > 0.05 ? syncData.currentProgress : null,
-                  backgroundColor: const Color(0xFFC8A96E).withOpacity(0.2),
+                  backgroundColor: const Color(0xFFC8A96E).withValues(alpha: 0.2),
                 ),
               )
             else

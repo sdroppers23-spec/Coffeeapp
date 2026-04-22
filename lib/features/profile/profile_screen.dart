@@ -48,7 +48,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   void _editProfile(User user) {
     showDialog(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.3),
+      barrierColor: Colors.black.withValues(alpha: 0.3),
       builder: (context) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: _EditProfileDialog(
@@ -402,7 +402,7 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
                       labelText: 'Display Name',
                       labelStyle: const TextStyle(color: Colors.white54),
                       filled: true,
-                      fillColor: Colors.white.withOpacity(0.05),
+                      fillColor: Colors.white.withValues(alpha: 0.05),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
@@ -423,7 +423,7 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
                             labelText: 'Avatar URL',
                             labelStyle: const TextStyle(color: Colors.white54),
                             filled: true,
-                            fillColor: Colors.white.withOpacity(0.05),
+                            fillColor: Colors.white.withValues(alpha: 0.05),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide.none,

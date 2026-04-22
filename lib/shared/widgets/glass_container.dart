@@ -74,11 +74,11 @@ class GlassContainer extends ConsumerWidget {
     }
     final effectiveBorderRadius = useDebug ? debugConfig.borderRadius : borderRadius;
     final effectiveBorderColor = useDebug
-        ? debugConfig.borderColor.withOpacity(debugConfig.borderOpacity)
-        : (borderColor ?? Colors.white.withOpacity(0.12));
+        ? debugConfig.borderColor.withValues(alpha: debugConfig.borderOpacity)
+        : (borderColor ?? Colors.white.withValues(alpha: 0.12));
     final effectiveBaseColor = useDebug
-        ? debugConfig.baseColor.withOpacity(effectiveBaseOpacity)
-        : Colors.black.withOpacity(0.4);
+        ? debugConfig.baseColor.withValues(alpha: effectiveBaseOpacity)
+        : Colors.black.withValues(alpha: 0.4);
     final effectiveTintColor = useDebug ? debugConfig.tintColor : (color ?? Colors.white);
 
     // Layer 1 & 2 combined into a clipped stack
@@ -112,7 +112,7 @@ class GlassContainer extends ConsumerWidget {
             padding: padding,
             decoration: BoxDecoration(
               color: (useDebug || backgroundGradient == null)
-                  ? effectiveTintColor.withOpacity(effectiveOpacity)
+                  ? effectiveTintColor.withValues(alpha: effectiveOpacity)
                   : null,
               borderRadius: BorderRadius.circular(effectiveBorderRadius),
               border: Border.all(
@@ -126,7 +126,7 @@ class GlassContainer extends ConsumerWidget {
                           : AssetImage(imageUrl!),
                       fit: BoxFit.cover,
                       colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(1 - imageOpacity),
+                        Colors.black.withValues(alpha: 1 - imageOpacity),
                         BlendMode.darken,
                       ),
                     )
@@ -138,8 +138,8 @@ class GlassContainer extends ConsumerWidget {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          Colors.white.withOpacity(0.1),
-                          Colors.white.withOpacity(0.02),
+                          Colors.white.withValues(alpha: 0.1),
+                          Colors.white.withValues(alpha: 0.02),
                         ],
                       )),
             ),
@@ -164,7 +164,7 @@ class GlassContainer extends ConsumerWidget {
             [
               BoxShadow(
                 color: (useDebug ? debugConfig.shadowColor : Colors.black)
-                    .withOpacity(0.3),
+                    .withValues(alpha: 0.3),
                 blurRadius: useDebug ? debugConfig.shadowBlur : 20,
                 spreadRadius: useDebug ? debugConfig.shadowSpread : 0,
                 offset: Offset(0, useDebug ? debugConfig.shadowOffsetY : 4),

@@ -24,7 +24,7 @@ class PremiumBackground extends StatelessWidget {
                 center: Alignment.topCenter,
                 radius: 1.2,
                 colors: [
-                  const Color(0xFFC8A96E).withOpacity(0.03),
+                  const Color(0xFFC8A96E).withValues(alpha: 0.03),
                   Colors.transparent,
                 ],
               ),

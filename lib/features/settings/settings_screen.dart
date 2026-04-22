@@ -186,7 +186,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           Text(
                             'Легка вібрація при натисканні та\nутриманні',
                             style: GoogleFonts.outfit(
-                              color: theme.colorScheme.onSurface.withOpacity(0.5),
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                               fontSize: 13,
                               height: 1.2,
                             ),
@@ -197,9 +197,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     Switch(
                       value: ref.watch(settingsProvider),
                       activeThumbColor: theme.colorScheme.secondary,
-                      activeTrackColor: theme.colorScheme.secondary.withOpacity(0.2),
+                      activeTrackColor: theme.colorScheme.secondary.withValues(alpha: 0.2),
                       inactiveThumbColor: Colors.grey[400],
-                      inactiveTrackColor: theme.colorScheme.onSurface.withOpacity(0.1),
+                      inactiveTrackColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
                       onChanged: (val) {
                         ref.read(settingsProvider.notifier).toggleVibration(val);
                       },
@@ -223,7 +223,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     onTap: () {},
                   ),
                   Divider(
-                    color: theme.colorScheme.onSurface.withOpacity(0.05),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
                     height: 1,
                     indent: 16,
                     endIndent: 16,
@@ -291,7 +291,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         style: GoogleFonts.outfit(
           fontSize: 13,
           fontWeight: FontWeight.bold,
-          color: isDark ? theme.colorScheme.primary : theme.colorScheme.primary.withOpacity(0.6),
+          color: isDark ? theme.colorScheme.primary : theme.colorScheme.primary.withValues(alpha: 0.6),
           letterSpacing: 2.0,
         ),
       ),
@@ -308,12 +308,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDark 
-              ? theme.colorScheme.onSurface.withOpacity(0.05)
-              : theme.colorScheme.primary.withOpacity(0.08),
+              ? theme.colorScheme.onSurface.withValues(alpha: 0.05)
+              : theme.colorScheme.primary.withValues(alpha: 0.08),
         ),
         boxShadow: isDark ? null : [
           BoxShadow(
-            color: theme.colorScheme.primary.withOpacity(0.03),
+            color: theme.colorScheme.primary.withValues(alpha: 0.03),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -339,7 +339,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           children: [
             Icon(
               icon,
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               size: 22,
             ),
             const SizedBox(width: 14),
@@ -355,7 +355,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
             Icon(
               Icons.chevron_right_rounded,
-              color: theme.colorScheme.onSurface.withOpacity(0.3),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
               size: 24,
             ),
           ],

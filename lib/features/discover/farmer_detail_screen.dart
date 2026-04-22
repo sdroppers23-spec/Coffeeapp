@@ -162,10 +162,10 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                color: gold.withOpacity(0.15),
+                                color: gold.withValues(alpha: 0.15),
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: gold.withOpacity(0.45),
+                                  color: gold.withValues(alpha: 0.45),
                                 ),
                               ),
                               child: Text(
@@ -202,7 +202,7 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                           style: GoogleFonts.outfit(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
-                            color: gold.withOpacity(0.85),
+                            color: gold.withValues(alpha: 0.85),
                           ),
                         ),
                       ],
@@ -214,8 +214,8 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              gold.withOpacity(0.5),
-                              gold.withOpacity(0.0),
+                              gold.withValues(alpha: 0.5),
+                              gold.withValues(alpha: 0.0),
                             ],
                           ),
                         ),
@@ -230,7 +230,7 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                               padding: HtmlPaddings.zero,
                               fontSize: FontSize(16.5),
                               lineHeight: LineHeight(1.78),
-                              color: Colors.white.withOpacity(0.88),
+                              color: Colors.white.withValues(alpha: 0.88),
                               fontFamily: GoogleFonts.outfit().fontFamily,
                             ),
                             "h1,h2,h3": Style(
@@ -257,7 +257,7 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                             ".coffee-accent": Style(
-                              color: gold.withOpacity(0.5),
+                              color: gold.withValues(alpha: 0.5),
                             ),
                             ".coffee-accent-gold": Style(
                               color: gold, // Solid gold for better contrast
@@ -271,7 +271,7 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                               fontSize: FontSize(16.5),
                               lineHeight: LineHeight(1.6),
                               margin: Margins.only(bottom: 8),
-                              color: Colors.white.withOpacity(0.9),
+                              color: Colors.white.withValues(alpha: 0.9),
                             ),
                             "li::marker": Style(
                               color: gold,

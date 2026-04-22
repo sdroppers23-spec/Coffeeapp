@@ -243,7 +243,7 @@ class _AdminEditBeanSheetState extends ConsumerState<AdminEditBeanSheet> {
           labelText: label,
           labelStyle: const TextStyle(color: Colors.white54, fontSize: 13),
           filled: true,
-          fillColor: Colors.white.withOpacity(0.05),
+          fillColor: Colors.white.withValues(alpha: 0.05),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 16,
             vertical: 12,
@@ -311,7 +311,7 @@ class _AdminEditBeanSheetState extends ConsumerState<AdminEditBeanSheet> {
                         decoration: InputDecoration(
                           labelText: 'Roaster (Brand)',
                           filled: true,
-                          fillColor: Colors.white.withOpacity(0.05),
+                          fillColor: Colors.white.withValues(alpha: 0.05),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide.none,
@@ -341,7 +341,7 @@ class _AdminEditBeanSheetState extends ConsumerState<AdminEditBeanSheet> {
                         decoration: InputDecoration(
                           labelText: 'Farmer',
                           filled: true,
-                          fillColor: Colors.white.withOpacity(0.05),
+                          fillColor: Colors.white.withValues(alpha: 0.05),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide.none,

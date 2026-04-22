@@ -357,7 +357,7 @@ class _TerroirGlobeState extends ConsumerState<TerroirGlobe>
       constraints: const BoxConstraints(maxWidth: 300),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: theme.colorScheme.primary.withOpacity(0.95),
+        color: theme.colorScheme.primary.withValues(alpha: 0.95),
         borderRadius: BorderRadius.circular(30),
         boxShadow: [
           BoxShadow(color: Colors.black54, blurRadius: 30, spreadRadius: 2),
@@ -481,8 +481,8 @@ class _GlobePainter extends CustomPainter {
           final pSize = (depthFactor * (isLand ? 2.5 : 1.0)).clamp(0.4, 3.5);
 
           paint.color = isLand
-              ? const Color(0xFFB8955A).withOpacity(opacity)   // Rich gold-brown land
-              : Colors.white.withOpacity(opacity * 0.08);      // Even fainter ocean
+              ? const Color(0xFFB8955A).withValues(alpha: opacity)   // Rich gold-brown land
+              : Colors.white.withValues(alpha: opacity * 0.08);      // Even fainter ocean
 
           canvas.drawCircle(pos, pSize, paint);
 
@@ -503,7 +503,7 @@ class _GlobePainter extends CustomPainter {
       final glowPaint = Paint()
         ..color = const Color(
           0xFFC8A96E,
-        ).withOpacity(0.3 * (1.0 - rippleValue))
+        ).withValues(alpha: 0.3 * (1.0 - rippleValue))
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
       canvas.drawCircle(rippleCenter!, 15, glowPaint);
 
@@ -519,7 +519,7 @@ class _GlobePainter extends CustomPainter {
         final ripplePaint = Paint()
           ..color = const Color(
             0xFFC8A96E,
-          ).withOpacity((1.0 - rippleValue) * 0.8)
+          ).withValues(alpha: (1.0 - rippleValue) * 0.8)
           ..style = PaintingStyle.stroke
           ..strokeWidth = 2.0;
         canvas.drawCircle(rippleCenter!, rippleValue * 80, ripplePaint);
@@ -537,7 +537,7 @@ class _GlobePainter extends CustomPainter {
     // Atmosphere
     final atomShadow = Paint()
       ..shader = RadialGradient(
-        colors: [Colors.transparent, Colors.black.withOpacity(0.4)],
+        colors: [Colors.transparent, Colors.black.withValues(alpha: 0.4)],
         stops: const [0.8, 1.0],
       ).createShader(Rect.fromCircle(center: center, radius: radius));
     canvas.drawCircle(center, radius, atomShadow);
@@ -574,7 +574,7 @@ class _GlobePainter extends CustomPainter {
 
       // Glow effect
       final glowPaint = Paint()
-        ..color = const Color(0xFFC8A96E).withOpacity(0.6)
+        ..color = const Color(0xFFC8A96E).withValues(alpha: 0.6)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
       canvas.drawCircle(pos, 8, glowPaint);
 

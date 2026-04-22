@@ -52,8 +52,8 @@ class MyLotGridCard extends ConsumerWidget {
           borderRadius: 24,
           color: isSelected ? const Color(0xFFC8A96E) : Colors.white10,
           borderColor: isSelected
-              ? const Color(0xFFC8A96E).withOpacity(0.8)
-              : Colors.white.withOpacity(0.12),
+              ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
+              : Colors.white.withValues(alpha: 0.12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -71,9 +71,9 @@ class MyLotGridCard extends ConsumerWidget {
                         height: 48,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: const Color(0xFFC8A96E).withOpacity(0.05),
+                          color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
                           border: Border.all(
-                            color: const Color(0xFFC8A96E).withOpacity(0.2),
+                            color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
                             width: 1,
                           ),
                         ),
@@ -98,7 +98,7 @@ class MyLotGridCard extends ConsumerWidget {
                             color: const Color(0xFF1A1714),
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(
-                              color: const Color(0xFFC8A96E).withOpacity(0.4),
+                              color: const Color(0xFFC8A96E).withValues(alpha: 0.4),
                               width: 1,
                             ),
                           ),
@@ -170,7 +170,7 @@ class MyLotGridCard extends ConsumerWidget {
               overflow: TextOverflow.ellipsis,
               style: GoogleFonts.outfit(
                 fontSize: 8.5,
-                color: const Color(0xFFC8A96E).withOpacity(0.45),
+                color: const Color(0xFFC8A96E).withValues(alpha: 0.45),
                 letterSpacing: 1.1,
                 fontWeight: FontWeight.w600,
               ),
@@ -182,7 +182,7 @@ class MyLotGridCard extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.05),
+                color: Colors.white.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Text(
@@ -191,7 +191,7 @@ class MyLotGridCard extends ConsumerWidget {
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.outfit(
                   fontSize: 7.5, 
-                  color: Colors.white.withOpacity(0.5),
+                  color: Colors.white.withValues(alpha: 0.5),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -301,8 +301,8 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
               ? const Color(0xFFC8A96E)
               : Colors.white,
           borderColor: isSelected
-              ? const Color(0xFFC8A96E).withOpacity(0.8)
-              : Colors.white.withOpacity(0.12),
+              ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
+              : Colors.white.withValues(alpha: 0.12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -329,7 +329,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                           Text(
                             lot.roasteryName!,
                             style: GoogleFonts.outfit(
-                              color: const Color(0xFFC8A96E).withOpacity(0.38),
+                              color: const Color(0xFFC8A96E).withValues(alpha: 0.38),
                               fontSize: 12,
                             ),
                           ),
@@ -372,7 +372,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                                   errorBuilder: (context, error, stackTrace) => Container(
                                     width: 54,
                                     height: 54,
-                                    color: const Color(0xFFC8A96E).withOpacity(0.1),
+                                    color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
                                     child: const Icon(Icons.coffee_rounded, color: Color(0xFFC8A96E), size: 18),
                                   ),
                                 )
@@ -384,7 +384,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                                   errorBuilder: (context, error, stackTrace) => Container(
                                     width: 54,
                                     height: 54,
-                                    color: const Color(0xFFC8A96E).withOpacity(0.1),
+                                    color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
                                     child: const Icon(Icons.coffee_rounded, color: Color(0xFFC8A96E), size: 18),
                                   ),
                                 ),
@@ -394,7 +394,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                           width: 54,
                           height: 54,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFC8A96E).withOpacity(0.05),
+                            color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
                             shape: BoxShape.circle,
                           ),
                           child: Center(
@@ -419,7 +419,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                             decoration: BoxDecoration(
                               color: const Color(0xFF1A1714),
                               shape: BoxShape.circle,
-                              border: Border.all(color: const Color(0xFFC8A96E).withOpacity(0.4), width: 1),
+                              border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.4), width: 1),
                             ),
                             child: Text(
                               lot.scaScore ?? '85',
@@ -459,7 +459,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                                   icon: Icons.local_fire_department_rounded, 
                                   text: lot.roastLevel!.toUpperCase(), 
                                   theme: theme,
-                                  color: theme.colorScheme.primary.withOpacity(0.2),
+                                  color: theme.colorScheme.primary.withValues(alpha: 0.2),
                                 ),
                               const SizedBox(width: 8),
                               _TagChip(icon: Icons.location_on_outlined, text: lot.originCountry, theme: theme),
@@ -576,7 +576,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                   color: isSelected ? const Color(0xFFC8A96E) : Colors.transparent,
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: isSelected ? const Color(0xFFC8A96E) : const Color(0xFFC8A96E).withOpacity(0.38),
+                    color: isSelected ? const Color(0xFFC8A96E) : const Color(0xFFC8A96E).withValues(alpha: 0.38),
                     width: 2,
                   ),
                 ),
@@ -614,7 +614,7 @@ class _HorizontalSensoryBar extends StatelessWidget {
           label,
           maxLines: 1,
           overflow: TextOverflow.clip,
-          style: GoogleFonts.outfit(fontSize: 8, color: const Color(0xFFC8A96E).withOpacity(0.38), fontWeight: FontWeight.bold, letterSpacing: 0.5),
+          style: GoogleFonts.outfit(fontSize: 8, color: const Color(0xFFC8A96E).withValues(alpha: 0.38), fontWeight: FontWeight.bold, letterSpacing: 0.5),
         ),
         const SizedBox(height: 4),
         Row(
@@ -625,7 +625,7 @@ class _HorizontalSensoryBar extends StatelessWidget {
                 height: 2.5,
                 margin: const EdgeInsets.only(right: 2),
                 decoration: BoxDecoration(
-                  color: isFilled ? theme.colorScheme.primary : const Color(0xFFC8A96E).withOpacity(0.1),
+                  color: isFilled ? theme.colorScheme.primary : const Color(0xFFC8A96E).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(1),
                 ),
               ),
@@ -650,9 +650,9 @@ class _TagChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: color ?? const Color(0xFFC8A96E).withOpacity(0.05),
+        color: color ?? const Color(0xFFC8A96E).withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFC8A96E).withOpacity(0.03)),
+        border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.03)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -737,7 +737,7 @@ class _FreshnessProgressBar extends StatelessWidget {
             Text(isUk ? 'Свіжість' : 'Freshness', 
               style: GoogleFonts.outfit(
                 fontSize: 10, 
-                color: const Color(0xFFC8A96E).withOpacity(0.38)
+                color: const Color(0xFFC8A96E).withValues(alpha: 0.38)
               )
             ),
             Text(labelText, 
@@ -753,7 +753,7 @@ class _FreshnessProgressBar extends StatelessWidget {
           height: 3,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: const Color(0xFFC8A96E).withOpacity(0.05),
+            color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(2),
           ),
           child: FractionallySizedBox(
@@ -766,7 +766,7 @@ class _FreshnessProgressBar extends StatelessWidget {
                 boxShadow: [
                   if (!isExpired)
                     BoxShadow(
-                      color: statusColor.withOpacity(0.3),
+                      color: statusColor.withValues(alpha: 0.3),
                       blurRadius: 6,
                       spreadRadius: 0.5
                     )
@@ -838,7 +838,7 @@ class _LotPropertyGrid extends StatelessWidget {
       style: GoogleFonts.outfit(
         fontSize: 10,
         fontWeight: FontWeight.w900,
-        color: const Color(0xFFC8A96E).withOpacity(0.2),
+        color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
         letterSpacing: 2.0,
       ),
     );
@@ -868,7 +868,7 @@ class _InfoItem extends StatelessWidget {
           label.toUpperCase(),
           style: GoogleFonts.outfit(
             fontSize: 8,
-            color: const Color(0xFFC8A96E).withOpacity(0.4),
+            color: const Color(0xFFC8A96E).withValues(alpha: 0.4),
             fontWeight: FontWeight.bold,
           ),
         ),

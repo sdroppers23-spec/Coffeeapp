@@ -127,12 +127,12 @@ class _PremiumFarmerCard extends ConsumerWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: gold.withOpacity(0.4),
+                        color: gold.withValues(alpha: 0.4),
                         width: 2,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: gold.withOpacity(0.15),
+                          color: gold.withValues(alpha: 0.15),
                           blurRadius: 12,
                           spreadRadius: 2,
                         ),
@@ -165,7 +165,7 @@ class _PremiumFarmerCard extends ConsumerWidget {
                           style: GoogleFonts.outfit(
                             fontSize: 13,
                             fontWeight: FontWeight.w400,
-                            color: Colors.white.withOpacity(0.6),
+                            color: Colors.white.withValues(alpha: 0.6),
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -194,7 +194,7 @@ class _PremiumFarmerCard extends ConsumerWidget {
                 style: GoogleFonts.outfit(
                   fontSize: 14,
                   height: 1.5,
-                  color: Colors.white.withOpacity(0.75),
+                  color: Colors.white.withValues(alpha: 0.75),
                 ),
               ),
               const SizedBox(height: 16),
@@ -247,7 +247,7 @@ class _PremiumFarmerCard extends ConsumerWidget {
       height: 42,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
         boxShadow: const [
           BoxShadow(
             color: Colors.black26,
@@ -276,9 +276,9 @@ class _PremiumFarmerCard extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFFC8A96E).withOpacity(0.1),
+        color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFC8A96E).withOpacity(0.2)),
+        border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.2)),
       ),
       child: Text(
         label.trim(),

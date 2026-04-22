@@ -39,10 +39,10 @@ class EncyclopediaLotGridCard extends ConsumerWidget {
         padding: const EdgeInsets.all(12),
         opacity: isSelected ? 0.35 : 0.12,
         borderRadius: 24,
-        color: isSelected ? const Color(0xFFC8A96E) : Colors.white.withOpacity(0.1),
+        color: isSelected ? const Color(0xFFC8A96E) : Colors.white.withValues(alpha: 0.1),
         borderColor: isSelected
-            ? const Color(0xFFC8A96E).withOpacity(0.8)
-            : Colors.white.withOpacity(0.12),
+            ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
+            : Colors.white.withValues(alpha: 0.12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -59,9 +59,9 @@ class EncyclopediaLotGridCard extends ConsumerWidget {
                       height: 48,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: const Color(0xFFC8A96E).withOpacity(0.05),
+                        color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
                         border: Border.all(
-                          color: const Color(0xFFC8A96E).withOpacity(0.2),
+                          color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
                           width: 1,
                         ),
                       ),
@@ -93,7 +93,7 @@ class EncyclopediaLotGridCard extends ConsumerWidget {
                           color: const Color(0xFF1A1714),
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                            color: const Color(0xFFC8A96E).withOpacity(0.4),
+                            color: const Color(0xFFC8A96E).withValues(alpha: 0.4),
                             width: 1,
                           ),
                         ),
@@ -117,7 +117,7 @@ class EncyclopediaLotGridCard extends ConsumerWidget {
                         : Icons.radio_button_unchecked_rounded,
                     color: isSelected
                         ? Colors.white
-                        : Colors.white.withOpacity(0.3),
+                        : Colors.white.withValues(alpha: 0.3),
                     size: 24,
                   )
                 else
@@ -156,7 +156,7 @@ class EncyclopediaLotGridCard extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.05),
+                color: Colors.white.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -174,7 +174,7 @@ class EncyclopediaLotGridCard extends ConsumerWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.outfit(
-                        color: Colors.white.withOpacity(0.6),
+                        color: Colors.white.withValues(alpha: 0.6),
                         fontSize: 9,
                         fontWeight: FontWeight.w500,
                       ),
@@ -223,11 +223,11 @@ class EncyclopediaLotListCard extends ConsumerWidget {
           opacity: isSelected ? 0.35 : 0.12,
           borderRadius: 24,
           color: isSelected
-              ? const Color(0xFFC8A96E).withOpacity(0.1)
-              : Colors.white.withOpacity(0.05),
+              ? const Color(0xFFC8A96E).withValues(alpha: 0.1)
+              : Colors.white.withValues(alpha: 0.05),
           borderColor: isSelected
-              ? const Color(0xFFC8A96E).withOpacity(0.8)
-              : Colors.white.withOpacity(0.12),
+              ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
+              : Colors.white.withValues(alpha: 0.12),
           child: Row(
             children: [
               // Avatar with Flag & Score
@@ -239,9 +239,9 @@ class EncyclopediaLotListCard extends ConsumerWidget {
                     height: 56,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: const Color(0xFFC8A96E).withOpacity(0.05),
+                      color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
                       border: Border.all(
-                        color: const Color(0xFFC8A96E).withOpacity(0.2),
+                        color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
                         width: 1,
                       ),
                     ),
@@ -270,7 +270,7 @@ class EncyclopediaLotListCard extends ConsumerWidget {
                         color: const Color(0xFF1A1714),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                          color: const Color(0xFFC8A96E).withOpacity(0.4),
+                          color: const Color(0xFFC8A96E).withValues(alpha: 0.4),
                           width: 1,
                         ),
                       ),
@@ -335,7 +335,7 @@ class EncyclopediaLotListCard extends ConsumerWidget {
                       : Icons.radio_button_unchecked_rounded,
                   color: isSelected
                       ? Colors.white
-                      : Colors.white.withOpacity(0.3),
+                      : Colors.white.withValues(alpha: 0.3),
                   size: 28,
                 )
               else
@@ -381,16 +381,16 @@ class _TraitBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: const Color(0xFFC8A96E).withOpacity(0.05),
+        color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(6),
         border:
-            Border.all(color: const Color(0xFFC8A96E).withOpacity(0.1)),
+            Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.1)),
       ),
       child: Text(
         text.toUpperCase(),
         style: GoogleFonts.outfit(
           fontSize: 8,
-          color: const Color(0xFFC8A96E).withOpacity(0.6),
+          color: const Color(0xFFC8A96E).withValues(alpha: 0.6),
           fontWeight: FontWeight.bold,
           letterSpacing: 0.5,
         ),

@@ -81,7 +81,7 @@ class DiscoveryActionBar extends ConsumerWidget {
             child: Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.05),
+                color: Colors.white.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.white10),
               ),
@@ -140,7 +140,7 @@ class _ActionButton extends ConsumerWidget {
         decoration: BoxDecoration(
           color: isActive
               ? const Color(0xFFC8A96E)
-              : Colors.white.withOpacity(0.05),
+              : Colors.white.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
             color: isActive ? Colors.transparent : Colors.white10,

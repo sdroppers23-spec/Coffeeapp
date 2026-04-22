@@ -86,10 +86,10 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> {
                     filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: action.color.withOpacity(0.15),
+                        color: action.color.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(widget.borderRadius),
                         border: Border.all(
-                          color: action.color.withOpacity(0.3),
+                          color: action.color.withValues(alpha: 0.3),
                           width: 1.0,
                         ),
                       ),

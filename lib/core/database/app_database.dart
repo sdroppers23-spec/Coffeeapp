@@ -959,6 +959,7 @@ class AppDatabase extends _$AppDatabase {
       brewTempC: r.brewTempC,
       notes: r.notes,
       rating: r.rating,
+      createdAt: r.createdAt,
       updatedAt: r.updatedAt,
       isSynced: r.isSynced,
       microns: r.microns,

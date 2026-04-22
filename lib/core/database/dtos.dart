@@ -499,6 +499,7 @@ class CustomRecipeDto {
   final double brewTempC;
   final String notes;
   final int rating;
+  final DateTime? createdAt;
   final DateTime? updatedAt;
   final bool isSynced;
 
@@ -522,6 +523,7 @@ class CustomRecipeDto {
     required this.brewTempC,
     required this.notes,
     required this.rating,
+    this.createdAt,
     this.updatedAt,
     this.isSynced = false,
     this.microns,
@@ -531,6 +533,54 @@ class CustomRecipeDto {
   });
 
   String get pourScheduleJson => jsonEncode(pours);
+
+  CustomRecipeDto copyWith({
+    String? id,
+    String? lotId,
+    String? methodKey,
+    String? name,
+    double? coffeeGrams,
+    double? totalWaterMl,
+    int? grindNumber,
+    int? comandanteClicks,
+    int? ek43Division,
+    int? totalPours,
+    List<dynamic>? pours,
+    double? brewTempC,
+    String? notes,
+    int? rating,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    bool? isSynced,
+    int? microns,
+    String? recipeType,
+    double? brewRatio,
+    String? grinderName,
+  }) {
+    return CustomRecipeDto(
+      id: id ?? this.id,
+      lotId: lotId ?? this.lotId,
+      methodKey: methodKey ?? this.methodKey,
+      name: name ?? this.name,
+      coffeeGrams: coffeeGrams ?? this.coffeeGrams,
+      totalWaterMl: totalWaterMl ?? this.totalWaterMl,
+      grindNumber: grindNumber ?? this.grindNumber,
+      comandanteClicks: comandanteClicks ?? this.comandanteClicks,
+      ek43Division: ek43Division ?? this.ek43Division,
+      totalPours: totalPours ?? this.totalPours,
+      pours: pours ?? this.pours,
+      brewTempC: brewTempC ?? this.brewTempC,
+      notes: notes ?? this.notes,
+      rating: rating ?? this.rating,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isSynced: isSynced ?? this.isSynced,
+      microns: microns ?? this.microns,
+      recipeType: recipeType ?? this.recipeType,
+      brewRatio: brewRatio ?? this.brewRatio,
+      grinderName: grinderName ?? this.grinderName,
+    );
+  }
 }
 
 extension LocalizedBeanDtoExtension on LocalizedBeanDto {

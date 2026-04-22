@@ -489,9 +489,9 @@ class _CustomRecipeFormScreenState
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.07),
+                color: Colors.white.withValues(alpha: 0.07),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.white.withOpacity(0.1)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
@@ -645,7 +645,7 @@ class _PourRow extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -787,14 +787,14 @@ class _Field extends StatelessWidget {
             ? const EdgeInsets.symmetric(horizontal: 12, vertical: 10)
             : null,
         filled: true,
-        fillColor: Colors.white.withOpacity(0.07),
+        fillColor: Colors.white.withValues(alpha: 0.07),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
+          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -899,8 +899,8 @@ class _CircleBtn extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: enabled
-              ? const Color(0xFFC8A96E).withOpacity(0.2)
-              : Colors.white.withOpacity(0.05),
+              ? const Color(0xFFC8A96E).withValues(alpha: 0.2)
+              : Colors.white.withValues(alpha: 0.05),
           border: Border.all(
             color: enabled ? const Color(0xFFC8A96E) : Colors.white12,
           ),

@@ -150,7 +150,7 @@ class _AdminEditSphereSheetState extends ConsumerState<AdminEditSphereSheet> {
           labelText: label,
           labelStyle: const TextStyle(color: Colors.white54, fontSize: 13),
           filled: true,
-          fillColor: Colors.white.withOpacity(0.05),
+          fillColor: Colors.white.withValues(alpha: 0.05),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 16,
             vertical: 12,

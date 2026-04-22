@@ -75,9 +75,9 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
               child: Container(
                 padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.05),
+                  color: Colors.white.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: Colors.white.withOpacity(0.1)),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
                 ),
                 child: Material(
                   color: Colors.transparent,
@@ -88,7 +88,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                         width: 64,
                         height: 64,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFC8A96E).withOpacity(0.1),
+                          color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(Icons.warning_amber_rounded,
@@ -119,9 +119,9 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                               height: 48,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(14),
-                                color: Colors.white.withOpacity(0.05),
+                                color: Colors.white.withValues(alpha: 0.05),
                                 border: Border.all(
-                                    color: Colors.white.withOpacity(0.1)),
+                                    color: Colors.white.withValues(alpha: 0.1)),
                               ),
                               alignment: Alignment.center,
                               child: Text('СКАСУВАТИ',
@@ -144,7 +144,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                                 color: Colors.redAccent,
                                 border: Border.all(
                                     color:
-                                        Colors.redAccent.withOpacity(0.5)),
+                                        Colors.redAccent.withValues(alpha: 0.5)),
                               ),
                               alignment: Alignment.center,
                               child: Text('ВИДАЛИТИ',
@@ -270,10 +270,10 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                 icon: Container(
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFC8A96E).withOpacity(0.1),
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                     border: Border.all(
-                        color: const Color(0xFFC8A96E).withOpacity(0.3)),
+                        color: const Color(0xFFC8A96E).withValues(alpha: 0.3)),
                   ),
                   child: const Icon(Icons.add,
                       size: 20, color: Color(0xFFC8A96E)),
@@ -295,10 +295,10 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
               height: 44,
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.03),
+                color: Colors.white.withValues(alpha: 0.03),
                 borderRadius: BorderRadius.circular(22),
                 border: Border.all(
-                    color: Colors.white.withOpacity(0.05)),
+                    color: Colors.white.withValues(alpha: 0.05)),
               ),
               child: TabBar(
                 controller: _tabController,
@@ -391,7 +391,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                           boxShadow: [
                             BoxShadow(
                               color: const Color(0xFFC8A96E)
-                                  .withOpacity(0.35),
+                                  .withValues(alpha: 0.35),
                               blurRadius: 20,
                               spreadRadius: 2,
                               offset: const Offset(0, 6),
@@ -550,14 +550,14 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
               height: 120,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFFC8A96E).withOpacity(0.05),
+                color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
                 border: Border.all(
-                  color: const Color(0xFFC8A96E).withOpacity(0.1),
+                  color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
                   width: 2,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFFC8A96E).withOpacity(0.05),
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
                     blurRadius: 30,
                     spreadRadius: 5,
                   ),
@@ -686,7 +686,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
         labelStyle: GoogleFonts.poppins(color: Colors.white38, fontSize: 13),
         prefixIcon: Icon(icon, color: const Color(0xFFC8A96E), size: 18),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.05),
+        fillColor: Colors.white.withValues(alpha: 0.05),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -723,8 +723,8 @@ class _PremiumRoasterCard extends StatelessWidget {
         blur: 30,
         color: isSelected ? const Color(0xFFC8A96E) : Colors.white,
         borderColor: isSelected
-            ? const Color(0xFFC8A96E).withOpacity(0.8)
-            : Colors.white.withOpacity(0.12),
+            ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
+            : Colors.white.withValues(alpha: 0.12),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
@@ -740,7 +740,7 @@ class _PremiumRoasterCard extends StatelessWidget {
                           shape: BoxShape.circle,
                           color: isSelected
                               ? const Color(0xFFC8A96E)
-                              : Colors.white.withOpacity(0.1),
+                              : Colors.white.withValues(alpha: 0.1),
                           border: Border.all(
                             color: isSelected
                                 ? const Color(0xFFC8A96E)
@@ -760,7 +760,7 @@ class _PremiumRoasterCard extends StatelessWidget {
                         margin: const EdgeInsets.only(right: 14),
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.05),
+                          color: Colors.white.withValues(alpha: 0.05),
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(color: Colors.white12),
                         ),
@@ -912,9 +912,9 @@ class _PremiumPulsingLoaderState extends State<_PremiumPulsingLoader>
                   height: 80,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: const Color(0xFFC8A96E).withOpacity(0.1),
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
                     border: Border.all(
-                      color: const Color(0xFFC8A96E).withOpacity(0.3),
+                      color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
                       width: 2,
                     ),
                   ),

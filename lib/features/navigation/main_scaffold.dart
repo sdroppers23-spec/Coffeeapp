@@ -176,8 +176,8 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                                 ),
                                 backgroundGradient: null,
                                 borderColor: isDark
-                                    ? Colors.white.withOpacity(0.25)
-                                    : theme.colorScheme.primary.withOpacity(0.2),
+                                    ? Colors.white.withValues(alpha: 0.25)
+                                    : theme.colorScheme.primary.withValues(alpha: 0.2),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -230,8 +230,8 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                               borderRadius: 26,
                               backgroundGradient: null,
                               borderColor: isDark
-                                  ? Colors.white.withOpacity(0.25)
-                                  : theme.colorScheme.primary.withOpacity(0.2),
+                                  ? Colors.white.withValues(alpha: 0.25)
+                                  : theme.colorScheme.primary.withValues(alpha: 0.2),
                               child: Center(
                                 child: Icon(
                                   Icons.settings_rounded,
@@ -343,13 +343,13 @@ class _NavBarItemState extends ConsumerState<_NavBarItem>
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: widget.isSelected
-                        ? (isDark ? Colors.white10 : theme.colorScheme.primary.withOpacity(0.1))
+                        ? (isDark ? Colors.white10 : theme.colorScheme.primary.withValues(alpha: 0.1))
                         : Colors.transparent,
                     shape: BoxShape.circle,
                     boxShadow: widget.isSelected
                         ? [
                             BoxShadow(
-                              color: activeColor.withOpacity(0.15),
+                              color: activeColor.withValues(alpha: 0.15),
                               blurRadius: 25,
                               spreadRadius: 2,
                             ),
@@ -486,11 +486,11 @@ class _FrostedCapsuleToastState extends State<_FrostedCapsuleToast>
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 backgroundGradient: LinearGradient(
                   colors: [
-                    Colors.white.withOpacity(0.15),
-                    Colors.white.withOpacity(0.05),
+                    Colors.white.withValues(alpha: 0.15),
+                    Colors.white.withValues(alpha: 0.05),
                   ],
                 ),
-                borderColor: Colors.white.withOpacity(0.2),
+                borderColor: Colors.white.withValues(alpha: 0.2),
                 child: Text(
                   widget.message,
                   style: GoogleFonts.outfit(

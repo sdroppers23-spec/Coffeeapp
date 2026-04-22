@@ -147,12 +147,12 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.08),
+                    color: Colors.white.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: Colors.white.withOpacity(0.12)),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.4),
+                        color: Colors.black.withValues(alpha: 0.4),
                         blurRadius: 30,
                         offset: const Offset(0, 15),
                       ),
@@ -170,7 +170,7 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
                               value: 1.0 - _controller.value,
                               strokeWidth: 2,
                               valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFC8A96E)),
-                              backgroundColor: Colors.white.withOpacity(0.05),
+                              backgroundColor: Colors.white.withValues(alpha: 0.05),
                             ),
                             Text(
                               '$_secondsRemaining',

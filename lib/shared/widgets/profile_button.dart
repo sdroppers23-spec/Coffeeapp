@@ -32,7 +32,7 @@ class ProfileButton extends ConsumerWidget {
           tag: 'profile_avatar',
           child: CircleAvatar(
             radius: 18,
-            backgroundColor: theme.colorScheme.primary.withOpacity(0.2),
+            backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.2),
             backgroundImage: user != null ? NetworkImage(avatarUrl) : null,
             onBackgroundImageError: (exception, stackTrace) {},
             child: user == null
@@ -112,7 +112,7 @@ class _ProfileSheet extends ConsumerWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF1A1A1A),
         borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: Colors.white.withOpacity(0.08)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

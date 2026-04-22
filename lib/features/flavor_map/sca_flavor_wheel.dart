@@ -144,10 +144,10 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.black.withOpacity(0.0),
+                    Colors.black.withValues(alpha: 0.0),
                     Colors.black,
                     Colors.black,
-                    Colors.black.withOpacity(0.0),
+                    Colors.black.withValues(alpha: 0.0),
                   ],
                   stops: const [0.0, 0.04, 0.96, 1.0],
                 ).createShader(bounds);
@@ -171,7 +171,7 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
+                              color: Colors.black.withValues(alpha: 0.2),
                               blurRadius: 20,
                               spreadRadius: 5,
                             ),
@@ -249,10 +249,10 @@ class _ScaWheelPainter extends CustomPainter {
 
       // 1. Draw Inner Ring (Category)
       final catPaint = Paint()
-        ..color = cat.color.withOpacity(0.7)
+        ..color = cat.color.withValues(alpha: 0.7)
         ..style = PaintingStyle.fill;
       final borderPaint = Paint()
-        ..color = Colors.white.withOpacity(0.3)
+        ..color = Colors.white.withValues(alpha: 0.3)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 0.5;
 
@@ -294,7 +294,7 @@ class _ScaWheelPainter extends CustomPainter {
       for (var sub in cat.sub) {
         final subSweepAngle = sub.noteKeys.length * angleStep * animationValue;
         final subPaint = Paint()
-          ..color = sub.color.withOpacity(0.7)
+          ..color = sub.color.withValues(alpha: 0.7)
           ..style = PaintingStyle.fill;
 
         _drawFlatArc(
@@ -337,7 +337,7 @@ class _ScaWheelPainter extends CustomPainter {
         for (var noteKey in sub.noteKeys) {
           final noteSweepAngle = angleStep * animationValue;
           final notePaint = Paint()
-            ..color = sub.color.withOpacity(0.7)
+            ..color = sub.color.withValues(alpha: 0.7)
             ..style = PaintingStyle.fill;
 
           _drawFlatArc(
@@ -370,7 +370,7 @@ class _ScaWheelPainter extends CustomPainter {
                 noteSweepAngle,
                 r2,
                 r3,
-                Colors.white.withOpacity(0.9),
+                Colors.white.withValues(alpha: 0.9),
                 7.2, // Outer ring (Note) - user set
                 false, // Normal weight for small text
               );
@@ -388,7 +388,7 @@ class _ScaWheelPainter extends CustomPainter {
 
     // Grid lines
     final gridPaint = Paint()
-      ..color = Colors.white.withOpacity(0.2)
+      ..color = Colors.white.withValues(alpha: 0.2)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.5;
     canvas.drawCircle(center, r0, gridPaint);

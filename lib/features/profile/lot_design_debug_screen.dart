@@ -148,18 +148,18 @@ class _DebugLotCardState extends State<_DebugLotCard> {
                     if (dir == DismissDirection.startToEnd) {
                       // LEFT SIDE ACTION
                       if (isV20) {
-                        bgColor = const Color(0xFF3A7BBF).withOpacity(0.8);
+                        bgColor = const Color(0xFF3A7BBF).withValues(alpha: 0.8);
                         icon = Icons.archive_outlined;
                         label = 'Архів';
                       } else {
-                        bgColor = const Color(0xFF39FF14).withOpacity(0.8);
+                        bgColor = const Color(0xFF39FF14).withValues(alpha: 0.8);
                         icon = Icons.edit_outlined;
                         label = 'Редагувати';
                       }
                       alignment = Alignment.centerLeft;
                     } else if (dir == DismissDirection.endToStart) {
                       // RIGHT SIDE ACTION (Delete for both)
-                      bgColor = Colors.redAccent.withOpacity(0.8);
+                      bgColor = Colors.redAccent.withValues(alpha: 0.8);
                       icon = Icons.delete_outline_rounded;
                       label = 'Видалити';
                       alignment = Alignment.centerRight;
@@ -171,10 +171,10 @@ class _DebugLotCardState extends State<_DebugLotCard> {
                         filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: bgColor.withOpacity(0.15),
+                            color: bgColor.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                              color: bgColor.withOpacity(0.3),
+                              color: bgColor.withValues(alpha: 0.3),
                               width: 1.0,
                             ),
                           ),
@@ -281,7 +281,7 @@ class _DebugLotCardState extends State<_DebugLotCard> {
       alignment: alignment,
       padding: const EdgeInsets.symmetric(horizontal: 24),
       decoration: BoxDecoration(
-        color: widget.swipeColor.withOpacity(0.7),
+        color: widget.swipeColor.withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(20), // [FIX] Rounded background
       ),
       child: Icon(Icons.delete_outline, color: widget.swipeColor),
@@ -300,10 +300,10 @@ class _DebugLotCardState extends State<_DebugLotCard> {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.20),
+            color: Colors.white.withValues(alpha: 0.20),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: Colors.white.withOpacity(0.12),
+              color: Colors.white.withValues(alpha: 0.12),
               width: 1.0,
             ),
           ),
@@ -329,13 +329,13 @@ class _DebugLotCardState extends State<_DebugLotCard> {
               padding: const EdgeInsets.all(16), // Паддінг тепер ТУТ, всередині
               decoration: BoxDecoration(
                 color: isSelected
-                    ? const Color(0xFFC8A96E).withOpacity(0.15)
-                    : Colors.white.withOpacity(0.10),
+                    ? const Color(0xFFC8A96E).withValues(alpha: 0.15)
+                    : Colors.white.withValues(alpha: 0.10),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
                   color: isSelected
-                      ? const Color(0xFFC8A96E).withOpacity(0.8)
-                      : Colors.white.withOpacity(0.12),
+                      ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
+                      : Colors.white.withValues(alpha: 0.12),
                   width: 1.0,
                 ),
               ),

@@ -54,10 +54,10 @@ class GlobalStatusBar extends ConsumerWidget {
         right: 20,
       ),
       decoration: BoxDecoration(
-        color: statusColor.withOpacity(0.1),
+        color: statusColor.withValues(alpha: 0.1),
         border: Border(
           bottom: BorderSide(
-            color: statusColor.withOpacity(0.2),
+            color: statusColor.withValues(alpha: 0.2),
             width: 0.5,
           ),
         ),

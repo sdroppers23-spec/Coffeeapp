@@ -112,11 +112,11 @@ class _FrostedCapsuleToastState extends State<_FrostedCapsuleToast>
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   backgroundGradient: LinearGradient(
                     colors: [
-                      Colors.white.withOpacity(0.12),
-                      Colors.white.withOpacity(0.05),
+                      Colors.white.withValues(alpha: 0.12),
+                      Colors.white.withValues(alpha: 0.05),
                     ],
                   ),
-                  borderColor: widget.accentColor.withOpacity(0.3),
+                  borderColor: widget.accentColor.withValues(alpha: 0.3),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

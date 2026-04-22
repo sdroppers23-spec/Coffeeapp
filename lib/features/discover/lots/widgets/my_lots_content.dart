@@ -73,9 +73,9 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.05),
+                    color: Colors.white.withValues(alpha: 0.05),
                     borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: Colors.white.withOpacity(0.1)),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
                   ),
                   child: Material(
                     color: Colors.transparent,
@@ -86,7 +86,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                           width: 64,
                           height: 64,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFC8A96E).withOpacity(0.1),
+                            color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
@@ -124,8 +124,8 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                                   height: 48,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(14),
-                                    color: Colors.white.withOpacity(0.05),
-                                    border: Border.all(color: Colors.white.withOpacity(0.1)),
+                                    color: Colors.white.withValues(alpha: 0.05),
+                                    border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
                                   ),
                                   alignment: Alignment.center,
                                   child: Text(
@@ -149,7 +149,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(14),
                                     color: Colors.redAccent, // Made opaque
-                                    border: Border.all(color: Colors.redAccent.withOpacity(0.5)),
+                                    border: Border.all(color: Colors.redAccent.withValues(alpha: 0.5)),
                                   ),
                                   alignment: Alignment.center,
                                   child: Text(
@@ -341,7 +341,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -360,9 +360,9 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
               height: 44,
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.03),
+                color: Colors.white.withValues(alpha: 0.03),
                 borderRadius: BorderRadius.circular(22),
-                border: Border.all(color: Colors.white.withOpacity(0.05)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
               ),
               child: TabBar(
                 controller: _subTabController,
@@ -569,7 +569,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
           borderRadius: BorderRadius.circular(50),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFC8A96E).withOpacity(0.35),
+              color: const Color(0xFFC8A96E).withValues(alpha: 0.35),
               blurRadius: 20,
               spreadRadius: 2,
               offset: const Offset(0, 6),
@@ -602,10 +602,10 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
       decoration: BoxDecoration(
         color: const Color(0xFF1D1B1A),
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.black.withValues(alpha: 0.5),
             blurRadius: 20,
             spreadRadius: 4,
           ),
@@ -689,9 +689,9 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                                 child: Container(
                                   padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.05),
+                                    color: Colors.white.withValues(alpha: 0.05),
                                     borderRadius: BorderRadius.circular(24),
-                                    border: Border.all(color: Colors.white.withOpacity(0.1)),
+                                    border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
                                   ),
                                   child: Material(
                                     color: Colors.transparent,
@@ -702,7 +702,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                                           width: 64,
                                           height: 64,
                                           decoration: BoxDecoration(
-                                            color: const Color(0xFFC8A96E).withOpacity(0.1),
+                                            color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
                                             shape: BoxShape.circle,
                                           ),
                                           child: const Icon(
@@ -740,8 +740,8 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                                                   height: 48,
                                                   decoration: BoxDecoration(
                                                     borderRadius: BorderRadius.circular(14),
-                                                    color: Colors.white.withOpacity(0.05),
-                                                    border: Border.all(color: Colors.white.withOpacity(0.1)),
+                                                    color: Colors.white.withValues(alpha: 0.05),
+                                                    border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
                                                   ),
                                                   alignment: Alignment.center,
                                                   child: Text(
@@ -765,7 +765,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                                                   decoration: BoxDecoration(
                                                     borderRadius: BorderRadius.circular(14),
                                                     color: Colors.redAccent,
-                                                    border: Border.all(color: Colors.redAccent.withOpacity(0.5)),
+                                                    border: Border.all(color: Colors.redAccent.withValues(alpha: 0.5)),
                                                   ),
                                                   alignment: Alignment.center,
                                                   child: Text(
@@ -874,7 +874,7 @@ class _CountdownProgressState extends State<_CountdownProgress> with SingleTicke
           value: _controller.value,
           strokeWidth: 2,
           valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFC8A96E)),
-          backgroundColor: Colors.white.withOpacity(0.1),
+          backgroundColor: Colors.white.withValues(alpha: 0.1),
         );
       },
     );

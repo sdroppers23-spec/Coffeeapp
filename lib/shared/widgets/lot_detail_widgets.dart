@@ -19,13 +19,13 @@ class LotBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         color: isPrimary
-            ? theme.colorScheme.primary.withOpacity(0.15)
-            : Colors.white.withOpacity(0.05),
+            ? theme.colorScheme.primary.withValues(alpha: 0.15)
+            : Colors.white.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: isPrimary
-              ? theme.colorScheme.primary.withOpacity(0.3)
-              : Colors.white.withOpacity(0.1),
+              ? theme.colorScheme.primary.withValues(alpha: 0.3)
+              : Colors.white.withValues(alpha: 0.1),
         ),
       ),
       child: Text(
@@ -127,7 +127,7 @@ class LotCompactStat extends StatelessWidget {
                 Icon(
                   Icons.info_outline_rounded,
                   size: 10,
-                  color: const Color(0xFFC8A96E).withOpacity(0.5),
+                  color: const Color(0xFFC8A96E).withValues(alpha: 0.5),
                 ),
               ],
             ],

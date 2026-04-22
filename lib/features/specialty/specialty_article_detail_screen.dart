@@ -142,9 +142,9 @@ class _SpecialtyArticleDetailScreenState
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
-                          color: gold.withOpacity(0.1),
+                          color: gold.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(100),
-                          border: Border.all(color: gold.withOpacity(0.3)),
+                          border: Border.all(color: gold.withValues(alpha: 0.3)),
                         ),
                         child: Text(
                           widget.moduleName,
@@ -175,13 +175,13 @@ class _SpecialtyArticleDetailScreenState
                       // Read time & Share row
                       Row(
                         children: [
-                          Icon(Icons.access_time, size: 14, color: gold.withOpacity(0.7)),
+                          Icon(Icons.access_time, size: 14, color: gold.withValues(alpha: 0.7)),
                           const SizedBox(width: 6),
                           Text(
                             '${widget.article.readTimeMin} хв читання',
                             style: GoogleFonts.outfit(
                               fontSize: 14,
-                              color: Colors.white.withOpacity(0.6),
+                              color: Colors.white.withValues(alpha: 0.6),
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -196,8 +196,8 @@ class _SpecialtyArticleDetailScreenState
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              gold.withOpacity(0.35),
-                              gold.withOpacity(0.0),
+                              gold.withValues(alpha: 0.35),
+                              gold.withValues(alpha: 0.0),
                             ],
                           ),
                         ),
@@ -214,7 +214,7 @@ class _SpecialtyArticleDetailScreenState
                             padding: HtmlPaddings.zero,
                             fontSize: FontSize(17),
                             lineHeight: LineHeight(1.8),
-                            color: Colors.white.withOpacity(0.9),
+                            color: Colors.white.withValues(alpha: 0.9),
                             fontFamily: GoogleFonts.outfit().fontFamily,
                           ),
                           "h1,h2,h3": Style(
@@ -241,10 +241,10 @@ class _SpecialtyArticleDetailScreenState
                             fontWeight: FontWeight.bold,
                           ),
                           ".coffee-accent": Style(
-                            color: gold.withOpacity(0.5),
+                            color: gold.withValues(alpha: 0.5),
                           ),
                           ".coffee-accent-gold": Style(
-                            color: gold.withOpacity(0.8),
+                            color: gold.withValues(alpha: 0.8),
                             fontWeight: FontWeight.bold,
                           ),
                           "ol, ul": Style(
@@ -255,7 +255,7 @@ class _SpecialtyArticleDetailScreenState
                             fontSize: FontSize(17),
                             lineHeight: LineHeight(1.6),
                             margin: Margins.only(bottom: 8),
-                            color: Colors.white.withOpacity(0.9),
+                            color: Colors.white.withValues(alpha: 0.9),
                           ),
                           "li::marker": Style(
                             color: gold,

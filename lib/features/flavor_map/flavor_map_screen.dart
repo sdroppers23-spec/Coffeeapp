@@ -73,10 +73,14 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Image.asset(
-                            'assets/images/flavor_wheel_logo_${ref.watch(localeProvider).toLowerCase()}.png',
-                            height: 32,
-                            fit: BoxFit.contain,
+                          Text(
+                            ref.t('specialty').toUpperCase(),
+                            style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFFC8A96E),
+                              letterSpacing: 1.5,
+                            ),
                           ),
                           const SizedBox(width: 8),
                           const SyncIndicator(),
@@ -95,7 +99,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                 decoration: BoxDecoration(
                   color: const Color(0xFF1D1B1A), // Dark brown matte
                   borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+                  border: Border.all(color: Colors.white.withOpacity(0.05)),
                 ),
                 child: Row(
                   children: [
@@ -144,7 +148,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                               color: const Color(0xFF171312),
                               borderRadius: BorderRadius.circular(40),
                               border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.05),
+                                color: Colors.white.withOpacity(0.05),
                               ),
                             ),
                             child: Column(
@@ -215,10 +219,14 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                         Column(
                           children: [
                             const SizedBox(height: 10),
-                            Image.asset(
-                              ref.watch(localeProvider) == 'uk' ? 'assets/images/flavor_wheel_logo_uk.png' : 'assets/images/flavor_wheel_logo_en.png',
-                              height: 60,
-                              fit: BoxFit.contain,
+                            Text(
+                              ref.t('tab_wheel').toUpperCase(),
+                              style: GoogleFonts.poppins(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFFC8A96E),
+                                letterSpacing: 2,
+                              ),
                             ),
                             const SizedBox(height: 10),
                             Expanded(
@@ -280,7 +288,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
         }
       },
       selectedColor: const Color(0xFFC8A96E),
-      backgroundColor: Colors.white.withValues(alpha: 0.05),
+      backgroundColor: Colors.white.withOpacity(0.05),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(
@@ -331,7 +339,7 @@ class _FlavorInfoCard extends ConsumerWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: color.withValues(alpha: 0.5),
+                          color: color.withOpacity(0.5),
                           blurRadius: 8,
                           spreadRadius: 2,
                         ),
@@ -363,7 +371,7 @@ class _FlavorInfoCard extends ConsumerWidget {
             FlavorDescriptions.getDescription(flavorKey, ref.watch(localeProvider)),
             style: GoogleFonts.outfit(
               fontSize: 14,
-              color: Colors.white.withValues(alpha: 0.7),
+              color: Colors.white.withOpacity(0.7),
               height: 1.5,
             ),
           ),
@@ -393,10 +401,10 @@ class _FlavorInfoCard extends ConsumerWidget {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.05),
+                            color: Colors.white.withOpacity(0.05),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.1),
+                              color: Colors.white.withOpacity(0.1),
                             ),
                           ),
                           child: Text(
@@ -570,9 +578,9 @@ class _TemplateChip extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.05),
+              color: Colors.white.withOpacity(0.05),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+              border: Border.all(color: Colors.white.withOpacity(0.1)),
             ),
             child: Text(
               label,

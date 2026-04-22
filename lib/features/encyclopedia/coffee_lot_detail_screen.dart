@@ -104,8 +104,8 @@ class _CoffeeLotDetailScreenState extends ConsumerState<CoffeeLotDetailScreen>
                             child: Icon(
                               Icons.coffee_rounded,
                               size: 64,
-                              color: theme.colorScheme.primary.withValues(
-                                alpha: 0.1,
+                              color: theme.colorScheme.primary.withOpacity(
+                                0.1,
                               ),
                             ),
                           )
@@ -120,9 +120,9 @@ class _CoffeeLotDetailScreenState extends ConsumerState<CoffeeLotDetailScreen>
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          Colors.black.withValues(alpha: 0.6),
+                          Colors.black.withOpacity(0.6),
                           Colors.transparent,
-                          Colors.black.withValues(alpha: 1.0),
+                          Colors.black.withOpacity(1.0),
                         ],
                         stops: const [0.0, 0.5, 1.0],
                       ),
@@ -284,7 +284,7 @@ class _InfoTabState extends ConsumerState<_InfoTab> {
                   Container(
                     width: 1,
                     height: 30,
-                    color: Colors.white.withValues(alpha: 0.05),
+                    color: Colors.white.withOpacity(0.05),
                   ),
                   Expanded(
                     child: LotCompactStat(
@@ -307,7 +307,7 @@ class _InfoTabState extends ConsumerState<_InfoTab> {
                   Container(
                     width: 1,
                     height: 30,
-                    color: Colors.white.withValues(alpha: 0.05),
+                    color: Colors.white.withOpacity(0.05),
                   ),
                   Expanded(
                     child: LotCompactStat(
@@ -560,12 +560,12 @@ class _ProfileTab extends ConsumerWidget {
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: theme.colorScheme.primary.withValues(
-                  alpha: 0.1,
+                backgroundColor: theme.colorScheme.primary.withOpacity(
+                  0.1,
                 ),
                 foregroundColor: theme.colorScheme.primary,
                 side: BorderSide(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.5),
+                  color: theme.colorScheme.primary.withOpacity(0.5),
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -636,10 +636,10 @@ class _RecipesTab extends ConsumerWidget {
               style: const TextStyle(fontSize: 13),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
+              backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
               foregroundColor: theme.colorScheme.primary,
               side: BorderSide(
-                color: theme.colorScheme.primary.withValues(alpha: 0.5),
+                color: theme.colorScheme.primary.withOpacity(0.5),
               ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
@@ -713,7 +713,7 @@ class _RecommendedCard extends StatelessWidget {
                     vertical: 2,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.amber.withValues(alpha: 0.1),
+                    color: Colors.amber.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Row(
@@ -773,7 +773,7 @@ class _Stat extends StatelessWidget {
         Icon(
           icon,
           size: 16,
-          color: theme.colorScheme.primary.withValues(alpha: 0.4),
+          color: theme.colorScheme.primary.withOpacity(0.4),
         ),
         const SizedBox(height: 4),
         Text(

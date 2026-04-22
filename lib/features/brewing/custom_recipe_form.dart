@@ -14,14 +14,16 @@ import '../../shared/services/toast_service.dart';
 class _PourEntry {
   int? pourNumber;
   double? waterMl;
-  double? atMinute;
+  int? atMin;
+  int? atSec;
   int? durationSec;
   String notes;
 
   _PourEntry({
     this.pourNumber,
     this.waterMl,
-    this.atMinute,
+    this.atMin = 0,
+    this.atSec = 0,
     this.durationSec,
     this.notes = '',
   });
@@ -29,18 +31,32 @@ class _PourEntry {
   Map<String, dynamic> toJson() => {
     'pourNumber': pourNumber,
     'waterMl': waterMl,
-    'atMinute': atMinute,
+    'atMin': atMin,
+    'atSec': atSec,
+    'atMinute': (atMin ?? 0) + (atSec ?? 0) / 60.0, // For backward compatibility
     'durationSec': durationSec,
     'notes': notes,
   };
 
-  static _PourEntry fromJson(Map<String, dynamic> j) => _PourEntry(
-    pourNumber: j['pourNumber'] as int?,
-    waterMl: (j['waterMl'] as num?)?.toDouble(),
-    atMinute: (j['atMinute'] as num?)?.toDouble(),
-    durationSec: j['durationSec'] as int?,
-    notes: j['notes'] as String? ?? '',
-  );
+  static _PourEntry fromJson(Map<String, dynamic> j) {
+    // Handle old format where only atMinute existed
+    int m = j['atMin'] as int? ?? 0;
+    int s = j['atSec'] as int? ?? 0;
+    if (j['atMin'] == null && j['atSec'] == null && j['atMinute'] != null) {
+      final totalSec = ((j['atMinute'] as num).toDouble() * 60).round();
+      m = totalSec ~/ 60;
+      s = totalSec % 60;
+    }
+
+    return _PourEntry(
+      pourNumber: j['pourNumber'] as int?,
+      waterMl: (j['waterMl'] as num?)?.toDouble(),
+      atMin: m,
+      atSec: s,
+      durationSec: j['durationSec'] as int?,
+      notes: j['notes'] as String? ?? '',
+    );
+  }
 }
 
 // ─── Form Screen ──────────────────────────────────────────────────────────────
@@ -181,9 +197,8 @@ class _CustomRecipeFormScreenState
           final p = _pours[i];
           return {
             'waterMl': TextEditingController(text: p.waterMl?.toString() ?? ''),
-            'atMinute': TextEditingController(
-              text: p.atMinute?.toString() ?? '',
-            ),
+            'atMin': TextEditingController(text: p.atMin?.toString() ?? '0'),
+            'atSec': TextEditingController(text: p.atSec?.toString() ?? '0'),
             'durationSec': TextEditingController(
               text: p.durationSec?.toString() ?? '',
             ),
@@ -237,8 +252,9 @@ class _CustomRecipeFormScreenState
       final ctrls = _pourCtrlsList[i];
       _pours[i]
         ..pourNumber = i + 1
-        ..waterMl = double.tryParse(ctrls['waterMl']!.text)
-        ..atMinute = double.tryParse(ctrls['atMinute']!.text)
+        ..waterMl = double.tryParse(ctrls['waterMl']!.text.replaceAll(',', '.'))
+        ..atMin = int.tryParse(ctrls['atMin']!.text) ?? 0
+        ..atSec = int.tryParse(ctrls['atSec']!.text) ?? 0
         ..durationSec = int.tryParse(ctrls['durationSec']!.text)
         ..notes = ctrls['notes']!.text;
     }
@@ -263,7 +279,8 @@ class _CustomRecipeFormScreenState
           _PourEntry(
             pourNumber: 1,
             waterMl: yieldWater,
-            atMinute: 0,
+            atMin: 0,
+            atSec: 0,
             durationSec: shotSec,
             notes: 'Extraction',
           ),
@@ -593,7 +610,8 @@ class _CustomRecipeFormScreenState
                 style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
               ),
             ),
-            const SizedBox(height: 24),
+            // Padding for navigation bar overlap
+            SizedBox(height: MediaQuery.of(context).padding.bottom + 20),
           ],
         ),
       ),
@@ -631,9 +649,10 @@ class _PourRow extends StatelessWidget {
           Row(
             children: [
               Expanded(
+                flex: 2,
                 child: _Field(
                   controller: ctrls['waterMl']!,
-                  label: 'Water (ml)',
+                  label: '${context.t('water')} (g)',
                   hint: '50',
                   keyboardType: TextInputType.number,
                   dense: true,
@@ -641,21 +660,32 @@ class _PourRow extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Expanded(
+                flex: 1,
                 child: _Field(
-                  controller: ctrls['atMinute']!,
-                  label: 'At minute',
-                  hint: '0.5',
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
+                  controller: ctrls['atMin']!,
+                  label: 'Min',
+                  hint: '0',
+                  keyboardType: TextInputType.number,
+                  dense: true,
+                ),
+              ),
+              const SizedBox(width: 4),
+              Expanded(
+                flex: 1,
+                child: _Field(
+                  controller: ctrls['atSec']!,
+                  label: 'Sec',
+                  hint: '30',
+                  keyboardType: TextInputType.number,
                   dense: true,
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
+                flex: 2,
                 child: _Field(
                   controller: ctrls['durationSec']!,
-                  label: 'Duration (s)',
+                  label: '${context.t('duration')} (s)',
                   hint: '30',
                   keyboardType: TextInputType.number,
                   dense: true,
@@ -748,14 +778,14 @@ class _Field extends StatelessWidget {
             ? const EdgeInsets.symmetric(horizontal: 12, vertical: 10)
             : null,
         filled: true,
-        fillColor: Colors.white.withValues(alpha: 0.07),
+        fillColor: Colors.white.withOpacity(0.07),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+          borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

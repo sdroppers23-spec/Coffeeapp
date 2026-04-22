@@ -245,12 +245,12 @@ class RadarPainter extends CustomPainter {
     final angleStep = 2 * pi / labels.length;
 
     final gridPaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.15) // Force subtle white for grid
+      ..color = Colors.white.withOpacity(0.15) // Force subtle white for grid
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
     final axisPaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.3) // Force visible white for axes
+      ..color = Colors.white.withOpacity(0.3) // Force visible white for axes
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
@@ -336,7 +336,7 @@ class RadarPainter extends CustomPainter {
     dataPath.close();
 
     final fillPaint = Paint()
-      ..color = primaryColor.withValues(alpha: 0.2)
+      ..color = primaryColor.withOpacity(0.2)
       ..style = PaintingStyle.fill;
 
     final strokePaint = Paint()
@@ -374,9 +374,9 @@ class _TemplateChip extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.05),
+          color: Colors.white.withOpacity(0.05),
           border: Border.all(
-            color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
+            color: const Color(0xFFC8A96E).withOpacity(0.2),
           ),
           borderRadius: BorderRadius.circular(10),
         ),

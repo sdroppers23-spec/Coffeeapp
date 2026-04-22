@@ -11,6 +11,7 @@ import '../../../core/providers/settings_provider.dart';
 import '../../../core/l10n/app_localizations.dart';
 import '../../../shared/widgets/lot_detail_widgets.dart';
 import '../../../shared/utils/sensory_utils.dart';
+import '../../../shared/services/toast_service.dart';
 
 // ─── Grid Card ────────────────────────────────────────────────────────────────
 class EncyclopediaLotGridCard extends ConsumerWidget {
@@ -395,45 +396,11 @@ class _FavoriteIcon extends ConsumerWidget {
         ref.read(settingsProvider.notifier).triggerSelectionVibrate();
         ref.read(databaseProvider).toggleFavorite(bean.id, !bean.isFavorite);
         if (context.mounted) {
-          final isUk = LocaleService.currentLocale == 'uk';
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: GlassContainer(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  borderRadius: 16,
-                  color: Colors.black.withValues(alpha: 0.6),
-                  borderColor: const Color(0xFFC8A96E).withValues(alpha: 0.3),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        bean.isFavorite ? Icons.heart_broken_rounded : Icons.favorite_rounded,
-                        color: const Color(0xFFC8A96E),
-                        size: 18,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        bean.isFavorite 
-                          ? (isUk ? 'Видалено з обраного' : 'Removed from favorites')
-                          : (isUk ? 'Додано в обране' : 'Added to favorites'),
-                        style: GoogleFonts.outfit(
-                          color: const Color(0xFFC8A96E),
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                behavior: SnackBarBehavior.floating,
-                duration: const Duration(seconds: 2),
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              ),
-            );
+          if (bean.isFavorite) {
+            ToastService.showInfo(context, context.t('toast_removed_from_favorites'));
+          } else {
+            ToastService.showSuccess(context, context.t('toast_added_to_favorites'));
+          }
         }
       },
       child: Padding(

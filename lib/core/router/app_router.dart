@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -47,8 +47,19 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       return null;
     },
+    errorBuilder: (context, state) => const Scaffold(
+      body: Center(
+        child: Text('Page not found'),
+      ),
+    ),
     routes: [
       GoRoute(path: '/auth', builder: (context, state) => const AuthScreen()),
+      // Catch legacy/invalid recipe routes and redirect to recipes tab
+      GoRoute(path: '/add_recipe', redirect: (context, state) => '/recipes'),
+      GoRoute(path: '/edit_recipe', redirect: (context, state) => '/recipes'),
+      GoRoute(path: '/add-recipe', redirect: (context, state) => '/recipes'),
+      GoRoute(path: '/edit-recipe', redirect: (context, state) => '/recipes'),
+      
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return MainScaffold(navigationShell: navigationShell);
@@ -120,10 +131,33 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/lot_details',
         builder: (context, state) {
-          final extra = state.extra as Map<String, dynamic>;
+          // Gracefully handle null extra (web refresh)
+          final extra = state.extra as Map<String, dynamic>?;
+          final lot = extra?['lot'] as CoffeeLotDto?;
+          final entry = extra?['entry'] as EncyclopediaEntry?;
+          
+          if (lot == null && entry == null) {
+            return Scaffold(
+              appBar: AppBar(title: const Text('Lot Detail')),
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Lot data is no longer available.'),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () => context.go('/'),
+                      child: const Text('Return Home'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+          
           return LotDetailView(
-            lot: extra['lot'] as CoffeeLotDto?,
-            entry: extra['entry'] as EncyclopediaEntry?,
+            lot: lot,
+            entry: entry,
           );
         },
       ),

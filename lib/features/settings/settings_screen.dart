@@ -5,7 +5,9 @@ import 'package:go_router/go_router.dart';
 import '../navigation/navigation_providers.dart';
 import '../../core/supabase/supabase_provider.dart';
 import '../../core/providers/settings_provider.dart';
+import '../../core/providers/design_theme_provider.dart';
 import '../../core/l10n/app_localizations.dart';
+import '../../shared/widgets/premium_background.dart';
 // import '../../shared/widgets/premium_background.dart'; // Removed unused import
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -59,7 +61,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -81,11 +83,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ),
         centerTitle: false,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      body: PremiumBackground(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             // МОВА
             _buildSectionTitle(context, ref.t('language').toUpperCase()),
             _buildCard(
@@ -210,6 +213,34 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
 
 
+            // СТИЛЬ ДИЗАЙНУ
+            _buildSectionTitle(context, ref.t('design_theme').toUpperCase()),
+            _buildCard(
+              context,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    _buildThemeOption(
+                      context,
+                      ref: ref,
+                      theme: AppDesignTheme.glass,
+                      label: ref.t('design_glass'),
+                      icon: Icons.auto_awesome_rounded,
+                    ),
+                    const SizedBox(height: 12),
+                    _buildThemeOption(
+                      context,
+                      ref: ref,
+                      theme: AppDesignTheme.coffee,
+                      label: ref.t('design_coffee'),
+                      icon: Icons.coffee_rounded,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
             // ЮРИДИЧНА ІНФОРМАЦІЯ
             _buildSectionTitle(context, 'ЮРИДИЧНА ІНФОРМАЦІЯ'),
             _buildCard(
@@ -278,8 +309,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildSectionTitle(BuildContext context, String title) {
     final theme = Theme.of(context);
@@ -320,6 +352,64 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ],
       ),
       child: child,
+    );
+  }
+
+  Widget _buildThemeOption(
+    BuildContext context, {
+    required WidgetRef ref,
+    required AppDesignTheme theme,
+    required String label,
+    required IconData icon,
+  }) {
+    final currentTheme = ref.watch(designThemeProvider);
+    final isSelected = currentTheme == theme;
+    final themeData = Theme.of(context);
+
+    return GestureDetector(
+      onTap: () {
+        ref.read(settingsProvider.notifier).triggerSelectionVibrate();
+        ref.read(designThemeProvider.notifier).setTheme(theme);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: isSelected 
+              ? themeData.colorScheme.primary.withValues(alpha: 0.1) 
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected 
+                ? themeData.colorScheme.primary.withValues(alpha: 0.3) 
+                : Colors.white.withValues(alpha: 0.05),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: isSelected ? themeData.colorScheme.primary : Colors.white38,
+              size: 20,
+            ),
+            const SizedBox(width: 12),
+            Text(
+              label,
+              style: GoogleFonts.outfit(
+                color: isSelected ? Colors.white : Colors.white70,
+                fontSize: 16,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+              ),
+            ),
+            const Spacer(),
+            if (isSelected)
+              Icon(
+                Icons.check_circle_rounded,
+                color: themeData.colorScheme.primary,
+                size: 20,
+              ),
+          ],
+        ),
+      ),
     );
   }
 

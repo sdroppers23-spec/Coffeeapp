@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../features/discover/lots/providers/lot_design_debug_provider.dart';
+import '../../core/providers/design_theme_provider.dart';
 
 class GlassContainer extends ConsumerWidget {
   final Widget child;
@@ -52,6 +53,8 @@ class GlassContainer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final debugConfig = ref.watch(lotDesignDebugProvider);
     final useDebug = debugConfig.isDebugMode;
+    final designTheme = ref.watch(designThemeProvider);
+    final isCoffee = designTheme == AppDesignTheme.coffee;
 
     double effectiveBlur = useDebug ? debugConfig.blur : blur;
     double effectiveOpacity = useDebug ? debugConfig.tintOpacity : opacity;
@@ -72,13 +75,26 @@ class GlassContainer extends ConsumerWidget {
         effectiveBaseOpacity = debugConfig.profileBaseOpacity;
       }
     }
+
+    // Override for Coffee theme
+    if (isCoffee && !useDebug) {
+      effectiveBlur = 0;
+    }
+
     final effectiveBorderRadius = useDebug ? debugConfig.borderRadius : borderRadius;
+    
     final effectiveBorderColor = useDebug
         ? debugConfig.borderColor.withValues(alpha: debugConfig.borderOpacity)
-        : (borderColor ?? Colors.white.withValues(alpha: 0.12));
+        : (borderColor ?? (isCoffee 
+            ? const Color(0xFFC8A96E).withValues(alpha: 0.2) 
+            : Colors.white.withValues(alpha: 0.12)));
+
     final effectiveBaseColor = useDebug
         ? debugConfig.baseColor.withValues(alpha: effectiveBaseOpacity)
-        : Colors.black.withValues(alpha: 0.4);
+        : (isCoffee 
+            ? const Color(0xFF161412).withValues(alpha: 1.0) 
+            : Colors.black.withValues(alpha: 0.4));
+
     final effectiveTintColor = useDebug ? debugConfig.tintColor : (color ?? Colors.white);
 
     // Layer 1 & 2 combined into a clipped stack
@@ -133,15 +149,16 @@ class GlassContainer extends ConsumerWidget {
                   : null,
               gradient: (useDebug || imageUrl != null)
                   ? null
-                  : (backgroundGradient ??
-                      LinearGradient(
+                  : (backgroundGradient ?? (isCoffee 
+                      ? null 
+                      : LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
                           Colors.white.withValues(alpha: 0.1),
                           Colors.white.withValues(alpha: 0.02),
                         ],
-                      )),
+                      ))),
             ),
             child: child,
           ),

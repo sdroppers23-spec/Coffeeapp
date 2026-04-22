@@ -18,6 +18,7 @@ import '../../features/brewing/widgets/custom_recipe_card.dart';
 import '../../shared/models/processing_methods_repository.dart';
 import '../../features/navigation/navigation_providers.dart';
 import '../services/toast_service.dart';
+import 'add_recipe_dialog.dart';
 
 class LotDetailView extends ConsumerStatefulWidget {
   final CoffeeLotDto? lot;
@@ -237,13 +238,15 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                     icon: Icons.coffee_rounded,
                     count: filterCount,
                     isLimitReached: filterCount >= 10,
-                    onTap: () {
+                    onTap: () async {
                       Navigator.pop(ctx);
-                      context.push('/custom_recipe_form', extra: {
-                        'lotId': lotId,
-                        'methodKey': 'v60',
-                        'recipeType': 'filter',
-                      });
+                      await showDialog(
+                        context: context,
+                        builder: (context) => AddRecipeDialog(
+                          lotId: lotId,
+                          initialMethod: 'v60',
+                        ),
+                      );
                     },
                   ),
                 ),
@@ -254,13 +257,15 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                     icon: Icons.coffee_maker_rounded,
                     count: espressoCount,
                     isLimitReached: espressoCount >= 10,
-                    onTap: () {
+                    onTap: () async {
                       Navigator.pop(ctx);
-                      context.push('/custom_recipe_form', extra: {
-                        'lotId': lotId,
-                        'methodKey': 'espresso',
-                        'recipeType': 'espresso',
-                      });
+                      await showDialog(
+                        context: context,
+                        builder: (context) => AddRecipeDialog(
+                          lotId: lotId,
+                          initialMethod: 'espresso',
+                        ),
+                      );
                     },
                   ),
                 ),

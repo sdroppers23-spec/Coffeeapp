@@ -12,6 +12,7 @@ import '../../shared/widgets/premium_app_bar.dart';
 import '../../shared/widgets/premium_background.dart';
 import '../../shared/widgets/profile_button.dart';
 import '../../shared/widgets/scroll_to_top_button.dart';
+import '../../shared/services/toast_service.dart';
 
 // ─── Body (Embedded Version) ──────────────────────────────────────────────────
 class EncyclopediaBody extends ConsumerStatefulWidget {
@@ -38,7 +39,6 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
 
   @override
   Widget build(BuildContext context) {
-    final isUk = ref.watch(localeProvider) == 'uk';
     final originsAsync = ref.watch(encyclopediaDataProvider);
 
     return PremiumBackground(
@@ -62,15 +62,7 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
                       ),
                     );
                   } else if (selectedCount == 1) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(isUk
-                            ? 'Оберіть другий лот для порівняння'
-                            : 'Select a second lot to compare'),
-                        backgroundColor: const Color(0xFFC8A96E),
-                        behavior: SnackBarBehavior.floating,
-                      ),
-                    );
+                    ToastService.showInfo(context, context.t('toast_select_second_lot'));
                   } else {
                     Navigator.push(
                       context,

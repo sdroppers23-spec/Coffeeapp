@@ -17,6 +17,7 @@ import '../../shared/utils/sensory_utils.dart';
 import '../navigation/navigation_providers.dart';
 import '../encyclopedia/encyclopedia_providers.dart';
 import '../brewing/custom_recipe_timer_screen.dart';
+import '../../shared/services/toast_service.dart';
 
 class CoffeeLotDetailScreen extends ConsumerStatefulWidget {
   final LocalizedBeanDto entry;
@@ -85,19 +86,11 @@ class _CoffeeLotDetailScreenState extends ConsumerState<CoffeeLotDetailScreen>
                     onPressed: () async {
                       ref.read(databaseProvider).toggleFavorite(entry.id, !isFavorite);
                       if (context.mounted) {
-                        final isUk = LocaleService.currentLocale == 'uk';
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              isFavorite 
-                                ? (isUk ? 'Видалено з обраного' : 'Removed from favorites')
-                                : (isUk ? 'Додано в обране' : 'Added to favorites')
-                            ),
-                            backgroundColor: const Color(0xFFC8A96E),
-                            behavior: SnackBarBehavior.floating,
-                            duration: const Duration(seconds: 1),
-                          ),
-                        );
+                        if (isFavorite) {
+                          ToastService.showInfo(context, context.t('toast_removed_from_favorites'));
+                        } else {
+                          ToastService.showSuccess(context, context.t('toast_added_to_favorites'));
+                        }
                       }
                     },
                   );

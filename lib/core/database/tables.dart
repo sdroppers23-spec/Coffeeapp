@@ -434,6 +434,8 @@ class CustomRecipes extends Table {
   RealColumn get brewRatio => real().nullable()();
   TextColumn get grinderName => text().nullable()();
 
+  TextColumn get sensoryJson => text().withDefault(const Constant('{}'))();
+
   // Sync Status
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
   BoolColumn get isDeletedLocal =>

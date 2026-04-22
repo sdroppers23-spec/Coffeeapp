@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:go_router/go_router.dart';
 import '../../core/database/dtos.dart';
 import 'custom_recipe_list.dart';
 import '../../shared/widgets/glass_container.dart';
 import '../../shared/widgets/premium_background.dart';
+import '../../shared/widgets/add_recipe_dialog.dart';
 
 // ─── Method metadata (shared with BrewingGuideScreen) ──────────────────────────
 const _methodMeta = {
@@ -51,8 +51,9 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
             SliverAppBar(
               expandedHeight: 240,
               pinned: true,
-              backgroundColor: Colors.transparent,
+              backgroundColor: Colors.black.withValues(alpha: 0.8),
               elevation: 0,
+              scrolledUnderElevation: 4,
               actions: [
                 IconButton(
                   icon: const Icon(Icons.add_rounded, color: Colors.white, size: 28),

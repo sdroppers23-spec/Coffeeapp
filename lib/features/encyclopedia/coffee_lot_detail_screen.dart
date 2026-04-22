@@ -17,11 +17,6 @@ import '../../shared/utils/sensory_utils.dart';
 import '../navigation/navigation_providers.dart';
 import '../encyclopedia/encyclopedia_providers.dart';
 import '../brewing/custom_recipe_timer_screen.dart';
-import 'dart:convert';
-import 'package:uuid/uuid.dart';
-import 'package:drift/drift.dart' hide Column;
-import '../../core/database/app_database.dart';
-import '../../core/supabase/supabase_provider.dart';
 
 class CoffeeLotDetailScreen extends ConsumerStatefulWidget {
   final LocalizedBeanDto entry;
@@ -811,11 +806,11 @@ class _CustomRecipeCardWrapper extends ConsumerWidget {
             const SizedBox(height: 12),
             Row(
               children: [
-                _Stat(label: isUk ? 'КАВА' : 'COFFEE', value: '${recipe.coffeeGrams}g'),
+                _Stat(isUk ? 'КАВА' : 'COFFEE', '${recipe.coffeeGrams}g'),
                 const SizedBox(width: 24),
-                _Stat(label: recipe.recipeType == 'espresso' ? (isUk ? 'ВИХІД' : 'YIELD') : (isUk ? 'ВОДА' : 'WATER'), value: '${recipe.totalWaterMl}ml'),
+                _Stat(recipe.recipeType == 'espresso' ? (isUk ? 'ВИХІД' : 'YIELD') : (isUk ? 'ВОДА' : 'WATER'), '${recipe.totalWaterMl}ml'),
                 const SizedBox(width: 24),
-                _Stat(label: 'TEMP', value: '${recipe.brewTempC}°C'),
+                _Stat('TEMP', '${recipe.brewTempC}°C'),
                 const Spacer(),
                 IconButton(
                   icon: const Icon(Icons.play_arrow_rounded, color: Color(0xFFC8A96E)),
@@ -929,6 +924,32 @@ class _Cell extends StatelessWidget {
 class _RecommendedCard extends ConsumerWidget {
   final RecommendedRecipeDto recipe;
   const _RecommendedCard({required this.recipe});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isUk = LocaleService.currentLocale == 'uk';
+    
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: GlassContainer(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  recipe.methodKey.toUpperCase(),
+                  style: GoogleFonts.outfit(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
                     color: Colors.amber.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(6),
                   ),
@@ -953,10 +974,10 @@ class _RecommendedCard extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _Stat(Icons.coffee, '${recipe.coffeeGrams}g'),
-                _Stat(Icons.water_drop, '${recipe.waterGrams}ml'),
-                _Stat(Icons.thermostat, '${recipe.tempC.toInt()}°C'),
-                _Stat(Icons.timer, '${recipe.timeSec}s'),
+                _Stat(isUk ? 'КАВА' : 'COFFEE', '${recipe.coffeeGrams}g'),
+                _Stat(isUk ? 'ВОДА' : 'WATER', '${recipe.waterGrams}ml'),
+                _Stat('TEMP', '${recipe.tempC.toInt()}°C'),
+                _Stat(isUk ? 'ЧАС' : 'TIME', '${recipe.timeSec}s'),
               ],
             ),
             if (recipe.notes.isNotEmpty) ...[
@@ -978,18 +999,22 @@ class _RecommendedCard extends ConsumerWidget {
 }
 
 class _Stat extends StatelessWidget {
-  final IconData icon;
+  final String label;
   final String value;
-  const _Stat(this.icon, this.value);
+  const _Stat(this.label, this.value);
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
       children: [
-        Icon(
-          icon,
-          size: 16,
-          color: theme.colorScheme.primary.withValues(alpha: 0.4),
+        Text(
+          label,
+          style: GoogleFonts.outfit(
+            fontSize: 9,
+            fontWeight: FontWeight.bold,
+            color: theme.colorScheme.primary.withValues(alpha: 0.6),
+            letterSpacing: 1,
+          ),
         ),
         const SizedBox(height: 4),
         Text(

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:go_router/go_router.dart';
+import '../../../shared/widgets/add_recipe_dialog.dart';
 
 import '../../../core/database/database_provider.dart';
 import '../../../core/database/dtos.dart';

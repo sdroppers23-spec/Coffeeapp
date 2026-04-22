@@ -9750,6 +9750,18 @@ class $CustomRecipesTable extends CustomRecipes
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _sensoryJsonMeta = const VerificationMeta(
+    'sensoryJson',
+  );
+  @override
+  late final GeneratedColumn<String> sensoryJson = GeneratedColumn<String>(
+    'sensory_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('{}'),
+  );
   static const VerificationMeta _isSyncedMeta = const VerificationMeta(
     'isSynced',
   );
@@ -9803,6 +9815,7 @@ class $CustomRecipesTable extends CustomRecipes
     recipeType,
     brewRatio,
     grinderName,
+    sensoryJson,
     isSynced,
     isDeletedLocal,
   ];
@@ -9972,6 +9985,15 @@ class $CustomRecipesTable extends CustomRecipes
         ),
       );
     }
+    if (data.containsKey('sensory_json')) {
+      context.handle(
+        _sensoryJsonMeta,
+        sensoryJson.isAcceptableOrUnknown(
+          data['sensory_json']!,
+          _sensoryJsonMeta,
+        ),
+      );
+    }
     if (data.containsKey('is_synced')) {
       context.handle(
         _isSyncedMeta,
@@ -10080,6 +10102,10 @@ class $CustomRecipesTable extends CustomRecipes
         DriftSqlType.string,
         data['${effectivePrefix}grinder_name'],
       ),
+      sensoryJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sensory_json'],
+      )!,
       isSynced: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_synced'],
@@ -10119,6 +10145,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
   final String recipeType;
   final double? brewRatio;
   final String? grinderName;
+  final String sensoryJson;
   final bool isSynced;
   final bool isDeletedLocal;
   const CustomRecipe({
@@ -10143,6 +10170,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     required this.recipeType,
     this.brewRatio,
     this.grinderName,
+    required this.sensoryJson,
     required this.isSynced,
     required this.isDeletedLocal,
   });
@@ -10182,6 +10210,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     if (!nullToAbsent || grinderName != null) {
       map['grinder_name'] = Variable<String>(grinderName);
     }
+    map['sensory_json'] = Variable<String>(sensoryJson);
     map['is_synced'] = Variable<bool>(isSynced);
     map['is_deleted_local'] = Variable<bool>(isDeletedLocal);
     return map;
@@ -10222,6 +10251,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       grinderName: grinderName == null && nullToAbsent
           ? const Value.absent()
           : Value(grinderName),
+      sensoryJson: Value(sensoryJson),
       isSynced: Value(isSynced),
       isDeletedLocal: Value(isDeletedLocal),
     );
@@ -10254,6 +10284,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       recipeType: serializer.fromJson<String>(json['recipeType']),
       brewRatio: serializer.fromJson<double?>(json['brewRatio']),
       grinderName: serializer.fromJson<String?>(json['grinderName']),
+      sensoryJson: serializer.fromJson<String>(json['sensoryJson']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
       isDeletedLocal: serializer.fromJson<bool>(json['isDeletedLocal']),
     );
@@ -10283,6 +10314,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       'recipeType': serializer.toJson<String>(recipeType),
       'brewRatio': serializer.toJson<double?>(brewRatio),
       'grinderName': serializer.toJson<String?>(grinderName),
+      'sensoryJson': serializer.toJson<String>(sensoryJson),
       'isSynced': serializer.toJson<bool>(isSynced),
       'isDeletedLocal': serializer.toJson<bool>(isDeletedLocal),
     };
@@ -10310,6 +10342,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     String? recipeType,
     Value<double?> brewRatio = const Value.absent(),
     Value<String?> grinderName = const Value.absent(),
+    String? sensoryJson,
     bool? isSynced,
     bool? isDeletedLocal,
   }) => CustomRecipe(
@@ -10334,6 +10367,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     recipeType: recipeType ?? this.recipeType,
     brewRatio: brewRatio.present ? brewRatio.value : this.brewRatio,
     grinderName: grinderName.present ? grinderName.value : this.grinderName,
+    sensoryJson: sensoryJson ?? this.sensoryJson,
     isSynced: isSynced ?? this.isSynced,
     isDeletedLocal: isDeletedLocal ?? this.isDeletedLocal,
   );
@@ -10378,6 +10412,9 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       grinderName: data.grinderName.present
           ? data.grinderName.value
           : this.grinderName,
+      sensoryJson: data.sensoryJson.present
+          ? data.sensoryJson.value
+          : this.sensoryJson,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
       isDeletedLocal: data.isDeletedLocal.present
           ? data.isDeletedLocal.value
@@ -10409,6 +10446,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
           ..write('recipeType: $recipeType, ')
           ..write('brewRatio: $brewRatio, ')
           ..write('grinderName: $grinderName, ')
+          ..write('sensoryJson: $sensoryJson, ')
           ..write('isSynced: $isSynced, ')
           ..write('isDeletedLocal: $isDeletedLocal')
           ..write(')'))
@@ -10438,6 +10476,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     recipeType,
     brewRatio,
     grinderName,
+    sensoryJson,
     isSynced,
     isDeletedLocal,
   ]);
@@ -10466,6 +10505,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
           other.recipeType == this.recipeType &&
           other.brewRatio == this.brewRatio &&
           other.grinderName == this.grinderName &&
+          other.sensoryJson == this.sensoryJson &&
           other.isSynced == this.isSynced &&
           other.isDeletedLocal == this.isDeletedLocal);
 }
@@ -10492,6 +10532,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
   final Value<String> recipeType;
   final Value<double?> brewRatio;
   final Value<String?> grinderName;
+  final Value<String> sensoryJson;
   final Value<bool> isSynced;
   final Value<bool> isDeletedLocal;
   final Value<int> rowid;
@@ -10517,6 +10558,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     this.recipeType = const Value.absent(),
     this.brewRatio = const Value.absent(),
     this.grinderName = const Value.absent(),
+    this.sensoryJson = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.isDeletedLocal = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -10543,6 +10585,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     this.recipeType = const Value.absent(),
     this.brewRatio = const Value.absent(),
     this.grinderName = const Value.absent(),
+    this.sensoryJson = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.isDeletedLocal = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -10573,6 +10616,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     Expression<String>? recipeType,
     Expression<double>? brewRatio,
     Expression<String>? grinderName,
+    Expression<String>? sensoryJson,
     Expression<bool>? isSynced,
     Expression<bool>? isDeletedLocal,
     Expression<int>? rowid,
@@ -10599,6 +10643,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
       if (recipeType != null) 'recipe_type': recipeType,
       if (brewRatio != null) 'brew_ratio': brewRatio,
       if (grinderName != null) 'grinder_name': grinderName,
+      if (sensoryJson != null) 'sensory_json': sensoryJson,
       if (isSynced != null) 'is_synced': isSynced,
       if (isDeletedLocal != null) 'is_deleted_local': isDeletedLocal,
       if (rowid != null) 'rowid': rowid,
@@ -10627,6 +10672,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     Value<String>? recipeType,
     Value<double?>? brewRatio,
     Value<String?>? grinderName,
+    Value<String>? sensoryJson,
     Value<bool>? isSynced,
     Value<bool>? isDeletedLocal,
     Value<int>? rowid,
@@ -10653,6 +10699,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
       recipeType: recipeType ?? this.recipeType,
       brewRatio: brewRatio ?? this.brewRatio,
       grinderName: grinderName ?? this.grinderName,
+      sensoryJson: sensoryJson ?? this.sensoryJson,
       isSynced: isSynced ?? this.isSynced,
       isDeletedLocal: isDeletedLocal ?? this.isDeletedLocal,
       rowid: rowid ?? this.rowid,
@@ -10725,6 +10772,9 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     if (grinderName.present) {
       map['grinder_name'] = Variable<String>(grinderName.value);
     }
+    if (sensoryJson.present) {
+      map['sensory_json'] = Variable<String>(sensoryJson.value);
+    }
     if (isSynced.present) {
       map['is_synced'] = Variable<bool>(isSynced.value);
     }
@@ -10761,6 +10811,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
           ..write('recipeType: $recipeType, ')
           ..write('brewRatio: $brewRatio, ')
           ..write('grinderName: $grinderName, ')
+          ..write('sensoryJson: $sensoryJson, ')
           ..write('isSynced: $isSynced, ')
           ..write('isDeletedLocal: $isDeletedLocal, ')
           ..write('rowid: $rowid')
@@ -23054,6 +23105,7 @@ typedef $$CustomRecipesTableCreateCompanionBuilder =
       Value<String> recipeType,
       Value<double?> brewRatio,
       Value<String?> grinderName,
+      Value<String> sensoryJson,
       Value<bool> isSynced,
       Value<bool> isDeletedLocal,
       Value<int> rowid,
@@ -23081,6 +23133,7 @@ typedef $$CustomRecipesTableUpdateCompanionBuilder =
       Value<String> recipeType,
       Value<double?> brewRatio,
       Value<String?> grinderName,
+      Value<String> sensoryJson,
       Value<bool> isSynced,
       Value<bool> isDeletedLocal,
       Value<int> rowid,
@@ -23197,6 +23250,11 @@ class $$CustomRecipesTableFilterComposer
 
   ColumnFilters<String> get grinderName => $composableBuilder(
     column: $table.grinderName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sensoryJson => $composableBuilder(
+    column: $table.sensoryJson,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -23325,6 +23383,11 @@ class $$CustomRecipesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get sensoryJson => $composableBuilder(
+    column: $table.sensoryJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isSynced => $composableBuilder(
     column: $table.isSynced,
     builder: (column) => ColumnOrderings(column),
@@ -23426,6 +23489,11 @@ class $$CustomRecipesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get sensoryJson => $composableBuilder(
+    column: $table.sensoryJson,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<bool> get isSynced =>
       $composableBuilder(column: $table.isSynced, builder: (column) => column);
 
@@ -23487,6 +23555,7 @@ class $$CustomRecipesTableTableManager
                 Value<String> recipeType = const Value.absent(),
                 Value<double?> brewRatio = const Value.absent(),
                 Value<String?> grinderName = const Value.absent(),
+                Value<String> sensoryJson = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<bool> isDeletedLocal = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -23512,6 +23581,7 @@ class $$CustomRecipesTableTableManager
                 recipeType: recipeType,
                 brewRatio: brewRatio,
                 grinderName: grinderName,
+                sensoryJson: sensoryJson,
                 isSynced: isSynced,
                 isDeletedLocal: isDeletedLocal,
                 rowid: rowid,
@@ -23539,6 +23609,7 @@ class $$CustomRecipesTableTableManager
                 Value<String> recipeType = const Value.absent(),
                 Value<double?> brewRatio = const Value.absent(),
                 Value<String?> grinderName = const Value.absent(),
+                Value<String> sensoryJson = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<bool> isDeletedLocal = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -23564,6 +23635,7 @@ class $$CustomRecipesTableTableManager
                 recipeType: recipeType,
                 brewRatio: brewRatio,
                 grinderName: grinderName,
+                sensoryJson: sensoryJson,
                 isSynced: isSynced,
                 isDeletedLocal: isDeletedLocal,
                 rowid: rowid,

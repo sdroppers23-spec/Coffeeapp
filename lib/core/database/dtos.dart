@@ -504,6 +504,7 @@ class CustomRecipeDto {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final bool isSynced;
+  final String? sensoryJson;
 
   final int? microns;
   final String recipeType;
@@ -532,6 +533,7 @@ class CustomRecipeDto {
     this.recipeType = 'filter',
     this.brewRatio,
     this.grinderName,
+    this.sensoryJson,
   });
 
   String get pourScheduleJson => jsonEncode(pours);
@@ -558,6 +560,7 @@ class CustomRecipeDto {
     String? recipeType,
     double? brewRatio,
     String? grinderName,
+    String? sensoryJson,
   }) {
     return CustomRecipeDto(
       id: id ?? this.id,
@@ -581,6 +584,7 @@ class CustomRecipeDto {
       recipeType: recipeType ?? this.recipeType,
       brewRatio: brewRatio ?? this.brewRatio,
       grinderName: grinderName ?? this.grinderName,
+      sensoryJson: sensoryJson ?? this.sensoryJson,
     );
   }
 }

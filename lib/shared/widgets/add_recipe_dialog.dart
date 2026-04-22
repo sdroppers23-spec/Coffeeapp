@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,7 +11,6 @@ import '../../core/database/database_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/database/dtos.dart';
 import '../widgets/sensory_radar_chart.dart';
-import '../../shared/utils/sensory_utils.dart';
 
 class AddRecipeDialog extends ConsumerStatefulWidget {
   final String lotId;
@@ -86,8 +86,14 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
       } else {
         _pours = List<Map<String, dynamic>>.from(r.pours);
       }
-      if (r.sensoryPoints.isNotEmpty) {
-        _sensoryPoints = Map<String, double>.from(r.sensoryPoints.map((k, v) => MapEntry(k, (v as num).toDouble())));
+      if (widget.existingRecipe?.sensoryJson != null) {
+        try {
+          _sensoryPoints = Map<String, double>.from(
+            jsonDecode(widget.existingRecipe!.sensoryJson!).map(
+              (k, v) => MapEntry(k, (v as num).toDouble()),
+            ),
+          );
+        } catch (_) {}
       }
     } else {
       _coffeeController.text = _recipeType == 'espresso' ? '18' : '15';
@@ -169,7 +175,6 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final isUk = LocaleService.currentLocale == 'uk';
 
     return Dialog(
@@ -213,7 +218,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                 // Method Selection
                 _buildFieldLabel(isUk ? 'МЕТОД' : 'METHOD'),
                 DropdownButtonFormField<String>(
-                  value: _method,
+                  initialValue: _method,
                   dropdownColor: const Color(0xFF1E1E1E),
                   style: GoogleFonts.outfit(color: Colors.white),
                   decoration: _inputDecoration(),
@@ -320,7 +325,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                   const SizedBox(height: 16),
                   _buildFieldLabel(isUk ? 'МЛИНОК' : 'GRINDER'),
                   DropdownButtonFormField<String>(
-                    value: _grinderName,
+                    initialValue: _grinderName,
                     dropdownColor: const Color(0xFF1E1E1E),
                     style: GoogleFonts.outfit(color: Colors.white),
                     decoration: _inputDecoration(),
@@ -404,7 +409,9 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                   child: SizedBox(
                     height: 200,
                     width: 200,
-                    child: SensoryRadarChart(points: _sensoryPoints),
+                    child: SensoryRadarChart(
+                      staticValues: _sensoryPoints,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 24),

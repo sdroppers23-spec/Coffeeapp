@@ -520,20 +520,14 @@ class _ProfileTab extends ConsumerWidget {
           height: 400,
           child: SensoryRadarChart(
             interactive: false,
-            staticValues: entry.radarPoints.isNotEmpty 
-                ? entry.radarPoints.map((k, v) => MapEntry(k, (v / 5.0)))
-                : (entry.sensoryPoints.isNotEmpty 
-                    ? entry.sensoryPoints.map(
-                        (k, v) => MapEntry(k, (v != null ? (v as num).toDouble() / 5.0 : 0.2)),
-                      )
-                    : {
-                        'bitterness': 0.2,
-                        'acidity': 0.2,
-                        'sweetness': 0.2,
-                        'body': 0.2,
-                        'intensity': 0.2,
-                        'aftertaste': 0.2,
-                      }),
+            staticValues: <String, double>{
+              'bitterness': (entry.radarPoints['bitterness'] ?? entry.sensoryPoints['bitterness'] ?? 1.0).toDouble() / 5.0,
+              'acidity': (entry.radarPoints['acidity'] ?? entry.sensoryPoints['acidity'] ?? 1.0).toDouble() / 5.0,
+              'sweetness': (entry.radarPoints['sweetness'] ?? entry.sensoryPoints['sweetness'] ?? 1.0).toDouble() / 5.0,
+              'body': (entry.radarPoints['body'] ?? entry.sensoryPoints['body'] ?? 1.0).toDouble() / 5.0,
+              'intensity': (entry.radarPoints['intensity'] ?? entry.sensoryPoints['intensity'] ?? 1.0).toDouble() / 5.0,
+              'aftertaste': (entry.radarPoints['aftertaste'] ?? entry.sensoryPoints['aftertaste'] ?? 1.0).toDouble() / 5.0,
+            },
             height: 400,
           ),
         ),
@@ -549,32 +543,32 @@ class _ProfileTab extends ConsumerWidget {
         const SizedBox(height: 16),
         SensoryIndicator(
           label: ref.t('bitterness'),
-          value: entry.radarPoints['bitterness'] != null ? (entry.radarPoints['bitterness']! / 5.0) : (entry.sensoryPoints['bitterness'] != null ? (entry.sensoryPoints['bitterness'] as num).toDouble() / 5.0 : 0.2),
+          value: (entry.radarPoints['bitterness'] ?? entry.sensoryPoints['bitterness'] ?? 1.0) / 5.0,
           color: const Color(0xFFC8A96E),
         ),
         SensoryIndicator(
           label: ref.t('acidity'),
-          value: entry.radarPoints['acidity'] != null ? (entry.radarPoints['acidity']! / 5.0) : (entry.sensoryPoints['acidity'] != null ? (entry.sensoryPoints['acidity'] as num).toDouble() / 5.0 : 0.2),
+          value: (entry.radarPoints['acidity'] ?? entry.sensoryPoints['acidity'] ?? 1.0) / 5.0,
           color: const Color(0xFFC8A96E),
         ),
         SensoryIndicator(
           label: ref.t('sweetness'),
-          value: entry.radarPoints['sweetness'] != null ? (entry.radarPoints['sweetness']! / 5.0) : (entry.sensoryPoints['sweetness'] != null ? (entry.sensoryPoints['sweetness'] as num).toDouble() / 5.0 : 0.2),
+          value: (entry.radarPoints['sweetness'] ?? entry.sensoryPoints['sweetness'] ?? 1.0) / 5.0,
           color: const Color(0xFFC8A96E),
         ),
         SensoryIndicator(
           label: ref.t('body'),
-          value: entry.radarPoints['body'] != null ? (entry.radarPoints['body']! / 5.0) : (entry.sensoryPoints['body'] != null ? (entry.sensoryPoints['body'] as num).toDouble() / 5.0 : 0.2),
+          value: (entry.radarPoints['body'] ?? entry.sensoryPoints['body'] ?? 1.0) / 5.0,
           color: const Color(0xFFC8A96E),
         ),
         SensoryIndicator(
           label: ref.t('intensity'),
-          value: entry.radarPoints['intensity'] != null ? (entry.radarPoints['intensity']! / 5.0) : (entry.sensoryPoints['intensity'] != null ? (entry.sensoryPoints['intensity'] as num).toDouble() / 5.0 : 0.2),
+          value: (entry.radarPoints['intensity'] ?? entry.sensoryPoints['intensity'] ?? 1.0) / 5.0,
           color: const Color(0xFFC8A96E),
         ),
         SensoryIndicator(
           label: ref.t('aftertaste'),
-          value: entry.radarPoints['aftertaste'] != null ? (entry.radarPoints['aftertaste']! / 5.0) : (entry.sensoryPoints['aftertaste'] != null ? (entry.sensoryPoints['aftertaste'] as num).toDouble() / 5.0 : 0.2),
+          value: (entry.radarPoints['aftertaste'] ?? entry.sensoryPoints['aftertaste'] ?? 1.0) / 5.0,
           color: const Color(0xFFC8A96E),
         ),
         if (entry.detailedProcess.isNotEmpty) ...[

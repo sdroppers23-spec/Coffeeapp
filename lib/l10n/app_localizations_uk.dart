@@ -238,9 +238,6 @@ class AppLocalizationsUk extends AppLocalizations {
   String get cupping_score => 'Оцінка SCA';
 
   @override
-  String get aroma => 'Аромат';
-
-  @override
   String get body => 'Тіло';
 
   @override

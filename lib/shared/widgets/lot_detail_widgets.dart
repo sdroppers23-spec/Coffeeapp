@@ -140,7 +140,7 @@ class LotCompactStat extends StatelessWidget {
 
 class SensoryIndicator extends StatelessWidget {
   final String label;
-  final double value;
+  final double value; // Expected 0.0 to 1.0
   final Color color;
 
   const SensoryIndicator({
@@ -152,8 +152,11 @@ class SensoryIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Convert 0.0-1.0 to 1-5 scale
+    final int score = (value * 5).round().clamp(0, 5);
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -161,51 +164,51 @@ class SensoryIndicator extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                label.toUpperCase(),
+                label,
                 style: GoogleFonts.outfit(
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white54,
-                  letterSpacing: 1,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white.withValues(alpha: 0.9),
                 ),
               ),
               Text(
-                '${(value * 100).toInt()}%',
+                '$score/5',
                 style: GoogleFonts.outfit(
-                  fontSize: 10,
+                  fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  color: color,
+                  color: Colors.white,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 6),
-          Stack(
-            children: [
-              Container(
-                height: 4,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.05),
-                  borderRadius: BorderRadius.circular(2),
+          const SizedBox(height: 10),
+          Row(
+            children: List.generate(5, (index) {
+              final isFilled = index < score;
+              return Expanded(
+                child: Container(
+                  height: 3,
+                  margin: EdgeInsets.only(
+                    right: index == 4 ? 0 : 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isFilled
+                        ? const Color(0xFFC8A96E)
+                        : Colors.white.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(1),
+                    boxShadow: isFilled
+                        ? [
+                            BoxShadow(
+                              color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
+                              blurRadius: 4,
+                              offset: const Offset(0, 1),
+                            ),
+                          ]
+                        : null,
+                  ),
                 ),
-              ),
-              Container(
-                height: 4,
-                width: MediaQuery.of(context).size.width * 0.8 * value.clamp(0.0, 1.0),
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.circular(2),
-                  boxShadow: [
-                    BoxShadow(
-                      color: color.withValues(alpha: 0.3),
-                      blurRadius: 4,
-                      spreadRadius: 1,
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              );
+            }),
           ),
         ],
       ),

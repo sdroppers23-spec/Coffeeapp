@@ -180,7 +180,7 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
               floatingActionButton: _tabController.index == 2 ? Padding(
                 padding: const EdgeInsets.only(bottom: 20, right: 8),
                 child: FloatingActionButton.extended(
-                  onPressed: () => _showRecipeTypeSelector(context, ref, liveLot?.id ?? widget.lot!.id),
+                  onPressed: () => _showRecipeTypeSelector(context, ref, liveLot?.id ?? widget.lot?.id ?? liveBean?.id.toString() ?? widget.entry?.id.toString() ?? ''),
                   backgroundColor: theme.colorScheme.primary,
                   foregroundColor: Colors.black,
                   label: Text(
@@ -765,7 +765,7 @@ class _InfoTab extends ConsumerWidget {
   }
 }
 
-class _SensoryTab extends StatelessWidget {
+class _SensoryTab extends ConsumerWidget {
   final Map<String, double> points;
   final bool isUk;
   final String? lotId;
@@ -773,7 +773,7 @@ class _SensoryTab extends StatelessWidget {
   const _SensoryTab({required this.points, required this.isUk, this.lotId});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Column(
@@ -788,12 +788,44 @@ class _SensoryTab extends StatelessWidget {
                 interactive: !isEncyclopedia,
                 isLocked: isEncyclopedia,
                 height: 350,
-                staticValues: points,
+                staticValues: points.map((k, v) => MapEntry(k, v / 5.0)),
               );
             }(),
           ),
+          const SizedBox(height: 32),
           _SectionTitle(title: context.t('sensory_grid').toUpperCase()),
-          const SizedBox(height: 160),
+          const SizedBox(height: 16),
+          SensoryIndicator(
+            label: ref.t('bitterness'),
+            value: (points['bitterness'] ?? 1.0) / 5.0,
+            color: const Color(0xFFC8A96E),
+          ),
+          SensoryIndicator(
+            label: ref.t('acidity'),
+            value: (points['acidity'] ?? 1.0) / 5.0,
+            color: const Color(0xFFC8A96E),
+          ),
+          SensoryIndicator(
+            label: ref.t('sweetness'),
+            value: (points['sweetness'] ?? 1.0) / 5.0,
+            color: const Color(0xFFC8A96E),
+          ),
+          SensoryIndicator(
+            label: ref.t('body'),
+            value: (points['body'] ?? 1.0) / 5.0,
+            color: const Color(0xFFC8A96E),
+          ),
+          SensoryIndicator(
+            label: ref.t('intensity'),
+            value: (points['intensity'] ?? 1.0) / 5.0,
+            color: const Color(0xFFC8A96E),
+          ),
+          SensoryIndicator(
+            label: ref.t('aftertaste'),
+            value: (points['aftertaste'] ?? 1.0) / 5.0,
+            color: const Color(0xFFC8A96E),
+          ),
+          const SizedBox(height: 140),
         ],
       ),
     );

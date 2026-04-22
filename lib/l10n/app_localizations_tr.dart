@@ -238,9 +238,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get cupping_score => 'Tadım Puanı';
 
   @override
-  String get aroma => 'Aroma';
-
-  @override
   String get body => 'Gövde';
 
   @override

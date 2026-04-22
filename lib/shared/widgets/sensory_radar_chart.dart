@@ -69,11 +69,11 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
             child: Row(
               children: [
                 _TemplateChip(ref.t('process_washed_label'), 'Clean & Bright', {
-                  'bitterness': 0.3,
+                  'bitterness': 0.2,
                   'acidity': 0.8,
                   'sweetness': 0.6,
                   'body': 0.4,
-                  'intensity': 0.5,
+                  'intensity': 0.7,
                   'aftertaste': 0.6,
                 }),
                 const SizedBox(width: 8),
@@ -81,7 +81,7 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
                   ref.t('process_natural_label'),
                   'Fruity & Sweet',
                   {
-                    'bitterness': 0.4,
+                    'bitterness': 0.3,
                     'acidity': 0.5,
                     'sweetness': 0.9,
                     'body': 0.7,
@@ -94,7 +94,7 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
                   ref.t('process_honey_label'),
                   'Sticky & Balanced',
                   {
-                    'bitterness': 0.5,
+                    'bitterness': 0.4,
                     'acidity': 0.6,
                     'sweetness': 0.8,
                     'body': 0.6,

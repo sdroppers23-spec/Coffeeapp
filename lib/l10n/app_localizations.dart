@@ -558,12 +558,6 @@ abstract class AppLocalizations {
   /// **'Cupping Score'**
   String get cupping_score;
 
-  /// No description provided for @aroma.
-  ///
-  /// In en, this message translates to:
-  /// **'Aroma'**
-  String get aroma;
-
   /// No description provided for @body.
   ///
   /// In en, this message translates to:

@@ -238,9 +238,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get cupping_score => 'カッピングスコア';
 
   @override
-  String get aroma => 'アロマ';
-
-  @override
   String get body => 'ボディ';
 
   @override

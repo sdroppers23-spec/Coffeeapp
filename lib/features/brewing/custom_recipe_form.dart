@@ -215,19 +215,22 @@ class _CustomRecipeFormScreenState
           s = s % 60;
           changed = true;
         }
+        
+        // Final clamping
         if (m > 59) {
           m = 59;
-          changed = true;
-        }
-        if (s > 59 && m == 59) {
           s = 59;
           changed = true;
         }
 
         if (changed) {
-          minCtrl.text = m.toString();
-          secCtrl.text = s.toString();
-          // Maintain cursor position at the end
+          final mText = m.toString();
+          final sText = s.toString().padLeft(2, '0');
+          
+          if (minCtrl.text != mText) minCtrl.text = mText;
+          if (secCtrl.text != sText) secCtrl.text = sText;
+          
+          // Maintain cursor position
           minCtrl.selection = TextSelection.fromPosition(
             TextPosition(offset: minCtrl.text.length),
           );
@@ -292,9 +295,15 @@ class _CustomRecipeFormScreenState
   }
 
   void _readPourControllers() {
-    for (int i = 0; i < _totalPours; i++) {
+    final count = _pourCtrlsList.length;
+    for (int i = 0; i < count; i++) {
       final ctrls = _pourCtrlsList[i];
       
+      // Ensure _pours is large enough
+      while (_pours.length <= i) {
+        _pours.add(_PourEntry(pourNumber: i + 1));
+      }
+
       _pours[i]
         ..pourNumber = i + 1
         ..waterMl = double.tryParse(ctrls['waterMl']!.text.replaceAll(',', '.'))

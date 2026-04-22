@@ -238,9 +238,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get cupping_score => '杯测分数';
 
   @override
-  String get aroma => '香气';
-
-  @override
   String get body => '醇厚度';
 
   @override

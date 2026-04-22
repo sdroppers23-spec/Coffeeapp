@@ -238,9 +238,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cupping_score => 'Puntuación de cata';
 
   @override
-  String get aroma => 'Aroma';
-
-  @override
   String get body => 'Cuerpo';
 
   @override

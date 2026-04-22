@@ -238,9 +238,6 @@ class AppLocalizationsRo extends AppLocalizations {
   String get cupping_score => 'Scor Cupping';
 
   @override
-  String get aroma => 'Aromă';
-
-  @override
   String get body => 'Corp';
 
   @override

@@ -238,9 +238,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get cupping_score => 'Оценка каппинга';
 
   @override
-  String get aroma => 'Аромат';
-
-  @override
   String get body => 'Тело';
 
   @override

@@ -16,6 +16,12 @@ import '../../shared/widgets/glass_container.dart';
 import '../../shared/utils/sensory_utils.dart';
 import '../navigation/navigation_providers.dart';
 import '../encyclopedia/encyclopedia_providers.dart';
+import '../brewing/custom_recipe_timer_screen.dart';
+import 'dart:convert';
+import 'package:uuid/uuid.dart';
+import 'package:drift/drift.dart' hide Column;
+import '../../core/database/app_database.dart';
+import '../../core/supabase/supabase_provider.dart';
 
 class CoffeeLotDetailScreen extends ConsumerStatefulWidget {
   final LocalizedBeanDto entry;
@@ -762,15 +768,15 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
-class _CustomRecipeCardWrapper extends StatelessWidget {
+class _CustomRecipeCardWrapper extends ConsumerWidget {
   final CustomRecipeDto recipe;
   const _CustomRecipeCardWrapper({required this.recipe});
 
   @override
-  Widget build(BuildContext context) {
-    // We use the shared CustomRecipeCard but with some adjustments if needed
-    // For now, let's just show a simple version similar to RecommendedCard
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final isUk = LocaleService.currentLocale == 'uk';
+    
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: GlassContainer(
@@ -803,21 +809,79 @@ class _CustomRecipeCardWrapper extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            Text(
-              recipe.name,
-              style: GoogleFonts.outfit(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 8),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _Stat(Icons.coffee, '${recipe.coffeeGrams}g'),
-                _Stat(Icons.water_drop, '${recipe.totalWaterMl}ml'),
-                _Stat(Icons.thermostat, '${recipe.brewTempC.toInt()}°C'),
+                _Stat(label: isUk ? 'КАВА' : 'COFFEE', value: '${recipe.coffeeGrams}g'),
+                const SizedBox(width: 24),
+                _Stat(label: recipe.recipeType == 'espresso' ? (isUk ? 'ВИХІД' : 'YIELD') : (isUk ? 'ВОДА' : 'WATER'), value: '${recipe.totalWaterMl}ml'),
+                const SizedBox(width: 24),
+                _Stat(label: 'TEMP', value: '${recipe.brewTempC}°C'),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.play_arrow_rounded, color: Color(0xFFC8A96E)),
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => CustomRecipeTimerScreen(recipe: recipe)),
+                  ),
+                ),
+                PopupMenuButton<String>(
+                  icon: const Icon(Icons.more_vert_rounded, color: Colors.white54, size: 20),
+                  color: const Color(0xFF1E1E1E),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  onSelected: (val) async {
+                    if (val == 'delete') {
+                      final confirmed = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          backgroundColor: const Color(0xFF1E1E1E),
+                          title: Text(isUk ? 'Видалити рецепт?' : 'Delete Recipe?', style: const TextStyle(color: Colors.white)),
+                          content: Text(isUk ? 'Цю дію неможливо скасувати.' : 'This action cannot be undone.', style: const TextStyle(color: Colors.white70)),
+                          actions: [
+                            TextButton(onPressed: () => Navigator.pop(context, false), child: Text(isUk ? 'СКАСУВАТИ' : 'CANCEL')),
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, true),
+                              child: Text(isUk ? 'ВИДАЛИТИ' : 'DELETE', style: const TextStyle(color: Colors.redAccent)),
+                            ),
+                          ],
+                        ),
+                      );
+                      if (confirmed == true) {
+                        await ref.read(databaseProvider).deleteCustomRecipe(recipe.id);
+                        ref.invalidate(customRecipesForLotProvider(recipe.lotId ?? ''));
+                      }
+                    } else if (val == 'edit') {
+                      await showDialog(
+                        context: context,
+                        builder: (context) => AddRecipeDialog(
+                          lotId: recipe.lotId ?? '',
+                          existingRecipe: recipe,
+                        ),
+                      );
+                      ref.invalidate(customRecipesForLotProvider(recipe.lotId ?? ''));
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: 'edit',
+                      child: Row(
+                        children: [
+                          const Icon(Icons.edit_rounded, size: 18, color: Colors.white70),
+                          const SizedBox(width: 12),
+                          Text(isUk ? 'Редагувати' : 'Edit', style: const TextStyle(color: Colors.white)),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: 'delete',
+                      child: Row(
+                        children: [
+                          const Icon(Icons.delete_outline_rounded, size: 18, color: Colors.redAccent),
+                          const SizedBox(width: 12),
+                          Text(isUk ? 'Видалити' : 'Delete', style: const TextStyle(color: Colors.redAccent)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ],
@@ -862,37 +926,9 @@ class _Cell extends StatelessWidget {
   }
 }
 
-class _RecommendedCard extends StatelessWidget {
+class _RecommendedCard extends ConsumerWidget {
   final RecommendedRecipeDto recipe;
   const _RecommendedCard({required this.recipe});
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: GlassContainer(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  recipe.methodKey.toUpperCase(),
-                  style: GoogleFonts.outfit(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.primary,
-                    letterSpacing: 1,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
                     color: Colors.amber.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(6),
                   ),

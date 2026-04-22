@@ -40,7 +40,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? e]) : super(e ?? openConnection());
 
   @override
-  int get schemaVersion => 37;
+  int get schemaVersion => 38;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -105,8 +105,12 @@ class AppDatabase extends _$AppDatabase {
         await _safeAddColumn(m, localizedBeansV2, localizedBeansV2.radarJson);
       }
       if (from < 37) {
-        // v37: Add userPriceJson for manual price entry
         await _safeAddColumn(m, localizedBeansV2, localizedBeansV2.userPriceJson);
+      }
+      if (from < 38) {
+        // v38: Add category column to brewing recipes
+        await _safeAddColumn(m, brewingRecipes, brewingRecipes.category);
+        await _safeAddColumn(m, brewingRecipesV2, brewingRecipesV2.category);
       }
     },
     beforeOpen: (details) async {

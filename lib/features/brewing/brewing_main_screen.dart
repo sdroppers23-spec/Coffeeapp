@@ -62,7 +62,7 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
       backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
       appBar: PremiumAppBar(
-        title: ref.t('alternative'),
+        title: ref.t('brewing'),
         actions: [
           IconButton(
             icon: Icon(
@@ -242,9 +242,18 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
     );
   }
 
-  void _handleTypeSelected(String type) {
+  void _handleTypeSelected(String type) async {
     Navigator.pop(context);
-    context.push('/custom_recipe_form', extra: {'recipeType': type});
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AddRecipeDialog(
+        lotId: '',
+        initialMethod: type == 'espresso' ? 'espresso' : 'v60',
+      ),
+    );
+    if (result == true) {
+      ref.invalidate(globalCustomRecipesProvider);
+    }
   }
 }
 
@@ -277,7 +286,7 @@ class _BrewingMethodsContent extends ConsumerWidget {
         return CustomScrollView(
           slivers: [
             // Top spacer (replaces padding.top)
-            const SliverToBoxAdapter(child: SizedBox(height: 120)),
+            const SliverToBoxAdapter(child: SizedBox(height: 160)),
 
             if (espressoMethods.isNotEmpty) ...[
               SliverPadding(

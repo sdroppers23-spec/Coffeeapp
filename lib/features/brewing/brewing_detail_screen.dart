@@ -56,8 +56,17 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
               actions: [
                 IconButton(
                   icon: const Icon(Icons.add_rounded, color: Colors.white, size: 28),
-                  onPressed: () {
-                    context.push('/custom_recipe_form', extra: {'recipeType': widget.recipe.category});
+                  onPressed: () async {
+                    final result = await showDialog<bool>(
+                      context: context,
+                      builder: (context) => AddRecipeDialog(
+                        lotId: '',
+                        initialMethod: widget.recipe.methodKey,
+                      ),
+                    );
+                    if (result == true) {
+                      ref.invalidate(customRecipesForMethodProvider(widget.recipe.methodKey));
+                    }
                   },
                 ),
               ],
@@ -92,50 +101,41 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                 ),
               ),
             ),
-          ],
-          body: Container(
-            color: Colors.transparent,
-            child: Column(
-              children: [
-                // ── Info Row ──────────────────────────────────────────────────────
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                  child: GlassContainer(
-                    padding: const EdgeInsets.all(16),
-                    opacity: 0.1,
-                    blur: 10,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _InfoChip(
-                          icon: Icons.thermostat_outlined,
-                          label: '${widget.recipe.tempC?.toInt() ?? 0}°C',
-                        ),
-                        _InfoChip(
-                          icon: Icons.balance_outlined,
-                          label: _formattedRatio,
-                        ),
-                        _InfoChip(
-                          icon: Icons.timer_outlined,
-                          label: _formatTime(widget.recipe.totalTimeSec ?? 0),
-                        ),
-                        _InfoChip(
-                          icon: Icons.signal_cellular_alt_outlined,
-                          label: widget.recipe.difficulty ?? 'Medium',
-                        ),
-                      ],
-                    ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                child: GlassContainer(
+                  padding: const EdgeInsets.all(16),
+                  opacity: 0.1,
+                  blur: 10,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _InfoChip(
+                        icon: Icons.thermostat_outlined,
+                        label: '${widget.recipe.tempC?.toInt() ?? 0}°C',
+                      ),
+                      _InfoChip(
+                        icon: Icons.balance_outlined,
+                        label: _formattedRatio,
+                      ),
+                      _InfoChip(
+                        icon: Icons.timer_outlined,
+                        label: _formatTime(widget.recipe.totalTimeSec ?? 0),
+                      ),
+                      _InfoChip(
+                        icon: Icons.signal_cellular_alt_outlined,
+                        label: widget.recipe.difficulty ?? 'Medium',
+                      ),
+                    ],
                   ),
                 ),
-                // ── Recipes List ──────────────────────────────────────────────────
-                Expanded(
-                  child: CustomRecipeListTab(
-                    methodKey: widget.recipe.methodKey,
-                    showFab: false,
-                  ),
-                ),
-              ],
+              ),
             ),
+          ],
+          body: CustomRecipeListTab(
+            methodKey: widget.recipe.methodKey,
+            showFab: true,
           ),
         ),
       ),

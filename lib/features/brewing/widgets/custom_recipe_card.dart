@@ -120,15 +120,20 @@ class CustomRecipeCard extends StatelessWidget {
                                 'Edit Recipe',
                                 style: TextStyle(color: Colors.white),
                               ),
-                              onTap: () {
-                                Navigator.pop(context);
-                                context.push('/custom_recipe_form', extra: {
-                                  'methodKey': methodKey,
-                                  'recipe': recipe,
-                                  'recipeType': recipe.recipeType,
-                                });
-                              },
-                            ),
+                                onTap: () async {
+                                  Navigator.pop(context);
+                                  final result = await showDialog<bool>(
+                                    context: context,
+                                    builder: (context) => AddRecipeDialog(
+                                      lotId: recipe.lotId ?? '',
+                                      existingRecipe: recipe,
+                                    ),
+                                  );
+                                  if (result == true) {
+                                    ref.invalidate(customRecipesForMethodProvider(methodKey));
+                                  }
+                                },
+                              ),
                             ListTile(
                               leading: const Icon(
                                 Icons.delete_outline_rounded,
@@ -286,7 +291,6 @@ class CustomRecipeCard extends StatelessWidget {
                       builder: (_) => CustomRecipeTimerScreen(recipe: recipe),
                     ),
                   ),
-
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFC8A96E),
                     foregroundColor: Colors.black,

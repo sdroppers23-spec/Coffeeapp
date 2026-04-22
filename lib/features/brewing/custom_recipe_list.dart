@@ -6,7 +6,7 @@ import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../shared/widgets/glass_container.dart';
-import 'custom_recipe_form.dart';
+import '../../shared/widgets/add_recipe_dialog.dart';
 import 'widgets/custom_recipe_card.dart';
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
@@ -47,12 +47,16 @@ class CustomRecipeListTab extends ConsumerWidget {
       backgroundColor: Colors.transparent,
       floatingActionButton: !showFab ? null : FloatingActionButton.extended(
         onPressed: () async {
-          await Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => CustomRecipeFormScreen(methodKey: methodKey),
+          final result = await showDialog<bool>(
+            context: context,
+            builder: (context) => AddRecipeDialog(
+              lotId: '', // Adding a general recipe for the method
+              initialMethod: methodKey,
             ),
           );
-          ref.invalidate(customRecipesForMethodProvider(methodKey));
+          if (result == true) {
+            ref.invalidate(customRecipesForMethodProvider(methodKey));
+          }
         },
         icon: const Icon(Icons.add_rounded),
         label: Text(
@@ -137,6 +141,28 @@ class GlobalCustomRecipeList extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: Colors.transparent,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () async {
+          final result = await showDialog<bool>(
+            context: context,
+            builder: (context) => const AddRecipeDialog(
+              lotId: '',
+            ),
+          );
+          if (result == true) {
+            ref.invalidate(globalCustomRecipesProvider);
+          }
+        },
+        icon: const Icon(Icons.add_rounded),
+        label: Text(
+          ref.t('add_recipe'),
+          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+        ),
+        backgroundColor: const Color(0xFFC8A96E),
+        foregroundColor: Colors.black,
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      ),
       body: recipesAsync.when(
         loading: () => const Center(
           child: CircularProgressIndicator(color: Color(0xFFC8A96E)),
@@ -161,9 +187,29 @@ class GlobalCustomRecipeList extends ConsumerWidget {
                   const SizedBox(height: 16),
                   Text(
                     ref.t('history_empty'),
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.outfit(
                       color: Colors.white38,
                       fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  // Button to add first recipe
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      final result = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => const AddRecipeDialog(lotId: ''),
+                      );
+                      if (result == true) {
+                        ref.invalidate(globalCustomRecipesProvider);
+                      }
+                    },
+                    icon: const Icon(Icons.add_rounded),
+                    label: Text(ref.t('add_recipe')),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFC8A96E).withValues(alpha: 0.2),
+                      foregroundColor: const Color(0xFFC8A96E),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                   ),
                 ],
@@ -171,17 +217,59 @@ class GlobalCustomRecipeList extends ConsumerWidget {
             );
           }
 
-          return ListView.separated(
-            padding: const EdgeInsets.fromLTRB(16, 120, 16, 100),
-            itemCount: recipes.length,
-            separatorBuilder: (_, _) => const SizedBox(height: 16),
-            itemBuilder: (context, i) => CustomRecipeCard(
-              recipe: recipes[i],
-              methodKey: recipes[i].methodKey,
-              ref: ref,
-            ),
+          bool isEspresso(String? method, String? type) {
+            if (type == 'espresso') return true;
+            final m = (method ?? '').toLowerCase();
+            return m.contains('espresso') || m.contains('lever');
+          }
+
+          final espressoRecipes = recipes.where((r) => isEspresso(r.methodKey, r.recipeType)).toList();
+          final filterRecipes = recipes.where((r) => !isEspresso(r.methodKey, r.recipeType)).toList();
+
+          return ListView(
+            padding: const EdgeInsets.fromLTRB(16, 160, 16, 100),
+            children: [
+              if (espressoRecipes.isNotEmpty) ...[
+                _CategoryHeader(title: ref.t('espresso').toUpperCase()),
+                const SizedBox(height: 16),
+                ...espressoRecipes.map((r) => Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: CustomRecipeCard(recipe: r, methodKey: r.methodKey, ref: ref),
+                )),
+                const SizedBox(height: 16),
+              ],
+              if (filterRecipes.isNotEmpty) ...[
+                _CategoryHeader(title: ref.t('alternative').toUpperCase()),
+                const SizedBox(height: 16),
+                ...filterRecipes.map((r) => Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: CustomRecipeCard(recipe: r, methodKey: r.methodKey, ref: ref),
+                )),
+              ],
+            ],
           );
         },
+      ),
+    );
+  }
+}
+
+class _CategoryHeader extends StatelessWidget {
+  final String title;
+  const _CategoryHeader({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8),
+      child: Text(
+        title,
+        style: GoogleFonts.outfit(
+          color: Colors.white70,
+          fontSize: 13,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 2,
+        ),
       ),
     );
   }

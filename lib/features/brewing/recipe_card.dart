@@ -91,7 +91,7 @@ class RecipeCard extends StatelessWidget {
                             recipe.description,
                             style: GoogleFonts.outfit(
                               fontSize: 13.5,
-                              color: Colors.white.withValues(alpha: 0.65),
+                              color: Colors.white.withOpacity(0.65),
                               height: 1.45,
                             ),
                             maxLines: 2,
@@ -107,9 +107,9 @@ class RecipeCard extends StatelessWidget {
                     width: 36,
                     height: 36,
                     decoration: BoxDecoration(
-                      color: gold.withValues(alpha: 0.12),
+                      color: gold.withOpacity(0.12),
                       shape: BoxShape.circle,
-                      border: Border.all(color: gold.withValues(alpha: 0.3)),
+                      border: Border.all(color: gold.withOpacity(0.3)),
                     ),
                     child: const Icon(
                       Icons.arrow_forward_rounded,
@@ -127,7 +127,7 @@ class RecipeCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Divider(
-                color: Colors.white.withValues(alpha: 0.08),
+                color: Colors.white.withOpacity(0.08),
                 height: 1,
               ),
             ),
@@ -173,23 +173,23 @@ class RecipeCard extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: gold.withValues(alpha: 0.1),
+                    color: gold.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                     border:
-                        Border.all(color: gold.withValues(alpha: 0.25)),
+                        Border.all(color: gold.withOpacity(0.25)),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(Icons.local_florist_outlined,
-                          size: 11, color: gold.withValues(alpha: 0.8)),
+                          size: 11, color: gold.withOpacity(0.8)),
                       const SizedBox(width: 5),
                       Text(
                         recipe.flavorProfile!,
                         style: GoogleFonts.outfit(
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
-                          color: gold.withValues(alpha: 0.9),
+                          color: gold.withOpacity(0.9),
                           letterSpacing: 0.2,
                         ),
                       ),
@@ -224,7 +224,7 @@ class _StatCell extends StatelessWidget {
     return Expanded(
       child: Column(
         children: [
-          Icon(icon, size: 15, color: c.withValues(alpha: 0.8)),
+          Icon(icon, size: 15, color: c.withOpacity(0.8)),
           const SizedBox(height: 4),
           Text(
             value,
@@ -241,7 +241,7 @@ class _StatCell extends StatelessWidget {
             label,
             style: GoogleFonts.outfit(
               fontSize: 9,
-              color: Colors.white.withValues(alpha: 0.45),
+              color: Colors.white.withOpacity(0.45),
               letterSpacing: 0.3,
             ),
             maxLines: 1,
@@ -270,7 +270,7 @@ class _DifficultyCell extends StatelessWidget {
             decoration: BoxDecoration(
               color: color,
               shape: BoxShape.circle,
-              boxShadow: [BoxShadow(color: color.withValues(alpha: 0.5), blurRadius: 6)],
+              boxShadow: [BoxShadow(color: color.withOpacity(0.5), blurRadius: 6)],
             ),
           ),
           const SizedBox(height: 4),
@@ -290,7 +290,7 @@ class _DifficultyCell extends StatelessWidget {
             'Рівень',
             style: GoogleFonts.outfit(
               fontSize: 9,
-              color: Colors.white.withValues(alpha: 0.45),
+              color: Colors.white.withOpacity(0.45),
               letterSpacing: 0.3,
             ),
           ),
@@ -307,7 +307,7 @@ class _VerticalDivider extends StatelessWidget {
     return Container(
       width: 1,
       height: 36,
-      color: Colors.white.withValues(alpha: 0.07),
+      color: Colors.white.withOpacity(0.07),
     );
   }
 }

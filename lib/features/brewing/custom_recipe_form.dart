@@ -195,10 +195,10 @@ class _CustomRecipeFormScreenState
       ..addAll(
         List.generate(_totalPours, (i) {
           final p = _pours[i];
+          final timeStr = '${p.atMin ?? 0}:${(p.atSec ?? 0).toString().padLeft(2, '0')}';
           return {
             'waterMl': TextEditingController(text: p.waterMl?.toString() ?? ''),
-            'atMin': TextEditingController(text: p.atMin?.toString() ?? '0'),
-            'atSec': TextEditingController(text: p.atSec?.toString() ?? '0'),
+            'atTime': TextEditingController(text: timeStr),
             'durationSec': TextEditingController(
               text: p.durationSec?.toString() ?? '',
             ),
@@ -250,11 +250,25 @@ class _CustomRecipeFormScreenState
   void _readPourControllers() {
     for (int i = 0; i < _totalPours; i++) {
       final ctrls = _pourCtrlsList[i];
+      
+      // Parse time string (m:ss or ss)
+      final timeParts = ctrls['atTime']!.text.split(':');
+      int m = 0;
+      int s = 0;
+      if (timeParts.length >= 2) {
+        m = int.tryParse(timeParts[0]) ?? 0;
+        s = int.tryParse(timeParts[1]) ?? 0;
+      } else if (timeParts.length == 1) {
+        final total = int.tryParse(timeParts[0]) ?? 0;
+        m = total ~/ 60;
+        s = total % 60;
+      }
+
       _pours[i]
         ..pourNumber = i + 1
         ..waterMl = double.tryParse(ctrls['waterMl']!.text.replaceAll(',', '.'))
-        ..atMin = int.tryParse(ctrls['atMin']!.text) ?? 0
-        ..atSec = int.tryParse(ctrls['atSec']!.text) ?? 0
+        ..atMin = m
+        ..atSec = s
         ..durationSec = int.tryParse(ctrls['durationSec']!.text)
         ..notes = ctrls['notes']!.text;
     }
@@ -292,10 +306,10 @@ class _CustomRecipeFormScreenState
       if (widget.existingRecipe != null) {
         final updateCompanion = CustomRecipesCompanion(
           id: Value(widget.existingRecipe!.id),
-          lotId: Value(widget.lotId),
+          lotId: Value(widget.lotId ?? widget.existingRecipe?.lotId),
           methodKey: Value(widget.methodKey),
           name: Value(_nameCtrl.text.trim()),
-          createdAt: Value(widget.existingRecipe!.updatedAt ?? now),
+          createdAt: Value(widget.existingRecipe!.createdAt),
           updatedAt: Value(now),
           coffeeGrams: Value(double.tryParse(_coffeeGCtrl.text.replaceAll(',', '.')) ?? 0),
           totalWaterMl: Value(double.tryParse(_waterMlCtrl.text.replaceAll(',', '.')) ?? 0),
@@ -475,9 +489,9 @@ class _CustomRecipeFormScreenState
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.07),
+                color: Colors.white.withOpacity(0.07),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                border: Border.all(color: Colors.white.withOpacity(0.1)),
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
@@ -611,7 +625,7 @@ class _CustomRecipeFormScreenState
               ),
             ),
             // Padding for navigation bar overlap
-            SizedBox(height: MediaQuery.of(context).padding.bottom + 20),
+            SizedBox(height: MediaQuery.of(context).padding.bottom + 100),
           ],
         ),
       ),
@@ -631,7 +645,7 @@ class _PourRow extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
+        color: Colors.white.withOpacity(0.05),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -660,23 +674,12 @@ class _PourRow extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Expanded(
-                flex: 1,
+                flex: 2,
                 child: _Field(
-                  controller: ctrls['atMin']!,
-                  label: 'Min',
-                  hint: '0',
-                  keyboardType: TextInputType.number,
-                  dense: true,
-                ),
-              ),
-              const SizedBox(width: 4),
-              Expanded(
-                flex: 1,
-                child: _Field(
-                  controller: ctrls['atSec']!,
-                  label: 'Sec',
-                  hint: '30',
-                  keyboardType: TextInputType.number,
+                  controller: ctrls['atTime']!,
+                  label: '${context.t('timer')} (m:ss)',
+                  hint: '0:30',
+                  keyboardType: TextInputType.datetime,
                   dense: true,
                 ),
               ),
@@ -717,12 +720,18 @@ class _SectionHeader extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
-          Text(
-            title,
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFFC8A96E),
-              fontSize: 14,
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                title,
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFFC8A96E),
+                  fontSize: 14,
+                ),
+              ),
             ),
           ),
           const SizedBox(width: 8),
@@ -778,14 +787,14 @@ class _Field extends StatelessWidget {
             ? const EdgeInsets.symmetric(horizontal: 12, vertical: 10)
             : null,
         filled: true,
-        fillColor: Colors.white.withValues(alpha: 0.07),
+        fillColor: Colors.white.withOpacity(0.07),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+          borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -890,8 +899,8 @@ class _CircleBtn extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: enabled
-              ? const Color(0xFFC8A96E).withValues(alpha: 0.2)
-              : Colors.white.withValues(alpha: 0.05),
+              ? const Color(0xFFC8A96E).withOpacity(0.2)
+              : Colors.white.withOpacity(0.05),
           border: Border.all(
             color: enabled ? const Color(0xFFC8A96E) : Colors.white12,
           ),

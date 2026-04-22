@@ -69,7 +69,7 @@ class BrandDetailsScreen extends ConsumerWidget {
               child: Text(
                 brand.fullDesc,
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, height: 1.6),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7), fontSize: 13, height: 1.6),
               ),
             ),
             const SizedBox(height: 24),
@@ -81,7 +81,7 @@ class BrandDetailsScreen extends ConsumerWidget {
                 data: (lots) {
                   if (lots.isEmpty) {
                     return Center(
-                      child: Text(ref.t('no_lots_found'), style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54))),
+                      child: Text(ref.t('no_lots_found'), style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.54))),
                     );
                   }
                   return ListView.builder(
@@ -130,7 +130,7 @@ class _BrandProductCard extends ConsumerWidget {
                       ),
                       Text(
                         entry.country,
-                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54), fontSize: 12),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.54), fontSize: 12),
                       ),
                     ],
                   ),
@@ -138,7 +138,7 @@ class _BrandProductCard extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.1),
+                    color: Colors.white.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -158,7 +158,7 @@ class _BrandProductCard extends ConsumerWidget {
               style: TextStyle(
                 color: Theme.of(
                   context,
-                ).colorScheme.onSurface.withValues(alpha: 0.9),
+                ).colorScheme.onSurface.withOpacity(0.9),
                 fontSize: 13,
                 height: 1.5,
               ),

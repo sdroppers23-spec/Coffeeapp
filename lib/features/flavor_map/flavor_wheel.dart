@@ -124,7 +124,7 @@ class GlobePainter extends CustomPainter {
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2
-        ..color = const Color(0xFFC8A96E).withValues(alpha: 0.3)
+        ..color = const Color(0xFFC8A96E).withOpacity(0.3)
         ..maskFilter = const MaskFilter.blur(BlurStyle.outer, 10),
     );
 
@@ -137,7 +137,7 @@ class GlobePainter extends CustomPainter {
 
   void _drawGrid(Canvas canvas, Offset center, double radius, double focal) {
     final gridPaint = Paint()
-      ..color = const Color(0xFFC8A96E).withValues(alpha: 0.05)
+      ..color = const Color(0xFFC8A96E).withOpacity(0.05)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.5;
 
@@ -182,8 +182,8 @@ class GlobePainter extends CustomPainter {
         // Aroma Pillar
         final pillarPaint = Paint()
           ..shader = ui.Gradient.linear(cp - const Offset(0, 30), cp, [
-            markerColor.withValues(alpha: 0.0),
-            markerColor.withValues(alpha: 0.8),
+            markerColor.withOpacity(0.0),
+            markerColor.withOpacity(0.8),
           ])
           ..strokeWidth = 1.5;
         canvas.drawLine(cp - const Offset(0, 30), cp, pillarPaint);
@@ -194,7 +194,7 @@ class GlobePainter extends CustomPainter {
           cp,
           6,
           Paint()
-            ..color = markerColor.withValues(alpha: 0.3)
+            ..color = markerColor.withOpacity(0.3)
             ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
         );
 

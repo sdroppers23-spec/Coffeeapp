@@ -236,7 +236,7 @@ class _PresetButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFC8A96E).withValues(alpha: 0.1) : Colors.transparent,
+          color: isSelected ? const Color(0xFFC8A96E).withOpacity(0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected ? const Color(0xFFC8A96E) : Colors.white10,

@@ -96,7 +96,7 @@ class _SensoryBar extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: isActive
                         ? theme.colorScheme.primary
-                        : Colors.white.withValues(alpha: 0.05),
+                        : Colors.white.withOpacity(0.05),
                     borderRadius: BorderRadius.circular(1),
                   ),
                 ),

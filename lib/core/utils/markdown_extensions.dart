@@ -37,7 +37,7 @@ class StyleTagBuilder extends MarkdownElementBuilder {
     if (tag == 'gold') {
       style = style.copyWith(color: goldColor, fontWeight: FontWeight.bold);
     } else if (tag == 'accent') {
-      style = style.copyWith(color: goldColor.withValues(alpha: 0.7));
+      style = style.copyWith(color: goldColor.withOpacity(0.7));
     } else if (tag == 'serif') {
       style = GoogleFonts.cormorantGaramond(
         textStyle: style,

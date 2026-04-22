@@ -104,8 +104,8 @@ class _CoffeeLotDetailScreenState extends ConsumerState<CoffeeLotDetailScreen>
                             child: Icon(
                               Icons.coffee_rounded,
                               size: 64,
-                              color: theme.colorScheme.primary.withValues(
-                                alpha: 0.1,
+                              color: theme.colorScheme.primary.withOpacity(
+                                0.1,
                               ),
                             ),
                           )
@@ -120,9 +120,9 @@ class _CoffeeLotDetailScreenState extends ConsumerState<CoffeeLotDetailScreen>
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          Colors.black.withValues(alpha: 0.6),
+                          Colors.black.withOpacity(0.6),
                           Colors.transparent,
-                          Colors.black.withValues(alpha: 1.0),
+                          Colors.black.withOpacity(1.0),
                         ],
                         stops: const [0.0, 0.5, 1.0],
                       ),
@@ -284,7 +284,7 @@ class _InfoTabState extends ConsumerState<_InfoTab> {
                   Container(
                     width: 1,
                     height: 30,
-                    color: Colors.white.withValues(alpha: 0.05),
+                    color: Colors.white.withOpacity(0.05),
                   ),
                   Expanded(
                     child: LotCompactStat(
@@ -307,7 +307,7 @@ class _InfoTabState extends ConsumerState<_InfoTab> {
                   Container(
                     width: 1,
                     height: 30,
-                    color: Colors.white.withValues(alpha: 0.05),
+                    color: Colors.white.withOpacity(0.05),
                   ),
                   Expanded(
                     child: LotCompactStat(
@@ -560,12 +560,12 @@ class _ProfileTab extends ConsumerWidget {
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: theme.colorScheme.primary.withValues(
-                  alpha: 0.1,
+                backgroundColor: theme.colorScheme.primary.withOpacity(
+                  0.1,
                 ),
                 foregroundColor: theme.colorScheme.primary,
                 side: BorderSide(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.5),
+                  color: theme.colorScheme.primary.withOpacity(0.5),
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -581,74 +581,151 @@ class _ProfileTab extends ConsumerWidget {
       ],
     );
   }
-}
-
-class _RecipesTab extends ConsumerWidget {
+}class _RecipesTab extends ConsumerWidget {
   final LocalizedBeanDto entry;
   const _RecipesTab({required this.entry});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recipesAsync = ref.watch(recommendedRecipesForLotProvider(entry.id));
+    final recommendedAsync = ref.watch(recommendedRecipesForLotProvider(entry.id));
+    final customRecipesAsync = ref.watch(customRecipesForLotProvider(entry.id.toString()));
     final theme = Theme.of(context);
     final navHeight = ref.watch(navBarHeightProvider);
 
     return ListView(
       padding: EdgeInsets.fromLTRB(20, 20, 20, navHeight + 40),
       children: [
-        recipesAsync.when(
+        // Recommended Recipes Section
+        recommendedAsync.when(
           data: (recipes) {
-            if (recipes.isEmpty) {
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(40),
-                  child: Text(
-                    ref.t('no_recipes_for_lot'),
-                    style: const TextStyle(color: Colors.white24, fontSize: 13),
-                  ),
-                ),
-              );
-            }
+            if (recipes.isEmpty) return const SizedBox.shrink();
             return Column(
-              children: recipes
-                  .map((r) => _RecommendedCard(recipe: r))
-                  .toList(),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _SectionHeader(ref.t('recommended_recipes')),
+                const SizedBox(height: 12),
+                ...recipes.map((r) => _RecommendedCard(recipe: r)),
+                const SizedBox(height: 24),
+              ],
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, _) => Text('Error: $e'),
         ),
-        const SizedBox(height: 24),
-        Center(
-          child: ElevatedButton.icon(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) =>
-                      const CustomRecipeFormScreen(methodKey: 'v60'),
-                ),
-              );
-            },
-            icon: const Icon(Icons.add_circle_outline, size: 18),
-            label: Text(
-              ref.t('add_custom_recipe'),
-              style: const TextStyle(fontSize: 13),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
-              foregroundColor: theme.colorScheme.primary,
-              side: BorderSide(
-                color: theme.colorScheme.primary.withValues(alpha: 0.5),
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            ),
-          ),
+
+        // Custom User Recipes Section
+        customRecipesAsync.when(
+          data: (recipes) {
+            if (recipes.isEmpty) {
+              if (recommendedAsync.value?.isEmpty ?? true) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(40),
+                    child: Text(
+                      ref.t('no_recipes_for_lot'),
+                      style: const TextStyle(color: Colors.white24, fontSize: 13),
+                    ),
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            }
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _SectionHeader(ref.t('my_recipes')),
+                const SizedBox(height: 12),
+                ...recipes.map((r) => _CustomRecipeCardWrapper(recipe: r)),
+              ],
+            );
+          },
+          loading: () => const SizedBox.shrink(),
+          error: (e, _) => Text('Error: $e'),
         ),
       ],
+    );
+  }
+}
+
+class _SectionHeader extends StatelessWidget {
+  final String title;
+  const _SectionHeader(this.title);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title.toUpperCase(),
+      style: GoogleFonts.outfit(
+        fontSize: 11,
+        fontWeight: FontWeight.bold,
+        color: Theme.of(context).colorScheme.primary,
+        letterSpacing: 1.5,
+      ),
+    );
+  }
+}
+
+class _CustomRecipeCardWrapper extends StatelessWidget {
+  final CustomRecipeDto recipe;
+  const _CustomRecipeCardWrapper({required this.recipe});
+
+  @override
+  Widget build(BuildContext context) {
+    // We use the shared CustomRecipeCard but with some adjustments if needed
+    // For now, let's just show a simple version similar to RecommendedCard
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: GlassContainer(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  recipe.methodKey.toUpperCase(),
+                  style: GoogleFonts.outfit(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.primary,
+                    letterSpacing: 1,
+                  ),
+                ),
+                Row(
+                  children: List.generate(
+                    5,
+                    (i) => Icon(
+                      i < recipe.rating ? Icons.star : Icons.star_border,
+                      color: Colors.amber,
+                      size: 14,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              recipe.name,
+              style: GoogleFonts.outfit(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _Stat(Icons.coffee, '${recipe.coffeeGrams}g'),
+                _Stat(Icons.water_drop, '${recipe.totalWaterMl}ml'),
+                _Stat(Icons.thermostat, '${recipe.brewTempC.toInt()}°C'),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -657,6 +734,12 @@ final recommendedRecipesForLotProvider =
     FutureProvider.family<List<RecommendedRecipeDto>, int>((ref, lotId) async {
       final db = ref.watch(databaseProvider);
       return db.getRecommendedRecipesForLot(lotId);
+    });
+
+final customRecipesForLotProvider =
+    StreamProvider.family<List<CustomRecipeDto>, String>((ref, lotId) {
+      final db = ref.watch(databaseProvider);
+      return db.watchCustomRecipesForLot(lotId);
     });
 
 // Local widget _CompactStat removed in favor of shared widgets
@@ -713,7 +796,7 @@ class _RecommendedCard extends StatelessWidget {
                     vertical: 2,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.amber.withValues(alpha: 0.1),
+                    color: Colors.amber.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Row(
@@ -773,7 +856,7 @@ class _Stat extends StatelessWidget {
         Icon(
           icon,
           size: 16,
-          color: theme.colorScheme.primary.withValues(alpha: 0.4),
+          color: theme.colorScheme.primary.withOpacity(0.4),
         ),
         const SizedBox(height: 4),
         Text(

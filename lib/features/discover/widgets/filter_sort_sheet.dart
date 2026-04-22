@@ -245,7 +245,7 @@ class _FilterSortSheetState extends ConsumerState<FilterSortSheet> {
           label: Text(opt),
           selected: isSelected,
           onSelected: (_) => onToggle(opt),
-          backgroundColor: Colors.white.withValues(alpha: 0.05),
+          backgroundColor: Colors.white.withOpacity(0.05),
           selectedColor: const Color(0xFFC8A96E),
           labelStyle: GoogleFonts.poppins(
             fontSize: 12,
@@ -292,7 +292,7 @@ class _SortChip extends ConsumerWidget {
           decoration: BoxDecoration(
             color: isSelected
                 ? const Color(0xFFC8A96E)
-                : Colors.white.withValues(alpha: 0.05),
+                : Colors.white.withOpacity(0.05),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isSelected ? Colors.transparent : Colors.white10,

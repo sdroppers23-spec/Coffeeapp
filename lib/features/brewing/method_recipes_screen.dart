@@ -48,7 +48,7 @@ class MethodRecipesScreen extends StatelessWidget {
                   'Спосіб заварювання',
                   style: GoogleFonts.outfit(
                     fontSize: 11,
-                    color: gold.withValues(alpha: 0.7),
+                    color: gold.withOpacity(0.7),
                     letterSpacing: 0.5,
                   ),
                 ),
@@ -70,7 +70,7 @@ class MethodRecipesScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      gold.withValues(alpha: 0.4),
+                      gold.withOpacity(0.4),
                       Colors.transparent,
                     ],
                   ),
@@ -89,10 +89,10 @@ class MethodRecipesScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: gold.withValues(alpha: 0.12),
+                      color: gold.withOpacity(0.12),
                       borderRadius: BorderRadius.circular(10),
                       border:
-                          Border.all(color: gold.withValues(alpha: 0.3)),
+                          Border.all(color: gold.withOpacity(0.3)),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,

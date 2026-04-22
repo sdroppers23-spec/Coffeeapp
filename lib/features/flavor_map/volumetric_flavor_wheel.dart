@@ -339,8 +339,8 @@ class _VolumetricPainter extends CustomPainter {
         center,
         centerRadius,
         [
-          const Color(0xFFC8A96E).withValues(alpha: 0.3),
-          const Color(0xFF1A1A1A).withValues(alpha: 0.8),
+          const Color(0xFFC8A96E).withOpacity(0.3),
+          const Color(0xFF1A1A1A).withOpacity(0.8),
         ],
         [0.0, 1.0],
       );
@@ -403,7 +403,7 @@ class _VolumetricPainter extends CustomPainter {
     final gradient = ui.Gradient.radial(
       center,
       outerR,
-      [node.color, node.color.withValues(alpha: alpha * 0.5)],
+      [node.color, node.color.withOpacity(alpha * 0.5)],
       [0.8, 1.0],
     );
 
@@ -443,7 +443,7 @@ class _VolumetricPainter extends CustomPainter {
       text: TextSpan(
         text: text.toUpperCase(),
         style: GoogleFonts.inter(
-          color: Colors.white.withValues(alpha: 0.95),
+          color: Colors.white.withOpacity(0.95),
           fontSize: level == 1 ? 9.5 : 7.5,
           fontWeight: FontWeight.bold,
         ),

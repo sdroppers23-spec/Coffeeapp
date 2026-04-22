@@ -107,8 +107,8 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
                                 }
                               });
                             },
-                            color: Colors.white.withValues(alpha: 0.1),
-                            borderColor: const Color(0xFFC8A96E).withValues(alpha: 0.5),
+                            color: Colors.white.withOpacity(0.1),
+                            borderColor: const Color(0xFFC8A96E).withOpacity(0.5),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -128,8 +128,8 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
                                 }
                               });
                             },
-                            color: Colors.white.withValues(alpha: 0.1),
-                            borderColor: const Color(0xFFC8A96E).withValues(alpha: 0.5),
+                            color: Colors.white.withOpacity(0.1),
+                            borderColor: const Color(0xFFC8A96E).withOpacity(0.5),
                           ),
                         ),
                       ],
@@ -140,10 +140,10 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
                     if (_coffeeA != null && _coffeeB != null)
                       Container(
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.05),
+                          color: Colors.white.withOpacity(0.05),
                           borderRadius: BorderRadius.circular(24),
                           border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.1),
+                            color: Colors.white.withOpacity(0.1),
                           ),
                         ),
                         child: ClipRRect(
@@ -298,7 +298,7 @@ class _CompareRow extends StatelessWidget {
         border: isLast
             ? null
             : Border(
-                bottom: BorderSide(color: Colors.white.withValues(alpha: 0.05)),
+                bottom: BorderSide(color: Colors.white.withOpacity(0.05)),
               ),
       ),
       child: Column(

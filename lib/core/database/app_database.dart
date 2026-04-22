@@ -933,6 +933,16 @@ class AppDatabase extends _$AppDatabase {
     return query.watch().map((rows) => rows.map((r) => _mapCustomRecipe(r)).toList());
   }
 
+  Stream<List<CustomRecipeDto>> watchCustomRecipesForMethod(String methodKey) {
+    final query = select(customRecipes)..where((t) => t.methodKey.equals(methodKey) & t.isDeletedLocal.equals(false));
+    return query.watch().map((rows) => rows.map((r) => _mapCustomRecipe(r)).toList());
+  }
+
+  Stream<List<CustomRecipeDto>> watchAllCustomRecipes() {
+    final query = select(customRecipes)..where((t) => t.isDeletedLocal.equals(false));
+    return query.watch().map((rows) => rows.map((r) => _mapCustomRecipe(r)).toList());
+  }
+
   CustomRecipeDto _mapCustomRecipe(CustomRecipe r) {
     return CustomRecipeDto(
       id: r.id,

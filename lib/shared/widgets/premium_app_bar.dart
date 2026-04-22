@@ -26,8 +26,8 @@ class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
         filter: ui.ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: AppBar(
           backgroundColor: isDark 
-              ? Colors.black.withValues(alpha: 0.2)
-              : theme.colorScheme.surface.withValues(alpha: 0.7),
+              ? Colors.black.withOpacity(0.2)
+              : theme.colorScheme.surface.withOpacity(0.7),
           elevation: 0,
           scrolledUnderElevation: 0,
           leading: showBackButton 

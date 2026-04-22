@@ -11,25 +11,33 @@ import 'widgets/custom_recipe_card.dart';
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
 final customRecipesForMethodProvider =
-    FutureProvider.family<List<CustomRecipeDto>, String>((
+    StreamProvider.family<List<CustomRecipeDto>, String>((
       ref,
       methodKey,
-    ) async {
+    ) {
       final db = ref.watch(databaseProvider);
-      return db.getCustomRecipesForMethod(methodKey);
+      // Assuming watchCustomRecipesForMethod exists or we use watchAll and filter
+      // Actually app_database.dart has watchCustomRecipesForLot, let's see if it has for method.
+      // If not, we can use watchAll and filter or add it.
+      return db.watchCustomRecipesForMethod(methodKey);
     });
 
-final globalCustomRecipesProvider = FutureProvider<List<CustomRecipeDto>>((
+final globalCustomRecipesProvider = StreamProvider<List<CustomRecipeDto>>((
   ref,
-) async {
+) {
   final db = ref.watch(databaseProvider);
-  return db.getAllCustomRecipes();
+  return db.watchAllCustomRecipes();
 });
 
 // ─── Tab widget (embedded inside BrewingDetailScreen Tab 2) ───────────────────
 class CustomRecipeListTab extends ConsumerWidget {
   final String methodKey;
-  const CustomRecipeListTab({super.key, required this.methodKey});
+  final bool showFab;
+  const CustomRecipeListTab({
+    super.key,
+    required this.methodKey,
+    this.showFab = true,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,7 +45,7 @@ class CustomRecipeListTab extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: !showFab ? null : FloatingActionButton.extended(
         onPressed: () async {
           await Navigator.of(context).push(
             MaterialPageRoute(

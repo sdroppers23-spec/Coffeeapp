@@ -39,6 +39,9 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      if (mounted) setState(() {});
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) ref.read(navBarVisibleProvider.notifier).show();
     });
@@ -95,7 +98,7 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
           ),
         ),
       ),
-      floatingActionButton: _isSelectingType ? null : _buildAddRecipeFab(context),
+      floatingActionButton: (_isSelectingType || _tabController.index == 0) ? null : _buildAddRecipeFab(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: TabBarView(
         controller: _tabController,
@@ -117,7 +120,7 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
             borderRadius: BorderRadius.circular(50),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFFC8A96E).withValues(alpha: 0.35),
+                color: const Color(0xFFC8A96E).withOpacity(0.35),
                 blurRadius: 20,
                 spreadRadius: 2,
                 offset: const Offset(0, 6),
@@ -156,9 +159,9 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
           decoration: BoxDecoration(
-            color: const Color(0xFF1D1B1A).withValues(alpha: 0.9),
+            color: const Color(0xFF1D1B1A).withOpacity(0.9),
             borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.1), width: 0.5),
+            border: Border.all(color: Colors.white.withOpacity(0.1), width: 0.5),
           ),
           padding: const EdgeInsets.fromLTRB(24, 32, 24, 48),
           child: Column(
@@ -215,9 +218,9 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 24),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.05),
+            color: Colors.white.withOpacity(0.05),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+            border: Border.all(color: Colors.white.withOpacity(0.1)),
           ),
           child: Column(
             children: [

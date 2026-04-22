@@ -42,7 +42,7 @@ class RadarChartPainter extends CustomPainter {
     final radius = math.min(size.width / 2, size.height / 2) * 0.7;
 
     final bgPaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.05)
+      ..color = Colors.white.withOpacity(0.05)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
 
@@ -123,7 +123,7 @@ class RadarChartPainter extends CustomPainter {
       ..strokeJoin = StrokeJoin.round;
 
     final valueFillPaint = Paint()
-      ..color = mainColor.withValues(alpha: 0.2)
+      ..color = mainColor.withOpacity(0.2)
       ..style = PaintingStyle.fill;
 
     // Detect scale automatically or default to 5

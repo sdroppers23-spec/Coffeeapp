@@ -14,10 +14,10 @@ class ConflictDialog extends StatelessWidget {
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
       child: AlertDialog(
-        backgroundColor: const Color(0xFF1E293B).withValues(alpha: 0.8),
+        backgroundColor: const Color(0xFF1E293B).withOpacity(0.8),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
-          side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+          side: BorderSide(color: Colors.white.withOpacity(0.1)),
         ),
         title: Row(
           children: [
@@ -51,10 +51,10 @@ class ConflictDialog extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.3),
+                color: Colors.black.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
+                  color: const Color(0xFFC8A96E).withOpacity(0.3),
                 ),
               ),
               child: Row(
@@ -127,7 +127,7 @@ class ConflictDialog extends StatelessWidget {
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     elevation: 10,
-                    shadowColor: const Color(0xFFC8A96E).withValues(alpha: 0.4),
+                    shadowColor: const Color(0xFFC8A96E).withOpacity(0.4),
                   ),
                   onPressed: () =>
                       Navigator.pop(context, ConflictResult.replace),

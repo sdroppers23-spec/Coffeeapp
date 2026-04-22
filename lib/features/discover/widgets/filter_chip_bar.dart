@@ -100,7 +100,7 @@ class FilterChipBar extends ConsumerWidget {
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
+                  color: const Color(0xFFC8A96E).withOpacity(0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),

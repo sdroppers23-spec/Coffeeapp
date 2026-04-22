@@ -59,8 +59,8 @@ class AppTheme {
         onSecondary: darkBg,
         onSurface: textPrimary,
         onSurfaceVariant: textSecondary,
-        outline: primary.withValues(alpha: 0.2),
-        outlineVariant: primary.withValues(alpha: 0.1),
+        outline: primary.withOpacity(0.2),
+        outlineVariant: primary.withOpacity(0.1),
       ),
       iconTheme: const IconThemeData(
         color: accent,
@@ -137,7 +137,7 @@ class AppTheme {
         hintStyle: const TextStyle(color: textSecondary),
       ),
       dividerTheme: DividerThemeData(
-        color: textSecondary.withValues(alpha: 0.1),
+        color: textSecondary.withOpacity(0.1),
         thickness: 1,
       ),
     );

@@ -113,7 +113,7 @@ class _CustomLotDetailScreenState extends ConsumerState<CustomLotDetailScreen>
                             child: Icon(
                               Icons.coffee_rounded,
                               size: 64,
-                              color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                              color: theme.colorScheme.primary.withOpacity(0.1),
                             ),
                           )
                         : null,
@@ -127,9 +127,9 @@ class _CustomLotDetailScreenState extends ConsumerState<CustomLotDetailScreen>
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          Colors.black.withValues(alpha: 0.6),
+                          Colors.black.withOpacity(0.6),
                           Colors.transparent,
-                          Colors.black.withValues(alpha: 1.0),
+                          Colors.black.withOpacity(1.0),
                         ],
                         stops: const [0.0, 0.5, 1.0],
                       ),
@@ -271,7 +271,7 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
                       child: Text(
                         ref.t('recipe_limit_reached'),
                         style: GoogleFonts.outfit(
-                          color: Colors.redAccent.withValues(alpha: 0.8),
+                          color: Colors.redAccent.withOpacity(0.8),
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
@@ -336,7 +336,7 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.05),
+                color: Colors.white.withOpacity(0.05),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(
@@ -421,7 +421,7 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
     final isUk = LocaleService.currentLocale == 'uk';
     return await showDialog<bool>(
           context: context,
-          barrierColor: Colors.black.withValues(alpha: 0.8),
+          barrierColor: Colors.black.withOpacity(0.8),
           builder: (context) => Center(
             child: Padding(
               padding: const EdgeInsets.all(28.0),
@@ -430,17 +430,17 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
                 padding: const EdgeInsets.all(32),
                 opacity: 0.12,
                 blur: 35,
-                borderColor: Colors.white.withValues(alpha: 0.1),
+                borderColor: Colors.white.withOpacity(0.1),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: Colors.redAccent.withValues(alpha: 0.1),
+                        color: Colors.redAccent.withOpacity(0.1),
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: Colors.redAccent.withValues(alpha: 0.2),
+                          color: Colors.redAccent.withOpacity(0.2),
                           width: 1.5,
                         ),
                       ),
@@ -525,14 +525,14 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
           borderRadius: BorderRadius.circular(27),
           border: Border.all(
             color: isPrimary
-                ? color.withValues(alpha: 0.4)
-                : Colors.white.withValues(alpha: 0.15),
+                ? color.withOpacity(0.4)
+                : Colors.white.withOpacity(0.15),
             width: 1.5,
           ),
           boxShadow: [
             if (isPrimary)
               BoxShadow(
-                color: color.withValues(alpha: 0.15),
+                color: color.withOpacity(0.15),
                 blurRadius: 20,
                 spreadRadius: 2,
               ),
@@ -546,8 +546,8 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
               alignment: Alignment.center,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               color: isPrimary
-                  ? color.withValues(alpha: 0.25)
-                  : Colors.white.withValues(alpha: 0.08),
+                  ? color.withOpacity(0.25)
+                  : Colors.white.withOpacity(0.08),
               child: Text(
                 label,
                 style: GoogleFonts.outfit(
@@ -592,7 +592,7 @@ class _InfoTab extends ConsumerWidget {
                   Container(
                     width: 1,
                     height: 30,
-                    color: Colors.white.withValues(alpha: 0.05),
+                    color: Colors.white.withOpacity(0.05),
                   ),
                   Expanded(
                     child: LotCompactStat(
@@ -614,7 +614,7 @@ class _InfoTab extends ConsumerWidget {
                   Container(
                     width: 1,
                     height: 30,
-                    color: Colors.white.withValues(alpha: 0.05),
+                    color: Colors.white.withOpacity(0.05),
                   ),
                   Expanded(
                     child: LotCompactStat(

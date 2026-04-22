@@ -459,7 +459,7 @@ class AppLocalizations {
       'tab_recipes': 'Рецепти',
       'tab_profile': 'Профіль',
       'tab_sphere': 'Сфера',
-      'tab_wheel': 'Коло',
+      'tab_wheel': 'Коло смаків',
       'flavor_wheel_title': 'Коло смаків',
       'radar_aroma': 'Аромат',
       'radar_flavor': 'Смак',

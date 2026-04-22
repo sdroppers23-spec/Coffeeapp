@@ -292,7 +292,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
       hintText: hint,
       hintStyle: const TextStyle(color: Colors.white24, fontSize: 13),
       filled: true,
-      fillColor: Colors.white.withValues(alpha: 0.05),
+      fillColor: Colors.white.withOpacity(0.05),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -300,7 +300,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.05)),
+        borderSide: BorderSide(color: Colors.white.withOpacity(0.05)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),

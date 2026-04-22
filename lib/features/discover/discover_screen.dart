@@ -274,18 +274,18 @@ class _CapsuleTabState extends State<_CapsuleTab> {
         decoration: BoxDecoration(
           color: widget.isSelected
               ? const Color(0xFFC8A96E)
-              : Colors.white.withValues(alpha: 0.05),
+              : Colors.white.withOpacity(0.05),
           borderRadius: BorderRadius.circular(28),
           border: Border.all(
             color: _isPressed
-                ? Colors.white.withValues(alpha: 0.8) // Yellowish-white flash
+                ? Colors.white.withOpacity(0.8) // Yellowish-white flash
                 : (widget.isSelected ? Colors.transparent : Colors.white10),
             width: 1.5,
           ),
           boxShadow: widget.isSelected
               ? [
                   BoxShadow(
-                    color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
+                    color: const Color(0xFFC8A96E).withOpacity(0.3),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),

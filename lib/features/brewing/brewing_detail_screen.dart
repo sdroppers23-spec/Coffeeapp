@@ -138,8 +138,8 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen>
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [
-                            Colors.black.withValues(alpha: 0.3),
-                            Colors.black.withValues(alpha: 0.8),
+                            Colors.black.withOpacity(0.3),
+                            Colors.black.withOpacity(0.8),
                           ],
                         ),
                       ),
@@ -186,10 +186,10 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen>
                 // ── Tabs ──────────────────────────────────────────────────────────
                 TabBar(
                   controller: _tabController,
-                  tabs: const [
-                    Tab(text: 'Recipe Steps'),
-                    Tab(text: 'Custom Versions'),
-                    Tab(text: 'Recommended'),
+                  tabs: [
+                    Tab(text: ref.t('tab_steps')),
+                    Tab(text: ref.t('tab_custom')),
+                    Tab(text: ref.t('tab_recommended')),
                   ],
                   indicatorColor: const Color(0xFFC8A96E),
                   indicatorWeight: 3,
@@ -211,7 +211,10 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen>
                         onStopTimer: _stopTimer,
                         formatTime: _formatTime,
                       ),
-                      CustomRecipeListTab(methodKey: widget.recipe.methodKey),
+                      CustomRecipeListTab(
+                        methodKey: widget.recipe.methodKey,
+                        showFab: false,
+                      ),
                       _RecommendedRecipesTab(methodKey: widget.recipe.methodKey),
                     ],
                   ),
@@ -315,7 +318,7 @@ class _StepsTab extends StatelessWidget {
         return GlassContainer(
           opacity: isActive ? 0.15 : 0.05,
           borderColor: isActive
-              ? const Color(0xFFC8A96E).withValues(alpha: 0.5)
+              ? const Color(0xFFC8A96E).withOpacity(0.5)
               : null,
           padding: const EdgeInsets.all(20),
           child: Column(
@@ -414,7 +417,7 @@ class _DurationBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.06),
+        color: Colors.white.withOpacity(0.06),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Text(
@@ -486,7 +489,7 @@ class _TimerSection extends StatelessWidget {
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: timerRunning
-                    ? Colors.redAccent.withValues(alpha: 0.8)
+                    ? Colors.redAccent.withOpacity(0.8)
                     : const Color(0xFFC8A96E),
                 foregroundColor: Colors.black,
                 padding: const EdgeInsets.symmetric(
@@ -530,7 +533,7 @@ class _RecommendedRecipesTab extends ConsumerWidget {
                 const SizedBox(height: 12),
                 Text(
                   'No recommended recipes yet',
-                  style: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
+                  style: TextStyle(color: Colors.white.withOpacity(0.3)),
                 ),
               ],
             ),
@@ -574,7 +577,7 @@ class _RecommendedRecipeCard extends StatelessWidget {
                 width: 60,
                 height: 60,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.05),
+                  color: Colors.white.withOpacity(0.05),
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -671,7 +674,7 @@ class _RadarChart extends StatelessWidget {
         RadarChartData(
           dataSets: [
             RadarDataSet(
-              fillColor: const Color(0xFFC8A96E).withValues(alpha: 0.4),
+              fillColor: const Color(0xFFC8A96E).withOpacity(0.4),
               borderColor: const Color(0xFFC8A96E),
               entryRadius: 2,
               dataEntries: entries.map((v) => RadarEntry(value: v)).toList(),

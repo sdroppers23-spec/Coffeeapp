@@ -142,7 +142,7 @@ List<Widget> _buildValue(
           style: GoogleFonts.outfit(
             fontSize: 15,
             height: 1.55,
-            color: onSurface.withValues(alpha: 0.92),
+            color: onSurface.withOpacity(0.92),
           ),
         ),
       ),
@@ -154,7 +154,7 @@ List<Widget> _buildValue(
         value.toString(),
         style: GoogleFonts.outfit(
           fontSize: 15,
-          color: onSurface.withValues(alpha: 0.9),
+          color: onSurface.withOpacity(0.9),
         ),
       ),
     ];
@@ -170,7 +170,7 @@ List<Widget> _buildValue(
       value.toString(),
       style: GoogleFonts.outfit(
         fontSize: 14,
-        color: onSurface.withValues(alpha: 0.7),
+        color: onSurface.withOpacity(0.7),
       ),
     ),
   ];
@@ -201,7 +201,7 @@ List<Widget> _buildList(List list, {required Color onSurface}) {
                       style: GoogleFonts.outfit(
                         fontSize: 15,
                         height: 1.55,
-                        color: onSurface.withValues(alpha: 0.92),
+                        color: onSurface.withOpacity(0.92),
                       ),
                     ),
                   ),
@@ -243,7 +243,7 @@ Widget _buildMapCard(Map<String, dynamic> map, {required Color onSurface}) {
         style: GoogleFonts.outfit(
           fontSize: 15,
           height: 1.55,
-          color: onSurface.withValues(alpha: 0.92),
+          color: onSurface.withOpacity(0.92),
         ),
         children: [
           TextSpan(
@@ -273,7 +273,7 @@ Widget _buildMapCard(Map<String, dynamic> map, {required Color onSurface}) {
           style: GoogleFonts.outfit(
             fontSize: 14,
             height: 1.5,
-            color: onSurface.withValues(alpha: 0.85),
+            color: onSurface.withOpacity(0.85),
           ),
         ),
       ],
@@ -302,7 +302,7 @@ Widget _buildMapCard(Map<String, dynamic> map, {required Color onSurface}) {
             style: GoogleFonts.outfit(
               fontSize: 14,
               height: 1.5,
-              color: onSurface.withValues(alpha: 0.88),
+              color: onSurface.withOpacity(0.88),
             ),
           ),
         ],
@@ -337,7 +337,7 @@ Widget _buildMapCard(Map<String, dynamic> map, {required Color onSurface}) {
         style: GoogleFonts.outfit(
           fontSize: 15,
           height: 1.55,
-          color: onSurface.withValues(alpha: 0.92),
+          color: onSurface.withOpacity(0.92),
         ),
         children: [
           TextSpan(
@@ -367,7 +367,7 @@ Widget _buildMapCard(Map<String, dynamic> map, {required Color onSurface}) {
           style: GoogleFonts.outfit(
             fontSize: 14,
             height: 1.5,
-            color: onSurface.withValues(alpha: 0.88),
+            color: onSurface.withOpacity(0.88),
           ),
         ),
       ],
@@ -395,7 +395,7 @@ List<Widget> _buildRemainingMapEntries(
         style: GoogleFonts.poppins(
           fontSize: 12,
           fontWeight: FontWeight.w600,
-          color: onSurface.withValues(alpha: 0.65),
+          color: onSurface.withOpacity(0.65),
         ),
       ),
     );
@@ -433,7 +433,7 @@ List<Widget> _buildMap(Map<String, dynamic> map, {required Color onSurface}) {
           style: GoogleFonts.poppins(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: onSurface.withValues(alpha: 0.7),
+            color: onSurface.withOpacity(0.7),
           ),
         ),
       );
@@ -475,16 +475,16 @@ class SpecialtyArticleCard extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
           color: isDark 
-              ? Colors.white.withValues(alpha: 0.06) 
+              ? Colors.white.withOpacity(0.06) 
               : Colors.white,
           border: Border.all(
             color: isDark 
-                ? Colors.white.withValues(alpha: 0.08)
-                : theme.colorScheme.primary.withValues(alpha: 0.1),
+                ? Colors.white.withOpacity(0.08)
+                : theme.colorScheme.primary.withOpacity(0.1),
           ),
           boxShadow: isDark ? null : [
             BoxShadow(
-              color: theme.colorScheme.primary.withValues(alpha: 0.03),
+              color: theme.colorScheme.primary.withOpacity(0.03),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -500,14 +500,14 @@ class SpecialtyArticleCard extends StatelessWidget {
                   Icon(
                     Icons.timer_outlined,
                     size: 17,
-                    color: onSurface.withValues(alpha: 0.45),
+                    color: onSurface.withOpacity(0.45),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     '$minutes хв',
                     style: GoogleFonts.outfit(
                       fontSize: 13,
-                      color: onSurface.withValues(alpha: 0.55),
+                      color: onSurface.withOpacity(0.55),
                     ),
                   ),
                 ],

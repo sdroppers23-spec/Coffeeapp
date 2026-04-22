@@ -371,7 +371,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                       // ── Section: General ──────────────────────────────────────────
                       _SectionHeader(ref.t('general')),
                       DropdownButtonFormField<String>(
-                        value: _method,
+                        initialValue: _method,
                         dropdownColor: const Color(0xFF1E1E1E),
                         style: GoogleFonts.outfit(color: Colors.white),
                         decoration: _inputDecoration(label: 'METHOD'),

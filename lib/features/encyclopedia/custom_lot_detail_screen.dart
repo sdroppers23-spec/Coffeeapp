@@ -697,7 +697,7 @@ class _ProfileTab extends ConsumerWidget {
     final navHeight = ref.watch(navBarHeightProvider);
 
     return ListView(
-      padding: EdgeInsets.fromLTRB(20, 0, 20, navHeight + 40),
+      padding: EdgeInsets.fromLTRB(20, 0, 20, navHeight + 100),
       children: [
         SizedBox(
           height: 400,
@@ -725,13 +725,6 @@ class _ProfileTab extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: SensoryPreview(
-            points: lot.sensoryPoints.map((k, v) => MapEntry(k, v as num)),
-            isGrid: true,
-          ),
-        ),
       ],
     );
   }

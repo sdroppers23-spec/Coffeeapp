@@ -154,28 +154,7 @@ class EncyclopediaLotGridCard extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 12),
-            // Sensory Info
-            Expanded(
-              child: Column(
-                children: [
-                  _SensoryFiveSegmentBarSmall(
-                    label: isUk ? 'Кислотність' : 'Acidity',
-                    value: (entry.sensoryPoints['acidity'] ?? 3).toDouble(),
-                    theme: theme,
-                  ),
-                  _SensoryFiveSegmentBarSmall(
-                    label: isUk ? 'Солодкість' : 'Sweetness',
-                    value: (entry.sensoryPoints['sweetness'] ?? 3).toDouble(),
-                    theme: theme,
-                  ),
-                  _SensoryFiveSegmentBarSmall(
-                    label: isUk ? 'Тіло' : 'Body',
-                    value: (entry.sensoryPoints['body'] ?? 3).toDouble(),
-                    theme: theme,
-                  ),
-                ],
-              ),
-            ),
+            const Spacer(),
             // Bottom Traits
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),

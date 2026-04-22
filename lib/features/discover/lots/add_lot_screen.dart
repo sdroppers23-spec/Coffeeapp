@@ -307,20 +307,13 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           );
           finalImageUrl = localPath;
           
-          messenger.showSnackBar(
-            SnackBar(
-              content: Text(isUk ? 'Фото збережено локально' : 'Photo saved locally'),
-              backgroundColor: const Color(0xFFC8A96E),
-              duration: const Duration(seconds: 1),
-            ),
-          );
+          if (mounted) {
+            ToastService.showSuccess(context, context.t('toast_photo_saved_locally'));
+          }
         } catch (e) {
-          messenger.showSnackBar(
-            SnackBar(
-              content: Text(isUk ? 'Помилка збереження фото: $e' : 'Error saving photo: $e'),
-              backgroundColor: Colors.redAccent,
-            ),
-          );
+          if (mounted) {
+            ToastService.showError(context, '${context.t('error_saving_photo')}: $e');
+          }
         }
       }
 
@@ -393,19 +386,20 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
 
       if (mounted) {
         // Pop loading
-        Navigator.of(context).pop();
-        
+        if (mounted) {
+          ToastService.showSuccess(context, context.t('toast_changes_saved'));
+        }
+
         ref.invalidate(userLotsProvider);
         ref.read(syncStatusProvider.notifier).syncEverything();
         ref.read(navBarVisibleProvider.notifier).show();
-        context.pop();
+        if (mounted) context.pop();
       }
     } catch (e) {
       if (mounted) {
         // Pop loading
         Navigator.of(context).pop();
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Помилка при збереженні: $e')));
+        ToastService.showError(context, '${context.t('error_saving_lot')}: $e');
       }
     }
   }
@@ -468,7 +462,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           ),
           const Spacer(),
           Text(
-            widget.initialLot != null ? 'РЕДАГУВАТИ' : 'НОВИЙ ЛОТ',
+            widget.initialLot != null ? context.t('edit_lot').toUpperCase() : context.t('add_lot').toUpperCase(),
             style: GoogleFonts.outfit(
               fontSize: 13,
               fontWeight: FontWeight.bold,
@@ -527,10 +521,10 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         unselectedLabelColor: const Color(0xFFC8A96E).withValues(alpha: 0.38),
         labelStyle: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 11, letterSpacing: 0.5),
         unselectedLabelStyle: GoogleFonts.outfit(fontWeight: FontWeight.w500, fontSize: 11),
-        tabs: const [
-          Tab(text: 'ОБСМАЖЧИК'),
-          Tab(text: 'КАВА'),
-          Tab(text: 'СМАК'),
+        tabs: [
+          Tab(text: context.t('roasters').toUpperCase()),
+          Tab(text: context.t('coffee').toUpperCase()),
+          Tab(text: context.t('flavor').toUpperCase()),
         ],
       ),
     );
@@ -555,7 +549,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           ),
           child: Center(
             child: Text(
-              'ЗБЕРЕГТИ ЛОТ',
+              context.t('save_lot').toUpperCase(),
               style: GoogleFonts.outfit(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,

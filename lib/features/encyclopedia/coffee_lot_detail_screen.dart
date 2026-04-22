@@ -514,22 +514,31 @@ class _ProfileTab extends ConsumerWidget {
     final navHeight = ref.watch(navBarHeightProvider);
 
     return ListView(
-      padding: EdgeInsets.fromLTRB(20, 0, 20, navHeight + 40),
+      padding: EdgeInsets.fromLTRB(20, 0, 20, navHeight + 100),
       children: [
         SizedBox(
           height: 400,
           child: SensoryRadarChart(
             interactive: false,
-            staticValues: entry.radarPoints.isEmpty
-                ? entry.sensoryPoints.map(
-                    (k, v) => MapEntry(k, (v as num).toDouble() / 5.0),
-                  )
-                : entry.radarPoints.map((k, v) => MapEntry(k, (v / 5.0))),
+            staticValues: entry.radarPoints.isNotEmpty 
+                ? entry.radarPoints.map((k, v) => MapEntry(k, (v / 5.0)))
+                : (entry.sensoryPoints.isNotEmpty 
+                    ? entry.sensoryPoints.map(
+                        (k, v) => MapEntry(k, (v != null ? (v as num).toDouble() / 5.0 : 0.2)),
+                      )
+                    : {
+                        'bitterness': 0.2,
+                        'acidity': 0.2,
+                        'sweetness': 0.2,
+                        'body': 0.2,
+                        'intensity': 0.2,
+                        'aftertaste': 0.2,
+                      }),
             height: 400,
           ),
         ),
         Text(
-          ref.t('sensory_profile_header').toUpperCase(),
+          ref.t('sensory_grid').toUpperCase(),
           style: GoogleFonts.outfit(
             fontSize: 11,
             fontWeight: FontWeight.bold,
@@ -538,15 +547,6 @@ class _ProfileTab extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: SensoryPreview(
-            points: entry.radarPoints.isEmpty
-                ? entry.sensoryPoints.map((k, v) => MapEntry(k, v as num))
-                : entry.radarPoints.map((k, v) => MapEntry(k, v)),
-            isGrid: true,
-          ),
-        ),
         if (entry.detailedProcess.isNotEmpty) ...[
           const SizedBox(height: 32),
           Center(

@@ -19,18 +19,18 @@ class LocaleService {
 }
 
 extension AppLocalizationsContext on BuildContext {
-  String t(String key) {
+  String t(String key, {Map<String, String>? args}) {
     final languageCode = ProviderScope.containerOf(this).read(localeProvider);
     LocaleService.currentLocale = languageCode;
-    return AppLocalizations.get(key, languageCode);
+    return AppLocalizations.get(key, languageCode, args: args);
   }
 }
 
 extension AppLocalizationsRef on WidgetRef {
-  String t(String key) {
+  String t(String key, {Map<String, String>? args}) {
     final languageCode = watch(localeProvider);
     LocaleService.currentLocale = languageCode;
-    return AppLocalizations.get(key, languageCode);
+    return AppLocalizations.get(key, languageCode, args: args);
   }
 }
 
@@ -48,17 +48,25 @@ class AppLocalizations {
     }
   }
 
-  String translate(String key) {
+  String translate(String key, {Map<String, String>? args}) {
     final languageCode = locale?.languageCode ?? LocaleService.currentLocale;
-    return get(key, languageCode);
+    return get(key, languageCode, args: args);
   }
 
   // Legacy alias
-  String t(String key) => translate(key);
+  String t(String key, {Map<String, String>? args}) => translate(key, args: args);
 
-  static String get(String key, String languageCode) {
+  static String get(String key, String languageCode, {Map<String, String>? args}) {
     final map = _translations[languageCode] ?? _translations['en']!;
-    return map[key] ?? key;
+    String value = map[key] ?? key;
+    
+    if (args != null) {
+      args.forEach((k, v) {
+        value = value.replaceAll('{$k}', v);
+      });
+    }
+    
+    return value;
   }
 
   static const Map<String, Map<String, String>> _translations = {
@@ -98,10 +106,14 @@ class AppLocalizations {
       'roast_date': 'Roast Date',
       'lot_number': 'Lot #',
       'roast_level': 'Roast Level',
+      'tab_info': 'Info',
+      'tab_sensory': 'Sensory',
       'tab_recipes': 'Recipes',
+      'tab_product': 'Product',
       'tab_profile': 'Profile',
       'tab_sphere': 'Sphere',
       'tab_wheel': 'Wheel',
+      'flavor_wheel_title': 'Flavor Wheel',
       'radar_aroma': 'Aroma',
       'radar_flavor': 'Flavor',
       'radar_acidity': 'Acidity',
@@ -222,6 +234,12 @@ class AppLocalizations {
       'process_anaerobic_label': 'Anaerobic',
       'tab_product': 'Product',
       'tab_source': 'Source',
+      'tab_info': 'Info',
+      'tab_sensory': 'Sensory',
+      'tab_recipes': 'Recipes',
+      'tab_profile': 'Profile',
+      'tab_sphere': 'Sphere',
+      'tab_wheel': 'Flavor Wheel',
       'roast_light': 'Light',
       'roast_medium': 'Medium',
       'roast_dark': 'Dark',
@@ -386,13 +404,28 @@ class AppLocalizations {
       'toast_recipe_deleted': 'Recipe deleted',
       'toast_recipe_saved': 'Recipe saved',
       'toast_recipe_updated': 'Recipe updated',
+      'toast_lot_deleted': 'Lot deleted',
+      'toast_lot_saved': 'Lot saved',
       'toast_lot_archived': 'Lot archived',
+      'toast_lot_unarchived': 'Lot unarchived',
+      'toast_lot_added': 'Lot added',
+      'toast_photo_saved_locally': 'Photo saved locally',
+      'error_saving_photo': 'Error saving photo',
+      'error_saving_lot': 'Error saving lot',
       'toast_lot_restored': 'Lot restored',
-      'toast_roasters_archived': 'Roasters archived',
-      'toast_roasters_restored': 'Roasters restored',
+      'toast_lots_deleted': 'Lots deleted',
+      'toast_lots_archived': 'Lots archived',
+      'toast_lots_restored': 'Lots restored',
       'toast_changes_saved': 'Changes saved',
       'toast_roaster_archived': 'Roaster archived',
       'toast_roaster_restored': 'Roaster restored',
+      'delete_confirm_title': 'Delete Lot?',
+      'delete_confirm_message': 'Are you sure you want to delete this lot?',
+      'delete_confirm_batch_title': 'Delete Lots?',
+      'delete_confirm_batch_message': 'Are you sure you want to delete {count} selected lots?',
+      'delete': 'Delete',
+      'cancel': 'Cancel',
+      'undo': 'UNDO',
     },
     'uk': {
       'discover': 'Відкриття',
@@ -436,6 +469,7 @@ class AppLocalizations {
       'tab_profile': 'Профіль',
       'tab_sphere': 'Сфера',
       'tab_wheel': 'Коло',
+      'flavor_wheel_title': 'Коло смаків',
       'radar_aroma': 'Аромат',
       'radar_flavor': 'Смак',
       'radar_acidity': 'Кислотність',
@@ -444,6 +478,12 @@ class AppLocalizations {
       'radar_balance': 'Баланс',
       'radar_sweetness': 'Солодкість',
       'radar_intensity': 'Насиченість',
+      'bitterness': 'Гіркота',
+      'acidity': 'Кислотність',
+      'sweetness': 'Солодкість',
+      'body': 'Тіло',
+      'intensity': 'Насиченість',
+      'aftertaste': 'Післясмак',
       'shop_coffee': 'Купити цю каву',
       'terroir_farm': 'Терруар та ферма',
       'sensory_grid': 'Сенсорний профіль',
@@ -463,6 +503,12 @@ class AppLocalizations {
       'process_natural_label': 'Натуральний',
       'process_honey_label': 'Хані',
       'process_anaerobic_label': 'Анаеробний',
+      'tab_info': 'Інфо',
+      'tab_sensory': 'Сенсорика',
+      'tab_recipes': 'Рецепти',
+      'tab_profile': 'Профіль',
+      'tab_sphere': 'Сфера',
+      'tab_wheel': 'Коло смаків',
       'wheel_cat_floral': 'Квіткові',
       'wheel_cat_fruity': 'Фруктовї',
       'wheel_cat_sour_fermented': 'Кислі/Ферментовані',
@@ -720,13 +766,32 @@ class AppLocalizations {
       'toast_recipe_deleted': 'Рецепт видалено',
       'toast_recipe_saved': 'Рецепт збережено',
       'toast_recipe_updated': 'Рецепт оновлено',
+      'toast_lot_deleted': 'Лот видалено',
+      'toast_lot_saved': 'Лот збережено',
       'toast_lot_archived': 'Лот архівовано',
+      'toast_lot_unarchived': 'Лот розархівовано',
+      'toast_lot_added': 'Лот додано',
+      'toast_photo_saved_locally': 'Фото збережено локально',
+      'error_saving_photo': 'Помилка збереження фото',
+      'error_saving_lot': 'Помилка збереження лоту',
       'toast_lot_restored': 'Лот відновлено',
-      'toast_roasters_archived': 'Обсмажчики архівовані',
-      'toast_roasters_restored': 'Обсмажчики відновлені',
+      'toast_lots_deleted': 'Лоти видалено',
+      'toast_lots_archived': 'Лоти архівовано',
+      'toast_lots_restored': 'Лоти відновлено',
       'toast_changes_saved': 'Зміни збережено',
+      'toast_photo_saved_locally': 'Фото збережено локально',
+      'error_saving_photo': 'Помилка збереження фото',
+      'error_saving_lot': 'Помилка збереження лота',
       'toast_roaster_archived': 'Обсмажчик архівований',
       'toast_roaster_restored': 'Обсмажчик відновлений',
+      'tab_product': 'Продукт',
+      'delete_confirm_title': 'Видалити лот?',
+      'delete_confirm_message': 'Ви впевнені, що хочете видалити цей лот?',
+      'delete_confirm_batch_title': 'Видалити лоти?',
+      'delete_confirm_batch_message': 'Ви впевнені, що хочете видалити {count} вибраних лотів?',
+      'delete': 'Видалити',
+      'cancel': 'Скасувати',
+      'undo': 'СКАСУВАТИ',
     },
   };
 }

@@ -129,8 +129,8 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
             ),
             SizedBox(height: 16),
             Text(
-              'Завантаження лотів...',
-              style: TextStyle(
+              context.t('loading_lots'),
+              style: const TextStyle(
                 color: Colors.white70,
                 fontSize: 14,
                 fontStyle: FontStyle.italic,
@@ -163,7 +163,7 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
         if (isGrid) {
           return GridView.builder(
             controller: _scrollController,
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 220),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               mainAxisSpacing: 12,
@@ -183,7 +183,7 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
 
         return ListView.separated(
           controller: _scrollController,
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 180),
           itemCount: filtered.length,
           separatorBuilder: (context, index) => const SizedBox(height: 12),
           itemBuilder: (context, i) {

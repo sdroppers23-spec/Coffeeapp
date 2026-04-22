@@ -178,33 +178,7 @@ class MyLotGridCard extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 12),
-            // Sensory Info
-            Expanded(
-              child: Builder(
-                builder: (context) {
-                  final mapped = SensoryUtils.map4To6Axis(lot.sensoryPoints);
-                  return Column(
-                    children: [
-                      _SensoryFiveSegmentBarSmall(
-                        label: isUk ? 'Гіркота' : 'Bitterness',
-                        value: (mapped['bitterness'] ?? 3).toDouble(),
-                        theme: theme,
-                      ),
-                      _SensoryFiveSegmentBarSmall(
-                        label: isUk ? 'Кислотність' : 'Acidity',
-                        value: (mapped['acidity'] ?? 3).toDouble(),
-                        theme: theme,
-                      ),
-                      _SensoryFiveSegmentBarSmall(
-                        label: isUk ? 'Солодкість' : 'Sweetness',
-                        value: (mapped['sweetness'] ?? 3).toDouble(),
-                        theme: theme,
-                      ),
-                    ],
-                  );
-                }
-              ),
-            ),
+            const Spacer(),
             
             // Bottom Traits
             Container(

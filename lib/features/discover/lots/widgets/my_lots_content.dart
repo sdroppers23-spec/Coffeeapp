@@ -97,7 +97,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                         ),
                         const SizedBox(height: 20),
                         Text(
-                          'Видалити лот?',
+                          context.t('delete_confirm_title'),
                           style: GoogleFonts.outfit(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -106,7 +106,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          'Ви впевнені, що хочете видалити ${lot.coffeeName ?? 'цей лот'}?',
+                          context.t('delete_confirm_message'),
                           textAlign: TextAlign.center,
                           style: GoogleFonts.outfit(
                             color: Colors.white70,
@@ -129,7 +129,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                                   ),
                                   alignment: Alignment.center,
                                   child: Text(
-                                    'СКАСУВАТИ',
+                                    context.t('cancel').toUpperCase(),
                                     style: GoogleFonts.outfit(
                                       color: Colors.white70,
                                       fontWeight: FontWeight.bold,
@@ -153,7 +153,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                                   ),
                                   alignment: Alignment.center,
                                   child: Text(
-                                    'ВИДАЛИТИ',
+                                    context.t('delete').toUpperCase(),
                                     style: GoogleFonts.outfit(
                                       color: Colors.white, // White text on red background
                                       fontWeight: FontWeight.bold,
@@ -192,15 +192,15 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
 
     if (isArchive) {
       if (lots.length == 1) {
-        message = isUk ? 'Лот архівовано' : 'Lot archived';
+        message = context.t('toast_lot_archived');
       } else {
-        message = isUk ? 'Лотів архівовано: ${lots.length}' : '${lots.length} lots archived';
+        message = context.t('toast_lots_archived');
       }
     } else {
       if (lots.length == 1) {
-        message = isUk ? 'Лот видалено' : 'Lot deleted';
+        message = context.t('toast_lot_deleted');
       } else {
-        message = isUk ? 'Лотів видалено: ${lots.length}' : '${lots.length} lots deleted';
+        message = context.t('toast_lots_deleted');
       }
     }
 
@@ -461,7 +461,16 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                 onFavoriteToggle: (lot) async {
                   ref.read(settingsProvider.notifier).triggerHaptic();
                   final db = ref.read(databaseProvider);
-                  await db.toggleLotFavorite(lot.id, !lot.isFavorite);
+                  final newState = !lot.isFavorite;
+                  await db.toggleLotFavorite(lot.id, newState);
+                  
+                  if (context.mounted) {
+                    final msg = newState 
+                        ? context.t('toast_added_to_favorites') 
+                        : context.t('toast_removed_from_favorites');
+                    ToastService.showSuccess(context, msg);
+                  }
+                  
                   ref.invalidate(userLotsProvider);
                 },
               );
@@ -494,7 +503,16 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                 onFavoriteToggle: (lot) async {
                   ref.read(settingsProvider.notifier).triggerSelectionVibrate();
                   final db = ref.read(databaseProvider);
-                  await db.toggleLotFavorite(lot.id, !lot.isFavorite);
+                  final newState = !lot.isFavorite;
+                  await db.toggleLotFavorite(lot.id, newState);
+                  
+                  if (context.mounted) {
+                    final msg = newState 
+                        ? context.t('toast_added_to_favorites') 
+                        : context.t('toast_removed_from_favorites');
+                    ToastService.showSuccess(context, msg);
+                  }
+                  
                   ref.invalidate(userLotsProvider);
                 },
                 onEditSwipe: activeTab == 2 ? null : (lot) {
@@ -696,7 +714,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                                         ),
                                         const SizedBox(height: 20),
                                         Text(
-                                          'Видалити лоти?',
+                                          context.t('delete_confirm_batch_title'),
                                           style: GoogleFonts.outfit(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
@@ -705,7 +723,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                                         ),
                                         const SizedBox(height: 12),
                                         Text(
-                                          'Ви впевнені, що хочете видалити ${ref.read(myLotsSelectedIdsProvider).length} вибраних документів?',
+                                          context.t('delete_confirm_batch_message', args: {'count': ref.read(myLotsSelectedIdsProvider).length.toString()}),
                                           textAlign: TextAlign.center,
                                           style: GoogleFonts.outfit(
                                             color: Colors.white70,
@@ -728,7 +746,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                                                   ),
                                                   alignment: Alignment.center,
                                                   child: Text(
-                                                    'СКАСУВАТИ',
+                                                    context.t('cancel').toUpperCase(),
                                                     style: GoogleFonts.outfit(
                                                       color: Colors.white70,
                                                       fontWeight: FontWeight.bold,
@@ -752,7 +770,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                                                   ),
                                                   alignment: Alignment.center,
                                                   child: Text(
-                                                    'ВИДАЛИТИ',
+                                                    context.t('delete').toUpperCase(),
                                                     style: GoogleFonts.outfit(
                                                       color: Colors.white,
                                                       fontWeight: FontWeight.bold,

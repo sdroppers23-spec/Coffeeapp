@@ -793,13 +793,8 @@ class _SensoryTab extends StatelessWidget {
               );
             }(),
           ),
-          const SizedBox(height: 30),
-          _SectionTitle(title: isUk ? 'СЕНСОРНИЙ ПРОФІЛЬ' : 'SENSORY PROFILE'),
-          SensoryPreview(
-            points: points.map((k, v) => MapEntry(k, v)),
-            isGrid: true,
-          ),
-          const SizedBox(height: 140),
+          _SectionTitle(title: ref.t('sensory_grid').toUpperCase()),
+          const SizedBox(height: 160),
         ],
       ),
     );

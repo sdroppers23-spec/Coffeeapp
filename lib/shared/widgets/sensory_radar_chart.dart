@@ -139,15 +139,18 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
                 onPanEnd: canInteract
                     ? (_) => setState(() => _draggingLabel = null)
                     : null,
-                child: CustomPaint(
-                  size: Size(constraints.maxWidth, constraints.maxHeight),
-                  painter: RadarPainter(
-                    values: values,
-                    primaryColor: theme.colorScheme.primary,
-                    gridColor: theme.colorScheme.surface,
-                    textColor: theme.colorScheme.onSurface,
-                    labelFontSize: widget.labelFontSize,
-                    ref: ref,
+                child: SizedBox(
+                  width: constraints.maxWidth,
+                  height: constraints.maxHeight,
+                  child: CustomPaint(
+                    painter: RadarPainter(
+                      values: values,
+                      primaryColor: theme.colorScheme.primary,
+                      gridColor: theme.colorScheme.surface,
+                      textColor: theme.colorScheme.onSurface,
+                      labelFontSize: widget.labelFontSize,
+                      ref: ref,
+                    ),
                   ),
                 ),
               );
@@ -346,11 +349,13 @@ class RadarPainter extends CustomPainter {
     canvas.drawPath(dataPath, fillPaint);
     canvas.drawPath(dataPath, strokePaint);
 
-    // 4. Vertex dots for better visibility
+    // 4. Vertex dots removed for cleaner aesthetic
+    /*
     final dotPaint = Paint()..color = primaryColor;
     for (var point in points) {
       canvas.drawCircle(point, 3, dotPaint);
     }
+    */
   }
 
   @override

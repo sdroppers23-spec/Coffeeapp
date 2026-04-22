@@ -202,7 +202,7 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
                         child: Text(
-                          'СКАСУВАТИ',
+                          context.t('undo'),
                           style: GoogleFonts.outfit(
                             color: Colors.black,
                             fontSize: 12,

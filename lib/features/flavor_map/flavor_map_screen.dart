@@ -14,28 +14,7 @@ import '../navigation/navigation_providers.dart';
 import '../../shared/widgets/sensory_radar_chart.dart';
 import '../../shared/models/processing_methods_repository.dart';
 
-class FlavorValuesNotifier extends Notifier<Map<String, double>> {
-  @override
-  Map<String, double> build() {
-    return {
-      'bitterness': 0.3,
-      'acidity': 0.6,
-      'sweetness': 0.8,
-      'body': 0.5,
-      'intensity': 0.7,
-      'aftertaste': 0.6,
-    };
-  }
-
-  void updateValue(String label, double newValue) {
-    state = {...state, label: newValue};
-  }
-}
-
-final flavorValuesProvider =
-    NotifierProvider<FlavorValuesNotifier, Map<String, double>>(() {
-      return FlavorValuesNotifier();
-    });
+// Duplicates removed, using shared versions from sensory_radar_chart.dart
 
 class FlavorMapScreen extends ConsumerStatefulWidget {
   const FlavorMapScreen({super.key});
@@ -95,13 +74,10 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(
-                            ref.t('specialty'),
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          Image.asset(
+                            'assets/images/flavor_wheel_logo_${ref.watch(localeProvider).toLowerCase()}.png',
+                            height: 32,
+                            fit: BoxFit.contain,
                           ),
                           const SizedBox(width: 8),
                           const SyncIndicator(),
@@ -239,6 +215,13 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                         // Tab 2: Flavor Wheel
                         Column(
                           children: [
+                            const SizedBox(height: 10),
+                            Image.asset(
+                              isUk ? 'assets/images/flavor_wheel_logo_uk.png' : 'assets/images/flavor_wheel_logo_en.png',
+                              height: 60,
+                              fit: BoxFit.contain,
+                            ),
+                            const SizedBox(height: 10),
                             Expanded(
                               child: ScaFlavorWheel(
                                 onSelect: _onFlavorSelect,
@@ -268,21 +251,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                 ),
               ),
 
-              // Simple Legend at the bottom of the stack or column as seen in screenshot
-              if (_selectedTab == 0)
-                Padding(
-                  padding: const EdgeInsets.only(top: 12, bottom: 120),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _LegendItem(color: const Color(0xFFFFEB3B), label: ref.t('acidity')),
-                      const SizedBox(width: 20),
-                      _LegendItem(color: const Color(0xFF8D6E63), label: ref.t('body')),
-                      const SizedBox(width: 20),
-                      _LegendItem(color: const Color(0xFFE91E63), label: ref.t('sweetness')),
-                    ],
-                  ),
-                ),
+
             ],
           ),
         ),
@@ -594,205 +563,18 @@ class _InteractiveSpiderChartState
           ),
         ),
         const SizedBox(height: 24),
-        Expanded(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final center = Offset(
-                constraints.maxWidth / 2,
-                constraints.maxHeight / 2,
-              );
-              final radius =
-                  min(constraints.maxWidth, constraints.maxHeight) / 2 - 40;
-
-              return GestureDetector(
-                onPanStart: (details) => _handleDragStart(
-                  details.localPosition,
-                  center,
-                  radius,
-                  values,
-                ),
-                onPanUpdate: (details) =>
-                    _handleDragUpdate(details.localPosition, center, radius),
-                onPanEnd: (_) => setState(() => _draggingLabel = null),
-                child: RepaintBoundary(
-                  child: CustomPaint(
-                    size: Size(constraints.maxWidth, constraints.maxHeight),
-                    painter: RadarPainter(
-                      values: values,
-                      primaryColor: const Color(0xFFC8A96E),
-                      textColor: Colors.white54,
-                      ref: ref,
-                    ),
-                  ),
-                ),
-              );
-            },
+        const Expanded(
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: SensoryRadarChart(
+              interactive: true,
+              height: 400,
+            ),
           ),
         ),
       ],
     );
   }
-
-  void _handleDragStart(
-    Offset localPosition,
-    Offset center,
-    double maxRadius,
-    Map<String, double> values,
-  ) {
-    final labels = values.keys.toList();
-    final angleStep = 2 * pi / labels.length;
-
-    for (int i = 0; i < labels.length; i++) {
-      final angle = angleStep * i - pi / 2;
-      final val = values[labels[i]]!;
-
-      final pointX = center.dx + maxRadius * val * cos(angle);
-      final pointY = center.dy + maxRadius * val * sin(angle);
-
-      if ((Offset(pointX, pointY) - localPosition).distance < 35.0) {
-        setState(() {
-          _draggingLabel = labels[i];
-        });
-        break;
-      }
-    }
-  }
-
-  void _handleDragUpdate(
-    Offset localPosition,
-    Offset center,
-    double maxRadius,
-  ) {
-    if (_draggingLabel == null) return;
-    final distance = (localPosition - center).distance;
-    double newValue = distance / maxRadius;
-    newValue = newValue.clamp(0.0, 1.0);
-    ref
-        .read(flavorValuesProvider.notifier)
-        .updateValue(_draggingLabel!, newValue);
-  }
-}
-
-class RadarPainter extends CustomPainter {
-  final Map<String, double> values;
-  final Color primaryColor;
-  final Color textColor;
-  final WidgetRef ref;
-
-  RadarPainter({
-    required this.values,
-    required this.primaryColor,
-    required this.textColor,
-    required this.ref,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final maxRadius = min(size.width, size.height) / 2 - 40;
-
-    final labels = values.keys.toList();
-    final angleStep = 2 * pi / labels.length;
-
-    // 1. Draw gridLines
-    final gridPaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.1)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
-
-    for (int level = 1; level <= 5; level++) {
-      final r = maxRadius * (level / 5);
-      final path = Path();
-      for (int i = 0; i < labels.length; i++) {
-        final angle = angleStep * i - pi / 2;
-        final x = center.dx + r * cos(angle);
-        final y = center.dy + r * sin(angle);
-        if (i == 0) {
-          path.moveTo(x, y);
-        } else {
-          path.lineTo(x, y);
-        }
-        if (level == 5) {
-          canvas.drawLine(center, Offset(x, y), gridPaint);
-        }
-      }
-      path.close();
-      canvas.drawPath(path, gridPaint);
-    }
-
-    // 2. Draw data shape
-    final dataPath = Path();
-    final points = <Offset>[];
-
-    for (int i = 0; i < labels.length; i++) {
-      final angle = angleStep * i - pi / 2;
-      final val = values[labels[i]] ?? 0.5;
-      final x = center.dx + maxRadius * val * cos(angle);
-      final y = center.dy + maxRadius * val * sin(angle);
-
-      points.add(Offset(x, y));
-      if (i == 0) {
-        dataPath.moveTo(x, y);
-      } else {
-        dataPath.lineTo(x, y);
-      }
-    }
-    dataPath.close();
-
-    canvas.drawPath(
-      dataPath,
-      Paint()
-        ..color = primaryColor.withValues(alpha: 0.25)
-        ..style = PaintingStyle.fill,
-    );
-
-    canvas.drawPath(
-      dataPath,
-      Paint()
-        ..color = primaryColor
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2,
-    );
-
-    // 3. Dots and Labels
-    final textPainter = TextPainter(
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-    );
-
-    for (int i = 0; i < labels.length; i++) {
-      final point = points[i];
-      final angle = angleStep * i - pi / 2;
-
-      canvas.drawCircle(point, 4, Paint()..color = primaryColor);
-
-      // Handle text wrapping/splitting if too wide
-      final labelText = ref.t(labels[i]).toUpperCase();
-      final maxLabelWidth = 65.0; // Restrict width to encourage wrapping
-      
-      textPainter.text = TextSpan(
-        text: labelText,
-        style: GoogleFonts.outfit( // Using Outfit for better wrapping aesthetics
-          color: textColor,
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 0.5,
-        ),
-      );
-      
-      textPainter.layout(maxWidth: maxLabelWidth);
-
-      // Position logic for labels around the radar
-      final labelRadius = maxRadius + 22;
-      final lx = center.dx + labelRadius * cos(angle);
-      final ly = center.dy + labelRadius * sin(angle);
-
-      textPainter.paint(canvas, Offset(lx - textPainter.width / 2, ly - textPainter.height / 2));
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant RadarPainter oldDelegate) => true;
 }
 
 class _TemplateChip extends ConsumerWidget {

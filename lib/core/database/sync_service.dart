@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:drift/drift.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'app_database.dart';
@@ -38,12 +37,13 @@ class SyncService {
     bool force = false,
     Function(String, double)? onProgress,
   }) async {
+
     try {
-      debugPrint('SYNC: Starting full synchronization...');
       _progressController.add(0.05);
       onProgress?.call('Connecting to cloud...', 0.05);
       
       if (supabase == null) {
+
         _progressController.add(1.0);
         onProgress?.call('Supabase not available, skipping cloud sync.', 1.0);
         return;
@@ -51,36 +51,44 @@ class SyncService {
 
       // 1. Version Guard (Cache Buster)
       if (force) {
+
         onProgress?.call('Clearing local cache...', 0.1);
         _progressController.add(0.1);
         await _clearLocalSharedData();
       }
 
       // 2. Sequential Stable Sync with real progress updates
-      onProgress?.call('Syncing Farmers...', 0.2);
+
+      onProgress?.call('Syncing Brands...', 0.2);
       _progressController.add(0.2);
+      await syncBrands();
+      await Future.delayed(const Duration(milliseconds: 200));
+
+
+      onProgress?.call('Syncing Farmers...', 0.3);
+      _progressController.add(0.3);
       await syncFarmers();
       await Future.delayed(const Duration(milliseconds: 200));
       
-      onProgress?.call('Syncing Encyclopedia...', 0.4);
-      _progressController.add(0.4);
+
+      onProgress?.call('Syncing Encyclopedia...', 0.5);
+      _progressController.add(0.5);
       await syncEncyclopedia();
       await Future.delayed(const Duration(milliseconds: 200));
       
-      onProgress?.call('Syncing Methods...', 0.6);
-      _progressController.add(0.6);
+
+      onProgress?.call('Syncing Methods...', 0.7);
+      _progressController.add(0.7);
       await syncBrewingRecipes();
       await Future.delayed(const Duration(milliseconds: 200));
       
-      onProgress?.call('Syncing Articles...', 0.8);
-      _progressController.add(0.8);
+
+      onProgress?.call('Syncing Articles...', 0.85);
+      _progressController.add(0.85);
       await syncArticles();
       await Future.delayed(const Duration(milliseconds: 200));
       
-      onProgress?.call('Syncing Brands...', 0.9);
-      _progressController.add(0.9);
-      await syncBrands();
-      
+
       onProgress?.call('Syncing User Data...', 0.95);
       _progressController.add(0.95);
       // Push local changes (including deletions) BEFORE pulling to prevent restored deleted items
@@ -91,10 +99,10 @@ class SyncService {
 
       _progressController.add(1.0);
       onProgress?.call('Cloud Connected', 1.0);
-      debugPrint('SYNC: All systems synchronized [STABLE]');
+
     } catch (e) {
-      debugPrint('SYNC ERROR: $e');
-      _progressController.add(0.0); // Reset or mark error
+
+      _progressController.add(0.0); 
       onProgress?.call('Sync failed: $e', 1.0);
       rethrow;
     }
@@ -105,7 +113,7 @@ class SyncService {
   void subscribeToRealtimeUpdates() {
     if (supabase == null) return;
     
-    debugPrint('SYNC: Initializing real-time subscriptions...');
+
 
     // 1. Articles Channel
     supabase!
@@ -115,7 +123,7 @@ class SyncService {
           schema: 'public',
           table: 'specialty_articles',
           callback: (payload) async {
-            debugPrint('SYNC: Real-time event for Articles: ${payload.eventType}');
+
             if (payload.eventType == PostgresChangeEvent.delete) {
               final id = payload.oldRecord['id'] as int;
               await (db.delete(db.specialtyArticles)..where((t) => t.id.equals(id))).go();
@@ -136,7 +144,7 @@ class SyncService {
           schema: 'public',
           table: 'localized_farmers',
           callback: (payload) async {
-            debugPrint('SYNC: Real-time event for Farmers: ${payload.eventType}');
+
             if (payload.eventType == PostgresChangeEvent.delete) {
               final id = payload.oldRecord['id'] as int;
               await (db.delete(db.localizedFarmers)..where((t) => t.id.equals(id))).go();
@@ -156,7 +164,7 @@ class SyncService {
           schema: 'public',
           table: 'encyclopedia_entries',
           callback: (payload) async {
-            debugPrint('SYNC: Real-time event for Encyclopedia: ${payload.eventType}');
+
             if (payload.eventType == PostgresChangeEvent.delete) {
               final id = payload.oldRecord['id'] as int;
               await (db.delete(db.localizedBeansV2)..where((t) => t.id.equals(id))).go();
@@ -176,7 +184,7 @@ class SyncService {
           schema: 'public',
           table: 'brewing_recipes',
           callback: (payload) async {
-            debugPrint('SYNC: Real-time event for Brewing Recipes: ${payload.eventType}');
+
             if (payload.eventType == PostgresChangeEvent.delete) {
               final key = payload.oldRecord['method_key'] as String;
               await (db.delete(db.brewingRecipes)..where((t) => t.methodKey.equals(key))).go();
@@ -195,7 +203,7 @@ class SyncService {
     if (supabase == null) return;
 
     try {
-      debugPrint('SYNC: Pulling farmers (V2)...');
+
       final data = await supabase!.from('localized_farmers').select().order('id');
       final remoteIds = data.map((item) => item['id'] as int).toList();
 
@@ -241,8 +249,8 @@ class SyncService {
 
           await db.smartUpsertFarmerV2(farmer, translations);
         } catch (e) {
-          debugPrint('SYNC ERROR for Farmer ${item['id']}: $e');
-        }
+      // Production silent fail
+    }
       }
 
       if (remoteIds.isNotEmpty) {
@@ -252,7 +260,7 @@ class SyncService {
         });
       }
     } catch (e) {
-      debugPrint('SYNC CRITICAL ERROR (Farmers V2): $e');
+      // Production silent fail
     }
   }
 
@@ -261,7 +269,7 @@ class SyncService {
     if (supabase == null) return;
 
     try {
-      debugPrint('SYNC: Pulling articles (V2)...');
+
       final data = await supabase!.from('specialty_articles').select().order('id');
       final remoteIds = data.map((item) => item['id'] as int).toList();
 
@@ -303,8 +311,8 @@ class SyncService {
 
           await db.smartUpsertArticleV2(article, translations);
         } catch (e) {
-          debugPrint('SYNC ERROR for Article ${item['id']}: $e');
-        }
+      // Production silent fail
+    }
       }
 
       if (remoteIds.isNotEmpty) {
@@ -314,7 +322,7 @@ class SyncService {
         });
       }
     } catch (e) {
-      debugPrint('SYNC CRITICAL ERROR (Articles V2): $e');
+      // Production silent fail
     }
   }
 
@@ -340,7 +348,7 @@ class SyncService {
           if (r.isDeletedLocal) {
             await supabase!.from('user_custom_recipes').delete().eq('id', r.id).eq('user_id', userId);
             await db.deleteCustomRecipe(r.id);
-            debugPrint('SYNC: Deleted recipe ${r.id} from cloud');
+
           } else {
             await supabase!.from('user_custom_recipes').upsert({
               'id': r.id,
@@ -364,8 +372,8 @@ class SyncService {
             await (db.update(db.customRecipes)..where((t) => t.id.equals(r.id))).write(const CustomRecipesCompanion(isSynced: Value(true)));
           }
         } catch (e) {
-          debugPrint('SYNC ERROR: Could not push recipe ${r.id}: $e');
-        }
+      // Production silent fail
+    }
       }
 
       // 2. Sync Personal Coffee Lots (Upsert & Delete)
@@ -375,7 +383,7 @@ class SyncService {
           if (l.isDeletedLocal) {
             await supabase!.from('user_coffee_lots').delete().eq('id', l.id).eq('user_id', userId);
             await db.deleteLotPermanently(l.id);
-            debugPrint('SYNC: Deleted lot ${l.id} from cloud');
+
           } else {
             await supabase!.from('user_coffee_lots').upsert({
               'id': l.id,
@@ -413,8 +421,8 @@ class SyncService {
             await (db.update(db.coffeeLots)..where((t) => t.id.equals(l.id))).write(const CoffeeLotsCompanion(isSynced: Value(true)));
           }
         } catch (e) {
-          debugPrint('SYNC ERROR: Could not push lot ${l.id}: $e');
-        }
+      // Production silent fail
+    }
       }
       
       // 3. Sync User Brands (Upsert & Delete)
@@ -422,19 +430,17 @@ class SyncService {
       for (final b in brandsToSync) {
         try {
           if (b.isDeletedLocal) {
-            debugPrint('SYNC: Deleting brand ${b.id} from cloud...');
+
             final response = await supabase!.from('user_brands').delete().eq('id', b.id).eq('user_id', userId).select();
             if (response.isEmpty) {
-              debugPrint('SYNC WARNING: Brand ${b.id} not found in cloud during delete. It might have been deleted already or ID mismatch.');
-            } else {
-              debugPrint('SYNC: Deleted brand ${b.id} from cloud successfully.');
+
             }
             await (db.delete(db.localizedBrands)..where((t) => t.id.equals(b.id))).go();
             await (db.delete(db.localizedBrandTranslations)..where((t) => t.brandId.equals(b.id))).go();
-            debugPrint('SYNC: Purged brand ${b.id} from local DB.');
+
           } else {
             // Upsert logic...
-            debugPrint('SYNC: Upserting brand ${b.id} (${b.name})');
+
             await supabase!.from('user_brands').upsert({
               'id': b.id,
               'user_id': userId,
@@ -456,153 +462,133 @@ class SyncService {
             }
 
             await (db.update(db.localizedBrands)..where((t) => t.id.equals(b.id))).write(const LocalizedBrandsCompanion(isSynced: Value(true)));
-            debugPrint('SYNC: Brand ${b.id} pushed successfully.');
+
           }
         } catch (e) {
-          debugPrint('SYNC ERROR: Could not push brand ${b.id}: $e');
-        }
+      // Production silent fail
+    }
       }
     } catch (e) {
-      debugPrint('SYNC ERROR (User Push): $e');
+      // Production silent fail
     }
   }
 
   /// Pulls user-specific lots and recipes from Supabase.
   Future<void> pullUserContent() async {
-    if (supabase == null || supabase!.auth.currentUser == null) return;
+    if (supabase == null || supabase!.auth.currentUser == null) {
+
+      return;
+    }
     
     try {
       final userId = supabase!.auth.currentUser!.id;
-      debugPrint('SYNC: Pulling user content for $userId');
+
 
       // 1. Pull Lots
+
       final lotsData = await supabase!.from('user_coffee_lots').select().eq('user_id', userId);
+
+      
       for (final item in lotsData) {
-        final id = item['id'] as String;
-        
-        // CHECK: If lot is deleted locally OR has unsynced changes, do not pull it back from cloud
-        final localLot = await db.findConflictLot(id);
-        if (localLot != null && (localLot.isDeletedLocal || !localLot.isSynced)) {
-          debugPrint('SYNC: Skipping pull for locally modified/deleted lot $id');
-          continue;
-        }
+        try {
+          final id = item['id'] as String;
+          
+          // CHECK: If lot is deleted locally OR has unsynced changes, do not pull it back from cloud
+          final localLot = await db.findConflictLot(id);
+          if (localLot != null && (localLot.isDeletedLocal || !localLot.isSynced)) {
 
-        final lot = CoffeeLotsCompanion(
-          id: Value(id),
-          userId: Value(userId),
-          coffeeName: Value(item['coffee_name'] as String?),
-          roasteryName: Value(item['roastery_name'] as String?),
-          roasteryCountry: Value(item['roastery_country'] as String?),
-          originCountry: Value(item['origin_country'] as String?),
-          region: Value(item['region'] as String?),
-          altitude: Value(item['altitude'] as String?),
-          process: Value(item['process'] as String?),
-          roastLevel: Value(item['roast_level'] as String?),
-          roastDate: Value(DateTime.tryParse(item['roast_date'] ?? '')),
-          openedAt: Value(DateTime.tryParse(item['opened_at'] ?? '')),
-          weight: Value(item['weight'] as String?),
-          lotNumber: Value(item['lot_number'] as String?),
-          isDecaf: Value(item['is_decaf'] as bool? ?? false),
-          farm: Value(item['farm'] as String?),
-          washStation: Value(item['wash_station'] as String?),
-          farmer: Value(item['farmer'] as String?),
-          varieties: Value(item['varieties'] as String?),
-          flavorProfile: Value(item['flavor_profile'] as String?),
-          scaScore: Value(item['sca_score'] as String?),
-          isFavorite: Value(item['is_favorite'] as bool? ?? false),
-          isArchived: Value(item['is_archived'] as bool? ?? false),
-          isOpen: Value(item['is_open'] as bool? ?? false),
-          isGround: Value(item['is_ground'] as bool? ?? false),
-          sensoryJson: Value(item['sensory_json'] is Map ? jsonEncode(item['sensory_json']) : (item['sensory_json']?.toString() ?? '{}')),
-          priceJson: Value(item['price_json'] is Map ? jsonEncode(item['price_json']) : (item['price_json']?.toString() ?? '{}')),
-          brandId: Value(item['brand_id'] as int?),
-          imageUrl: Value(item['image_url'] as String?),
-          isSynced: const Value(true),
-          createdAt: Value(DateTime.tryParse(item['created_at'] ?? '')),
-          updatedAt: Value(DateTime.tryParse(item['updated_at'] ?? '')),
-        );
-        await db.into(db.coffeeLots).insertOnConflictUpdate(lot);
-      }
+            continue;
+          }
 
-      // 2. Pull Recipes
-      final recipesData = await supabase!.from('user_custom_recipes').select().eq('user_id', userId);
-      for (final item in recipesData) {
-        final id = item['id'] as String;
 
-        // CHECK: If recipe is deleted locally OR has unsynced changes, skip pull
-        final existing = await (db.select(db.customRecipes)..where((t) => t.id.equals(id))).getSingleOrNull();
-        if (existing != null && (existing.isDeletedLocal || !existing.isSynced)) {
-          debugPrint('SYNC: Skipping pull for locally modified/deleted recipe $id');
-          continue;
-        }
-
-        final recipe = CustomRecipesCompanion(
-          id: Value(id),
-          userId: Value(userId),
-          lotId: Value(item['lot_id'] as String?),
-          methodKey: Value(item['method_key'] as String),
-          name: Value(item['name'] as String),
-          coffeeGrams: Value((item['coffee_grams'] as num).toDouble()),
-          totalWaterMl: Value((item['total_water_ml'] as num).toDouble()),
-          grindNumber: Value(item['grind_number'] as int? ?? 0),
-          comandanteClicks: Value(item['comandante_clicks'] as int? ?? 0),
-          ek43Division: Value(item['ek43_division'] as int? ?? 0),
-          totalPours: Value(item['total_pours'] as int? ?? 1),
-          pourScheduleJson: Value(item['pour_schedule_json'] is List ? jsonEncode(item['pour_schedule_json']) : (item['pour_schedule_json']?.toString() ?? '[]')),
-          brewTempC: Value((item['brew_temp_c'] as num?)?.toDouble() ?? 93.0),
-          notes: Value(item['notes'] as String? ?? ''),
-          rating: Value(item['rating'] as int? ?? 0),
-          isSynced: const Value(true),
-          createdAt: Value(DateTime.tryParse(item['created_at'] ?? '')),
-          updatedAt: Value(DateTime.tryParse(item['updated_at'] ?? '')),
-        );
-        await db.into(db.customRecipes).insertOnConflictUpdate(recipe);
-      }
-      
-
-      // 3. Pull Brands
-      final brandsData = await supabase!.from('user_brands').select().eq('user_id', userId);
-      for (final item in brandsData) {
-        final id = item['id'] as int;
-        
-        final localBrand = await (db.select(db.localizedBrands)..where((t) => t.id.equals(id))).getSingleOrNull();
-        if (localBrand != null && (localBrand.isDeletedLocal || !localBrand.isSynced)) continue;
-
-        final brand = LocalizedBrandsCompanion(
-          id: Value(id),
-          userId: Value(userId),
-          name: Value(item['name'] as String),
-          logoUrl: Value(item['logo_url'] as String?),
-          siteUrl: Value(item['site_url'] as String?),
-          isSynced: const Value(true),
-          createdAt: Value(DateTime.tryParse(item['created_at'] ?? '')),
-        );
-        await db.into(db.localizedBrands).insertOnConflictUpdate(brand);
-
-        // Pull translations
-        final transData = await supabase!.from('user_brand_translations').select().eq('brand_id', id);
-        for (final t in transData) {
-          final trans = LocalizedBrandTranslationsCompanion(
-            brandId: Value(id),
-            languageCode: Value(t['language_code'] as String),
-            shortDesc: Value(t['short_desc'] as String?),
-            fullDesc: Value(t['full_desc'] as String?),
-            location: Value(t['location'] as String?),
+          final lot = CoffeeLotsCompanion(
+            id: Value(id),
+            userId: Value(userId),
+            coffeeName: Value(item['coffee_name'] as String?),
+            roasteryName: Value(item['roastery_name'] as String?),
+            roasteryCountry: Value(item['roastery_country'] as String?),
+            originCountry: Value(item['origin_country'] as String?),
+            region: Value(item['region'] as String?),
+            altitude: Value(item['altitude'] as String?),
+            process: Value(item['process'] as String?),
+            roastLevel: Value(item['roast_level'] as String?),
+            roastDate: Value(DateTime.tryParse(item['roast_date'] ?? '')),
+            openedAt: Value(DateTime.tryParse(item['opened_at'] ?? '')),
+            weight: Value(item['weight'] as String?),
+            lotNumber: Value(item['lot_number'] as String?),
+            isDecaf: Value(item['is_decaf'] as bool? ?? false),
+            farm: Value(item['farm'] as String?),
+            washStation: Value(item['wash_station'] as String?),
+            farmer: Value(item['farmer'] as String?),
+            varieties: Value(item['varieties'] as String?),
+            flavorProfile: Value(item['flavor_profile'] as String?),
+            scaScore: Value(item['sca_score'] as String?),
+            isFavorite: Value(item['is_favorite'] as bool? ?? false),
+            isArchived: Value(item['is_archived'] as bool? ?? false),
+            isOpen: Value(item['is_open'] as bool? ?? false),
+            isGround: Value(item['is_ground'] as bool? ?? false),
+            sensoryJson: Value(item['sensory_json'] is Map ? jsonEncode(item['sensory_json']) : (item['sensory_json']?.toString() ?? '{}')),
+            priceJson: Value(item['price_json'] is Map ? jsonEncode(item['price_json']) : (item['price_json']?.toString() ?? '{}')),
+            brandId: Value(item['brand_id'] as int?),
+            imageUrl: Value(item['image_url'] as String?),
+            updatedAt: Value(DateTime.now()),
+            isSynced: const Value(true),
           );
-          await db.into(db.localizedBrandTranslations).insertOnConflictUpdate(trans);
-        }
+
+          await db.insertUserLot(lot);
+        } catch (e) {
+      // Production silent fail
+    }
       }
+
+      // 2. Recipes
+
+      final remoteRecipes = await supabase!
+          .from('user_custom_recipes')
+          .select()
+          .eq('user_id', userId);
       
-      debugPrint('SYNC: User content pulled (${lotsData.length} lots, ${recipesData.length} recipes, ${brandsData.length} brands)');
+
+      for (final item in remoteRecipes) {
+        try {
+          if (item['is_deleted_local'] == true) {
+
+            continue;
+          }
+
+          await db.insertCustomRecipe(CustomRecipesCompanion(
+            id: Value(item['id'] as String),
+            userId: Value(item['user_id'] as String),
+            lotId: Value(item['lot_id'] as String?),
+            methodKey: Value(item['method_key'] as String? ?? 'v60'),
+            name: Value(item['name'] as String? ?? 'Recipe'),
+            coffeeGrams: Value((item['coffee_grams'] as num?)?.toDouble() ?? 0.0),
+            totalWaterMl: Value((item['total_water_ml'] as num?)?.toDouble() ?? 0.0),
+            grindNumber: Value(item['grind_number'] as int? ?? 0),
+            comandanteClicks: Value(item['comandante_clicks'] as int? ?? 0),
+            ek43Division: Value(item['ek43_division'] as int? ?? 0),
+            totalPours: Value(item['total_pours'] as int? ?? 1),
+            pourScheduleJson: Value(item['pour_schedule_json']?.toString() ?? '[]'),
+            brewTempC: Value((item['brew_temp_c'] as num?)?.toDouble() ?? 93.0),
+            notes: Value(item['notes'] as String? ?? ''),
+            rating: Value(item['rating'] as int? ?? 0),
+            updatedAt: Value(DateTime.now()),
+            isSynced: const Value(true),
+          ));
+        } catch (e) {
+      // Production silent fail
+    }
+      }
+
     } catch (e) {
-      debugPrint('SYNC ERROR (User Pull): $e');
+      // Production silent fail
     }
   }
 
   Future<void> syncBrewingRecipes() async {
     if (supabase == null) return;
     try {
-      debugPrint('SYNC: Pulling methods (V2, EN-only)...');
+
       final data = await supabase!.from('brewing_recipes').select();
       final remoteKeys = data.map((item) => item['method_key'] as String).toList();
       
@@ -645,8 +631,8 @@ class SyncService {
 
           await db.smartUpsertBrewingRecipeV2(recipe, translations);
         } catch (e) {
-          debugPrint('SYNC ERROR for method ${item['method_key']}: $e');
-        }
+      // Production silent fail
+    }
       }
 
       if (remoteKeys.isNotEmpty) {
@@ -656,7 +642,7 @@ class SyncService {
         });
       }
     } catch (e) {
-      debugPrint('SYNC CRITICAL ERROR (Brewing Recipes V2): $e');
+      // Production silent fail
     }
   }
 
@@ -664,12 +650,27 @@ class SyncService {
   Future<void> syncBrands() async {
     if (supabase == null) return;
     try {
-      debugPrint('SYNC: Pulling brands from localized_brands...');
+
+      // 1. Fetch all brands
       final data = await supabase!.from('localized_brands').select();
-      
-      // Collect remote IDs for cleanup later
       final remoteIds = data.map((item) => item['id'] as int).toList();
       
+      if (remoteIds.isEmpty) return;
+
+      // 2. Fetch all translations in one go
+
+      final allTranslations = await supabase!
+          .from('localized_brand_translations')
+          .select()
+          .inFilter('brand_id', remoteIds);
+
+      // Group translations by brand_id
+      final Map<int, List<Map<String, dynamic>>> translationMap = {};
+      for (final t in allTranslations) {
+        final bId = t['brand_id'] as int;
+        translationMap.putIfAbsent(bId, () => []).add(t);
+      }
+
       for (final item in data) {
         try {
           final id = item['id'] as int;
@@ -680,13 +681,9 @@ class SyncService {
             siteUrl: Value(item['site_url'] as String?),
           );
 
-          // Get translations
-          final transData = await supabase!
-              .from('localized_brand_translations')
-              .select()
-              .eq('brand_id', id);
-
           final List<LocalizedBrandTranslationsCompanion> translations = [];
+          final transData = translationMap[id] ?? [];
+
           for (final t in transData) {
              translations.add(LocalizedBrandTranslationsCompanion(
                brandId: Value(id),
@@ -697,7 +694,7 @@ class SyncService {
              ));
           }
 
-          // Add 'uk'
+          // Add 'uk' fallback if missing
           if (!translations.any((t) => t.languageCode.value == 'uk')) {
              translations.add(LocalizedBrandTranslationsCompanion(
                brandId: Value(id),
@@ -710,8 +707,8 @@ class SyncService {
 
           await db.smartUpsertBrand(companion, translations);
         } catch (e) {
-          debugPrint('SYNC ERROR for brand ID ${item['id']}: $e');
-        }
+      // Production silent fail
+    }
       }
 
       if (remoteIds.isNotEmpty) {
@@ -727,14 +724,14 @@ class SyncService {
         });
       }
     } catch (e) {
-      debugPrint('SYNC ERROR (Brands): $e');
+      // Production silent fail
     }
   }
 
   /// Clears local shared tables to force fresh sync.
   Future<void> _clearLocalSharedData() async {
     try {
-      debugPrint('SYNC: Clearing local shared tables...');
+
       await db.transaction(() async {
         await db.delete(db.localizedFarmers).go();
         await db.delete(db.localizedBeans).go();
@@ -743,9 +740,9 @@ class SyncService {
         await db.delete(db.localizedBrands).go();
         await db.delete(db.brewingRecipes).go();
       });
-      debugPrint('SYNC: Local cache cleared.');
+
     } catch (e) {
-      debugPrint('SYNC ERROR (Clear): $e');
+      // Production silent fail
     }
   }
 
@@ -803,9 +800,9 @@ class SyncService {
 
       await db.smartUpsertFarmer(farmer, translations);
       _dataUpdateController.add(null);
-      debugPrint('SYNC: Real-time update success for Farmer $id');
+
     } catch (e) {
-      debugPrint('SYNC ERROR (Single Farmer $id): $e');
+      // Production silent fail
     }
   }
 
@@ -849,16 +846,16 @@ class SyncService {
 
       await db.smartUpsertArticle(article, translations);
       _dataUpdateController.add(null);
-      debugPrint('SYNC: Real-time update success for Article $id');
+
     } catch (e) {
-      debugPrint('SYNC ERROR (Single Article $id): $e');
+      // Production silent fail
     }
   }
 
   Future<void> syncEncyclopedia() async {
     if (supabase == null) return;
     try {
-      debugPrint('SYNC: Pulling encyclopedia from encyclopedia_entries (V2)...');
+
       // Use encyclopedia_entries — the correct table with 18 rows
       final data = await supabase!.from('encyclopedia_entries').select();
       final remoteIds = data.map((item) => item['id'] as int).toList();
@@ -928,8 +925,8 @@ class SyncService {
 
           await db.smartUpsertBeanV2(bean, translations);
         } catch (e) {
-          debugPrint('SYNC ERROR for Encyclopedia Entry ${item['id']}: $e');
-        }
+      // Production silent fail
+    }
       }
 
       if (remoteIds.isNotEmpty) {
@@ -939,7 +936,7 @@ class SyncService {
         });
       }
     } catch (e) {
-      debugPrint('SYNC CRITICAL ERROR (Encyclopedia V2): $e');
+      // Production silent fail
     }
   }
 
@@ -1009,9 +1006,9 @@ class SyncService {
 
       await db.smartUpsertBeanV2(bean, translations);
       _dataUpdateController.add(null);
-      debugPrint('SYNC: Real-time update success for Encyclopedia Entry $id');
+
     } catch (e) {
-      debugPrint('SYNC ERROR (Single Encyclopedia Entry $id): $e');
+      // Production silent fail
     }
   }
 
@@ -1078,9 +1075,9 @@ class SyncService {
 
       await db.smartUpsertBean(bean, translations);
       _dataUpdateController.add(null);
-      debugPrint('SYNC: Real-time update success for Bean $id');
+
     } catch (e) {
-      debugPrint('SYNC ERROR (Single Bean $id): $e');
+      // Production silent fail
     }
   }
 
@@ -1128,9 +1125,9 @@ class SyncService {
 
       await db.smartUpsertBrewingRecipe(companion, translations);
       _dataUpdateController.add(null);
-      debugPrint('SYNC: Real-time update success for Recipe $key');
+
     } catch (e) {
-      debugPrint('SYNC ERROR (Single Recipe $key): $e');
+      // Production silent fail
     }
   }
 }

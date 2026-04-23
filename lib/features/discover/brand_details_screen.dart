@@ -26,7 +26,7 @@ class BrandDetailsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final lotsAsync = ref.watch(brandLotsProvider(brand.id));
-    debugPrint('UI: BrandDetailsScreen for ${brand.name} (ID: ${brand.id})');
+
 
     return Scaffold(
       extendBodyBehindAppBar: true,

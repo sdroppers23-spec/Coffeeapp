@@ -2,8 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../features/discover/lots/providers/lot_design_debug_provider.dart';
-import '../../core/providers/design_theme_provider.dart';
+
 
 class GlassContainer extends ConsumerWidget {
   final Widget child;
@@ -24,7 +23,6 @@ class GlassContainer extends ConsumerWidget {
   final bool enableShadow;
   final bool enableRepaintBoundary;
   final bool useOuterClip;
-  final String? debugKey;
 
   const GlassContainer({
     super.key,
@@ -46,56 +44,23 @@ class GlassContainer extends ConsumerWidget {
     this.enableShadow = true,
     this.enableRepaintBoundary = false,
     this.useOuterClip = true,
-    this.debugKey,
+    // debugKey removed as it is no longer used
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final debugConfig = ref.watch(lotDesignDebugProvider);
-    final useDebug = debugConfig.isDebugMode;
-    final designTheme = ref.watch(designThemeProvider);
-    final isCoffee = designTheme == AppDesignTheme.coffee;
+    // Fixed production configurations
+    final double effectiveBlur = blur;
+    final double effectiveOpacity = opacity;
+    const double effectiveBaseOpacity = 0.4;
 
-    double effectiveBlur = useDebug ? debugConfig.blur : blur;
-    double effectiveOpacity = useDebug ? debugConfig.tintOpacity : opacity;
-    double effectiveBaseOpacity = useDebug ? debugConfig.baseOpacity : 0.4;
-
-    if (useDebug && debugKey != null) {
-      if (debugKey == 'navBar') {
-        effectiveBlur = debugConfig.navBarBlur;
-        effectiveOpacity = debugConfig.navBarOpacity;
-        effectiveBaseOpacity = debugConfig.navBarBaseOpacity;
-      } else if (debugKey == 'flavorCard') {
-        effectiveBlur = debugConfig.flavorCardBlur;
-        effectiveOpacity = debugConfig.flavorCardOpacity;
-        effectiveBaseOpacity = debugConfig.flavorCardBaseOpacity;
-      } else if (debugKey == 'profileDialog') {
-        effectiveBlur = debugConfig.profileBlur;
-        effectiveOpacity = debugConfig.profileOpacity;
-        effectiveBaseOpacity = debugConfig.profileBaseOpacity;
-      }
-    }
-
-    // Override for Coffee theme
-    if (isCoffee && !useDebug) {
-      effectiveBlur = 0;
-    }
-
-    final effectiveBorderRadius = useDebug ? debugConfig.borderRadius : borderRadius;
+    final effectiveBorderRadius = borderRadius;
     
-    final effectiveBorderColor = useDebug
-        ? debugConfig.borderColor.withValues(alpha: debugConfig.borderOpacity)
-        : (borderColor ?? (isCoffee 
-            ? const Color(0xFFC8A96E).withValues(alpha: 0.2) 
-            : Colors.white.withValues(alpha: 0.12)));
+    final effectiveBorderColor = borderColor ?? Colors.white.withValues(alpha: 0.12);
 
-    final effectiveBaseColor = useDebug
-        ? debugConfig.baseColor.withValues(alpha: effectiveBaseOpacity)
-        : (isCoffee 
-            ? const Color(0xFF161412).withValues(alpha: 1.0) 
-            : Colors.black.withValues(alpha: 0.4));
+    final effectiveBaseColor = Colors.black.withValues(alpha: effectiveBaseOpacity);
 
-    final effectiveTintColor = useDebug ? debugConfig.tintColor : (color ?? Colors.white);
+    final effectiveTintColor = color ?? Colors.white;
 
     // Layer 1 & 2 combined into a clipped stack
     Widget mainContent = ClipRRect(
@@ -127,7 +92,7 @@ class GlassContainer extends ConsumerWidget {
           Container(
             padding: padding,
             decoration: BoxDecoration(
-              color: (useDebug || backgroundGradient == null)
+              color: backgroundGradient == null
                   ? effectiveTintColor.withValues(alpha: effectiveOpacity)
                   : null,
               borderRadius: BorderRadius.circular(effectiveBorderRadius),
@@ -147,18 +112,16 @@ class GlassContainer extends ConsumerWidget {
                       ),
                     )
                   : null,
-              gradient: (useDebug || imageUrl != null)
+              gradient: imageUrl != null
                   ? null
-                  : (backgroundGradient ?? (isCoffee 
-                      ? null 
-                      : LinearGradient(
+                  : (backgroundGradient ?? LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
                           Colors.white.withValues(alpha: 0.1),
                           Colors.white.withValues(alpha: 0.02),
                         ],
-                      ))),
+                      )),
             ),
             child: child,
           ),
@@ -180,11 +143,10 @@ class GlassContainer extends ConsumerWidget {
           ? (shadows ??
             [
               BoxShadow(
-                color: (useDebug ? debugConfig.shadowColor : Colors.black)
-                    .withValues(alpha: 0.3),
-                blurRadius: useDebug ? debugConfig.shadowBlur : 20,
-                spreadRadius: useDebug ? debugConfig.shadowSpread : 0,
-                offset: Offset(0, useDebug ? debugConfig.shadowOffsetY : 4),
+                color: Colors.black.withValues(alpha: 0.3),
+                blurRadius: 20,
+                spreadRadius: 0,
+                offset: const Offset(0, 4),
               ),
             ])
           : null,

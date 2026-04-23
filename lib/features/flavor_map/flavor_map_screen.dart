@@ -317,7 +317,7 @@ class _FlavorInfoCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GlassContainer(
-      debugKey: 'flavorCard',
+
       padding: const EdgeInsets.all(20),
       borderRadius: 24,
       blur: 25,

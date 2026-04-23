@@ -168,7 +168,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                             child: ConstrainedBox(
                               constraints: const BoxConstraints(maxWidth: 330),
                               child: GlassContainer(
-                                debugKey: 'navBar',
+
                                 borderRadius: 40,
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 1,
@@ -224,7 +224,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                               }
                             },
                             child: GlassContainer(
-                              debugKey: 'navBar',
+
                               width: 52,
                               height: 52,
                               borderRadius: 26,

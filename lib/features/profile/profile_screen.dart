@@ -503,7 +503,6 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
       backgroundColor: Colors.transparent,
       elevation: 0,
       child: GlassContainer(
-        debugKey: 'profileDialog',
         borderRadius: 24,
         padding: const EdgeInsets.all(24),
         child: Column(

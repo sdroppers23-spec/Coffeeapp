@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-import 'dart:ui';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import '../navigation/navigation_providers.dart';
 import '../../core/supabase/supabase_provider.dart';
 import '../../core/providers/settings_provider.dart';
-import '../../core/providers/design_theme_provider.dart';
 import '../../core/l10n/app_localizations.dart';
-import '../../shared/widgets/add_recipe_dialog.dart';
 import '../../core/providers/preferences_provider.dart';
 import '../../shared/widgets/premium_background.dart';
-// import '../../shared/widgets/premium_background.dart'; // Removed unused import
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -229,35 +225,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                 ),
               ),
-
-              // СТИЛЬ ДИЗАЙНУ
-              _buildSectionTitle(context, ref.t('design_theme').toUpperCase()),
-              _buildCard(
-                context,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      _buildThemeOption(
-                        context,
-                        ref: ref,
-                        theme: AppDesignTheme.glass,
-                        label: ref.t('design_glass'),
-                        icon: Icons.auto_awesome_rounded,
-                      ),
-                      const SizedBox(height: 12),
-                      _buildThemeOption(
-                        context,
-                        ref: ref,
-                        theme: AppDesignTheme.coffee,
-                        label: ref.t('design_coffee'),
-                        icon: Icons.coffee_rounded,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
               // ОДИНИЦІ ВИМІРУ
               _buildSectionTitle(context, ref.t('units')),
               _buildCard(
@@ -342,47 +309,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ),
               ),
 
-              // ТЕСТУВАННЯ ТА РОЗРОБКА
-              _buildSectionTitle(context, ref.t('debug')),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Row(
-                  children: [
-                    _buildGlassRecipeTile(
-                      context: context,
-                      title: ref.t('espresso'),
-                      subtitle: ref.t('quick_recipe'),
-                      icon: Icons.coffee_maker_rounded,
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => const AddRecipeDialog(
-                            lotId: 'test_lot',
-                            initialMethod: 'espresso',
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(width: 16),
-                    _buildGlassRecipeTile(
-                      context: context,
-                      title: ref.t('filter'),
-                      subtitle: ref.t('v60_chemex'),
-                      icon: Icons.coffee_outlined,
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => const AddRecipeDialog(
-                            lotId: 'test_lot',
-                            initialMethod: 'v60',
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-
               const SizedBox(height: 48),
 
               // Bottom button
@@ -455,66 +381,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  Widget _buildThemeOption(
-    BuildContext context, {
-    required WidgetRef ref,
-    required AppDesignTheme theme,
-    required String label,
-    required IconData icon,
-  }) {
-    final currentTheme = ref.watch(designThemeProvider);
-    final isSelected = currentTheme == theme;
-    final themeData = Theme.of(context);
-
-    return GestureDetector(
-      onTap: () {
-        ref.read(settingsProvider.notifier).triggerSelectionVibrate();
-        ref.read(designThemeProvider.notifier).setTheme(theme);
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? themeData.colorScheme.primary.withValues(alpha: 0.1)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isSelected
-                ? themeData.colorScheme.primary.withValues(alpha: 0.3)
-                : Colors.white.withValues(alpha: 0.05),
-          ),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              color: isSelected
-                  ? themeData.colorScheme.primary
-                  : Colors.white38,
-              size: 20,
-            ),
-            const SizedBox(width: 12),
-            Text(
-              label,
-              style: GoogleFonts.outfit(
-                color: isSelected ? Colors.white : Colors.white70,
-                fontSize: 16,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-              ),
-            ),
-            const Spacer(),
-            if (isSelected)
-              Icon(
-                Icons.check_circle_rounded,
-                color: themeData.colorScheme.primary,
-                size: 20,
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildListItem(
     BuildContext context, {
     required IconData icon,
@@ -555,6 +421,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       ),
     );
   }
+
 
   Widget _buildSwitchPreference(
     BuildContext context, {
@@ -709,94 +576,4 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  Widget _buildGlassRecipeTile({
-    required BuildContext context,
-    required String title,
-    required String subtitle,
-    required IconData icon,
-    required VoidCallback onTap,
-  }) {
-    final theme = Theme.of(context);
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          height: 140,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.1),
-              width: 1,
-            ),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.white.withValues(alpha: 0.08),
-                Colors.white.withValues(alpha: 0.03),
-              ],
-            ),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(24),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: Stack(
-                children: [
-                  Positioned(
-                    right: -10,
-                    bottom: -10,
-                    child: Icon(
-                      icon,
-                      size: 80,
-                      color: Colors.white.withValues(alpha: 0.05),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.primary.withValues(
-                              alpha: 0.2,
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Icon(
-                            icon,
-                            color: theme.colorScheme.primary,
-                            size: 24,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          title,
-                          style: GoogleFonts.outfit(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Text(
-                          subtitle,
-                          style: GoogleFonts.outfit(
-                            color: Colors.white38,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }

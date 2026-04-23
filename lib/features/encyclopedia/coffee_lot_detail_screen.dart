@@ -8,6 +8,7 @@ import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/network/price_sync_service.dart';
+import '../../shared/widgets/recipe_type_bottom_sheet.dart';
 import '../../shared/widgets/add_recipe_dialog.dart';
 import '../../shared/widgets/pressable_scale.dart';
 import '../../shared/widgets/lot_detail_widgets.dart';
@@ -718,10 +719,21 @@ class _ProfileTab extends ConsumerWidget {
                   height: 56,
                   child: PressableScale(
                     onTap: () async {
-                      await showDialog(
+                      showModalBottomSheet(
                         context: context,
-                        builder: (context) => AddRecipeDialog(
-                          lotId: entry.id.toString(),
+                        backgroundColor: Colors.transparent,
+                        builder: (ctx) => RecipeTypeBottomSheet(
+                          title: ref.t('choose_brewing_type'),
+                          onTypeSelected: (type) async {
+                            Navigator.pop(ctx);
+                            await showDialog(
+                              context: context,
+                              builder: (context) => AddRecipeDialog(
+                                lotId: entry.id.toString(),
+                                initialMethod: type == 'espresso' ? 'espresso' : 'v60',
+                              ),
+                            );
+                          },
                         ),
                       );
                     },

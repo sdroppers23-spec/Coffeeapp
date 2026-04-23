@@ -9,6 +9,7 @@ import '../../shared/widgets/glass_container.dart';
 import '../../shared/widgets/sensory_radar_chart.dart';
 import '../navigation/navigation_providers.dart';
 
+import '../../shared/widgets/recipe_type_bottom_sheet.dart';
 import '../../core/database/database_provider.dart';
 import '../../shared/widgets/add_recipe_dialog.dart';
 import '../../shared/widgets/pressable_scale.dart';
@@ -285,12 +286,24 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
                       onTap: limitReached
                           ? null
                           : () async {
-                              final result = await showDialog(
+                              showModalBottomSheet(
                                 context: context,
-                                builder: (context) =>
-                                    AddRecipeDialog(lotId: widget.lot.id),
+                                backgroundColor: Colors.transparent,
+                                builder: (ctx) => RecipeTypeBottomSheet(
+                                  title: ref.t('choose_brewing_type'),
+                                  onTypeSelected: (type) async {
+                                    Navigator.pop(ctx);
+                                    final result = await showDialog(
+                                      context: context,
+                                      builder: (context) => AddRecipeDialog(
+                                        lotId: widget.lot.id,
+                                        initialMethod: type == 'espresso' ? 'espresso' : 'v60',
+                                      ),
+                                    );
+                                    if (result == true) setState(() {});
+                                  },
+                                ),
                               );
-                              if (result == true) setState(() {});
                             },
                       child: Container(
                         decoration: BoxDecoration(

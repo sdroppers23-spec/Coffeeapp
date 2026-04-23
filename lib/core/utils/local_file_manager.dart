@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:flutter/foundation.dart';
+import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:uuid/uuid.dart';
@@ -24,10 +24,10 @@ class LocalFileManager {
       final file = File(filePath);
       await file.writeAsBytes(bytes);
       
-      debugPrint('LOCAL STORAGE: Saved image to $filePath');
+
       return filePath;
     } catch (e) {
-      debugPrint('LOCAL STORAGE ERROR: Failed to save image: $e');
+      // Silent fail for image saving telemetry
       rethrow;
     }
   }
@@ -39,10 +39,10 @@ class LocalFileManager {
       final file = File(path);
       if (await file.exists()) {
         await file.delete();
-        debugPrint('LOCAL STORAGE: Deleted image $path');
+
       }
     } catch (e) {
-      debugPrint('LOCAL STORAGE ERROR: Failed to delete image: $e');
+      // Ignore cleanup errors in production
     }
   }
 

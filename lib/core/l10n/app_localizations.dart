@@ -412,8 +412,7 @@ class AppLocalizations {
       'delete_confirm_batch_title': 'Delete Lots?',
       'delete_confirm_batch_message': 'Are you sure you want to delete {count} selected lots?',
       'toast_select_second_lot': 'Select a second lot to compare',
-      'design_glass': 'Glass',
-      'design_coffee': 'Coffee',
+
       'vibration': 'Vibration',
       'haptic_feedback': 'Haptic Feedback',
       'haptic_desc': 'Light vibration when pressing and holding',
@@ -773,9 +772,7 @@ class AppLocalizations {
       'delete_confirm_batch_title': 'Видалити лоти?',
       'delete_confirm_batch_message': 'Ви впевнені, що хочете видалити {count} вибраних лотів?',
       'toast_select_second_lot': 'Оберіть другий лот для порівняння',
-      'design_theme': 'Стиль дизайну',
-      'design_glass': 'Скло',
-      'design_coffee': 'Кава',
+
       'delete': 'Видалити',
       'cancel': 'Скасувати',
       'undo': 'СКАСУВАТИ',

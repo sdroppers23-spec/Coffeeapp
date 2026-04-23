@@ -277,10 +277,10 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           _imageExtension = image.name.split('.').last.toLowerCase();
           _currentImageUrl = null; // New image replaces old one
         });
-        debugPrint('IMAGE PICKED: extension=$_imageExtension, bytes=${bytes.length}');
+
       }
     } catch (e) {
-      debugPrint('PICK IMAGE ERROR: $e');
+      // Production silent fail
     }
   }
 
@@ -401,7 +401,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         ),
       );
       
-      debugPrint('SAVE LOT: Successfully saved $lotId to local database');
+
 
       if (mounted) {
         // Pop loading

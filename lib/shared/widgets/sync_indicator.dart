@@ -69,12 +69,12 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
           await syncEverything(force: true);
           await prefs.setBool(resyncKey, true);
           _hasPerformedSessionSync = true;
-          debugPrint('SYNC: Version Guard completed.');
+
         });
       } else if (!_hasPerformedSessionSync) {
         _hasPerformedSessionSync = true;
         Future.microtask(() => pullFromCloud());
-        debugPrint('SYNC: Standard session-start sync triggered.');
+
       }
     }
 
@@ -87,7 +87,7 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
       final isNowOnline = nextList != null && !nextList.contains(ConnectivityResult.none);
 
       if (wasOffline && isNowOnline && _hasPerformedSessionSync) {
-        debugPrint('SYNC: Connectivity recovered. Triggering sync...');
+
         Future.microtask(() => syncEverything());
       }
     });
@@ -107,7 +107,7 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
   SyncService get _syncService => ref.read(syncServiceProvider);
 
   void invalidateData() {
-    debugPrint('SYNC: Invalidating all data providers for immediate UI update...');
+
     ref.invalidate(farmersProvider);
     ref.invalidate(specialtyArticlesProvider);
     ref.invalidate(specialtyEncyclopediaProvider);

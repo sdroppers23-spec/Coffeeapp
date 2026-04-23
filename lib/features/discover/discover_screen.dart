@@ -11,7 +11,6 @@ import './roasters_screen.dart';
 import '../navigation/navigation_providers.dart';
 import '../specialty/specialty_screen.dart';
 import '../../shared/widgets/sync_indicator.dart';
-import './widgets/debug_content.dart';
 
 class DiscoverScreen extends ConsumerStatefulWidget {
   const DiscoverScreen({super.key});
@@ -78,8 +77,6 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
         return 'Мої обсмажчики';
       case DiscoverTabType.encyclopedia:
         return 'Енциклопедія';
-      case DiscoverTabType.debug:
-        return 'Дебаг';
     }
   }
 
@@ -234,8 +231,6 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
         return const RoastersBody();
       case 'history':
         return const SpecialtyEducationScreen();
-      case 'debug':
-        return const DebugContent();
       default:
         return Center(
           child: Text(

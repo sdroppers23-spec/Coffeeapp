@@ -268,7 +268,7 @@ class _TerroirGlobeState extends ConsumerState<FlavorWheel>
       );
       if (mounted) setState(() => _nebulaShader = program.fragmentShader());
     } catch (e) {
-      debugPrint('Globe Asset Load Error: $e');
+      // Asset load failure
     }
   }
 

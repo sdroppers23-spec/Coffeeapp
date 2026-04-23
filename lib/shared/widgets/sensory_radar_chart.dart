@@ -116,7 +116,7 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
                 constraints.maxHeight / 2,
               );
               final radius =
-                  min(constraints.maxWidth, constraints.maxHeight) / 2 - 60;
+                  min(constraints.maxWidth, constraints.maxHeight) / 2 - 55;
 
               final bool canInteract = widget.interactive && !widget.isLocked;
 
@@ -230,7 +230,7 @@ class RadarPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     if (values.isEmpty) return;
 
-    final maxRadius = min(size.width, size.height) / 2 - 30;
+    final maxRadius = min(size.width, size.height) / 2 - 55;
     final center = Offset(size.width / 2, size.height / 2);
     
     // STRICT ORDER of the 6 axes

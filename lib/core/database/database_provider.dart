@@ -19,13 +19,25 @@ final coffeeDataSeedProvider = Provider<CoffeeDataSeed>((ref) {
 });
 
 final databaseInitializerProvider = FutureProvider<void>((ref) async {
-  final seeder = ref.watch(coffeeDataSeedProvider);
-  await seeder.seedAll();
+
+  final seeder = ref.read(coffeeDataSeedProvider);
   
-  // Start cloud sync immediately after seeding
-  final syncService = ref.watch(syncServiceProvider);
-  // We don't await here to avoid blocking app start, but fire it off
+  try {
+    if (await ref.read(databaseProvider).brandsIsEmpty()) {
+
+      await seeder.seedAll();
+
+    } else {
+
+    }
+  } catch (e) {
+    // Silent fail in production as per hardening guidelines
+  }
+  
+  final syncService = ref.read(syncServiceProvider);
+
   unawaited(syncService.syncAll());
+
 });
 
 final syncServiceProvider = Provider<SyncService>((ref) {

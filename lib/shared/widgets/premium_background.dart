@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/providers/design_theme_provider.dart';
+
 
 class PremiumBackground extends ConsumerWidget {
   final Widget child;
@@ -8,16 +8,13 @@ class PremiumBackground extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final designTheme = ref.watch(designThemeProvider);
-    final isCoffee = designTheme == AppDesignTheme.coffee;
-
     return Stack(
       fit: StackFit.expand,
       children: [
         // 1. Base Color
-        DecoratedBox(
+        const DecoratedBox(
           decoration: BoxDecoration(
-            color: isCoffee ? const Color(0xFF0C0B0A) : const Color(0xFF0F0E0D), 
+            color: Color(0xFF0F0E0D), 
           ),
         ),
 
@@ -29,8 +26,7 @@ class PremiumBackground extends ConsumerWidget {
                 center: Alignment.topCenter,
                 radius: 1.2,
                 colors: [
-                  (isCoffee ? const Color(0xFFC8A96E) : const Color(0xFFC8A96E))
-                      .withValues(alpha: isCoffee ? 0.05 : 0.03),
+                  const Color(0xFFC8A96E).withValues(alpha: 0.03),
                   Colors.transparent,
                 ],
               ),

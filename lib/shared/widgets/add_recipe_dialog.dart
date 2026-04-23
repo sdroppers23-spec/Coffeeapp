@@ -970,7 +970,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
               Expanded(
                 flex: 4,
                 child: _buildSmallTextFieldWithLabel(
-                  label: isUk ? 'Тривалість (ГГ:ХХ:СС)' : 'Duration (HH:MM:SS)',
+                  label: isUk ? 'Тривалість' : 'Duration',
                   controller: pc.duration,
                   focusNode: _durFocusNodes[index],
                   hint: '00:00:00',
@@ -1076,7 +1076,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
           ),
         ),
         SizedBox(
-          width: 50,
+          width: 55,
           child: TextFormField(
             controller: controller,
             onChanged: onChanged,
@@ -1091,19 +1091,15 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             },
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(
-                4,
-              ), // Allow for carry over during typing
+              LengthLimitingTextInputFormatter(2),
             ],
-            style: GoogleFonts.outfit(
-              color: Colors.white,
-              fontSize: 13,
-              fontWeight: FontWeight.bold,
-            ),
+            style: GoogleFonts.outfit(color: Colors.white, fontSize: 13),
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white.withValues(alpha: 0.05),
-              contentPadding: const EdgeInsets.symmetric(vertical: 10),
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 10,
+              ), // Same vertical padding as other fields
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide.none,

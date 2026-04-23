@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/database/database_provider.dart';
@@ -65,8 +63,8 @@ final specialtyEncyclopediaProvider = FutureProvider<SpecialtyEncyclopediaRoot>(
       );
 
       return SpecialtyEncyclopediaRoot(modules: [articleModule, beanModule]);
-    } catch (e, stack) {
-      debugPrint('Error in specialtyEncyclopediaProvider (DB): $e\n$stack');
+    } catch (e) {
+      // Production silent fail
       rethrow;
     }
   },

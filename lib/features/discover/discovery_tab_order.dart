@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/providers/settings_provider.dart';
 
-enum DiscoverTabType { farmers, roasters, history, encyclopedia, myLots, debug }
+enum DiscoverTabType { farmers, roasters, history, encyclopedia, myLots }
 
 class DiscoveryTabOrderNotifier extends Notifier<List<DiscoverTabType>> {
   static const String _storageKey = 'discovery_tab_order_v1';
@@ -27,7 +27,6 @@ class DiscoveryTabOrderNotifier extends Notifier<List<DiscoverTabType>> {
       DiscoverTabType.myLots,
       DiscoverTabType.farmers,
       DiscoverTabType.roasters,
-      DiscoverTabType.debug,
     ];
   }
 

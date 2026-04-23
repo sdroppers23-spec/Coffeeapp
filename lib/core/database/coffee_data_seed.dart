@@ -1,5 +1,4 @@
 import 'package:drift/drift.dart';
-import 'package:flutter/foundation.dart';
 import 'app_database.dart';
 
 /// Seeds all static content into the local Drift database on first launch.
@@ -19,10 +18,10 @@ class CoffeeDataSeed {
     Function(String)? onProgress,
   }) async {
     onProgress?.call('Initializing database sync...');
-    debugPrint('DB SEEDING: STARTING (FORCE=$force)...');
+
 
     if (force || await db.brandsIsEmpty()) {
-      debugPrint('DB SEEDING: PERFORMING MANDATORY CLEANUP...');
+
       await db.transaction(() async {
         await (db.delete(db.localizedBeans)).go();
         await (db.delete(db.localizedBeanTranslations)).go();
@@ -32,7 +31,7 @@ class CoffeeDataSeed {
         await (db.delete(db.specialtyArticles)).go();
         await (db.delete(db.localizedFarmers)).go();
       });
-      debugPrint('DB SEEDING: CLEANUP COMPLETE.');
+
     }
 
     onProgress?.call('Seeding Brands...');
@@ -52,10 +51,8 @@ class CoffeeDataSeed {
       await _seedBrewingRecipes();
 
       onProgress?.call('All systems synchronized [STABLE]');
-      debugPrint('DB SEEDING: ALL COMPLETED SUCCESSFULLY');
-    } catch (e, st) {
-      debugPrint('DB SEEDING FATAL ERROR: $e');
-      debugPrint('STACKTRACE: $st');
+
+    } catch (e) {
       onProgress?.call('Synchronization error: $e');
     }
   }
@@ -79,7 +76,7 @@ class CoffeeDataSeed {
     if (!isEmpty && !force) return;
 
     // Cloud will handle this.
-    debugPrint('DB SEEDING: Skipping placeholder farmers (using Cloud).');
+
   }
 
   Future<void> _seedEncyclopedia({bool force = false}) async {
@@ -87,11 +84,11 @@ class CoffeeDataSeed {
     if (!isEmpty && !force) return;
 
     // Cloud will handle this.
-    debugPrint('DB SEEDING: Skipping placeholder articles (using Cloud).');
+
   }
 
   Future<void> _seedBrewingRecipes() async {
-    debugPrint('DB SEEDING: Populating 8 Brewing Methods...');
+
     
     final List<Map<String, dynamic>> recipes = [
       {

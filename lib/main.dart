@@ -23,13 +23,13 @@ void main() async {
     final anonKey = dotenv.env['SUPABASE_ANON_KEY'] ?? '';
 
     if (url.isEmpty || url.contains('placeholder') || anonKey.isEmpty) {
-      debugPrint('SUPABASE CONFIG ERROR: Please provide real keys in .env');
+
       supabaseError = true;
     } else {
       await Supabase.initialize(url: url, anonKey: anonKey);
     }
   } catch (e) {
-    debugPrint('INITIALIZATION ERROR: $e');
+
     supabaseError = true;
   }
 

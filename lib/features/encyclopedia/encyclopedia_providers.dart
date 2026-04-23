@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/database/database_provider.dart';
@@ -33,7 +32,7 @@ final localEncyclopediaStreamProvider =
       // subscribeToRealtimeUpdates now handles all shared tables including beans
       syncService.subscribeToRealtimeUpdates();
     } catch (e) {
-      debugPrint('BACKGROUND SYNC ERROR: $e');
+      // Production silent fail
     }
   });
 

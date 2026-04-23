@@ -53,10 +53,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
   }
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -90,253 +86,271 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-            // МОВА
-            _buildSectionTitle(context, ref.t('language').toUpperCase()),
-            _buildCard(
-              context,
-              child: PopupMenuButton<String>(
-                onSelected: (code) {
-                  ref.read(localeProvider.notifier).setLocale(code);
-                  setState(() {});
-                },
-                offset: const Offset(0, 50),
-                color: theme.cardColor,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    value: 'en',
+              // МОВА
+              _buildSectionTitle(context, ref.t('language').toUpperCase()),
+              _buildCard(
+                context,
+                child: PopupMenuButton<String>(
+                  onSelected: (code) {
+                    ref.read(localeProvider.notifier).setLocale(code);
+                    setState(() {});
+                  },
+                  offset: const Offset(0, 50),
+                  color: theme.cardColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: 'en',
+                      child: Row(
+                        children: [
+                          const Text('🇺🇸 English'),
+                          if (ref.read(localeProvider) == 'en') ...[
+                            const Spacer(),
+                            Icon(
+                              Icons.check,
+                              color: theme.colorScheme.primary,
+                              size: 18,
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: 'uk',
+                      child: Row(
+                        children: [
+                          const Text('🇺🇦 Українська'),
+                          if (ref.read(localeProvider) == 'uk') ...[
+                            const Spacer(),
+                            Icon(
+                              Icons.check,
+                              color: theme.colorScheme.primary,
+                              size: 18,
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ],
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
                     child: Row(
                       children: [
-                        const Text('🇺🇸 English'),
-                        if (ref.read(localeProvider) == 'en') ...[
-                          const Spacer(),
-                          Icon(Icons.check, color: theme.colorScheme.primary, size: 18),
-                        ],
+                        Icon(
+                          Icons.language_rounded,
+                          color: theme.colorScheme.primary,
+                          size: 22,
+                        ),
+                        const SizedBox(width: 16),
+                        Text(
+                          ref.t('language'),
+                          style: GoogleFonts.outfit(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          ref.watch(localeProvider) == 'uk'
+                              ? 'Українська'
+                              : 'English',
+                          style: GoogleFonts.outfit(
+                            fontSize: 14,
+                            color: Colors.white38,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          color: Colors.white24,
+                          size: 14,
+                        ),
                       ],
                     ),
                   ),
-                  PopupMenuItem(
-                    value: 'uk',
-                    child: Row(
-                      children: [
-                        const Text('🇺🇦 Українська'),
-                        if (ref.read(localeProvider) == 'uk') ...[
-                          const Spacer(),
-                          Icon(Icons.check, color: theme.colorScheme.primary, size: 18),
-                        ],
-                      ],
-                    ),
-                  ),
-                ],
+                ),
+              ),
+
+              // ВІБРАЦІЯ
+              _buildSectionTitle(context, 'ВІБРАЦІЯ'),
+              _buildCard(
+                context,
                 child: Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.fromLTRB(16, 16, 8, 16),
                   child: Row(
                     children: [
-                      Icon(
-                        Icons.language_rounded,
-                        color: theme.colorScheme.primary,
-                        size: 22,
-                      ),
-                      const SizedBox(width: 16),
-                      Text(
-                        ref.t('language'),
-                        style: GoogleFonts.outfit(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Тактильний відгук',
+                              style: GoogleFonts.outfit(
+                                color: theme.colorScheme.onSurface,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Легка вібрація при натисканні та\nутриманні',
+                              style: GoogleFonts.outfit(
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.5,
+                                ),
+                                fontSize: 13,
+                                height: 1.2,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      const Spacer(),
-                      Text(
-                        ref.watch(localeProvider) == 'uk' ? 'Українська' : 'English',
-                        style: GoogleFonts.outfit(
-                          fontSize: 14,
-                          color: Colors.white38,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      const Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: Colors.white24,
-                        size: 14,
+                      Switch(
+                        value: ref.watch(settingsProvider),
+                        activeThumbColor: theme.colorScheme.secondary,
+                        activeTrackColor: theme.colorScheme.secondary
+                            .withValues(alpha: 0.2),
+                        inactiveThumbColor: Colors.grey[400],
+                        inactiveTrackColor: theme.colorScheme.onSurface
+                            .withValues(alpha: 0.1),
+                        onChanged: (val) {
+                          ref
+                              .read(settingsProvider.notifier)
+                              .toggleVibration(val);
+                        },
                       ),
                     ],
                   ),
                 ),
               ),
-            ),
 
-
-            // ВІБРАЦІЯ
-            _buildSectionTitle(context, 'ВІБРАЦІЯ'),
-            _buildCard(
-              context,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 8, 16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Тактильний відгук',
-                            style: GoogleFonts.outfit(
-                              color: theme.colorScheme.onSurface,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Легка вібрація при натисканні та\nутриманні',
-                            style: GoogleFonts.outfit(
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                              fontSize: 13,
-                              height: 1.2,
-                            ),
-                          ),
-                        ],
+              // СТИЛЬ ДИЗАЙНУ
+              _buildSectionTitle(context, ref.t('design_theme').toUpperCase()),
+              _buildCard(
+                context,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      _buildThemeOption(
+                        context,
+                        ref: ref,
+                        theme: AppDesignTheme.glass,
+                        label: ref.t('design_glass'),
+                        icon: Icons.auto_awesome_rounded,
                       ),
+                      const SizedBox(height: 12),
+                      _buildThemeOption(
+                        context,
+                        ref: ref,
+                        theme: AppDesignTheme.coffee,
+                        label: ref.t('design_coffee'),
+                        icon: Icons.coffee_rounded,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // ЮРИДИЧНА ІНФОРМАЦІЯ
+              _buildSectionTitle(context, 'ЮРИДИЧНА ІНФОРМАЦІЯ'),
+              _buildCard(
+                context,
+                child: Column(
+                  children: [
+                    _buildListItem(
+                      context,
+                      icon: Icons.lock_outline_rounded,
+                      title: 'Політика конфіденційності',
+                      onTap: () {},
                     ),
-                    Switch(
-                      value: ref.watch(settingsProvider),
-                      activeThumbColor: theme.colorScheme.secondary,
-                      activeTrackColor: theme.colorScheme.secondary.withValues(alpha: 0.2),
-                      inactiveThumbColor: Colors.grey[400],
-                      inactiveTrackColor: theme.colorScheme.onSurface.withValues(alpha: 0.1),
-                      onChanged: (val) {
-                        ref.read(settingsProvider.notifier).toggleVibration(val);
+                    Divider(
+                      color: theme.colorScheme.onSurface.withValues(
+                        alpha: 0.05,
+                      ),
+                      height: 1,
+                      indent: 16,
+                      endIndent: 16,
+                    ),
+                    _buildListItem(
+                      context,
+                      icon: Icons.insert_drive_file_outlined,
+                      title: 'Умови використання',
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 32),
+
+              // ПІДТРИМКА
+              _buildSectionTitle(context, 'ПІДТРИМКА'),
+              _buildCard(
+                context,
+                child: Column(
+                  children: [
+                    _buildListItem(
+                      context,
+                      icon: Icons.help_outline_rounded,
+                      title: 'Служба підтримки',
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ),
+
+              // ТЕСТУВАННЯ ТА РОЗРОБКА
+              _buildSectionTitle(context, 'ТЕСТУВАННЯ ТА РОЗРОБКА'),
+              _buildCard(
+                context,
+                child: Column(
+                  children: [
+                    _buildListItem(
+                      context,
+                      icon: Icons.bug_report_outlined,
+                      title: 'Тестувати новий діалог рецептів',
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => const AddRecipeDialog(
+                            lotId: 'test_lot',
+                            initialMethod: 'v60',
+                          ),
+                        );
                       },
                     ),
                   ],
                 ),
               ),
-            ),
 
+              const SizedBox(height: 48),
 
-            // СТИЛЬ ДИЗАЙНУ
-            _buildSectionTitle(context, ref.t('design_theme').toUpperCase()),
-            _buildCard(
-              context,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    _buildThemeOption(
-                      context,
-                      ref: ref,
-                      theme: AppDesignTheme.glass,
-                      label: ref.t('design_glass'),
-                      icon: Icons.auto_awesome_rounded,
-                    ),
-                    const SizedBox(height: 12),
-                    _buildThemeOption(
-                      context,
-                      ref: ref,
-                      theme: AppDesignTheme.coffee,
-                      label: ref.t('design_coffee'),
-                      icon: Icons.coffee_rounded,
-                    ),
-                  ],
+              // Bottom button
+              Center(
+                child: GestureDetector(
+                  onTap: _signOut,
+                  child: _isLoading
+                      ? const CircularProgressIndicator()
+                      : Text(
+                          'Вийти з акаунта',
+                          style: GoogleFonts.poppins(
+                            color: const Color(0xFFE57373),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                 ),
               ),
-            ),
-
-            // ЮРИДИЧНА ІНФОРМАЦІЯ
-            _buildSectionTitle(context, 'ЮРИДИЧНА ІНФОРМАЦІЯ'),
-            _buildCard(
-              context,
-              child: Column(
-                children: [
-                  _buildListItem(
-                    context,
-                    icon: Icons.lock_outline_rounded,
-                    title: 'Політика конфіденційності',
-                    onTap: () {},
-                  ),
-                  Divider(
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
-                    height: 1,
-                    indent: 16,
-                    endIndent: 16,
-                  ),
-                  _buildListItem(
-                    context,
-                    icon: Icons.insert_drive_file_outlined,
-                    title: 'Умови використання',
-                    onTap: () {},
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 32),
-
-            // ПІДТРИМКА
-            _buildSectionTitle(context, 'ПІДТРИМКА'),
-            _buildCard(
-              context,
-              child: Column(
-                children: [
-                  _buildListItem(
-                    context,
-                    icon: Icons.help_outline_rounded,
-                    title: 'Служба підтримки',
-                    onTap: () {},
-                  ),
-                ],
-              ),
-            ),
-
-            // ТЕСТУВАННЯ ТА РОЗРОБКА
-            _buildSectionTitle(context, 'ТЕСТУВАННЯ ТА РОЗРОБКА'),
-            _buildCard(
-              context,
-              child: Column(
-                children: [
-                  _buildListItem(
-                    context,
-                    icon: Icons.bug_report_outlined,
-                    title: 'Тестувати новий діалог рецептів',
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => const AddRecipeDialog(
-                          lotId: 'test_lot',
-                          initialMethod: 'v60',
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 48),
-
-            // Bottom button
-            Center(
-              child: GestureDetector(
-                onTap: _signOut,
-                child: _isLoading
-                    ? const CircularProgressIndicator()
-                    : Text(
-                        'Вийти з акаунта',
-                        style: GoogleFonts.poppins(
-                          color: const Color(0xFFE57373),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-              ),
-            ),
-            const SizedBox(height: 48),
-          ],
+              const SizedBox(height: 48),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildSectionTitle(BuildContext context, String title) {
     final theme = Theme.of(context);
@@ -348,7 +362,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         style: GoogleFonts.outfit(
           fontSize: 13,
           fontWeight: FontWeight.bold,
-          color: isDark ? theme.colorScheme.primary : theme.colorScheme.primary.withValues(alpha: 0.6),
+          color: isDark
+              ? theme.colorScheme.primary
+              : theme.colorScheme.primary.withValues(alpha: 0.6),
           letterSpacing: 2.0,
         ),
       ),
@@ -364,17 +380,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         color: isDark ? const Color(0xFF111111) : Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isDark 
+          color: isDark
               ? theme.colorScheme.onSurface.withValues(alpha: 0.05)
               : theme.colorScheme.primary.withValues(alpha: 0.08),
         ),
-        boxShadow: isDark ? null : [
-          BoxShadow(
-            color: theme.colorScheme.primary.withValues(alpha: 0.03),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
+        boxShadow: isDark
+            ? null
+            : [
+                BoxShadow(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.03),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
       ),
       child: child,
     );
@@ -399,13 +417,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected 
-              ? themeData.colorScheme.primary.withValues(alpha: 0.1) 
+          color: isSelected
+              ? themeData.colorScheme.primary.withValues(alpha: 0.1)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected 
-                ? themeData.colorScheme.primary.withValues(alpha: 0.3) 
+            color: isSelected
+                ? themeData.colorScheme.primary.withValues(alpha: 0.3)
                 : Colors.white.withValues(alpha: 0.05),
           ),
         ),
@@ -413,7 +431,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           children: [
             Icon(
               icon,
-              color: isSelected ? themeData.colorScheme.primary : Colors.white38,
+              color: isSelected
+                  ? themeData.colorScheme.primary
+                  : Colors.white38,
               size: 20,
             ),
             const SizedBox(width: 12),

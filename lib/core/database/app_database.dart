@@ -51,17 +51,21 @@ class AppDatabase extends _$AppDatabase {
         await transaction(() async {
           // recreate farmers or just add column, but recreation is safer for this state
           await customStatement('DROP TABLE IF EXISTS localized_farmers;');
-          await customStatement('DROP TABLE IF EXISTS localized_farmer_translations;');
-          
+          await customStatement(
+            'DROP TABLE IF EXISTS localized_farmer_translations;',
+          );
+
           await m.createTable(localizedFarmers);
           await m.createTable(localizedFarmerTranslations);
-          
+
           // Force recreation of articles/beans/recipes to ensure they are consistent after parallel sync failures
           await customStatement('DROP TABLE IF EXISTS specialty_articles;');
-          await customStatement('DROP TABLE IF EXISTS specialty_article_translations;');
+          await customStatement(
+            'DROP TABLE IF EXISTS specialty_article_translations;',
+          );
           await customStatement('DROP TABLE IF EXISTS localized_beans;');
           await customStatement('DROP TABLE IF EXISTS brewing_recipes;');
-          
+
           await m.createTable(specialtyArticles);
           await m.createTable(specialtyArticleTranslations);
           await m.createTable(localizedBeans);
@@ -78,7 +82,11 @@ class AppDatabase extends _$AppDatabase {
       if (from < 32) {
         // v32: Add sync flags to brands
         await _safeAddColumn(m, localizedBrands, localizedBrands.isSynced);
-        await _safeAddColumn(m, localizedBrands, localizedBrands.isDeletedLocal);
+        await _safeAddColumn(
+          m,
+          localizedBrands,
+          localizedBrands.isDeletedLocal,
+        );
       }
       if (from < 33) {
         // v33: Add favorite/archive support for brands
@@ -105,7 +113,11 @@ class AppDatabase extends _$AppDatabase {
         await _safeAddColumn(m, localizedBeansV2, localizedBeansV2.radarJson);
       }
       if (from < 37) {
-        await _safeAddColumn(m, localizedBeansV2, localizedBeansV2.userPriceJson);
+        await _safeAddColumn(
+          m,
+          localizedBeansV2,
+          localizedBeansV2.userPriceJson,
+        );
       }
       if (from < 38) {
         // v38: Add category column to brewing recipes
@@ -114,7 +126,11 @@ class AppDatabase extends _$AppDatabase {
       }
       if (from < 39) {
         // v39: Add extractionTimeSeconds to custom recipes
-        await _safeAddColumn(m, customRecipes, customRecipes.extractionTimeSeconds);
+        await _safeAddColumn(
+          m,
+          customRecipes,
+          customRecipes.extractionTimeSeconds,
+        );
       }
     },
     beforeOpen: (details) async {
@@ -136,7 +152,8 @@ class AppDatabase extends _$AppDatabase {
   // ── Farmers ──────────────────────────────────────────────────────────────────
   // ── Farmers (Wide Table) ───────────────────────────────────────────────────
   /// Reads from V2 table (populated by SyncService V2).
-  Future<List<LocalizedFarmerDto>> getAllFarmers(String lang) => getAllFarmersV2(lang);
+  Future<List<LocalizedFarmerDto>> getAllFarmers(String lang) =>
+      getAllFarmersV2(lang);
 
   Future<void> smartUpsertFarmer(
     LocalizedFarmersCompanion f,
@@ -144,15 +161,17 @@ class AppDatabase extends _$AppDatabase {
   ) async {
     await batch((batch) {
       batch.insertAllOnConflictUpdate(localizedFarmers, [f]);
-      batch.insertAllOnConflictUpdate(localizedFarmerTranslations, translations);
+      batch.insertAllOnConflictUpdate(
+        localizedFarmerTranslations,
+        translations,
+      );
     });
   }
 
   Future<void> upsertLocalizedFarmer(
     LocalizedFarmersCompanion f,
     List<LocalizedFarmerTranslationsCompanion> translations,
-  ) =>
-      smartUpsertFarmer(f, translations);
+  ) => smartUpsertFarmer(f, translations);
 
   // ── V2 Methods ──────────────────────────────────────────────────────────────
 
@@ -160,7 +179,9 @@ class AppDatabase extends _$AppDatabase {
     final query = select(localizedFarmersV2).join([
       leftOuterJoin(
         localizedFarmerTranslationsV2,
-        localizedFarmerTranslationsV2.farmerId.equalsExp(localizedFarmersV2.id) &
+        localizedFarmerTranslationsV2.farmerId.equalsExp(
+              localizedFarmersV2.id,
+            ) &
             localizedFarmerTranslationsV2.languageCode.equals(lang),
       ),
     ]);
@@ -192,7 +213,10 @@ class AppDatabase extends _$AppDatabase {
   ) async {
     await batch((batch) {
       batch.insertAllOnConflictUpdate(localizedFarmersV2, [f]);
-      batch.insertAllOnConflictUpdate(localizedFarmerTranslationsV2, translations);
+      batch.insertAllOnConflictUpdate(
+        localizedFarmerTranslationsV2,
+        translations,
+      );
     });
   }
 
@@ -200,7 +224,9 @@ class AppDatabase extends _$AppDatabase {
     final query = select(specialtyArticlesV2).join([
       leftOuterJoin(
         specialtyArticleTranslationsV2,
-        specialtyArticleTranslationsV2.articleId.equalsExp(specialtyArticlesV2.id) &
+        specialtyArticleTranslationsV2.articleId.equalsExp(
+              specialtyArticlesV2.id,
+            ) &
             specialtyArticleTranslationsV2.languageCode.equals(lang),
       ),
     ]);
@@ -228,7 +254,10 @@ class AppDatabase extends _$AppDatabase {
   ) async {
     await batch((batch) {
       batch.insertAllOnConflictUpdate(specialtyArticlesV2, [a]);
-      batch.insertAllOnConflictUpdate(specialtyArticleTranslationsV2, translations);
+      batch.insertAllOnConflictUpdate(
+        specialtyArticleTranslationsV2,
+        translations,
+      );
     });
   }
 
@@ -246,8 +275,10 @@ class AppDatabase extends _$AppDatabase {
   }
 
   // Alias methods for compatibility
-  Future<List<LocalizedBeanDto>> getAllBeans(String lang) => getEncyclopediaV2(lang);
-  Future<List<LocalizedBeanDto>> getAllEncyclopediaEntries(String lang) => getEncyclopediaV2(lang);
+  Future<List<LocalizedBeanDto>> getAllBeans(String lang) =>
+      getEncyclopediaV2(lang);
+  Future<List<LocalizedBeanDto>> getAllEncyclopediaEntries(String lang) =>
+      getEncyclopediaV2(lang);
 
   LocalizedBeanDto _mapBeanV2Row(TypedResult row, String lang) {
     final bean = row.readTable(localizedBeansV2);
@@ -301,7 +332,9 @@ class AppDatabase extends _$AppDatabase {
       isFavorite: bean.isFavorite,
       isArchived: false,
       flagUrl: bean.flagUrl,
-      radarPoints: _parseJson(bean.radarJson).map((k, v) => MapEntry(k, (v as num).toDouble())),
+      radarPoints: _parseJson(
+        bean.radarJson,
+      ).map((k, v) => MapEntry(k, (v as num).toDouble())),
       userPricing: _parseJson(bean.userPriceJson),
       createdAt: bean.createdAt,
     );
@@ -313,7 +346,10 @@ class AppDatabase extends _$AppDatabase {
   ) async {
     await batch((batch) {
       batch.insertAllOnConflictUpdate(localizedBeansV2, [bean]);
-      batch.insertAllOnConflictUpdate(localizedBeanTranslationsV2, translations);
+      batch.insertAllOnConflictUpdate(
+        localizedBeanTranslationsV2,
+        translations,
+      );
     });
   }
 
@@ -323,7 +359,10 @@ class AppDatabase extends _$AppDatabase {
   ) async {
     await batch((batch) {
       batch.insertAllOnConflictUpdate(brewingRecipesV2, [recipe]);
-      batch.insertAllOnConflictUpdate(brewingRecipeTranslationsV2, translations);
+      batch.insertAllOnConflictUpdate(
+        brewingRecipeTranslationsV2,
+        translations,
+      );
     });
   }
 
@@ -331,7 +370,9 @@ class AppDatabase extends _$AppDatabase {
     final query = select(brewingRecipesV2).join([
       leftOuterJoin(
         brewingRecipeTranslationsV2,
-        brewingRecipeTranslationsV2.recipeKey.equalsExp(brewingRecipesV2.methodKey) &
+        brewingRecipeTranslationsV2.recipeKey.equalsExp(
+              brewingRecipesV2.methodKey,
+            ) &
             brewingRecipeTranslationsV2.languageCode.equals(lang),
       ),
     ]);
@@ -360,20 +401,28 @@ class AppDatabase extends _$AppDatabase {
   }
 
   // ── Brands ───────────────────────────────────────────────────────────────────
-  Future<List<LocalizedBrandDto>> getAllBrands(String userId, [String lang = 'uk']) async {
-    final query = select(localizedBrands).join([
-      leftOuterJoin(
-        localizedBrandTranslations,
-        localizedBrandTranslations.brandId.equalsExp(localizedBrands.id) &
-            localizedBrandTranslations.languageCode.equals(lang),
-      ),
-    ])..where((localizedBrands.userId.equals(userId) | localizedBrands.userId.isNull()) & localizedBrands.isDeletedLocal.equals(false));
+  Future<List<LocalizedBrandDto>> getAllBrands(
+    String userId, [
+    String lang = 'uk',
+  ]) async {
+    final query =
+        select(localizedBrands).join([
+          leftOuterJoin(
+            localizedBrandTranslations,
+            localizedBrandTranslations.brandId.equalsExp(localizedBrands.id) &
+                localizedBrandTranslations.languageCode.equals(lang),
+          ),
+        ])..where(
+          (localizedBrands.userId.equals(userId) |
+                  localizedBrands.userId.isNull()) &
+              localizedBrands.isDeletedLocal.equals(false),
+        );
 
     final rows = await query.get();
     return rows.map((row) {
       final brand = row.readTable(localizedBrands);
       final translation = row.readTableOrNull(localizedBrandTranslations);
-      
+
       return LocalizedBrandDto(
         id: brand.id,
         name: brand.name,
@@ -389,21 +438,20 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<LocalizedBrandDto?> getBrandById(int id, String lang) async {
-    final query =
-        select(localizedBrands).join([
-          leftOuterJoin(
-            localizedBrandTranslations,
-            localizedBrandTranslations.brandId.equalsExp(localizedBrands.id) &
-                localizedBrandTranslations.languageCode.equals(lang),
-          ),
-        ])..where(localizedBrands.id.equals(id));
+    final query = select(localizedBrands).join([
+      leftOuterJoin(
+        localizedBrandTranslations,
+        localizedBrandTranslations.brandId.equalsExp(localizedBrands.id) &
+            localizedBrandTranslations.languageCode.equals(lang),
+      ),
+    ])..where(localizedBrands.id.equals(id));
 
     final row = await query.getSingleOrNull();
     if (row == null) return null;
 
     final brand = row.readTable(localizedBrands);
     final translation = row.readTableOrNull(localizedBrandTranslations);
-    
+
     return LocalizedBrandDto(
       id: brand.id,
       name: brand.name,
@@ -427,7 +475,12 @@ class AppDatabase extends _$AppDatabase {
     });
   }
 
-  Future<int> addBrand(String userId, String name, String location, String shortDesc) async {
+  Future<int> addBrand(
+    String userId,
+    String name,
+    String location,
+    String shortDesc,
+  ) async {
     final res = await into(localizedBrands).insert(
       LocalizedBrandsCompanion.insert(
         userId: Value(userId),
@@ -513,7 +566,8 @@ class AppDatabase extends _$AppDatabase {
   }
 
   // ── Origins / Beans ──────────────────────────────────────────────────────────
-  Future<List<LocalizedBeanDto>> getAllOrigins(String lang) => getEncyclopediaV2(lang);
+  Future<List<LocalizedBeanDto>> getAllOrigins(String lang) =>
+      getEncyclopediaV2(lang);
 
   /// Watches V2 table (populated by SyncService V2).
   Stream<List<LocalizedBeanDto>> watchAllEncyclopediaEntries(String lang) {
@@ -525,13 +579,12 @@ class AppDatabase extends _$AppDatabase {
             localizedBeanTranslationsV2.languageCode.equals(lang),
       ),
     ]);
-    
+
     return query.watch().map((rows) {
       if (rows.isEmpty) return [];
       return rows.map((row) => _mapBeanV2Row(row, lang)).toList();
     });
   }
-
 
   Future<List<LocalizedBeanDto>> getBeansByBrand(
     int brandId,
@@ -558,7 +611,6 @@ class AppDatabase extends _$AppDatabase {
       batch.insertAllOnConflictUpdate(localizedBeanTranslations, translations);
     });
   }
-
 
   Future<int> insertBean(LocalizedBeansCompanion b) =>
       into(localizedBeans).insertOnConflictUpdate(b);
@@ -597,9 +649,10 @@ class AppDatabase extends _$AppDatabase {
       ),
     ])..where(localizedBeansV2.id.equals(id));
 
-    return query.watchSingleOrNull().map((row) => row != null ? _mapBeanV2Row(row, lang) : null);
+    return query.watchSingleOrNull().map(
+      (row) => row != null ? _mapBeanV2Row(row, lang) : null,
+    );
   }
-
 
   Future<LocalizedBeanTranslation?> getBeanTranslation(
     int beanId,
@@ -623,7 +676,9 @@ class AppDatabase extends _$AppDatabase {
     final query = selectOnly(localizedBeansV2)
       ..addColumns([localizedBeansV2.id])
       ..where(localizedBeansV2.isFavorite.equals(true));
-    return query.watch().map((rows) => rows.map((r) => r.read(localizedBeansV2.id)!).toSet());
+    return query.watch().map(
+      (rows) => rows.map((r) => r.read(localizedBeansV2.id)!).toSet(),
+    );
   }
 
   LocalizedBeanDto _mapBeanRow(TypedResult row, String lang) {
@@ -737,12 +792,16 @@ class AppDatabase extends _$AppDatabase {
   ) async {
     await batch((batch) {
       batch.insertAllOnConflictUpdate(specialtyArticles, [article]);
-      batch.insertAllOnConflictUpdate(specialtyArticleTranslations, translations);
+      batch.insertAllOnConflictUpdate(
+        specialtyArticleTranslations,
+        translations,
+      );
     });
   }
 
   /// Reads from V2 table (populated by SyncService V2).
-  Future<List<SpecialtyArticleDto>> getAllArticles(String lang) => getAllArticlesV2(lang);
+  Future<List<SpecialtyArticleDto>> getAllArticles(String lang) =>
+      getAllArticlesV2(lang);
 
   Future<int> deleteBeansForBrand(int brandId) =>
       (delete(localizedBeans)..where((t) => t.brandId.equals(brandId))).go();
@@ -792,7 +851,8 @@ class AppDatabase extends _$AppDatabase {
 
   // ── User Data (Private) ──────────────────────────────────────────────────────
   Future<List<CoffeeLotDto>> getAllUserLots(String userId) async {
-    final query = select(coffeeLots)..where((t) => t.userId.equals(userId) & t.isDeletedLocal.equals(false));
+    final query = select(coffeeLots)
+      ..where((t) => t.userId.equals(userId) & t.isDeletedLocal.equals(false));
     final rows = await query.get();
     return rows.map((r) => _mapLotRow(r)).toList();
   }
@@ -801,7 +861,9 @@ class AppDatabase extends _$AppDatabase {
       getAllUserLots(userId);
 
   Future<List<CoffeeLotDto>> getLotsForBrand(int brandId) async {
-    final query = select(coffeeLots)..where((t) => t.brandId.equals(brandId) & t.isDeletedLocal.equals(false));
+    final query = select(
+      coffeeLots,
+    )..where((t) => t.brandId.equals(brandId) & t.isDeletedLocal.equals(false));
     final rows = await query.get();
     return rows.map((r) => _mapLotRow(r)).toList();
   }
@@ -812,7 +874,8 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<List<CoffeeLotDto>> getAllCoffeeLots() async {
-    final query = select(coffeeLots)..where((t) => t.isDeletedLocal.equals(false));
+    final query = select(coffeeLots)
+      ..where((t) => t.isDeletedLocal.equals(false));
     final rows = await query.get();
     return rows.map((r) => _mapLotRow(r)).toList();
   }
@@ -858,19 +921,13 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> toggleLotFavorite(String id, bool val) async {
     await (update(coffeeLots)..where((t) => t.id.equals(id))).write(
-      CoffeeLotsCompanion(
-        isFavorite: Value(val),
-        isSynced: const Value(false),
-      ),
+      CoffeeLotsCompanion(isFavorite: Value(val), isSynced: const Value(false)),
     );
   }
 
   Future<void> toggleLotArchive(String id, bool val) async {
     await (update(coffeeLots)..where((t) => t.id.equals(id))).write(
-      CoffeeLotsCompanion(
-        isArchived: Value(val),
-        isSynced: const Value(false),
-      ),
+      CoffeeLotsCompanion(isArchived: Value(val), isSynced: const Value(false)),
     );
   }
 
@@ -882,7 +939,9 @@ class AppDatabase extends _$AppDatabase {
 
   Stream<CoffeeLotDto?> watchLotById(String id) {
     final query = select(coffeeLots)..where((t) => t.id.equals(id));
-    return query.watchSingleOrNull().map((row) => row != null ? _mapLotRow(row) : null);
+    return query.watchSingleOrNull().map(
+      (row) => row != null ? _mapLotRow(row) : null,
+    );
   }
 
   CoffeeLotDto _mapLotRow(CoffeeLot r) {
@@ -932,34 +991,49 @@ class AppDatabase extends _$AppDatabase {
   Future<List<CustomRecipeDto>> getCustomRecipesForMethod(
     String methodKey,
   ) async {
-    final rows = await (select(customRecipes)
-          ..where((t) =>
-              t.methodKey.equals(methodKey) &
-              t.isDeletedLocal.equals(false)))
-        .get();
+    final rows =
+        await (select(customRecipes)..where(
+              (t) =>
+                  t.methodKey.equals(methodKey) &
+                  t.isDeletedLocal.equals(false),
+            ))
+            .get();
     return rows.map((r) => _mapCustomRecipe(r)).toList();
   }
 
   Future<List<CustomRecipeDto>> getCustomRecipesForLot(String lotId) async {
-    final rows = await (select(
-      customRecipes,
-    )..where((t) => t.lotId.equals(lotId) & t.isDeletedLocal.equals(false))).get();
+    final rows =
+        await (select(customRecipes)..where(
+              (t) => t.lotId.equals(lotId) & t.isDeletedLocal.equals(false),
+            ))
+            .get();
     return rows.map((r) => _mapCustomRecipe(r)).toList();
   }
 
   Stream<List<CustomRecipeDto>> watchCustomRecipesForLot(String lotId) {
-    final query = select(customRecipes)..where((t) => t.lotId.equals(lotId) & t.isDeletedLocal.equals(false));
-    return query.watch().map((rows) => rows.map((r) => _mapCustomRecipe(r)).toList());
+    final query = select(customRecipes)
+      ..where((t) => t.lotId.equals(lotId) & t.isDeletedLocal.equals(false));
+    return query.watch().map(
+      (rows) => rows.map((r) => _mapCustomRecipe(r)).toList(),
+    );
   }
 
   Stream<List<CustomRecipeDto>> watchCustomRecipesForMethod(String methodKey) {
-    final query = select(customRecipes)..where((t) => t.methodKey.equals(methodKey) & t.isDeletedLocal.equals(false));
-    return query.watch().map((rows) => rows.map((r) => _mapCustomRecipe(r)).toList());
+    final query = select(customRecipes)
+      ..where(
+        (t) => t.methodKey.equals(methodKey) & t.isDeletedLocal.equals(false),
+      );
+    return query.watch().map(
+      (rows) => rows.map((r) => _mapCustomRecipe(r)).toList(),
+    );
   }
 
   Stream<List<CustomRecipeDto>> watchAllCustomRecipes() {
-    final query = select(customRecipes)..where((t) => t.isDeletedLocal.equals(false));
-    return query.watch().map((rows) => rows.map((r) => _mapCustomRecipe(r)).toList());
+    final query = select(customRecipes)
+      ..where((t) => t.isDeletedLocal.equals(false));
+    return query.watch().map(
+      (rows) => rows.map((r) => _mapCustomRecipe(r)).toList(),
+    );
   }
 
   CustomRecipeDto _mapCustomRecipe(CustomRecipe r) {
@@ -990,7 +1064,9 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<String> upsertCustomRecipe(CustomRecipesCompanion r) async {
-    final row = await into(customRecipes).insertReturning(r, mode: InsertMode.insertOrReplace);
+    final row = await into(
+      customRecipes,
+    ).insertReturning(r, mode: InsertMode.insertOrReplace);
     return row.id;
   }
 
@@ -1015,7 +1091,8 @@ class AppDatabase extends _$AppDatabase {
 
   // ── Brewing (Static Wide Table) ───────────────────────────────────────────
   /// Reads from V2 table (populated by SyncService V2). English-only for brewing methods.
-  Future<List<BrewingRecipeDto>> getAllBrewingRecipes(String lang) => getAllBrewingRecipesV2('en');
+  Future<List<BrewingRecipeDto>> getAllBrewingRecipes(String lang) =>
+      getAllBrewingRecipesV2('en');
 
   Future<void> smartUpsertBrewingRecipe(
     BrewingRecipesCompanion recipe,
@@ -1047,12 +1124,17 @@ class AppDatabase extends _$AppDatabase {
 
   /// Safely adds a column to a table, ignoring "duplicate column name" errors.
   /// This is essential for Windows/Emulators where migrations might be triggered redundantly.
-  Future<void> _safeAddColumn(Migrator m, TableInfo table, GeneratedColumn column) async {
+  Future<void> _safeAddColumn(
+    Migrator m,
+    TableInfo table,
+    GeneratedColumn column,
+  ) async {
     try {
       await m.addColumn(table, column);
     } catch (e) {
       final msg = e.toString().toLowerCase();
-      if (msg.contains('duplicate column name') || msg.contains('already exists')) {
+      if (msg.contains('duplicate column name') ||
+          msg.contains('already exists')) {
         return; // Safe to ignore
       }
       rethrow;

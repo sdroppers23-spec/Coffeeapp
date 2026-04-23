@@ -60,90 +60,93 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
   Widget build(BuildContext context) {
     final values = ref.watch(flavorValuesProvider);
     return Scaffold(
-        backgroundColor: Colors.transparent,
-        body: SafeArea(
-          child: Column(
-            children: [
-              // Top Bar: Matches Discover Screen Style
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            ref.t('specialty').toUpperCase(),
-                            style: GoogleFonts.poppins(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xFFC8A96E),
-                              letterSpacing: 1.5,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          const SyncIndicator(),
-                        ],
-                      ),
-                    ),
-                    const UserProfileAvatar(radius: 17),
-                  ],
-                ),
-              ),
-
-              // Internal Tab Bar Segmented Control: Matches Screenshot
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1D1B1A), // Dark brown matte
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _TabOption(
-                        icon: Icons.radar,
-                        label: ref.t('tab_profile'),
-                        isSelected: _selectedTab == 0,
-                        onTap: () => _setTab(0),
-                      ),
-                    ),
-                    Expanded(
-                      child: _TabOption(
-                        icon: Icons.public,
-                        label: ref.t('tab_sphere'),
-                        isSelected: _selectedTab == 1,
-                        onTap: () => _setTab(1),
-                      ),
-                    ),
-                    Expanded(
-                      child: _TabOption(
-                        icon: Icons.pie_chart_outline,
-                        label: ref.t('tab_wheel'),
-                        isSelected: _selectedTab == 2,
-                        onTap: () => _setTab(2),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 2),
-
-              // Content Area
-              Expanded(
-                child: Stack(
-                  children: [
-                    IndexedStack(
-                      index: _selectedTab,
+      backgroundColor: Colors.transparent,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Top Bar: Matches Discover Screen Style
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        // Tab 0: Profile - Matching Screenshot
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                        Text(
+                          ref.t('specialty').toUpperCase(),
+                          style: GoogleFonts.poppins(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFFC8A96E),
+                            letterSpacing: 1.5,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const SyncIndicator(),
+                      ],
+                    ),
+                  ),
+                  const UserProfileAvatar(radius: 17),
+                ],
+              ),
+            ),
+
+            // Internal Tab Bar Segmented Control: Matches Screenshot
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1D1B1A), // Dark brown matte
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _TabOption(
+                      icon: Icons.radar,
+                      label: ref.t('tab_profile'),
+                      isSelected: _selectedTab == 0,
+                      onTap: () => _setTab(0),
+                    ),
+                  ),
+                  Expanded(
+                    child: _TabOption(
+                      icon: Icons.public,
+                      label: ref.t('tab_sphere'),
+                      isSelected: _selectedTab == 1,
+                      onTap: () => _setTab(1),
+                    ),
+                  ),
+                  Expanded(
+                    child: _TabOption(
+                      icon: Icons.pie_chart_outline,
+                      label: ref.t('tab_wheel'),
+                      isSelected: _selectedTab == 2,
+                      onTap: () => _setTab(2),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 2),
+
+            // Content Area
+            Expanded(
+              child: Stack(
+                children: [
+                  IndexedStack(
+                    index: _selectedTab,
+                    children: [
+                      // Tab 0: Profile - Matching Screenshot
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Align(
+                          alignment: Alignment.topCenter,
                           child: Container(
+                            height: 540,
                             decoration: BoxDecoration(
                               color: const Color(0xFF171312),
                               borderRadius: BorderRadius.circular(40),
@@ -164,44 +167,50 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 16),
-                                
-                                  // Process Selection chips - All 10 methods
-                                  SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                                    child: Row(
-                                      children: [
-                                        _buildMethodChip('natural'),
-                                        const SizedBox(width: 8),
-                                        _buildMethodChip('washed'),
-                                        const SizedBox(width: 8),
-                                        _buildMethodChip('honey'),
-                                        const SizedBox(width: 8),
-                                        _buildMethodChip('anaerobic'),
-                                        const SizedBox(width: 8),
-                                        _buildMethodChip('carbonic'),
-                                        const SizedBox(width: 8),
-                                        _buildMethodChip('thermal'),
-                                        const SizedBox(width: 8),
-                                        _buildMethodChip('lactic'),
-                                        const SizedBox(width: 8),
-                                        _buildMethodChip('yeast'),
-                                        const SizedBox(width: 8),
-                                        _buildMethodChip('koji'),
-                                        const SizedBox(width: 8),
-                                        _buildMethodChip('wet_hulled'),
-                                      ],
-                                    ),
+
+                                // Process Selection chips - All 10 methods
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
                                   ),
-                                
+                                  child: Row(
+                                    children: [
+                                      _buildMethodChip('natural'),
+                                      const SizedBox(width: 8),
+                                      _buildMethodChip('washed'),
+                                      const SizedBox(width: 8),
+                                      _buildMethodChip('honey'),
+                                      const SizedBox(width: 8),
+                                      _buildMethodChip('anaerobic'),
+                                      const SizedBox(width: 8),
+                                      _buildMethodChip('carbonic'),
+                                      const SizedBox(width: 8),
+                                      _buildMethodChip('thermal'),
+                                      const SizedBox(width: 8),
+                                      _buildMethodChip('lactic'),
+                                      const SizedBox(width: 8),
+                                      _buildMethodChip('yeast'),
+                                      const SizedBox(width: 8),
+                                      _buildMethodChip('koji'),
+                                      const SizedBox(width: 8),
+                                      _buildMethodChip('wet_hulled'),
+                                    ],
+                                  ),
+                                ),
+
                                 const SizedBox(height: 10),
                                 Expanded(
                                   child: (() {
-                                    final method = ProcessingMethodsRepository.getById(_selectedMethodId);
+                                    final method =
+                                        ProcessingMethodsRepository.getById(
+                                          _selectedMethodId,
+                                        );
                                     return SensoryRadarChart(
                                       interactive: true,
                                       isLocked: true, // Educational locking
-                                      staticValues: method?.sensoryPreset ?? values,
+                                      staticValues:
+                                          method?.sensoryPreset ?? values,
                                       height: 380,
                                     );
                                   })(),
@@ -211,57 +220,54 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                             ),
                           ),
                         ),
-
-                        // Tab 1: Sphere
-                        const TerroirGlobe(),
-
-                        // Tab 2: Flavor Wheel
-                        Column(
-                          children: [
-                            const SizedBox(height: 10),
-                              Text(
-                                ref.t('tab_wheel').toUpperCase(),
-                                style: GoogleFonts.outfit(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xFFC8A96E),
-                                  letterSpacing: 1.5,
-                                ),
-                              ),
-                            const SizedBox(height: 10),
-                            Expanded(
-                              child: ScaFlavorWheel(
-                                onSelect: _onFlavorSelect,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                          ],
-                        ),
-                      ],
-                    ),
-
-                    if (_selectedFlavorKey != null && _selectedTab == 2)
-                      Positioned(
-                        key: const Key('flavorCard'),
-                        left: 16,
-                        right: 16,
-                        bottom: 140, // Above bottom nav
-                        child: _FlavorInfoCard(
-                          flavorKey: _selectedFlavorKey!,
-                          color: _selectedFlavorColor!,
-                          relatedItems: _selectedFlavorItems!,
-                          onClose: () => setState(() => _selectedFlavorKey = null),
-                        ),
                       ),
 
-                  ],
-                ),
+                      // Tab 1: Sphere
+                      const TerroirGlobe(),
+
+                      // Tab 2: Flavor Wheel
+                      Column(
+                        children: [
+                          const SizedBox(height: 10),
+                          Text(
+                            ref.t('tab_wheel').toUpperCase(),
+                            style: GoogleFonts.outfit(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFFC8A96E),
+                              letterSpacing: 1.5,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Expanded(
+                            child: ScaFlavorWheel(onSelect: _onFlavorSelect),
+                          ),
+                          const SizedBox(height: 12),
+                        ],
+                      ),
+                    ],
+                  ),
+
+                  if (_selectedFlavorKey != null && _selectedTab == 2)
+                    Positioned(
+                      key: const Key('flavorCard'),
+                      left: 16,
+                      right: 16,
+                      bottom: 140, // Above bottom nav
+                      child: _FlavorInfoCard(
+                        flavorKey: _selectedFlavorKey!,
+                        color: _selectedFlavorColor!,
+                        relatedItems: _selectedFlavorItems!,
+                        onClose: () =>
+                            setState(() => _selectedFlavorKey = null),
+                      ),
+                    ),
+                ],
               ),
-
-
-            ],
-          ),
+            ),
+          ],
         ),
+      ),
     );
   }
 
@@ -300,7 +306,6 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
   }
 }
 
-
 class _FlavorInfoCard extends ConsumerWidget {
   final String flavorKey;
   final Color color;
@@ -317,7 +322,6 @@ class _FlavorInfoCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GlassContainer(
-
       padding: const EdgeInsets.all(20),
       borderRadius: 24,
       blur: 25,
@@ -368,7 +372,10 @@ class _FlavorInfoCard extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            FlavorDescriptions.getDescription(flavorKey, ref.watch(localeProvider)),
+            FlavorDescriptions.getDescription(
+              flavorKey,
+              ref.watch(localeProvider),
+            ),
             style: GoogleFonts.outfit(
               fontSize: 14,
               color: Colors.white.withValues(alpha: 0.7),
@@ -474,7 +481,9 @@ class _TabOption extends StatelessWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 13,
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                    color: isSelected ? const Color(0xFFC8A96E) : Colors.white24,
+                    color: isSelected
+                        ? const Color(0xFFC8A96E)
+                        : Colors.white24,
                   ),
                 ),
               ),
@@ -496,7 +505,6 @@ class InteractiveSpiderChart extends ConsumerStatefulWidget {
 
 class _InteractiveSpiderChartState
     extends ConsumerState<InteractiveSpiderChart> {
-
   @override
   Widget build(BuildContext context) {
     // Watch these exact labels to match screenshot
@@ -509,42 +517,30 @@ class _InteractiveSpiderChartState
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _TemplateChip(
-                ref.t('process_washed_label'),
-                'Clean & Bright',
-                {
-                  'bitterness': 0.2,
-                  'acidity': 0.9,
-                  'sweetness': 0.4,
-                  'body': 0.3,
-                  'intensity': 0.4,
-                  'aftertaste': 0.7,
-                },
-              ),
-              _TemplateChip(
-                ref.t('process_natural_label'),
-                'Fruity & Sweet',
-                {
-                  'bitterness': 0.4,
-                  'acidity': 0.4,
-                  'sweetness': 0.9,
-                  'body': 0.8,
-                  'intensity': 0.8,
-                  'aftertaste': 0.7,
-                },
-              ),
-              _TemplateChip(
-                ref.t('process_honey_label'),
-                'Sticky & Balanced',
-                {
-                  'bitterness': 0.3,
-                  'acidity': 0.6,
-                  'sweetness': 0.8,
-                  'body': 0.6,
-                  'intensity': 0.6,
-                  'aftertaste': 0.7,
-                },
-              ),
+              _TemplateChip(ref.t('process_washed_label'), 'Clean & Bright', {
+                'bitterness': 0.2,
+                'acidity': 0.9,
+                'sweetness': 0.4,
+                'body': 0.3,
+                'intensity': 0.4,
+                'aftertaste': 0.7,
+              }),
+              _TemplateChip(ref.t('process_natural_label'), 'Fruity & Sweet', {
+                'bitterness': 0.4,
+                'acidity': 0.4,
+                'sweetness': 0.9,
+                'body': 0.8,
+                'intensity': 0.8,
+                'aftertaste': 0.7,
+              }),
+              _TemplateChip(ref.t('process_honey_label'), 'Sticky & Balanced', {
+                'bitterness': 0.3,
+                'acidity': 0.6,
+                'sweetness': 0.8,
+                'body': 0.6,
+                'intensity': 0.6,
+                'aftertaste': 0.7,
+              }),
             ],
           ),
         ),
@@ -552,10 +548,7 @@ class _InteractiveSpiderChartState
         const Expanded(
           child: Padding(
             padding: EdgeInsets.all(20),
-            child: SensoryRadarChart(
-              interactive: true,
-              height: 400,
-            ),
+            child: SensoryRadarChart(interactive: true, height: 400),
           ),
         ),
       ],
@@ -576,7 +569,9 @@ class _TemplateChip extends ConsumerWidget {
       onTap: () {
         ref.read(settingsProvider.notifier).triggerSelectionVibrate();
         for (var entry in values.entries) {
-          ref.read(flavorValuesProvider.notifier).updateValue(entry.key, entry.value);
+          ref
+              .read(flavorValuesProvider.notifier)
+              .updateValue(entry.key, entry.value);
         }
       },
       child: Column(
@@ -611,5 +606,3 @@ class _TemplateChip extends ConsumerWidget {
     );
   }
 }
-
-

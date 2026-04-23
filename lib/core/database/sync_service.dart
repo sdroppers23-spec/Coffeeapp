@@ -125,11 +125,11 @@ class SyncService {
           callback: (payload) async {
 
             if (payload.eventType == PostgresChangeEvent.delete) {
-              final id = payload.oldRecord['id'] as int;
+              final id = (payload.oldRecord['id'] as num).toInt();
               await (db.delete(db.specialtyArticles)..where((t) => t.id.equals(id))).go();
             } else {
               // INSERT or UPDATE
-              final id = payload.newRecord['id'] as int;
+              final id = (payload.newRecord['id'] as num).toInt();
               await syncSingleArticle(id);
             }
           },
@@ -146,10 +146,10 @@ class SyncService {
           callback: (payload) async {
 
             if (payload.eventType == PostgresChangeEvent.delete) {
-              final id = payload.oldRecord['id'] as int;
-              await (db.delete(db.localizedFarmers)..where((t) => t.id.equals(id))).go();
-            } else {
-              final id = payload.newRecord['id'] as int;
+              final id = (payload.oldRecord['id'] as num).toInt();
+              await db.deleteArticle(id);
+            } else if (payload.newRecord != null) {
+              final id = (payload.newRecord!['id'] as num).toInt();
               await syncSingleFarmer(id);
             }
           },
@@ -166,10 +166,10 @@ class SyncService {
           callback: (payload) async {
 
             if (payload.eventType == PostgresChangeEvent.delete) {
-              final id = payload.oldRecord['id'] as int;
+              final id = (payload.oldRecord['id'] as num).toInt();
               await (db.delete(db.localizedBeansV2)..where((t) => t.id.equals(id))).go();
             } else {
-              final id = payload.newRecord['id'] as int;
+              final id = (payload.newRecord['id'] as num).toInt();
               await syncSingleEncyclopediaEntryV2(id);
             }
           },
@@ -205,11 +205,11 @@ class SyncService {
     try {
 
       final data = await supabase!.from('localized_farmers').select().order('id');
-      final remoteIds = data.map((item) => item['id'] as int).toList();
+      final remoteIds = data.map((item) => (item['id'] as num).toInt()).toList();
 
       for (final item in data) {
         try {
-          final id = item['id'] as int;
+          final id = (item['id'] as num).toInt();
           
           String imageUrl = item['image_url'] as String? ?? '';
           if (imageUrl.isNotEmpty && !imageUrl.startsWith('http') && !imageUrl.startsWith('assets/')) {
@@ -271,12 +271,12 @@ class SyncService {
     try {
 
       final data = await supabase!.from('specialty_articles').select().order('id');
-      final remoteIds = data.map((item) => item['id'] as int).toList();
+      final remoteIds = data.map((item) => (item['id'] as num).toInt()).toList();
 
       for (int i = 0; i < data.length; i++) {
         final item = data[i];
         try {
-          final id = item['id'] as int;
+          final id = (item['id'] as num).toInt();
           
           String imageUrl = item['image_url'] as String? ?? '';
           if (imageUrl.isNotEmpty && !imageUrl.startsWith('http') && !imageUrl.startsWith('assets/')) {
@@ -287,7 +287,7 @@ class SyncService {
             id: Value(id),
             imageUrl: Value(imageUrl),
             flagUrl: const Value(''),
-            readTimeMin: Value(item['read_time_min'] as int? ?? 5),
+            readTimeMin: Value((item['read_time_min'] as num?)?.toInt() ?? 5),
             createdAt: Value(item['created_at'] != null ? DateTime.tryParse(item['created_at'] as String) : null),
           );
 
@@ -529,7 +529,7 @@ class SyncService {
             isGround: Value(item['is_ground'] as bool? ?? false),
             sensoryJson: Value(item['sensory_json'] is Map ? jsonEncode(item['sensory_json']) : (item['sensory_json']?.toString() ?? '{}')),
             priceJson: Value(item['price_json'] is Map ? jsonEncode(item['price_json']) : (item['price_json']?.toString() ?? '{}')),
-            brandId: Value(item['brand_id'] as int?),
+            brandId: Value((item['brand_id'] as num?)?.toInt()),
             imageUrl: Value(item['image_url'] as String?),
             updatedAt: Value(DateTime.now()),
             isSynced: const Value(true),
@@ -564,14 +564,14 @@ class SyncService {
             name: Value(item['name'] as String? ?? 'Recipe'),
             coffeeGrams: Value((item['coffee_grams'] as num?)?.toDouble() ?? 0.0),
             totalWaterMl: Value((item['total_water_ml'] as num?)?.toDouble() ?? 0.0),
-            grindNumber: Value(item['grind_number'] as int? ?? 0),
-            comandanteClicks: Value(item['comandante_clicks'] as int? ?? 0),
-            ek43Division: Value(item['ek43_division'] as int? ?? 0),
-            totalPours: Value(item['total_pours'] as int? ?? 1),
+            grindNumber: Value((item['grind_number'] as num?)?.toInt() ?? 0),
+            comandanteClicks: Value((item['comandante_clicks'] as num?)?.toInt() ?? 0),
+            ek43Division: Value((item['ek43_division'] as num?)?.toInt() ?? 0),
+            totalPours: Value((item['total_pours'] as num?)?.toInt() ?? 1),
             pourScheduleJson: Value(item['pour_schedule_json']?.toString() ?? '[]'),
             brewTempC: Value((item['brew_temp_c'] as num?)?.toDouble() ?? 93.0),
             notes: Value(item['notes'] as String? ?? ''),
-            rating: Value(item['rating'] as int? ?? 0),
+            rating: Value((item['rating'] as num?)?.toInt() ?? 0),
             updatedAt: Value(DateTime.now()),
             isSynced: const Value(true),
           ));
@@ -653,7 +653,7 @@ class SyncService {
 
       // 1. Fetch all brands
       final data = await supabase!.from('localized_brands').select();
-      final remoteIds = data.map((item) => item['id'] as int).toList();
+      final remoteIds = data.map((item) => (item['id'] as num).toInt()).toList();
       
       if (remoteIds.isEmpty) return;
 
@@ -667,13 +667,13 @@ class SyncService {
       // Group translations by brand_id
       final Map<int, List<Map<String, dynamic>>> translationMap = {};
       for (final t in allTranslations) {
-        final bId = t['brand_id'] as int;
+        final bId = (t['brand_id'] as num).toInt();
         translationMap.putIfAbsent(bId, () => []).add(t);
       }
 
       for (final item in data) {
         try {
-          final id = item['id'] as int;
+          final id = (item['id'] as num).toInt();
           final companion = LocalizedBrandsCompanion(
             id: Value(id),
             name: Value(item['name'] as String? ?? ''),
@@ -821,7 +821,7 @@ class SyncService {
       final article = SpecialtyArticlesCompanion(
         id: Value(id),
         imageUrl: Value(imageUrl),
-        readTimeMin: Value(item['read_time_min'] as int? ?? 5),
+        readTimeMin: Value((item['read_time_min'] as num?)?.toInt() ?? 5),
       );
 
       final translationsData = await supabase!.from('specialty_article_translations').select().eq('article_id', id);
@@ -858,18 +858,18 @@ class SyncService {
 
       // Use encyclopedia_entries — the correct table with 18 rows
       final data = await supabase!.from('encyclopedia_entries').select();
-      final remoteIds = data.map((item) => item['id'] as int).toList();
+      final remoteIds = data.map((item) => (item['id'] as num).toInt()).toList();
 
       for (final item in data) {
         try {
-          final id = item['id'] as int;
+          final id = (item['id'] as num).toInt();
           
           final bean = LocalizedBeansV2Companion(
             id: Value(id),
-            brandId: Value(item['brand_id'] as int?),
+            brandId: Value((item['brand_id'] as num?)?.toInt()),
             countryEmoji: Value(item['country_emoji'] as String? ?? ''),
-            altitudeMin: Value(item['altitude_min'] as int?),
-            altitudeMax: Value(item['altitude_max'] as int?),
+            altitudeMin: Value((item['altitude_min'] as num?)?.toInt()),
+            altitudeMax: Value((item['altitude_max'] as num?)?.toInt()),
             lotNumber: Value(item['lot_number'] as String? ?? ''),
             scaScore: Value(item['sca_score']?.toString() ?? '82+'),
             cupsScore: Value(double.tryParse(item['cups_score']?.toString() ?? '82.0') ?? 82.0),
@@ -884,13 +884,13 @@ class SyncService {
             isPremium: Value(item['is_premium'] as bool? ?? false),
             detailedProcessMarkdown: Value(item['detailed_process_markdown'] as String? ?? ''),
             url: Value(item['url'] as String? ?? ''),
-            farmerId: Value(item['farmer_id'] as int?), // May be null if not in table
+            farmerId: Value((item['farmer_id'] as num?)?.toInt()), // May be null if not in table
             isDecaf: Value(item['is_decaf'] as bool? ?? false),
             farm: Value(item['farm'] as String?),
             farmPhotosUrlCover: Value(item['farm_photos_url_cover'] as String?),
             washStation: Value(item['wash_station'] as String?),
             flagUrl: Value(item['image_url'] as String? ?? ''),
-            radarJson: Value(item['radar_json']?.toString() ?? '{}'),
+            radarJson: Value(item['radar_json'] != null ? jsonEncode(item['radar_json']) : '{}'),
             createdAt: Value(item['created_at'] != null ? DateTime.tryParse(item['created_at'] as String) : null),
           );
 
@@ -949,10 +949,10 @@ class SyncService {
 
       final bean = LocalizedBeansV2Companion(
         id: Value(id),
-        brandId: Value(item['brand_id'] as int?),
+        brandId: Value((item['brand_id'] as num?)?.toInt()),
         countryEmoji: Value(item['country_emoji'] as String? ?? ''),
-        altitudeMin: Value(item['altitude_min'] as int?),
-        altitudeMax: Value(item['altitude_max'] as int?),
+        altitudeMin: Value((item['altitude_min'] as num?)?.toInt()),
+        altitudeMax: Value((item['altitude_max'] as num?)?.toInt()),
         lotNumber: Value(item['lot_number'] as String? ?? ''),
         scaScore: Value(item['sca_score']?.toString() ?? '82+'),
         cupsScore: Value(double.tryParse(item['cups_score']?.toString() ?? '82.0') ?? 82.0),
@@ -967,13 +967,13 @@ class SyncService {
         isPremium: Value(item['is_premium'] as bool? ?? false),
         detailedProcessMarkdown: Value(item['detailed_process_markdown'] as String? ?? ''),
         url: Value(item['url'] as String? ?? ''),
-        farmerId: Value(item['farmer_id'] as int?),
+        farmerId: Value((item['farmer_id'] as num?)?.toInt()),
         isDecaf: Value(item['is_decaf'] as bool? ?? false),
         farm: Value(item['farm'] as String?),
         farmPhotosUrlCover: Value(item['farm_photos_url_cover'] as String?),
         washStation: Value(item['wash_station'] as String?),
         flagUrl: Value(item['image_url'] as String? ?? ''),
-        radarJson: Value(item['radar_json']?.toString() ?? '{}'),
+        radarJson: Value(item['radar_json'] != null ? jsonEncode(item['radar_json']) : '{}'),
         createdAt: Value(item['created_at'] != null ? DateTime.tryParse(item['created_at'] as String) : null),
       );
 
@@ -1028,10 +1028,10 @@ class SyncService {
 
       final bean = LocalizedBeansCompanion(
         id: Value(id),
-        brandId: Value(item['brand_id'] as int?),
+        brandId: Value((item['brand_id'] as num?)?.toInt()),
         countryEmoji: Value(emoji),
-        altitudeMin: Value(item['altitude_min'] as int?),
-        altitudeMax: Value(item['altitude_max'] as int?),
+        altitudeMin: Value((item['altitude_min'] as num?)?.toInt()),
+        altitudeMax: Value((item['altitude_max'] as num?)?.toInt()),
         lotNumber: Value(item['lot_number'] as String? ?? ''),
         scaScore: Value(item['sca_score']?.toString() ?? '82+'),
         cupsScore: Value(double.tryParse(item['cups_score']?.toString() ?? '82.0') ?? 82.0),

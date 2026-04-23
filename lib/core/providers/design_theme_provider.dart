@@ -21,6 +21,7 @@ class DesignThemeNotifier extends Notifier<AppDesignTheme> {
   }
 }
 
-final designThemeProvider = NotifierProvider<DesignThemeNotifier, AppDesignTheme>(() {
-  return DesignThemeNotifier();
-});
+final designThemeProvider =
+    NotifierProvider<DesignThemeNotifier, AppDesignTheme>(() {
+      return DesignThemeNotifier();
+    });

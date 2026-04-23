@@ -206,7 +206,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                                     );
                                   })(),
                                 ),
-                                const SizedBox(height: 32),
+                                const SizedBox(height: 3),
                               ],
                             ),
                           ),

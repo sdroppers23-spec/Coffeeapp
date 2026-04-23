@@ -635,15 +635,33 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
           ],
         ),
         const SizedBox(height: 12),
-        _buildTextField(
-          controller: _tempController,
-          label:
-              isUk
-                  ? 'Температура (${pref.tempUnit == TempUnit.celsius ? '°C' : '°F'})'
-                  : 'Brew Temp (${pref.tempUnit == TempUnit.celsius ? '°C' : '°F'})',
-          hint: pref.tempUnit == TempUnit.celsius ? '93.0' : '199.4',
-          keyboardType: TextInputType.number,
-          maxLength: 5,
+        Row(
+          children: [
+            Expanded(
+              child: _buildTextField(
+                controller: _extractionTimeController,
+                label: isUk ? 'Час екстракції (хв:сек)' : 'Extraction Time (mm:ss)',
+                hint: '00:30',
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  _TimeMaskFormatter(),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildTextField(
+                controller: _tempController,
+                label: isUk
+                    ? 'Температура (${pref.tempUnit == TempUnit.celsius ? '°C' : '°F'})'
+                    : 'Brew Temp (${pref.tempUnit == TempUnit.celsius ? '°C' : '°F'})',
+                hint: pref.tempUnit == TempUnit.celsius ? '93.0' : '199.4',
+                keyboardType: TextInputType.number,
+                maxLength: 5,
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 12),
         _buildTextField(
@@ -682,27 +700,33 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             ),
           ],
         ),
-        const SizedBox(height: 12),
-        _buildTextField(
-          controller: _extractionTimeController,
-          label: isUk ? 'Час екстракції (хв:сек)' : 'Extraction Time (mm:ss)',
-          hint: '00:30',
-          keyboardType: TextInputType.number,
-          inputFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
-            _TimeMaskFormatter(),
+        Row(
+          children: [
+            Expanded(
+              child: _buildTextField(
+                controller: _extractionTimeController,
+                label: isUk ? 'Час екстракції (хв:сек)' : 'Extraction Time (mm:ss)',
+                hint: '00:30',
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  _TimeMaskFormatter(),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildTextField(
+                controller: _tempController,
+                label: isUk
+                    ? 'Температура (${pref.tempUnit == TempUnit.celsius ? '°C' : '°F'})'
+                    : 'Brew Temp (${pref.tempUnit == TempUnit.celsius ? '°C' : '°F'})',
+                hint: pref.tempUnit == TempUnit.celsius ? '93.0' : '199.4',
+                keyboardType: TextInputType.number,
+                maxLength: 5,
+              ),
+            ),
           ],
-        ),
-        const SizedBox(height: 12),
-        _buildTextField(
-          controller: _tempController,
-          label:
-              isUk
-                  ? 'Температура (${pref.tempUnit == TempUnit.celsius ? '°C' : '°F'})'
-                  : 'Brew Temp (${pref.tempUnit == TempUnit.celsius ? '°C' : '°F'})',
-          hint: pref.tempUnit == TempUnit.celsius ? '93.0' : '199.4',
-          keyboardType: TextInputType.number,
-          maxLength: 5,
         ),
         const SizedBox(height: 12),
         _buildTextField(
@@ -726,10 +750,15 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           initialValue: _grinderNameController.text.isNotEmpty
-              ? (['Comandante', 'EK43', 'Fellow Ode', 'Wilfa', 'Timemore']
-                      .contains(_grinderNameController.text)
-                  ? _grinderNameController.text
-                  : 'Other')
+              ? ([
+                      'Comandante',
+                      'EK43',
+                      'Fellow Ode',
+                      'Wilfa',
+                      'Timemore',
+                    ].contains(_grinderNameController.text)
+                    ? _grinderNameController.text
+                    : 'Other')
               : 'Other',
           dropdownColor: const Color(0xFF1D1B1A),
           style: GoogleFonts.outfit(color: Colors.white),
@@ -776,7 +805,9 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
           label: isUk ? 'Помел' : 'Grind',
           hint: isUk ? 'Налаштування помелу' : 'Grind setting',
           keyboardType: TextInputType.number,
-          inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))],
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+          ],
         ),
         const SizedBox(height: 12),
         _buildTextField(

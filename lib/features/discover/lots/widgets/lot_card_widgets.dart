@@ -518,7 +518,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                 ),
               ),
   
-              const SizedBox(height: 16),
+              const SizedBox(height: 3),
               // Freshness Bar + Expand Arrow below
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,

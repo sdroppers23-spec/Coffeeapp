@@ -230,8 +230,9 @@ class RadarPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     if (values.isEmpty) return;
 
+    final maxRadius = min(size.width, size.height) / 2 - 30;
     final center = Offset(size.width / 2, size.height / 2);
-    final maxRadius = min(size.width, size.height) / 2 - 48;
+    final labelRadius = maxRadius + 22;
     
     // STRICT ORDER of the 6 axes
     final labels = [

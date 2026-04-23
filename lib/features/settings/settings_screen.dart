@@ -272,9 +272,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       offLabel: '°C',
                       onLabel: '°F',
                       onChanged: (val) {
-                        ref.read(preferencesProvider.notifier).setTempUnit(
-                          val ? TempUnit.fahrenheit : TempUnit.celsius,
-                        );
+                        ref
+                            .read(preferencesProvider.notifier)
+                            .setTempUnit(
+                              val ? TempUnit.fahrenheit : TempUnit.celsius,
+                            );
                       },
                     ),
                     _buildDivider(theme),
@@ -286,9 +288,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       offLabel: isUk ? 'М' : 'M',
                       onLabel: isUk ? 'Ф' : 'FT',
                       onChanged: (val) {
-                        ref.read(preferencesProvider.notifier).setLengthUnit(
-                          val ? LengthUnit.feet : LengthUnit.meters,
-                        );
+                        ref
+                            .read(preferencesProvider.notifier)
+                            .setLengthUnit(
+                              val ? LengthUnit.feet : LengthUnit.meters,
+                            );
                       },
                     ),
                     _buildDivider(theme),
@@ -648,7 +652,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 final isSelected = prefs.currency == c;
                 return GestureDetector(
                   onTap: () {
-                    ref.read(settingsProvider.notifier).triggerSelectionVibrate();
+                    ref
+                        .read(settingsProvider.notifier)
+                        .triggerSelectionVibrate();
                     ref.read(preferencesProvider.notifier).setCurrency(c);
                   },
                   child: AnimatedContainer(
@@ -668,8 +674,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       style: GoogleFonts.outfit(
                         color: isSelected ? Colors.black : Colors.white38,
                         fontSize: 12,
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.w400,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.w400,
                       ),
                     ),
                   ),

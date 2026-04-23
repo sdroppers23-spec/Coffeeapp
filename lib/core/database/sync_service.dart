@@ -147,9 +147,9 @@ class SyncService {
 
             if (payload.eventType == PostgresChangeEvent.delete) {
               final id = (payload.oldRecord['id'] as num).toInt();
-              await db.deleteArticle(id);
-            } else if (payload.newRecord != null) {
-              final id = (payload.newRecord!['id'] as num).toInt();
+              await (db.delete(db.localizedFarmers)..where((t) => t.id.equals(id))).go();
+            } else {
+              final id = (payload.newRecord['id'] as num).toInt();
               await syncSingleFarmer(id);
             }
           },

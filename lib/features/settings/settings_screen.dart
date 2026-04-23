@@ -7,6 +7,7 @@ import '../../core/supabase/supabase_provider.dart';
 import '../../core/providers/settings_provider.dart';
 import '../../core/providers/design_theme_provider.dart';
 import '../../core/l10n/app_localizations.dart';
+import '../../shared/widgets/add_recipe_dialog.dart';
 import '../../shared/widgets/premium_background.dart';
 // import '../../shared/widgets/premium_background.dart'; // Removed unused import
 
@@ -282,6 +283,30 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     icon: Icons.help_outline_rounded,
                     title: 'Служба підтримки',
                     onTap: () {},
+                  ),
+                ],
+              ),
+            ),
+
+            // ТЕСТУВАННЯ ТА РОЗРОБКА
+            _buildSectionTitle(context, 'ТЕСТУВАННЯ ТА РОЗРОБКА'),
+            _buildCard(
+              context,
+              child: Column(
+                children: [
+                  _buildListItem(
+                    context,
+                    icon: Icons.bug_report_outlined,
+                    title: 'Тестувати новий діалог рецептів',
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => const AddRecipeDialog(
+                          lotId: 'test_lot',
+                          initialMethod: 'v60',
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),

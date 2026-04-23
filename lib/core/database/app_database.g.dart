@@ -9750,6 +9750,16 @@ class $CustomRecipesTable extends CustomRecipes
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _extractionTimeSecondsMeta =
+      const VerificationMeta('extractionTimeSeconds');
+  @override
+  late final GeneratedColumn<int> extractionTimeSeconds = GeneratedColumn<int>(
+    'extraction_time_seconds',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _sensoryJsonMeta = const VerificationMeta(
     'sensoryJson',
   );
@@ -9815,6 +9825,7 @@ class $CustomRecipesTable extends CustomRecipes
     recipeType,
     brewRatio,
     grinderName,
+    extractionTimeSeconds,
     sensoryJson,
     isSynced,
     isDeletedLocal,
@@ -9985,6 +9996,15 @@ class $CustomRecipesTable extends CustomRecipes
         ),
       );
     }
+    if (data.containsKey('extraction_time_seconds')) {
+      context.handle(
+        _extractionTimeSecondsMeta,
+        extractionTimeSeconds.isAcceptableOrUnknown(
+          data['extraction_time_seconds']!,
+          _extractionTimeSecondsMeta,
+        ),
+      );
+    }
     if (data.containsKey('sensory_json')) {
       context.handle(
         _sensoryJsonMeta,
@@ -10102,6 +10122,10 @@ class $CustomRecipesTable extends CustomRecipes
         DriftSqlType.string,
         data['${effectivePrefix}grinder_name'],
       ),
+      extractionTimeSeconds: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}extraction_time_seconds'],
+      ),
       sensoryJson: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}sensory_json'],
@@ -10145,6 +10169,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
   final String recipeType;
   final double? brewRatio;
   final String? grinderName;
+  final int? extractionTimeSeconds;
   final String sensoryJson;
   final bool isSynced;
   final bool isDeletedLocal;
@@ -10170,6 +10195,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     required this.recipeType,
     this.brewRatio,
     this.grinderName,
+    this.extractionTimeSeconds,
     required this.sensoryJson,
     required this.isSynced,
     required this.isDeletedLocal,
@@ -10209,6 +10235,9 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     }
     if (!nullToAbsent || grinderName != null) {
       map['grinder_name'] = Variable<String>(grinderName);
+    }
+    if (!nullToAbsent || extractionTimeSeconds != null) {
+      map['extraction_time_seconds'] = Variable<int>(extractionTimeSeconds);
     }
     map['sensory_json'] = Variable<String>(sensoryJson);
     map['is_synced'] = Variable<bool>(isSynced);
@@ -10251,6 +10280,9 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       grinderName: grinderName == null && nullToAbsent
           ? const Value.absent()
           : Value(grinderName),
+      extractionTimeSeconds: extractionTimeSeconds == null && nullToAbsent
+          ? const Value.absent()
+          : Value(extractionTimeSeconds),
       sensoryJson: Value(sensoryJson),
       isSynced: Value(isSynced),
       isDeletedLocal: Value(isDeletedLocal),
@@ -10284,6 +10316,9 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       recipeType: serializer.fromJson<String>(json['recipeType']),
       brewRatio: serializer.fromJson<double?>(json['brewRatio']),
       grinderName: serializer.fromJson<String?>(json['grinderName']),
+      extractionTimeSeconds: serializer.fromJson<int?>(
+        json['extractionTimeSeconds'],
+      ),
       sensoryJson: serializer.fromJson<String>(json['sensoryJson']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
       isDeletedLocal: serializer.fromJson<bool>(json['isDeletedLocal']),
@@ -10314,6 +10349,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       'recipeType': serializer.toJson<String>(recipeType),
       'brewRatio': serializer.toJson<double?>(brewRatio),
       'grinderName': serializer.toJson<String?>(grinderName),
+      'extractionTimeSeconds': serializer.toJson<int?>(extractionTimeSeconds),
       'sensoryJson': serializer.toJson<String>(sensoryJson),
       'isSynced': serializer.toJson<bool>(isSynced),
       'isDeletedLocal': serializer.toJson<bool>(isDeletedLocal),
@@ -10342,6 +10378,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     String? recipeType,
     Value<double?> brewRatio = const Value.absent(),
     Value<String?> grinderName = const Value.absent(),
+    Value<int?> extractionTimeSeconds = const Value.absent(),
     String? sensoryJson,
     bool? isSynced,
     bool? isDeletedLocal,
@@ -10367,6 +10404,9 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     recipeType: recipeType ?? this.recipeType,
     brewRatio: brewRatio.present ? brewRatio.value : this.brewRatio,
     grinderName: grinderName.present ? grinderName.value : this.grinderName,
+    extractionTimeSeconds: extractionTimeSeconds.present
+        ? extractionTimeSeconds.value
+        : this.extractionTimeSeconds,
     sensoryJson: sensoryJson ?? this.sensoryJson,
     isSynced: isSynced ?? this.isSynced,
     isDeletedLocal: isDeletedLocal ?? this.isDeletedLocal,
@@ -10412,6 +10452,9 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       grinderName: data.grinderName.present
           ? data.grinderName.value
           : this.grinderName,
+      extractionTimeSeconds: data.extractionTimeSeconds.present
+          ? data.extractionTimeSeconds.value
+          : this.extractionTimeSeconds,
       sensoryJson: data.sensoryJson.present
           ? data.sensoryJson.value
           : this.sensoryJson,
@@ -10446,6 +10489,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
           ..write('recipeType: $recipeType, ')
           ..write('brewRatio: $brewRatio, ')
           ..write('grinderName: $grinderName, ')
+          ..write('extractionTimeSeconds: $extractionTimeSeconds, ')
           ..write('sensoryJson: $sensoryJson, ')
           ..write('isSynced: $isSynced, ')
           ..write('isDeletedLocal: $isDeletedLocal')
@@ -10476,6 +10520,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     recipeType,
     brewRatio,
     grinderName,
+    extractionTimeSeconds,
     sensoryJson,
     isSynced,
     isDeletedLocal,
@@ -10505,6 +10550,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
           other.recipeType == this.recipeType &&
           other.brewRatio == this.brewRatio &&
           other.grinderName == this.grinderName &&
+          other.extractionTimeSeconds == this.extractionTimeSeconds &&
           other.sensoryJson == this.sensoryJson &&
           other.isSynced == this.isSynced &&
           other.isDeletedLocal == this.isDeletedLocal);
@@ -10532,6 +10578,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
   final Value<String> recipeType;
   final Value<double?> brewRatio;
   final Value<String?> grinderName;
+  final Value<int?> extractionTimeSeconds;
   final Value<String> sensoryJson;
   final Value<bool> isSynced;
   final Value<bool> isDeletedLocal;
@@ -10558,6 +10605,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     this.recipeType = const Value.absent(),
     this.brewRatio = const Value.absent(),
     this.grinderName = const Value.absent(),
+    this.extractionTimeSeconds = const Value.absent(),
     this.sensoryJson = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.isDeletedLocal = const Value.absent(),
@@ -10585,6 +10633,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     this.recipeType = const Value.absent(),
     this.brewRatio = const Value.absent(),
     this.grinderName = const Value.absent(),
+    this.extractionTimeSeconds = const Value.absent(),
     this.sensoryJson = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.isDeletedLocal = const Value.absent(),
@@ -10616,6 +10665,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     Expression<String>? recipeType,
     Expression<double>? brewRatio,
     Expression<String>? grinderName,
+    Expression<int>? extractionTimeSeconds,
     Expression<String>? sensoryJson,
     Expression<bool>? isSynced,
     Expression<bool>? isDeletedLocal,
@@ -10643,6 +10693,8 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
       if (recipeType != null) 'recipe_type': recipeType,
       if (brewRatio != null) 'brew_ratio': brewRatio,
       if (grinderName != null) 'grinder_name': grinderName,
+      if (extractionTimeSeconds != null)
+        'extraction_time_seconds': extractionTimeSeconds,
       if (sensoryJson != null) 'sensory_json': sensoryJson,
       if (isSynced != null) 'is_synced': isSynced,
       if (isDeletedLocal != null) 'is_deleted_local': isDeletedLocal,
@@ -10672,6 +10724,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     Value<String>? recipeType,
     Value<double?>? brewRatio,
     Value<String?>? grinderName,
+    Value<int?>? extractionTimeSeconds,
     Value<String>? sensoryJson,
     Value<bool>? isSynced,
     Value<bool>? isDeletedLocal,
@@ -10699,6 +10752,8 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
       recipeType: recipeType ?? this.recipeType,
       brewRatio: brewRatio ?? this.brewRatio,
       grinderName: grinderName ?? this.grinderName,
+      extractionTimeSeconds:
+          extractionTimeSeconds ?? this.extractionTimeSeconds,
       sensoryJson: sensoryJson ?? this.sensoryJson,
       isSynced: isSynced ?? this.isSynced,
       isDeletedLocal: isDeletedLocal ?? this.isDeletedLocal,
@@ -10772,6 +10827,11 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     if (grinderName.present) {
       map['grinder_name'] = Variable<String>(grinderName.value);
     }
+    if (extractionTimeSeconds.present) {
+      map['extraction_time_seconds'] = Variable<int>(
+        extractionTimeSeconds.value,
+      );
+    }
     if (sensoryJson.present) {
       map['sensory_json'] = Variable<String>(sensoryJson.value);
     }
@@ -10811,6 +10871,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
           ..write('recipeType: $recipeType, ')
           ..write('brewRatio: $brewRatio, ')
           ..write('grinderName: $grinderName, ')
+          ..write('extractionTimeSeconds: $extractionTimeSeconds, ')
           ..write('sensoryJson: $sensoryJson, ')
           ..write('isSynced: $isSynced, ')
           ..write('isDeletedLocal: $isDeletedLocal, ')
@@ -23105,6 +23166,7 @@ typedef $$CustomRecipesTableCreateCompanionBuilder =
       Value<String> recipeType,
       Value<double?> brewRatio,
       Value<String?> grinderName,
+      Value<int?> extractionTimeSeconds,
       Value<String> sensoryJson,
       Value<bool> isSynced,
       Value<bool> isDeletedLocal,
@@ -23133,6 +23195,7 @@ typedef $$CustomRecipesTableUpdateCompanionBuilder =
       Value<String> recipeType,
       Value<double?> brewRatio,
       Value<String?> grinderName,
+      Value<int?> extractionTimeSeconds,
       Value<String> sensoryJson,
       Value<bool> isSynced,
       Value<bool> isDeletedLocal,
@@ -23250,6 +23313,11 @@ class $$CustomRecipesTableFilterComposer
 
   ColumnFilters<String> get grinderName => $composableBuilder(
     column: $table.grinderName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get extractionTimeSeconds => $composableBuilder(
+    column: $table.extractionTimeSeconds,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -23383,6 +23451,11 @@ class $$CustomRecipesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get extractionTimeSeconds => $composableBuilder(
+    column: $table.extractionTimeSeconds,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get sensoryJson => $composableBuilder(
     column: $table.sensoryJson,
     builder: (column) => ColumnOrderings(column),
@@ -23489,6 +23562,11 @@ class $$CustomRecipesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<int> get extractionTimeSeconds => $composableBuilder(
+    column: $table.extractionTimeSeconds,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get sensoryJson => $composableBuilder(
     column: $table.sensoryJson,
     builder: (column) => column,
@@ -23555,6 +23633,7 @@ class $$CustomRecipesTableTableManager
                 Value<String> recipeType = const Value.absent(),
                 Value<double?> brewRatio = const Value.absent(),
                 Value<String?> grinderName = const Value.absent(),
+                Value<int?> extractionTimeSeconds = const Value.absent(),
                 Value<String> sensoryJson = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<bool> isDeletedLocal = const Value.absent(),
@@ -23581,6 +23660,7 @@ class $$CustomRecipesTableTableManager
                 recipeType: recipeType,
                 brewRatio: brewRatio,
                 grinderName: grinderName,
+                extractionTimeSeconds: extractionTimeSeconds,
                 sensoryJson: sensoryJson,
                 isSynced: isSynced,
                 isDeletedLocal: isDeletedLocal,
@@ -23609,6 +23689,7 @@ class $$CustomRecipesTableTableManager
                 Value<String> recipeType = const Value.absent(),
                 Value<double?> brewRatio = const Value.absent(),
                 Value<String?> grinderName = const Value.absent(),
+                Value<int?> extractionTimeSeconds = const Value.absent(),
                 Value<String> sensoryJson = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<bool> isDeletedLocal = const Value.absent(),
@@ -23635,6 +23716,7 @@ class $$CustomRecipesTableTableManager
                 recipeType: recipeType,
                 brewRatio: brewRatio,
                 grinderName: grinderName,
+                extractionTimeSeconds: extractionTimeSeconds,
                 sensoryJson: sensoryJson,
                 isSynced: isSynced,
                 isDeletedLocal: isDeletedLocal,

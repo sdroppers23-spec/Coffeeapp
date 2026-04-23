@@ -187,15 +187,15 @@ class SensoryIndicator extends StatelessWidget {
               final isFilled = index < score;
               return Expanded(
                 child: Container(
-                  height: 0.8,
+                  height: 3.5,
                   margin: EdgeInsets.only(
-                    right: index == 4 ? 0 : 2,
+                    right: index == 4 ? 0 : 3,
                   ),
                   decoration: BoxDecoration(
                     color: isFilled
                         ? const Color(0xFFC8A96E)
                         : Colors.white.withValues(alpha: 0.05),
-                    borderRadius: BorderRadius.circular(1),
+                    borderRadius: BorderRadius.circular(2),
                   ),
                 ),
               );
@@ -243,12 +243,12 @@ class CompactSensoryBar extends StatelessWidget {
           children: List.generate(5, (index) {
             final isFilled = index < value.toInt();
             return Container(
-              width: 5,
-              height: 0.8,
-              margin: const EdgeInsets.only(right: 1.0),
+              width: 10,
+              height: 3.5,
+              margin: const EdgeInsets.only(right: 2.0),
               decoration: BoxDecoration(
                 color: isFilled ? theme.colorScheme.primary : const Color(0xFFC8A96E).withValues(alpha: 0.05),
-                borderRadius: BorderRadius.circular(1),
+                borderRadius: BorderRadius.circular(1.5),
               ),
             );
           }),

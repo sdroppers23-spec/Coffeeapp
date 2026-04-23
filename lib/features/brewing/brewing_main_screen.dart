@@ -98,7 +98,7 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
           ),
         ),
       ),
-      floatingActionButton: _isSelectingType ? null : Padding(
+      floatingActionButton: _isSelectingType || _tabController.index == 0 ? null : Padding(
         padding: EdgeInsets.only(bottom: ref.watch(navBarHeightProvider) + 48),
         child: _buildAddRecipeFab(context),
       ),

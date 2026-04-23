@@ -7,9 +7,10 @@ import 'package:uuid/uuid.dart';
 import 'package:drift/drift.dart' hide Column;
 import '../../core/database/app_database.dart';
 import '../../core/database/dtos.dart';
-import '../../core/supabase/supabase_provider.dart';
+import '../../core/providers/preferences_provider.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/l10n/app_localizations.dart';
+import '../../core/supabase/supabase_provider.dart';
 
 class AddRecipeDialog extends ConsumerStatefulWidget {
   final String lotId;
@@ -70,12 +71,27 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
     _nameController.text = recipe?.name ?? '';
     _coffeeController.text = recipe?.coffeeGrams.toStringAsFixed(1) ?? '';
     _waterController.text = recipe?.totalWaterMl.toStringAsFixed(1) ?? '';
-    _tempController.text = recipe?.brewTempC.toStringAsFixed(1) ?? '';
+
+    // Temperature conversion for display
+    final pref = ref.read(preferencesProvider);
+    double initialTemp = recipe?.brewTempC ?? 93.0;
+    if (pref.tempUnit == TempUnit.fahrenheit) {
+      initialTemp = (initialTemp * 9 / 5) + 32;
+    }
+    _tempController.text = initialTemp.toStringAsFixed(1);
+
     _grindController.text = recipe?.grindNumber.toString() ?? '';
     _micronsController.text = recipe?.microns?.toString() ?? '';
     _ratioController.text = recipe?.brewRatio?.toStringAsFixed(1) ?? '';
-    _extractionTimeController.text =
-        recipe?.extractionTimeSeconds?.toString() ?? '';
+
+    if (recipe?.extractionTimeSeconds != null) {
+      _extractionTimeController.text = _formatSecondsToHMS(
+        recipe!.extractionTimeSeconds!,
+      );
+    } else {
+      _extractionTimeController.text = '';
+    }
+
     _notesController.text = recipe?.notes ?? '';
 
     final initialGrinder = recipe?.grinderName ?? 'Other';
@@ -248,7 +264,15 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
           }).toList(),
         ),
       ),
-      brewTempC: Value(double.tryParse(_tempController.text) ?? 93.0),
+      brewTempC: Value(() {
+        final rawTemp = double.tryParse(_tempController.text) ?? 93.0;
+        final pref = ref.read(preferencesProvider);
+        if (pref.tempUnit == TempUnit.fahrenheit) {
+          // Convert back to Celsius for storage
+          return (rawTemp - 32) * 5 / 9;
+        }
+        return rawTemp;
+      }()),
       notes: Value(_notesController.text),
       rating: Value(_rating),
       createdAt: Value(widget.existingRecipe?.createdAt ?? DateTime.now()),
@@ -274,6 +298,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
   Widget build(BuildContext context) {
     final gold = const Color(0xFFC8A96E);
     final isUk = LocaleService.currentLocale == 'uk';
+    final pref = ref.watch(preferencesProvider);
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -386,11 +411,11 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                                     : 'Espresso Parameters'),
                         ),
                         const SizedBox(height: 20),
-
+                        // SECTION: Method Params
                         if (_recipeType == 'filter')
-                          _buildFilterParams(isUk)
+                          _buildFilterParams(isUk, pref)
                         else
-                          _buildEspressoParams(isUk),
+                          _buildEspressoParams(isUk, pref),
 
                         const SizedBox(height: 32),
 
@@ -407,9 +432,11 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                           _buildSectionHeader(
                             isUk ? 'Графік вливань' : 'Pour Schedule',
                           ),
-                          const SizedBox(height: 20),
-                          _buildPourSchedule(isUk, gold),
-                          const SizedBox(height: 32),
+                          const SizedBox(height: 12),
+                          if (_recipeType != 'espresso') ...[
+                            _buildPourSchedule(isUk, gold),
+                            const SizedBox(height: 24),
+                          ],
                         ],
 
                         // SECTION: Notes
@@ -581,7 +608,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
     );
   }
 
-  Widget _buildFilterParams(bool isUk) {
+  Widget _buildFilterParams(bool isUk, UserPreferences pref) {
     return Column(
       children: [
         Row(
@@ -610,10 +637,13 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
         const SizedBox(height: 12),
         _buildTextField(
           controller: _tempController,
-          label: isUk ? 'Температура (°C)' : 'Brew Temp (°C)',
-          hint: '93',
+          label:
+              isUk
+                  ? 'Температура (${pref.tempUnit == TempUnit.celsius ? '°C' : '°F'})'
+                  : 'Brew Temp (${pref.tempUnit == TempUnit.celsius ? '°C' : '°F'})',
+          hint: pref.tempUnit == TempUnit.celsius ? '93.0' : '199.4',
           keyboardType: TextInputType.number,
-          maxLength: 3,
+          maxLength: 5,
         ),
         const SizedBox(height: 12),
         _buildTextField(
@@ -626,7 +656,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
     );
   }
 
-  Widget _buildEspressoParams(bool isUk) {
+  Widget _buildEspressoParams(bool isUk, UserPreferences pref) {
     return Column(
       children: [
         Row(
@@ -666,10 +696,13 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
         const SizedBox(height: 12),
         _buildTextField(
           controller: _tempController,
-          label: isUk ? 'Температура (°C)' : 'Brew Temp (°C)',
-          hint: '93',
+          label:
+              isUk
+                  ? 'Температура (${pref.tempUnit == TempUnit.celsius ? '°C' : '°F'})'
+                  : 'Brew Temp (${pref.tempUnit == TempUnit.celsius ? '°C' : '°F'})',
+          hint: pref.tempUnit == TempUnit.celsius ? '93.0' : '199.4',
           keyboardType: TextInputType.number,
-          maxLength: 3,
+          maxLength: 5,
         ),
         const SizedBox(height: 12),
         _buildTextField(
@@ -693,7 +726,10 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           initialValue: _grinderNameController.text.isNotEmpty
-              ? _grinderNameController.text
+              ? (['Comandante', 'EK43', 'Fellow Ode', 'Wilfa', 'Timemore']
+                      .contains(_grinderNameController.text)
+                  ? _grinderNameController.text
+                  : 'Other')
               : 'Other',
           dropdownColor: const Color(0xFF1D1B1A),
           style: GoogleFonts.outfit(color: Colors.white),
@@ -740,6 +776,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
           label: isUk ? 'Помел' : 'Grind',
           hint: isUk ? 'Налаштування помелу' : 'Grind setting',
           keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))],
         ),
         const SizedBox(height: 12),
         _buildTextField(
@@ -747,6 +784,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
           label: isUk ? 'Мікрони (µm)' : 'Microns (µm)',
           hint: isUk ? 'Мікрони (µm)' : 'Microns (µm)',
           keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         ),
       ],
     );
@@ -901,7 +939,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
               Expanded(
                 flex: 4,
                 child: _buildSmallTextFieldWithLabel(
-                  label: isUk ? 'Тривалість (с)' : 'Duration (s)',
+                  label: isUk ? 'Тривалість (ГГ:ХХ:СС)' : 'Duration (HH:MM:SS)',
                   controller: pc.duration,
                   focusNode: _durFocusNodes[index],
                   hint: '00:00:00',

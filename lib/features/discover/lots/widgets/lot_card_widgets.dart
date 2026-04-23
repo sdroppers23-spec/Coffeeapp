@@ -12,6 +12,7 @@ import '../../../../shared/utils/sensory_utils.dart';
 import 'package:vibration/vibration.dart';
 import '../../../../shared/widgets/glass_swipe_wrapper.dart';
 import '../../../../shared/widgets/lot_detail_widgets.dart';
+import '../../../../core/providers/preferences_provider.dart';
 
 class MyLotGridCard extends ConsumerWidget {
   final CoffeeLotDto lot;
@@ -759,15 +760,32 @@ class _FreshnessProgressBar extends StatelessWidget {
     );
   }
 }
-class _LotPropertyGrid extends StatelessWidget {
+class _LotPropertyGrid extends ConsumerWidget {
   final CoffeeLotDto lot;
 
   const _LotPropertyGrid({required this.lot});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isUk = LocaleService.currentLocale == 'uk';
-    
+    final pref = ref.watch(preferencesProvider);
+
+    String altitudeText = 'N/A';
+    if (lot.altitude != null && lot.altitude!.isNotEmpty) {
+      final m = double.tryParse(lot.altitude!);
+      if (m != null) {
+        if (pref.lengthUnit == LengthUnit.feet) {
+          altitudeText = '${(m * 3.28084).toStringAsFixed(0)}ft';
+        } else {
+          altitudeText = '${m.toStringAsFixed(0)}m';
+        }
+      } else {
+        altitudeText = lot.altitude!;
+      }
+    }
+
+    final currencySymbol = _getCurrencySymbol(pref.currency);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -779,14 +797,14 @@ class _LotPropertyGrid extends StatelessWidget {
           _InfoItem(label: isUk ? 'Ферма' : 'Farm', value: lot.farm),
           _InfoItem(label: isUk ? 'Станція' : 'Station', value: lot.washStation),
           _InfoItem(label: isUk ? 'Фермер' : 'Farmer', value: lot.farmer),
-          _InfoItem(label: isUk ? 'Висота' : 'Altitude', value: lot.altitude != null ? '${lot.altitude}m' : null),
+          _InfoItem(label: isUk ? 'Висота' : 'Altitude', value: altitudeText),
         ]),
         const SizedBox(height: 20),
         _buildSectionHeader(isUk ? 'КАВА ТА ОБРОБКА' : 'COFFEE & PROCESS'),
         const SizedBox(height: 12),
         _buildGrid([
           _InfoItem(label: isUk ? 'Різновид' : 'Varieties', value: lot.varieties),
-          _InfoItem(label: isUk ? 'Оброба' : 'Process', value: lot.process),
+          _InfoItem(label: isUk ? 'Обробка' : 'Process', value: lot.process),
           _InfoItem(label: isUk ? 'Декаф' : 'Decaf', value: lot.isDecaf ? (isUk ? 'Так' : 'Yes') : (isUk ? 'Ні' : 'No')),
           _InfoItem(label: isUk ? 'Мелена' : 'Ground', value: lot.isGround ? (isUk ? 'Так' : 'Yes') : (isUk ? 'Ні' : 'No')),
         ]),
@@ -798,18 +816,30 @@ class _LotPropertyGrid extends StatelessWidget {
           _InfoItem(label: isUk ? 'Дата обсмажки' : 'Roast Date', value: lot.roastDate?.toString().split(' ')[0]),
           _InfoItem(label: isUk ? 'Відкрито' : 'Opened At', value: lot.openedAt?.toString().split(' ')[0]),
           _InfoItem(label: isUk ? 'Ціна' : 'Price', value: (() {
-            final p1 = lot.pricing['retail'];
+            final p1 = lot.pricing['retail'] ?? lot.pricing['retail_250'];
             final p2 = lot.pricing['retail_1k'];
             final val = (p1 != null && p1.toString().isNotEmpty) ? p1.toString() 
                       : (p2 != null && p2.toString().isNotEmpty) ? p2.toString() : null;
             if (val == null) return null;
-            return (val.contains('₴') || val.contains('\$') || val.contains('€') || val.toLowerCase().contains('uah')) ? val : '$val ₴';
+            
+            // If already has currency symbol, return as is
+            if (val.contains('₴') || val.contains(r'$') || val.contains('€') || val.toLowerCase().contains('uah')) return val;
+            
+            return '$val $currencySymbol';
           })()),
           _InfoItem(label: isUk ? 'Вага' : 'Weight', value: lot.weight != null ? '${lot.weight}g' : null),
           _InfoItem(label: isUk ? 'ID Лоту' : 'Lot ID', value: lot.lotNumber),
         ]),
       ],
     );
+  }
+
+  String _getCurrencySymbol(Currency currency) {
+    switch (currency) {
+      case Currency.uah: return '₴';
+      case Currency.usd: return r'$';
+      case Currency.eur: return '€';
+    }
   }
 
   Widget _buildSectionHeader(String title) {

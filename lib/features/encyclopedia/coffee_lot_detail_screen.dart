@@ -18,6 +18,7 @@ import '../navigation/navigation_providers.dart';
 import '../encyclopedia/encyclopedia_providers.dart';
 import '../brewing/custom_recipe_timer_screen.dart';
 import '../../shared/services/toast_service.dart';
+import '../../core/providers/preferences_provider.dart';
 
 class CoffeeLotDetailScreen extends ConsumerStatefulWidget {
   final LocalizedBeanDto entry;
@@ -324,8 +325,7 @@ class _InfoTabState extends ConsumerState<_InfoTab> {
                   Expanded(
                     child: LotCompactStat(
                       label: ref.t('altitude'),
-                      value:
-                          '${entry.altitudeMin ?? 'N/A'}-${entry.altitudeMax ?? 'N/A'} m',
+                      value: _formatAltitude(entry.altitudeMin, entry.altitudeMax),
                     ),
                   ),
                 ],
@@ -460,7 +460,25 @@ class _InfoTabState extends ConsumerState<_InfoTab> {
     );
   }
 
+  String _formatAltitude(int? min, int? max) {
+    final pref = ref.watch(preferencesProvider);
+    final unit = pref.lengthUnit;
+    
+    if (min == null && max == null) return 'N/A';
+    
+    if (unit == LengthUnit.feet) {
+      final minFt = min != null ? (min * 3.28084).toStringAsFixed(0) : 'N/A';
+      final maxFt = max != null ? (max * 3.28084).toStringAsFixed(0) : 'N/A';
+      return '$minFt-$maxFt ft';
+    } else {
+      return '${min ?? 'N/A'}-${max ?? 'N/A'} m';
+    }
+  }
+
   TableRow _priceRow(String weight, String? retail, String? wholesale) {
+    final pref = ref.watch(preferencesProvider);
+    final symbol = _getCurrencySymbol(pref.currency);
+    
     if ((retail == null || retail == '---') &&
         (wholesale == null || wholesale == '---')) {
       return const TableRow(children: [SizedBox(), SizedBox(), SizedBox()]);
@@ -468,10 +486,18 @@ class _InfoTabState extends ConsumerState<_InfoTab> {
     return TableRow(
       children: [
         _Cell(weight),
-        _Cell(retail != null && retail != '---' ? '$retail ₴' : '---'),
-        _Cell(wholesale != null && wholesale != '---' ? '$wholesale ₴' : '---'),
+        _Cell(retail != null && retail != '---' ? '$retail $symbol' : '---'),
+        _Cell(wholesale != null && wholesale != '---' ? '$wholesale $symbol' : '---'),
       ],
     );
+  }
+
+  String _getCurrencySymbol(Currency c) {
+    switch (c) {
+      case Currency.uah: return '₴';
+      case Currency.eur: return '€';
+      case Currency.usd: return r'$';
+    }
   }
 }
 
@@ -803,7 +829,7 @@ class _CustomRecipeCardWrapper extends ConsumerWidget {
                 const SizedBox(width: 24),
                 _Stat(recipe.recipeType == 'espresso' ? (isUk ? 'ВИХІД' : 'YIELD') : (isUk ? 'ВОДА' : 'WATER'), '${recipe.totalWaterMl}ml'),
                 const SizedBox(width: 24),
-                _Stat('TEMP', '${recipe.brewTempC}°C'),
+                _Stat('TEMP', _formatTemp(ref, recipe.brewTempC)),
                 const Spacer(),
                 IconButton(
                   icon: const Icon(Icons.play_arrow_rounded, color: Color(0xFFC8A96E)),
@@ -989,6 +1015,15 @@ class _RecommendedCard extends ConsumerWidget {
       ),
     );
   }
+}
+
+String _formatTemp(WidgetRef ref, double celsius) {
+  final pref = ref.watch(preferencesProvider);
+  if (pref.tempUnit == TempUnit.fahrenheit) {
+    final f = (celsius * 9 / 5) + 32;
+    return '${f.toStringAsFixed(0)}°F';
+  }
+  return '${celsius.toStringAsFixed(0)}°C';
 }
 
 class _Stat extends StatelessWidget {

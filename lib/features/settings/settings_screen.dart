@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +9,7 @@ import '../../core/providers/settings_provider.dart';
 import '../../core/providers/design_theme_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../shared/widgets/add_recipe_dialog.dart';
+import '../../core/providers/preferences_provider.dart';
 import '../../shared/widgets/premium_background.dart';
 // import '../../shared/widgets/premium_background.dart'; // Removed unused import
 
@@ -56,6 +58,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isUk = ref.watch(localeProvider) == 'uk';
+    final prefs = ref.watch(preferencesProvider);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -174,7 +178,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
 
               // ВІБРАЦІЯ
-              _buildSectionTitle(context, 'ВІБРАЦІЯ'),
+              _buildSectionTitle(context, ref.t('vibration')),
               _buildCard(
                 context,
                 child: Padding(
@@ -186,7 +190,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Тактильний відгук',
+                              ref.t('haptic_feedback'),
                               style: GoogleFonts.outfit(
                                 color: theme.colorScheme.onSurface,
                                 fontSize: 16,
@@ -195,7 +199,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              'Легка вібрація при натисканні та\nутриманні',
+                              ref.t('haptic_desc'),
                               style: GoogleFonts.outfit(
                                 color: theme.colorScheme.onSurface.withValues(
                                   alpha: 0.5,
@@ -254,8 +258,47 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ),
               ),
 
+              // ОДИНИЦІ ВИМІРУ
+              _buildSectionTitle(context, ref.t('units')),
+              _buildCard(
+                context,
+                child: Column(
+                  children: [
+                    _buildSwitchPreference(
+                      context,
+                      icon: Icons.thermostat_rounded,
+                      title: ref.t('temperature'),
+                      value: prefs.tempUnit == TempUnit.fahrenheit,
+                      offLabel: '°C',
+                      onLabel: '°F',
+                      onChanged: (val) {
+                        ref.read(preferencesProvider.notifier).setTempUnit(
+                          val ? TempUnit.fahrenheit : TempUnit.celsius,
+                        );
+                      },
+                    ),
+                    _buildDivider(theme),
+                    _buildSwitchPreference(
+                      context,
+                      icon: Icons.straighten_rounded,
+                      title: ref.t('distance'),
+                      value: prefs.lengthUnit == LengthUnit.feet,
+                      offLabel: isUk ? 'М' : 'M',
+                      onLabel: isUk ? 'Ф' : 'FT',
+                      onChanged: (val) {
+                        ref.read(preferencesProvider.notifier).setLengthUnit(
+                          val ? LengthUnit.feet : LengthUnit.meters,
+                        );
+                      },
+                    ),
+                    _buildDivider(theme),
+                    _buildCurrencyPreference(context, ref, prefs),
+                  ],
+                ),
+              ),
+
               // ЮРИДИЧНА ІНФОРМАЦІЯ
-              _buildSectionTitle(context, 'ЮРИДИЧНА ІНФОРМАЦІЯ'),
+              _buildSectionTitle(context, ref.t('legal')),
               _buildCard(
                 context,
                 child: Column(
@@ -263,21 +306,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     _buildListItem(
                       context,
                       icon: Icons.lock_outline_rounded,
-                      title: 'Політика конфіденційності',
+                      title: ref.t('privacy_policy'),
                       onTap: () {},
                     ),
-                    Divider(
-                      color: theme.colorScheme.onSurface.withValues(
-                        alpha: 0.05,
-                      ),
-                      height: 1,
-                      indent: 16,
-                      endIndent: 16,
-                    ),
+                    _buildDivider(theme),
                     _buildListItem(
                       context,
                       icon: Icons.insert_drive_file_outlined,
-                      title: 'Умови використання',
+                      title: ref.t('terms_of_use'),
                       onTap: () {},
                     ),
                   ],
@@ -287,7 +323,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               const SizedBox(height: 32),
 
               // ПІДТРИМКА
-              _buildSectionTitle(context, 'ПІДТРИМКА'),
+              _buildSectionTitle(context, ref.t('support')),
               _buildCard(
                 context,
                 child: Column(
@@ -295,7 +331,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     _buildListItem(
                       context,
                       icon: Icons.help_outline_rounded,
-                      title: 'Служба підтримки',
+                      title: ref.t('customer_support'),
                       onTap: () {},
                     ),
                   ],
@@ -303,15 +339,32 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
 
               // ТЕСТУВАННЯ ТА РОЗРОБКА
-              _buildSectionTitle(context, 'ТЕСТУВАННЯ ТА РОЗРОБКА'),
-              _buildCard(
-                context,
-                child: Column(
+              _buildSectionTitle(context, ref.t('debug')),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Row(
                   children: [
-                    _buildListItem(
-                      context,
-                      icon: Icons.bug_report_outlined,
-                      title: 'Тестувати новий діалог рецептів',
+                    _buildGlassRecipeTile(
+                      context: context,
+                      title: ref.t('espresso'),
+                      subtitle: ref.t('quick_recipe'),
+                      icon: Icons.coffee_maker_rounded,
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => const AddRecipeDialog(
+                            lotId: 'test_lot',
+                            initialMethod: 'espresso',
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(width: 16),
+                    _buildGlassRecipeTile(
+                      context: context,
+                      title: ref.t('filter'),
+                      subtitle: ref.t('v60_chemex'),
+                      icon: Icons.coffee_outlined,
                       onTap: () {
                         showDialog(
                           context: context,
@@ -335,7 +388,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   child: _isLoading
                       ? const CircularProgressIndicator()
                       : Text(
-                          'Вийти з акаунта',
+                          ref.t('sign_out_account'),
                           style: GoogleFonts.poppins(
                             color: const Color(0xFFE57373),
                             fontSize: 14,
@@ -494,6 +547,247 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               size: 24,
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSwitchPreference(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required bool value,
+    required String offLabel,
+    required String onLabel,
+    required ValueChanged<bool> onChanged,
+  }) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+            size: 22,
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Text(
+              title,
+              style: GoogleFonts.outfit(
+                color: theme.colorScheme.onSurface,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+          Text(
+            offLabel,
+            style: GoogleFonts.outfit(
+              color: !value ? theme.colorScheme.primary : Colors.white24,
+              fontSize: 14,
+              fontWeight: !value ? FontWeight.bold : FontWeight.w400,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Switch(
+            value: value,
+            activeTrackColor: theme.colorScheme.primary.withValues(alpha: 0.2),
+            activeThumbColor: theme.colorScheme.primary,
+            onChanged: onChanged,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            onLabel,
+            style: GoogleFonts.outfit(
+              color: value ? theme.colorScheme.primary : Colors.white24,
+              fontSize: 14,
+              fontWeight: value ? FontWeight.bold : FontWeight.w400,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCurrencyPreference(
+    BuildContext context,
+    WidgetRef ref,
+    UserPreferences prefs,
+  ) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          Icon(
+            Icons.payments_outlined,
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+            size: 22,
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Text(
+              ref.t('currency'),
+              style: GoogleFonts.outfit(
+                color: theme.colorScheme.onSurface,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: Currency.values.map((c) {
+                final isSelected = prefs.currency == c;
+                return GestureDetector(
+                  onTap: () {
+                    ref.read(settingsProvider.notifier).triggerSelectionVibrate();
+                    ref.read(preferencesProvider.notifier).setCurrency(c);
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? theme.colorScheme.primary
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      _currencySymbolOnly(c),
+                      style: GoogleFonts.outfit(
+                        color: isSelected ? Colors.black : Colors.white38,
+                        fontSize: 12,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _currencySymbolOnly(Currency c) {
+    switch (c) {
+      case Currency.uah:
+        return '₴';
+      case Currency.eur:
+        return '€';
+      case Currency.usd:
+        return '\$';
+    }
+  }
+
+  Widget _buildDivider(ThemeData theme) {
+    return Divider(
+      color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+      height: 1,
+      indent: 16,
+      endIndent: 16,
+    );
+  }
+
+  Widget _buildGlassRecipeTile({
+    required BuildContext context,
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    final theme = Theme.of(context);
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          height: 140,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.1),
+              width: 1,
+            ),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.white.withValues(alpha: 0.08),
+                Colors.white.withValues(alpha: 0.03),
+              ],
+            ),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Stack(
+                children: [
+                  Positioned(
+                    right: -10,
+                    bottom: -10,
+                    child: Icon(
+                      icon,
+                      size: 80,
+                      color: Colors.white.withValues(alpha: 0.05),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primary.withValues(
+                              alpha: 0.2,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            icon,
+                            color: theme.colorScheme.primary,
+                            size: 24,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          title,
+                          style: GoogleFonts.outfit(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(
+                          subtitle,
+                          style: GoogleFonts.outfit(
+                            color: Colors.white38,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );

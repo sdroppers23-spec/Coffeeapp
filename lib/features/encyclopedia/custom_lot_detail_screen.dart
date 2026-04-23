@@ -14,6 +14,7 @@ import '../../shared/widgets/add_recipe_dialog.dart';
 import '../../shared/widgets/pressable_scale.dart';
 import '../../shared/widgets/lot_detail_widgets.dart';
 import '../../core/providers/settings_provider.dart';
+import '../../core/providers/preferences_provider.dart';
 
 class CustomLotDetailScreen extends ConsumerStatefulWidget {
   final CoffeeLotDto lot;
@@ -386,7 +387,7 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${recipe.coffeeGrams}g / ${recipe.totalWaterMl}ml • ${recipe.brewTempC}°C',
+                    '${recipe.coffeeGrams}g / ${recipe.totalWaterMl}ml • ${_formatTemp(ref, recipe.brewTempC)}',
                     style: GoogleFonts.outfit(
                       color: Colors.white54,
                       fontSize: 12,
@@ -630,7 +631,7 @@ class _InfoTab extends ConsumerWidget {
               ],
               if (lot.altitude?.isNotEmpty ?? false) ...[
                 const Divider(height: 24, color: Colors.white10),
-                LotCompactStat(label: ref.t('altitude'), value: lot.altitude!),
+                LotCompactStat(label: ref.t('altitude'), value: _formatAltitude(ref, lot.altitude!)),
               ],
               if (lot.varieties?.isNotEmpty ?? false) ...[
                 const Divider(height: 24, color: Colors.white10),
@@ -757,5 +758,35 @@ class _ProfileTab extends ConsumerWidget {
         const SizedBox(height: 16),
       ],
     );
+  }
+}
+
+String _formatTemp(WidgetRef ref, double celsius) {
+  final pref = ref.watch(preferencesProvider);
+  if (pref.tempUnit == TempUnit.fahrenheit) {
+    final f = (celsius * 9 / 5) + 32;
+    return '${f.toStringAsFixed(0)}°F';
+  }
+  return '${celsius.toStringAsFixed(0)}°C';
+}
+
+String _formatAltitude(WidgetRef ref, String altitude) {
+  final pref = ref.watch(preferencesProvider);
+  if (pref.lengthUnit == LengthUnit.meters) return '$altitude m';
+  
+  // Try to parse range like "1200-1500" or single value "1200"
+  try {
+    final parts = altitude.split('-').map((s) => s.trim().replaceAll(RegExp(r'[^0-9]'), '')).toList();
+    if (parts.isEmpty) return altitude;
+    
+    final converted = parts.map((p) {
+      final val = int.tryParse(p);
+      if (val == null) return p;
+      return (val * 3.28084).toStringAsFixed(0);
+    }).join('-');
+    
+    return '$converted ft';
+  } catch (e) {
+    return altitude;
   }
 }

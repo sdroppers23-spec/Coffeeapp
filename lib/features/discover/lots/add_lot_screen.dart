@@ -24,6 +24,7 @@ import 'lots_providers.dart';
 import '../../../shared/models/processing_methods_repository.dart';
 import '../../../shared/widgets/sensory_radar_chart.dart';
 import '../../../shared/services/toast_service.dart';
+import '../../../core/providers/preferences_provider.dart';
 
 class AddLotScreen extends ConsumerStatefulWidget {
   final CoffeeLotDto? initialLot;
@@ -163,7 +164,17 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     _roasteryCountryController = TextEditingController(text: widget.initialLot?.roasteryCountry ?? 'Ukraine');
     _originCountryController = TextEditingController(text: widget.initialLot?.originCountry ?? '');
     _regionController = TextEditingController(text: widget.initialLot?.region ?? '');
-    _altitudeController = TextEditingController(text: widget.initialLot?.altitude ?? '');
+    
+    // Altitude conversion for display
+    final pref = ref.read(preferencesProvider);
+    String altitudeStr = widget.initialLot?.altitude ?? '';
+    if (altitudeStr.isNotEmpty && pref.lengthUnit == LengthUnit.feet) {
+      double? m = double.tryParse(altitudeStr);
+      if (m != null) {
+        altitudeStr = (m * 3.28084).toStringAsFixed(0);
+      }
+    }
+    _altitudeController = TextEditingController(text: altitudeStr);
     _varietiesController = TextEditingController(text: widget.initialLot?.varieties ?? '');
     _farmerController = TextEditingController(text: widget.initialLot?.farmer ?? '');
     _washStationController = TextEditingController(text: widget.initialLot?.washStation ?? '');
@@ -355,7 +366,16 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           coffeeName: Value(_originCountryController.text), // Fallback or clear
           originCountry: Value(_originCountryController.text),
           region: Value(_regionController.text),
-          altitude: Value(_altitudeController.text),
+          altitude: Value(() {
+            final raw = _altitudeController.text;
+            if (raw.isEmpty) return '';
+            final pref = ref.read(preferencesProvider);
+            if (pref.lengthUnit == LengthUnit.feet) {
+              final ft = double.tryParse(raw);
+              if (ft != null) return (ft / 3.28084).toStringAsFixed(0);
+            }
+            return raw;
+          }()),
           process: Value(effectiveProcess),
           roastLevel: Value(_roastLevel),
           roastDate: Value(_roastDate),
@@ -562,8 +582,21 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     );
   }
 
+  String _getCurrencySymbol(Currency c) {
+    switch (c) {
+      case Currency.uah:
+        return '₴';
+      case Currency.eur:
+        return '€';
+      case Currency.usd:
+        return r'$';
+    }
+  }
+
   // ─── Tab 1: Roastery & Pricing ────────────────────────────────────
   Widget _buildRoasteryTab() {
+    final pref = ref.watch(preferencesProvider);
+    final currencySymbol = _getCurrencySymbol(pref.currency);
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
       children: [
@@ -611,7 +644,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             label: 'ALTITUDE',
             controller: _altitudeController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            suffix: 'm',
+            suffix: pref.lengthUnit == LengthUnit.meters ? 'm' : 'ft',
           ),
           _divider(),
           _fieldRow(label: 'VARIETALS', controller: _varietiesController),
@@ -627,13 +660,13 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
 
         _sectionLabel('Ціноутворення'),
         _darkCard(children: [
-          _fieldRow(label: 'РОЗДРІБ 250G', controller: _priceController, keyboardType: TextInputType.number, suffix: '₴'),
+          _fieldRow(label: 'РОЗДРІБ 250G', controller: _priceController, keyboardType: TextInputType.number, suffix: currencySymbol),
           _divider(),
-          _fieldRow(label: 'РОЗДРІБ 1KG', controller: _retailPrice1kController, keyboardType: TextInputType.number, suffix: '₴'),
+          _fieldRow(label: 'РОЗДРІБ 1KG', controller: _retailPrice1kController, keyboardType: TextInputType.number, suffix: currencySymbol),
           _divider(),
-          _fieldRow(label: 'ОПТ 250G', controller: _wholesalePrice250Controller, keyboardType: TextInputType.number, suffix: '₴'),
+          _fieldRow(label: 'ОПТ 250G', controller: _wholesalePrice250Controller, keyboardType: TextInputType.number, suffix: currencySymbol),
           _divider(),
-          _fieldRow(label: 'ОПТ 1KG', controller: _wholesalePrice1kController, keyboardType: TextInputType.number, suffix: '₴'),
+          _fieldRow(label: 'ОПТ 1KG', controller: _wholesalePrice1kController, keyboardType: TextInputType.number, suffix: currencySymbol),
         ]),
       ],
     );

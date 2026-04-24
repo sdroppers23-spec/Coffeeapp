@@ -24,9 +24,7 @@ class MyLotsContent extends ConsumerStatefulWidget {
   ConsumerState<MyLotsContent> createState() => _MyLotsContentState();
 }
 
-  // Remove TabController as we now use the DiscoveryActionBar's state
-  final Set<String> _pendingDeleteIds = {};
-  // Remove local _selectedLotIds to use global provider
+class _MyLotsContentState extends ConsumerState<MyLotsContent> {
   final Set<String> _pendingDeleteIds = {};
   bool _isUndoVisible = false;
   
@@ -619,16 +617,16 @@ class MyLotsContent extends ConsumerStatefulWidget {
                 ),
                 const SizedBox(width: 16),
                 _buildSelectionAction(
-                  _subTabController.index == 2
+                  ref.read(myLotsFilterProvider).showArchivedOnly
                       ? Icons.unarchive_outlined
                       : Icons.archive_outlined,
                   Colors.white,
                   () async {
                     final db = ref.read(databaseProvider);
-                    final activeTab = _subTabController.index;
+                    final isArchive = ref.read(myLotsFilterProvider).showArchivedOnly;
                     final idsToClear = Set<String>.from(ref.read(myLotsSelectedIdsProvider));
                     for (var id in idsToClear) {
-                      await db.toggleLotArchive(id, activeTab != 2);
+                      await db.toggleLotArchive(id, !isArchive);
                       ref.read(myLotsSelectedIdsProvider.notifier).remove(id);
                     }
 
@@ -771,7 +769,7 @@ class MyLotsContent extends ConsumerStatefulWidget {
                     if (confirm == true) {
                       final selectedIdsSnapshot = Set<String>.from(ref.read(myLotsSelectedIdsProvider));
                       final selectedLots = (lotsAsync.value ?? []).where((l) => selectedIdsSnapshot.contains(l.id)).toList();
-                      final isArchive = filter.showArchivedOnly;
+                      final isArchive = ref.read(myLotsFilterProvider).showArchivedOnly;
                       
                       for (final id in selectedIdsSnapshot) {
                         ref.read(myLotsSelectedIdsProvider.notifier).remove(id);

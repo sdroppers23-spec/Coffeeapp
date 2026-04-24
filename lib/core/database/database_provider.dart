@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'app_database.dart';
@@ -23,11 +24,17 @@ final databaseInitializerProvider = FutureProvider<void>((ref) async {
   final seeder = ref.read(coffeeDataSeedProvider);
   
   try {
-    if (await ref.read(databaseProvider).brandsIsEmpty()) {
+    final db = ref.read(databaseProvider);
+    final brandsEmpty = await db.brandsIsEmpty();
+    final farmersEmpty = await db.farmersIsEmpty();
+    final encyclopediaEmpty = await db.encyclopediaIsEmpty();
+    final articlesEmpty = await db.specialtyArticlesIsEmpty();
 
+    if (brandsEmpty || farmersEmpty || encyclopediaEmpty || articlesEmpty) {
+      debugPrint('DatabaseProvider: Core tables empty, triggering re-seed...');
       await seeder.seedAll();
-
-    } else {
+    }
+ else {
 
     }
   } catch (e) {

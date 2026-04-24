@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:drift/drift.dart';
 import 'package:uuid/uuid.dart';
 import 'connection/connection.dart';
@@ -141,13 +142,13 @@ class AppDatabase extends _$AppDatabase {
   // ── Specialty Articles ───────────────────────────────────────────────────────
 
   Future<bool> encyclopediaIsEmpty() async =>
-      (await select(specialtyArticles).get()).isEmpty;
+      (await select(localizedBeansV2).get()).isEmpty;
 
   Future<bool> farmersIsEmpty() async =>
-      (await select(localizedFarmers).get()).isEmpty;
+      (await select(localizedFarmersV2).get()).isEmpty;
 
   Future<bool> specialtyArticlesIsEmpty() async =>
-      (await select(specialtyArticles).get()).isEmpty;
+      (await select(specialtyArticlesV2).get()).isEmpty;
 
   // ── Farmers ──────────────────────────────────────────────────────────────────
   // ── Farmers (Wide Table) ───────────────────────────────────────────────────
@@ -517,6 +518,13 @@ class AppDatabase extends _$AppDatabase {
   Future<bool> brandsIsEmpty() async {
     final countExp = localizedBrands.id.count();
     final query = selectOnly(localizedBrands)..addColumns([countExp]);
+    final result = await query.map((row) => row.read(countExp)).getSingle();
+    return (result ?? 0) == 0;
+  }
+
+  Future<bool> farmersV2IsEmpty() async {
+    final countExp = localizedFarmersV2.id.count();
+    final query = selectOnly(localizedFarmersV2)..addColumns([countExp]);
     final result = await query.map((row) => row.read(countExp)).getSingle();
     return (result ?? 0) == 0;
   }
@@ -1064,10 +1072,16 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<String> upsertCustomRecipe(CustomRecipesCompanion r) async {
-    final row = await into(
-      customRecipes,
-    ).insertReturning(r, mode: InsertMode.insertOrReplace);
-    return row.id;
+    try {
+      final row = await into(
+        customRecipes,
+      ).insertReturning(r, mode: InsertMode.insertOrReplace);
+      debugPrint('AppDatabase: Successfully upserted recipe ${row.id}');
+      return row.id;
+    } catch (e) {
+      debugPrint('AppDatabase: Error upserting recipe: $e');
+      rethrow;
+    }
   }
 
   Future<String> insertCustomRecipe(CustomRecipesCompanion r) =>

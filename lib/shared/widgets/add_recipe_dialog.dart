@@ -220,6 +220,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
     final supabase = ref.read(supabaseProvider);
     final user = supabase.auth.currentUser;
     final userId = user?.id ?? 'local_user';
+    debugPrint('RecipeDialog: User state - user=${user?.email}, id=$userId');
 
     final recipe = CustomRecipesCompanion.insert(
       id: Value(widget.existingRecipe?.id ?? const Uuid().v4()),

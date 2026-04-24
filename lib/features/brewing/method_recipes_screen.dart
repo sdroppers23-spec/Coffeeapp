@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/database/dtos.dart';
 import 'recipe_card.dart';
+import '../navigation/navigation_providers.dart';
 
-class MethodRecipesScreen extends StatelessWidget {
+class MethodRecipesScreen extends ConsumerStatefulWidget {
   final String methodKey;
   final String methodNameUk;
   final List<BrewingRecipeDto> recipes;
@@ -16,120 +18,142 @@ class MethodRecipesScreen extends StatelessWidget {
   });
 
   @override
+  ConsumerState<MethodRecipesScreen> createState() => _MethodRecipesScreenState();
+}
+
+class _MethodRecipesScreenState extends ConsumerState<MethodRecipesScreen> {
+
+  @override
+  void dispose() {
+    // Restore nav bar when leaving the screen
+    Future.microtask(() {
+      if (mounted) ref.read(navBarVisibleProvider.notifier).show();
+    });
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     const gold = Color(0xFFC8A96E);
     const bg = Color(0xFF0A0908);
 
-    return Scaffold(
-      backgroundColor: bg,
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          // ── App Bar ──────────────────────────────────────────────────────
-          SliverAppBar(
-            backgroundColor: bg,
-            elevation: 0,
-            pinned: true,
-            leading: IconButton(
-              icon: const CircleAvatar(
-                backgroundColor: Colors.white10,
-                child: Icon(
-                  Icons.arrow_back_ios_new,
-                  color: Colors.white,
-                  size: 16,
-                ),
-              ),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Спосіб заварювання',
-                  style: GoogleFonts.outfit(
-                    fontSize: 11,
-                    color: gold.withValues(alpha: 0.7),
-                    letterSpacing: 0.5,
-                  ),
-                ),
-                Text(
-                  methodNameUk,
-                  style: GoogleFonts.cormorantGaramond(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          ref.read(navBarVisibleProvider.notifier).show();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: bg,
+        body: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
+            // ── App Bar ──────────────────────────────────────────────────────
+            SliverAppBar(
+              backgroundColor: bg,
+              elevation: 0,
+              pinned: true,
+              leading: IconButton(
+                icon: const CircleAvatar(
+                  backgroundColor: Colors.white10,
+                  child: Icon(
+                    Icons.arrow_back_ios_new,
                     color: Colors.white,
-                    height: 1.1,
+                    size: 16,
                   ),
                 ),
-              ],
-            ),
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(1),
-              child: Container(
-                height: 1,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      gold.withValues(alpha: 0.4),
-                      Colors.transparent,
-                    ],
-                  ),
-                ),
+                onPressed: () => Navigator.of(context).pop(),
               ),
-            ),
-          ),
-
-          // ── Header Info Strip ─────────────────────────────────────────────
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
-              child: Row(
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: gold.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(10),
-                      border:
-                          Border.all(color: gold.withValues(alpha: 0.3)),
+                  Text(
+                    'Спосіб заварювання',
+                    style: GoogleFonts.outfit(
+                      fontSize: 11,
+                      color: gold.withValues(alpha: 0.7),
+                      letterSpacing: 0.5,
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.menu_book_rounded,
-                            size: 13, color: Color(0xFFC8A96E)),
-                        const SizedBox(width: 6),
-                        Text(
-                          '${recipes.length} ${_recipesLabel(recipes.length)}',
-                          style: GoogleFonts.poppins(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: gold,
-                          ),
-                        ),
-                      ],
+                  ),
+                  Text(
+                    widget.methodNameUk,
+                    style: GoogleFonts.cormorantGaramond(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                      height: 1.1,
                     ),
                   ),
                 ],
               ),
-            ),
-          ),
-
-          // ── Recipe Cards ──────────────────────────────────────────────────
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, i) => Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: RecipeCard(recipe: recipes[i]),
+              bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(1),
+                child: Container(
+                  height: 1,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        gold.withValues(alpha: 0.4),
+                        Colors.transparent,
+                      ],
+                    ),
+                  ),
                 ),
-                childCount: recipes.length,
               ),
             ),
-          ),
-        ],
+  
+            // ── Header Info Strip ─────────────────────────────────────────────
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: gold.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(10),
+                        border:
+                            Border.all(color: gold.withValues(alpha: 0.3)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.menu_book_rounded,
+                              size: 13, color: Color(0xFFC8A96E)),
+                          const SizedBox(width: 6),
+                          Text(
+                            '${widget.recipes.length} ${_recipesLabel(widget.recipes.length)}',
+                            style: GoogleFonts.poppins(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: gold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+  
+            // ── Recipe Cards ──────────────────────────────────────────────────
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, i) => Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: RecipeCard(recipe: widget.recipes[i]),
+                  ),
+                  childCount: widget.recipes.length,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../shared/widgets/recipe_type_bottom_sheet.dart';
 import '../../core/l10n/app_localizations.dart';
-import '../../shared/widgets/add_recipe_dialog.dart';
 import '../../shared/widgets/profile_button.dart';
 import '../navigation/navigation_providers.dart';
 import 'brewing_guide_screen.dart';
@@ -32,7 +30,6 @@ class BrewingMainScreen extends ConsumerStatefulWidget {
 class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  bool _isSelectingType = false;
 
   @override
   void initState() {
@@ -97,11 +94,6 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
           ),
         ),
       ),
-      floatingActionButton: _isSelectingType ? null : Padding(
-        padding: EdgeInsets.only(bottom: ref.watch(navBarHeightProvider) + 96),
-        child: _buildAddRecipeFab(context),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: TabBarView(
         controller: _tabController,
         children: const [_BrewingMethodsContent(), GlobalCustomRecipeList()],
@@ -109,76 +101,7 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
     );
   }
 
-  Widget _buildAddRecipeFab(BuildContext context) {
-    return AnimatedSlide(
-      offset: const Offset(0, 0),
-      duration: const Duration(milliseconds: 300),
-      child: GestureDetector(
-        onTap: () => _showRecipeTypeSelection(context),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
-          decoration: BoxDecoration(
-            color: const Color(0xFFC8A96E),
-            borderRadius: BorderRadius.circular(50),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFFC8A96E).withValues(alpha: 0.35),
-                blurRadius: 20,
-                spreadRadius: 2,
-                offset: const Offset(0, 6),
-              )
-            ],
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.add_rounded, color: Colors.black, size: 20),
-              const SizedBox(width: 8),
-              Text(
-                'ДОДАТИ РЕЦЕПТ',
-                style: GoogleFonts.outfit(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 12,
-                  letterSpacing: 1.5,
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
-  void _showRecipeTypeSelection(BuildContext context) {
-    setState(() => _isSelectingType = true);
-
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      barrierColor: Colors.black54,
-      builder: (ctx) => RecipeTypeBottomSheet(
-        title: ref.t('choose_brewing_type'),
-        onTypeSelected: (type) => _handleTypeSelected(type),
-      ),
-    ).whenComplete(() {
-      if (mounted) setState(() => _isSelectingType = false);
-    });
-  }
-
-  void _handleTypeSelected(String type) async {
-    Navigator.pop(context);
-    final result = await showDialog<bool>(
-      context: context,
-      builder: (context) => AddRecipeDialog(
-        lotId: '',
-        initialMethod: type == 'espresso' ? 'espresso' : 'v60',
-      ),
-    );
-    if (result == true) {
-      ref.invalidate(globalCustomRecipesProvider);
-    }
-  }
 }
 
 class _BrewingMethodsContent extends ConsumerWidget {

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/database/dtos.dart';
 import '../../shared/widgets/glass_container.dart';
 import 'brewing_detail_screen.dart';
 import 'method_recipes_screen.dart';
+import '../navigation/navigation_providers.dart';
 
 // ─── Method metadata ─────────────────────────────────────────────────────────
 // ─── MethodTile ───────────────────────────────────────────────────────────────
-class MethodTile extends StatelessWidget {
+class MethodTile extends ConsumerWidget {
   final List<BrewingRecipeDto> methodRecipes;
 
   const MethodTile({
@@ -34,7 +36,7 @@ class MethodTile extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     const gold = Color(0xFFC8A96E);
     final name = _getEffectiveName(context);
     final imageUrl = _getEffectiveImageUrl();
@@ -44,6 +46,9 @@ class MethodTile extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
+        // Hide nav bar when entering detail view
+        ref.read(navBarVisibleProvider.notifier).hide();
+        
         if (_count > 1) {
           Navigator.of(context).push(
             MaterialPageRoute(

@@ -146,7 +146,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                         child: Align(
                           alignment: Alignment.topCenter,
                           child: Container(
-                            height: 540,
+                            height: 390,
                             decoration: BoxDecoration(
                               color: const Color(0xFF171312),
                               borderRadius: BorderRadius.circular(40),
@@ -211,7 +211,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                                       isLocked: true, // Educational locking
                                       staticValues:
                                           method?.sensoryPreset ?? values,
-                                      height: 380,
+                                      height: 280,
                                     );
                                   })(),
                                 ),

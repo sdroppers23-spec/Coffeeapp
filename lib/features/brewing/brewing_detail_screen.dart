@@ -80,9 +80,10 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                             colors: [
                               Colors.black54,
                               Colors.transparent,
-                              Colors.black87,
+                              Colors.transparent,
+                              Color(0xFF0F0E0D),
                             ],
-                            stops: [0.0, 0.4, 1.0],
+                            stops: [0.0, 0.3, 0.7, 1.0],
                           ),
                         ),
                       ),
@@ -118,32 +119,71 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
               ),
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.all(24.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         widget.recipe.name,
                         style: GoogleFonts.cormorantGaramond(
-                          fontSize: 40,
+                          fontSize: 48,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                           height: 1.0,
                         ),
                       ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          _InfoChip(
-                            icon: Icons.timer_outlined,
-                            label: _formatTime(widget.recipe.totalTimeSec ?? 0),
+                      const SizedBox(height: 24),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: const Color(0xFFC8A96E).withValues(alpha: 0.5),
+                            width: 1,
                           ),
-                          _InfoChip(
-                            icon: Icons.signal_cellular_alt_outlined,
-                            label: widget.recipe.difficulty ?? 'Medium',
-                          ),
-                        ],
+                          color: Colors.white.withValues(alpha: 0.03),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _ParameterItem(
+                              label: ref.t('ratio'),
+                              value: '1:${(1 / (widget.recipe.ratioGramsPerMl ?? 0.066)).toStringAsFixed(0)}',
+                            ),
+                            _ParameterItem(
+                              label: ref.t('timer'),
+                              value: _formatTime(widget.recipe.totalTimeSec ?? 180),
+                            ),
+                            _ParameterItem(
+                              label: ref.t('difficulty'),
+                              value: widget.recipe.difficulty ?? 'Med',
+                            ),
+                            _ParameterItem(
+                              label: ref.t('intensity'),
+                              value: widget.recipe.flavorProfile ?? 'Balanced',
+                            ),
+                          ],
+                        ),
                       ),
+                      const SizedBox(height: 32),
+                      Text(
+                        ref.t('about_method'),
+                        style: GoogleFonts.outfit(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        widget.recipe.description,
+                        style: GoogleFonts.outfit(
+                          fontSize: 16,
+                          color: Colors.white70,
+                          height: 1.5,
+                        ),
+                      ),
+                      const SizedBox(height: 100),
                     ],
                   ),
                 ),
@@ -188,23 +228,31 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
   }
 }
 
-// ─── Info Chip ────────────────────────────────────────────────────────────────
-class _InfoChip extends StatelessWidget {
-  final IconData icon;
+// ─── Parameter Item ──────────────────────────────────────────────────────────
+class _ParameterItem extends StatelessWidget {
   final String label;
-  const _InfoChip({required this.icon, required this.label});
+  final String value;
+  const _ParameterItem({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: const Color(0xFFC8A96E), size: 20),
-        const SizedBox(height: 6),
         Text(
-          label,
-          style: GoogleFonts.poppins(
-            fontSize: 11,
+          label.toUpperCase(),
+          style: GoogleFonts.outfit(
+            fontSize: 9,
+            color: const Color(0xFFC8A96E),
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: GoogleFonts.outfit(
+            fontSize: 14,
             color: Colors.white,
             fontWeight: FontWeight.w600,
           ),

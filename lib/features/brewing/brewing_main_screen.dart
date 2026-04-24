@@ -36,10 +36,23 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
-      if (mounted) setState(() {});
+      if (mounted) {
+        if (_tabController.index == 1) {
+          ref.read(navBarVisibleProvider.notifier).hide();
+        } else {
+          ref.read(navBarVisibleProvider.notifier).show();
+        }
+        setState(() {});
+      }
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) ref.read(navBarVisibleProvider.notifier).show();
+      if (mounted) {
+        if (_tabController.index == 1) {
+          ref.read(navBarVisibleProvider.notifier).hide();
+        } else {
+          ref.read(navBarVisibleProvider.notifier).show();
+        }
+      }
     });
   }
 
@@ -58,7 +71,7 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
       backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
       appBar: PremiumAppBar(
-        title: ref.t('brewing'),
+        title: ref.t('alternative_brewing'),
         actions: [
           IconButton(
             icon: Icon(
@@ -135,24 +148,7 @@ class _BrewingMethodsContent extends ConsumerWidget {
             // Top spacer (replaces padding.top)
             const SliverToBoxAdapter(child: SizedBox(height: 160)),
 
-            if (espressoMethods.isNotEmpty) ...[
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                sliver: SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 16, left: 8),
-                    child: Text(
-                      'ЕСПРЕСО',
-                      style: GoogleFonts.outfit(
-                        color: Colors.white70,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 2,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              if (espressoMethods.isNotEmpty) ...[
               if (isGrid)
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -189,23 +185,6 @@ class _BrewingMethodsContent extends ConsumerWidget {
             ],
 
             if (filterMethods.isNotEmpty) ...[
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                sliver: SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 16, left: 8),
-                    child: Text(
-                      'ФІЛЬТР',
-                      style: GoogleFonts.outfit(
-                        color: Colors.white70,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 2,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
               if (isGrid)
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),

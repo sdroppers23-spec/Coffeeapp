@@ -25,7 +25,7 @@ final themeProvider = NotifierProvider<ThemeNotifier, ThemeMode>(() {
 
 class AppTheme {
   // ── Palette: Dark Roast ──────────────────────────────────────────────────
-  static const Color darkBg = Color(0xFF120C0B);
+  static const Color darkBg = Color(0xFF0A0908);
   static const Color darkSurface = Color(0xFF1D1513);
   static const Color darkPrimary = Color(0xFFD7CCC8); // Milk Foam
   static const Color darkAccent = Color(0xFFC6AC8F); // Crema Gold

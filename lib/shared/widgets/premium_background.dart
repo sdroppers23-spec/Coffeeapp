@@ -11,10 +11,9 @@ class PremiumBackground extends ConsumerWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        // 1. Base Color
         const DecoratedBox(
           decoration: BoxDecoration(
-            color: Color(0xFF0F0E0D), 
+            color: Color(0xFF0A0908), 
           ),
         ),
 

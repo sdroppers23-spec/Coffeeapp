@@ -297,8 +297,9 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
 
       // Attempt cloud sync if logged in
       if (user != null) {
+        debugPrint('Starting cloud sync for recipe: ${recipe.id.value}');
         try {
-          await ref.read(supabaseProvider).from('custom_recipes').upsert({
+          await ref.read(supabaseProvider).from('user_custom_recipes').upsert({
             'id': recipe.id.value,
             'user_id': userId,
             'lot_id': recipe.lotId.value,
@@ -321,8 +322,9 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
 
           // Mark as synced locally
           await db.upsertCustomRecipe(recipe.copyWith(isSynced: const Value(true)));
+          debugPrint('Cloud sync successful for recipe: ${recipe.id.value}');
         } catch (e) {
-          debugPrint('Cloud sync failed: $e');
+          debugPrint('Cloud sync failed for recipe ${recipe.id.value}: $e');
           // We don't fail the local save if cloud sync fails
         }
       }

@@ -129,9 +129,10 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                               Colors.black54,
                               Colors.transparent,
                               Colors.transparent,
+                              Colors.black38,
                               Color(0xFF0F0E0D),
                             ],
-                            stops: [0.0, 0.3, 0.7, 1.0],
+                            stops: [0.0, 0.2, 0.5, 0.8, 1.0],
                           ),
                         ),
                       ),
@@ -319,7 +320,18 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
     bool overlapsContent,
   ) {
     return Container(
-      color: const Color(0xFF0F0E0D), // Matches background
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            const Color(0xFF0F0E0D).withValues(alpha: 0.0),
+            const Color(0xFF0F0E0D).withValues(alpha: 0.8),
+            const Color(0xFF0F0E0D),
+          ],
+          stops: const [0.0, 0.4, 1.0],
+        ),
+      ),
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

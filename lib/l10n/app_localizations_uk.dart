@@ -295,7 +295,8 @@ class AppLocalizationsUk extends AppLocalizations {
   String get premium_roasters => 'Преміум Обсмажчики';
 
   @override
-  String get auth_subtitle => 'Увійдіть, щоб відстежувати свій шлях';
+  String get auth_subtitle =>
+      'Ласкаво просимо! Будь ласка увійдіть чи зареєструйтесь';
 
   @override
   String get search_origins => 'Пошук...';

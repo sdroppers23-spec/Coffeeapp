@@ -346,8 +346,10 @@ class SyncService {
       for (final r in recipesToSync) {
         try {
           if (r.isDeletedLocal) {
+            debugPrint('Deleting recipe from cloud: ${r.id}');
             await supabase!.from('user_custom_recipes').delete().eq('id', r.id).eq('user_id', userId);
-            await db.deleteCustomRecipe(r.id);
+            await db.deleteCustomRecipePermanently(r.id);
+            debugPrint('Recipe deleted permanently from local: ${r.id}');
 
           } else {
             await supabase!.from('user_custom_recipes').upsert({
@@ -368,12 +370,12 @@ class SyncService {
               'rating': r.rating,
               'created_at': r.createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
               'updated_at': DateTime.now().toIso8601String(),
-            });
             await (db.update(db.customRecipes)..where((t) => t.id.equals(r.id))).write(const CustomRecipesCompanion(isSynced: Value(true)));
+            debugPrint('Recipe synced to cloud: ${r.id}');
           }
         } catch (e) {
-      // Production silent fail
-    }
+          debugPrint('Error syncing recipe ${r.id}: $e');
+        }
       }
 
       // 2. Sync Personal Coffee Lots (Upsert & Delete)
@@ -854,11 +856,18 @@ class SyncService {
 
   Future<void> syncEncyclopedia() async {
     if (supabase == null) return;
+    debugPrint('SyncService: Syncing Encyclopedia...');
     try {
 
       // Use encyclopedia_entries — the correct table with 18 rows
       final data = await supabase!.from('encyclopedia_entries').select();
       final remoteIds = data.map((item) => (item['id'] as num).toInt()).toList();
+      debugPrint('SyncService: Fetched ${data.length} encyclopedia entries');
+
+      if (data.isEmpty) {
+        debugPrint('SyncService: No encyclopedia entries found in remote');
+        return;
+      }
 
       for (final item in data) {
         try {
@@ -927,8 +936,8 @@ class SyncService {
 
           await db.smartUpsertBeanV2(bean, translations);
         } catch (e) {
-      // Production silent fail
-    }
+          debugPrint('SyncService: Error processing encyclopedia item ${item['id']}: $e');
+        }
       }
 
       if (remoteIds.isNotEmpty) {
@@ -937,8 +946,9 @@ class SyncService {
           await (db.delete(db.localizedBeansV2)..where((t) => t.id.isIn(remoteIds).not())).go();
         });
       }
+      debugPrint('SyncService: Encyclopedia sync complete');
     } catch (e) {
-      // Production silent fail
+      debugPrint('SyncService: Error in syncEncyclopedia: $e');
     }
   }
 

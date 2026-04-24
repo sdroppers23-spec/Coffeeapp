@@ -295,7 +295,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get premium_roasters => 'Premium Roasters';
 
   @override
-  String get auth_subtitle => 'Sign in to sync your coffee journey';
+  String get auth_subtitle => 'Welcome! Please log in or sign up';
 
   @override
   String get search_origins => 'Search origins...';

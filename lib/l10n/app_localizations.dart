@@ -675,7 +675,7 @@ abstract class AppLocalizations {
   /// No description provided for @auth_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Sign in to sync your coffee journey'**
+  /// **'Welcome! Please log in or sign up'**
   String get auth_subtitle;
 
   /// No description provided for @search_origins.

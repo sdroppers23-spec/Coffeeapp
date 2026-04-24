@@ -855,21 +855,35 @@ class SyncService {
 
   Future<void> syncEncyclopedia() async {
     if (supabase == null) return;
-    debugPrint('SyncService: Syncing Encyclopedia...');
+    debugPrint('SyncService: Starting Encyclopedia sync...');
     try {
-
-      // Use encyclopedia_entries — the correct table with 18 rows
+      // 1. Fetch main entries
       final data = await supabase!.from('encyclopedia_entries').select();
-      debugPrint('SyncService: Fetched ${data.length} encyclopedia entries from Supabase');
+      final remoteIds = data.map((item) => (item['id'] as num).toInt()).toList();
+      debugPrint('SyncService: Fetched ${data.length} encyclopedia entries from cloud');
 
-      final List<LocalizedBeansV2Companion> beans = [];
-      final List<LocalizedBeanTranslationsV2Companion> allTranslations = [];
-      final List<int> remoteIds = [];
+      if (remoteIds.isEmpty) {
+        debugPrint('SyncService: No remote encyclopedia entries found, skipping.');
+        return;
+      }
 
+      // 2. Fetch all translations (even if empty in Supabase for now)
+      final allTranslationsData = await supabase!
+          .from('localized_bean_translations')
+          .select()
+          .inFilter('bean_id', remoteIds);
+      
+      // Group translations by bean_id
+      final Map<int, List<Map<String, dynamic>>> translationMap = {};
+      for (final t in allTranslationsData) {
+        final bId = (t['bean_id'] as num).toInt();
+        translationMap.putIfAbsent(bId, () => []).add(t);
+      }
+
+      int successCount = 0;
       for (var item in data) {
         try {
           final int id = (item['id'] as num).toInt();
-          remoteIds.add(id);
 
           final bean = LocalizedBeansV2Companion(
             id: Value(id),
@@ -882,12 +896,12 @@ class SyncService {
             cupsScore: Value(double.tryParse(item['cups_score']?.toString() ?? '82.0') ?? 82.0),
             sensoryJson: Value(item['sensory_json'] != null ? jsonEncode(item['sensory_json']) : '{}'),
             priceJson: Value(item['price_json'] != null ? jsonEncode(item['price_json']) : '{}'),
-            plantationPhotosUrl: Value(item['plantation_photos_url'] as String? ?? '[]'),
+            plantationPhotosUrl: Value(_safeJson(item['plantation_photos_url'])),
             harvestSeason: Value(item['harvest_season'] as String? ?? ''),
             price: Value(item['price'] as String? ?? ''),
             weight: Value(item['weight'] as String? ?? ''),
             roastDate: Value(item['roast_date'] as String? ?? ''),
-            processingMethodsJson: Value(item['processing_methods_json'] as String? ?? '[]'),
+            processingMethodsJson: Value(_safeJson(item['processing_methods_json'])),
             isPremium: Value(item['is_premium'] as bool? ?? false),
             detailedProcessMarkdown: Value(item['detailed_process_markdown'] as String? ?? ''),
             url: Value(item['url'] as String? ?? ''),
@@ -903,56 +917,89 @@ class SyncService {
             createdAt: Value(item['created_at'] != null ? DateTime.tryParse(item['created_at'] as String) : null),
           );
 
-          beans.add(bean);
+          final List<LocalizedBeanTranslationsV2Companion> translations = [];
+          final transData = translationMap[id] ?? [];
 
-          final List<LocalizedBeanTranslationsV2Companion> translations = [
-            LocalizedBeanTranslationsV2Companion(
+          // Add existing translations from cloud
+          for (final t in transData) {
+            translations.add(LocalizedBeanTranslationsV2Companion(
+              beanId: Value(id),
+              languageCode: Value(t['language_code'] as String),
+              country: Value(t['country'] as String?),
+              region: Value(t['region'] as String?),
+              varieties: Value(t['varieties'] as String?),
+              flavorNotes: Value(_safeJson(t['flavor_notes'])),
+              processMethod: Value(t['process_method'] as String?),
+              description: Value(ContentUtils.cleanCoffeeContent(t['description'] as String? ?? '')),
+              farmDescription: Value(ContentUtils.cleanCoffeeContent(t['farm_description'] as String? ?? '')),
+              roastLevel: Value(t['roast_level'] as String?),
+            ));
+          }
+
+          // FALLBACK logic: if 'uk' or 'en' is missing, use the main table (which has Ukrainian data)
+          if (!translations.any((t) => t.languageCode.value == 'uk')) {
+            translations.add(LocalizedBeanTranslationsV2Companion(
               beanId: Value(id),
               languageCode: const Value('uk'),
               country: Value(item['country'] as String? ?? 'Unknown'),
               region: Value(item['region'] as String? ?? ''),
               varieties: Value(item['varieties'] as String? ?? ''),
-              flavorNotes: Value(item['flavor_notes']?.toString() ?? '[]'),
+              flavorNotes: Value(_safeJson(item['flavor_notes'])),
               processMethod: Value(item['process_method'] as String? ?? ''),
               description: Value(ContentUtils.cleanCoffeeContent(item['description'] as String? ?? '')),
               farmDescription: Value(ContentUtils.cleanCoffeeContent(item['farm_description'] as String? ?? '')),
               roastLevel: Value(item['roast_level'] as String? ?? ''),
-            ),
-            LocalizedBeanTranslationsV2Companion(
+            ));
+          }
+
+          if (!translations.any((t) => t.languageCode.value == 'en')) {
+            translations.add(LocalizedBeanTranslationsV2Companion(
               beanId: Value(id),
               languageCode: const Value('en'),
               country: Value(item['country'] as String? ?? 'Unknown'),
               region: Value(item['region'] as String? ?? ''),
               varieties: Value(item['varieties'] as String? ?? ''),
-              flavorNotes: Value(item['flavor_notes']?.toString() ?? '[]'),
+              flavorNotes: Value(_safeJson(item['flavor_notes'])),
               processMethod: Value(item['process_method'] as String? ?? ''),
               description: Value(ContentUtils.cleanCoffeeContent(item['description'] as String? ?? '')),
               farmDescription: Value(ContentUtils.cleanCoffeeContent(item['farm_description'] as String? ?? '')),
               roastLevel: Value(item['roast_level'] as String? ?? ''),
-            ),
-          ];
+            ));
+          }
 
-          allTranslations.addAll(translations);
+          await db.smartUpsertBeanV2(bean, translations);
+          successCount++;
         } catch (e) {
           debugPrint('SyncService: Error mapping encyclopedia entry ${item['id']}: $e');
         }
       }
 
-      if (beans.isNotEmpty) {
-        await db.transaction(() async {
-          await db.batch((batch) {
-            batch.insertAllOnConflictUpdate(db.localizedBeansV2, beans);
-            batch.insertAllOnConflictUpdate(db.localizedBeanTranslationsV2, allTranslations);
-          });
-          // Cleanup deleted
-          await (db.delete(db.localizedBeansV2)..where((t) => t.id.isIn(remoteIds).not())).go();
-        });
-        debugPrint('SyncService: Successfully upserted ${beans.length} encyclopedia entries');
-      }
-      debugPrint('SyncService: Encyclopedia sync complete');
+      // 3. Cleanup deleted
+      await db.transaction(() async {
+        await (db.delete(db.localizedBeanTranslationsV2)..where((t) => t.beanId.isIn(remoteIds).not())).go();
+        await (db.delete(db.localizedBeansV2)..where((t) => t.id.isIn(remoteIds).not())).go();
+      });
+
+      debugPrint('SyncService: Encyclopedia sync complete. Successfully synced $successCount entries.');
     } catch (e) {
-      debugPrint('SyncService: Error in syncEncyclopedia: $e');
+      debugPrint('SyncService: Fatal error in syncEncyclopedia: $e');
     }
+  }
+
+  String _safeJson(dynamic val, [String fallback = '[]']) {
+    if (val == null) return fallback;
+    if (val is String) {
+      // Check if it's actually JSON
+      try {
+        jsonDecode(val);
+        return val;
+      } catch (_) {
+        // Not JSON, wrap it as a single element array if it's a non-empty string
+        if (val.isEmpty) return fallback;
+        return jsonEncode([val]);
+      }
+    }
+    return jsonEncode(val);
   }
 
   /// Syncs a single encyclopedia entry by ID.
@@ -973,12 +1020,12 @@ class SyncService {
         cupsScore: Value(double.tryParse(item['cups_score']?.toString() ?? '82.0') ?? 82.0),
         sensoryJson: Value(item['sensory_json'] != null ? jsonEncode(item['sensory_json']) : '{}'),
         priceJson: Value(item['price_json'] != null ? jsonEncode(item['price_json']) : '{}'),
-        plantationPhotosUrl: Value(item['plantation_photos_url'] as String? ?? '[]'),
+        plantationPhotosUrl: Value(_safeJson(item['plantation_photos_url'])),
         harvestSeason: Value(item['harvest_season'] as String? ?? ''),
         price: Value(item['price'] as String? ?? ''),
         weight: Value(item['weight'] as String? ?? ''),
         roastDate: Value(item['roast_date'] as String? ?? ''),
-        processingMethodsJson: Value(item['processing_methods_json'] as String? ?? '[]'),
+        processingMethodsJson: Value(_safeJson(item['processing_methods_json'])),
         isPremium: Value(item['is_premium'] as bool? ?? false),
         detailedProcessMarkdown: Value(item['detailed_process_markdown'] as String? ?? ''),
         url: Value(item['url'] as String? ?? ''),
@@ -994,38 +1041,59 @@ class SyncService {
         createdAt: Value(item['created_at'] != null ? DateTime.tryParse(item['created_at'] as String) : null),
       );
 
-      final List<LocalizedBeanTranslationsV2Companion> translations = [
-        LocalizedBeanTranslationsV2Companion(
+      final List<LocalizedBeanTranslationsV2Companion> translations = [];
+      final transData = await supabase!.from('localized_bean_translations').select().eq('bean_id', id);
+
+      for (final t in transData) {
+        translations.add(LocalizedBeanTranslationsV2Companion(
+          beanId: Value(id),
+          languageCode: Value(t['language_code'] as String),
+          country: Value(t['country'] as String?),
+          region: Value(t['region'] as String?),
+          varieties: Value(t['varieties'] as String?),
+          flavorNotes: Value(_safeJson(t['flavor_notes'])),
+          processMethod: Value(t['process_method'] as String?),
+          description: Value(ContentUtils.cleanCoffeeContent(t['description'] as String? ?? '')),
+          farmDescription: Value(ContentUtils.cleanCoffeeContent(t['farm_description'] as String? ?? '')),
+          roastLevel: Value(t['roast_level'] as String?),
+        ));
+      }
+
+      // Fallback
+      if (!translations.any((t) => t.languageCode.value == 'uk')) {
+        translations.add(LocalizedBeanTranslationsV2Companion(
           beanId: Value(id),
           languageCode: const Value('uk'),
           country: Value(item['country'] as String? ?? 'Unknown'),
           region: Value(item['region'] as String? ?? ''),
           varieties: Value(item['varieties'] as String? ?? ''),
-          flavorNotes: Value(item['flavor_notes']?.toString() ?? '[]'),
+          flavorNotes: Value(_safeJson(item['flavor_notes'])),
           processMethod: Value(item['process_method'] as String? ?? ''),
           description: Value(ContentUtils.cleanCoffeeContent(item['description'] as String? ?? '')),
           farmDescription: Value(ContentUtils.cleanCoffeeContent(item['farm_description'] as String? ?? '')),
           roastLevel: Value(item['roast_level'] as String? ?? ''),
-        ),
-        LocalizedBeanTranslationsV2Companion(
+        ));
+      }
+
+      if (!translations.any((t) => t.languageCode.value == 'en')) {
+        translations.add(LocalizedBeanTranslationsV2Companion(
           beanId: Value(id),
           languageCode: const Value('en'),
           country: Value(item['country'] as String? ?? 'Unknown'),
           region: Value(item['region'] as String? ?? ''),
           varieties: Value(item['varieties'] as String? ?? ''),
-          flavorNotes: Value(item['flavor_notes']?.toString() ?? '[]'),
+          flavorNotes: Value(_safeJson(item['flavor_notes'])),
           processMethod: Value(item['process_method'] as String? ?? ''),
           description: Value(ContentUtils.cleanCoffeeContent(item['description'] as String? ?? '')),
           farmDescription: Value(ContentUtils.cleanCoffeeContent(item['farm_description'] as String? ?? '')),
           roastLevel: Value(item['roast_level'] as String? ?? ''),
-        ),
-      ];
+        ));
+      }
 
       await db.smartUpsertBeanV2(bean, translations);
       _dataUpdateController.add(null);
-
     } catch (e) {
-      // Production silent fail
+      debugPrint('SyncService: Error in syncSingleEncyclopediaEntryV2 ($id): $e');
     }
   }
 

@@ -238,7 +238,6 @@ class AppLocalizations {
       'wheel_note_stale': 'Stale',
       'wheel_note_musty': 'Musty',
       'wheel_note_dusty': 'Dusty',
-      'aftertaste': 'Aftertaste',
       'retail': 'Retail',
       'wholesale': 'Wholesale',
       'shop_coffee': 'Shop this Coffee',

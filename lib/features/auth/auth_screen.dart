@@ -102,7 +102,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             children: [
               Center(
                 child: Image.asset(
-                  'assets/images/Logo1.png',
+                  'assets/images/Logo2.png',
                   height: 140,
                   fit: BoxFit.contain,
                 ),

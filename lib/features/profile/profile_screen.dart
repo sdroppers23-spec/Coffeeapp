@@ -288,6 +288,25 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ),
                 ),
               ),
+              const SizedBox(height: 60),
+              // App Logo at bottom
+              Opacity(
+                opacity: 0.3,
+                child: Image.asset(
+                  'assets/images/Logo2.png',
+                  height: 40,
+                  fit: BoxFit.contain,
+                ),
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'v1.0.0',
+                style: TextStyle(
+                  color: Colors.white24,
+                  fontSize: 10,
+                  letterSpacing: 2,
+                ),
+              ),
               const SizedBox(height: 120), // Bottom padding for nav bar clearance
             ],
           ),

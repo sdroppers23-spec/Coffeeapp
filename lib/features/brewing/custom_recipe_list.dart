@@ -507,6 +507,7 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
       ),
     );
   }
+}
 
 class _SortChip extends StatelessWidget {
   final String label;

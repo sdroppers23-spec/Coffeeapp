@@ -139,42 +139,81 @@ class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
             ),
             if (_isSelectionMode)
               Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: GlassContainer(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  borderRadius: 16,
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.close_rounded, color: Colors.white),
-                        onPressed: () => setState(() {
-                          _isSelectionMode = false;
-                          _selectedIds.clear();
-                        }),
-                      ),
-                      Text(
-                        '${_selectedIds.length} ${isUk ? 'вибрано' : 'selected'}',
-                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                      const Spacer(),
-                      IconButton(
-                        icon: const Icon(Icons.select_all_rounded, color: Colors.white),
-                        tooltip: ref.t('select_all'),
-                        onPressed: () => _selectAll(recipes),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete_outline_rounded, color: Color(0xFFEF5350)),
-                        onPressed: _selectedIds.isEmpty ? null : _deleteSelected,
+                bottom: 90,
+                left: 20,
+                right: 20,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1D1B1A),
+                    borderRadius: BorderRadius.circular(30),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.5),
+                        blurRadius: 20,
+                        spreadRadius: 4,
                       ),
                     ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '${_selectedIds.length} ${isUk ? 'вибрано' : 'selected'}',
+                                style: GoogleFonts.outfit(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                            _buildSelectionAction(
+                              Icons.select_all_rounded,
+                              Colors.white,
+                              () => _selectAll(recipes),
+                            ),
+                            const SizedBox(width: 12),
+                            _buildSelectionAction(
+                              Icons.delete_outline_rounded,
+                              const Color(0xFFEF5350),
+                              _selectedIds.isEmpty ? null : _deleteSelected,
+                            ),
+                            const SizedBox(width: 8),
+                            _buildSelectionAction(
+                              Icons.close_rounded,
+                              Colors.white70,
+                              () => setState(() {
+                                _isSelectionMode = false;
+                                _selectedIds.clear();
+                              }),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
           ],
         );
       },
+    );
+  }
+
+  Widget _buildSelectionAction(IconData icon, Color color, VoidCallback? onTap) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Icon(icon, color: color, size: 26),
+      ),
     );
   }
 }
@@ -284,7 +323,7 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
         return Stack(
           children: [
             ListView(
-              padding: const EdgeInsets.fromLTRB(16, 140, 16, 120),
+              padding: const EdgeInsets.fromLTRB(16, 200, 16, 120),
               children: [
                 if (espressoRecipes.isNotEmpty) ...[
                   _CategoryHeader(title: ref.t('espresso').toUpperCase()),
@@ -342,7 +381,7 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
               left: 0,
               right: 0,
               child: Container(
-                padding: const EdgeInsets.fromLTRB(16, 110, 16, 16),
+                padding: const EdgeInsets.fromLTRB(16, 160, 16, 16),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
@@ -388,56 +427,67 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
               ),
             ),
 
-            // Bottom Selection Bar
             if (_isSelectionMode)
               Positioned(
-                bottom: 40,
+                bottom: 90,
                 left: 20,
                 right: 20,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1D1B1A).withValues(alpha: 0.8),
-                        borderRadius: BorderRadius.circular(30),
-                        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1D1B1A),
+                    borderRadius: BorderRadius.circular(30),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.5),
+                        blurRadius: 20,
+                        spreadRadius: 4,
                       ),
-                      child: Row(
-                        children: [
-                          _ActionButton(
-                            icon: Icons.close_rounded,
-                            onTap: () => setState(() {
-                              _isSelectionMode = false;
-                              _selectedIds.clear();
-                            }),
-                          ),
-                          const SizedBox(width: 12),
-                          Text(
-                            '${_selectedIds.length} ${isUk ? 'вибрано' : 'selected'}',
-                            style: GoogleFonts.outfit(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '${_selectedIds.length} ${isUk ? 'вибрано' : 'selected'}',
+                                style: GoogleFonts.outfit(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
                             ),
-                          ),
-                          const Spacer(),
-                          _ActionButton(
-                            icon: Icons.select_all_rounded,
-                            onTap: () {
-                              final recipes = recipesAsync.value ?? [];
-                              _selectAll(recipes);
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                          _ActionButton(
-                            icon: Icons.delete_outline_rounded,
-                            color: const Color(0xFFEF5350),
-                            onTap: _selectedIds.isEmpty ? null : _deleteSelectedBatch,
-                          ),
-                        ],
+                            _buildSelectionAction(
+                              Icons.select_all_rounded,
+                              Colors.white,
+                              () {
+                                final recipes = recipesAsync.value ?? [];
+                                _selectAll(recipes);
+                              },
+                            ),
+                            const SizedBox(width: 12),
+                            _buildSelectionAction(
+                              Icons.delete_outline_rounded,
+                              const Color(0xFFEF5350),
+                              _selectedIds.isEmpty ? null : _deleteSelectedBatch,
+                            ),
+                            const SizedBox(width: 8),
+                            _buildSelectionAction(
+                              Icons.close_rounded,
+                              Colors.white70,
+                              () => setState(() {
+                                _isSelectionMode = false;
+                                _selectedIds.clear();
+                              }),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -446,6 +496,17 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
           ],
         );
       },
+    );
+  }
+
+  Widget _buildSelectionAction(IconData icon, Color color, VoidCallback? onTap) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Icon(icon, color: color, size: 26),
+      ),
     );
   }
 }

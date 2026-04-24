@@ -180,7 +180,7 @@ class _BrewingMethodsContent extends ConsumerWidget {
         return CustomScrollView(
           slivers: [
             // Top spacer (replaces padding.top)
-            const SliverToBoxAdapter(child: SizedBox(height: 160)),
+            const SliverToBoxAdapter(child: SizedBox(height: 210)),
 
               if (espressoMethods.isNotEmpty) ...[
               if (isGrid)

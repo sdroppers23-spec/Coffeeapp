@@ -860,18 +860,17 @@ class SyncService {
 
       // Use encyclopedia_entries — the correct table with 18 rows
       final data = await supabase!.from('encyclopedia_entries').select();
-      final remoteIds = data.map((item) => (item['id'] as num).toInt()).toList();
-      debugPrint('SyncService: Fetched ${data.length} encyclopedia entries');
+      debugPrint('SyncService: Fetched ${data.length} encyclopedia entries from Supabase');
 
-      if (data.isEmpty) {
-        debugPrint('SyncService: No encyclopedia entries found in remote');
-        return;
-      }
+      final List<LocalizedBeansV2Companion> beans = [];
+      final List<LocalizedBeanTranslationsV2Companion> allTranslations = [];
+      final List<int> remoteIds = [];
 
-      for (final item in data) {
+      for (var item in data) {
         try {
-          final id = (item['id'] as num).toInt();
-          
+          final int id = (item['id'] as num).toInt();
+          remoteIds.add(id);
+
           final bean = LocalizedBeansV2Companion(
             id: Value(id),
             brandId: Value((item['brand_id'] as num?)?.toInt()),
@@ -904,8 +903,8 @@ class SyncService {
             createdAt: Value(item['created_at'] != null ? DateTime.tryParse(item['created_at'] as String) : null),
           );
 
-          // Table encyclopedia_entries stores data in 'country', 'region', etc.
-          // We provide fallback for both uk/en languages.
+          beans.add(bean);
+
           final List<LocalizedBeanTranslationsV2Companion> translations = [
             LocalizedBeanTranslationsV2Companion(
               beanId: Value(id),
@@ -933,17 +932,22 @@ class SyncService {
             ),
           ];
 
-          await db.smartUpsertBeanV2(bean, translations);
+          allTranslations.addAll(translations);
         } catch (e) {
-          debugPrint('SyncService: Error processing encyclopedia item ${item['id']}: $e');
+          debugPrint('SyncService: Error mapping encyclopedia entry ${item['id']}: $e');
         }
       }
 
-      if (remoteIds.isNotEmpty) {
+      if (beans.isNotEmpty) {
         await db.transaction(() async {
-          await (db.delete(db.localizedBeanTranslationsV2)..where((t) => t.beanId.isIn(remoteIds).not())).go();
+          await db.batch((batch) {
+            batch.insertAllOnConflictUpdate(db.localizedBeansV2, beans);
+            batch.insertAllOnConflictUpdate(db.localizedBeanTranslationsV2, allTranslations);
+          });
+          // Cleanup deleted
           await (db.delete(db.localizedBeansV2)..where((t) => t.id.isIn(remoteIds).not())).go();
         });
+        debugPrint('SyncService: Successfully upserted ${beans.length} encyclopedia entries');
       }
       debugPrint('SyncService: Encyclopedia sync complete');
     } catch (e) {

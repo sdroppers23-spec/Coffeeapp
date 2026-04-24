@@ -43,6 +43,7 @@ final databaseInitializerProvider = FutureProvider<void>((ref) async {
   
   final syncService = ref.read(syncServiceProvider);
 
+  debugPrint('DatabaseProvider: Starting background sync...');
   unawaited(syncService.syncAll());
 
 });

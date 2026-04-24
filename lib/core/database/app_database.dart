@@ -589,7 +589,11 @@ class AppDatabase extends _$AppDatabase {
     ]);
 
     return query.watch().map((rows) {
-      if (rows.isEmpty) return [];
+      debugPrint('AppDatabase: watchAllEncyclopediaEntries found ${rows.length} rows for lang $lang');
+      if (rows.isNotEmpty) {
+        final first = rows.first.readTable(localizedBeansV2);
+        debugPrint('AppDatabase: Sample row ID: ${first.id}');
+      }
       return rows.map((row) => _mapBeanV2Row(row, lang)).toList();
     });
   }

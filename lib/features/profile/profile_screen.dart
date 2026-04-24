@@ -291,7 +291,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               const SizedBox(height: 60),
               // App Logo at bottom
               Image.asset(
-                'assets/images/Logo2.png',
+                'assets/images/Logo3.png',
                 height: 120,
                 fit: BoxFit.contain,
               ),

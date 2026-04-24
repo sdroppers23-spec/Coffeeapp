@@ -51,6 +51,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
   final _grinderNameController = TextEditingController();
   final _customGrinderController = TextEditingController();
   bool _isOtherGrinder = false;
+  bool _isGrinderExpanded = false;
 
   // Pour Schedule
   final List<PourControllers> _pourControllers = [];
@@ -213,8 +214,15 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
 
   Future<void> _save() async {
     final isUk = LocaleService.currentLocale == 'uk';
-    if (!_formKey.currentState!.validate()) return;
-    if (_isOtherGrinder && _customGrinderController.text.isEmpty) return;
+    if (!_formKey.currentState!.validate()) {
+      ToastService.showError(
+        context,
+        isUk
+            ? 'Будь ласка, заповніть обов’язкові поля'
+            : 'Please fill in required fields',
+      );
+      return;
+    }
 
     final db = ref.read(databaseProvider);
     final supabase = ref.read(supabaseProvider);
@@ -800,26 +808,103 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
   }
 
   Widget _buildGrinderSection(bool isUk, Color gold) {
+    if (!_isGrinderExpanded && _grinderNameController.text.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: TextButton.icon(
+            onPressed: () => setState(() => _isGrinderExpanded = true),
+            icon: Icon(Icons.tune_rounded, color: gold, size: 20),
+            label: Text(
+              isUk ? 'Оберіть кавомолку' : 'Choose Grinder',
+              style: GoogleFonts.outfit(
+                color: gold,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              backgroundColor: Colors.white.withValues(alpha: 0.05),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: BorderSide(color: gold.withValues(alpha: 0.3), width: 1),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (!_isGrinderExpanded && _grinderNameController.text.isEmpty) {
+      return Center(
+        child: TextButton.icon(
+          onPressed: () => setState(() => _isGrinderExpanded = true),
+          icon: Icon(Icons.settings_input_component_rounded, color: gold, size: 20),
+          label: Text(
+            isUk ? 'Оберіть кавомолку' : 'Choose coffee grinder',
+            style: GoogleFonts.outfit(
+              color: gold,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            backgroundColor: gold.withValues(alpha: 0.1),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+              side: BorderSide(color: gold.withValues(alpha: 0.3)),
+            ),
+          ),
+        ),
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          isUk ? 'Модель кавомолки' : 'Grinder Model',
-          style: GoogleFonts.outfit(color: Colors.white38, fontSize: 11),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              isUk ? 'Модель кавомолки' : 'Grinder Model',
+              style: GoogleFonts.outfit(color: Colors.white38, fontSize: 11),
+            ),
+            GestureDetector(
+              onTap: () => setState(() {
+                _isGrinderExpanded = false;
+                _grinderNameController.clear();
+                _customGrinderController.clear();
+                _isOtherGrinder = false;
+              }),
+              child: Icon(
+                Icons.close_rounded,
+                color: Colors.white24,
+                size: 16,
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
-          initialValue: _grinderNameController.text.isNotEmpty
-              ? ([
-                      'Comandante',
-                      'EK43',
-                      'Fellow Ode',
-                      'Wilfa',
-                      'Timemore',
-                    ].contains(_grinderNameController.text)
-                    ? _grinderNameController.text
-                    : 'Other')
-              : 'Other',
+          value:
+              _grinderNameController.text.isNotEmpty
+                  ? ([
+                        'Comandante',
+                        'EK43',
+                        'Fellow Ode',
+                        'Wilfa',
+                        'Timemore',
+                        'Other',
+                      ].contains(_grinderNameController.text)
+                      ? _grinderNameController.text
+                      : 'Other')
+                  : null,
+          hint: Text(
+            isUk ? 'Оберіть зі списку...' : 'Select from list...',
+            style: GoogleFonts.outfit(color: Colors.white24, fontSize: 14),
+          ),
           dropdownColor: const Color(0xFF1D1B1A),
           style: GoogleFonts.outfit(color: Colors.white),
           decoration: InputDecoration(
@@ -835,7 +920,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             ),
           ),
           items:
-              ['Other', 'Comandante', 'EK43', 'Fellow Ode', 'Wilfa', 'Timemore']
+              ['Comandante', 'EK43', 'Fellow Ode', 'Wilfa', 'Timemore', 'Other']
                   .map(
                     (e) => DropdownMenuItem(
                       value: e,
@@ -843,10 +928,12 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                     ),
                   )
                   .toList(),
-          onChanged: (val) => setState(() {
-            _grinderNameController.text = val!;
-            _isOtherGrinder = val == 'Other';
-          }),
+          onChanged:
+              (val) => setState(() {
+                _grinderNameController.text = val!;
+                _isOtherGrinder = val == 'Other';
+                _isGrinderExpanded = true;
+              }),
         ),
         if (_isOtherGrinder) ...[
           const SizedBox(height: 12),
@@ -854,9 +941,11 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             controller: _customGrinderController,
             label: isUk ? 'Введіть назву кавомолки' : 'Enter grinder name',
             hint: isUk ? 'Назва кавомолки' : 'Grinder name',
-            validator: (val) => val == null || val.isEmpty
-                ? (isUk ? 'Обов’язково' : 'Required')
-                : null,
+            validator:
+                (val) =>
+                    val == null || val.isEmpty
+                        ? (isUk ? 'Обов’язково' : 'Required')
+                        : null,
           ),
         ],
         const SizedBox(height: 12),
@@ -880,6 +969,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
       ],
     );
   }
+
 
   Widget _buildPourSchedule(bool isUk, Color gold) {
     return Column(

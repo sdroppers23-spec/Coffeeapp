@@ -6,9 +6,7 @@ import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../shared/widgets/modern_undo_timer.dart';
-import 'dart:ui';
 import 'widgets/custom_recipe_card.dart';
-import '../../shared/widgets/glass_container.dart';
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
 final customRecipesForMethodProvider =
@@ -509,35 +507,6 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
       ),
     );
   }
-}
-
-class _ActionButton extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback? onTap;
-  final Color color;
-
-  const _ActionButton({
-    required this.icon,
-    this.onTap,
-    this.color = Colors.white,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Icon(icon, color: color, size: 22),
-      ),
-    );
-  }
-}
 
 class _SortChip extends StatelessWidget {
   final String label;

@@ -8,6 +8,7 @@ import 'custom_recipe_list.dart';
 import '../../shared/widgets/premium_background.dart';
 import '../../shared/widgets/add_recipe_dialog.dart';
 import '../navigation/navigation_providers.dart';
+import '../../core/l10n/app_localizations.dart';
 
 // ─── Method metadata (shared with BrewingGuideScreen) ──────────────────────────
 const _methodMeta = {
@@ -38,11 +39,6 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
     super.dispose();
   }
 
-  String _formatTime(int secs) {
-    final m = secs ~/ 60;
-    final s = secs % 60;
-    return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,55 +113,19 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                   const SizedBox(width: 8),
                 ],
               ),
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: _StickyHeaderDelegate(
+                  recipe: widget.recipe,
+                  t: ref.t,
+                ),
+              ),
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        widget.recipe.name,
-                        style: GoogleFonts.cormorantGaramond(
-                          fontSize: 48,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          height: 1.0,
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: const Color(0xFFC8A96E).withValues(alpha: 0.5),
-                            width: 1,
-                          ),
-                          color: Colors.white.withValues(alpha: 0.03),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            _ParameterItem(
-                              label: ref.t('ratio'),
-                              value: '1:${(1 / (widget.recipe.ratioGramsPerMl ?? 0.066)).toStringAsFixed(0)}',
-                            ),
-                            _ParameterItem(
-                              label: ref.t('timer'),
-                              value: _formatTime(widget.recipe.totalTimeSec ?? 180),
-                            ),
-                            _ParameterItem(
-                              label: ref.t('difficulty'),
-                              value: widget.recipe.difficulty ?? 'Med',
-                            ),
-                            _ParameterItem(
-                              label: ref.t('intensity'),
-                              value: widget.recipe.flavorProfile ?? 'Balanced',
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 32),
                       Text(
                         ref.t('about_method'),
                         style: GoogleFonts.outfit(
@@ -183,7 +143,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                           height: 1.5,
                         ),
                       ),
-                      const SizedBox(height: 100),
+                      const SizedBox(height: 32),
                     ],
                   ),
                 ),
@@ -226,6 +186,90 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
 
     return Image.asset(assetPath, fit: BoxFit.cover);
   }
+}
+
+// ─── Sticky Header Delegate ──────────────────────────────────────────────────
+class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final BrewingRecipeDto recipe;
+  final String Function(String) t;
+
+  _StickyHeaderDelegate({required this.recipe, required this.t});
+
+  @override
+  double get minExtent => 160;
+  @override
+  double get maxExtent => 160;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return Container(
+      color: const Color(0xFF0F0E0D), // Matches background
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            recipe.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.cormorantGaramond(
+              fontSize: 36, // Slightly smaller for sticky
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              height: 1.0,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: const Color(0xFFC8A96E).withValues(alpha: 0.5),
+                width: 1,
+              ),
+              color: Colors.white.withValues(alpha: 0.03),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _ParameterItem(
+                  label: t('ratio'),
+                  value:
+                      '1:${(1 / (recipe.ratioGramsPerMl ?? 0.066)).toStringAsFixed(0)}',
+                ),
+                _ParameterItem(
+                  label: t('timer'),
+                  value: _formatTime(recipe.totalTimeSec ?? 180),
+                ),
+                _ParameterItem(
+                  label: t('difficulty'),
+                  value: recipe.difficulty ?? 'Med',
+                ),
+                _ParameterItem(
+                  label: t('intensity'),
+                  value: recipe.flavorProfile ?? 'Balanced',
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatTime(int seconds) {
+    int m = seconds ~/ 60;
+    int s = seconds % 60;
+    return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
+  }
+
+  @override
+  bool shouldRebuild(_StickyHeaderDelegate oldDelegate) => true;
 }
 
 // ─── Parameter Item ──────────────────────────────────────────────────────────

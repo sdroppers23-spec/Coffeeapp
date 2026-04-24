@@ -43,14 +43,14 @@ class CustomRecipeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final pours = _pours;
 
-    return InkWell(
-      onTap: isSelectionMode ? onTap : null,
-      borderRadius: BorderRadius.circular(24),
-      child: GlassContainer(
-        padding: const EdgeInsets.all(0),
-        borderColor: isSelected 
-          ? const Color(0xFFC8A96E) 
-          : Colors.white.withValues(alpha: 0.1),
+    return GlassContainer(
+      padding: const EdgeInsets.all(0),
+      borderColor: isSelected 
+        ? const Color(0xFFC8A96E) 
+        : Colors.white.withValues(alpha: 0.1),
+      child: InkWell(
+        onTap: isSelectionMode ? onTap : null,
+        borderRadius: BorderRadius.circular(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -340,6 +340,7 @@ class CustomRecipeCard extends StatelessWidget {
               ),
             ),
         ],
+        ),
       ),
     );
   }

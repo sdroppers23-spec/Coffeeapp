@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../shared/widgets/profile_button.dart';
 import '../navigation/navigation_providers.dart';
@@ -100,7 +99,7 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
               ),
               // Most styles now come from global tabBarTheme in AppTheme
               tabs: [
-                Tab(text: ref.t('alternative')),
+                Tab(text: ref.t('brewing_methods')),
                 Tab(text: ref.t('my_recipes')),
               ],
             ),

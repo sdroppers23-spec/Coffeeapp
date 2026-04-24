@@ -144,9 +144,9 @@ class GlobalCustomRecipeList extends ConsumerStatefulWidget {
 class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList> {
   RecipeSort _sortBy = RecipeSort.date;
   bool _isSelectionMode = false;
-  final Set<int> _selectedIds = {};
+  final Set<String> _selectedIds = {};
 
-  void _toggleSelection(int id) {
+  void _toggleSelection(String id) {
     setState(() {
       if (_selectedIds.contains(id)) {
         _selectedIds.remove(id);
@@ -166,6 +166,17 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
       _isSelectionMode = false;
     });
     ref.invalidate(globalCustomRecipesProvider);
+  }
+
+  void _selectAll() {
+    final recipes = ref.read(globalCustomRecipesProvider).value ?? [];
+    setState(() {
+      if (_selectedIds.length == recipes.length) {
+        _selectedIds.clear();
+      } else {
+        _selectedIds.addAll(recipes.map((r) => r.id));
+      }
+    });
   }
 
   @override
@@ -240,7 +251,7 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
               sortedRecipes.sort((a, b) => a.name.compareTo(b.name));
               break;
             case RecipeSort.method:
-              sortedRecipes.sort((a, b) => (a.methodKey ?? '').compareTo(b.methodKey ?? ''));
+              sortedRecipes.sort((a, b) => a.methodKey.compareTo(b.methodKey));
               break;
           }
 
@@ -256,7 +267,7 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
           return Stack(
             children: [
               ListView(
-                padding: const EdgeInsets.fromLTRB(16, 170, 16, 120),
+                padding: const EdgeInsets.fromLTRB(16, 100, 16, 120),
                 children: [
                   if (espressoRecipes.isNotEmpty) ...[
                     _CategoryHeader(title: ref.t('espresso').toUpperCase()),
@@ -298,17 +309,17 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
                 left: 0,
                 right: 0,
                 child: Container(
-                  padding: const EdgeInsets.fromLTRB(16, 110, 16, 16),
+                  padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
                         const Color(0xFF0F0E0D),
-                        const Color(0xFF0F0E0D).withValues(alpha: 0.9),
-                        Colors.transparent,
+                        const Color(0xFF0F0E0D).withValues(alpha: 0.95),
+                        const Color(0xFF0F0E0D).withValues(alpha: 0.0),
                       ],
-                      stops: const [0.0, 0.8, 1.0],
+                      stops: const [0.0, 0.7, 1.0],
                     ),
                   ),
                   child: Row(
@@ -340,6 +351,13 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
                         ),
                       ),
                       const SizedBox(width: 12),
+                      if (_isSelectionMode)
+                        _ActionIcon(
+                          icon: Icons.select_all_rounded,
+                          onTap: _selectAll,
+                          color: const Color(0xFFC8A96E),
+                        ),
+                      const SizedBox(width: 8),
                       _ActionIcon(
                         icon: _isSelectionMode ? Icons.close_rounded : Icons.checklist_rounded,
                         onTap: () => setState(() {

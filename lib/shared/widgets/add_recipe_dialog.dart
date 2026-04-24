@@ -221,7 +221,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
     final recipe = CustomRecipesCompanion.insert(
       id: Value(widget.existingRecipe?.id ?? const Uuid().v4()),
       userId: user.id,
-      lotId: Value(widget.lotId),
+      lotId: Value(widget.lotId.isEmpty ? null : widget.lotId),
       methodKey: _method,
       name: _nameController.text.isEmpty ? 'Recipe' : _nameController.text,
       coffeeGrams: double.tryParse(_coffeeController.text) ?? 15.0,

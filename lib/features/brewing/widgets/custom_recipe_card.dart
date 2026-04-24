@@ -93,15 +93,26 @@ class CustomRecipeCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          recipe.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.outfit(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFFC8A96E),
-                          ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                recipe.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.outfit(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xFFC8A96E),
+                                ),
+                              ),
+                            ),
+                            if (recipe.isFavorite)
+                              const Padding(
+                                padding: EdgeInsets.only(left: 8),
+                                child: Icon(Icons.favorite_rounded, color: Colors.redAccent, size: 16),
+                              ),
+                          ],
                         ),
                         Text(
                           '${recipe.methodKey.toUpperCase()} • ${recipe.totalWaterMl.toInt()}ml',
@@ -277,20 +288,36 @@ class CustomRecipeCard extends StatelessWidget {
       leftAction: GlassSwipeAction(
         icon: Icons.edit_outlined,
         label: isUk ? 'Редагувати' : 'Edit',
-        color: const Color(0xFF2DD4BF), // Using teal for edit
+        color: const Color(0xFF2DD4BF),
         onTap: () => _editRecipe(context),
       ),
-      rightAction: GlassSwipeAction(
-        icon: Icons.delete_outline_rounded,
-        label: isUk ? 'Видалити' : 'Delete',
-        color: const Color(0xFFEF4444), // Using red for delete
-        onTap: () => _showModernUndo(context),
-      ),
+      rightAction: recipe.isArchived
+          ? GlassSwipeAction(
+              icon: Icons.unarchive_outlined,
+              label: isUk ? 'Відновити' : 'Restore',
+              color: const Color(0xFF3A7BBF),
+              onTap: () async {
+                final db = ref.read(databaseProvider);
+                await db.toggleCustomRecipeArchive(recipe.id, false);
+                ref.invalidate(globalCustomRecipesProvider);
+              },
+            )
+          : GlassSwipeAction(
+              icon: Icons.archive_outlined,
+              label: isUk ? 'Архів' : 'Archive',
+              color: const Color(0xFFF59E0B),
+              onTap: () async {
+                final db = ref.read(databaseProvider);
+                await db.toggleCustomRecipeArchive(recipe.id, true);
+                ref.invalidate(globalCustomRecipesProvider);
+              },
+            ),
       child: card,
     );
   }
 
   void _showActions(BuildContext context) {
+    final isUk = LocaleService.currentLocale == 'uk';
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -301,8 +328,44 @@ class CustomRecipeCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
+              leading: Icon(
+                recipe.isFavorite ? Icons.favorite_rounded : Icons.favorite_outline_rounded,
+                color: recipe.isFavorite ? Colors.redAccent : Colors.white70,
+              ),
+              title: Text(
+                recipe.isFavorite 
+                    ? (isUk ? 'Прибрати з обраних' : 'Remove from Favorites')
+                    : (isUk ? 'Додати до обраних' : 'Add to Favorites'),
+                style: const TextStyle(color: Colors.white),
+              ),
+              onTap: () async {
+                Navigator.pop(context);
+                final db = ref.read(databaseProvider);
+                await db.toggleCustomRecipeFavorite(recipe.id, !recipe.isFavorite);
+                ref.invalidate(globalCustomRecipesProvider);
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                recipe.isArchived ? Icons.unarchive_outlined : Icons.archive_outlined,
+                color: Colors.white70,
+              ),
+              title: Text(
+                recipe.isArchived 
+                    ? (isUk ? 'Відновити з архіву' : 'Restore from Archive')
+                    : (isUk ? 'Архівувати' : 'Archive Recipe'),
+                style: const TextStyle(color: Colors.white),
+              ),
+              onTap: () async {
+                Navigator.pop(context);
+                final db = ref.read(databaseProvider);
+                await db.toggleCustomRecipeArchive(recipe.id, !recipe.isArchived);
+                ref.invalidate(globalCustomRecipesProvider);
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.edit_rounded, color: Colors.white70),
-              title: const Text('Edit Recipe', style: TextStyle(color: Colors.white)),
+              title: Text(isUk ? 'Редагувати' : 'Edit Recipe', style: const TextStyle(color: Colors.white)),
               onTap: () {
                 Navigator.pop(context);
                 _editRecipe(context);
@@ -310,7 +373,7 @@ class CustomRecipeCard extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
-              title: const Text('Delete Recipe', style: TextStyle(color: Colors.redAccent)),
+              title: Text(isUk ? 'Видалити' : 'Delete Recipe', style: const TextStyle(color: Colors.redAccent)),
               onTap: () {
                 Navigator.pop(context);
                 _showModernUndo(context);

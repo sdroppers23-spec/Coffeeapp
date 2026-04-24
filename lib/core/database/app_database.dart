@@ -41,7 +41,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? e]) : super(e ?? openConnection());
 
   @override
-  int get schemaVersion => 39;
+  int get schemaVersion => 40;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -110,7 +110,7 @@ class AppDatabase extends _$AppDatabase {
         await _safeAddColumn(m, localizedBeansV2, localizedBeansV2.flagUrl);
       }
       if (from < 36) {
-        // v36: Add radarJson to encyclopedia beans
+        // v35: Add radarJson to encyclopedia beans
         await _safeAddColumn(m, localizedBeansV2, localizedBeansV2.radarJson);
       }
       if (from < 37) {
@@ -132,6 +132,11 @@ class AppDatabase extends _$AppDatabase {
           customRecipes,
           customRecipes.extractionTimeSeconds,
         );
+      }
+      if (from < 40) {
+        // v40: Add isFavorite and isArchived to custom recipes
+        await _safeAddColumn(m, customRecipes, customRecipes.isFavorite);
+        await _safeAddColumn(m, customRecipes, customRecipes.isArchived);
       }
     },
     beforeOpen: (details) async {
@@ -1067,6 +1072,8 @@ class AppDatabase extends _$AppDatabase {
       createdAt: r.createdAt,
       updatedAt: r.updatedAt,
       isSynced: r.isSynced,
+      isFavorite: r.isFavorite,
+      isArchived: r.isArchived,
       microns: r.microns,
       recipeType: r.recipeType,
       brewRatio: r.brewRatio,
@@ -1100,6 +1107,24 @@ class AppDatabase extends _$AppDatabase {
       const CustomRecipesCompanion(
         isDeletedLocal: Value(true),
         isSynced: Value(false),
+      ),
+    );
+  }
+
+  Future<int> toggleCustomRecipeFavorite(String id, bool isFavorite) async {
+    return (update(customRecipes)..where((t) => t.id.equals(id))).write(
+      CustomRecipesCompanion(
+        isFavorite: Value(isFavorite),
+        isSynced: const Value(false),
+      ),
+    );
+  }
+
+  Future<int> toggleCustomRecipeArchive(String id, bool isArchived) async {
+    return (update(customRecipes)..where((t) => t.id.equals(id))).write(
+      CustomRecipesCompanion(
+        isArchived: Value(isArchived),
+        isSynced: const Value(false),
       ),
     );
   }

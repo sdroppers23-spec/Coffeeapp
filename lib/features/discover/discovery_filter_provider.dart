@@ -164,3 +164,8 @@ final myLotsFilterProvider =
     NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState>(() {
       return DiscoveryFilterNotifier();
     });
+
+final brewingFilterProvider =
+    NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState>(() {
+      return DiscoveryFilterNotifier();
+    });

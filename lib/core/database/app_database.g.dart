@@ -9772,6 +9772,36 @@ class $CustomRecipesTable extends CustomRecipes
     requiredDuringInsert: false,
     defaultValue: const Constant('{}'),
   );
+  static const VerificationMeta _isFavoriteMeta = const VerificationMeta(
+    'isFavorite',
+  );
+  @override
+  late final GeneratedColumn<bool> isFavorite = GeneratedColumn<bool>(
+    'is_favorite',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_favorite" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isArchivedMeta = const VerificationMeta(
+    'isArchived',
+  );
+  @override
+  late final GeneratedColumn<bool> isArchived = GeneratedColumn<bool>(
+    'is_archived',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_archived" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _isSyncedMeta = const VerificationMeta(
     'isSynced',
   );
@@ -9827,6 +9857,8 @@ class $CustomRecipesTable extends CustomRecipes
     grinderName,
     extractionTimeSeconds,
     sensoryJson,
+    isFavorite,
+    isArchived,
     isSynced,
     isDeletedLocal,
   ];
@@ -10014,6 +10046,18 @@ class $CustomRecipesTable extends CustomRecipes
         ),
       );
     }
+    if (data.containsKey('is_favorite')) {
+      context.handle(
+        _isFavoriteMeta,
+        isFavorite.isAcceptableOrUnknown(data['is_favorite']!, _isFavoriteMeta),
+      );
+    }
+    if (data.containsKey('is_archived')) {
+      context.handle(
+        _isArchivedMeta,
+        isArchived.isAcceptableOrUnknown(data['is_archived']!, _isArchivedMeta),
+      );
+    }
     if (data.containsKey('is_synced')) {
       context.handle(
         _isSyncedMeta,
@@ -10130,6 +10174,14 @@ class $CustomRecipesTable extends CustomRecipes
         DriftSqlType.string,
         data['${effectivePrefix}sensory_json'],
       )!,
+      isFavorite: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_favorite'],
+      )!,
+      isArchived: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_archived'],
+      )!,
       isSynced: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_synced'],
@@ -10171,6 +10223,8 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
   final String? grinderName;
   final int? extractionTimeSeconds;
   final String sensoryJson;
+  final bool isFavorite;
+  final bool isArchived;
   final bool isSynced;
   final bool isDeletedLocal;
   const CustomRecipe({
@@ -10197,6 +10251,8 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     this.grinderName,
     this.extractionTimeSeconds,
     required this.sensoryJson,
+    required this.isFavorite,
+    required this.isArchived,
     required this.isSynced,
     required this.isDeletedLocal,
   });
@@ -10240,6 +10296,8 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       map['extraction_time_seconds'] = Variable<int>(extractionTimeSeconds);
     }
     map['sensory_json'] = Variable<String>(sensoryJson);
+    map['is_favorite'] = Variable<bool>(isFavorite);
+    map['is_archived'] = Variable<bool>(isArchived);
     map['is_synced'] = Variable<bool>(isSynced);
     map['is_deleted_local'] = Variable<bool>(isDeletedLocal);
     return map;
@@ -10284,6 +10342,8 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
           ? const Value.absent()
           : Value(extractionTimeSeconds),
       sensoryJson: Value(sensoryJson),
+      isFavorite: Value(isFavorite),
+      isArchived: Value(isArchived),
       isSynced: Value(isSynced),
       isDeletedLocal: Value(isDeletedLocal),
     );
@@ -10320,6 +10380,8 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
         json['extractionTimeSeconds'],
       ),
       sensoryJson: serializer.fromJson<String>(json['sensoryJson']),
+      isFavorite: serializer.fromJson<bool>(json['isFavorite']),
+      isArchived: serializer.fromJson<bool>(json['isArchived']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
       isDeletedLocal: serializer.fromJson<bool>(json['isDeletedLocal']),
     );
@@ -10351,6 +10413,8 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       'grinderName': serializer.toJson<String?>(grinderName),
       'extractionTimeSeconds': serializer.toJson<int?>(extractionTimeSeconds),
       'sensoryJson': serializer.toJson<String>(sensoryJson),
+      'isFavorite': serializer.toJson<bool>(isFavorite),
+      'isArchived': serializer.toJson<bool>(isArchived),
       'isSynced': serializer.toJson<bool>(isSynced),
       'isDeletedLocal': serializer.toJson<bool>(isDeletedLocal),
     };
@@ -10380,6 +10444,8 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     Value<String?> grinderName = const Value.absent(),
     Value<int?> extractionTimeSeconds = const Value.absent(),
     String? sensoryJson,
+    bool? isFavorite,
+    bool? isArchived,
     bool? isSynced,
     bool? isDeletedLocal,
   }) => CustomRecipe(
@@ -10408,6 +10474,8 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
         ? extractionTimeSeconds.value
         : this.extractionTimeSeconds,
     sensoryJson: sensoryJson ?? this.sensoryJson,
+    isFavorite: isFavorite ?? this.isFavorite,
+    isArchived: isArchived ?? this.isArchived,
     isSynced: isSynced ?? this.isSynced,
     isDeletedLocal: isDeletedLocal ?? this.isDeletedLocal,
   );
@@ -10458,6 +10526,12 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       sensoryJson: data.sensoryJson.present
           ? data.sensoryJson.value
           : this.sensoryJson,
+      isFavorite: data.isFavorite.present
+          ? data.isFavorite.value
+          : this.isFavorite,
+      isArchived: data.isArchived.present
+          ? data.isArchived.value
+          : this.isArchived,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
       isDeletedLocal: data.isDeletedLocal.present
           ? data.isDeletedLocal.value
@@ -10491,6 +10565,8 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
           ..write('grinderName: $grinderName, ')
           ..write('extractionTimeSeconds: $extractionTimeSeconds, ')
           ..write('sensoryJson: $sensoryJson, ')
+          ..write('isFavorite: $isFavorite, ')
+          ..write('isArchived: $isArchived, ')
           ..write('isSynced: $isSynced, ')
           ..write('isDeletedLocal: $isDeletedLocal')
           ..write(')'))
@@ -10522,6 +10598,8 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     grinderName,
     extractionTimeSeconds,
     sensoryJson,
+    isFavorite,
+    isArchived,
     isSynced,
     isDeletedLocal,
   ]);
@@ -10552,6 +10630,8 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
           other.grinderName == this.grinderName &&
           other.extractionTimeSeconds == this.extractionTimeSeconds &&
           other.sensoryJson == this.sensoryJson &&
+          other.isFavorite == this.isFavorite &&
+          other.isArchived == this.isArchived &&
           other.isSynced == this.isSynced &&
           other.isDeletedLocal == this.isDeletedLocal);
 }
@@ -10580,6 +10660,8 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
   final Value<String?> grinderName;
   final Value<int?> extractionTimeSeconds;
   final Value<String> sensoryJson;
+  final Value<bool> isFavorite;
+  final Value<bool> isArchived;
   final Value<bool> isSynced;
   final Value<bool> isDeletedLocal;
   final Value<int> rowid;
@@ -10607,6 +10689,8 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     this.grinderName = const Value.absent(),
     this.extractionTimeSeconds = const Value.absent(),
     this.sensoryJson = const Value.absent(),
+    this.isFavorite = const Value.absent(),
+    this.isArchived = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.isDeletedLocal = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -10635,6 +10719,8 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     this.grinderName = const Value.absent(),
     this.extractionTimeSeconds = const Value.absent(),
     this.sensoryJson = const Value.absent(),
+    this.isFavorite = const Value.absent(),
+    this.isArchived = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.isDeletedLocal = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -10667,6 +10753,8 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     Expression<String>? grinderName,
     Expression<int>? extractionTimeSeconds,
     Expression<String>? sensoryJson,
+    Expression<bool>? isFavorite,
+    Expression<bool>? isArchived,
     Expression<bool>? isSynced,
     Expression<bool>? isDeletedLocal,
     Expression<int>? rowid,
@@ -10696,6 +10784,8 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
       if (extractionTimeSeconds != null)
         'extraction_time_seconds': extractionTimeSeconds,
       if (sensoryJson != null) 'sensory_json': sensoryJson,
+      if (isFavorite != null) 'is_favorite': isFavorite,
+      if (isArchived != null) 'is_archived': isArchived,
       if (isSynced != null) 'is_synced': isSynced,
       if (isDeletedLocal != null) 'is_deleted_local': isDeletedLocal,
       if (rowid != null) 'rowid': rowid,
@@ -10726,6 +10816,8 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     Value<String?>? grinderName,
     Value<int?>? extractionTimeSeconds,
     Value<String>? sensoryJson,
+    Value<bool>? isFavorite,
+    Value<bool>? isArchived,
     Value<bool>? isSynced,
     Value<bool>? isDeletedLocal,
     Value<int>? rowid,
@@ -10755,6 +10847,8 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
       extractionTimeSeconds:
           extractionTimeSeconds ?? this.extractionTimeSeconds,
       sensoryJson: sensoryJson ?? this.sensoryJson,
+      isFavorite: isFavorite ?? this.isFavorite,
+      isArchived: isArchived ?? this.isArchived,
       isSynced: isSynced ?? this.isSynced,
       isDeletedLocal: isDeletedLocal ?? this.isDeletedLocal,
       rowid: rowid ?? this.rowid,
@@ -10835,6 +10929,12 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     if (sensoryJson.present) {
       map['sensory_json'] = Variable<String>(sensoryJson.value);
     }
+    if (isFavorite.present) {
+      map['is_favorite'] = Variable<bool>(isFavorite.value);
+    }
+    if (isArchived.present) {
+      map['is_archived'] = Variable<bool>(isArchived.value);
+    }
     if (isSynced.present) {
       map['is_synced'] = Variable<bool>(isSynced.value);
     }
@@ -10873,6 +10973,8 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
           ..write('grinderName: $grinderName, ')
           ..write('extractionTimeSeconds: $extractionTimeSeconds, ')
           ..write('sensoryJson: $sensoryJson, ')
+          ..write('isFavorite: $isFavorite, ')
+          ..write('isArchived: $isArchived, ')
           ..write('isSynced: $isSynced, ')
           ..write('isDeletedLocal: $isDeletedLocal, ')
           ..write('rowid: $rowid')
@@ -23168,6 +23270,8 @@ typedef $$CustomRecipesTableCreateCompanionBuilder =
       Value<String?> grinderName,
       Value<int?> extractionTimeSeconds,
       Value<String> sensoryJson,
+      Value<bool> isFavorite,
+      Value<bool> isArchived,
       Value<bool> isSynced,
       Value<bool> isDeletedLocal,
       Value<int> rowid,
@@ -23197,6 +23301,8 @@ typedef $$CustomRecipesTableUpdateCompanionBuilder =
       Value<String?> grinderName,
       Value<int?> extractionTimeSeconds,
       Value<String> sensoryJson,
+      Value<bool> isFavorite,
+      Value<bool> isArchived,
       Value<bool> isSynced,
       Value<bool> isDeletedLocal,
       Value<int> rowid,
@@ -23323,6 +23429,16 @@ class $$CustomRecipesTableFilterComposer
 
   ColumnFilters<String> get sensoryJson => $composableBuilder(
     column: $table.sensoryJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isFavorite => $composableBuilder(
+    column: $table.isFavorite,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isArchived => $composableBuilder(
+    column: $table.isArchived,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -23461,6 +23577,16 @@ class $$CustomRecipesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get isFavorite => $composableBuilder(
+    column: $table.isFavorite,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isArchived => $composableBuilder(
+    column: $table.isArchived,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isSynced => $composableBuilder(
     column: $table.isSynced,
     builder: (column) => ColumnOrderings(column),
@@ -23572,6 +23698,16 @@ class $$CustomRecipesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<bool> get isFavorite => $composableBuilder(
+    column: $table.isFavorite,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isArchived => $composableBuilder(
+    column: $table.isArchived,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<bool> get isSynced =>
       $composableBuilder(column: $table.isSynced, builder: (column) => column);
 
@@ -23635,6 +23771,8 @@ class $$CustomRecipesTableTableManager
                 Value<String?> grinderName = const Value.absent(),
                 Value<int?> extractionTimeSeconds = const Value.absent(),
                 Value<String> sensoryJson = const Value.absent(),
+                Value<bool> isFavorite = const Value.absent(),
+                Value<bool> isArchived = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<bool> isDeletedLocal = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -23662,6 +23800,8 @@ class $$CustomRecipesTableTableManager
                 grinderName: grinderName,
                 extractionTimeSeconds: extractionTimeSeconds,
                 sensoryJson: sensoryJson,
+                isFavorite: isFavorite,
+                isArchived: isArchived,
                 isSynced: isSynced,
                 isDeletedLocal: isDeletedLocal,
                 rowid: rowid,
@@ -23691,6 +23831,8 @@ class $$CustomRecipesTableTableManager
                 Value<String?> grinderName = const Value.absent(),
                 Value<int?> extractionTimeSeconds = const Value.absent(),
                 Value<String> sensoryJson = const Value.absent(),
+                Value<bool> isFavorite = const Value.absent(),
+                Value<bool> isArchived = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<bool> isDeletedLocal = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -23718,6 +23860,8 @@ class $$CustomRecipesTableTableManager
                 grinderName: grinderName,
                 extractionTimeSeconds: extractionTimeSeconds,
                 sensoryJson: sensoryJson,
+                isFavorite: isFavorite,
+                isArchived: isArchived,
                 isSynced: isSynced,
                 isDeletedLocal: isDeletedLocal,
                 rowid: rowid,

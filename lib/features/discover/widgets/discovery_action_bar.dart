@@ -4,29 +4,34 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../discovery_filter_provider.dart';
 import 'filter_sort_sheet.dart';
 import '../../../shared/widgets/pressable_scale.dart';
-import '../../encyclopedia/encyclopedia_providers.dart';
 import '../../../core/l10n/app_localizations.dart';
 import '../../navigation/navigation_providers.dart';
 import '../../../core/providers/settings_provider.dart';
 
 class DiscoveryActionBar extends ConsumerWidget {
   final NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState> filterProvider;
-  final NotifierProvider<ComparisonSelectionNotifier, Set<String>> selectionProvider;
+  final dynamic selectionProvider;
   final VoidCallback onCompareTap;
+  final VoidCallback? onSelectAll;
   final List<String> availableCountries;
   final List<String> availableFlavors;
   final List<String> availableProcesses;
   final bool showFavoritesButton;
+  final bool showComparison;
+  final bool showViewModeToggle;
 
   const DiscoveryActionBar({
     super.key,
     required this.filterProvider,
     required this.selectionProvider,
     required this.onCompareTap,
+    this.onSelectAll,
     this.availableCountries = const [],
     this.availableFlavors = const [],
     this.availableProcesses = const [],
     this.showFavoritesButton = true,
+    this.showComparison = true,
+    this.showViewModeToggle = true,
   });
 
   @override
@@ -47,23 +52,26 @@ class DiscoveryActionBar extends ConsumerWidget {
                 isActive: state.hasActiveFilters,
                 onTap: () => _showSortSheet(context, ref),
               ),
-              const SizedBox(width: 8),
-              _ControlChip(
-                icon: Icons.compare_arrows_rounded,
-                label: selectedLots.isEmpty 
-                    ? context.t('compare') 
-                    : '${context.t('compare')} (${selectedLots.length})',
-                isActive: selectedLots.isNotEmpty,
-                onTap: onCompareTap,
-              ),
+              if (showComparison) ...[
+                const SizedBox(width: 8),
+                _ControlChip(
+                  icon: Icons.compare_arrows_rounded,
+                  label: selectedLots.isEmpty 
+                      ? context.t('compare') 
+                      : '${context.t('compare')} (${selectedLots.length})',
+                  isActive: selectedLots.isNotEmpty,
+                  onTap: onCompareTap,
+                ),
+              ],
               const Spacer(),
-              _ViewModeToggle(
-                isGrid: state.isGrid,
-                onTap: () {
-                  ref.read(settingsProvider.notifier).triggerHaptic();
-                  ref.read(filterProvider.notifier).toggleViewMode();
-                },
-              ),
+              if (showViewModeToggle)
+                _ViewModeToggle(
+                  isGrid: state.isGrid,
+                  onTap: () {
+                    ref.read(settingsProvider.notifier).triggerHaptic();
+                    ref.read(filterProvider.notifier).toggleViewMode();
+                  },
+                ),
             ],
           ),
           const SizedBox(height: 16),

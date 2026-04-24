@@ -505,6 +505,8 @@ class CustomRecipeDto {
   final DateTime? updatedAt;
   final bool isSynced;
   final String? sensoryJson;
+  final bool isFavorite;
+  final bool isArchived;
 
   final int? microns;
   final String recipeType;
@@ -530,6 +532,8 @@ class CustomRecipeDto {
     this.createdAt,
     this.updatedAt,
     this.isSynced = false,
+    this.isFavorite = false,
+    this.isArchived = false,
     this.microns,
     this.recipeType = 'filter',
     this.brewRatio,
@@ -558,6 +562,8 @@ class CustomRecipeDto {
     DateTime? createdAt,
     DateTime? updatedAt,
     bool? isSynced,
+    bool? isFavorite,
+    bool? isArchived,
     int? microns,
     String? recipeType,
     double? brewRatio,
@@ -583,6 +589,8 @@ class CustomRecipeDto {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       isSynced: isSynced ?? this.isSynced,
+      isFavorite: isFavorite ?? this.isFavorite,
+      isArchived: isArchived ?? this.isArchived,
       microns: microns ?? this.microns,
       recipeType: recipeType ?? this.recipeType,
       brewRatio: brewRatio ?? this.brewRatio,

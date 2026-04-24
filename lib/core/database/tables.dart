@@ -438,6 +438,9 @@ class CustomRecipes extends Table {
 
   TextColumn get sensoryJson => text().withDefault(const Constant('{}'))();
 
+  BoolColumn get isFavorite => boolean().withDefault(const Constant(false))();
+  BoolColumn get isArchived => boolean().withDefault(const Constant(false))();
+
   // Sync Status
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
   BoolColumn get isDeletedLocal =>

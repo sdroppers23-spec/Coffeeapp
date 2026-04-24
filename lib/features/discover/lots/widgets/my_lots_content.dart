@@ -289,6 +289,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                     ref.read(settingsProvider.notifier).triggerHaptic();
                     context.push('/compare', extra: ComparisonSource.myLots);
                   },
+                  onSelectAll: () => _selectAll(userLots),
                   availableCountries: countries,
                   availableFlavors: flavors,
                   availableProcesses: processes,
@@ -296,7 +297,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                 );
               },
               loading: () => const SizedBox.shrink(),
-              error: (_, __) => const SizedBox.shrink(),
+              error: (error, stack) => const SizedBox.shrink(),
             ),
             Expanded(
               child: _buildListView(lotsAsync, filter),

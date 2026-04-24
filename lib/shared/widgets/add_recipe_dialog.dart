@@ -888,7 +888,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
-          value:
+          initialValue:
               _grinderNameController.text.isNotEmpty
                   ? ([
                         'Comandante',

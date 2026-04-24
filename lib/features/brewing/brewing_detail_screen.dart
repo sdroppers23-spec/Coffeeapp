@@ -87,8 +87,9 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
         foregroundColor: Colors.black,
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      ),
-      body: PremiumBackground(
+        ),
+        backgroundColor: const Color(0xFF0F0E0D),
+        body: PremiumBackground(
           child: NestedScrollView(
             controller: _scrollController,
             headerSliverBuilder: (context, innerScrolled) => [
@@ -177,41 +178,96 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                 ),
               ),
               SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        ref.t('about_method'),
-                        style: GoogleFonts.outfit(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.info_outline_rounded, color: Color(0xFFC8A96E), size: 20),
+                            const SizedBox(width: 8),
+                            Text(
+                              ref.t('about_method').toUpperCase(),
+                              style: GoogleFonts.outfit(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w900,
+                                color: const Color(0xFFC8A96E),
+                                letterSpacing: 1.5,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        widget.recipe.description,
-                        style: GoogleFonts.outfit(
-                          fontSize: 16,
-                          color: Colors.white70,
-                          height: 1.5,
+                        const SizedBox(height: 16),
+                        Text(
+                          widget.recipe.description,
+                          style: GoogleFonts.outfit(
+                            fontSize: 15,
+                            color: Colors.white.withValues(alpha: 0.8),
+                            height: 1.6,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 32),
-                    ],
+                        const SizedBox(height: 20),
+                        const Divider(color: Colors.white10),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            _buildInfoPoint(
+                              ref.t('recommended_roast'),
+                              widget.recipe.methodKey.toLowerCase().contains('espresso') 
+                                ? 'Medium - Dark' 
+                                : 'Light - Medium',
+                              Icons.local_fire_department_rounded,
+                            ),
+                            const Spacer(),
+                            _buildInfoPoint(
+                              'Profile',
+                              'Clean & Balanced',
+                              Icons.analytics_rounded,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ),
-            ],
+                ],
             body: CustomRecipeListTab(
               methodKey: widget.recipe.methodKey,
-              showFab: false, // Hidden because we use outer Scaffold FAB
+              showFab: false,
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildInfoPoint(String label, String value, IconData icon) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(icon, color: const Color(0xFFC8A96E), size: 14),
+            const SizedBox(width: 6),
+            Text(
+              label.toUpperCase(),
+              style: GoogleFonts.outfit(
+                fontSize: 10,
+                color: const Color(0xFFC8A96E),
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.1,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: GoogleFonts.outfit(
+            fontSize: 15,
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
     );
   }
 

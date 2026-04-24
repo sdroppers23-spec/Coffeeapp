@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -223,7 +224,52 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                       ),
 
                       // Tab 1: Sphere
-                      const TerroirGlobe(),
+                      Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          const TerroirGlobe(),
+                          ClipRRect(
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                              child: Container(
+                                color: Colors.black.withValues(alpha: 0.4),
+                                child: Center(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.5)),
+                                          borderRadius: BorderRadius.circular(16),
+                                        ),
+                                        child: Text(
+                                          'COMING SOON',
+                                          style: GoogleFonts.outfit(
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.w900,
+                                            color: const Color(0xFFC8A96E),
+                                            letterSpacing: 6,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        'Interactive Terroir Globe',
+                                        style: GoogleFonts.outfit(
+                                          fontSize: 16,
+                                          color: Colors.white70,
+                                          letterSpacing: 2,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
 
                       // Tab 2: Flavor Wheel
                       Column(

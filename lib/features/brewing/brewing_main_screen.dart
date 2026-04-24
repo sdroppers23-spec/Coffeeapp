@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/l10n/app_localizations.dart';
+import '../../shared/widgets/add_recipe_dialog.dart';
 import '../../shared/widgets/profile_button.dart';
 import '../navigation/navigation_providers.dart';
 import 'brewing_guide_screen.dart';
@@ -36,12 +38,12 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
       if (mounted) {
+        setState(() {}); // Rebuild for FAB visibility
         if (_tabController.index == 1) {
           ref.read(navBarVisibleProvider.notifier).hide();
         } else {
           ref.read(navBarVisibleProvider.notifier).show();
         }
-        setState(() {});
       }
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -72,16 +74,21 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
       appBar: PremiumAppBar(
         title: ref.t('alternative'),
         actions: [
-          if (_selectedTab == 0)
-            IconButton(
-              icon: Icon(
-                ref.watch(brewingViewModeProvider)
-                    ? Icons.view_list_rounded
-                    : Icons.grid_view_rounded,
-                color: accentColor,
-              ),
-              onPressed: () => ref.read(brewingViewModeProvider.notifier).toggle(),
-            ),
+          ListenableBuilder(
+            listenable: _tabController,
+            builder: (context, _) {
+              if (_tabController.index != 0) return const SizedBox.shrink();
+              return IconButton(
+                icon: Icon(
+                  ref.watch(brewingViewModeProvider)
+                      ? Icons.view_list_rounded
+                      : Icons.grid_view_rounded,
+                  color: accentColor,
+                ),
+                onPressed: () => ref.read(brewingViewModeProvider.notifier).toggle(),
+              );
+            },
+          ),
           const ProfileButton(),
         ],
         bottom: PreferredSize(
@@ -106,6 +113,33 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
             ),
           ),
         ),
+      ),
+      floatingActionButton: ListenableBuilder(
+        listenable: _tabController,
+        builder: (context, _) => _tabController.index == 1
+          ? FloatingActionButton.extended(
+              onPressed: () async {
+                final result = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => const AddRecipeDialog(),
+                );
+                if (result == true) {
+                  ref.invalidate(globalCustomRecipesProvider);
+                }
+              },
+              icon: const Icon(Icons.add_rounded),
+              label: Text(
+                ref.t('add_recipe'),
+                style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+              ),
+              backgroundColor: const Color(0xFFC8A96E),
+              foregroundColor: Colors.black,
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            )
+          : const SizedBox.shrink(),
       ),
       body: TabBarView(
         controller: _tabController,

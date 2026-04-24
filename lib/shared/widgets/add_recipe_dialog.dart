@@ -11,6 +11,7 @@ import '../../core/providers/preferences_provider.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/supabase/supabase_provider.dart';
+import '../services/toast_service.dart';
 
 class AddRecipeDialog extends ConsumerStatefulWidget {
   final String lotId;
@@ -19,7 +20,7 @@ class AddRecipeDialog extends ConsumerStatefulWidget {
 
   const AddRecipeDialog({
     super.key,
-    required this.lotId,
+    this.lotId = '',
     this.existingRecipe,
     this.initialMethod,
   });
@@ -211,6 +212,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
   }
 
   Future<void> _save() async {
+    final isUk = LocaleService.currentLocale == 'uk';
     if (!_formKey.currentState!.validate()) return;
     if (_isOtherGrinder && _customGrinderController.text.isEmpty) return;
 
@@ -223,7 +225,15 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
       userId: userId,
       lotId: Value(widget.lotId.isEmpty ? null : widget.lotId),
       methodKey: _method,
-      name: _nameController.text.isEmpty ? 'Recipe' : _nameController.text,
+      name: () {
+        String name = _nameController.text.trim();
+        if (name.isEmpty) name = isUk ? 'Рецепт' : 'Recipe';
+        final methodSuffix = '(${_method.toUpperCase()})';
+        if (!name.contains(methodSuffix)) {
+          return '$name $methodSuffix';
+        }
+        return name;
+      }(),
       coffeeGrams: double.tryParse(_coffeeController.text) ?? 15.0,
       totalWaterMl: double.tryParse(_waterController.text) ?? 250.0,
       grindNumber: Value(int.tryParse(_grindController.text) ?? 0),
@@ -281,14 +291,14 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
 
     try {
       await db.upsertCustomRecipe(recipe);
-      
+      if (!mounted) return;
+      ToastService.showSuccess(context, isUk ? 'Рецепт збережено' : 'Recipe saved');
+      Navigator.pop(context, true);
+
       // Attempt cloud sync if logged in
       if (user != null) {
         try {
-          final supabase = ref.read(supabaseProvider);
-          final pours = jsonDecode(recipe.pourScheduleJson.value);
-          
-          await supabase.from('custom_recipes').upsert({
+          await ref.read(supabaseProvider).from('custom_recipes').upsert({
             'id': recipe.id.value,
             'user_id': userId,
             'lot_id': recipe.lotId.value,
@@ -300,7 +310,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             'comandante_clicks': recipe.comandanteClicks.value,
             'ek43_division': recipe.ek43Division.value,
             'total_pours': recipe.totalPours.value,
-            'pour_schedule_json': pours,
+            'pour_schedule_json': jsonDecode(recipe.pourScheduleJson.value),
             'brew_temp_c': recipe.brewTempC.value,
             'notes': recipe.notes.value,
             'rating': recipe.rating.value,
@@ -308,7 +318,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             'updated_at': DateTime.now().toIso8601String(),
             'recipe_type': recipe.recipeType.value,
           });
-          
+
           // Mark as synced locally
           await db.upsertCustomRecipe(recipe.copyWith(isSynced: const Value(true)));
         } catch (e) {
@@ -316,23 +326,13 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
           // We don't fail the local save if cloud sync fails
         }
       }
-
-      if (mounted) {
-        ToastService.show(
-          context,
-          ref.t(widget.existingRecipe != null ? 'recipe_updated' : 'recipe_saved'),
-          type: ToastType.success,
-        );
-        Navigator.pop(context, true);
-      }
     } catch (e) {
-      if (mounted) {
-        ToastService.show(
-          context,
-          'Error: $e',
-          type: ToastType.error,
-        );
-      }
+      debugPrint('Cloud sync failed: $e');
+      if (!mounted) return;
+      ToastService.showError(
+        context,
+        isUk ? 'Помилка синхронізації' : 'Sync error',
+      );
     }
   }
 
@@ -1078,7 +1078,6 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
               ? const TextInputType.numberWithOptions(decimal: true)
               : TextInputType.text,
           onTap: () {
-            // Put cursor at end
             controller.selection = TextSelection.collapsed(
               offset: controller.text.length,
             );

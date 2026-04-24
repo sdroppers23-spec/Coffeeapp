@@ -109,9 +109,12 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                ref.t('auth_subtitle'),
+                ref.t('auth_greeting'),
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.white54, height: 1.5),
+                style: GoogleFonts.outfit(
+                  fontSize: 16,
+                  color: Colors.white70,
+                ),
               ),
               const SizedBox(height: 48),
               TextField(

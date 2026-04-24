@@ -373,7 +373,7 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
               ],
             ),
 
-            // Sticky Header for Sorting
+            // Sticky Header with Filters and Sort
             Positioned(
               top: 0,
               left: 0,
@@ -385,15 +385,24 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      const Color(0xFF0F0E0D),
-                      const Color(0xFF0F0E0D).withValues(alpha: 0.95),
-                      const Color(0xFF0F0E0D).withValues(alpha: 0.0),
+                      const Color(0xFF0A0908),
+                      const Color(0xFF0A0908).withValues(alpha: 0.95),
+                      const Color(0xFF0A0908).withValues(alpha: 0.0),
                     ],
                     stops: const [0.0, 0.7, 1.0],
                   ),
                 ),
                 child: Row(
                   children: [
+                    _ActionButton(
+                      icon: Icons.filter_list_rounded,
+                      label: ref.t('filters'),
+                      isActive: false, // Placeholder for now
+                      onTap: () {
+                        // Show sort sheet or filter logic
+                      },
+                    ),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
@@ -567,3 +576,57 @@ class _CategoryHeader extends StatelessWidget {
     );
   }
 }
+
+class _ActionButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final bool isActive;
+
+  const _ActionButton({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.isActive = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isActive
+              ? const Color(0xFFC8A96E)
+              : Colors.white.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: isActive ? Colors.transparent : Colors.white10,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 18,
+              color: isActive ? Colors.black : const Color(0xFFC8A96E),
+            ),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: GoogleFonts.outfit(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: isActive ? Colors.black : Colors.white70,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/theme/app_theme.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../shared/widgets/add_recipe_dialog.dart';
 import '../../shared/widgets/profile_button.dart';
@@ -69,7 +70,7 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
     final accentColor = theme.colorScheme.secondary;
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppTheme.darkBg,
       extendBodyBehindAppBar: true,
       appBar: PremiumAppBar(
         title: ref.t('alternative'),

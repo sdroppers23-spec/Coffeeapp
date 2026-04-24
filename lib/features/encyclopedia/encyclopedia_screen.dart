@@ -109,6 +109,7 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
     final filterState = ref.watch(encyclopediaFilterProvider);
     final isGrid = filterState.isGrid;
     final showFavoritesOnly = filterState.showFavoritesOnly;
+    final showArchivedOnly = filterState.showArchivedOnly;
 
     return originsAsync.when(
       loading: () => Center(
@@ -137,19 +138,19 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
           style: const TextStyle(color: Colors.white70),
         ),
       ),
-      data: (entries) {
-        var filtered = entries;
-        if (showFavoritesOnly) {
-          filtered = filtered.where((e) => e.isFavorite).toList();
-        }
-
+      data: (filtered) {
         if (filtered.isEmpty) {
           final search = filterState.search;
-          return _EmptyState(
-            message: showFavoritesOnly && search.isEmpty
-                ? context.t('no_favorites')
-                : '${context.t('no_results')} "$search"',
-          );
+          String emptyMessage = context.t('no_results');
+          if (showFavoritesOnly && search.isEmpty) {
+            emptyMessage = context.t('no_favorites');
+          } else if (showArchivedOnly && search.isEmpty) {
+            emptyMessage = context.t('no_archived');
+          } else if (search.isNotEmpty) {
+            emptyMessage = '${context.t('no_results')} "$search"';
+          }
+          
+          return _EmptyState(message: emptyMessage);
         }
 
         if (isGrid) {

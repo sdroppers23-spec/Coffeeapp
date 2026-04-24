@@ -18,6 +18,7 @@ class DiscoveryFilterState {
   final SortType sortType;
   final bool isGrid;
   final bool showFavoritesOnly;
+  final bool showArchivedOnly;
 
   const DiscoveryFilterState({
     this.search = '',
@@ -27,6 +28,7 @@ class DiscoveryFilterState {
     this.sortType = SortType.none,
     this.isGrid = false,
     this.showFavoritesOnly = false,
+    this.showArchivedOnly = false,
   });
 
   DiscoveryFilterState copyWith({
@@ -37,6 +39,7 @@ class DiscoveryFilterState {
     SortType? sortType,
     bool? isGrid,
     bool? showFavoritesOnly,
+    bool? showArchivedOnly,
   }) {
     return DiscoveryFilterState(
       search: search ?? this.search,
@@ -46,6 +49,7 @@ class DiscoveryFilterState {
       sortType: sortType ?? this.sortType,
       isGrid: isGrid ?? this.isGrid,
       showFavoritesOnly: showFavoritesOnly ?? this.showFavoritesOnly,
+      showArchivedOnly: showArchivedOnly ?? this.showArchivedOnly,
     );
   }
 
@@ -54,7 +58,8 @@ class DiscoveryFilterState {
       selectedFlavorNotes.isNotEmpty ||
       selectedProcesses.isNotEmpty ||
       sortType != SortType.none ||
-      showFavoritesOnly;
+      showFavoritesOnly ||
+      showArchivedOnly;
 }
 
 class DiscoveryFilterNotifier extends Notifier<DiscoveryFilterState> {
@@ -98,7 +103,31 @@ class DiscoveryFilterNotifier extends Notifier<DiscoveryFilterState> {
   void toggleViewMode() => state = state.copyWith(isGrid: !state.isGrid);
 
   void toggleFavoritesOnly() =>
-      state = state.copyWith(showFavoritesOnly: !state.showFavoritesOnly);
+      state = state.copyWith(
+        showFavoritesOnly: !state.showFavoritesOnly,
+        showArchivedOnly: false,
+      );
+
+  void toggleArchivedOnly() =>
+      state = state.copyWith(
+        showArchivedOnly: !state.showArchivedOnly,
+        showFavoritesOnly: false,
+      );
+
+  void showAll() => state = state.copyWith(
+        showFavoritesOnly: false,
+        showArchivedOnly: false,
+      );
+
+  void showFavorites() => state = state.copyWith(
+        showFavoritesOnly: true,
+        showArchivedOnly: false,
+      );
+
+  void showArchived() => state = state.copyWith(
+        showFavoritesOnly: false,
+        showArchivedOnly: true,
+      );
 
   void clearFilters() {
     state = state.copyWith(

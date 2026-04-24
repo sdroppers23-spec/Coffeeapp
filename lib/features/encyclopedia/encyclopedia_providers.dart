@@ -28,12 +28,17 @@ final localEncyclopediaStreamProvider =
   Future.microtask(() async {
     try {
       final syncService = ref.read(syncServiceProvider);
-      // Ensure we have initial data (gentle pull)
+      debugPrint('EncyclopediaProvider: Starting initial sync sequence...');
+      // 1. Sync brands first to satisfy foreign key constraints for beans
+      await syncService.syncBrands();
+      // 2. Sync farmers (referenced by beans)
+      await syncService.syncFarmers();
+      // 3. Sync encyclopedia entries
       await syncService.syncEncyclopedia();
-      // subscribeToRealtimeUpdates now handles all shared tables including beans
+      // 4. Subscribe to realtime updates
       syncService.subscribeToRealtimeUpdates();
-    } catch (e) {
-      // Production silent fail
+    } catch (e, stack) {
+      debugPrint('EncyclopediaProvider: Sync sequence failed: $e\n$stack');
     }
   });
 
@@ -79,6 +84,14 @@ final encyclopediaDataProvider = Provider<AsyncValue<List<LocalizedBeanDto>>>((r
       // Favorites Only
       if (filterState.showFavoritesOnly && !e.isFavorite) {
         return false;
+      }
+
+      // Archived Only vs Active
+      if (filterState.showArchivedOnly) {
+        if (!e.isArchived) return false;
+      } else {
+        // By default, hide archived items unless we are in the Archive tab
+        if (e.isArchived) return false;
       }
 
       return true;

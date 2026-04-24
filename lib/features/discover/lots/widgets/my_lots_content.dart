@@ -24,8 +24,8 @@ class MyLotsContent extends ConsumerStatefulWidget {
   ConsumerState<MyLotsContent> createState() => _MyLotsContentState();
 }
 
-class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTickerProviderStateMixin {
-  late TabController _subTabController;
+  // Remove TabController as we now use the DiscoveryActionBar's state
+  final Set<String> _pendingDeleteIds = {};
   // Remove local _selectedLotIds to use global provider
   final Set<String> _pendingDeleteIds = {};
   bool _isUndoVisible = false;
@@ -38,20 +38,11 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    _subTabController = TabController(length: 3, vsync: this);
-    _subTabController.addListener(() {
-      if (_subTabController.indexIsChanging) return;
-      if (_scrollController.hasClients) {
-        _scrollController.jumpTo(0);
-      }
-      setState(() {});
-    });
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
-    _subTabController.dispose();
     super.dispose();
   }
 
@@ -268,33 +259,46 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
       children: [
         Column(
           children: [
-            DiscoveryActionBar(
-              filterProvider: myLotsFilterProvider,
-              selectionProvider: myLotsSelectedIdsProvider,
-              onCompareTap: () {
-                ref.read(settingsProvider.notifier).triggerHaptic();
-                context.push('/compare', extra: ComparisonSource.myLots);
-              },
-              availableCountries: const [],
-              availableFlavors: const [],
-              availableProcesses: const [],
-              showFavoritesButton: false,
-            ),
             lotsAsync.when(
               data: (userLots) {
-                final filteredByTab = userLots.where((lot) {
-                  if (_pendingDeleteIds.contains(lot.id)) return false;
-                  final isArchived = lot.isArchived;
-                  if (_subTabController.index == 0) return !isArchived;
-                  if (_subTabController.index == 1) return lot.isFavorite && !isArchived;
-                  if (_subTabController.index == 2) return isArchived;
-                  return !isArchived;
-                }).toList();
-                final visibleLots = _applyFilters(filteredByTab, filter);
-                return _buildSubTabs(visibleLots);
+                // Extract unique values for filter dialog
+                final countries = userLots
+                    .map((l) => l.originCountry ?? '')
+                    .where((c) => c.isNotEmpty)
+                    .toSet()
+                    .toList()
+                  ..sort();
+                
+                final flavors = userLots
+                    .map((l) => l.flavorProfile ?? '')
+                    .expand((f) => f.split(',').map((s) => s.trim()))
+                    .where((f) => f.isNotEmpty)
+                    .toSet()
+                    .toList()
+                  ..sort();
+                
+                final processes = userLots
+                    .map((l) => l.process ?? '')
+                    .where((p) => p.isNotEmpty)
+                    .toSet()
+                    .toList()
+                  ..sort();
+
+                return DiscoveryActionBar(
+                  filterProvider: myLotsFilterProvider,
+                  selectionProvider: myLotsSelectedIdsProvider,
+                  onCompareTap: () {
+                    ref.read(settingsProvider.notifier).triggerHaptic();
+                    context.push('/compare', extra: ComparisonSource.myLots);
+                  },
+                  availableCountries: countries,
+                  availableFlavors: flavors,
+                  availableProcesses: processes,
+                  showFavoritesButton: false,
+                );
               },
-              loading: () => _buildSubTabs([]),
-              error: (_, _) => _buildSubTabs([]),
+              loading: () => const SizedBox.shrink(),
+              error: (_, __) => const SizedBox.shrink(),
             ),
             Expanded(
               child: _buildListView(lotsAsync, filter),
@@ -330,94 +334,21 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
     );
   }
 
-  Widget _buildSubTabs(List<CoffeeLotDto> visibleLots) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        children: [
-          if (_isSelectionMode) ...[
-            GestureDetector(
-              onTap: () => _selectAll(visibleLots),
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  visibleLots.every((l) => ref.watch(myLotsSelectedIdsProvider).contains(l.id))
-                      ? Icons.deselect_rounded
-                      : Icons.select_all_rounded,
-                  color: const Color(0xFFC8A96E),
-                  size: 20,
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-          ],
-          Expanded(
-            child: Container(
-              height: 44,
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.03),
-                borderRadius: BorderRadius.circular(22),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
-              ),
-              child: TabBar(
-                controller: _subTabController,
-                dividerColor: Colors.transparent,
-                indicator: BoxDecoration(
-                  color: const Color(0xFFC8A96E),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                indicatorSize: TabBarIndicatorSize.tab,
-                labelColor: Colors.black,
-                unselectedLabelColor: Colors.white54,
-                labelStyle: GoogleFonts.outfit(fontSize: 13, fontWeight: FontWeight.bold),
-                tabs: [
-                  const Tab(text: 'Усі'),
-                  Tab(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(Icons.favorite_rounded, size: 14),
-                        SizedBox(width: 4),
-                        Text('Улюблені'),
-                      ],
-                    ),
-                  ),
-                  Tab(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(Icons.archive_outlined, size: 14),
-                        SizedBox(width: 4),
-                        Text('Архів'),
-                      ],
-                    ),
-                  ),
-                ],
-                onTap: (_) => setState(() {}),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildListView(AsyncValue<List<CoffeeLotDto>> lotsAsync, DiscoveryFilterState filter) {
     return lotsAsync.when(
       data: (userLots) {
-        final activeTab = _subTabController.index;
         final filteredByTab = userLots.where((lot) {
           if (_pendingDeleteIds.contains(lot.id)) return false;
-          final isArchived = lot.isArchived;
-          if (activeTab == 0) return !isArchived; // All
-          if (activeTab == 1) return lot.isFavorite && !isArchived; // Favorites
-          if (activeTab == 2) return isArchived; // Archive
-          return !isArchived;
+          
+          if (filter.showFavoritesOnly) {
+            return lot.isFavorite && !lot.isArchived;
+          }
+          if (filter.showArchivedOnly) {
+            return lot.isArchived;
+          }
+          // Default: hide archived
+          return !lot.isArchived;
         }).toList();
 
         final filteredLots = _applyFilters(filteredByTab, filter);
@@ -514,10 +445,10 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                   
                   ref.invalidate(userLotsProvider);
                 },
-                onEditSwipe: activeTab == 2 ? null : (lot) {
+                onEditSwipe: filter.showArchivedOnly ? null : (lot) {
                   context.push('/edit_lot', extra: lot);
                 },
-                onRestoreSwipe: activeTab == 2 ? (lot) async {
+                onRestoreSwipe: filter.showArchivedOnly ? (lot) async {
                   final db = ref.read(databaseProvider);
                   await db.toggleLotArchive(lot.id, false);
                   ref.invalidate(userLotsProvider);
@@ -549,11 +480,55 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
 
   List<CoffeeLotDto> _applyFilters(List<CoffeeLotDto> lots, DiscoveryFilterState filter) {
     var result = lots.toList();
+
+    // 1. Search
     if (filter.search.isNotEmpty) {
       final q = filter.search.toLowerCase();
-      result = result.where((l) => (l.coffeeName?.toLowerCase().contains(q) ?? false) || (l.roasteryName?.toLowerCase().contains(q) ?? false)).toList();
+      result = result.where((l) => 
+        (l.coffeeName?.toLowerCase().contains(q) ?? false) || 
+        (l.roasteryName?.toLowerCase().contains(q) ?? false) ||
+        (l.originCountry?.toLowerCase().contains(q) ?? false) ||
+        (l.region?.toLowerCase().contains(q) ?? false)
+      ).toList();
     }
-    // Add other filters as needed...
+
+    // 2. Countries
+    if (filter.selectedCountries.isNotEmpty) {
+      result = result.where((l) => filter.selectedCountries.contains(l.originCountry)).toList();
+    }
+
+    // 3. Flavor Notes
+    if (filter.selectedFlavorNotes.isNotEmpty) {
+      result = result.where((l) {
+        final notes = (l.flavorProfile ?? '').split(',').map((s) => s.trim()).toSet();
+        return filter.selectedFlavorNotes.any((f) => notes.contains(f));
+      }).toList();
+    }
+
+    // 4. Process Methods
+    if (filter.selectedProcesses.isNotEmpty) {
+      result = result.where((l) => filter.selectedProcesses.contains(l.process)).toList();
+    }
+
+    // 5. Sorting
+    switch (filter.sortType) {
+      case SortType.alphabetAsc:
+        result.sort((a, b) => (a.coffeeName ?? '').compareTo(b.coffeeName ?? ''));
+        break;
+      case SortType.alphabetDesc:
+        result.sort((a, b) => (b.coffeeName ?? '').compareTo(a.coffeeName ?? ''));
+        break;
+      case SortType.dateAsc:
+        result.sort((a, b) => (a.createdAt ?? DateTime(0)).compareTo(b.createdAt ?? DateTime(0)));
+        break;
+      case SortType.dateDesc:
+        result.sort((a, b) => (b.createdAt ?? DateTime(0)).compareTo(a.createdAt ?? DateTime(0)));
+        break;
+      default:
+        // Default to newest first
+        result.sort((a, b) => (b.createdAt ?? DateTime(0)).compareTo(a.createdAt ?? DateTime(0)));
+    }
+
     return result;
   }
 
@@ -796,7 +771,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> with SingleTicker
                     if (confirm == true) {
                       final selectedIdsSnapshot = Set<String>.from(ref.read(myLotsSelectedIdsProvider));
                       final selectedLots = (lotsAsync.value ?? []).where((l) => selectedIdsSnapshot.contains(l.id)).toList();
-                      final isArchive = _subTabController.index == 2;
+                      final isArchive = filter.showArchivedOnly;
                       
                       for (final id in selectedIdsSnapshot) {
                         ref.read(myLotsSelectedIdsProvider.notifier).remove(id);

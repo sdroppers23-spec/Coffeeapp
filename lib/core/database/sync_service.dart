@@ -652,11 +652,19 @@ class SyncService {
     if (supabase == null) return;
     try {
 
-      // 1. Fetch all brands
-      final data = await supabase!.from('localized_brands').select();
-      final remoteIds = data.map((item) => (item['id'] as num).toInt()).toList();
+      // 1. Fetch all brands - try 'brands' table as it's the primary source in cloud
+      var data = await supabase!.from('brands').select();
+      if (data.isEmpty) {
+        data = await supabase!.from('localized_brands').select();
+      }
       
-      if (remoteIds.isEmpty) return;
+      final remoteIds = data.map((item) => (item['id'] as num).toInt()).toList();
+      debugPrint('SyncService: Found ${data.length} brands in cloud');
+      
+      if (remoteIds.isEmpty) {
+        debugPrint('SyncService: No brands found in cloud, skipping.');
+        return;
+      }
 
       // 2. Fetch all translations in one go
 
@@ -700,9 +708,20 @@ class SyncService {
              translations.add(LocalizedBrandTranslationsCompanion(
                brandId: Value(id),
                languageCode: const Value('uk'),
-               shortDesc: Value(ContentUtils.cleanCoffeeContent(item['short_desc_uk'] as String? ?? item['short_desc_en'] as String? ?? '')),
-               fullDesc: Value(ContentUtils.cleanCoffeeContent(item['full_desc_uk'] as String? ?? item['full_desc_en'] as String? ?? '')),
-               location: Value(ContentUtils.cleanCoffeeContent(item['location_uk'] as String? ?? item['location_en'] as String? ?? '')),
+               shortDesc: Value(ContentUtils.cleanCoffeeContent(item['short_desc'] as String? ?? item['short_desc_uk'] as String? ?? item['short_desc_en'] as String? ?? '')),
+               fullDesc: Value(ContentUtils.cleanCoffeeContent(item['full_desc'] as String? ?? item['full_desc_uk'] as String? ?? item['full_desc_en'] as String? ?? '')),
+               location: Value(ContentUtils.cleanCoffeeContent(item['location'] as String? ?? item['location_uk'] as String? ?? item['location_en'] as String? ?? '')),
+             ));
+          }
+          
+          // Add 'en' fallback if missing
+          if (!translations.any((t) => t.languageCode.value == 'en')) {
+             translations.add(LocalizedBrandTranslationsCompanion(
+               brandId: Value(id),
+               languageCode: const Value('en'),
+               shortDesc: Value(ContentUtils.cleanCoffeeContent(item['short_desc'] as String? ?? item['short_desc_en'] as String? ?? item['short_desc_uk'] as String? ?? '')),
+               fullDesc: Value(ContentUtils.cleanCoffeeContent(item['full_desc'] as String? ?? item['full_desc_en'] as String? ?? item['full_desc_uk'] as String? ?? '')),
+               location: Value(ContentUtils.cleanCoffeeContent(item['location'] as String? ?? item['location_en'] as String? ?? item['location_uk'] as String? ?? '')),
              ));
           }
 
@@ -859,8 +878,10 @@ class SyncService {
     try {
       // 1. Fetch main entries
       final data = await supabase!.from('encyclopedia_entries').select();
+      debugPrint('SyncService: Supabase returned ${data.length} encyclopedia entries');
+      
       final remoteIds = data.map((item) => (item['id'] as num).toInt()).toList();
-      debugPrint('SyncService: Fetched ${data.length} encyclopedia entries from cloud');
+      debugPrint('SyncService: Remote IDs: $remoteIds');
 
       if (remoteIds.isEmpty) {
         debugPrint('SyncService: No remote encyclopedia entries found, skipping.');

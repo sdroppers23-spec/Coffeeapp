@@ -132,16 +132,49 @@ class CustomRecipeListTab extends ConsumerWidget {
   }
 }
 
-class GlobalCustomRecipeList extends ConsumerWidget {
+enum RecipeSort { date, alphabet, method }
+
+class GlobalCustomRecipeList extends ConsumerStatefulWidget {
   const GlobalCustomRecipeList({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<GlobalCustomRecipeList> createState() => _GlobalCustomRecipeListState();
+}
+
+class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList> {
+  RecipeSort _sortBy = RecipeSort.date;
+  bool _isSelectionMode = false;
+  final Set<int> _selectedIds = {};
+
+  void _toggleSelection(int id) {
+    setState(() {
+      if (_selectedIds.contains(id)) {
+        _selectedIds.remove(id);
+      } else {
+        _selectedIds.add(id);
+      }
+    });
+  }
+
+  Future<void> _deleteSelected() async {
+    final db = ref.read(databaseProvider);
+    for (final id in _selectedIds) {
+      await db.deleteCustomRecipe(id);
+    }
+    setState(() {
+      _selectedIds.clear();
+      _isSelectionMode = false;
+    });
+    ref.invalidate(globalCustomRecipesProvider);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final recipesAsync = ref.watch(globalCustomRecipesProvider);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: _isSelectionMode ? null : FloatingActionButton.extended(
         onPressed: () async {
           final result = await showDialog<bool>(
             context: context,
@@ -192,29 +225,23 @@ class GlobalCustomRecipeList extends ConsumerWidget {
                       fontSize: 16,
                     ),
                   ),
-                  const SizedBox(height: 24),
-                  // Button to add first recipe
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      final result = await showDialog<bool>(
-                        context: context,
-                        builder: (context) => const AddRecipeDialog(lotId: ''),
-                      );
-                      if (result == true) {
-                        ref.invalidate(globalCustomRecipesProvider);
-                      }
-                    },
-                    icon: const Icon(Icons.add_rounded),
-                    label: Text(ref.t('add_recipe')),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFC8A96E).withValues(alpha: 0.2),
-                      foregroundColor: const Color(0xFFC8A96E),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                  ),
                 ],
               ),
             );
+          }
+
+          // Sorting
+          List<CustomRecipeDto> sortedRecipes = List.from(recipes);
+          switch (_sortBy) {
+            case RecipeSort.date:
+              sortedRecipes.sort((a, b) => (b.createdAt ?? DateTime.now()).compareTo(a.createdAt ?? DateTime.now()));
+              break;
+            case RecipeSort.alphabet:
+              sortedRecipes.sort((a, b) => a.name.compareTo(b.name));
+              break;
+            case RecipeSort.method:
+              sortedRecipes.sort((a, b) => (a.methodKey ?? '').compareTo(b.methodKey ?? ''));
+              break;
           }
 
           bool isEspresso(String? method, String? type) {
@@ -223,32 +250,185 @@ class GlobalCustomRecipeList extends ConsumerWidget {
             return m.contains('espresso') || m.contains('lever');
           }
 
-          final espressoRecipes = recipes.where((r) => isEspresso(r.methodKey, r.recipeType)).toList();
-          final filterRecipes = recipes.where((r) => !isEspresso(r.methodKey, r.recipeType)).toList();
+          final espressoRecipes = sortedRecipes.where((r) => isEspresso(r.methodKey, r.recipeType)).toList();
+          final filterRecipes = sortedRecipes.where((r) => !isEspresso(r.methodKey, r.recipeType)).toList();
 
-          return ListView(
-            padding: const EdgeInsets.fromLTRB(16, 160, 16, 100),
+          return Stack(
             children: [
-              if (espressoRecipes.isNotEmpty) ...[
-                _CategoryHeader(title: ref.t('espresso').toUpperCase()),
-                const SizedBox(height: 16),
-                ...espressoRecipes.map((r) => Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: CustomRecipeCard(recipe: r, methodKey: r.methodKey, ref: ref),
-                )),
-                const SizedBox(height: 16),
-              ],
-              if (filterRecipes.isNotEmpty) ...[
-                _CategoryHeader(title: ref.t('alternative').toUpperCase()),
-                const SizedBox(height: 16),
-                ...filterRecipes.map((r) => Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: CustomRecipeCard(recipe: r, methodKey: r.methodKey, ref: ref),
-                )),
-              ],
+              ListView(
+                padding: const EdgeInsets.fromLTRB(16, 170, 16, 120),
+                children: [
+                  if (espressoRecipes.isNotEmpty) ...[
+                    _CategoryHeader(title: ref.t('espresso').toUpperCase()),
+                    const SizedBox(height: 16),
+                    ...espressoRecipes.map((r) => Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: CustomRecipeCard(
+                        recipe: r, 
+                        methodKey: r.methodKey, 
+                        ref: ref,
+                        isSelectionMode: _isSelectionMode,
+                        isSelected: _selectedIds.contains(r.id),
+                        onTap: () => _toggleSelection(r.id),
+                      ),
+                    )),
+                    const SizedBox(height: 16),
+                  ],
+                  if (filterRecipes.isNotEmpty) ...[
+                    _CategoryHeader(title: ref.t('filter').toUpperCase()),
+                    const SizedBox(height: 16),
+                    ...filterRecipes.map((r) => Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: CustomRecipeCard(
+                        recipe: r, 
+                        methodKey: r.methodKey, 
+                        ref: ref,
+                        isSelectionMode: _isSelectionMode,
+                        isSelected: _selectedIds.contains(r.id),
+                        onTap: () => _toggleSelection(r.id),
+                      ),
+                    )),
+                  ],
+                ],
+              ),
+
+              // Sticky Header for Sorting & Selection
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(16, 110, 16, 16),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        const Color(0xFF0F0E0D),
+                        const Color(0xFF0F0E0D).withValues(alpha: 0.9),
+                        Colors.transparent,
+                      ],
+                      stops: const [0.0, 0.8, 1.0],
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              _SortChip(
+                                label: ref.t('date_added'),
+                                isSelected: _sortBy == RecipeSort.date,
+                                onTap: () => setState(() => _sortBy = RecipeSort.date),
+                              ),
+                              const SizedBox(width: 8),
+                              _SortChip(
+                                label: ref.t('alphabetical'),
+                                isSelected: _sortBy == RecipeSort.alphabet,
+                                onTap: () => setState(() => _sortBy = RecipeSort.alphabet),
+                              ),
+                              const SizedBox(width: 8),
+                              _SortChip(
+                                label: ref.t('brewing_method'),
+                                isSelected: _sortBy == RecipeSort.method,
+                                onTap: () => setState(() => _sortBy = RecipeSort.method),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      _ActionIcon(
+                        icon: _isSelectionMode ? Icons.close_rounded : Icons.checklist_rounded,
+                        onTap: () => setState(() {
+                          _isSelectionMode = !_isSelectionMode;
+                          if (!_isSelectionMode) _selectedIds.clear();
+                        }),
+                        color: _isSelectionMode ? Colors.redAccent : const Color(0xFFC8A96E),
+                      ),
+                      if (_isSelectionMode && _selectedIds.isNotEmpty) ...[
+                        const SizedBox(width: 8),
+                        _ActionIcon(
+                          icon: Icons.delete_sweep_rounded,
+                          onTap: _deleteSelected,
+                          color: Colors.redAccent,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+class _SortChip extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _SortChip({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? const Color(0xFFC8A96E) : Colors.white.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isSelected ? const Color(0xFFC8A96E) : Colors.white12,
+          ),
+        ),
+        child: Text(
+          label,
+          style: GoogleFonts.outfit(
+            fontSize: 12,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+            color: isSelected ? Colors.black : Colors.white70,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ActionIcon extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+  final Color color;
+
+  const _ActionIcon({
+    required this.icon,
+    required this.onTap,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          shape: BoxShape.circle,
+          border: Border.all(color: color.withValues(alpha: 0.2)),
+        ),
+        child: Icon(icon, color: color, size: 20),
       ),
     );
   }

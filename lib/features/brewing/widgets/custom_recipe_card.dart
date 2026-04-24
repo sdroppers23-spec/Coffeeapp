@@ -16,12 +16,18 @@ class CustomRecipeCard extends StatelessWidget {
   final CustomRecipeDto recipe;
   final String methodKey;
   final WidgetRef ref;
+  final bool isSelectionMode;
+  final bool isSelected;
+  final VoidCallback? onTap;
   
   const CustomRecipeCard({
     super.key,
     required this.recipe,
     required this.methodKey,
     required this.ref,
+    this.isSelectionMode = false,
+    this.isSelected = false,
+    this.onTap,
   });
 
   List<Map<String, dynamic>> get _pours {
@@ -37,137 +43,154 @@ class CustomRecipeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final pours = _pours;
 
-    return GlassContainer(
-      padding: const EdgeInsets.all(0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 16, 8, 4),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFC8A96E).withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    recipe.recipeType == 'espresso' 
-                      ? Icons.coffee_maker_rounded 
-                      : Icons.coffee_rounded,
-                    color: const Color(0xFFC8A96E),
-                    size: 18,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    recipe.name,
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      color: Colors.white,
+    return InkWell(
+      onTap: isSelectionMode ? onTap : null,
+      borderRadius: BorderRadius.circular(24),
+      child: GlassContainer(
+        padding: const EdgeInsets.all(0),
+        borderColor: isSelected 
+          ? const Color(0xFFC8A96E) 
+          : Colors.white.withValues(alpha: 0.1),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 8, 4),
+              child: Row(
+                children: [
+                  if (isSelectionMode) ...[
+                    Icon(
+                      isSelected 
+                        ? Icons.check_circle_rounded 
+                        : Icons.radio_button_unchecked_rounded,
+                      color: isSelected ? const Color(0xFFC8A96E) : Colors.white24,
+                      size: 22,
                     ),
-                  ),
-                ),
-                // Rating stars
-                if (recipe.rating > 0)
+                    const SizedBox(width: 12),
+                  ],
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
+                    padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.black26,
-                      borderRadius: BorderRadius.circular(20),
+                      color: const Color(0xFFC8A96E).withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: List.generate(
-                        recipe.rating,
-                        (_) => const Icon(
-                          Icons.star_rounded,
-                          color: Color(0xFFC8A96E),
-                          size: 14,
-                        ),
+                    child: Icon(
+                      recipe.recipeType == 'espresso' 
+                        ? Icons.coffee_maker_rounded 
+                        : Icons.coffee_rounded,
+                      color: const Color(0xFFC8A96E),
+                      size: 18,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      recipe.name,
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        color: Colors.white,
                       ),
                     ),
                   ),
-                // Actions
-                IconButton(
-                  icon: const Icon(
-                    Icons.more_horiz_rounded,
-                    color: Colors.white38,
-                  ),
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      backgroundColor: Colors.transparent,
-                      builder: (context) => GlassContainer(
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        borderRadius: 32,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ListTile(
-                              leading: const Icon(
-                                Icons.edit_rounded,
-                                color: Colors.white70,
-                              ),
-                              title: const Text(
-                                'Edit Recipe',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                                onTap: () async {
-                                  Navigator.pop(context);
-                                  final result = await showDialog<bool>(
-                                    context: context,
-                                    builder: (context) => AddRecipeDialog(
-                                      lotId: recipe.lotId ?? '',
-                                      existingRecipe: recipe,
-                                    ),
-                                  );
-                                  if (result == true) {
-                                    ref.invalidate(customRecipesForMethodProvider(methodKey));
-                                  }
-                                },
-                              ),
-                            ListTile(
-                              leading: const Icon(
-                                Icons.delete_outline_rounded,
-                                color: Colors.redAccent,
-                              ),
-                              title: const Text(
-                                'Delete Recipe',
-                                style: TextStyle(color: Colors.redAccent),
-                              ),
-                              onTap: () async {
-                                Navigator.pop(context);
-                                final db = ref.read(databaseProvider);
-                                await db.deleteCustomRecipe(recipe.id);
-                                if (context.mounted) {
-                                  ToastService.showInfo(
-                                    context, 
-                                    context.t('toast_recipe_deleted')
-                                  );
-                                }
-                                ref.invalidate(
-                                  customRecipesForMethodProvider(methodKey),
-                                );
-                              },
+                  // Rating stars
+                  if (recipe.rating > 0 && !isSelectionMode)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black26,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: List.generate(
+                          recipe.rating,
+                          (_) => const Icon(
+                            Icons.star_rounded,
+                            color: Color(0xFFC8A96E),
+                            size: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  // Actions
+                  if (!isSelectionMode)
+                    IconButton(
+                      icon: const Icon(
+                        Icons.more_horiz_rounded,
+                        color: Colors.white38,
+                      ),
+                      onPressed: () {
+                        showModalBottomSheet(
+                          context: context,
+                          backgroundColor: Colors.transparent,
+                          builder: (context) => GlassContainer(
+                            padding: const EdgeInsets.symmetric(vertical: 20),
+                            borderRadius: 32,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ListTile(
+                                  leading: const Icon(
+                                    Icons.edit_rounded,
+                                    color: Colors.white70,
+                                  ),
+                                  title: const Text(
+                                    'Edit Recipe',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                    onTap: () async {
+                                      Navigator.pop(context);
+                                      final result = await showDialog<bool>(
+                                        context: context,
+                                        builder: (context) => AddRecipeDialog(
+                                          lotId: recipe.lotId ?? '',
+                                          existingRecipe: recipe,
+                                        ),
+                                      );
+                                      if (result == true) {
+                                        ref.invalidate(customRecipesForMethodProvider(methodKey));
+                                      }
+                                    },
+                                  ),
+                                ListTile(
+                                  leading: const Icon(
+                                    Icons.delete_outline_rounded,
+                                    color: Colors.redAccent,
+                                  ),
+                                  title: const Text(
+                                    'Delete Recipe',
+                                    style: TextStyle(color: Colors.redAccent),
+                                  ),
+                                  onTap: () async {
+                                    Navigator.pop(context);
+                                    final db = ref.read(databaseProvider);
+                                    await db.deleteCustomRecipe(recipe.id);
+                                    if (context.mounted) {
+                                      ToastService.showInfo(
+                                        context, 
+                                        context.t('toast_recipe_deleted')
+                                      );
+                                    }
+                                    ref.invalidate(
+                                      customRecipesForMethodProvider(methodKey),
+                                    );
+                                  },
+                                ),
+                                const SizedBox(height: 20),
+                              ],
                             ),
-                            const SizedBox(height: 20),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
+                          ),
+                        );
+                      },
+                    ),
+                ],
+              ),
             ),
-          ),
           // Key stats
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),

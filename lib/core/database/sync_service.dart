@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'app_database.dart';
+import 'package:flutter/foundation.dart';
 import '../utils/content_utils.dart';
 
 /// Service responsible for synchronizing user-managed coffee data.
@@ -346,11 +347,10 @@ class SyncService {
       for (final r in recipesToSync) {
         try {
           if (r.isDeletedLocal) {
-            debugPrint('Deleting recipe from cloud: ${r.id}');
+            debugPrint('SyncService: Deleting recipe from cloud: ${r.id}');
             await supabase!.from('user_custom_recipes').delete().eq('id', r.id).eq('user_id', userId);
             await db.deleteCustomRecipePermanently(r.id);
-            debugPrint('Recipe deleted permanently from local: ${r.id}');
-
+            debugPrint('SyncService: Recipe deleted permanently from local: ${r.id}');
           } else {
             await supabase!.from('user_custom_recipes').upsert({
               'id': r.id,
@@ -364,17 +364,19 @@ class SyncService {
               'comandante_clicks': r.comandanteClicks,
               'ek43_division': r.ek43Division,
               'total_pours': r.totalPours,
-              'pour_schedule_json': r.pourScheduleJson,
+              'pour_schedule_json': jsonDecode(r.pourScheduleJson),
               'brew_temp_c': r.brewTempC,
               'notes': r.notes,
               'rating': r.rating,
               'created_at': r.createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
               'updated_at': DateTime.now().toIso8601String(),
+              'recipe_type': r.recipeType,
+            });
             await (db.update(db.customRecipes)..where((t) => t.id.equals(r.id))).write(const CustomRecipesCompanion(isSynced: Value(true)));
-            debugPrint('Recipe synced to cloud: ${r.id}');
+            debugPrint('SyncService: Recipe synced to cloud: ${r.id}');
           }
         } catch (e) {
-          debugPrint('Error syncing recipe ${r.id}: $e');
+          debugPrint('SyncService: Error syncing recipe ${r.id}: $e');
         }
       }
 
@@ -383,9 +385,10 @@ class SyncService {
       for (final l in lotsToSync) {
         try {
           if (l.isDeletedLocal) {
+            debugPrint('SyncService: Deleting lot from cloud: ${l.id}');
             await supabase!.from('user_coffee_lots').delete().eq('id', l.id).eq('user_id', userId);
             await db.deleteLotPermanently(l.id);
-
+            debugPrint('SyncService: Lot deleted permanently from local: ${l.id}');
           } else {
             await supabase!.from('user_coffee_lots').upsert({
               'id': l.id,
@@ -413,18 +416,19 @@ class SyncService {
               'is_archived': l.isArchived,
               'is_open': l.isOpen,
               'is_ground': l.isGround,
-              'sensory_json': l.sensoryJson,
-              'price_json': l.priceJson,
+              'sensory_json': jsonDecode(l.sensoryJson),
+              'price_json': jsonDecode(l.priceJson),
               'brand_id': l.brandId,
               'image_url': l.imageUrl,
               'created_at': l.createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
               'updated_at': DateTime.now().toIso8601String(),
             });
             await (db.update(db.coffeeLots)..where((t) => t.id.equals(l.id))).write(const CoffeeLotsCompanion(isSynced: Value(true)));
+            debugPrint('SyncService: Lot synced to cloud: ${l.id}');
           }
         } catch (e) {
-      // Production silent fail
-    }
+          debugPrint('SyncService: Error syncing lot ${l.id}: $e');
+        }
       }
       
       // 3. Sync User Brands (Upsert & Delete)
@@ -432,17 +436,12 @@ class SyncService {
       for (final b in brandsToSync) {
         try {
           if (b.isDeletedLocal) {
-
-            final response = await supabase!.from('user_brands').delete().eq('id', b.id).eq('user_id', userId).select();
-            if (response.isEmpty) {
-
-            }
+            debugPrint('SyncService: Deleting brand from cloud: ${b.id}');
+            await supabase!.from('user_brands').delete().eq('id', b.id).eq('user_id', userId);
             await (db.delete(db.localizedBrands)..where((t) => t.id.equals(b.id))).go();
             await (db.delete(db.localizedBrandTranslations)..where((t) => t.brandId.equals(b.id))).go();
-
+            debugPrint('SyncService: Brand deleted permanently from local: ${b.id}');
           } else {
-            // Upsert logic...
-
             await supabase!.from('user_brands').upsert({
               'id': b.id,
               'user_id': userId,
@@ -464,14 +463,14 @@ class SyncService {
             }
 
             await (db.update(db.localizedBrands)..where((t) => t.id.equals(b.id))).write(const LocalizedBrandsCompanion(isSynced: Value(true)));
-
+            debugPrint('SyncService: Brand synced to cloud: ${b.id}');
           }
         } catch (e) {
-      // Production silent fail
-    }
+          debugPrint('SyncService: Error syncing brand ${b.id}: $e');
+        }
       }
     } catch (e) {
-      // Production silent fail
+      debugPrint('SyncService: Fatal error in pushLocalUserContent: $e');
     }
   }
 
@@ -1088,10 +1087,44 @@ class SyncService {
       }
 
       await db.smartUpsertBean(bean, translations);
+      
+      // Update V2 for consistency
+      final beanV2 = LocalizedBeansV2Companion(
+        id: Value(id),
+        brandId: Value((item['brand_id'] as num?)?.toInt()),
+        countryEmoji: Value(emoji),
+        altitudeMin: Value((item['altitude_min'] as num?)?.toInt()),
+        altitudeMax: Value((item['altitude_max'] as num?)?.toInt()),
+        lotNumber: Value(item['lot_number'] as String? ?? ''),
+        scaScore: Value(item['sca_score']?.toString() ?? '82+'),
+        cupsScore: Value(double.tryParse(item['cups_score']?.toString() ?? '82.0') ?? 82.0),
+        sensoryJson: Value(item['sensory_json']?.toString() ?? '{}'),
+        priceJson: Value(item['price_json']?.toString() ?? '{}'),
+        retailPrice: Value(item['retail_price']?.toString() ?? item['price']?.toString()),
+        isPremium: Value(item['is_premium'] as bool? ?? false),
+        isDecaf: Value(item['is_decaf'] as bool? ?? false),
+        url: Value(item['url'] as String? ?? ''),
+        createdAt: Value(item['created_at'] != null ? DateTime.tryParse(item['created_at'] as String) : null),
+      );
+
+      final List<LocalizedBeanTranslationsV2Companion> translationsV2 = translations.map((t) => LocalizedBeanTranslationsV2Companion(
+        beanId: Value(id),
+        languageCode: t.languageCode,
+        country: t.country,
+        region: t.region,
+        varieties: t.varieties,
+        flavorNotes: t.flavorNotes,
+        processMethod: t.processMethod,
+        description: t.description,
+        farmDescription: t.farmDescription,
+        roastLevel: t.roastLevel,
+      )).toList();
+
+      await db.smartUpsertBeanV2(beanV2, translationsV2);
       _dataUpdateController.add(null);
 
     } catch (e) {
-      // Production silent fail
+      debugPrint('SyncService: Error in syncSingleBean ($id): $e');
     }
   }
 

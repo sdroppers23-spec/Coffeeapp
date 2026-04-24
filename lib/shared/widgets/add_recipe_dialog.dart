@@ -217,7 +217,8 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
     if (_isOtherGrinder && _customGrinderController.text.isEmpty) return;
 
     final db = ref.read(databaseProvider);
-    final user = ref.read(supabaseProvider).auth.currentUser;
+    final supabase = ref.read(supabaseProvider);
+    final user = supabase.auth.currentUser;
     final userId = user?.id ?? 'local_user';
 
     final recipe = CustomRecipesCompanion.insert(
@@ -290,16 +291,19 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
     );
 
     try {
+      debugPrint('RecipeDialog: Attempting local save for recipe ${recipe.id.value}...');
       await db.upsertCustomRecipe(recipe);
+      debugPrint('RecipeDialog: Local save successful');
+      
       if (!mounted) return;
       ToastService.showSuccess(context, isUk ? 'Рецепт збережено' : 'Recipe saved');
       Navigator.pop(context, true);
 
       // Attempt cloud sync if logged in
       if (user != null) {
-        debugPrint('Starting cloud sync for recipe: ${recipe.id.value}');
+        debugPrint('RecipeDialog: Starting cloud sync for user $userId');
         try {
-          await ref.read(supabaseProvider).from('user_custom_recipes').upsert({
+          await supabase.from('user_custom_recipes').upsert({
             'id': recipe.id.value,
             'user_id': userId,
             'lot_id': recipe.lotId.value,
@@ -322,18 +326,18 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
 
           // Mark as synced locally
           await db.upsertCustomRecipe(recipe.copyWith(isSynced: const Value(true)));
-          debugPrint('Cloud sync successful for recipe: ${recipe.id.value}');
+          debugPrint('RecipeDialog: Cloud sync successful for recipe: ${recipe.id.value}');
         } catch (e) {
-          debugPrint('Cloud sync failed for recipe ${recipe.id.value}: $e');
+          debugPrint('RecipeDialog: Cloud sync error (non-fatal): $e');
           // We don't fail the local save if cloud sync fails
         }
       }
     } catch (e) {
-      debugPrint('Cloud sync failed: $e');
+      debugPrint('RecipeDialog: FATAL ERROR during local save: $e');
       if (!mounted) return;
       ToastService.showError(
         context,
-        isUk ? 'Помилка синхронізації' : 'Sync error',
+        isUk ? 'Помилка збереження локально' : 'Error saving locally',
       );
     }
   }

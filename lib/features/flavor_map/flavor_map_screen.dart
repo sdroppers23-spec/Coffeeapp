@@ -238,10 +238,19 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 24,
+                                          vertical: 12,
+                                        ),
                                         decoration: BoxDecoration(
-                                          border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.5)),
-                                          borderRadius: BorderRadius.circular(16),
+                                          border: Border.all(
+                                            color: const Color(
+                                              0xFFC8A96E,
+                                            ).withValues(alpha: 0.5),
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            16,
+                                          ),
                                         ),
                                         child: Text(
                                           'COMING SOON',

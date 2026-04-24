@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -97,7 +98,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                 expandedHeight: 400,
                 pinned: true,
                 stretch: true,
-                backgroundColor: const Color(0xFF0F0E0D),
+                backgroundColor: Colors.transparent,
                 elevation: 0,
                 surfaceTintColor: Colors.transparent,
                 title: _showTitleInAppBar
@@ -111,32 +112,40 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                       )
                     : null,
                 centerTitle: true,
-                flexibleSpace: FlexibleSpaceBar(
-                  stretchModes: const [
-                    StretchMode.zoomBackground,
-                    StretchMode.blurBackground,
-                  ],
-                  background: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      _buildHeroImage(widget.recipe.imageUrl),
-                      const DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.black54,
-                              Colors.transparent,
-                              Colors.transparent,
-                              Colors.black38,
-                              Color(0xFF0F0E0D),
-                            ],
-                            stops: [0.0, 0.2, 0.5, 0.8, 1.0],
-                          ),
+                flexibleSpace: ClipRect(
+                  child: BackdropFilter(
+                    filter: ui.ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                    child: Container(
+                      color: const Color(0xFF0F0E0D).withValues(alpha: 0.6),
+                      child: FlexibleSpaceBar(
+                        stretchModes: const [
+                          StretchMode.zoomBackground,
+                          StretchMode.blurBackground,
+                        ],
+                        background: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            _buildHeroImage(widget.recipe.imageUrl),
+                            const DecoratedBox(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Colors.black87,
+                                    Colors.transparent,
+                                    Colors.transparent,
+                                    Colors.black45,
+                                    Color(0xFF0F0E0D),
+                                  ],
+                                  stops: [0.0, 0.2, 0.6, 0.9, 1.0],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
                 ),
                 leading: IconButton(
@@ -319,20 +328,24 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            const Color(0xFF0F0E0D).withValues(alpha: 0.0),
-            const Color(0xFF0F0E0D).withValues(alpha: 0.8),
-            const Color(0xFF0F0E0D),
-          ],
-          stops: const [0.0, 0.4, 1.0],
-        ),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12),
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                const Color(0xFF0F0E0D).withValues(alpha: 0.4),
+                const Color(0xFF0F0E0D).withValues(alpha: 0.7),
+                const Color(0xFF0F0E0D).withValues(alpha: 0.9),
+                const Color(0xFF0F0E0D),
+              ],
+              stops: const [0.0, 0.3, 0.7, 1.0],
+            ),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -353,10 +366,10 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: const Color(0xFFC8A96E).withValues(alpha: 0.5),
+                color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
                 width: 1,
               ),
-              color: Colors.white.withValues(alpha: 0.03),
+              color: const Color(0xFF1A1918).withValues(alpha: 0.4),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -383,8 +396,10 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
           ),
         ],
       ),
-    );
-  }
+    ),
+   ),
+  );
+ }
 
   String _formatTime(int seconds) {
     int m = seconds ~/ 60;

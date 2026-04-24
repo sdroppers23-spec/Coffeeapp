@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:drift/drift.dart';
 import 'app_database.dart';
 
@@ -38,6 +40,8 @@ class CoffeeDataSeed {
     await _seedBrands(force: force);
     onProgress?.call('Seeding Farmers...');
     await _seedFarmers(force: force);
+    onProgress?.call('Seeding Specialty Articles...');
+    await _seedSpecialtyArticles(force: force);
     onProgress?.call('Seeding Encyclopedia...');
     await _seedEncyclopedia(force: force);
     onProgress?.call('Seeding Catalog...');
@@ -75,16 +79,124 @@ class CoffeeDataSeed {
     final isEmpty = await db.farmersIsEmpty();
     if (!isEmpty && !force) return;
 
-    // Cloud will handle this.
+    try {
+      final jsonString = await rootBundle.loadString('assets/data/clean_farmers.json');
+      final List<dynamic> jsonList = jsonDecode(jsonString);
 
+      for (final item in jsonList) {
+        final farmer = LocalizedFarmersV2Companion(
+          id: Value(int.tryParse(item['id'].toString().replaceAll(RegExp(r'[^0-9]'), '')) ?? 0),
+          imageUrl: Value(item['image_url_portrait'] as String? ?? ''),
+        );
+
+        final translations = [
+          LocalizedFarmerTranslationsV2Companion(
+            farmerId: farmer.id,
+            languageCode: const Value('en'),
+            name: Value(item['farmer_name_en'] as String? ?? ''),
+            country: Value(item['country_en'] as String? ?? ''),
+            region: Value(item['region_uk'] as String? ?? ''), // fallback
+            story: Value(item['biography_uk'] as String? ?? ''), // fallback
+          ),
+          LocalizedFarmerTranslationsV2Companion(
+            farmerId: farmer.id,
+            languageCode: const Value('uk'),
+            name: Value(item['farmer_name_uk'] as String? ?? ''),
+            country: Value(item['country_uk'] as String? ?? ''),
+            region: Value(item['region_uk'] as String? ?? ''),
+            story: Value(item['biography_uk'] as String? ?? ''),
+          ),
+        ];
+
+        await db.smartUpsertFarmerV2(farmer, translations);
+      }
+    } catch (e) {
+      // Ignore if file missing
+    }
+  }
+
+  Future<void> _seedSpecialtyArticles({bool force = false}) async {
+    final isEmpty = await db.specialtyArticlesIsEmpty();
+    if (!isEmpty && !force) return;
+
+    try {
+      final jsonString = await rootBundle.loadString('assets/data/specialty_encyclopedia.json');
+      final Map<String, dynamic> data = jsonDecode(jsonString);
+      final List<dynamic> modules = data['modules'] as List<dynamic>? ?? [];
+
+      for (var i = 0; i < modules.length; i++) {
+        final module = modules[i];
+        final List<dynamic> contentList = module['content'] as List<dynamic>? ?? [];
+        
+        for (var j = 0; j < contentList.length; j++) {
+          final item = contentList[j];
+          final topic = item['topic'] as String? ?? 'Topic $j';
+          
+          final article = SpecialtyArticlesV2Companion(
+            id: Value(i * 100 + j),
+            imageUrl: const Value(''),
+            readTimeMin: const Value(5),
+          );
+
+          final translations = [
+            SpecialtyArticleTranslationsV2Companion(
+              articleId: article.id,
+              languageCode: const Value('uk'),
+              title: Value(topic),
+              contentHtml: Value(jsonEncode(item)),
+            ),
+            SpecialtyArticleTranslationsV2Companion(
+              articleId: article.id,
+              languageCode: const Value('en'),
+              title: Value(topic),
+              contentHtml: Value(jsonEncode(item)),
+            ),
+          ];
+
+          await db.smartUpsertArticleV2(article, translations);
+        }
+      }
+    } catch (e) {
+      // Ignore if missing
+    }
   }
 
   Future<void> _seedEncyclopedia({bool force = false}) async {
     final isEmpty = await db.encyclopediaIsEmpty();
     if (!isEmpty && !force) return;
 
-    // Cloud will handle this.
+    // Provide a tiny fallback seed so it's not totally empty if cloud sync fails
+    final bean = LocalizedBeansV2Companion(
+      id: const Value(1),
+      scaScore: const Value('88+'),
+      cupsScore: const Value(88.5),
+      processingMethodsJson: const Value('["Washed"]'),
+    );
 
+    final translations = [
+      LocalizedBeanTranslationsV2Companion(
+        beanId: const Value(1),
+        languageCode: const Value('uk'),
+        country: const Value('Ефіопія'),
+        region: const Value('Їргачеффе'),
+        varieties: const Value('Heirloom'),
+        flavorNotes: const Value('["Жасмин", "Бергамот", "Чорний чай"]'),
+        processMethod: const Value('Мита'),
+        description: const Value('Класична ефіопська кава з яскравим квітковим профілем.'),
+      ),
+      LocalizedBeanTranslationsV2Companion(
+        beanId: const Value(1),
+        languageCode: const Value('en'),
+        country: const Value('Ethiopia'),
+        region: const Value('Yirgacheffe'),
+        varieties: const Value('Heirloom'),
+        flavorNotes: const Value('["Jasmine", "Bergamot", "Black Tea"]'),
+        processMethod: const Value('Washed'),
+        description: const Value('Classic Ethiopian coffee with a bright floral profile.'),
+      ),
+    ];
+
+    await db.smartUpsertBeanV2(bean, translations);
   }
 
   Future<void> _seedBrewingRecipes() async {

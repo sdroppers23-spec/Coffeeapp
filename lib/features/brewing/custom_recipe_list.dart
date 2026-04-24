@@ -30,7 +30,7 @@ final globalCustomRecipesProvider = StreamProvider<List<CustomRecipeDto>>((
 });
 
 // ─── Tab widget (embedded inside BrewingDetailScreen Tab 2) ───────────────────
-class CustomRecipeListTab extends ConsumerWidget {
+class CustomRecipeListTab extends ConsumerStatefulWidget {
   final String methodKey;
   final bool showFab;
   const CustomRecipeListTab({
@@ -40,94 +40,166 @@ class CustomRecipeListTab extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final recipesAsync = ref.watch(customRecipesForMethodProvider(methodKey));
+  ConsumerState<CustomRecipeListTab> createState() => _CustomRecipeListTabState();
+}
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      floatingActionButton: !showFab ? null : FloatingActionButton.extended(
-        onPressed: () async {
-          final result = await showDialog<bool>(
-            context: context,
-            builder: (context) => AddRecipeDialog(
-              lotId: '', // Adding a general recipe for the method
-              initialMethod: methodKey,
-            ),
-          );
-          if (result == true) {
-            ref.invalidate(customRecipesForMethodProvider(methodKey));
-          }
-        },
-        icon: const Icon(Icons.add_rounded),
-        label: Text(
-          ref.t('add_recipe'),
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-        ),
-        backgroundColor: const Color(0xFFC8A96E),
-        foregroundColor: Colors.black,
-        elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
+  bool _isSelectionMode = false;
+  final Set<String> _selectedIds = {};
+
+  void _toggleSelection(String id) {
+    setState(() {
+      if (_selectedIds.contains(id)) {
+        _selectedIds.remove(id);
+      } else {
+        _selectedIds.add(id);
+      }
+    });
+  }
+
+  void _selectAll(List<CustomRecipeDto> recipes) {
+    setState(() {
+      if (_selectedIds.length == recipes.length) {
+        _selectedIds.clear();
+      } else {
+        _selectedIds.addAll(recipes.map((r) => r.id));
+      }
+    });
+  }
+
+  Future<void> _deleteSelected() async {
+    final db = ref.read(databaseProvider);
+    for (final id in _selectedIds) {
+      await db.deleteCustomRecipe(id);
+    }
+    setState(() {
+      _selectedIds.clear();
+      _isSelectionMode = false;
+    });
+    ref.invalidate(customRecipesForMethodProvider(widget.methodKey));
+    ref.invalidate(globalCustomRecipesProvider);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final recipesAsync = ref.watch(customRecipesForMethodProvider(widget.methodKey));
+
+    return recipesAsync.when(
+      loading: () => const Center(
+        child: CircularProgressIndicator(color: Color(0xFFC8A96E)),
       ),
-      body: recipesAsync.when(
-        loading: () => const Center(
-          child: CircularProgressIndicator(color: Color(0xFFC8A96E)),
+      error: (e, _) => Center(
+        child: Text(
+          'Error: $e',
+          style: const TextStyle(color: Colors.white70),
         ),
-        error: (e, _) => Center(
-          child: Text(
-            'Error: $e',
-            style: const TextStyle(color: Colors.white70),
-          ),
-        ),
-        data: (recipes) {
-          if (recipes.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GlassContainer(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      children: [
-                        const Icon(
-                          Icons.auto_awesome_rounded,
-                          size: 48,
-                          color: Color(0xFFC8A96E),
+      ),
+      data: (recipes) {
+        if (recipes.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GlassContainer(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    children: [
+                      const Icon(
+                        Icons.auto_awesome_rounded,
+                        size: 48,
+                        color: Color(0xFFC8A96E),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        ref.t('no_recipes_yet'),
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
                         ),
-                        const SizedBox(height: 16),
-                        Text(
-                          ref.t('no_recipes_yet'),
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        ref.t('perfect_brew_starts_here'),
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          color: Colors.white70,
+                          fontSize: 14,
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          ref.t('perfect_brew_starts_here'),
-                          style: const TextStyle(color: Colors.white54, fontSize: 14),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 80),
-                ],
-              ),
-            );
-          }
-
-          return ListView.separated(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-            itemCount: recipes.length,
-            separatorBuilder: (_, _) => const SizedBox(height: 16),
-            itemBuilder: (context, i) => CustomRecipeCard(
-              recipe: recipes[i],
-              methodKey: methodKey,
-              ref: ref,
+                ),
+                const SizedBox(height: 80),
+              ],
             ),
           );
-        },
-      ),
+        }
+
+        return Stack(
+          children: [
+            ListView.separated(
+              padding: EdgeInsets.fromLTRB(16, _isSelectionMode ? 80 : 16, 16, 120),
+              itemCount: recipes.length,
+              separatorBuilder: (_, _) => const SizedBox(height: 16),
+              itemBuilder: (context, i) => CustomRecipeCard(
+                recipe: recipes[i],
+                methodKey: widget.methodKey,
+                ref: ref,
+                isSelectionMode: _isSelectionMode,
+                isSelected: _selectedIds.contains(recipes[i].id),
+                onTap: () => _toggleSelection(recipes[i].id),
+                onLongPress: () {
+                  if (!_isSelectionMode) {
+                    setState(() {
+                      _isSelectionMode = true;
+                      _selectedIds.add(recipes[i].id);
+                    });
+                  }
+                },
+              ),
+            ),
+            if (_isSelectionMode)
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: GlassContainer(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(16),
+                    bottomRight: Radius.circular(16),
+                  ),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.close_rounded, color: Colors.white),
+                        onPressed: () => setState(() {
+                          _isSelectionMode = false;
+                          _selectedIds.clear();
+                        }),
+                      ),
+                      Text(
+                        '${_selectedIds.length} ${ref.t('selected')}',
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        icon: const Icon(Icons.select_all_rounded, color: Colors.white),
+                        tooltip: ref.t('select_all'),
+                        onPressed: () => _selectAll(recipes),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete_outline_rounded, color: Color(0xFFEF5350)),
+                        onPressed: _selectedIds.isEmpty ? null : _deleteSelected,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }
@@ -281,6 +353,14 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
                         isSelectionMode: _isSelectionMode,
                         isSelected: _selectedIds.contains(r.id),
                         onTap: () => _toggleSelection(r.id),
+                        onLongPress: () {
+                          if (!_isSelectionMode) {
+                            setState(() {
+                              _isSelectionMode = true;
+                              _selectedIds.add(r.id);
+                            });
+                          }
+                        },
                       ),
                     )),
                     const SizedBox(height: 16),
@@ -297,6 +377,14 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
                         isSelectionMode: _isSelectionMode,
                         isSelected: _selectedIds.contains(r.id),
                         onTap: () => _toggleSelection(r.id),
+                        onLongPress: () {
+                          if (!_isSelectionMode) {
+                            setState(() {
+                              _isSelectionMode = true;
+                              _selectedIds.add(r.id);
+                            });
+                          }
+                        },
                       ),
                     )),
                   ],

@@ -216,11 +216,11 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
 
     final db = ref.read(databaseProvider);
     final user = ref.read(supabaseProvider).auth.currentUser;
-    if (user == null) return;
+    final userId = user?.id ?? 'local_user';
 
     final recipe = CustomRecipesCompanion.insert(
       id: Value(widget.existingRecipe?.id ?? const Uuid().v4()),
-      userId: user.id,
+      userId: userId,
       lotId: Value(widget.lotId.isEmpty ? null : widget.lotId),
       methodKey: _method,
       name: _nameController.text.isEmpty ? 'Recipe' : _nameController.text,
@@ -279,8 +279,61 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
       updatedAt: Value(DateTime.now()),
     );
 
-    await db.upsertCustomRecipe(recipe);
-    if (mounted) Navigator.pop(context, true);
+    try {
+      await db.upsertCustomRecipe(recipe);
+      
+      // Attempt cloud sync if logged in
+      if (user != null) {
+        try {
+          final supabase = ref.read(supabaseProvider);
+          final pours = jsonDecode(recipe.pourScheduleJson.value);
+          
+          await supabase.from('custom_recipes').upsert({
+            'id': recipe.id.value,
+            'user_id': userId,
+            'lot_id': recipe.lotId.value,
+            'method_key': recipe.methodKey.value,
+            'name': recipe.name.value,
+            'coffee_grams': recipe.coffeeGrams.value,
+            'total_water_ml': recipe.totalWaterMl.value,
+            'grind_number': recipe.grindNumber.value,
+            'comandante_clicks': recipe.comandanteClicks.value,
+            'ek43_division': recipe.ek43Division.value,
+            'total_pours': recipe.totalPours.value,
+            'pour_schedule_json': pours,
+            'brew_temp_c': recipe.brewTempC.value,
+            'notes': recipe.notes.value,
+            'rating': recipe.rating.value,
+            'created_at': (recipe.createdAt.value ?? DateTime.now()).toIso8601String(),
+            'updated_at': DateTime.now().toIso8601String(),
+            'recipe_type': recipe.recipeType.value,
+          });
+          
+          // Mark as synced locally
+          await db.upsertCustomRecipe(recipe.copyWith(isSynced: const Value(true)));
+        } catch (e) {
+          debugPrint('Cloud sync failed: $e');
+          // We don't fail the local save if cloud sync fails
+        }
+      }
+
+      if (mounted) {
+        ToastService.show(
+          context,
+          ref.t(widget.existingRecipe != null ? 'recipe_updated' : 'recipe_saved'),
+          type: ToastType.success,
+        );
+        Navigator.pop(context, true);
+      }
+    } catch (e) {
+      if (mounted) {
+        ToastService.show(
+          context,
+          'Error: $e',
+          type: ToastType.error,
+        );
+      }
+    }
   }
 
   int _parseHMSToSeconds(String hms) {

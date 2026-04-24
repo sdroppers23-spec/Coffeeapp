@@ -19,6 +19,7 @@ class CustomRecipeCard extends StatelessWidget {
   final bool isSelectionMode;
   final bool isSelected;
   final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
   
   const CustomRecipeCard({
     super.key,
@@ -28,6 +29,7 @@ class CustomRecipeCard extends StatelessWidget {
     this.isSelectionMode = false,
     this.isSelected = false,
     this.onTap,
+    this.onLongPress,
   });
 
   List<Map<String, dynamic>> get _pours {
@@ -49,7 +51,16 @@ class CustomRecipeCard extends StatelessWidget {
         ? const Color(0xFFC8A96E) 
         : Colors.white.withValues(alpha: 0.1),
       child: InkWell(
-        onTap: isSelectionMode ? onTap : null,
+        onTap: isSelectionMode ? onTap : (onTap ?? () {
+          // Default behavior: go to timer if not in selection mode and no custom onTap
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CustomRecipeTimerScreen(recipe: recipe),
+            ),
+          );
+        }),
+        onLongPress: onLongPress,
         borderRadius: BorderRadius.circular(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -70,17 +70,18 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
       backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
       appBar: PremiumAppBar(
-        title: ref.t('alternative_brewing'),
+        title: ref.t('alternative'),
         actions: [
-          IconButton(
-            icon: Icon(
-              ref.watch(brewingViewModeProvider)
-                  ? Icons.view_list_rounded
-                  : Icons.grid_view_rounded,
-              color: accentColor,
+          if (_selectedTab == 0)
+            IconButton(
+              icon: Icon(
+                ref.watch(brewingViewModeProvider)
+                    ? Icons.view_list_rounded
+                    : Icons.grid_view_rounded,
+                color: accentColor,
+              ),
+              onPressed: () => ref.read(brewingViewModeProvider.notifier).toggle(),
             ),
-            onPressed: () => ref.read(brewingViewModeProvider.notifier).toggle(),
-          ),
           const ProfileButton(),
         ],
         bottom: PreferredSize(

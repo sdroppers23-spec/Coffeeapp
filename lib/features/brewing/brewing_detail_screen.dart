@@ -29,9 +29,23 @@ class BrewingDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
+  final _scrollController = ScrollController();
+  bool _showTitleInAppBar = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      final show = _scrollController.offset > 300;
+      if (show != _showTitleInAppBar) {
+        setState(() => _showTitleInAppBar = show);
+      }
+    });
+  }
 
   @override
   void dispose() {
+    _scrollController.dispose();
     // Restore nav bar when leaving the screen
     Future.microtask(() {
       if (mounted) ref.read(navBarVisibleProvider.notifier).show();
@@ -50,15 +64,52 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
       },
       child: Scaffold(
         extendBodyBehindAppBar: true,
-        body: PremiumBackground(
+        floatingActionButton: FloatingActionButton.extended(
+        onPressed: () async {
+          final result = await showDialog<bool>(
+            context: context,
+            builder: (context) => AddRecipeDialog(
+              lotId: '',
+              initialMethod: widget.recipe.methodKey,
+            ),
+          );
+          if (result == true) {
+            ref.invalidate(customRecipesForMethodProvider(widget.recipe.methodKey));
+            ref.invalidate(globalCustomRecipesProvider);
+          }
+        },
+        icon: const Icon(Icons.add_rounded),
+        label: Text(
+          ref.t('add_recipe'),
+          style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+        ),
+        backgroundColor: const Color(0xFFC8A96E),
+        foregroundColor: Colors.black,
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      ),
+      body: PremiumBackground(
           child: NestedScrollView(
+            controller: _scrollController,
             headerSliverBuilder: (context, innerScrolled) => [
               SliverAppBar(
                 expandedHeight: 400,
                 pinned: true,
                 stretch: true,
-                backgroundColor: Colors.transparent,
+                backgroundColor: const Color(0xFF0F0E0D),
                 elevation: 0,
+                surfaceTintColor: Colors.transparent,
+                title: _showTitleInAppBar
+                    ? Text(
+                        ref.t('alternative'),
+                        style: GoogleFonts.outfit(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      )
+                    : null,
+                centerTitle: true,
                 flexibleSpace: FlexibleSpaceBar(
                   stretchModes: const [
                     StretchMode.zoomBackground,
@@ -100,14 +151,19 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                       backgroundColor: Colors.black26,
                       child: Icon(Icons.add_rounded, color: Colors.white),
                     ),
-                    onPressed: () {
-                      showDialog(
+                    onPressed: () async {
+                      final result = await showDialog<bool>(
                         context: context,
                         builder: (context) => AddRecipeDialog(
                           lotId: '',
                           initialMethod: widget.recipe.methodKey,
                         ),
                       );
+                      if (result == true) {
+                        // Invalidate both potential providers
+                        ref.invalidate(customRecipesForMethodProvider(widget.recipe.methodKey));
+                        ref.invalidate(globalCustomRecipesProvider);
+                      }
                     },
                   ),
                   const SizedBox(width: 8),
@@ -151,7 +207,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
             ],
             body: CustomRecipeListTab(
               methodKey: widget.recipe.methodKey,
-              showFab: true,
+              showFab: false, // Hidden because we use outer Scaffold FAB
             ),
           ),
         ),

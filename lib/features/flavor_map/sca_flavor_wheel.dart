@@ -31,7 +31,9 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1200), // Slightly longer for elegance
+      duration: const Duration(
+        milliseconds: 1200,
+      ), // Slightly longer for elegance
     );
     _animation = CurvedAnimation(
       parent: _controller,
@@ -191,11 +193,10 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
                               child: CustomPaint(
                                 size: Size(currentSize, currentSize),
                                 painter: _ScaWheelPainter(
-                                    data: _data,
-                                    animationValue: _animation.value,
-                                    selectedCategory: _selectedCategory,
-                                    ref: ref,
-                                  ),
+                                  data: _data,
+                                  animationValue: _animation.value,
+                                  selectedCategory: _selectedCategory,
+                                  ref: ref,
                                 ),
                               ),
                             ),
@@ -326,18 +327,18 @@ class _ScaWheelPainter extends CustomPainter {
 
         // Label for Subcategory (only if wide enough)
         if (subSweepAngle > 0.05) {
-            _drawTextInsideArc(
-              canvas,
-              ScaFlavorWheelL10n.translate(currentLocale, sub.name),
-              center,
-              subStartAngle,
-              subSweepAngle,
-              r1,
-              r2,
-              Colors.white,
-              8.0,
-              true,
-            );
+          _drawTextInsideArc(
+            canvas,
+            ScaFlavorWheelL10n.translate(currentLocale, sub.name),
+            center,
+            subStartAngle,
+            subSweepAngle,
+            r1,
+            r2,
+            Colors.white,
+            8.0,
+            true,
+          );
         }
 
         // 3. Draw Outer Ring (Notes)
@@ -380,8 +381,8 @@ class _ScaWheelPainter extends CustomPainter {
                 r2,
                 r3,
                 Colors.white.withValues(alpha: 0.9 * labelOpacity),
-                7.2, 
-                false, 
+                7.2,
+                false,
               );
             }
           }
@@ -476,18 +477,19 @@ class _ScaWheelPainter extends CustomPainter {
 
     final angle = startAngle + sweepAngle / 2;
     canvas.save();
-    
+
     // Position at the center of the arc
     canvas.translate(
       center.dx + middleRadius * math.cos(angle),
       center.dy + middleRadius * math.sin(angle),
     );
-    
+
     // Rotate to align with the arc
     canvas.rotate(angle + math.pi / 2);
-    
+
     // Flip text if it's in the bottom half of the circle to keep it upright
-    bool shouldFlip = (angle % (2 * math.pi)) > 0 && (angle % (2 * math.pi)) < math.pi;
+    bool shouldFlip =
+        (angle % (2 * math.pi)) > 0 && (angle % (2 * math.pi)) < math.pi;
     if (shouldFlip) {
       canvas.rotate(math.pi);
     }

@@ -186,14 +186,17 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
                               ),
                             ],
                           ),
-                          child: RepaintBoundary(
-                            child: CustomPaint(
-                              size: Size(currentSize, currentSize),
-                              painter: _ScaWheelPainter(
-                                data: _data,
-                                animationValue: _animation.value,
-                                selectedCategory: _selectedCategory,
-                                ref: ref,
+                          child: ClipOval(
+                            child: RepaintBoundary(
+                              child: CustomPaint(
+                                size: Size(currentSize, currentSize),
+                                painter: _ScaWheelPainter(
+                                    data: _data,
+                                    animationValue: _animation.value,
+                                    selectedCategory: _selectedCategory,
+                                    ref: ref,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -289,7 +292,7 @@ class _ScaWheelPainter extends CustomPainter {
         catSweepAngle,
         r0,
         r1,
-        Colors.white.withValues(alpha: animationValue.clamp(0.0, 1.0)),
+        Colors.white,
         9.0,
         true,
       );
@@ -331,7 +334,7 @@ class _ScaWheelPainter extends CustomPainter {
               subSweepAngle,
               r1,
               r2,
-              Colors.white.withValues(alpha: animationValue.clamp(0.0, 1.0)),
+              Colors.white,
               8.0,
               true,
             );
@@ -364,10 +367,10 @@ class _ScaWheelPainter extends CustomPainter {
             borderPaint,
           );
 
-          // Label for Note (Inside tile) with smooth fade-in
-          final labelOpacity = ((animationValue - 0.8) / 0.2).clamp(0.0, 1.0);
-          if (labelOpacity > 0) {
-            if (noteSweepAngle > 0.005) {
+          // Label for Note (Inside tile) with smooth fade-in - DELAYED for performance
+          final labelOpacity = ((animationValue - 0.85) / 0.15).clamp(0.0, 1.0);
+          if (labelOpacity > 0.05) {
+            if (noteSweepAngle > 0.01) {
               _drawTextInsideArc(
                 canvas,
                 ScaFlavorWheelL10n.translate(currentLocale, noteKey),
@@ -377,8 +380,8 @@ class _ScaWheelPainter extends CustomPainter {
                 r2,
                 r3,
                 Colors.white.withValues(alpha: 0.9 * labelOpacity),
-                7.2, // Outer ring (Note) - user set
-                false, // Normal weight for small text
+                7.2, 
+                false, 
               );
             }
           }
@@ -436,90 +439,64 @@ class _ScaWheelPainter extends CustomPainter {
     Offset center,
     double startAngle,
     double sweepAngle,
-    double rStart,
-    double rEnd,
+    double innerRadius,
+    double outerRadius,
     Color color,
-    double baseFontSize,
-    bool bold,
+    double fontSize,
+    bool isBold,
   ) {
-    final middleAngle = startAngle + sweepAngle / 2;
-    final middleRadius = (rStart + rEnd) / 2;
+    if (sweepAngle < 0.01) return;
 
-    final actualFontWeight = bold ? FontWeight.w500 : FontWeight.w400;
-    const actualFontFamily = 'Outfit';
+    final middleRadius = (innerRadius + outerRadius) / 2;
+    final maxAllowedWidth = sweepAngle * middleRadius * 0.9;
 
+    final tp = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: GoogleFonts.outfit(
+          color: color,
+          fontSize: fontSize,
+          fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+      maxLines: 1,
+      ellipsis: '...',
+    );
 
-    // Calculate max allowed width (roughly the width of the arc at middleRadius)
-    final maxAllowedWidth = (middleRadius * sweepAngle) * 0.85;
+    tp.layout();
 
-    // Handle multi-line wrapping for long names or specific delimiters
-    List<String> lines = [text];
-    if (text.contains(' / ')) {
-      lines = text.split(' / ').map((e) => e.trim()).toList();
-    } else if (text.length > 10 && text.contains(' ')) {
-      // Very simple heuristic for wrapping at spaces
-      final mid = text.length ~/ 2;
-      int spaceIdx = text.indexOf(' ', mid);
-      if (spaceIdx == -1) spaceIdx = text.lastIndexOf(' ', mid);
-      if (spaceIdx != -1) {
-        lines = [text.substring(0, spaceIdx), text.substring(spaceIdx + 1)];
-      }
+    // Scale if too wide
+    double scale = 1.0;
+    if (tp.width > maxAllowedWidth) {
+      scale = maxAllowedWidth / tp.width;
+      if (scale < 0.5) return; // Too small to read
     }
 
-    final List<TextPainter> painters = lines.map((line) {
-      final tp = TextPainter(
-        text: TextSpan(
-          text: line,
-          style: GoogleFonts.getFont(
-            actualFontFamily,
-            color: color,
-            fontSize: baseFontSize,
-            fontWeight: actualFontWeight,
-            letterSpacing: 0.2,
-          ),
-        ),
-        textDirection: TextDirection.ltr,
-      );
-      tp.layout();
-      
-      // Proportional scaling if still too wide (minimized range to maintain uniformity)
-      if (tp.width > maxAllowedWidth) {
-        final scale = (maxAllowedWidth / tp.width).clamp(0.9, 1.0);
-        tp.text = TextSpan(
-          text: line,
-          style: GoogleFonts.getFont(
-            actualFontFamily,
-            color: color,
-            fontSize: baseFontSize * scale,
-            fontWeight: actualFontWeight,
-            letterSpacing: -0.2,
-          ),
-        );
-        tp.layout();
-      }
-      return tp;
-    }).toList();
-
+    final angle = startAngle + sweepAngle / 2;
     canvas.save();
-    canvas.translate(center.dx, center.dy);
-    canvas.rotate(middleAngle);
-    canvas.translate(middleRadius, 0);
-
-    // Flip threshold adjusted to pi/2 + 0.2 to avoid splitting categories at the bottom (like Nutty/Cocoa)
-    bool shouldFlip = middleAngle > (math.pi / 2 + 0.2) && middleAngle < (3 * math.pi / 2 - 0.2);
+    
+    // Position at the center of the arc
+    canvas.translate(
+      center.dx + middleRadius * math.cos(angle),
+      center.dy + middleRadius * math.sin(angle),
+    );
+    
+    // Rotate to align with the arc
+    canvas.rotate(angle + math.pi / 2);
+    
+    // Flip text if it's in the bottom half of the circle to keep it upright
+    bool shouldFlip = (angle % (2 * math.pi)) > 0 && (angle % (2 * math.pi)) < math.pi;
     if (shouldFlip) {
       canvas.rotate(math.pi);
     }
 
-    // Stack lines vertically
-    final totalHeight = painters.fold<double>(0, (sum, p) => sum + p.height);
-    double currentY = -totalHeight / 2;
-
-    for (var tp in painters) {
-      tp.paint(canvas, Offset(-tp.width / 2, currentY));
-      currentY += tp.height;
+    if (scale < 1.0) {
+      canvas.scale(scale, scale);
     }
 
+    tp.paint(canvas, Offset(-tp.width / 2, -tp.height / 2));
     canvas.restore();
   }
 

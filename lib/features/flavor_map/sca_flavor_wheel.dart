@@ -246,7 +246,7 @@ class _ScaWheelPainter extends CustomPainter {
     final angleStep = (2 * math.pi) / totalNotesCount;
 
     // Rings layout
-    final r0 = fullRadius * 0.15; // Smaller inner white hole
+    final r0 = fullRadius * 0.12; // Even smaller inner white hole
     final r1 = fullRadius * 0.45; // Category ring
     final r2 = fullRadius * 0.68; // Subcategory ring
     final r3 = fullRadius * 0.96; // Notes ring (pushed outer)
@@ -390,7 +390,7 @@ class _ScaWheelPainter extends CustomPainter {
                 r3,
                 Colors.white.withValues(alpha: 0.9 * labelOpacity),
                 8.5,
-                false, 
+                false,
                 isOtherSection: cat.key == "wheel_cat_others",
               );
             }
@@ -501,10 +501,10 @@ class _ScaWheelPainter extends CustomPainter {
     canvas.translate(middleRadius, 0);
 
     // Flip text if it's in the bottom half of the circle
-    // If it's the "Others" section, we skip flipping to keep uniform orientation with the category label
-    bool shouldFlip = !isOtherSection &&
-        middleAngle > (math.pi / 2 + 0.2) &&
-        middleAngle < (3 * math.pi / 2 - 0.2);
+    // If it's the "Others" section, we FORCE flip as per user request to have it "upside down"
+    bool shouldFlip = isOtherSection || 
+                      (middleAngle > (math.pi / 2 + 0.2) && 
+                       middleAngle < (3 * math.pi / 2 - 0.2));
     if (shouldFlip) {
       canvas.rotate(math.pi);
     }

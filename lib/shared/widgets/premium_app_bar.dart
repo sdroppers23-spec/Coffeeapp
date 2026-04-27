@@ -7,6 +7,7 @@ class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final PreferredSizeWidget? bottom;
   final bool showBackButton;
+  final double? toolbarHeight;
 
   const PremiumAppBar({
     super.key,
@@ -14,6 +15,7 @@ class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.actions,
     this.bottom,
     this.showBackButton = false,
+    this.toolbarHeight,
   });
 
   @override
@@ -30,6 +32,7 @@ class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
               : theme.colorScheme.surface.withValues(alpha: 0.7),
           elevation: 0,
           scrolledUnderElevation: 0,
+          toolbarHeight: toolbarHeight,
           leading: showBackButton 
               ? BackButton(color: theme.colorScheme.onSurface) 
               : null,
@@ -53,6 +56,6 @@ class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize {
     final bottomHeight = bottom?.preferredSize.height ?? 0;
-    return Size.fromHeight(kToolbarHeight + bottomHeight);
+    return Size.fromHeight((toolbarHeight ?? kToolbarHeight) + bottomHeight);
   }
 }

@@ -74,6 +74,7 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
       extendBodyBehindAppBar: true,
       appBar: PremiumAppBar(
         title: ref.t('alternative'),
+        toolbarHeight: 48,
         actions: [
           ListenableBuilder(
             listenable: _tabController,
@@ -93,10 +94,9 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
           const ProfileButton(),
         ],
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(55),
+          preferredSize: const Size.fromHeight(44),
           child: Container(
             height: 44,
-            margin: const EdgeInsets.only(bottom: 12),
             child: TabBar(
               controller: _tabController,
               isScrollable: true,
@@ -181,7 +181,7 @@ class _BrewingMethodsContent extends ConsumerWidget {
         return CustomScrollView(
           slivers: [
             // Top spacer (replaces padding.top)
-            const SliverToBoxAdapter(child: SizedBox(height: 210)),
+            const SliverToBoxAdapter(child: SizedBox(height: 170)),
 
               if (espressoMethods.isNotEmpty) ...[
               if (isGrid)

@@ -371,7 +371,7 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
     return Column(
       children: [
         // Spacer for BrewingMainScreen's PremiumAppBar + TabBar
-        const SizedBox(height: 210),
+        const SizedBox(height: 170),
         
         // Internal Header: Search + Action Bar
         Container(

@@ -80,7 +80,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
     if (pref.tempUnit == TempUnit.fahrenheit) {
       initialTemp = (initialTemp * 9 / 5) + 32;
     }
-    _tempController.text = initialTemp.toStringAsFixed(1);
+    _tempController.text = recipe != null ? initialTemp.toStringAsFixed(1) : '';
 
     _grindController.text = recipe?.grindNumber.toString() ?? '';
     _micronsController.text = recipe?.microns?.toString() ?? '';
@@ -145,8 +145,8 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
 
   void _addPourController({
     String water = '',
-    String min = '0',
-    String sec = '0',
+    String min = '',
+    String sec = '',
     String duration = '',
     String notes = '',
   }) {
@@ -1244,6 +1244,8 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             ],
             style: GoogleFonts.outfit(color: Colors.white, fontSize: 13),
             decoration: InputDecoration(
+              hintText: '0',
+              hintStyle: GoogleFonts.outfit(color: Colors.white24, fontSize: 13),
               filled: true,
               fillColor: Colors.white.withValues(alpha: 0.05),
               contentPadding: const EdgeInsets.symmetric(

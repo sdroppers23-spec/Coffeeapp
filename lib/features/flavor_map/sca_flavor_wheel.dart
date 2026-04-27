@@ -247,9 +247,9 @@ class _ScaWheelPainter extends CustomPainter {
 
     // Rings layout
     final r0 = fullRadius * 0.12; // Even smaller inner white hole
-    final r1 = fullRadius * 0.45; // Category ring
-    final r2 = fullRadius * 0.68; // Subcategory ring
-    final r3 = fullRadius * 0.96; // Notes ring (pushed outer)
+    final r1 = fullRadius * 0.43; // Category ring (was 0.45)
+    final r2 = fullRadius * 0.66; // Subcategory ring (was 0.68)
+    final r3 = fullRadius * 0.94; // Notes ring (was 0.96)
 
     final currentLocale = ref.watch(localeProvider);
 

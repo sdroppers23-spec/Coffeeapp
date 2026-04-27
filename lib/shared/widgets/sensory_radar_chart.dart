@@ -68,7 +68,7 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                _TemplateChip(ref.t('process_washed_label'), 'Clean & Bright', {
+                _TemplateChip(ref.t('process_washed'), ref.t('sensory_washed_desc'), {
                   'bitterness': 0.2,
                   'acidity': 0.8,
                   'sweetness': 0.6,
@@ -78,8 +78,8 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
                 }),
                 const SizedBox(width: 8),
                 _TemplateChip(
-                  ref.t('process_natural_label'),
-                  'Fruity & Sweet',
+                  ref.t('process_natural'),
+                  ref.t('sensory_natural_desc'),
                   {
                     'bitterness': 0.3,
                     'acidity': 0.5,
@@ -91,8 +91,8 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
                 ),
                 const SizedBox(width: 8),
                 _TemplateChip(
-                  ref.t('process_honey_label'),
-                  'Sticky & Balanced',
+                  ref.t('process_honey'),
+                  ref.t('sensory_honey_desc'),
                   {
                     'bitterness': 0.4,
                     'acidity': 0.6,

@@ -600,30 +600,30 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
       children: [
-        _sectionLabel('Обсмажчик'),
+        _sectionLabel(context.t('section_roaster')),
         _darkCard(children: [
-          _fieldRow(label: 'NAME *', controller: _roasteryController),
+          _fieldRow(label: '${context.t('name_field')} *'.toUpperCase(), controller: _roasteryController),
           _divider(),
-          _fieldRow(label: 'COUNTRY', controller: _roasteryCountryController),
+          _fieldRow(label: context.t('country_field').toUpperCase(), controller: _roasteryCountryController),
         ]),
         
-        _sectionLabel('Кава та лот'),
+        _sectionLabel(context.t('section_coffee_lot')),
         _darkCard(children: [
-          _fieldRow(label: 'FARMER', controller: _farmerController),
+          _fieldRow(label: context.t('farmer_field').toUpperCase(), controller: _farmerController),
           _divider(),
-          _fieldRow(label: 'WASH STATION', controller: _washStationController),
+          _fieldRow(label: context.t('wash_station_field').toUpperCase(), controller: _washStationController),
           _divider(),
-          _fieldRow(label: 'LOT NUMBER', controller: _lotNumberController, keyboardType: TextInputType.number),
+          _fieldRow(label: context.t('lot_number_field').toUpperCase(), controller: _lotNumberController, keyboardType: TextInputType.number),
           _divider(),
           _fieldRow(
-            label: 'SCA SCORE', 
+            label: context.t('sca_score_field').toUpperCase(), 
             controller: _scaScoreController, 
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            helperText: 'Оцінка SCA від 80 до 100',
+            helperText: context.t('sca_score_helper'),
           ),
           _divider(),
           _fieldRow(
-            label: 'WEIGHT',
+            label: context.t('weight_field').toUpperCase(),
             controller: _weightController,
             suffix: 'g',
             keyboardType: TextInputType.number,
@@ -634,39 +634,39 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           ),
         ]),
 
-        _sectionLabel('Походження'),
+        _sectionLabel(context.t('section_origin')),
         _darkCard(children: [
-          _fieldRow(label: 'COUNTRY *', controller: _originCountryController),
+          _fieldRow(label: context.t('country_field').toUpperCase(), controller: _originCountryController),
           _divider(),
-          _fieldRow(label: 'REGION', controller: _regionController),
+          _fieldRow(label: context.t('region_field').toUpperCase(), controller: _regionController),
           _divider(),
           _fieldRow(
-            label: 'ALTITUDE',
+            label: context.t('altitude_field').toUpperCase(),
             controller: _altitudeController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             suffix: pref.lengthUnit == LengthUnit.meters ? 'm' : 'ft',
           ),
           _divider(),
-          _fieldRow(label: 'VARIETALS', controller: _varietiesController),
+          _fieldRow(label: context.t('varietals_field').toUpperCase(), controller: _varietiesController),
         ]),
 
-        _sectionLabel('Обробка'),
+        _sectionLabel(context.t('section_processing')),
         _buildProcessSection(),
 
-        _sectionLabel('Смакові ноти'),
+        _sectionLabel(context.t('section_flavor_notes')),
         _darkCard(children: [
-          _fieldRow(label: 'FLAVOR NOTES', controller: _flavorProfileController),
+          _fieldRow(label: context.t('flavor_notes_field').toUpperCase(), controller: _flavorProfileController),
         ]),
 
-        _sectionLabel('Ціноутворення'),
+        _sectionLabel(context.t('section_pricing')),
         _darkCard(children: [
-          _fieldRow(label: 'РОЗДРІБ 250G', controller: _priceController, keyboardType: TextInputType.number, suffix: currencySymbol),
+          _fieldRow(label: context.t('retail_250g').toUpperCase(), controller: _priceController, keyboardType: TextInputType.number, suffix: currencySymbol),
           _divider(),
-          _fieldRow(label: 'РОЗДРІБ 1KG', controller: _retailPrice1kController, keyboardType: TextInputType.number, suffix: currencySymbol),
+          _fieldRow(label: context.t('retail_1kg').toUpperCase(), controller: _retailPrice1kController, keyboardType: TextInputType.number, suffix: currencySymbol),
           _divider(),
-          _fieldRow(label: 'ОПТ 250G', controller: _wholesalePrice250Controller, keyboardType: TextInputType.number, suffix: currencySymbol),
+          _fieldRow(label: context.t('wholesale_250g').toUpperCase(), controller: _wholesalePrice250Controller, keyboardType: TextInputType.number, suffix: currencySymbol),
           _divider(),
-          _fieldRow(label: 'ОПТ 1KG', controller: _wholesalePrice1kController, keyboardType: TextInputType.number, suffix: currencySymbol),
+          _fieldRow(label: context.t('wholesale_1kg').toUpperCase(), controller: _wholesalePrice1kController, keyboardType: TextInputType.number, suffix: currencySymbol),
         ]),
       ],
     );
@@ -677,14 +677,14 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
       children: [
-        _sectionLabel('Фото лоту'),
+        _sectionLabel(context.t('section_photo')),
         _buildImagePicker(),
         const SizedBox(height: 16),
 
-        _sectionLabel('Дата обсмажування'),
+        _sectionLabel(context.t('section_roast_date')),
         _darkCard(children: [
           _dateRow(
-            label: 'ROAST DATE',
+            label: context.t('roast_date_field').toUpperCase(),
             date: _roastDate,
             onTap: () async {
               final picked = await showDatePicker(
@@ -704,9 +704,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           ),
           _divider(),
           _dateRow(
-            label: 'OPENED AT',
+            label: context.t('opened_at_field').toUpperCase(),
             date: _openedAt,
-            placeholder: 'Не відкрито',
+            placeholder: context.t('not_opened'),
             onTap: () async {
               final picked = await showDatePicker(
                 context: context, 
@@ -727,12 +727,12 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           ),
         ]),
 
-        _sectionLabel('Стан пачки'),
+        _sectionLabel(context.t('section_bag_state')),
         Row(
           children: [
             Expanded(
               child: _toggleButton(
-                label: 'ЗАКРИТА', 
+                label: context.t('bag_closed'), 
                 active: !_isOpen, 
                 onTap: () => setState(() => _isOpen = false),
               ),
@@ -740,7 +740,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             const SizedBox(width: 8),
             Expanded(
               child: _toggleButton(
-                label: 'ВІДКРИТА', 
+                label: context.t('bag_opened'), 
                 active: _isOpen, 
                 onTap: () {
                   setState(() {
@@ -754,7 +754,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         ),
 
         if (_isOpen) ...[
-          _sectionLabel('Тип помелу'),
+          _sectionLabel(context.t('section_grind_type')),
           _darkCard(children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -770,8 +770,8 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                     fontWeight: FontWeight.w500,
                   ),
                   items: [
-                    DropdownMenuItem(value: false, child: Text('В ЗЕРНАХ', style: GoogleFonts.outfit(color: Colors.white))),
-                    DropdownMenuItem(value: true, child: Text('ЗМЕЛЕНА', style: GoogleFonts.outfit(color: Colors.white))),
+                    DropdownMenuItem(value: false, child: Text(context.t('whole_bean'), style: GoogleFonts.outfit(color: Colors.white))),
+                    DropdownMenuItem(value: true, child: Text(context.t('ground'), style: GoogleFonts.outfit(color: Colors.white))),
                   ],
                   onChanged: (v) {
                     setState(() {
@@ -785,7 +785,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           ]),
         ],
 
-        _sectionLabel('Обсмажка'),
+        _sectionLabel(context.t('section_roast')),
         _darkCard(children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
@@ -793,7 +793,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'ROAST LEVEL',
+                  context.t('roast_level_field').toUpperCase(),
                   style: GoogleFonts.outfit(
                     fontSize: 10, 
                     color: Colors.white, 
@@ -812,7 +812,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                     items: _roastLevels.map((String level) {
                       return DropdownMenuItem<String>(
                         value: level,
-                        child: Text(level.toUpperCase(), style: GoogleFonts.outfit(color: Colors.white)),
+                        child: Text(context.t('roast_${level.toLowerCase().replaceAll('-', '_')}').toUpperCase(), style: GoogleFonts.outfit(color: Colors.white)),
                       );
                     }).toList(),
                     onChanged: (String? newValue) {
@@ -857,7 +857,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                     Icon(Icons.add_a_photo_outlined, color: const Color(0xFFC8A96E).withValues(alpha: 0.5), size: 40),
                     const SizedBox(height: 8),
                     Text(
-                      'ДОДАТИ ФОТО',
+                      context.t('add_photo_label'),
                       style: GoogleFonts.outfit(
                         color: const Color(0xFFC8A96E).withValues(alpha: 0.5),
                         fontSize: 12,
@@ -889,7 +889,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       children: [
         _darkCard(children: [
           _dropdownRow(
-            label: 'METHOD',
+            label: context.t('section_processing').toUpperCase(),
             value: _selectedProcess,
             items: _processingMethods,
             onChanged: (val) {
@@ -915,7 +915,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           ),
           if (_isOtherProcess) ...[
             _divider(),
-            _fieldRow(label: 'СВІЙ МЕТОД', controller: _processController, placeholder: 'Введіть назву'),
+            _fieldRow(label: context.t('custom_method_label'), controller: _processController, placeholder: context.t('enter_name_placeholder')),
           ],
           _divider(),
           Padding(
@@ -944,7 +944,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           if (_isDecaf) ...[
             _divider(),
             _dropdownRow(
-              label: 'DECAF METHOD',
+              label: context.t('section_processing').toUpperCase() + ' DECAF',
               value: _decafMethods.contains(_decafProcess) ? _decafProcess : 'Other',
               items: _decafMethods,
               onChanged: (val) {
@@ -957,10 +957,10 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             if (_isOtherDecaf) ...[
               _divider(),
               _fieldRow(
-                label: 'СВІЙ МЕТОД ДЕКАФУ',
+                label: context.t('custom_decaf_method_label'),
                 controller: TextEditingController(text: _decafProcess == 'Other' ? '' : _decafProcess),
                 onChanged: (v) => _decafProcess = v,
-                placeholder: 'Введіть назву',
+                placeholder: context.t('enter_name_placeholder'),
               ),
             ],
           ],
@@ -999,7 +999,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 dropdownColor: const Color(0xFF1A1714),
                 icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFFC8A96E), size: 18),
                 style: GoogleFonts.outfit(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
-                items: items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                items: items.map((e) => DropdownMenuItem(value: e, child: Text(context.t('process_${e.toLowerCase().replaceAll(' ', '_')}')))).toList(),
                 onChanged: onChanged,
               ),
             ),
@@ -1015,7 +1015,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
       children: [
-        _sectionLabel('Профіль смаку (1–5)'),
+        _sectionLabel(context.t('sensory_profile_1_5')),
         _darkCard(children: [
           _sensorySlider('BITTERNESS', _bitterness, (v) => setState(() => _bitterness = v), theme: theme, enabled: !_isSensoryLocked),
           _divider(),
@@ -1030,7 +1030,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           _sensorySlider('AFTERTASTE', _aftertaste, (v) => setState(() => _aftertaste = v), theme: theme, enabled: !_isSensoryLocked),
         ]),
         const SizedBox(height: 16),
-        _sectionLabel('Візуалізація профілю'),
+        _sectionLabel(context.t('visualize_profile')),
         Container(
           height: 300,
           padding: const EdgeInsets.all(16),
@@ -1053,7 +1053,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         ),
         const SizedBox(height: 12),
         _toggleButton(
-          label: _isSensoryLocked ? 'РОЗБЛОКУВАТИ ДЛЯ РЕДАГУВАННЯ' : 'ЗАБЛОКУВАТИ СЕНСОРИКУ',
+          label: _isSensoryLocked ? context.t('unlock_sensory') : context.t('lock_sensory'),
           active: !_isSensoryLocked,
           onTap: () => setState(() => _isSensoryLocked = !_isSensoryLocked),
         ),

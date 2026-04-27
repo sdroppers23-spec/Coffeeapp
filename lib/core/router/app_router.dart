@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../supabase/supabase_provider.dart';
+import '../providers/settings_provider.dart';
 import '../../features/auth/auth_screen.dart';
 import '../../features/discover/discover_screen.dart';
 import '../../features/profile/profile_screen.dart';
@@ -30,20 +31,49 @@ final _shellNavigatorRecipesKey = GlobalKey<NavigatorState>(
   debugLabel: 'recipes_shell',
 );
 
+class RouterRefreshNotifier extends ChangeNotifier {
+  RouterRefreshNotifier(Ref ref) {
+    _subscription = ref.listen(authStateProvider, (_, next) {
+      final event = next.value?.event;
+      if (event == AuthChangeEvent.signedIn || 
+          event == AuthChangeEvent.signedOut || 
+          event == AuthChangeEvent.initialSession) {
+        notifyListeners();
+      }
+    });
+    // Listen to guest mode changes
+    _guestSubscription = ref.listen(isGuestProvider, (_, _) {
+      notifyListeners();
+    });
+  }
+
+  late final ProviderSubscription _subscription;
+  late final ProviderSubscription _guestSubscription;
+
+  @override
+  void dispose() {
+    _subscription.close();
+    _guestSubscription.close();
+    super.dispose();
+  }
+}
+
 final routerProvider = Provider<GoRouter>((ref) {
   final supabase = ref.watch(supabaseProvider);
+  final refreshNotifier = RouterRefreshNotifier(ref);
 
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: '/specialty_hub',
-    refreshListenable: GoRouterRefreshStream(supabase.auth.onAuthStateChange),
+    refreshListenable: refreshNotifier,
     redirect: (context, state) {
       final session = supabase.auth.currentSession;
       final isLoggedIn = session != null;
+      final isGuest = ref.read(isGuestProvider);
       final isLoggingIn = state.matchedLocation == '/auth';
 
-      if (!isLoggedIn && !isLoggingIn) return '/auth';
-      if (isLoggedIn && isLoggingIn) return '/specialty_hub';
+      if (!isLoggedIn && !isGuest && !isLoggingIn) return '/auth';
+      if ((isLoggedIn || isGuest) && isLoggingIn) return '/specialty_hub';
 
       return null;
     },

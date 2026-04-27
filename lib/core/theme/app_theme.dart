@@ -62,6 +62,7 @@ class AppTheme {
         outline: primary.withValues(alpha: 0.2),
         outlineVariant: primary.withValues(alpha: 0.1),
       ),
+      canvasColor: bg,
       iconTheme: const IconThemeData(
         color: accent,
         size: 24,

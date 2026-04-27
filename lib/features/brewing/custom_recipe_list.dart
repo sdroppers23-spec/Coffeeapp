@@ -9,7 +9,7 @@ import '../../shared/widgets/modern_undo_timer.dart';
 import 'widgets/custom_recipe_card.dart';
 import '../discover/discovery_filter_provider.dart';
 import '../discover/widgets/discovery_action_bar.dart';
-
+import '../navigation/navigation_providers.dart';
 
 // ─── Selection Provider ───────────────────────────────────────────────────────
 class BrewingSelectionNotifier extends Notifier<Set<String>> {
@@ -64,9 +64,16 @@ class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
     setState(() {
       if (_selectedIds.contains(id)) {
         _selectedIds.remove(id);
-        if (_selectedIds.isEmpty) _isSelectionMode = false;
+        if (_selectedIds.isEmpty) {
+          _isSelectionMode = false;
+          ref.read(navBarVisibleProvider.notifier).show();
+        }
       } else {
         _selectedIds.add(id);
+        if (!_isSelectionMode) {
+          _isSelectionMode = true;
+          ref.read(navBarVisibleProvider.notifier).hide();
+        }
       }
     });
   }
@@ -76,9 +83,11 @@ class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
       if (_selectedIds.length == recipes.length) {
         _selectedIds.clear();
         _isSelectionMode = false;
+        ref.read(navBarVisibleProvider.notifier).show();
       } else {
         _selectedIds.addAll(recipes.map((r) => r.id));
         _isSelectionMode = true;
+        ref.read(navBarVisibleProvider.notifier).hide();
       }
     });
   }
@@ -91,6 +100,7 @@ class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
       _isSelectionMode = false;
       _selectedIds.clear();
     });
+    ref.read(navBarVisibleProvider.notifier).show();
 
     final String deleteKey = count == 1
         ? 'deleted_1'
@@ -159,6 +169,7 @@ class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
                       _isSelectionMode = true;
                       _selectedIds.add(recipes[i].id);
                     });
+                    ref.read(navBarVisibleProvider.notifier).hide();
                   }
                 },
               ),
@@ -214,10 +225,13 @@ class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
                             _buildSelectionAction(
                               Icons.close_rounded,
                               Colors.white70,
-                              () => setState(() {
-                                _isSelectionMode = false;
-                                _selectedIds.clear();
-                              }),
+                              () {
+                                setState(() {
+                                  _isSelectionMode = false;
+                                  _selectedIds.clear();
+                                });
+                                ref.read(navBarVisibleProvider.notifier).show();
+                              },
                             ),
                           ],
                         ),
@@ -263,9 +277,11 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
     if (current.length == allIds.length) {
       ref.read(brewingSelectedIdsProvider.notifier).updateState({});
       setState(() => _isSelectionMode = false);
+      ref.read(navBarVisibleProvider.notifier).show();
     } else {
       ref.read(brewingSelectedIdsProvider.notifier).updateState(allIds);
       setState(() => _isSelectionMode = true);
+      ref.read(navBarVisibleProvider.notifier).hide();
     }
   }
 
@@ -278,6 +294,7 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
       _isSelectionMode = false;
       ref.read(brewingSelectedIdsProvider.notifier).updateState({});
     });
+    ref.read(navBarVisibleProvider.notifier).show();
 
     final String deleteKey = count == 1
         ? 'deleted_1'
@@ -488,7 +505,10 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
                             final next = Set<String>.from(selectedIds);
                             if (next.contains(r.id)) {
                               next.remove(r.id);
-                              if (next.isEmpty) setState(() => _isSelectionMode = false);
+                              if (next.isEmpty) {
+                                setState(() => _isSelectionMode = false);
+                                ref.read(navBarVisibleProvider.notifier).show();
+                              }
                             } else {
                               next.add(r.id);
                             }
@@ -499,6 +519,7 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
                           if (!_isSelectionMode) {
                             setState(() => _isSelectionMode = true);
                             ref.read(brewingSelectedIdsProvider.notifier).updateState({r.id});
+                            ref.read(navBarVisibleProvider.notifier).hide();
                           }
                         },
                       ),
@@ -560,10 +581,13 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
                               _buildSelectionAction(
                                 Icons.close_rounded,
                                 Colors.white70,
-                                () => setState(() {
-                                  _isSelectionMode = false;
-                                  ref.read(brewingSelectedIdsProvider.notifier).updateState({});
-                                }),
+                                () {
+                                  setState(() {
+                                    _isSelectionMode = false;
+                                    ref.read(brewingSelectedIdsProvider.notifier).updateState({});
+                                  });
+                                  ref.read(navBarVisibleProvider.notifier).show();
+                                },
                               ),
                             ],
                           ),

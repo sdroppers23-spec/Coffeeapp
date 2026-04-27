@@ -405,16 +405,21 @@ class AnimatedBranchContainer extends StatelessWidget {
       switchInCurve: Curves.easeInOut,
       switchOutCurve: Curves.easeInOut,
       transitionBuilder: (Widget child, Animation<double> animation) {
-        return FadeTransition(
-          opacity: animation,
-          child: SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0.02, 0),
-              end: Offset.zero,
-            ).animate(animation),
-            child: child,
-          ),
-        );
+        final isIncoming = child.key == ValueKey<int>(currentIndex);
+        if (isIncoming) {
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0.01, 0),
+                end: Offset.zero,
+              ).animate(animation),
+              child: child,
+            ),
+          );
+        } else {
+          return child;
+        }
       },
       child: KeyedSubtree(key: ValueKey<int>(currentIndex), child: child),
     );

@@ -4,15 +4,13 @@ import '../../../core/database/database_provider.dart';
 import '../../../core/database/dtos.dart';
 final userLotsProvider = FutureProvider<List<CoffeeLotDto>>((ref) async {
   final db = ref.watch(databaseProvider);
-  final userId = Supabase.instance.client.auth.currentUser?.id;
-  if (userId == null) return [];
+  final userId = Supabase.instance.client.auth.currentUser?.id ?? 'guest';
   return db.getUserLots(userId);
 });
 
 final userLotsStreamProvider = StreamProvider<List<CoffeeLotDto>>((ref) {
   final db = ref.watch(databaseProvider);
-  final userId = Supabase.instance.client.auth.currentUser?.id;
-  if (userId == null) return Stream.value([]);
+  final userId = Supabase.instance.client.auth.currentUser?.id ?? 'guest';
   return db.watchUserLots(userId);
 });
 

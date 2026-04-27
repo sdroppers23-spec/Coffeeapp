@@ -59,3 +59,14 @@ final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
 final settingsProvider = NotifierProvider<SettingsNotifier, bool>(() {
   return SettingsNotifier();
 });
+
+class GuestNotifier extends Notifier<bool> {
+  @override
+  bool build() => false;
+
+  void setGuest(bool value) => state = value;
+}
+
+final isGuestProvider = NotifierProvider<GuestNotifier, bool>(() {
+  return GuestNotifier();
+});

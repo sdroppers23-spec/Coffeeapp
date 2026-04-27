@@ -1147,6 +1147,26 @@ class AppDatabase extends _$AppDatabase {
     });
   }
 
+  /// Migrates data created in guest mode (or using 'local_user' ID) to the actual user ID.
+  /// Sets isSynced to false so that the next sync will push these records to Supabase.
+  Future<void> claimGuestData(String newUserId) async {
+    await transaction(() async {
+      // Update Lots
+      await (update(coffeeLots)..where((t) => t.userId.equals('guest') | t.userId.equals('local_user')))
+          .write(CoffeeLotsCompanion(
+            userId: Value(newUserId),
+            isSynced: const Value(false),
+          ));
+          
+      // Update Recipes
+      await (update(customRecipes)..where((t) => t.userId.equals('guest') | t.userId.equals('local_user')))
+          .write(CustomRecipesCompanion(
+            userId: Value(newUserId),
+            isSynced: const Value(false),
+          ));
+    });
+  }
+
   // ── Helpers ──────────────────────────────────────────────────────────────────
   Map<String, dynamic> _parseJson(String jsonStr) {
     try {

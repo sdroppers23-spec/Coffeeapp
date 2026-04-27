@@ -85,6 +85,33 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (ref.watch(isGuestProvider))
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.info_outline_rounded, color: Colors.orange),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            ref.t('guest_mode_notice'),
+                            style: GoogleFonts.outfit(
+                              fontSize: 13,
+                              color: Colors.orange.shade200,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               // МОВА
               _buildSectionTitle(context, ref.t('language').toUpperCase()),
               _buildCard(
@@ -313,13 +340,24 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               // Bottom button
               Center(
                 child: GestureDetector(
-                  onTap: _signOut,
+                  onTap: () {
+                    if (ref.read(isGuestProvider)) {
+                      ref.read(isGuestProvider.notifier).setGuest(false);
+                      context.go('/auth');
+                    } else {
+                      _signOut();
+                    }
+                  },
                   child: _isLoading
                       ? const CircularProgressIndicator()
                       : Text(
-                          ref.t('sign_out_account'),
+                          ref.watch(isGuestProvider)
+                              ? ref.t('log_in')
+                              : ref.t('sign_out_account'),
                           style: GoogleFonts.poppins(
-                            color: const Color(0xFFE57373),
+                            color: ref.watch(isGuestProvider)
+                                ? theme.colorScheme.primary
+                                : const Color(0xFFE57373),
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),

@@ -40,6 +40,8 @@ class AddLotScreen extends ConsumerStatefulWidget {
   ConsumerState<AddLotScreen> createState() => _AddLotScreenState();
 }
 
+enum _FieldType { text, numeric, scaScore, weight, altitude, lotNumber }
+
 class _AddLotScreenState extends ConsumerState<AddLotScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
@@ -266,7 +268,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         if (bytes.length > 5 * 1024 * 1024) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Зображення занадто велике (макс. 5МБ)')),
+              SnackBar(content: Text(context.t('error_image_too_large'))),
             );
           }
           return;
@@ -292,7 +294,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     if (!_canSave) return;
     
     final user = Supabase.instance.client.auth.currentUser;
-    if (user == null) return;
+    final userId = user?.id ?? 'guest';
 
     // Show loading
     showDialog(
@@ -357,10 +359,10 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           : null;
 
       // 3. Save to Local DB
-      await db.insertUserLot(
+      await db.upsertUserLot(
         CoffeeLotsCompanion(
           id: Value(lotId),
-          userId: Value(user.id),
+          userId: Value(userId),
           roasteryName: Value(_roasteryController.text),
           roasteryCountry: Value(_roasteryCountryController.text),
           coffeeName: Value(_originCountryController.text), // Fallback or clear
@@ -613,12 +615,12 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           _divider(),
           _fieldRow(label: context.t('wash_station_field').toUpperCase(), controller: _washStationController),
           _divider(),
-          _fieldRow(label: context.t('lot_number_field').toUpperCase(), controller: _lotNumberController, keyboardType: TextInputType.number),
+          _fieldRow(label: context.t('lot_number_field').toUpperCase(), controller: _lotNumberController, type: _FieldType.lotNumber),
           _divider(),
           _fieldRow(
             label: context.t('sca_score_field').toUpperCase(), 
             controller: _scaScoreController, 
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            type: _FieldType.scaScore,
             helperText: context.t('sca_score_helper'),
           ),
           _divider(),
@@ -626,7 +628,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             label: context.t('weight_field').toUpperCase(),
             controller: _weightController,
             suffix: 'g',
-            keyboardType: TextInputType.number,
+            type: _FieldType.weight,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
               _WeightInputFormatter(),
@@ -643,7 +645,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           _fieldRow(
             label: context.t('altitude_field').toUpperCase(),
             controller: _altitudeController,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            type: _FieldType.altitude,
             suffix: pref.lengthUnit == LengthUnit.meters ? 'm' : 'ft',
           ),
           _divider(),
@@ -660,13 +662,13 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
 
         _sectionLabel(context.t('section_pricing')),
         _darkCard(children: [
-          _fieldRow(label: context.t('retail_250g').toUpperCase(), controller: _priceController, keyboardType: TextInputType.number, suffix: currencySymbol),
+          _fieldRow(label: context.t('retail_250g').toUpperCase(), controller: _priceController, type: _FieldType.numeric, suffix: currencySymbol),
           _divider(),
-          _fieldRow(label: context.t('retail_1kg').toUpperCase(), controller: _retailPrice1kController, keyboardType: TextInputType.number, suffix: currencySymbol),
+          _fieldRow(label: context.t('retail_1kg').toUpperCase(), controller: _retailPrice1kController, type: _FieldType.numeric, suffix: currencySymbol),
           _divider(),
-          _fieldRow(label: context.t('wholesale_250g').toUpperCase(), controller: _wholesalePrice250Controller, keyboardType: TextInputType.number, suffix: currencySymbol),
+          _fieldRow(label: context.t('wholesale_250g').toUpperCase(), controller: _wholesalePrice250Controller, type: _FieldType.numeric, suffix: currencySymbol),
           _divider(),
-          _fieldRow(label: context.t('wholesale_1kg').toUpperCase(), controller: _wholesalePrice1kController, keyboardType: TextInputType.number, suffix: currencySymbol),
+          _fieldRow(label: context.t('wholesale_1kg').toUpperCase(), controller: _wholesalePrice1kController, type: _FieldType.numeric, suffix: currencySymbol),
         ]),
       ],
     );
@@ -771,7 +773,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                   ),
                   items: [
                     DropdownMenuItem(value: false, child: Text(context.t('whole_bean'), style: GoogleFonts.outfit(color: Colors.white))),
-                    DropdownMenuItem(value: true, child: Text(context.t('ground'), style: GoogleFonts.outfit(color: Colors.white))),
+                    DropdownMenuItem(value: true, child: Text(context.t('ground_coffee'), style: GoogleFonts.outfit(color: Colors.white))),
                   ],
                   onChanged: (v) {
                     setState(() {
@@ -912,6 +914,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 }
               });
             },
+            localizationPrefix: 'process_',
           ),
           if (_isOtherProcess) ...[
             _divider(),
@@ -923,7 +926,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             child: Row(
               children: [
                 Text(
-                  'DECAF',
+                  context.t('decaf').toUpperCase(),
                   style: GoogleFonts.outfit(
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
@@ -944,16 +947,17 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           if (_isDecaf) ...[
             _divider(),
             _dropdownRow(
-              label: "${context.t('section_processing').toUpperCase()} DECAF",
+              label: "${context.t('section_processing').toUpperCase()} ${context.t('decaf').toUpperCase()}",
               value: _decafMethods.contains(_decafProcess) ? _decafProcess : 'Other',
-              items: _decafMethods,
-              onChanged: (val) {
-                setState(() {
-                  _decafProcess = val!;
-                  _isOtherDecaf = val == 'Other';
-                });
-              },
-            ),
+            items: _decafMethods,
+            onChanged: (val) {
+              setState(() {
+                _decafProcess = val!;
+                _isOtherDecaf = val == 'Other';
+              });
+            },
+            localizationPrefix: 'decaf_',
+          ),
             if (_isOtherDecaf) ...[
               _divider(),
               _fieldRow(
@@ -974,6 +978,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     required String? value,
     required List<String> items,
     required ValueChanged<String?> onChanged,
+    String? localizationPrefix,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -1084,13 +1089,14 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
 
   Widget _fieldRow({
     required String label,
+    _FieldType type = _FieldType.text,
     TextEditingController? controller,
     String? value,
     Function(String)? onChanged,
     TextInputType? keyboardType,
+    List<TextInputFormatter>? inputFormatters,
     String? suffix,
     String? helperText,
-    List<TextInputFormatter>? inputFormatters,
     String? placeholder,
   }) {
     return Padding(
@@ -1109,23 +1115,29 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 child: TextField(
                   controller: controller ?? TextEditingController(text: value ?? ''),
                   style: GoogleFonts.outfit(color: Colors.white, fontSize: 16),
-                  keyboardType: keyboardType,
-                  enableInteractiveSelection: label != 'SCA SCORE' && label != 'LOT NUMBER',
-                  textCapitalization: (label == 'SCA SCORE' || label == 'LOT NUMBER') 
+                  keyboardType: keyboardType ?? (
+                    type == _FieldType.numeric || type == _FieldType.scaScore || type == _FieldType.weight || type == _FieldType.altitude
+                      ? const TextInputType.numberWithOptions(decimal: true)
+                      : TextInputType.text
+                  ),
+                  enableInteractiveSelection: type != _FieldType.scaScore && type != _FieldType.lotNumber,
+                  textCapitalization: (type == _FieldType.scaScore || type == _FieldType.lotNumber) 
                     ? TextCapitalization.none 
                     : TextCapitalization.sentences,
-                  autocorrect: (label == 'SCA SCORE' || label == 'LOT NUMBER') ? false : true,
-                  inputFormatters: inputFormatters ?? (label == 'SCA SCORE'
-                    ? [ScaScoreInputFormatter()]
-                    : label == 'LOT NUMBER'
-                      ? [LotNumberInputFormatter()]
-                      : label == 'ALTITUDE'
-                        ? [AltitudeInputFormatter()]
-                      : (keyboardType == TextInputType.number || keyboardType == const TextInputType.numberWithOptions(decimal: true))
-                        ? [FilteringTextInputFormatter.allow(RegExp(r'[0-9\.,]'))]
-                        : [GlobalCoffeeInputFormatter()]),
+                  autocorrect: (type == _FieldType.scaScore || type == _FieldType.lotNumber) ? false : true,
+                  inputFormatters: inputFormatters ?? (
+                    type == _FieldType.scaScore
+                      ? [ScaScoreInputFormatter()]
+                      : type == _FieldType.lotNumber
+                        ? [LotNumberInputFormatter()]
+                        : type == _FieldType.altitude
+                          ? [AltitudeInputFormatter()]
+                        : (type == _FieldType.numeric || type == _FieldType.weight)
+                          ? [FilteringTextInputFormatter.allow(RegExp(r'[0-9\.,]'))]
+                          : [GlobalCoffeeInputFormatter()]
+                  ),
                   decoration: InputDecoration(
-                    hintText: placeholder ?? (label == 'SCA SCORE' ? '80-100' : null),
+                    hintText: placeholder ?? (type == _FieldType.scaScore ? '80-100' : null),
                     hintStyle: GoogleFonts.outfit(color: Colors.white.withValues(alpha: 0.2)),
                     border: InputBorder.none,
                     isDense: true,

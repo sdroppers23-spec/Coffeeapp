@@ -108,6 +108,11 @@ class SyncService {
       rethrow;
     }
   }
+  
+  /// Migrates local guest data to the authenticated user's account.
+  Future<void> claimGuestData(String newUserId) async {
+    await db.claimGuestData(newUserId);
+  }
 
 
   /// Sets up real-time subscriptions for all main content tables.

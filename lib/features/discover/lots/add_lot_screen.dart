@@ -944,7 +944,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           if (_isDecaf) ...[
             _divider(),
             _dropdownRow(
-              label: context.t('section_processing').toUpperCase() + ' DECAF',
+              label: "${context.t('section_processing').toUpperCase()} DECAF",
               value: _decafMethods.contains(_decafProcess) ? _decafProcess : 'Other',
               items: _decafMethods,
               onChanged: (val) {

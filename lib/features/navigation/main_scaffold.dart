@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/l10n/app_localizations.dart';
 // import '../../l10n/app_localizations.dart' show AppLocalizations; // Removed unused import
 import '../../shared/widgets/glass_container.dart';
 import '../../shared/widgets/premium_background.dart';

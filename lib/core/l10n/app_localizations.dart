@@ -342,9 +342,7 @@ class AppLocalizations {
       'process_honey_label': 'Honey',
       'process_anaerobic_label': 'Anaerobic',
       'tab_source': 'Source',
-      'roast_light': 'Light',
-      'roast_medium': 'Medium',
-      'roast_dark': 'Dark',
+
       'no_recipes_for_lot': 'No recipes for this lot yet.',
       'process_detail': 'Processing Detail',
       'story_terroir': 'Story & Terroir',
@@ -367,12 +365,12 @@ class AppLocalizations {
       'required': 'Required',
       'espresso_parameters': 'Espresso Parameters',
       'coffee_and_water': 'Coffee & Water',
-      'coffee': 'Coffee',
+
       'total_water': 'Total Water',
       'pour_schedule': 'Pour Schedule',
       'number_of_pours': 'Number of pours',
       'notes_hint': 'Notes',
-      'add_lot': 'Add Lot',
+
       'roastery_name': 'Roastery Name',
       'coffee_name': 'Coffee Name',
       'variety': 'Variety',
@@ -440,16 +438,13 @@ class AppLocalizations {
       'desc_nutty': 'Classic coffee notes involving roasted nuts and various forms of chocolate.',
       'desc_note_chocolate': 'Deep, bitter-sweet notes ranging from milk to dark chocolate.',
       'desc_note_hazelnut': 'Mellow, oily, and sweet nuttiness.',
-      'process_natural': 'Natural',
-      'process_washed': 'Washed',
-      'process_honey': 'Honey',
-      'process_anaerobic': 'Anaerobic',
+
       'process_carbonic': 'Carbonic Maceration',
       'process_thermal': 'Thermal Shock',
-      'process_lactic': 'Lactic',
+
       'process_yeast': 'Yeast Inoculation',
       'process_koji': 'Koji Fermentation',
-      'process_wet_hulled': 'Wet Hulled',
+
 
       'process_natural_character': 'Sweetness, Berries, Body',
       'process_washed_character': 'Cleanliness, Acidity, Elegance',
@@ -510,12 +505,12 @@ class AppLocalizations {
       'toast_lot_added': 'Lot added',
       'toast_photo_saved_locally': 'Photo saved locally',
       'error_saving_photo': 'Error saving photo',
-      'error_saving_lot': 'Error saving lot',
+
       'toast_lot_restored': 'Lot restored',
       'toast_lots_deleted': 'Lots deleted',
       'toast_lots_archived': 'Lots archived',
       'toast_lots_restored': 'Lots restored',
-      'toast_changes_saved': 'Changes saved',
+
       'toast_roaster_archived': 'Roaster archived',
       'toast_roaster_restored': 'Roaster restored',
       'delete_confirm_title': 'Delete Lot?',
@@ -579,7 +574,7 @@ class AppLocalizations {
       'no_recipes_found': 'No recipes found',
       'search_recipes': 'Search recipes...',
       'roast_light_medium': 'Light - Medium',
-      'roast_medium_dark': 'Medium - Dark',
+
       'profile_balanced': 'Clean & Balanced',
       'difficulty_med': 'Med',
       'flavor_profile_label': 'Profile',
@@ -836,15 +831,15 @@ class AppLocalizations {
       'roast_light': 'Світле',
       'roast_medium_light': 'Світло-середнє',
       'roast_medium': 'Середнє',
-      'roast_medium_dark': 'Середньо-темне',
+
       'roast_dark': 'Темне',
       'roast_filter': 'Фільтр',
       'roast_omni': 'Омні',
       'roast_espresso': 'Еспресо',
       'add_lot': 'Додати лот',
       'edit_lot': 'Редагувати лот',
-      'toast_changes_saved': 'Зміни збережено!',
-      'error_saving_lot': 'Помилка при збереженні лоту',
+
+
       'wheel_cat_floral': 'Квіткові',
       'wheel_cat_fruity': 'Фруктовї',
       'wheel_cat_sour_fermented': 'Кислі/Ферментовані',
@@ -936,9 +931,7 @@ class AppLocalizations {
       'wheel_note_stale': 'Залежалий',
       'wheel_note_musty': 'Пліснявий',
       'wheel_note_dusty': 'Пильний',
-      'roast_light': 'Світле',
-      'roast_medium': 'Середнє',
-      'roast_dark': 'Темне',
+
       'no_recipes_for_lot': 'Рецептів для цього лоту поки немає.',
       'process_detail': 'Деталі обробки',
       'story_terroir': 'Історія та терруар',
@@ -962,12 +955,12 @@ class AppLocalizations {
       'coffee_and_water': 'Кава та вода',
       'retail': 'Роздріб',
       'wholesale': 'Опт',
-      'coffee': 'Кава',
+
       'total_water': 'Загальна кількість води',
       'pour_schedule': 'Графік вливань',
       'number_of_pours': 'Кількість вливань',
       'notes_hint': 'Примітки',
-      'add_lot': 'Додати лот',
+
       'roastery_name': 'Назва обсмажки',
       'coffee_name': 'Назва кави',
       'variety': 'Різновид',
@@ -1035,16 +1028,8 @@ class AppLocalizations {
       'desc_nutty': 'Класичні кавові ноти, що включають смажені горіхи та різні види шоколаду.',
       'desc_note_chocolate': 'Глибокі, гірко-солодкі ноти від молочного до темного шоколаду.',
       'desc_note_hazelnut': "М'яка масляниста солодкість горіха.",
-      'process_natural': 'Натуральна',
-      'process_washed': 'Мита',
-      'process_honey': 'Хані',
-      'process_anaerobic': 'Анаеробна',
-      'process_carbonic': 'Вуглекислотна мацерація',
-      'process_thermal': 'Термічний шок',
-      'process_lactic': 'Молочнокисла',
-      'process_yeast': 'Дріжджова',
-      'process_koji': 'Коджі',
-      'process_wet_hulled': 'Вет-халд',
+
+
 
       'process_natural_character': 'Солодкість, Ягідність, Тіло',
       'process_washed_character': 'Чистота, Кислотність, Елегантність',

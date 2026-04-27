@@ -64,11 +64,11 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isUk = LocaleService.currentLocale == 'uk';
 
     // Reactively watch for updates if we have IDs
     final lotAsync = widget.lot != null ? ref.watch(lotProvider(widget.lot!.id)) : const AsyncValue.data(null);
     final beanAsync = widget.entry != null ? ref.watch(beanProvider(widget.entry!.id)) : const AsyncValue.data(null);
+    final isUk = ref.watch(localeProvider) == 'uk';
 
     return lotAsync.when(
       loading: () => const Scaffold(backgroundColor: Colors.black, body: Center(child: CircularProgressIndicator())),
@@ -201,7 +201,6 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
   }
 
   void _showRecipeTypeSelector(BuildContext context, WidgetRef ref, String lotId) async {
-    final isUk = LocaleService.currentLocale == 'uk';
     final db = ref.read(databaseProvider);
     final recipes = await db.getCustomRecipesForLot(lotId);
     
@@ -226,7 +225,7 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
             ),
             const SizedBox(height: 24),
             Text(
-              isUk ? 'Оберіть тип рецепту' : 'Select recipe type',
+              ref.t('select_recipe_type'),
               style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.bold, color: const Color(0xFFC8A96E), letterSpacing: 2),
             ),
             const SizedBox(height: 24),
@@ -234,7 +233,7 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
               children: [
                 Expanded(
                   child: _RecipeTypeCard(
-                    title: isUk ? 'Фільтр' : 'Filter',
+                    title: ref.t('filter'),
                     icon: Icons.coffee_rounded,
                     count: filterCount,
                     isLimitReached: filterCount >= 10,
@@ -253,7 +252,7 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                 const SizedBox(width: 16),
                 Expanded(
                   child: _RecipeTypeCard(
-                    title: isUk ? 'Еспресо' : 'Espresso',
+                    title: ref.t('espresso'),
                     icon: Icons.coffee_maker_rounded,
                     count: espressoCount,
                     isLimitReached: espressoCount >= 10,
@@ -297,7 +296,6 @@ class _RecipeTypeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isUk = LocaleService.currentLocale == 'uk';
 
     return GestureDetector(
       onTap: isLimitReached ? null : onTap,
@@ -339,7 +337,7 @@ class _RecipeTypeCard extends StatelessWidget {
             if (isLimitReached) ...[
               const SizedBox(height: 8),
               Text(
-                isUk ? 'ЛІМІТ' : 'LIMIT',
+                context.t('limit'),
                 style: GoogleFonts.outfit(fontSize: 10, color: Colors.redAccent, fontWeight: FontWeight.bold),
               ),
             ],
@@ -508,7 +506,6 @@ class _InfoTab extends ConsumerWidget {
   const _InfoTab({this.lot, this.bean});
 
   void _showProcessInfoSheet(BuildContext context, WidgetRef ref, String process) {
-    final isUk = LocaleService.currentLocale == 'uk';
     final method = ProcessingMethodsRepository.getByMatchingName(process);
     
     final String title = method != null 
@@ -517,9 +514,7 @@ class _InfoTab extends ConsumerWidget {
         
     final String description = method?.extendedInfoKey != null
         ? ref.t(method!.extendedInfoKey!)
-        : (method != null ? ref.t(method.descKey) : (isUk 
-            ? 'Детальна інформація про цей метод обробки поки відсутня в нашому довіднику.'
-            : 'Detailed information about this process is not yet available in our guide.'));
+        : (method != null ? ref.t(method.descKey) : ref.t('process_info_missing'));
 
     final String? characters = method?.characterKey != null
         ? ref.t(method!.characterKey!)
@@ -606,7 +601,6 @@ class _InfoTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isUk = LocaleService.currentLocale == 'uk';
 
     // Grouping fields for a premium look
     return ListView(
@@ -621,14 +615,14 @@ class _InfoTab extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: LotCompactStat(
-                      label: isUk ? 'Різновид' : 'Variety',
+                      label: ref.t('variety'),
                       value: lot?.varieties ?? bean?.varieties ?? 'N/A',
                     ),
                   ),
                   Container(width: 1, height: 30, color: Colors.white10),
                   Expanded(
                     child: LotCompactStat(
-                      label: isUk ? 'Висота' : 'Altitude',
+                      label: ref.t('altitude'),
                       value: lot?.altitude ?? (bean?.altitudeMin != null ? '${bean!.altitudeMin}-${bean!.altitudeMax}m' : 'N/A'),
                     ),
                   ),
@@ -639,7 +633,7 @@ class _InfoTab extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: LotCompactStat(
-                      label: isUk ? 'Обробка' : 'Process',
+                      label: ref.t('process'),
                       value: lot?.process ?? bean?.processMethod ?? 'N/A',
                       onTap: () {
                         final processName = (lot?.process ?? bean?.processMethod ?? '').toLowerCase();
@@ -665,38 +659,38 @@ class _InfoTab extends ConsumerWidget {
         const SizedBox(height: 24),
 
         // ── ORIGIN \u0026 FARM ─────────────────────────────────────────────
-        _SectionTitle(title: isUk ? 'ПОХОДЖЕННЯ ТА ФЕРМА' : 'ORIGIN \u0026 FARM'),
+        _SectionTitle(title: ref.t('origin_and_farm')),
         GlassContainer(
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              _InfoRow(label: isUk ? 'Назва кави' : 'Coffee Name', value: lot?.coffeeName ?? bean?.fullDisplayName),
-              _InfoRow(label: isUk ? 'Країна' : 'Country', value: lot?.originCountry ?? bean?.country),
-              _InfoRow(label: isUk ? 'Регіон' : 'Region', value: lot?.region ?? bean?.region),
-              _InfoRow(label: isUk ? 'Ферма' : 'Farm', value: lot?.farm),
-              _InfoRow(label: isUk ? 'Фермер' : 'Farmer', value: lot?.farmer),
-              _InfoRow(label: isUk ? 'Станція' : 'Station', value: lot?.washStation),
+              _InfoRow(label: ref.t('coffee_name'), value: lot?.coffeeName ?? bean?.fullDisplayName),
+              _InfoRow(label: ref.t('country'), value: lot?.originCountry ?? bean?.country),
+              _InfoRow(label: ref.t('region'), value: lot?.region ?? bean?.region),
+              _InfoRow(label: ref.t('farm'), value: lot?.farm),
+              _InfoRow(label: ref.t('farmer'), value: lot?.farmer),
+              _InfoRow(label: ref.t('station'), value: lot?.washStation),
             ],
           ),
         ),
         const SizedBox(height: 24),
 
         // ── COFFEE SPECS ───────────────────────────────────────────────────
-        _SectionTitle(title: isUk ? 'ХАРАКТЕРИСТИКИ КАВИ' : 'COFFEE SPECS'),
+        _SectionTitle(title: ref.t('coffee_specs')),
         GlassContainer(
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              _InfoRow(label: isUk ? 'Сорт' : 'Variety', value: lot?.varieties ?? bean?.varieties),
+              _InfoRow(label: ref.t('variety'), value: lot?.varieties ?? bean?.varieties),
               _InfoRow(
-                label: isUk ? 'Обробка' : 'Process', 
+                label: ref.t('process'), 
                 value: lot?.process ?? bean?.processMethod,
                 onTap: (lot?.process ?? bean?.processMethod) != null 
                   ? () => _showProcessInfoSheet(context, ref, lot?.process ?? bean?.processMethod ?? '')
                   : null,
               ),
-              _InfoRow(label: isUk ? 'Декаф' : 'Decaf', value: lot != null ? (lot!.isDecaf ? (isUk ? 'Так' : 'Yes') : (isUk ? 'Ні' : 'No')) : null),
-              _InfoRow(label: isUk ? 'Мелена' : 'Ground', value: lot != null ? (lot!.isGround ? (isUk ? 'Так' : 'Yes') : (isUk ? 'Ні' : 'No')) : null),
+              _InfoRow(label: ref.t('decaf'), value: lot != null ? (lot!.isDecaf ? ref.t('yes') : ref.t('no')) : null),
+              _InfoRow(label: ref.t('ground'), value: lot != null ? (lot!.isGround ? ref.t('yes') : ref.t('no')) : null),
               _InfoRow(label: 'SCA SCORE', value: lot?.scaScore ?? bean?.scaScore),
             ],
           ),
@@ -704,33 +698,33 @@ class _InfoTab extends ConsumerWidget {
         const SizedBox(height: 24),
 
         // ── ROAST \u0026 PURCHASE ───────────────────────────────────────────
-        _SectionTitle(title: isUk ? 'ОБСМАЖЕННЯ ТА КУПІВЛЯ' : 'ROAST \u0026 PURCHASE'),
+        _SectionTitle(title: ref.t('roast_and_purchase')),
         GlassContainer(
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              _InfoRow(label: isUk ? 'Ростерія' : 'Roastery', value: lot?.roasteryName),
-              _InfoRow(label: isUk ? 'Країна обсмажки' : 'Roast Country', value: lot?.roasteryCountry),
-              _InfoRow(label: isUk ? 'Рівень' : 'Roast Level', value: lot?.roastLevel),
-              _InfoRow(label: isUk ? 'Дата обсмажки' : 'Roast Date', value: lot?.roastDate?.toString().split(' ')[0]),
-              _InfoRow(label: isUk ? 'Відкрито' : 'Opened At', value: lot?.openedAt?.toString().split(' ')[0]),
-              _InfoRow(label: isUk ? 'Вага' : 'Weight', value: lot?.weight != null ? (lot!.weight!.endsWith('g') ? lot!.weight : '${lot!.weight}g') : null),
+              _InfoRow(label: ref.t('roastery'), value: lot?.roasteryName),
+              _InfoRow(label: ref.t('roast_country'), value: lot?.roasteryCountry),
+              _InfoRow(label: ref.t('roast_level'), value: lot?.roastLevel),
+              _InfoRow(label: ref.t('roast_date'), value: lot?.roastDate?.toString().split(' ')[0]),
+              _InfoRow(label: ref.t('opened_at'), value: lot?.openedAt?.toString().split(' ')[0]),
+              _InfoRow(label: ref.t('weight'), value: lot?.weight != null ? (lot!.weight!.endsWith('g') ? lot!.weight : '${lot!.weight}g') : null),
               _InfoRow(label: 'ID Лоту', value: lot?.lotNumber),
             ],
           ),
         ),
         const SizedBox(height: 12),
         if ((lot != null && lot!.pricing.isNotEmpty) || (bean != null && (bean!.userPricing.isNotEmpty || bean!.pricing.isNotEmpty))) ...[
-          _SectionTitle(title: isUk ? 'ЦІНИ' : 'PRICES'),
+          _SectionTitle(title: ref.t('prices')),
           GlassContainer(
             padding: EdgeInsets.zero,
             child: Table(
               children: [
                 TableRow(
                   children: [
-                    _Cell(isUk ? 'Вага' : 'Weight', isHeader: true),
-                    _Cell(isUk ? 'Роздріб' : 'Retail', isHeader: true),
-                    _Cell(isUk ? 'Опт' : 'Wholesale', isHeader: true),
+                    _Cell(ref.t('weight'), isHeader: true),
+                    _Cell(ref.t('retail'), isHeader: true),
+                    _Cell(ref.t('wholesale'), isHeader: true),
                   ],
                 ),
                 _priceRow('250g', 
@@ -749,7 +743,7 @@ class _InfoTab extends ConsumerWidget {
 
         // ── FLAVOR PROFILE ────────────────────────────────────────────────
         if ((lot?.flavorProfile != null && lot!.flavorProfile!.isNotEmpty) || (bean?.description != null && bean!.description.isNotEmpty)) ...[
-          _SectionTitle(title: isUk ? 'ОПИС СМАКУ' : 'FLAVOR PROFILE'),
+          _SectionTitle(title: ref.t('flavor_profile_section')),
           GlassContainer(
             padding: const EdgeInsets.all(20),
             child: Text(
@@ -877,7 +871,6 @@ class _RecipesTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isUk = LocaleService.currentLocale == 'uk';
     final db = ref.watch(databaseProvider);
     
     return StreamBuilder<List<CustomRecipeDto>>(
@@ -894,7 +887,7 @@ class _RecipesTab extends ConsumerWidget {
                 const Icon(Icons.coffee_maker_outlined, color: Colors.white10, size: 64),
                 const SizedBox(height: 16),
                 Text(
-                  isUk ? 'НЕМАЄ РЕЦЕПТІВ ДЛЯ ЦЬОГО ЛОТУ' : 'NO RECIPES FOR THIS LOT',
+                  ref.t('no_recipes_lot'),
                   style: GoogleFonts.outfit(color: Colors.white24, fontWeight: FontWeight.bold, fontSize: 12, letterSpacing: 1.2),
                 ),
               ],

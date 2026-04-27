@@ -65,7 +65,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     ).then((_) => setState(() {})); // refresh UI
   }
 
-  void _showPasswordResetDialog(String email, bool isUk) {
+  void _showPasswordResetDialog(String email) {
     showDialog(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.3),
@@ -82,7 +82,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 const Icon(Icons.mail_outline_rounded, color: Color(0xFFC8A96E), size: 48),
                 const SizedBox(height: 24),
                 Text(
-                  isUk ? 'Відновлення паролю' : 'Password Reset',
+                  context.t('password_reset'),
                   style: GoogleFonts.poppins(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -91,9 +91,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  isUk 
-                    ? 'Ми надішлемо лист із інструкціями для зміни пароля на вашу пошту.' 
-                    : 'We will send an email with instructions to change your password to your email.',
+                  context.t('password_reset_instruction'),
                   textAlign: TextAlign.center,
                   style: GoogleFonts.outfit(color: Colors.white70),
                 ),
@@ -104,6 +102,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       child: ElevatedButton(
                         onPressed: () async {
                           final messenger = ScaffoldMessenger.of(context);
+                          final successMessage = context.t('instruction_email_sent');
                           Navigator.of(context).pop();
                           try {
                             await ref.read(supabaseProvider).auth.resetPasswordForEmail(email);
@@ -112,9 +111,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 behavior: SnackBarBehavior.floating,
                                 backgroundColor: const Color(0xFFC8A96E),
                                 content: Text(
-                                  isUk 
-                                    ? 'Лист із інструкцією відправлено на пошту' 
-                                    : 'Instruction email has been sent to your mail',
+                                  successMessage,
                                   style: const TextStyle(color: Colors.black),
                                 ),
                               ),
@@ -130,7 +127,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           foregroundColor: Colors.black,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
-                        child: Text(isUk ? 'ОК' : 'OK'),
+                        child: Text(context.t('ok')),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -141,7 +138,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           foregroundColor: Colors.white54,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
-                        child: Text(isUk ? 'Скасувати' : 'Cancel'),
+                        child: Text(context.t('cancel')),
                       ),
                     ),
                   ],
@@ -178,7 +175,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         meta['avatar_url'] as String? ??
         'https://api.dicebear.com/7.x/adventurer/png?seed=${user.id}';
 
-    final isUk = LocaleService.currentLocale == 'uk';
     final recipesAsync = ref.watch(globalCustomRecipesProvider);
     final lotsAsync = ref.watch(userLotsStreamProvider);
     final favoritesAsync = ref.watch(favoriteLotsStreamProvider);
@@ -229,7 +225,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             else ...[
               IconButton(
                 icon: const Icon(Icons.logout),
-                tooltip: 'Sign Out',
+                tooltip: ref.t('sign_out'),
                 onPressed: _signOut,
               ),
             ],
@@ -308,19 +304,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 child: Column(
                   children: [
                     _InfoRow(
-                      label: isUk ? 'ID акаунту' : 'Account ID',
+                      label: ref.t('account_id'),
                       value: '${user.id.substring(0, 8)}...',
                       icon: Icons.fingerprint_rounded,
                       onTap: () {
                         Clipboard.setData(ClipboardData(text: user.id));
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(isUk ? 'ID скопійовано' : 'ID copied')),
+                          SnackBar(content: Text(ref.t('id_copied'))),
                         );
                       },
                     ),
                     const Divider(color: Colors.white12, height: 24),
                     _InfoRow(
-                      label: isUk ? 'Дата приєднання' : 'Join Date',
+                      label: ref.t('join_date'),
                       value: joinDate,
                       icon: Icons.calendar_today_rounded,
                     ),
@@ -331,9 +327,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               if (!isGoogleUser) ...[
                 const SizedBox(height: 32),
                 TextButton(
-                  onPressed: () => _showPasswordResetDialog(user.email!, isUk),
+                  onPressed: () => _showPasswordResetDialog(user.email!),
                   child: Text(
-                    isUk ? 'Забули пароль?' : 'Forgot Password?',
+                    ref.t('forgot_password'),
                     style: GoogleFonts.outfit(
                       color: const Color(0xFFC8A96E),
                       fontWeight: FontWeight.w600,
@@ -567,8 +563,8 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Image uploaded successfully!'),
+          SnackBar(
+            content: Text(context.t('image_uploaded')),
             backgroundColor: Colors.green,
           ),
         );
@@ -578,7 +574,7 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Upload failed: $e. Make sure you have an "avatars" bucket initialized in Supabase.',
+              context.t('upload_failed', args: {'error': e.toString()}),
               style: const TextStyle(color: Colors.white),
             ),
             backgroundColor: Colors.red,
@@ -604,7 +600,7 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Edit Profile',
+              context.t('edit_profile_dialog_title'),
               style: GoogleFonts.poppins(
                 color: Colors.white,
                 fontSize: 20,
@@ -620,7 +616,7 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
                     controller: _nameController,
                     style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
-                      labelText: 'Display Name',
+                      labelText: context.t('display_name_label'),
                       labelStyle: const TextStyle(color: Colors.white54),
                       filled: true,
                       fillColor: Colors.white.withValues(alpha: 0.05),
@@ -641,7 +637,7 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
                             fontSize: 13,
                           ),
                           decoration: InputDecoration(
-                            labelText: 'Avatar URL',
+                            labelText: context.t('avatar_url_label'),
                             labelStyle: const TextStyle(color: Colors.white54),
                             filled: true,
                             fillColor: Colors.white.withValues(alpha: 0.05),
@@ -667,7 +663,7 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
                                 Icons.photo_library,
                                 color: Color(0xFFC8A96E),
                               ),
-                        tooltip: 'Upload from Gallery',
+                        tooltip: context.t('upload_from_gallery'),
                         onPressed: _isUploading ? null : _pickAndUploadImage,
                       ),
                     ],
@@ -681,9 +677,9 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
               children: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(color: Colors.white54),
+                  child: Text(
+                    context.t('cancel'),
+                    style: const TextStyle(color: Colors.white54),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -710,9 +706,9 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
                             color: Colors.black,
                           ),
                         )
-                      : const Text(
-                          'Save',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                      : Text(
+                          context.t('save'),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                 ),
               ],

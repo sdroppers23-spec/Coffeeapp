@@ -94,8 +94,8 @@ class _CustomRecipeTimerScreenState
   }
 
   String _getActiveStepText(int activeIndex) {
-    if (activeIndex < 0) return 'Ready to brew';
-    if (activeIndex >= _pours.length) return 'Brewing complete';
+    if (activeIndex < 0) return ref.t('ready_to_brew');
+    if (activeIndex >= _pours.length) return ref.t('brewing_complete');
 
     final pour = _pours[activeIndex];
     final isEspresso = widget.recipe.recipeType == 'espresso';
@@ -107,7 +107,7 @@ class _CustomRecipeTimerScreenState
     if (isEspresso) {
       label = ref.t('extraction');
     } else {
-      label = isBloom ? ref.t('bloom') : '${ref.t('pour')} #$ml';
+      label = isBloom ? ref.t('bloom') : '${ref.t('pour')} #${pour['pourNumber'] ?? (activeIndex + 1)}';
     }
 
     String text = '$label: $ml ml';
@@ -128,7 +128,7 @@ class _CustomRecipeTimerScreenState
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _resetTimer,
-            tooltip: 'Reset Timer',
+            tooltip: ref.t('reset_timer'),
           ),
         ],
       ),
@@ -260,7 +260,7 @@ class _CustomRecipeTimerScreenState
                 if (widget.recipe.brewTempC > 0)
                   _StatText('🌡 ${widget.recipe.brewTempC.toInt()}°C'),
                 if (widget.recipe.comandanteClicks > 0)
-                  _StatText('🔴 ${widget.recipe.comandanteClicks} clk'),
+                  _StatText('🔴 ${widget.recipe.comandanteClicks} ${ref.t('clicks')}'),
               ],
             ),
           ),

@@ -223,14 +223,14 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                             _buildInfoPoint(
                               ref.t('recommended_roast'),
                               widget.recipe.methodKey.toLowerCase().contains('espresso') 
-                                ? 'Medium - Dark' 
-                                : 'Light - Medium',
+                                ? ref.t('roast_medium_dark') 
+                                : ref.t('roast_light_medium'),
                               Icons.local_fire_department_rounded,
                             ),
                             const Spacer(),
                             _buildInfoPoint(
-                              'Profile',
-                              'Clean & Balanced',
+                              ref.t('flavor_profile_label'),
+                              ref.t('profile_balanced'),
                               Icons.analytics_rounded,
                             ),
                           ],
@@ -385,11 +385,11 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
                 ),
                 _ParameterItem(
                   label: t('difficulty'),
-                  value: recipe.difficulty ?? 'Med',
+                  value: recipe.difficulty ?? t('difficulty_med'),
                 ),
                 _ParameterItem(
                   label: t('intensity'),
-                  value: recipe.flavorProfile ?? 'Balanced',
+                  value: recipe.flavorProfile ?? t('balanced'),
                 ),
               ],
             ),

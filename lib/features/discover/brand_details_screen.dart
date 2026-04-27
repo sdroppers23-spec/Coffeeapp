@@ -76,8 +76,8 @@ class BrandDetailsScreen extends ConsumerWidget {
             const Divider(color: Colors.white10),
             Expanded(
               child: lotsAsync.when(
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, _) => Center(child: Text('Error loading lots: $e')),
+                loading: () => const Center(child: CircularProgressIndicator(color: Color(0xFFC8A96E))),
+                error: (e, _) => Center(child: Text(ref.t('error_loading_lots', args: {'error': e.toString()}))),
                 data: (lots) {
                   if (lots.isEmpty) {
                     return Center(

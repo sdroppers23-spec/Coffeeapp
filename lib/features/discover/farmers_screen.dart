@@ -26,17 +26,27 @@ class FarmersBody extends ConsumerWidget {
     final asyncFarms = ref.watch(farmersProvider);
 
     return asyncFarms.when(
-      loading: () => const Center(
-        child: CircularProgressIndicator(color: Color(0xFFC8A96E)),
+      loading: () => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const CircularProgressIndicator(color: Color(0xFFC8A96E)),
+            const SizedBox(height: 16),
+            Text(
+              context.t('loading_farmers'),
+              style: GoogleFonts.outfit(color: Colors.white38, fontSize: 14),
+            ),
+          ],
+        ),
       ),
       error: (e, _) => Center(
-        child: Text('Error: $e', style: const TextStyle(color: Colors.red)),
+        child: Text('${context.t('error')}: $e', style: const TextStyle(color: Colors.red)),
       ),
       data: (farmers) {
         if (farmers.isEmpty) {
           return Center(
             child: Text(
-              'No farmers found. Syncing...',
+              context.t('no_farmers_found'),
               style: GoogleFonts.poppins(color: Colors.white38),
             ),
           );

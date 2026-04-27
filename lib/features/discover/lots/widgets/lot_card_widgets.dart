@@ -36,7 +36,6 @@ class MyLotGridCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mappedSensory = SensoryUtils.map4To6Axis(lot.sensoryPoints);
     final theme = Theme.of(context);
-    final isUk = LocaleService.currentLocale == 'uk';
 
     return PressableScale(
       onLongPress: () => onLongPress(lot.id),
@@ -185,11 +184,11 @@ class MyLotGridCard extends ConsumerWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CompactSensoryBar(label: isUk ? 'ГІРКОТА' : 'BITTERNESS', value: (mappedSensory['bitterness'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
+                CompactSensoryBar(label: ref.t('bitterness').toUpperCase(), value: (mappedSensory['bitterness'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
                 const SizedBox(height: 6),
-                CompactSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
+                CompactSensoryBar(label: ref.t('acidity').toUpperCase(), value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
                 const SizedBox(height: 6),
-                CompactSensoryBar(label: isUk ? 'СОЛОДКІСТЬ' : 'SWEETNESS', value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
+                CompactSensoryBar(label: ref.t('sweetness').toUpperCase(), value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
               ],
             ),
             const SizedBox(height: 12),
@@ -290,23 +289,21 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
-    final lot = widget.lot;
-    final isUk = LocaleService.currentLocale == 'uk';
     final theme = Theme.of(context);
     final isSelected = widget.isSelected;
     final isSelectionMode = widget.isSelectionMode;
     
     // Normalize sensory data
-    final mappedSensory = SensoryUtils.map4To6Axis(lot.sensoryPoints);
+    final mappedSensory = SensoryUtils.map4To6Axis(widget.lot.sensoryPoints);
     final radarValues = mappedSensory.map((key, value) => MapEntry(key, value / 5.0));
 
     final card = PressableScale(
-      onLongPress: () => widget.onLongPress(lot.id),
+      onLongPress: () => widget.onLongPress(widget.lot.id),
       onTap: () {
         if (isSelectionMode) {
-          widget.onLongPress(lot.id);
+          widget.onLongPress(widget.lot.id);
         } else {
-          widget.onTap(lot.id);
+          widget.onTap(widget.lot.id);
         }
       },
       child: RepaintBoundary(
@@ -334,7 +331,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          lot.coffeeName ?? 'Unnamed',
+                          widget.lot.coffeeName ?? 'Unnamed',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.outfit(
@@ -343,9 +340,9 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        if (lot.roasteryName != null && lot.roasteryName!.isNotEmpty)
+                        if (widget.lot.roasteryName != null && widget.lot.roasteryName!.isNotEmpty)
                           Text(
-                            lot.roasteryName!,
+                            widget.lot.roasteryName!,
                             style: GoogleFonts.outfit(
                               color: const Color(0xFFC8A96E).withValues(alpha: 0.38),
                               fontSize: 12,
@@ -361,12 +358,12 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                         if (!kIsWeb && !Platform.isWindows) {
                           Vibration.vibrate(duration: 40, amplitude: 100);
                         }
-                        widget.onFavoriteToggle(lot);
+                        widget.onFavoriteToggle(widget.lot);
                       },
                       child: Icon(
-                        lot.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                        widget.lot.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
                         size: 20,
-                        color: lot.isFavorite ? Colors.redAccent : Colors.white24,
+                        color: widget.lot.isFavorite ? Colors.redAccent : Colors.white24,
                       ),
                     ),
                 ],
@@ -378,12 +375,12 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                 children: [
                   Stack(
                     children: [
-                      if (lot.imageUrl != null && lot.imageUrl!.isNotEmpty)
+                      if (widget.lot.imageUrl != null && widget.lot.imageUrl!.isNotEmpty)
                         ClipRRect(
                           borderRadius: BorderRadius.circular(24), // Circular-ish but consistent
-                          child: lot.imageUrl!.startsWith('http')
+                          child: widget.lot.imageUrl!.startsWith('http')
                               ? Image.network(
-                                  lot.imageUrl!,
+                                  widget.lot.imageUrl!,
                                   width: 54,
                                   height: 54,
                                   fit: BoxFit.cover,
@@ -395,7 +392,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                                   ),
                                 )
                               : Image.file(
-                                  File(lot.imageUrl!),
+                                  File(widget.lot.imageUrl!),
                                   width: 54,
                                   height: 54,
                                   fit: BoxFit.cover,
@@ -417,7 +414,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                           ),
                           child: Center(
                             child: Text(
-                              lot.scaScore ?? '85',
+                              widget.lot.scaScore ?? '85',
                               style: GoogleFonts.outfit(
                                 color: theme.colorScheme.primary,
                                 fontWeight: FontWeight.bold,
@@ -428,7 +425,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                         ),
                       
                       // Small floating score if image is present
-                      if (lot.imageUrl != null && lot.imageUrl!.isNotEmpty)
+                      if (widget.lot.imageUrl != null && widget.lot.imageUrl!.isNotEmpty)
                         Positioned(
                           bottom: 0,
                           right: 0,
@@ -440,7 +437,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                               border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.4), width: 1),
                             ),
                             child: Text(
-                              lot.scaScore ?? '85',
+                              widget.lot.scaScore ?? '85',
                               style: GoogleFonts.outfit(
                                 color: theme.colorScheme.primary,
                                 fontSize: 8,
@@ -460,11 +457,11 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            CompactSensoryBar(label: isUk ? 'ГІРКОТА' : 'BITTERNESS', value: (mappedSensory['bitterness'] ?? 3).toDouble(), theme: theme),
+                            CompactSensoryBar(label: ref.t('bitterness').toUpperCase(), value: (mappedSensory['bitterness'] ?? 3).toDouble(), theme: theme),
                             const SizedBox(width: 8),
-                            CompactSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme),
+                            CompactSensoryBar(label: ref.t('acidity').toUpperCase(), value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme),
                             const SizedBox(width: 8),
-                            CompactSensoryBar(label: isUk ? 'СОЛОДКІСТЬ' : 'SWEETNESS', value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme),
+                            CompactSensoryBar(label: ref.t('sweetness').toUpperCase(), value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme),
                           ],
                         ),
                         const SizedBox(height: 12),
@@ -473,18 +470,18 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: [
-                              if (lot.roastLevel != null && lot.roastLevel!.isNotEmpty)
+                              if (widget.lot.roastLevel != null && widget.lot.roastLevel!.isNotEmpty)
                                 _TagChip(
                                   icon: Icons.local_fire_department_rounded, 
-                                  text: lot.roastLevel!.toUpperCase(), 
+                                  text: widget.lot.roastLevel!.toUpperCase(), 
                                   theme: theme,
                                   color: theme.colorScheme.primary.withValues(alpha: 0.2),
                                 ),
                               const SizedBox(width: 8),
-                              _TagChip(icon: Icons.location_on_outlined, text: lot.originCountry, theme: theme),
+                              _TagChip(icon: Icons.location_on_outlined, text: widget.lot.originCountry, theme: theme),
                               const SizedBox(width: 8),
-                              if (lot.process != null && lot.process!.isNotEmpty)
-                                _TagChip(icon: Icons.water_drop_outlined, text: lot.process, theme: theme),
+                              if (widget.lot.process != null && widget.lot.process!.isNotEmpty)
+                                _TagChip(icon: Icons.water_drop_outlined, text: widget.lot.process, theme: theme),
                             ],
                           ),
                         ),
@@ -504,7 +501,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                     const SizedBox(height: 20),
                     const Divider(color: Colors.white10),
                     const SizedBox(height: 16),
-                    _LotPropertyGrid(lot: lot),
+                    _LotPropertyGrid(lot: widget.lot),
                     const SizedBox(height: 24),
                     SizedBox(
                       height: 200,
@@ -523,7 +520,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  _FreshnessProgressBar(lot: lot, isUk: isUk, theme: theme),
+                  _FreshnessProgressBar(lot: widget.lot, theme: theme),
                   if (!isSelectionMode)
                     GestureDetector(
                       onTap: _toggleExpanded,
@@ -553,28 +550,28 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
       ? card 
       : GlassSwipeWrapper(
           isSwipeEnabled: !_isExpanded,
-          dismissibleKey: Key('glass_swipe_${lot.id}'),
+          dismissibleKey: Key('glass_swipe_${widget.lot.id}'),
           leftAction: widget.onRestoreSwipe != null
             ? GlassSwipeAction(
                 icon: Icons.unarchive_outlined,
-                label: isUk ? 'Відновити' : 'Restore',
+                label: context.t('restore'),
                 color: const Color(0xFF3A7BBF),
-                onTap: () => widget.onRestoreSwipe!(lot),
+                onTap: () => widget.onRestoreSwipe!(widget.lot),
               )
             : widget.onEditSwipe != null
               ? GlassSwipeAction(
                   icon: Icons.edit_outlined,
-                  label: isUk ? 'Редагувати' : 'Edit',
+                  label: context.t('edit'),
                   color: const Color(0xFF39FF14),
-                  onTap: () => widget.onEditSwipe!(lot),
+                  onTap: () => widget.onEditSwipe!(widget.lot),
                 )
               : null,
           rightAction: widget.onDeleteSwipe != null
             ? GlassSwipeAction(
                 icon: Icons.delete_outline_rounded,
-                label: isUk ? 'Видалити' : 'Delete',
+                label: context.t('delete'),
                 color: Colors.redAccent,
-                onTap: () => widget.onDeleteSwipe!(lot),
+                onTap: () => widget.onDeleteSwipe!(widget.lot),
               )
             : null,
           child: card,
@@ -586,7 +583,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
         child: Row(
           children: [
             GestureDetector(
-              onTap: () => widget.onLongPress(lot.id),
+              onTap: () => widget.onLongPress(widget.lot.id),
               child: Container(
                 margin: const EdgeInsets.only(left: 4, right: 12),
                 width: 24,
@@ -654,10 +651,9 @@ class _TagChip extends StatelessWidget {
 
 class _FreshnessProgressBar extends StatelessWidget {
   final CoffeeLotDto lot;
-  final bool isUk;
   final ThemeData theme;
 
-  const _FreshnessProgressBar({required this.lot, required this.isUk, required this.theme});
+  const _FreshnessProgressBar({required this.lot, required this.theme});
 
   @override
   Widget build(BuildContext context) {
@@ -703,10 +699,11 @@ class _FreshnessProgressBar extends StatelessWidget {
     final Color statusColor = getSmoothColor(factor);
     final String labelText;
     if (isExpired) {
-      labelText = isUk ? 'ТЕРМІН ВИЙШОВ' : 'EXPIRED';
+      labelText = context.t('expired');
     } else {
       final int daysLeft = (limit - ageDays).clamp(0, limit);
-      labelText = '$daysLeft ${isUk ? 'дн. лишилось' : 'd. left'}';
+      final key = daysLeft == 1 ? 'days_left_1' : (daysLeft >= 2 && daysLeft <= 4 ? 'days_left_2_4' : 'days_left_5_plus');
+      labelText = context.t(key, args: {'count': daysLeft.toString()});
     }
 
     return Column(
@@ -715,7 +712,7 @@ class _FreshnessProgressBar extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(isUk ? 'Свіжість' : 'Freshness', 
+            Text(context.t('freshness'), 
               style: GoogleFonts.outfit(
                 fontSize: 10, 
                 color: const Color(0xFFC8A96E).withValues(alpha: 0.38)
@@ -767,7 +764,6 @@ class _LotPropertyGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isUk = LocaleService.currentLocale == 'uk';
     final pref = ref.watch(preferencesProvider);
 
     String altitudeText = 'N/A';
@@ -789,33 +785,33 @@ class _LotPropertyGrid extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(isUk ? 'ПОХОДЖЕННЯ ТА ФЕРМА' : 'ORIGIN & FARM'),
+        _buildSectionHeader(ref.t('origin_farm_section')),
         const SizedBox(height: 12),
         _buildGrid([
-          _InfoItem(label: isUk ? 'Країна' : 'Country', value: lot.originCountry),
-          _InfoItem(label: isUk ? 'Регіон' : 'Region', value: lot.region),
-          _InfoItem(label: isUk ? 'Ферма' : 'Farm', value: lot.farm),
-          _InfoItem(label: isUk ? 'Станція' : 'Station', value: lot.washStation),
-          _InfoItem(label: isUk ? 'Фермер' : 'Farmer', value: lot.farmer),
-          _InfoItem(label: isUk ? 'Висота' : 'Altitude', value: altitudeText),
+          _InfoItem(label: ref.t('country'), value: lot.originCountry),
+          _InfoItem(label: ref.t('region'), value: lot.region),
+          _InfoItem(label: ref.t('farm'), value: lot.farm),
+          _InfoItem(label: ref.t('station'), value: lot.washStation),
+          _InfoItem(label: ref.t('farmer'), value: lot.farmer),
+          _InfoItem(label: ref.t('altitude'), value: altitudeText),
         ]),
         const SizedBox(height: 20),
-        _buildSectionHeader(isUk ? 'КАВА ТА ОБРОБКА' : 'COFFEE & PROCESS'),
+        _buildSectionHeader(ref.t('coffee_process_section')),
         const SizedBox(height: 12),
         _buildGrid([
-          _InfoItem(label: isUk ? 'Різновид' : 'Varieties', value: lot.varieties),
-          _InfoItem(label: isUk ? 'Обробка' : 'Process', value: lot.process),
-          _InfoItem(label: isUk ? 'Декаф' : 'Decaf', value: lot.isDecaf ? (isUk ? 'Так' : 'Yes') : (isUk ? 'Ні' : 'No')),
-          _InfoItem(label: isUk ? 'Мелена' : 'Ground', value: lot.isGround ? (isUk ? 'Так' : 'Yes') : (isUk ? 'Ні' : 'No')),
+          _InfoItem(label: ref.t('varieties'), value: lot.varieties),
+          _InfoItem(label: ref.t('process'), value: lot.process),
+          _InfoItem(label: ref.t('decaf'), value: lot.isDecaf ? ref.t('yes') : ref.t('no')),
+          _InfoItem(label: ref.t('ground'), value: lot.isGround ? ref.t('yes') : ref.t('no')),
         ]),
         const SizedBox(height: 20),
-        _buildSectionHeader(isUk ? 'ОБСМАЖЕННЯ ТА КУПІВЛЯ' : 'ROAST & PURCHASE'),
+        _buildSectionHeader(ref.t('roast_purchase_section')),
         const SizedBox(height: 12),
         _buildGrid([
-          _InfoItem(label: isUk ? 'Рівень' : 'Roast Level', value: lot.roastLevel),
-          _InfoItem(label: isUk ? 'Дата обсмажки' : 'Roast Date', value: lot.roastDate?.toString().split(' ')[0]),
-          _InfoItem(label: isUk ? 'Відкрито' : 'Opened At', value: lot.openedAt?.toString().split(' ')[0]),
-          _InfoItem(label: isUk ? 'Ціна' : 'Price', value: (() {
+          _InfoItem(label: ref.t('roast_level_label'), value: lot.roastLevel),
+          _InfoItem(label: ref.t('roast_date_label'), value: lot.roastDate?.toString().split(' ')[0]),
+          _InfoItem(label: ref.t('opened_at_label'), value: lot.openedAt?.toString().split(' ')[0]),
+          _InfoItem(label: ref.t('price'), value: (() {
             final p1 = lot.pricing['retail'] ?? lot.pricing['retail_250'];
             final p2 = lot.pricing['retail_1k'];
             final val = (p1 != null && p1.toString().isNotEmpty) ? p1.toString() 
@@ -827,8 +823,8 @@ class _LotPropertyGrid extends ConsumerWidget {
             
             return '$val $currencySymbol';
           })()),
-          _InfoItem(label: isUk ? 'Вага' : 'Weight', value: lot.weight != null ? '${lot.weight}g' : null),
-          _InfoItem(label: isUk ? 'ID Лоту' : 'Lot ID', value: lot.lotNumber),
+          _InfoItem(label: ref.t('weight'), value: lot.weight != null ? '${lot.weight}g' : null),
+          _InfoItem(label: ref.t('lot_id_label'), value: lot.lotNumber),
         ]),
       ],
     );

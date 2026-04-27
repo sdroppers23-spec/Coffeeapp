@@ -55,7 +55,6 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
   @override
   Widget build(BuildContext context) {
     final pours = _pours;
-    final isUk = LocaleService.currentLocale == 'uk';
 
     final card = PressableScale(
       onLongPress: () {
@@ -185,7 +184,7 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                       '${widget.recipe.microns}μm',
                     ),
                   if (widget.recipe.totalPours > 1 && widget.recipe.recipeType != 'espresso')
-                    _Tag(Icons.opacity_rounded, '${widget.recipe.totalPours} pours'),
+                    _Tag(Icons.opacity_rounded, widget.ref.t('pours_count', args: {'count': widget.recipe.totalPours.toString()})),
                 ],
               ),
             ),
@@ -226,7 +225,7 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Pour #$n',
+                                  widget.ref.t('pour_number', args: {'n': n.toString()}),
                                   style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 12,
@@ -245,7 +244,7 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                                   ),
                                 if (at != null)
                                   Text(
-                                    'at ${at}min',
+                                    widget.ref.t('at_min', args: {'min': at.toString()}),
                                     style: const TextStyle(
                                       fontSize: 11,
                                       color: Colors.white38,
@@ -315,7 +314,7 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                               const Icon(Icons.timer_outlined, size: 20),
                               const SizedBox(width: 10),
                               Text(
-                                'START BREWING',
+                                widget.ref.t('start_brewing'),
                                 style: GoogleFonts.poppins(
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: 1.0,
@@ -342,14 +341,14 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
       dismissibleKey: Key('glass_swipe_recipe_${widget.recipe.id}'),
       leftAction: GlassSwipeAction(
         icon: Icons.edit_outlined,
-        label: isUk ? 'Редагувати' : 'Edit',
+        label: widget.ref.t('edit'),
         color: const Color(0xFF2DD4BF),
         onTap: () => _editRecipe(context),
       ),
       rightAction: widget.recipe.isArchived
           ? GlassSwipeAction(
               icon: Icons.unarchive_outlined,
-              label: isUk ? 'Відновити' : 'Restore',
+              label: widget.ref.t('restore'),
               color: const Color(0xFF3A7BBF),
               onTap: () async {
                 final db = widget.ref.read(databaseProvider);
@@ -359,7 +358,7 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
             )
           : GlassSwipeAction(
               icon: Icons.archive_outlined,
-              label: isUk ? 'Архів' : 'Archive',
+              label: widget.ref.t('archive'),
               color: const Color(0xFFF59E0B),
               onTap: () async {
                 final db = widget.ref.read(databaseProvider);
@@ -372,7 +371,6 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
   }
 
   void _showActions(BuildContext context) {
-    final isUk = LocaleService.currentLocale == 'uk';
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -389,8 +387,8 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
               ),
               title: Text(
                 widget.recipe.isFavorite 
-                    ? (isUk ? 'Прибрати з обраних' : 'Remove from Favorites')
-                    : (isUk ? 'Додати до обраних' : 'Add to Favorites'),
+                    ? widget.ref.t('remove_from_favorites')
+                    : widget.ref.t('add_to_favorites'),
                 style: const TextStyle(color: Colors.white),
               ),
               onTap: () async {
@@ -407,8 +405,8 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
               ),
               title: Text(
                 widget.recipe.isArchived 
-                    ? (isUk ? 'Відновити з архіву' : 'Restore from Archive')
-                    : (isUk ? 'Архівувати' : 'Archive Recipe'),
+                    ? widget.ref.t('restore_from_archive')
+                    : widget.ref.t('archive_recipe'),
                 style: const TextStyle(color: Colors.white),
               ),
               onTap: () async {
@@ -420,7 +418,7 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
             ),
             ListTile(
               leading: const Icon(Icons.edit_rounded, color: Colors.white70),
-              title: Text(isUk ? 'Редагувати' : 'Edit Recipe', style: const TextStyle(color: Colors.white)),
+              title: Text(widget.ref.t('edit_recipe'), style: const TextStyle(color: Colors.white)),
               onTap: () {
                 Navigator.pop(context);
                 _editRecipe(context);
@@ -428,7 +426,7 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
             ),
             ListTile(
               leading: const Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
-              title: Text(isUk ? 'Видалити' : 'Delete Recipe', style: const TextStyle(color: Colors.redAccent)),
+              title: Text(widget.ref.t('delete_recipe'), style: const TextStyle(color: Colors.redAccent)),
               onTap: () {
                 Navigator.pop(context);
                 _showModernUndo(context);
@@ -457,7 +455,7 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
   void _showModernUndo(BuildContext context) {
     ModernUndoTimer.show(
       context,
-      message: 'Рецепт видалено',
+      message: widget.ref.t('recipe_deleted'),
       onUndo: () {
         // Just cancel
       },

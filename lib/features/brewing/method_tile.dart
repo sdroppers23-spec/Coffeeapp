@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/database/dtos.dart';
 import '../../shared/widgets/glass_container.dart';
+import '../../core/l10n/app_localizations.dart';
 import 'brewing_detail_screen.dart';
 import 'method_recipes_screen.dart';
 import '../navigation/navigation_providers.dart';
@@ -220,11 +221,12 @@ class _RecipeCountChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final label = count == 1
-        ? '1 рецепт'
-        : count < 5
-            ? '$count рецепти'
-            : '$count рецептів';
+    final String pluralKey = count == 1
+        ? 'recipe_1'
+        : (count >= 2 && count <= 4)
+            ? 'recipe_2_4'
+            : 'recipe_5_plus';
+    final label = '$count ${context.t(pluralKey)}';
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),

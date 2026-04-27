@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../shared/widgets/user_profile_avatar.dart';
 import '../../core/providers/settings_provider.dart';
+import '../../core/l10n/app_localizations.dart';
 import 'lots/widgets/my_lots_content.dart';
 import './discovery_tab_order.dart';
 import '../encyclopedia/encyclopedia_screen.dart';
@@ -68,15 +69,15 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
   String _getTabLabel(DiscoverTabType type) {
     switch (type) {
       case DiscoverTabType.myLots:
-        return 'Мої лоти';
+        return ref.t('tab_my_lots');
       case DiscoverTabType.history:
-        return 'Історія Спешелті';
+        return ref.t('tab_history');
       case DiscoverTabType.farmers:
-        return 'Фермери';
+        return ref.t('tab_farmers');
       case DiscoverTabType.roasters:
-        return 'Мої обсмажчики';
+        return ref.t('tab_roasters');
       case DiscoverTabType.encyclopedia:
-        return 'Енциклопедія';
+        return ref.t('tab_encyclopedia');
     }
   }
 
@@ -117,7 +118,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          'Відкриття',
+                          ref.t('discover'),
                           style: GoogleFonts.poppins(
                             fontWeight: FontWeight.bold,
                             fontSize: 22,
@@ -234,7 +235,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
       default:
         return Center(
           child: Text(
-            'Контент розділу $tabId',
+            ref.t('section_content_placeholder', args: {'tabId': tabId}),
             style: GoogleFonts.poppins(color: Colors.white24),
           ),
         );

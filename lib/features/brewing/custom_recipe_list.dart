@@ -64,6 +64,7 @@ class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
     setState(() {
       if (_selectedIds.contains(id)) {
         _selectedIds.remove(id);
+        if (_selectedIds.isEmpty) _isSelectionMode = false;
       } else {
         _selectedIds.add(id);
       }
@@ -74,26 +75,35 @@ class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
     setState(() {
       if (_selectedIds.length == recipes.length) {
         _selectedIds.clear();
+        _isSelectionMode = false;
       } else {
         _selectedIds.addAll(recipes.map((r) => r.id));
+        _isSelectionMode = true;
       }
     });
   }
 
   Future<void> _deleteSelected() async {
-    final isUk = LocaleService.currentLocale == 'uk';
+    final count = _selectedIds.length;
     final idsToDelete = List<String>.from(_selectedIds);
-    final count = idsToDelete.length;
-
+    
     setState(() {
       _isSelectionMode = false;
       _selectedIds.clear();
     });
 
+    final String deleteKey = count == 1
+        ? 'deleted_1'
+        : (count >= 2 && count <= 4)
+            ? 'deleted_2_4'
+            : 'deleted_5_plus';
+            
     ModernUndoTimer.show(
       context,
-      message: isUk ? 'Видалено $count рецептів' : 'Deleted $count recipes',
-      onUndo: () {},
+      message: ref.t(deleteKey, args: {'count': count.toString()}),
+      onUndo: () {
+        // Implement undo if needed, but for now we just show the message
+      },
       onDismiss: () async {
         final db = ref.read(databaseProvider);
         for (final id in idsToDelete) {
@@ -107,7 +117,6 @@ class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
 
   @override
   Widget build(BuildContext context) {
-    final isUk = LocaleService.currentLocale == 'uk';
     final recipesAsync = ref.watch(customRecipesForMethodProvider(widget.methodKey));
 
     return recipesAsync.when(
@@ -123,16 +132,14 @@ class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
       data: (recipes) {
         if (recipes.isEmpty) {
           return Center(
-            child: isUk 
-              ? const Text('Рецепти не знайдено', style: TextStyle(color: Colors.white70)) 
-              : const Text('No recipes found', style: TextStyle(color: Colors.white70)),
+            child: Text(ref.t('no_recipes_found'), style: const TextStyle(color: Colors.white70)),
           );
         }
 
         return Stack(
           children: [
             ListView.separated(
-              padding: EdgeInsets.fromLTRB(16, _isSelectionMode ? 100 : 16, 16, 120),
+              padding: EdgeInsets.fromLTRB(16, _isSelectionMode ? 16 : 16, 16, 120),
               itemCount: recipes.length,
               separatorBuilder: (_, _) => const SizedBox(height: 16),
               itemBuilder: (context, i) => CustomRecipeCard(
@@ -141,7 +148,11 @@ class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
                 ref: ref,
                 isSelectionMode: _isSelectionMode,
                 isSelected: _selectedIds.contains(recipes[i].id),
-                onTap: () => _toggleSelection(recipes[i].id),
+                onTap: () {
+                  if (_isSelectionMode) {
+                    _toggleSelection(recipes[i].id);
+                  }
+                },
                 onLongPress: () {
                   if (!_isSelectionMode) {
                     setState(() {
@@ -180,7 +191,7 @@ class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
                           children: [
                             Expanded(
                               child: Text(
-                                '${_selectedIds.length} ${isUk ? 'вибрано' : 'selected'}',
+                                '${_selectedIds.length} ${ref.t('selected')}',
                                 style: GoogleFonts.outfit(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -248,29 +259,35 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
   void _selectAll(List<CustomRecipeDto> recipes) {
     final current = ref.read(brewingSelectedIdsProvider);
     final allIds = recipes.map((r) => r.id).toSet();
-    setState(() {
-      if (current.length == allIds.length) {
-        ref.read(brewingSelectedIdsProvider.notifier).updateState({});
-      } else {
-        ref.read(brewingSelectedIdsProvider.notifier).updateState(allIds);
-      }
-    });
+    
+    if (current.length == allIds.length) {
+      ref.read(brewingSelectedIdsProvider.notifier).updateState({});
+      setState(() => _isSelectionMode = false);
+    } else {
+      ref.read(brewingSelectedIdsProvider.notifier).updateState(allIds);
+      setState(() => _isSelectionMode = true);
+    }
   }
 
   Future<void> _deleteSelectedBatch() async {
-    final isUk = LocaleService.currentLocale == 'uk';
     final selectedIds = ref.read(brewingSelectedIdsProvider);
+    final count = selectedIds.length;
     final idsToDelete = List<String>.from(selectedIds);
-    final count = idsToDelete.length;
 
     setState(() {
       _isSelectionMode = false;
       ref.read(brewingSelectedIdsProvider.notifier).updateState({});
     });
 
+    final String deleteKey = count == 1
+        ? 'deleted_1'
+        : (count >= 2 && count <= 4)
+            ? 'deleted_2_4'
+            : 'deleted_5_plus';
+
     ModernUndoTimer.show(
       context,
-      message: isUk ? 'Видалено $count рецептів' : 'Deleted $count recipes',
+      message: ref.t(deleteKey, args: {'count': count.toString()}),
       onUndo: () {},
       onDismiss: () async {
         final db = ref.read(databaseProvider);
@@ -287,7 +304,6 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
     final recipesAsync = ref.watch(globalCustomRecipesProvider);
     final filterState = ref.watch(brewingFilterProvider);
     final selectedIds = ref.watch(brewingSelectedIdsProvider);
-    final isUk = LocaleService.currentLocale == 'uk';
 
     return recipesAsync.when(
       loading: () => const Center(
@@ -350,7 +366,7 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
               Expanded(
                 child: Center(
                   child: Text(
-                    isUk ? 'Рецепти не знайдено' : 'No recipes found',
+                    ref.t('no_recipes_found'),
                     style: const TextStyle(color: Colors.white70),
                   ),
                 ),
@@ -394,7 +410,7 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
                     onChanged: (val) => ref.read(brewingFilterProvider.notifier).updateSearch(val),
                     style: GoogleFonts.outfit(color: Colors.white),
                     decoration: InputDecoration(
-                      hintText: isUk ? 'Пошук рецептів...' : 'Search recipes...',
+                      hintText: ref.t('search_recipes'),
                       hintStyle: GoogleFonts.outfit(color: Colors.white38),
                       prefixIcon: const Icon(Icons.search_rounded, color: Color(0xFFC8A96E)),
                       border: InputBorder.none,
@@ -439,6 +455,7 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
                             final next = Set<String>.from(selectedIds);
                             if (next.contains(r.id)) {
                               next.remove(r.id);
+                              if (next.isEmpty) setState(() => _isSelectionMode = false);
                             } else {
                               next.add(r.id);
                             }
@@ -471,6 +488,7 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
                             final next = Set<String>.from(selectedIds);
                             if (next.contains(r.id)) {
                               next.remove(r.id);
+                              if (next.isEmpty) setState(() => _isSelectionMode = false);
                             } else {
                               next.add(r.id);
                             }
@@ -486,22 +504,6 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
                       ),
                     )),
                   ],
-                  if (filtered.isEmpty)
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 100),
-                        child: Column(
-                          children: [
-                            Icon(Icons.coffee_rounded, size: 64, color: Colors.white.withValues(alpha: 0.1)),
-                            const SizedBox(height: 16),
-                            Text(
-                              isUk ? 'Рецептів не знайдено' : 'No recipes found',
-                              style: GoogleFonts.outfit(color: Colors.white38),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
                 ],
               ),
               
@@ -533,7 +535,7 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
                             children: [
                               Expanded(
                                 child: Text(
-                                  '${selectedIds.length} ${isUk ? 'вибрано' : 'selected'}',
+                                  '${selectedIds.length} ${ref.t('selected')}',
                                   style: GoogleFonts.outfit(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,

@@ -96,7 +96,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        'Видалити обсмажчика?',
+                        context.t('delete_roaster_title'),
                         style: GoogleFonts.outfit(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -105,7 +105,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        'Видалити "$name" з вашого списку?',
+                        context.t('delete_roaster_confirm', args: {'name': name}),
                         textAlign: TextAlign.center,
                         style: GoogleFonts.outfit(
                             color: Colors.white70, fontSize: 14, height: 1.4),
@@ -124,7 +124,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                                     color: Colors.white.withValues(alpha: 0.1)),
                               ),
                               alignment: Alignment.center,
-                              child: Text('СКАСУВАТИ',
+                              child: Text(context.t('cancel_uppercase'),
                                   style: GoogleFonts.outfit(
                                       color: Colors.white70,
                                       fontWeight: FontWeight.bold,
@@ -147,7 +147,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                                         Colors.redAccent.withValues(alpha: 0.5)),
                               ),
                               alignment: Alignment.center,
-                              child: Text('ВИДАЛИТИ',
+                              child: Text(context.t('delete_uppercase'),
                                   style: GoogleFonts.outfit(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -203,8 +203,8 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
             : null,
         title: Text(
           _isSelectionMode
-              ? _selectionCountText
-              : 'Мої обсмажчики',
+              ? _getSelectionCountText(context)
+              : context.t('tab_roasters'),
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.bold,
             color: const Color(0xFFC8A96E),
@@ -249,7 +249,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
             IconButton(
               onPressed: () async {
                 final confirm =
-                    await _confirmDeleteDialog('${_selectedIds.length} обсмажчиків');
+                    await _confirmDeleteDialog(context.t('selection_roasters_5_plus', args: {'count': _selectedIds.length.toString()}));
                 if (confirm) {
                   final db = ref.read(databaseProvider);
                   for (final id in _selectedIds) {
@@ -313,24 +313,24 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                 labelStyle: GoogleFonts.outfit(
                     fontSize: 13, fontWeight: FontWeight.bold),
                 tabs: [
-                  const Tab(text: 'Усі'),
+                  Tab(text: context.t('tab_all')),
                   Tab(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(Icons.favorite_rounded, size: 14),
-                        SizedBox(width: 4),
-                        Text('Улюблені'),
+                      children: [
+                        const Icon(Icons.favorite_rounded, size: 14),
+                        const SizedBox(width: 4),
+                        Text(context.t('tab_favorites')),
                       ],
                     ),
                   ),
                   Tab(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(Icons.archive_outlined, size: 14),
-                        SizedBox(width: 4),
-                        Text('Архів'),
+                      children: [
+                        const Icon(Icons.archive_outlined, size: 14),
+                        const SizedBox(width: 4),
+                        Text(context.t('tab_archive')),
                       ],
                     ),
                   ),
@@ -341,13 +341,13 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
           // ── List ────────────────────────────────────────────────────────
           Expanded(
             child: brandsAsync.when(
-      loading: () => const Center(
-        child: _PremiumPulsingLoader(
-          message: 'Завантаження обсмажчиків...',
-        ),
-      ),
+              loading: () => Center(
+                child: _PremiumPulsingLoader(
+                  message: context.t('loading_roasters'),
+                ),
+              ),
       error: (e, _) => Center(
-          child: Text('Помилка: $e',
+          child: Text('${context.t('error')}: $e',
               style: const TextStyle(color: Colors.red))),
       data: (brands) {
         final filtered = brands.where((b) {
@@ -405,7 +405,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                                 color: Colors.black87, size: 20),
                             const SizedBox(width: 8),
                             Text(
-                              'ДОДАТИ ОБСМАЖЧИКА',
+                              context.t('add_roaster_uppercase'),
                               style: GoogleFonts.outfit(
                                 fontWeight: FontWeight.w800,
                                 fontSize: 12,
@@ -438,7 +438,6 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
 
   Widget _buildSwipeableBrandCard(LocalizedBrandDto brand) {
     final isArchiveTab = _tabController.index == 2;
-    final isUk = LocaleService.currentLocale == 'uk';
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -447,8 +446,8 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
         leftAction: GlassSwipeAction(
           icon: isArchiveTab ? Icons.unarchive_outlined : Icons.archive_outlined,
           label: isArchiveTab 
-            ? (isUk ? 'Відновити' : 'Restore')
-            : (isUk ? 'Архів' : 'Archive'),
+            ? context.t('restore')
+            : context.t('archive'),
           color: const Color(0xFF3A7BBF),
           onTap: () async {
             final db = ref.read(databaseProvider);
@@ -466,7 +465,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
         ),
         rightAction: GlassSwipeAction(
           icon: Icons.delete_outline_rounded,
-          label: isUk ? 'Видалити' : 'Delete',
+          label: context.t('delete'),
           color: Colors.redAccent,
           onTap: () async {
             final confirmed = await _confirmDeleteDialog(brand.name);
@@ -521,16 +520,16 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
     final isFavoritesTab = _tabController.index == 1;
 
     final String title = isArchiveTab
-        ? 'Архів порожній'
+        ? context.t('empty_archive_title')
         : isFavoritesTab
-            ? 'Жодного улюбленого'
-            : 'Немає обсмажчиків';
+            ? context.t('empty_favorites_title')
+            : context.t('empty_roasters_title');
 
     final String description = isArchiveTab
-        ? 'Заархівовані обсмажчики з\'являться тут'
+        ? context.t('empty_archive_desc')
         : isFavoritesTab
-            ? 'Натисніть ❤️ на картці, щоб додати до улюблених'
-            : 'Додайте своїх улюблених обсмажчиків';
+            ? context.t('empty_favorites_desc')
+            : context.t('empty_roasters_desc');
 
     final IconData icon = isArchiveTab
         ? Icons.archive_outlined
@@ -597,14 +596,17 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
 
   // ─── Selection helpers ─────────────────────────────────────────────────────
 
-  String get _selectionCountText {
+  String _getSelectionCountText(BuildContext context) {
     final count = _selectedIds.length;
-    if (count % 10 == 1 && count % 100 != 11) return 'Обрано $count обсмажчика';
-    if ([2, 3, 4].contains(count % 10) &&
-        ![12, 13, 14].contains(count % 100)) {
-      return 'Обрано $count обсмажчики';
+    final String key;
+    if (count % 10 == 1 && count % 100 != 11) {
+      key = 'selection_roasters_1';
+    } else if ([2, 3, 4].contains(count % 10) && ![12, 13, 14].contains(count % 100)) {
+      key = 'selection_roasters_2_4';
+    } else {
+      key = 'selection_roasters_5_plus';
     }
-    return 'Обрано $count обсмажчиків';
+    return context.t(key, args: {'count': count.toString()});
   }
 
   // ─── Add Dialog ───────────────────────────────────────────────────────────
@@ -624,7 +626,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
         backgroundColor: const Color(0xFF151515),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: Text(
-          'Додати обсмажчика',
+          context.t('add_roaster_title'),
           style: GoogleFonts.poppins(
               color: const Color(0xFFC8A96E), fontWeight: FontWeight.bold),
         ),
@@ -632,19 +634,19 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
           mainAxisSize: MainAxisSize.min,
           children: [
             _buildDialogField(
-                nameController, 'Назва обсмажчика', Icons.business_rounded),
+                nameController, context.t('roaster_name_label'), Icons.business_rounded),
             const SizedBox(height: 12),
             _buildDialogField(
-                locationController, 'Місто / країна', Icons.location_on_rounded),
+                locationController, context.t('city_country_label'), Icons.location_on_rounded),
             const SizedBox(height: 12),
-            _buildDialogField(shortDescController, 'Короткий опис',
+            _buildDialogField(shortDescController, context.t('short_desc_label'),
                 Icons.description_rounded),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Скасувати',
+            child: Text(context.t('cancel'),
                 style: GoogleFonts.poppins(color: Colors.white38)),
           ),
           TextButton(
@@ -662,7 +664,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
               }
             },
             child: Text(
-              'Зберегти',
+              context.t('save'),
               style: GoogleFonts.poppins(
                   color: const Color(0xFFC8A96E),
                   fontWeight: FontWeight.bold),

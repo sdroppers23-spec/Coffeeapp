@@ -157,18 +157,17 @@ class EncyclopediaLotGridCard extends ConsumerWidget {
             const SizedBox(height: 12),
             // Sensory Bars
             Builder(builder: (context) {
-              final isUk = LocaleService.currentLocale == 'uk';
               final theme = Theme.of(context);
               final mappedSensory = SensoryUtils.map4To6Axis(entry.sensoryPoints);
               
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CompactSensoryBar(label: isUk ? 'ГІРКОТА' : 'BITTERNESS', value: (mappedSensory['bitterness'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
+                  CompactSensoryBar(label: ref.t('bitterness').toUpperCase(), value: (mappedSensory['bitterness'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
                   const SizedBox(height: 6),
-                  CompactSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
+                  CompactSensoryBar(label: ref.t('acidity').toUpperCase(), value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
                   const SizedBox(height: 6),
-                  CompactSensoryBar(label: isUk ? 'СОЛОДКІСТЬ' : 'SWEETNESS', value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
+                  CompactSensoryBar(label: ref.t('sweetness').toUpperCase(), value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
                 ],
               );
             }),
@@ -339,16 +338,15 @@ class EncyclopediaLotListCard extends ConsumerWidget {
                     const SizedBox(height: 12),
                     // Sensory Bars
                     Builder(builder: (context) {
-                      final isUk = LocaleService.currentLocale == 'uk';
                       final theme = Theme.of(context);
                       final mappedSensory = SensoryUtils.map4To6Axis(entry.sensoryPoints);
                       
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          CompactSensoryBar(label: isUk ? 'ГІРКОТА' : 'BITTERNESS', value: (mappedSensory['bitterness'] ?? 3).toDouble(), theme: theme),
-                          CompactSensoryBar(label: isUk ? 'КИСЛОТНІСТЬ' : 'ACIDITY', value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme),
-                          CompactSensoryBar(label: isUk ? 'СОЛОДКІСТЬ' : 'SWEETNESS', value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme),
+                          CompactSensoryBar(label: ref.t('bitterness').toUpperCase(), value: (mappedSensory['bitterness'] ?? 3).toDouble(), theme: theme),
+                          CompactSensoryBar(label: ref.t('acidity').toUpperCase(), value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme),
+                          CompactSensoryBar(label: ref.t('sweetness').toUpperCase(), value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme),
                         ],
                       );
                     }),

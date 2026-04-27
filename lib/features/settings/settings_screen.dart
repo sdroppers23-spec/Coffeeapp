@@ -43,7 +43,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+          SnackBar(content: Text(ref.t('sign_out_error', args: {'error': e.toString()})), backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -54,7 +54,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isUk = ref.watch(localeProvider) == 'uk';
     final prefs = ref.watch(preferencesProvider);
 
     return Scaffold(
@@ -154,8 +153,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         const Spacer(),
                         Text(
                           ref.watch(localeProvider) == 'uk'
-                              ? 'Українська'
-                              : 'English',
+                              ? ref.t('ukrainian')
+                              : ref.t('english'),
                           style: GoogleFonts.outfit(
                             fontSize: 14,
                             color: Colors.white38,
@@ -252,8 +251,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       icon: Icons.straighten_rounded,
                       title: ref.t('distance'),
                       value: prefs.lengthUnit == LengthUnit.feet,
-                      offLabel: isUk ? 'М' : 'M',
-                      onLabel: isUk ? 'Ф' : 'FT',
+                      offLabel: ref.t('meters_short'),
+                      onLabel: ref.t('feet_short'),
                       onChanged: (val) {
                         ref
                             .read(preferencesProvider.notifier)

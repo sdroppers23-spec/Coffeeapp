@@ -253,7 +253,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                                           ),
                                         ),
                                         child: Text(
-                                          'COMING SOON',
+                                          ref.t('coming_soon'),
                                           style: GoogleFonts.outfit(
                                             fontSize: 28,
                                             fontWeight: FontWeight.w900,
@@ -264,7 +264,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                                       ),
                                       const SizedBox(height: 16),
                                       Text(
-                                        'Interactive Terroir Globe',
+                                        ref.t('terroir_globe_desc'),
                                         style: GoogleFonts.outfit(
                                           fontSize: 16,
                                           color: Colors.white70,
@@ -449,7 +449,7 @@ class _FlavorInfoCard extends ConsumerWidget {
           Row(
             children: [
               Text(
-                'RELATED:',
+                ref.t('related'),
                 style: GoogleFonts.poppins(
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
@@ -580,7 +580,7 @@ class _InteractiveSpiderChartState
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _TemplateChip(ref.t('process_washed_label'), 'Clean & Bright', {
+              _TemplateChip(ref.t('process_washed_label'), ref.t('clean_bright'), {
                 'bitterness': 0.2,
                 'acidity': 0.9,
                 'sweetness': 0.4,
@@ -588,7 +588,7 @@ class _InteractiveSpiderChartState
                 'intensity': 0.4,
                 'aftertaste': 0.7,
               }),
-              _TemplateChip(ref.t('process_natural_label'), 'Fruity & Sweet', {
+              _TemplateChip(ref.t('process_natural_label'), ref.t('fruity_sweet'), {
                 'bitterness': 0.4,
                 'acidity': 0.4,
                 'sweetness': 0.9,
@@ -596,7 +596,7 @@ class _InteractiveSpiderChartState
                 'intensity': 0.8,
                 'aftertaste': 0.7,
               }),
-              _TemplateChip(ref.t('process_honey_label'), 'Sticky & Balanced', {
+              _TemplateChip(ref.t('process_honey_label'), ref.t('sticky_balanced'), {
                 'bitterness': 0.3,
                 'acidity': 0.6,
                 'sweetness': 0.8,

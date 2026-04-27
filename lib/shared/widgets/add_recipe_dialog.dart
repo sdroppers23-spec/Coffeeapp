@@ -220,13 +220,10 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
   }
 
   Future<void> _save() async {
-    final isUk = LocaleService.currentLocale == 'uk';
     if (!_formKey.currentState!.validate()) {
       ToastService.showError(
         context,
-        isUk
-            ? 'Будь ласка, заповніть обов’язкові поля'
-            : 'Please fill in required fields',
+        ref.t('fill_required_fields'),
       );
       return;
     }
@@ -244,7 +241,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
       methodKey: _method,
       name: () {
         String name = _nameController.text.trim();
-        if (name.isEmpty) name = isUk ? 'Рецепт' : 'Recipe';
+        if (name.isEmpty) name = ref.t('recipes'); // Using existing 'recipes' for generic name
         final methodSuffix = '(${_method.toUpperCase()})';
         if (!name.contains(methodSuffix)) {
           return '$name $methodSuffix';
@@ -312,7 +309,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
       debugPrint('RecipeDialog: Local save successful');
       
       if (!mounted) return;
-      ToastService.showSuccess(context, isUk ? 'Рецепт збережено' : 'Recipe saved');
+      ToastService.showSuccess(context, ref.t('toast_recipe_saved'));
       Navigator.pop(context, true);
 
       // Attempt cloud sync if logged in
@@ -353,7 +350,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
       if (!mounted) return;
       ToastService.showError(
         context,
-        isUk ? 'Помилка збереження локально' : 'Error saving locally',
+        ref.t('error_saving_local'),
       );
     }
   }
@@ -372,7 +369,6 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
   @override
   Widget build(BuildContext context) {
     final gold = const Color(0xFFC8A96E);
-    final isUk = LocaleService.currentLocale == 'uk';
     final pref = ref.watch(preferencesProvider);
 
     return Dialog(
@@ -411,7 +407,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                       onPressed: () => Navigator.pop(context),
                     ),
                     Text(
-                      isUk ? 'Новий рецепт' : 'New Recipe',
+                      ref.t('new_recipe'),
                       style: GoogleFonts.outfit(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -421,7 +417,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                     TextButton(
                       onPressed: _save,
                       child: Text(
-                        isUk ? 'Зберегти' : 'Save',
+                        ref.t('save'),
                         style: GoogleFonts.outfit(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -442,17 +438,17 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // SECTION: Загальне
-                        _buildSectionHeader(isUk ? 'Загальне' : 'General'),
+                        _buildSectionHeader(ref.t('general')),
                         const SizedBox(height: 20),
                         _buildTextField(
                           controller: _nameController,
-                          hint: isUk ? 'Назва рецепту' : 'Recipe Name',
+                          hint: ref.t('recipe_name'),
                         ),
                         const SizedBox(height: 20),
                         Row(
                           children: [
                             Text(
-                              isUk ? 'Рейтинг:  ' : 'Rating:  ',
+                              ref.t('rating_label'),
                               style: GoogleFonts.outfit(
                                 color: Colors.white70,
                                 fontSize: 16,
@@ -480,49 +476,45 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                         // SECTION: Кава та вода (Dynamic based on Type)
                         _buildSectionHeader(
                           _recipeType == 'filter'
-                              ? (isUk ? 'Кава та вода' : 'Coffee & Water')
-                              : (isUk
-                                    ? 'Параметри еспресо'
-                                    : 'Espresso Parameters'),
+                                ? ref.t('coffee_and_water')
+                                : ref.t('espresso_parameters'),
                         ),
                         const SizedBox(height: 20),
                         // SECTION: Method Params
                         if (_recipeType == 'filter')
-                          _buildFilterParams(isUk, pref)
+                          _buildFilterParams(ref, pref)
                         else
-                          _buildEspressoParams(isUk, pref),
+                          _buildEspressoParams(ref, pref),
 
                         const SizedBox(height: 32),
 
                         // SECTION: Grinder Settings
                         _buildSectionHeader(
-                          isUk ? 'Налаштування помелу' : 'Grinder Settings',
+                          ref.t('grinder_settings'),
                         ),
                         const SizedBox(height: 20),
-                        _buildGrinderSection(isUk, gold),
+                        _buildGrinderSection(ref, gold),
                         const SizedBox(height: 32),
 
                         // SECTION: Dynamic (Pour Schedule for Filter)
                         if (_recipeType == 'filter') ...[
                           _buildSectionHeader(
-                            isUk ? 'Графік вливань' : 'Pour Schedule',
+                            ref.t('pour_schedule'),
                           ),
                           const SizedBox(height: 12),
                           if (_recipeType != 'espresso') ...[
-                            _buildPourSchedule(isUk, gold),
+                            _buildPourSchedule(ref, gold),
                             const SizedBox(height: 24),
                           ],
                         ],
 
                         // SECTION: Notes
-                        _buildSectionHeader(isUk ? 'Примітки' : 'Notes'),
+                        _buildSectionHeader(ref.t('notes_hint')),
                         const SizedBox(height: 20),
                         _buildTextField(
                           controller: _notesController,
-                          label: isUk ? 'Примітки' : 'Notes',
-                          hint: isUk
-                              ? 'Ваші нотатки тут...'
-                              : 'Your notes here...',
+                          label: ref.t('notes_hint'),
+                          hint: ref.t('notes_placeholder'),
                           maxLines: 4,
                         ),
                         const SizedBox(height: 32),
@@ -537,7 +529,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                                   ),
                                 ),
                                 child: Text(
-                                  isUk ? 'Скасувати' : 'Cancel',
+                                  ref.t('cancel'),
                                   style: GoogleFonts.outfit(
                                     color: Colors.white38,
                                   ),
@@ -559,7 +551,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                                   ),
                                 ),
                                 child: Text(
-                                  isUk ? 'Зберегти' : 'Save',
+                                  ref.t('save'),
                                   style: GoogleFonts.outfit(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -683,7 +675,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
     );
   }
 
-  Widget _buildFilterParams(bool isUk, UserPreferences pref) {
+  Widget _buildFilterParams(WidgetRef ref, UserPreferences pref) {
     return Column(
       children: [
         Row(
@@ -691,7 +683,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             Expanded(
               child: _buildTextField(
                 controller: _coffeeController,
-                label: isUk ? 'Кава (g)' : 'Coffee (g)',
+                label: ref.t('coffee_g'),
                 hint: '15.0',
                 keyboardType: TextInputType.number,
                 maxLength: 5,
@@ -701,7 +693,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             Expanded(
               child: _buildTextField(
                 controller: _waterController,
-                label: isUk ? 'Вода (ml)' : 'Water (ml)',
+                label: ref.t('water_ml'),
                 hint: '250.0',
                 keyboardType: TextInputType.number,
                 maxLength: 5,
@@ -715,7 +707,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             Expanded(
               child: _buildTextField(
                 controller: _extractionTimeController,
-                label: isUk ? 'Час екстракції (хв:сек)' : 'Extraction Time (mm:ss)',
+                label: ref.t('extraction_time_hint'),
                 hint: '00:30',
                 keyboardType: TextInputType.number,
                 inputFormatters: [
@@ -728,9 +720,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             Expanded(
               child: _buildTextField(
                 controller: _tempController,
-                label: isUk
-                    ? 'Температура (${pref.tempUnit == TempUnit.celsius ? '°C' : '°F'})'
-                    : 'Brew Temp (${pref.tempUnit == TempUnit.celsius ? '°C' : '°F'})',
+                label: '${ref.t('brew_temp')} (${pref.tempUnit == TempUnit.celsius ? '°C' : '°F'})',
                 hint: pref.tempUnit == TempUnit.celsius ? '93.0' : '199.4',
                 keyboardType: TextInputType.number,
                 maxLength: 5,
@@ -741,7 +731,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
         const SizedBox(height: 12),
         _buildTextField(
           controller: _ratioController,
-          label: isUk ? 'Співвідношення кави до води' : 'Brew Ratio',
+          label: ref.t('ratio'),
           hint: '1:16.7',
           readOnly: true,
         ),
@@ -749,7 +739,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
     );
   }
 
-  Widget _buildEspressoParams(bool isUk, UserPreferences pref) {
+  Widget _buildEspressoParams(WidgetRef ref, UserPreferences pref) {
     return Column(
       children: [
         Row(
@@ -757,7 +747,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             Expanded(
               child: _buildTextField(
                 controller: _coffeeController,
-                label: isUk ? 'Кава (g)' : 'Coffee (g)',
+                label: ref.t('coffee_g'),
                 hint: '18.0',
                 keyboardType: TextInputType.number,
                 maxLength: 5,
@@ -767,7 +757,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             Expanded(
               child: _buildTextField(
                 controller: _waterController,
-                label: isUk ? 'Вихід (g)' : 'Yield (g)',
+                label: ref.t('yield_g'),
                 hint: '36.0',
                 keyboardType: TextInputType.number,
                 maxLength: 5,
@@ -780,7 +770,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             Expanded(
               child: _buildTextField(
                 controller: _extractionTimeController,
-                label: isUk ? 'Час екстракції (хв:сек)' : 'Extraction Time (mm:ss)',
+                label: ref.t('extraction_time_hint'),
                 hint: '00:30',
                 keyboardType: TextInputType.number,
                 inputFormatters: [
@@ -793,9 +783,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             Expanded(
               child: _buildTextField(
                 controller: _tempController,
-                label: isUk
-                    ? 'Температура (${pref.tempUnit == TempUnit.celsius ? '°C' : '°F'})'
-                    : 'Brew Temp (${pref.tempUnit == TempUnit.celsius ? '°C' : '°F'})',
+                label: '${ref.t('brew_temp')} (${pref.tempUnit == TempUnit.celsius ? '°C' : '°F'})',
                 hint: pref.tempUnit == TempUnit.celsius ? '93.0' : '199.4',
                 keyboardType: TextInputType.number,
                 maxLength: 5,
@@ -806,7 +794,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
         const SizedBox(height: 12),
         _buildTextField(
           controller: _ratioController,
-          label: isUk ? 'Співвідношення кави до води' : 'Brew Ratio',
+          label: ref.t('ratio'),
           hint: '1:2.0',
           readOnly: true,
         ),
@@ -814,7 +802,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
     );
   }
 
-  Widget _buildGrinderSection(bool isUk, Color gold) {
+  Widget _buildGrinderSection(WidgetRef ref, Color gold) {
     if (!_isGrinderExpanded && _grinderNameController.text.isEmpty) {
       return Center(
         child: Padding(
@@ -823,7 +811,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             onPressed: () => setState(() => _isGrinderExpanded = true),
             icon: Icon(Icons.tune_rounded, color: gold, size: 20),
             label: Text(
-              isUk ? 'Оберіть кавомолку' : 'Choose Grinder',
+              ref.t('choose_grinder'),
               style: GoogleFonts.outfit(
                 color: gold,
                 fontWeight: FontWeight.bold,
@@ -849,7 +837,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
           onPressed: () => setState(() => _isGrinderExpanded = true),
           icon: Icon(Icons.settings_input_component_rounded, color: gold, size: 20),
           label: Text(
-            isUk ? 'Оберіть кавомолку' : 'Choose coffee grinder',
+            ref.t('choose_grinder'),
             style: GoogleFonts.outfit(
               color: gold,
               fontWeight: FontWeight.bold,
@@ -875,7 +863,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              isUk ? 'Модель кавомолки' : 'Grinder Model',
+              ref.t('grinder_model'),
               style: GoogleFonts.outfit(color: Colors.white38, fontSize: 11),
             ),
             GestureDetector(
@@ -909,7 +897,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                       : 'Other')
                   : null,
           hint: Text(
-            isUk ? 'Оберіть зі списку...' : 'Select from list...',
+            ref.t('select_from_list'),
             style: GoogleFonts.outfit(color: Colors.white24, fontSize: 14),
           ),
           dropdownColor: const Color(0xFF1D1B1A),
@@ -931,7 +919,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                   .map(
                     (e) => DropdownMenuItem(
                       value: e,
-                      child: Text(e == 'Other' && isUk ? 'Інше' : e),
+                      child: Text(e == 'Other' ? ref.t('other') : e),
                     ),
                   )
                   .toList(),
@@ -946,20 +934,20 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
           const SizedBox(height: 12),
           _buildTextField(
             controller: _customGrinderController,
-            label: isUk ? 'Введіть назву кавомолки' : 'Enter grinder name',
-            hint: isUk ? 'Назва кавомолки' : 'Grinder name',
+            label: ref.t('enter_grinder_name'),
+            hint: ref.t('grinder_name_label'),
             validator:
                 (val) =>
                     val == null || val.isEmpty
-                        ? (isUk ? 'Обов’язково' : 'Required')
+                        ? ref.t('required')
                         : null,
           ),
         ],
         const SizedBox(height: 12),
         _buildTextField(
           controller: _grindController,
-          label: isUk ? 'Помел' : 'Grind',
-          hint: isUk ? 'Налаштування помелу' : 'Grind setting',
+          label: ref.t('grind'),
+          hint: ref.t('grind_setting'),
           keyboardType: TextInputType.number,
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
@@ -968,8 +956,8 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
         const SizedBox(height: 12),
         _buildTextField(
           controller: _micronsController,
-          label: isUk ? 'Мікрони (µm)' : 'Microns (µm)',
-          hint: isUk ? 'Мікрони (µm)' : 'Microns (µm)',
+          label: ref.t('microns_label'),
+          hint: ref.t('microns_label'),
           keyboardType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         ),
@@ -978,14 +966,14 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
   }
 
 
-  Widget _buildPourSchedule(bool isUk, Color gold) {
+  Widget _buildPourSchedule(WidgetRef ref, Color gold) {
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              isUk ? 'Графік вливань' : 'Pour Schedule',
+              ref.t('pour_schedule_label'),
               style: GoogleFonts.outfit(
                 color: gold,
                 fontWeight: FontWeight.bold,
@@ -995,7 +983,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             Row(
               children: [
                 Text(
-                  isUk ? 'Кількість:' : 'Pours:',
+                  ref.t('pours_count'),
                   style: GoogleFonts.outfit(
                     color: Colors.white38,
                     fontSize: 12,
@@ -1040,13 +1028,13 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
         ),
         const SizedBox(height: 12),
         ...List.generate(_pourControllers.length, (index) {
-          return _buildPourItem(index, isUk, gold);
+          return _buildPourItem(index, ref, gold);
         }),
       ],
     );
   }
 
-  Widget _buildPourItem(int index, bool isUk, Color gold) {
+  Widget _buildPourItem(int index, WidgetRef ref, Color gold) {
     final pc = _pourControllers[index];
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -1060,7 +1048,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            isUk ? 'Вливання #${index + 1}' : 'Pour #${index + 1}',
+            ref.t('pour_num', args: {'num': (index + 1).toString()}),
             style: GoogleFonts.outfit(
               color: gold,
               fontWeight: FontWeight.bold,
@@ -1075,7 +1063,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
               Expanded(
                 flex: 3,
                 child: _buildSmallTextFieldWithLabel(
-                  label: isUk ? 'Вода (g)' : 'Water (g)',
+                  label: ref.t('water_g'),
                   controller: pc.water,
                   hint: '0',
                   maxLength: 5,
@@ -1083,7 +1071,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
               ),
               const SizedBox(width: 8),
               _buildTimeField(
-                label: isUk ? 'Хв' : 'Min',
+                label: ref.t('min_label'),
                 controller: pc.min,
                 focusNode: _minFocusNodes[index],
                 onChanged: (val) {
@@ -1108,7 +1096,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
               ),
               const SizedBox(width: 8),
               _buildTimeField(
-                label: isUk ? 'Сек' : 'Sec',
+                label: ref.t('sec_label'),
                 controller: pc.sec,
                 focusNode: _secFocusNodes[index],
                 onChanged: (val) {
@@ -1127,7 +1115,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
               Expanded(
                 flex: 4,
                 child: _buildSmallTextFieldWithLabel(
-                  label: isUk ? 'Тривалість' : 'Duration',
+                  label: ref.t('duration_label'),
                   controller: pc.duration,
                   focusNode: _durFocusNodes[index],
                   hint: '00:00:00',
@@ -1141,9 +1129,9 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
           ),
           const SizedBox(height: 12),
           _buildSmallTextFieldWithLabel(
-            label: isUk ? 'Примітки' : 'Notes',
+            label: ref.t('notes_label'),
             controller: pc.notes,
-            hint: isUk ? 'Примітки (опціонально)' : 'Notes (optional)',
+            hint: ref.t('notes_optional'),
             isNumber: false,
           ),
         ],

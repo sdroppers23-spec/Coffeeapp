@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../core/l10n/app_localizations.dart';
 import '../navigation/navigation_providers.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
@@ -45,7 +46,7 @@ class _BrewingGuideScreenState extends ConsumerState<BrewingGuideScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          'Brewing Methods',
+          context.t('brewing_methods'),
           style: GoogleFonts.cormorantGaramond(
             fontSize: 28,
             fontWeight: FontWeight.bold,
@@ -58,15 +59,15 @@ class _BrewingGuideScreenState extends ConsumerState<BrewingGuideScreen> {
         error: (e, _) => Center(child: Text('Error: $e')),
         data: (recipes) {
           if (recipes.isEmpty) {
-            return const Center(
+            return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(color: Color(0xFFD4A574)),
-                  SizedBox(height: 16),
+                  const CircularProgressIndicator(color: Color(0xFFD4A574)),
+                  const SizedBox(height: 16),
                   Text(
-                    'Setting up equipment...',
-                    style: TextStyle(color: Colors.white54),
+                    context.t('setting_up_equipment'),
+                    style: const TextStyle(color: Colors.white54),
                   ),
                 ],
               ),

@@ -18,7 +18,7 @@ subprojects {
 subprojects {
     project.evaluationDependsOn(":app")
     tasks.whenTaskAdded {
-        if (name.contains("generateDebugUnitTestConfig") || name.contains("generateReleaseUnitTestConfig")) {
+        if (name.contains("UnitTest", ignoreCase = true)) {
             enabled = false
         }
     }

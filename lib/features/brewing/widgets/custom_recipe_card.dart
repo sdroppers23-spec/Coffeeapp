@@ -16,7 +16,7 @@ import '../../../shared/widgets/pressable_scale.dart';
 import '../../../shared/widgets/modern_undo_timer.dart';
 import '../../../core/l10n/app_localizations.dart';
 
-class CustomRecipeCard extends StatelessWidget {
+class CustomRecipeCard extends StatefulWidget {
   final CustomRecipeDto recipe;
   final String methodKey;
   final WidgetRef ref;
@@ -24,7 +24,7 @@ class CustomRecipeCard extends StatelessWidget {
   final bool isSelected;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
-  
+
   const CustomRecipeCard({
     super.key,
     required this.recipe,
@@ -36,9 +36,16 @@ class CustomRecipeCard extends StatelessWidget {
     this.onLongPress,
   });
 
+  @override
+  State<CustomRecipeCard> createState() => _CustomRecipeCardState();
+}
+
+class _CustomRecipeCardState extends State<CustomRecipeCard> {
+  bool _isExpanded = false;
+
   List<Map<String, dynamic>> get _pours {
     try {
-      return (jsonDecode(recipe.pourScheduleJson) as List)
+      return (jsonDecode(widget.recipe.pourScheduleJson) as List)
           .cast<Map<String, dynamic>>();
     } catch (_) {
       return [];
@@ -55,20 +62,15 @@ class CustomRecipeCard extends StatelessWidget {
         if (!kIsWeb && !Platform.isWindows) {
           Vibration.vibrate(duration: 50, amplitude: 128);
         }
-        onLongPress?.call();
+        widget.onLongPress?.call();
       },
-      onTap: isSelectionMode ? onTap : (onTap ?? () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CustomRecipeTimerScreen(recipe: recipe),
-          ),
-        );
-      }),
+      onTap: widget.isSelectionMode 
+        ? widget.onTap 
+        : () => setState(() => _isExpanded = !_isExpanded),
       child: GlassContainer(
         padding: const EdgeInsets.all(0),
-        opacity: isSelected ? 0.25 : 0.15,
-        borderColor: isSelected 
+        opacity: widget.isSelected ? 0.25 : 0.15,
+        borderColor: widget.isSelected 
           ? const Color(0xFFC8A96E) 
           : Colors.white.withValues(alpha: 0.1),
         child: Column(
@@ -79,12 +81,12 @@ class CustomRecipeCard extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(20, 16, 8, 4),
               child: Row(
                 children: [
-                  if (isSelectionMode) ...[
+                  if (widget.isSelectionMode) ...[
                     Icon(
-                      isSelected 
+                      widget.isSelected 
                         ? Icons.check_circle_rounded 
                         : Icons.radio_button_unchecked_rounded,
-                      color: isSelected ? const Color(0xFFC8A96E) : Colors.white24,
+                      color: widget.isSelected ? const Color(0xFFC8A96E) : Colors.white24,
                       size: 22,
                     ),
                     const SizedBox(width: 12),
@@ -97,7 +99,7 @@ class CustomRecipeCard extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Text(
-                                recipe.name,
+                                widget.recipe.name,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.outfit(
@@ -107,7 +109,7 @@ class CustomRecipeCard extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            if (recipe.isFavorite)
+                            if (widget.recipe.isFavorite)
                               const Padding(
                                 padding: EdgeInsets.only(left: 8),
                                 child: Icon(Icons.favorite_rounded, color: Colors.redAccent, size: 16),
@@ -115,7 +117,7 @@ class CustomRecipeCard extends StatelessWidget {
                           ],
                         ),
                         Text(
-                          '${recipe.methodKey.toUpperCase()} • ${recipe.totalWaterMl.toInt()}ml',
+                          '${widget.recipe.methodKey.toUpperCase()} • ${widget.recipe.totalWaterMl.toInt()}ml',
                           style: GoogleFonts.outfit(
                             fontSize: 11,
                             color: Colors.white38,
@@ -125,10 +127,23 @@ class CustomRecipeCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if (!isSelectionMode)
-                    IconButton(
-                      icon: const Icon(Icons.more_horiz_rounded, color: Colors.white38),
-                      onPressed: () => _showActions(context),
+                  if (!widget.isSelectionMode)
+                    Row(
+                      children: [
+                        AnimatedRotation(
+                          duration: const Duration(milliseconds: 200),
+                          turns: _isExpanded ? 0.5 : 0,
+                          child: Icon(
+                            Icons.expand_more_rounded,
+                            color: _isExpanded ? const Color(0xFFC8A96E) : Colors.white38,
+                            size: 20,
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.more_horiz_rounded, color: Colors.white38),
+                          onPressed: () => _showActions(context),
+                        ),
+                      ],
                     ),
                 ],
               ),
@@ -143,139 +158,325 @@ class CustomRecipeCard extends StatelessWidget {
                 children: [
                   _Tag(
                     Icons.scale_rounded,
-                    '${recipe.coffeeGrams.toStringAsFixed(1)}g',
+                    '${widget.recipe.coffeeGrams.toStringAsFixed(1)}g',
                   ),
                   _Tag(
                     Icons.water_drop_rounded,
-                    '${recipe.totalWaterMl.toStringAsFixed(0)}ml',
+                    '${widget.recipe.totalWaterMl.toStringAsFixed(0)}ml',
                   ),
-                  if (recipe.brewTempC > 0)
+                  if (widget.recipe.brewTempC > 0)
                     _Tag(
                       Icons.thermostat_rounded,
-                      '${recipe.brewTempC.toInt()}°C',
+                      '${widget.recipe.brewTempC.toInt()}°C',
                     ),
-                  if (recipe.brewRatio != null && recipe.brewRatio! > 0)
+                  if (widget.recipe.brewRatio != null && widget.recipe.brewRatio! > 0)
                     _Tag(
                       Icons.balance_rounded,
-                      '1:${recipe.brewRatio!.toStringAsFixed(1)}',
+                      '1:${widget.recipe.brewRatio!.toStringAsFixed(1)}',
                     ),
-                  if (recipe.grinderName != 'Other' && recipe.grinderName != null)
+                  if (widget.recipe.grinderName != 'Other' && widget.recipe.grinderName != null)
                     _Tag(
                       Icons.settings_input_component_rounded,
-                      '${recipe.grinderName}: ${_getGrinderValue()}',
+                      '${widget.recipe.grinderName}: ${_getGrinderValue()}',
                     ),
-                  if (recipe.microns != null && recipe.microns! > 0)
+                  if (widget.recipe.microns != null && widget.recipe.microns! > 0)
                     _Tag(
                       Icons.height_rounded, 
-                      '${recipe.microns}μm',
+                      '${widget.recipe.microns}μm',
                     ),
-                  if (recipe.totalPours > 1 && recipe.recipeType != 'espresso')
-                    _Tag(Icons.opacity_rounded, '${recipe.totalPours} pours'),
+                  if (widget.recipe.totalPours > 1 && widget.recipe.recipeType != 'espresso')
+                    _Tag(Icons.opacity_rounded, '${widget.recipe.totalPours} pours'),
                 ],
               ),
             ),
 
-            if (pours.isNotEmpty) ...[
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Divider(color: Colors.white12, height: 24),
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                child: Row(
-                  children: pours.map<Widget>((pour) {
-                    final n = pour['pourNumber'] ?? '–';
-                    final ml = pour['waterMl'];
-                    final at = pour['atMinute'];
-                    return Container(
-                      margin: const EdgeInsets.only(right: 10),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.05),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.1),
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Pour #$n',
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                              color: const Color(0xFFC8A96E),
+            // Animated Detail Section
+            AnimatedCrossFade(
+              firstChild: const SizedBox(width: double.infinity),
+              secondChild: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (pours.isNotEmpty) ...[
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Divider(color: Colors.white12, height: 24),
+                    ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                      child: Row(
+                        children: pours.map<Widget>((pour) {
+                          final n = pour['pourNumber'] ?? '–';
+                          final ml = pour['waterMl'];
+                          final at = pour['atMinute'];
+                          return Container(
+                            margin: const EdgeInsets.only(right: 10),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 10,
                             ),
-                          ),
-                          const SizedBox(height: 2),
-                          if (ml != null)
-                            Text(
-                              '${ml}ml',
-                              style: const TextStyle(
-                                fontSize: 13,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.05),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.1),
                               ),
                             ),
-                          if (at != null)
-                            Text(
-                              'at ${at}min',
-                              style: const TextStyle(
-                                fontSize: 11,
-                                color: Colors.white38,
-                              ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Pour #$n',
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                    color: const Color(0xFFC8A96E),
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                if (ml != null)
+                                  Text(
+                                    '${ml}ml',
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                if (at != null)
+                                  Text(
+                                    'at ${at}min',
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.white38,
+                                    ),
+                                  ),
+                              ],
                             ),
-                        ],
+                          );
+                        }).toList(),
                       ),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ],
+                    ),
+                  ],
 
-            // Start Button
-            if (pours.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton(
-                    onPressed: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => CustomRecipeTimerScreen(recipe: recipe),
+                  if (widget.recipe.notes.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.03),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Icon(Icons.notes_rounded, size: 14, color: Colors.white38),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                widget.recipe.notes,
+                                style: GoogleFonts.outfit(
+                                  fontSize: 12,
+                                  color: Colors.white70,
+                                  height: 1.4,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFC8A96E),
-                      foregroundColor: Colors.black,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.timer_outlined, size: 20),
-                        const SizedBox(width: 10),
-                        Text(
-                          'START BREWING',
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.0,
+
+                  // Start Button
+                  if (pours.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 48,
+                        child: ElevatedButton(
+                          onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => CustomRecipeTimerScreen(recipe: widget.recipe),
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFC8A96E),
+                            foregroundColor: Colors.black,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.timer_outlined, size: 20),
+                              const SizedBox(width: 10),
+                              Text(
+                                'START BREWING',
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.0,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
+                ],
               ),
+              crossFadeState: _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+              duration: const Duration(milliseconds: 300),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (widget.isSelectionMode) return card;
+
+    return GlassSwipeWrapper(
+      dismissibleKey: Key('glass_swipe_recipe_${widget.recipe.id}'),
+      leftAction: GlassSwipeAction(
+        icon: Icons.edit_outlined,
+        label: isUk ? 'Редагувати' : 'Edit',
+        color: const Color(0xFF2DD4BF),
+        onTap: () => _editRecipe(context),
+      ),
+      rightAction: widget.recipe.isArchived
+          ? GlassSwipeAction(
+              icon: Icons.unarchive_outlined,
+              label: isUk ? 'Відновити' : 'Restore',
+              color: const Color(0xFF3A7BBF),
+              onTap: () async {
+                final db = widget.ref.read(databaseProvider);
+                await db.toggleCustomRecipeArchive(widget.recipe.id, false);
+                widget.ref.invalidate(globalCustomRecipesProvider);
+              },
+            )
+          : GlassSwipeAction(
+              icon: Icons.archive_outlined,
+              label: isUk ? 'Архів' : 'Archive',
+              color: const Color(0xFFF59E0B),
+              onTap: () async {
+                final db = widget.ref.read(databaseProvider);
+                await db.toggleCustomRecipeArchive(widget.recipe.id, true);
+                widget.ref.invalidate(globalCustomRecipesProvider);
+              },
+            ),
+      child: card,
+    );
+  }
+
+  void _showActions(BuildContext context) {
+    final isUk = LocaleService.currentLocale == 'uk';
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => GlassContainer(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        borderRadius: 32,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: Icon(
+                widget.recipe.isFavorite ? Icons.favorite_rounded : Icons.favorite_outline_rounded,
+                color: widget.recipe.isFavorite ? Colors.redAccent : Colors.white70,
+              ),
+              title: Text(
+                widget.recipe.isFavorite 
+                    ? (isUk ? 'Прибрати з обраних' : 'Remove from Favorites')
+                    : (isUk ? 'Додати до обраних' : 'Add to Favorites'),
+                style: const TextStyle(color: Colors.white),
+              ),
+              onTap: () async {
+                Navigator.pop(context);
+                final db = widget.ref.read(databaseProvider);
+                await db.toggleCustomRecipeFavorite(widget.recipe.id, !widget.recipe.isFavorite);
+                widget.ref.invalidate(globalCustomRecipesProvider);
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                widget.recipe.isArchived ? Icons.unarchive_outlined : Icons.archive_outlined,
+                color: Colors.white70,
+              ),
+              title: Text(
+                widget.recipe.isArchived 
+                    ? (isUk ? 'Відновити з архіву' : 'Restore from Archive')
+                    : (isUk ? 'Архівувати' : 'Archive Recipe'),
+                style: const TextStyle(color: Colors.white),
+              ),
+              onTap: () async {
+                Navigator.pop(context);
+                final db = widget.ref.read(databaseProvider);
+                await db.toggleCustomRecipeArchive(widget.recipe.id, !widget.recipe.isArchived);
+                widget.ref.invalidate(globalCustomRecipesProvider);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.edit_rounded, color: Colors.white70),
+              title: Text(isUk ? 'Редагувати' : 'Edit Recipe', style: const TextStyle(color: Colors.white)),
+              onTap: () {
+                Navigator.pop(context);
+                _editRecipe(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
+              title: Text(isUk ? 'Видалити' : 'Delete Recipe', style: const TextStyle(color: Colors.redAccent)),
+              onTap: () {
+                Navigator.pop(context);
+                _showModernUndo(context);
+              },
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _editRecipe(BuildContext context) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AddRecipeDialog(
+        lotId: widget.recipe.lotId ?? '',
+        existingRecipe: widget.recipe,
+      ),
+    );
+    if (result == true) {
+      widget.ref.invalidate(customRecipesForMethodProvider(widget.methodKey));
+    }
+  }
+
+  void _showModernUndo(BuildContext context) {
+    ModernUndoTimer.show(
+      context,
+      message: 'Рецепт видалено',
+      onUndo: () {
+        // Just cancel
+      },
+      onDismiss: () async {
+        final db = widget.ref.read(databaseProvider);
+        await db.deleteCustomRecipe(widget.recipe.id);
+        widget.ref.invalidate(customRecipesForMethodProvider(widget.methodKey));
+        widget.ref.invalidate(globalCustomRecipesProvider);
+      },
+    );
+  }
+
+  String _getGrinderValue() {
+    if (widget.recipe.grinderName == 'EK43') return widget.recipe.ek43Division.toString();
+    if (widget.recipe.grinderName != null && widget.recipe.grinderName!.contains('Comandante')) {
+      return widget.recipe.comandanteClicks.toString();
+    }
+    return widget.recipe.grindNumber.toString();
+  }
           ],
         ),
       ),

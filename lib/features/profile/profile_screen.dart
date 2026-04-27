@@ -65,6 +65,98 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     ).then((_) => setState(() {})); // refresh UI
   }
 
+  void _showPasswordResetDialog(String email, bool isUk) {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withValues(alpha: 0.3),
+      builder: (context) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Dialog(
+          backgroundColor: Colors.transparent,
+          child: GlassContainer(
+            borderRadius: 24,
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.mail_outline_rounded, color: Color(0xFFC8A96E), size: 48),
+                const SizedBox(height: 24),
+                Text(
+                  isUk ? 'Відновлення паролю' : 'Password Reset',
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  isUk 
+                    ? 'Ми надішлемо лист із інструкціями для зміни пароля на вашу пошту.' 
+                    : 'We will send an email with instructions to change your password to your email.',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.outfit(color: Colors.white70),
+                ),
+                const SizedBox(height: 32),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          Navigator.of(context).pop();
+                          try {
+                            await ref.read(supabaseProvider).auth.resetPasswordForEmail(email);
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: const Color(0xFFC8A96E),
+                                  content: Text(
+                                    isUk 
+                                      ? 'Лист із інструкцією відправлено на пошту' 
+                                      : 'Instruction email has been sent to your mail',
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(e.toString())),
+                              );
+                            }
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFC8A96E),
+                          foregroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                        child: Text(isUk ? 'ОК' : 'OK'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.white54,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                        child: Text(isUk ? 'Скасувати' : 'Cancel'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(supabaseProvider).auth.currentUser;
@@ -100,6 +192,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
     final createdAt = user.createdAt;
     final joinDate = DateFormat('dd.MM.yyyy').format(DateTime.parse(createdAt));
+    final isGoogleUser = user.appMetadata['provider'] == 'google' || 
+                        (user.identities?.any((i) => i.provider == 'google') ?? false);
 
     return PremiumBackground(
       child: PopScope(
@@ -237,33 +331,20 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ),
               ),
 
-              const SizedBox(height: 32),
-              TextButton(
-                onPressed: () async {
-                   try {
-                    await Supabase.instance.client.auth.resetPasswordForEmail(user.email!);
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(isUk ? 'Інструкції надіслано на пошту' : 'Instructions sent to email')),
-                      );
-                    }
-                  } catch (e) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(e.toString())),
-                      );
-                    }
-                  }
-                },
-                child: Text(
-                  isUk ? 'Забули пароль?' : 'Forgot Password?',
-                  style: GoogleFonts.outfit(
-                    color: const Color(0xFFC8A96E),
-                    fontWeight: FontWeight.w600,
-                    decoration: TextDecoration.underline,
+              if (!isGoogleUser) ...[
+                const SizedBox(height: 32),
+                TextButton(
+                  onPressed: () => _showPasswordResetDialog(user.email!, isUk),
+                  child: Text(
+                    isUk ? 'Забули пароль?' : 'Forgot Password?',
+                    style: GoogleFonts.outfit(
+                      color: const Color(0xFFC8A96E),
+                      fontWeight: FontWeight.w600,
+                      decoration: TextDecoration.underline,
+                    ),
                   ),
                 ),
-              ),
+              ],
 
               const SizedBox(height: 40),
               SizedBox(

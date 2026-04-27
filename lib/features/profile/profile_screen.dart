@@ -103,29 +103,26 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () async {
+                          final messenger = ScaffoldMessenger.of(context);
                           Navigator.of(context).pop();
                           try {
                             await ref.read(supabaseProvider).auth.resetPasswordForEmail(email);
-                            if (mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  behavior: SnackBarBehavior.floating,
-                                  backgroundColor: const Color(0xFFC8A96E),
-                                  content: Text(
-                                    isUk 
-                                      ? 'Лист із інструкцією відправлено на пошту' 
-                                      : 'Instruction email has been sent to your mail',
-                                    style: const TextStyle(color: Colors.black),
-                                  ),
+                            messenger.showSnackBar(
+                              SnackBar(
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: const Color(0xFFC8A96E),
+                                content: Text(
+                                  isUk 
+                                    ? 'Лист із інструкцією відправлено на пошту' 
+                                    : 'Instruction email has been sent to your mail',
+                                  style: const TextStyle(color: Colors.black),
                                 ),
-                              );
-                            }
+                              ),
+                            );
                           } catch (e) {
-                            if (mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(e.toString())),
-                              );
-                            }
+                            messenger.showSnackBar(
+                              SnackBar(content: Text(e.toString())),
+                            );
                           }
                         },
                         style: ElevatedButton.styleFrom(

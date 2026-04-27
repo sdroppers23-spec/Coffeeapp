@@ -302,6 +302,7 @@ class _ScaWheelPainter extends CustomPainter {
         Colors.white,
         11.0,
         true,
+        isOtherSection: cat.key == "wheel_cat_others",
       );
 
       // 2. Draw Middle Ring (Subcategory)
@@ -342,8 +343,9 @@ class _ScaWheelPainter extends CustomPainter {
             r1,
             r2,
             Colors.white,
-            9.5,
+            7.5,
             true,
+            isOtherSection: cat.key == "wheel_cat_others",
           );
         }
 
@@ -389,6 +391,7 @@ class _ScaWheelPainter extends CustomPainter {
                 Colors.white.withValues(alpha: 0.9 * labelOpacity),
                 8.5,
                 false, 
+                isOtherSection: cat.key == "wheel_cat_others",
               );
             }
           }
@@ -450,8 +453,9 @@ class _ScaWheelPainter extends CustomPainter {
     double rEnd,
     Color color,
     double baseFontSize,
-    bool bold,
-  ) {
+    bool bold, {
+    bool isOtherSection = false,
+  }) {
     final middleAngle = startAngle + sweepAngle / 2;
     final middleRadius = (rStart + rEnd) / 2;
 
@@ -497,7 +501,8 @@ class _ScaWheelPainter extends CustomPainter {
     canvas.translate(middleRadius, 0);
 
     // Flip text if it's in the bottom half of the circle
-    bool shouldFlip =
+    // If it's the "Others" section, we skip flipping to keep uniform orientation with the category label
+    bool shouldFlip = !isOtherSection &&
         middleAngle > (math.pi / 2 + 0.2) &&
         middleAngle < (3 * math.pi / 2 - 0.2);
     if (shouldFlip) {

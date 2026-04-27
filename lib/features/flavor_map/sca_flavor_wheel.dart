@@ -20,6 +20,7 @@ class ScaFlavorWheel extends ConsumerStatefulWidget {
 class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  late Animation<double> _animation;
   late TransformationController _transformationController;
   String? _selectedCategory;
 
@@ -30,7 +31,11 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 1200), // Slightly longer for elegance
+    );
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOutCubic, // Much smoother than linear
     );
     _transformationController = TransformationController();
     _transformationController.addListener(() {
@@ -166,7 +171,7 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
                     onTapUp: (details) =>
                         _handleTap(details.localPosition, currentSize),
                     child: AnimatedBuilder(
-                      animation: _controller,
+                      animation: _animation,
                       builder: (context, child) {
                         return Container(
                           width: currentSize,
@@ -189,7 +194,7 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
                                   size: Size(currentSize, currentSize),
                                   painter: _ScaWheelPainter(
                                     data: _data,
-                                    animationValue: _controller.value,
+                                    animationValue: _animation.value,
                                     selectedCategory: _selectedCategory,
                                     ref: ref,
                                   ),
@@ -364,8 +369,9 @@ class _ScaWheelPainter extends CustomPainter {
             borderPaint,
           );
 
-          // Label for Note (Inside tile)
-          if (animationValue > 0.8) {
+          // Label for Note (Inside tile) with smooth fade-in
+          final labelOpacity = ((animationValue - 0.6) / 0.4).clamp(0.0, 1.0);
+          if (labelOpacity > 0) {
             if (noteSweepAngle > 0.005) {
               _drawTextInsideArc(
                 canvas,
@@ -375,7 +381,7 @@ class _ScaWheelPainter extends CustomPainter {
                 noteSweepAngle,
                 r2,
                 r3,
-                Colors.white.withValues(alpha: 0.9),
+                Colors.white.withValues(alpha: 0.9 * labelOpacity),
                 7.2, // Outer ring (Note) - user set
                 false, // Normal weight for small text
               );

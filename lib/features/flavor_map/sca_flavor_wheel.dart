@@ -300,7 +300,7 @@ class _ScaWheelPainter extends CustomPainter {
         r0,
         r1,
         Colors.white,
-        9.0,
+        11.0,
         true,
       );
 
@@ -342,7 +342,7 @@ class _ScaWheelPainter extends CustomPainter {
             r1,
             r2,
             Colors.white,
-            8.0,
+            9.5,
             true,
           );
         }
@@ -387,8 +387,8 @@ class _ScaWheelPainter extends CustomPainter {
                 r2,
                 r3,
                 Colors.white.withValues(alpha: 0.9 * labelOpacity),
-                7.2, // Outer ring (Note) - user set
-                false, // Normal weight for small text
+                8.5,
+                false, 
               );
             }
           }
@@ -497,16 +497,21 @@ class _ScaWheelPainter extends CustomPainter {
     canvas.translate(middleRadius, 0);
 
     // Flip text if it's in the bottom half of the circle
-    bool shouldFlip = middleAngle > (math.pi / 2 + 0.2) && middleAngle < (3 * math.pi / 2 - 0.2);
+    bool shouldFlip =
+        middleAngle > (math.pi / 2 + 0.2) &&
+        middleAngle < (3 * math.pi / 2 - 0.2);
     if (shouldFlip) {
       canvas.rotate(math.pi);
     }
 
-    // Calculate scaling factor based on the widest line
-    double maxWidth = painters.fold<double>(0, (max, p) => math.max(max, p.width));
+    // Calculate scaling factor based on the widest line, with a clamp for uniformity
+    double maxWidth = painters.fold<double>(
+      0,
+      (max, p) => math.max(max, p.width),
+    );
     double scale = 1.0;
     if (maxWidth > maxAllowedWidth) {
-      scale = maxAllowedWidth / maxWidth;
+      scale = (maxAllowedWidth / maxWidth).clamp(0.8, 1.0);
     }
 
     if (scale < 1.0) {

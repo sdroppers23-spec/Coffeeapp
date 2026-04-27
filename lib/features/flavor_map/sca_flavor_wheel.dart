@@ -186,19 +186,14 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
                               ),
                             ],
                           ),
-                          child: ClipOval(
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 0.5, sigmaY: 0.5),
-                              child: RepaintBoundary(
-                                child: CustomPaint(
-                                  size: Size(currentSize, currentSize),
-                                  painter: _ScaWheelPainter(
-                                    data: _data,
-                                    animationValue: _animation.value,
-                                    selectedCategory: _selectedCategory,
-                                    ref: ref,
-                                  ),
-                                ),
+                          child: RepaintBoundary(
+                            child: CustomPaint(
+                              size: Size(currentSize, currentSize),
+                              painter: _ScaWheelPainter(
+                                data: _data,
+                                animationValue: _animation.value,
+                                selectedCategory: _selectedCategory,
+                                ref: ref,
                               ),
                             ),
                           ),
@@ -294,7 +289,7 @@ class _ScaWheelPainter extends CustomPainter {
         catSweepAngle,
         r0,
         r1,
-        Colors.white,
+        Colors.white.withValues(alpha: animationValue.clamp(0.0, 1.0)),
         9.0,
         true,
       );
@@ -336,7 +331,7 @@ class _ScaWheelPainter extends CustomPainter {
               subSweepAngle,
               r1,
               r2,
-              Colors.white,
+              Colors.white.withValues(alpha: animationValue.clamp(0.0, 1.0)),
               8.0,
               true,
             );
@@ -370,7 +365,7 @@ class _ScaWheelPainter extends CustomPainter {
           );
 
           // Label for Note (Inside tile) with smooth fade-in
-          final labelOpacity = ((animationValue - 0.6) / 0.4).clamp(0.0, 1.0);
+          final labelOpacity = ((animationValue - 0.8) / 0.2).clamp(0.0, 1.0);
           if (labelOpacity > 0) {
             if (noteSweepAngle > 0.005) {
               _drawTextInsideArc(

@@ -90,8 +90,8 @@ class ScaFlavorData {
           noteKeys: ["wheel_note_black_tea", "wheel_note_green_tea"],
         ),
         WheelSub(
-          key: "wheel_cat_floral",
-          name: "wheel_cat_floral",
+          key: "wheel_sub_floral",
+          name: "wheel_sub_floral",
           color: const Color(0xFFE5007D),
           noteKeys: [
             "wheel_note_chamomile",

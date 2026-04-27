@@ -135,6 +135,8 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
 
   @override
   Widget build(BuildContext context) {
+    final currentLocale = ref.watch(localeProvider);
+
     return LayoutBuilder(
       builder: (context, constraints) {
         // Set size to fit screen width exactly
@@ -201,7 +203,7 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
                                     data: _data,
                                     animationValue: _animation.value,
                                     selectedCategory: _selectedCategory,
-                                    ref: ref,
+                                    locale: currentLocale,
                                   ),
                                 ),
                               ),
@@ -225,13 +227,13 @@ class _ScaWheelPainter extends CustomPainter {
   final List<WheelCategory> data;
   final double animationValue;
   final String? selectedCategory;
-  final WidgetRef ref;
+  final String locale;
 
   _ScaWheelPainter({
     required this.data,
     required this.animationValue,
     this.selectedCategory,
-    required this.ref,
+    required this.locale,
   });
 
   @override
@@ -251,7 +253,7 @@ class _ScaWheelPainter extends CustomPainter {
     final r2 = fullRadius * 0.66; // Subcategory ring (was 0.68)
     final r3 = fullRadius * 0.94; // Notes ring (was 0.96)
 
-    final currentLocale = ref.watch(localeProvider);
+    final currentLocale = locale;
 
     double currentAngle = -math.pi / 2; // Start from top
 
@@ -539,6 +541,7 @@ class _ScaWheelPainter extends CustomPainter {
   bool shouldRepaint(covariant _ScaWheelPainter oldDelegate) {
     return oldDelegate.animationValue != animationValue ||
         oldDelegate.selectedCategory != selectedCategory ||
-        oldDelegate.data != data;
+        oldDelegate.data != data ||
+        oldDelegate.locale != locale;
   }
 }

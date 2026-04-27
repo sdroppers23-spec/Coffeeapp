@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'sca_flavor_wheel_l10n.dart';
 
 class LocaleNotifier extends Notifier<String> {
   @override
@@ -57,6 +58,11 @@ class AppLocalizations {
   String t(String key, {Map<String, String>? args}) => translate(key, args: args);
 
   static String get(String key, String languageCode, {Map<String, String>? args}) {
+    // Check if it's a flavor wheel key
+    if (key.startsWith('wheel_')) {
+      return ScaFlavorWheelL10n.translate(languageCode, key);
+    }
+
     final map = _translations[languageCode] ?? _translations['en']!;
     String value = map[key] ?? key;
     

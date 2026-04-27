@@ -1017,17 +1017,17 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       children: [
         _sectionLabel(context.t('sensory_profile_1_5')),
         _darkCard(children: [
-          _sensorySlider('BITTERNESS', _bitterness, (v) => setState(() => _bitterness = v), theme: theme, enabled: !_isSensoryLocked),
+          _sensorySlider(context.t('bitterness').toUpperCase(), _bitterness, (v) => setState(() => _bitterness = v), theme: theme, enabled: !_isSensoryLocked),
           _divider(),
-          _sensorySlider('ACIDITY', _acidity, (v) => setState(() => _acidity = v), theme: theme, enabled: !_isSensoryLocked),
+          _sensorySlider(context.t('acidity').toUpperCase(), _acidity, (v) => setState(() => _acidity = v), theme: theme, enabled: !_isSensoryLocked),
           _divider(),
-          _sensorySlider('SWEETNESS', _sweetness, (v) => setState(() => _sweetness = v), theme: theme, enabled: !_isSensoryLocked),
+          _sensorySlider(context.t('sweetness').toUpperCase(), _sweetness, (v) => setState(() => _sweetness = v), theme: theme, enabled: !_isSensoryLocked),
           _divider(),
-          _sensorySlider('BODY', _body, (v) => setState(() => _body = v), theme: theme, enabled: !_isSensoryLocked),
+          _sensorySlider(context.t('body').toUpperCase(), _body, (v) => setState(() => _body = v), theme: theme, enabled: !_isSensoryLocked),
           _divider(),
-          _sensorySlider('INTENSITY', _intensity, (v) => setState(() => _intensity = v), theme: theme, enabled: !_isSensoryLocked),
+          _sensorySlider(context.t('intensity').toUpperCase(), _intensity, (v) => setState(() => _intensity = v), theme: theme, enabled: !_isSensoryLocked),
           _divider(),
-          _sensorySlider('AFTERTASTE', _aftertaste, (v) => setState(() => _aftertaste = v), theme: theme, enabled: !_isSensoryLocked),
+          _sensorySlider(context.t('aftertaste').toUpperCase(), _aftertaste, (v) => setState(() => _aftertaste = v), theme: theme, enabled: !_isSensoryLocked),
         ]),
         const SizedBox(height: 16),
         _sectionLabel(context.t('visualize_profile')),
@@ -1040,7 +1040,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           ),
           child: SensoryRadarChart(
             interactive: false,
-            height: 280,
+            height: 260,
             staticValues: {
               'bitterness': _bitterness,
               'acidity': _acidity,

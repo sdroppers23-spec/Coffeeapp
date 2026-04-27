@@ -297,7 +297,10 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                             ),
                             const SizedBox(height: 2),
                             Expanded(
-                              child: ScaFlavorWheel(onSelect: _onFlavorSelect),
+                              child: ScaFlavorWheel(
+                                key: ValueKey(_selectedTab),
+                                onSelect: _onFlavorSelect,
+                              ),
                             ),
                             const SizedBox(height: 0),
                           ],

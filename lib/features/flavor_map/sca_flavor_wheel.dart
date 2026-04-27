@@ -156,46 +156,50 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
               blendMode: BlendMode.dstIn,
               child: InteractiveViewer(
                 transformationController: _transformationController,
-                minScale: 0.5, // Allow zooming out
+                minScale: 0.8, // Allow slight zoom out
                 maxScale: 4.0,
                 panEnabled: true,
-                boundaryMargin: const EdgeInsets.all(100), // Allow panning outside
-                constrained: false, // Important for larger child
-                child: GestureDetector(
-                  onTapUp: (details) =>
-                      _handleTap(details.localPosition, currentSize),
-                  child: AnimatedBuilder(
-                    animation: _controller,
-                    builder: (context, child) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.2),
-                              blurRadius: 20,
-                              spreadRadius: 5,
-                            ),
-                          ],
-                        ),
-                        child: ClipOval(
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 0.5, sigmaY: 0.5),
-                            child: RepaintBoundary(
-                              child: CustomPaint(
-                                size: Size(currentSize, currentSize),
-                                painter: _ScaWheelPainter(
-                                  data: _data,
-                                  animationValue: _controller.value,
-                                  selectedCategory: _selectedCategory,
-                                  ref: ref,
+                boundaryMargin: const EdgeInsets.all(40),
+                constrained: true, // Change to true for centering
+                child: Center(
+                  child: GestureDetector(
+                    onTapUp: (details) =>
+                        _handleTap(details.localPosition, currentSize),
+                    child: AnimatedBuilder(
+                      animation: _controller,
+                      builder: (context, child) {
+                        return Container(
+                          width: currentSize,
+                          height: currentSize,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.2),
+                                blurRadius: 20,
+                                spreadRadius: 5,
+                              ),
+                            ],
+                          ),
+                          child: ClipOval(
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 0.5, sigmaY: 0.5),
+                              child: RepaintBoundary(
+                                child: CustomPaint(
+                                  size: Size(currentSize, currentSize),
+                                  painter: _ScaWheelPainter(
+                                    data: _data,
+                                    animationValue: _controller.value,
+                                    selectedCategory: _selectedCategory,
+                                    ref: ref,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),

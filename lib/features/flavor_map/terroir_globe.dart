@@ -84,21 +84,21 @@ class _TerroirGlobeState extends ConsumerState<TerroirGlobe>
     final rotX = _tiltAngle;
 
     // Rotate back by Y
-    double tx = dx * math.cos(-rotY) + z * math.sin(-rotY);
-    double tz = -dx * math.sin(-rotY) + z * math.cos(-rotY);
-    double ty = dy;
+    final double tx = dx * math.cos(-rotY) + z * math.sin(-rotY);
+    final double tz = -dx * math.sin(-rotY) + z * math.cos(-rotY);
+    final double ty = dy;
 
     // Rotate back by X
-    double finalY = ty * math.cos(-rotX) - tz * math.sin(-rotX);
-    double finalZ = ty * math.sin(-rotX) + tz * math.cos(-rotX);
-    double finalX = tx;
+    final double finalY = ty * math.cos(-rotX) - tz * math.sin(-rotX);
+    final double finalZ = ty * math.sin(-rotX) + tz * math.cos(-rotX);
+    final double finalX = tx;
 
     // 3. Convert Cartesian to Lat/Lon
-    double latRad = math.asin(-finalY / radius); // Invert Y to fix orientation
-    double lonRad = math.atan2(finalZ, finalX);
+    final double latRad = math.asin(-finalY / radius); // Invert Y to fix orientation
+    final double lonRad = math.atan2(finalZ, finalX);
 
-    double lat = latRad * 180 / math.pi;
-    double lon = lonRad * 180 / math.pi;
+    final double lat = latRad * 180 / math.pi;
+    final double lon = lonRad * 180 / math.pi;
 
     // 4. Check if land
     if (WorldMaskData.isLand(lat, lon)) {
@@ -359,7 +359,7 @@ class _TerroirGlobeState extends ConsumerState<TerroirGlobe>
       decoration: BoxDecoration(
         color: theme.colorScheme.primary.withValues(alpha: 0.95),
         borderRadius: BorderRadius.circular(30),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(color: Colors.black54, blurRadius: 30, spreadRadius: 2),
         ],
       ),
@@ -368,7 +368,7 @@ class _TerroirGlobeState extends ConsumerState<TerroirGlobe>
         children: [
           Container(
             padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.white24,
               shape: BoxShape.circle,
             ),
@@ -429,12 +429,12 @@ class _GlobePainter extends CustomPainter {
 
     // Draw dark chocolate/black background
     final bgPaint = Paint()
-      ..shader = RadialGradient(
+      ..shader = const RadialGradient(
         colors: [
-          const Color(0xFF0F0804),
-          const Color(0xFF050302),
+          Color(0xFF0F0804),
+          Color(0xFF050302),
         ],
-        stops: const [0.7, 1.0],
+        stops: [0.7, 1.0],
       ).createShader(Rect.fromCircle(center: center, radius: radius));
     canvas.drawCircle(center, radius, bgPaint);
 
@@ -458,13 +458,13 @@ class _GlobePainter extends CustomPainter {
         double z = radius * math.cos(latRad) * math.sin(lonRad);
 
         // Rotation X (Tilt)
-        double ty = y * math.cos(rotationX) - z * math.sin(rotationX);
+        final double ty = y * math.cos(rotationX) - z * math.sin(rotationX);
         double tz = y * math.sin(rotationX) + z * math.cos(rotationX);
         y = ty;
         z = tz;
 
         // Rotation Y
-        double tx = x * math.cos(rotationY) + z * math.sin(rotationY);
+        final double tx = x * math.cos(rotationY) + z * math.sin(rotationY);
         tz = -x * math.sin(rotationY) + z * math.cos(rotationY);
         x = tx;
         z = tz;
@@ -558,13 +558,13 @@ class _GlobePainter extends CustomPainter {
     double z = radius * math.cos(latRad) * math.sin(lonRad);
 
     // Rotation X
-    double ty = y * math.cos(rotationX) - z * math.sin(rotationX);
+    final double ty = y * math.cos(rotationX) - z * math.sin(rotationX);
     double tz = y * math.sin(rotationX) + z * math.cos(rotationX);
     y = ty;
     z = tz;
 
     // Rotation Y
-    double tx = x * math.cos(rotationY) + z * math.sin(rotationY);
+    final double tx = x * math.cos(rotationY) + z * math.sin(rotationY);
     tz = -x * math.sin(rotationY) + z * math.cos(rotationY);
     x = tx;
     z = tz;

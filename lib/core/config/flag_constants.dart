@@ -2,9 +2,9 @@ class FlagConstants {
   static const Map<String, String> glassFlags = {
     // Colombia
     'Colombia':
-        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/colombia_sphere.png',
+        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/colombia_sphere.webp',
     'Колумбія':
-        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/colombia_sphere.png',
+        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/colombia_sphere.webp',
 
     // Ethiopia
     'Ethiopia':
@@ -14,23 +14,23 @@ class FlagConstants {
 
     // Brazil
     'Brazil':
-        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/brazil_sphere.png',
+        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/brazil_sphere.webp',
     'Бразилія':
-        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/brazil_sphere.png',
+        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/brazil_sphere.webp',
 
     // Kenya
     'Kenya':
-        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/kenya_sphere.png',
+        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/kenya_sphere.webp',
     'Кенія':
-        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/kenya_sphere.png',
+        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/kenya_sphere.webp',
 
     // Costa Rica
     'Costa Rica':
-        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/costa_rica_sphere.png',
+        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/costa_rica_sphere.webp',
     'Коста-Ріка':
-        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/costa_rica_sphere.png',
+        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/costa_rica_sphere.webp',
     'Коста-Рика':
-        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/costa_rica_sphere.png',
+        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/costa_rica_sphere.webp',
 
     // El Salvador
     'El Salvador':
@@ -42,9 +42,9 @@ class FlagConstants {
 
     // Ecuador
     'Ecuador':
-        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/ecuador_sphere.png',
+        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/ecuador_sphere.webp',
     'Еквадор':
-        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/ecuador_sphere.png',
+        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/ecuador_sphere.webp',
 
     // Guatemala
     'Guatemala':
@@ -54,9 +54,9 @@ class FlagConstants {
 
     // Indonesia
     'Indonesia':
-        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/indonesia_sphere.png',
+        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/indonesia_sphere.webp',
     'Індонезія':
-        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/indonesia_sphere.png',
+        'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/indonesia_sphere.webp',
 
     // Panama
     'Panama':

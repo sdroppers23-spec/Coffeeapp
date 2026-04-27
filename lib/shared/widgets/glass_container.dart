@@ -134,7 +134,7 @@ class GlassContainer extends ConsumerWidget {
     }
 
     // Final structure: Shadow + Optional Outer Clip
-    Widget finalCard = Container(
+    final Widget finalCard = Container(
       width: width,
       height: height,
       decoration: BoxDecoration(

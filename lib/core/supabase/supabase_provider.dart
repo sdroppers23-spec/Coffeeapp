@@ -11,7 +11,7 @@ final authStateProvider = StreamProvider<AuthState>((ref) {
   try {
     return ref.watch(supabaseProvider).auth.onAuthStateChange;
   } catch (e) {
-    return Stream.empty();
+    return const Stream.empty();
   }
 });
 

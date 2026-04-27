@@ -19,78 +19,78 @@ class FlavorNode {
 
 // Hierarchical data for the Volumetric Flavor Wheel (Radio Kava Style)
 final List<FlavorNode> volumetricFlavorData = [
-  FlavorNode(
+  const FlavorNode(
     nameKey: 'flavor_fruity',
-    color: const Color(0xFFFF5252),
+    color: Color(0xFFFF5252),
     children: [
       FlavorNode(
         nameKey: 'note_berry',
-        color: const Color(0xFFFF4081),
+        color: Color(0xFFFF4081),
         children: [
           FlavorNode(
             nameKey: 'note_strawberry',
-            color: const Color(0xFFF06292),
+            color: Color(0xFFF06292),
           ),
-          FlavorNode(nameKey: 'note_raspberry', color: const Color(0xFFEC407A)),
-          FlavorNode(nameKey: 'note_blueberry', color: const Color(0xFFD81B60)),
+          FlavorNode(nameKey: 'note_raspberry', color: Color(0xFFEC407A)),
+          FlavorNode(nameKey: 'note_blueberry', color: Color(0xFFD81B60)),
         ],
       ),
       FlavorNode(
         nameKey: 'note_citrus',
-        color: const Color(0xFFFFAB40),
+        color: Color(0xFFFFAB40),
         children: [
-          FlavorNode(nameKey: 'note_orange', color: const Color(0xFFFFB74D)),
-          FlavorNode(nameKey: 'note_lime', color: const Color(0xFFCDDC39)),
-          FlavorNode(nameKey: 'note_lemon', color: const Color(0xFFFFF176)),
+          FlavorNode(nameKey: 'note_orange', color: Color(0xFFFFB74D)),
+          FlavorNode(nameKey: 'note_lime', color: Color(0xFFCDDC39)),
+          FlavorNode(nameKey: 'note_lemon', color: Color(0xFFFFF176)),
         ],
       ),
       FlavorNode(
         nameKey: 'note_tropical',
-        color: const Color(0xFFFFD54F),
+        color: Color(0xFFFFD54F),
         children: [
-          FlavorNode(nameKey: 'note_mango', color: const Color(0xFFFFE082)),
-          FlavorNode(nameKey: 'note_pineapple', color: const Color(0xFFFFD54F)),
+          FlavorNode(nameKey: 'note_mango', color: Color(0xFFFFE082)),
+          FlavorNode(nameKey: 'note_pineapple', color: Color(0xFFFFD54F)),
         ],
       ),
     ],
   ),
-  FlavorNode(
+  const FlavorNode(
     nameKey: 'flavor_sweet',
-    color: const Color(0xFFFF9100),
+    color: Color(0xFFFF9100),
     children: [
       FlavorNode(
         nameKey: 'note_caramel',
-        color: const Color(0xFFFFAB40),
+        color: Color(0xFFFFAB40),
         children: [
-          FlavorNode(nameKey: 'note_honey', color: const Color(0xFFFFD180)),
-          FlavorNode(nameKey: 'note_vanilla', color: const Color(0xFFFFE57F)),
+          FlavorNode(nameKey: 'note_honey', color: Color(0xFFFFD180)),
+          FlavorNode(nameKey: 'note_vanilla', color: Color(0xFFFFE57F)),
         ],
       ),
     ],
   ),
-  FlavorNode(
+  const FlavorNode(
     nameKey: 'flavor_floral',
-    color: const Color(0xFFE040FB),
+    color: Color(0xFFE040FB),
     children: [
       FlavorNode(
         nameKey: 'note_jasmine',
-        color: const Color(0xFFEA80FC),
+        color: Color(0xFFEA80FC),
         children: [
-          FlavorNode(nameKey: 'note_tea', color: const Color(0xFFBCAAA4)),
+          FlavorNode(nameKey: 'note_tea', color: Color(0xFFBCAAA4)),
         ],
       ),
     ],
   ),
-  FlavorNode(
+  const FlavorNode(
     nameKey: 'flavor_nutty',
-    color: const Color(0xFF795548),
+    color: Color(0xFF795548),
     children: [
       FlavorNode(
         nameKey: 'note_chocolate',
-        color: const Color(0xFF5D4037),
+        color: Color(0xFF5D4037),
         children: [
-          FlavorNode(nameKey: 'note_cocoa', color: const Color(0xFF3E2723)),
-          FlavorNode(nameKey: 'note_hazelnut', color: const Color(0xFF8D6E63)),
+          FlavorNode(nameKey: 'note_cocoa', color: Color(0xFF3E2723)),
+          FlavorNode(nameKey: 'note_hazelnut', color: Color(0xFF8D6E63)),
         ],
       ),
     ],
@@ -147,11 +147,11 @@ class _VolumetricFlavorWheelState extends ConsumerState<VolumetricFlavorWheel>
     }
 
     // Determine ring
-    int ring = ((distance - centerRadius) / ringWidth).floor() + 1;
+    final int ring = ((distance - centerRadius) / ringWidth).floor() + 1;
     if (ring < 1 || ring > 3) return;
 
     double currentAngle = 0.0;
-    final totalAngle = 2 * math.pi;
+    const totalAngle = 2 * math.pi;
     final totalWeight = volumetricFlavorData.fold(
       0.0,
       (acc, n) => acc + _nodeWeight(n),

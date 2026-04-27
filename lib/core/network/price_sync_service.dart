@@ -17,7 +17,7 @@ class PriceSyncService {
       // 1. Try to find wholesale prices in data-wholesale-prices attribute
       // <div class="product-info" data-wholesale-prices='{"250g":"...", "1kg":"..."}'>
       final infoDiv = document.querySelector('[data-wholesale-prices]');
-      Map<String, String?> wholesale = {};
+      final Map<String, String?> wholesale = {};
       if (infoDiv != null) {
         final attr = infoDiv.attributes['data-wholesale-prices'];
         if (attr != null) {

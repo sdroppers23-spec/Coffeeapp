@@ -159,7 +159,7 @@ void main() async {
       for (var entry in module['content']) {
         final id = articleIdCounter++;
         final topic = entry['topic'];
-        String htmlContent = formatToHtml(entry);
+        final String htmlContent = formatToHtml(entry);
 
         articlesList.add({
           'id': id,
@@ -257,7 +257,7 @@ void main() async {
 }
 
 String formatToHtml(Map<String, dynamic> data) {
-  StringBuffer sb = StringBuffer();
+  final StringBuffer sb = StringBuffer();
   data.forEach((key, value) {
     if (key == 'topic') return;
     if (value is String) {
@@ -287,9 +287,9 @@ String formatToHtml(Map<String, dynamic> data) {
 List<String> parseCsvLine(String line) {
   final List<String> fields = [];
   bool inQuotes = false;
-  StringBuffer current = StringBuffer();
+  final StringBuffer current = StringBuffer();
   for (int i = 0; i < line.length; i++) {
-    var char = line[i];
+    final char = line[i];
     if (char == '"') {
       inQuotes = !inQuotes;
     } else if (char == ',' && !inQuotes) {

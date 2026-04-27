@@ -13,11 +13,11 @@ import '../../core/l10n/app_localizations.dart';
 
 // ─── Method metadata (shared with BrewingGuideScreen) ──────────────────────────
 const _methodMeta = {
-  'v60': 'assets/images/methods/v60.png',
-  'chemex': 'assets/images/methods/chemex.png',
-  'aeropress': 'assets/images/methods/aeropress.png',
-  'espresso': 'assets/images/methods/espresso.png',
-  'cold_brew': 'assets/images/methods/cold_brew.png',
+  'v60': 'assets/images/methods/v60.webp',
+  'chemex': 'assets/images/methods/chemex.webp',
+  'aeropress': 'assets/images/methods/aeropress.webp',
+  'espresso': 'assets/images/methods/espresso.webp',
+  'cold_brew': 'assets/images/methods/cold_brew.webp',
 };
 
 class BrewingDetailScreen extends ConsumerStatefulWidget {
@@ -282,7 +282,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
   }
 
   Widget _buildHeroImage(String url) {
-    final assetPath = _methodMeta[widget.recipe.methodKey] ?? 'assets/images/methods/v60.png';
+    final assetPath = _methodMeta[widget.recipe.methodKey] ?? 'assets/images/methods/v60.webp';
 
     if (url.startsWith('http')) {
       return CachedNetworkImage(
@@ -402,8 +402,8 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
  }
 
   String _formatTime(int seconds) {
-    int m = seconds ~/ 60;
-    int s = seconds % 60;
+    final int m = seconds ~/ 60;
+    final int s = seconds % 60;
     return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
   }
 

@@ -112,7 +112,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
     final roasterId = await db.insertBrand(
       LocalizedBrandsCompanion.insert(
         name: _nameController.text,
-        userId: Value('me'),
+        userId: const Value('me'),
         logoUrl: Value(_logoFile?.path ?? _logoUrlController.text),
       ),
     );

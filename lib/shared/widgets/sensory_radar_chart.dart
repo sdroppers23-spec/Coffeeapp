@@ -68,7 +68,7 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                _TemplateChip(ref.t('process_washed'), ref.t('sensory_washed_desc'), {
+                _TemplateChip(ref.t('process_washed'), ref.t('sensory_washed_desc'), const {
                   'bitterness': 0.2,
                   'acidity': 0.8,
                   'sweetness': 0.6,
@@ -80,7 +80,7 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
                 _TemplateChip(
                   ref.t('process_natural'),
                   ref.t('sensory_natural_desc'),
-                  {
+                  const {
                     'bitterness': 0.3,
                     'acidity': 0.5,
                     'sweetness': 0.9,
@@ -93,7 +93,7 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
                 _TemplateChip(
                   ref.t('process_honey'),
                   ref.t('sensory_honey_desc'),
-                  {
+                  const {
                     'bitterness': 0.4,
                     'acidity': 0.6,
                     'sweetness': 0.8,
@@ -199,7 +199,7 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
     if (_draggingLabel == null) return;
     final distance = (localPosition - center).distance;
     // Snap to 5 discrete levels (0.2, 0.4, 0.6, 0.8, 1.0)
-    double newValue = ((distance / maxRadius * 5).round() / 5.0).clamp(
+    final double newValue = ((distance / maxRadius * 5).round() / 5.0).clamp(
       0.2,
       1.0,
     ); 
@@ -314,7 +314,7 @@ class RadarPainter extends CustomPainter {
       final angle = angleStep * i - pi / 2;
 
       // If values are on 1-10 or 1-5 scale, normalize to 0-1
-      double rawVal = values[labels[i]] ?? 0.0;
+      final double rawVal = values[labels[i]] ?? 0.0;
       double normalized = rawVal;
       if (maxValInSet > 1.2 && maxValInSet <= 5.0) {
         normalized = rawVal / 5.0;

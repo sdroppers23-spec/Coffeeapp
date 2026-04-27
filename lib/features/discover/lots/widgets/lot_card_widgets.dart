@@ -677,7 +677,7 @@ class _FreshnessProgressBar extends StatelessWidget {
 
     // 3. Calculate factor
     double factor = 1.0 - (ageDays / limit.toDouble());
-    bool isExpired = ageDays >= limit;
+    final bool isExpired = ageDays >= limit;
     
     if (factor < 0.0) factor = 0.0;
     if (factor > 1.0) factor = 1.0;

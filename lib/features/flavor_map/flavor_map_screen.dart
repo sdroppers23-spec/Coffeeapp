@@ -580,7 +580,7 @@ class _InteractiveSpiderChartState
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _TemplateChip(ref.t('process_washed_label'), ref.t('clean_bright'), {
+              _TemplateChip(ref.t('process_washed_label'), ref.t('clean_bright'), const {
                 'bitterness': 0.2,
                 'acidity': 0.9,
                 'sweetness': 0.4,
@@ -588,7 +588,7 @@ class _InteractiveSpiderChartState
                 'intensity': 0.4,
                 'aftertaste': 0.7,
               }),
-              _TemplateChip(ref.t('process_natural_label'), ref.t('fruity_sweet'), {
+              _TemplateChip(ref.t('process_natural_label'), ref.t('fruity_sweet'), const {
                 'bitterness': 0.4,
                 'acidity': 0.4,
                 'sweetness': 0.9,
@@ -596,7 +596,7 @@ class _InteractiveSpiderChartState
                 'intensity': 0.8,
                 'aftertaste': 0.7,
               }),
-              _TemplateChip(ref.t('process_honey_label'), ref.t('sticky_balanced'), {
+              _TemplateChip(ref.t('process_honey_label'), ref.t('sticky_balanced'), const {
                 'bitterness': 0.3,
                 'acidity': 0.6,
                 'sweetness': 0.8,

@@ -177,7 +177,7 @@ class GlobePainter extends CustomPainter {
 
       if (p3d.z < 0) {
         final cp = p3d.project(size.width, size.height, focal);
-        Color markerColor = const Color(0xFFC8A96E);
+        const Color markerColor = Color(0xFFC8A96E);
 
         // Aroma Pillar
         final pillarPaint = Paint()

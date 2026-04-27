@@ -54,7 +54,7 @@ final encyclopediaDataProvider = Provider<AsyncValue<List<LocalizedBeanDto>>>((r
   return entriesAsync.whenData((entries) {
     debugPrint('EncyclopediaProvider: Received ${entries.length} entries from stream');
     // 1. Filter by search query, countries, flavors, and processes
-    var filtered = entries.where((e) {
+    final filtered = entries.where((e) {
       // Search
       if (search.isNotEmpty) {
         final matchesSearch = e.country.toLowerCase().contains(search) ||

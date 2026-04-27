@@ -180,12 +180,12 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
   }
 
   String _formatSecondsToHMS(int totalSeconds) {
-    int h = totalSeconds ~/ 3600;
-    int m = (totalSeconds % 3600) ~/ 60;
-    int s = totalSeconds % 60;
-    String hh = h.toString().padLeft(2, '0');
-    String mm = m.toString().padLeft(2, '0');
-    String ss = s.toString().padLeft(2, '0');
+    final int h = totalSeconds ~/ 3600;
+    final int m = (totalSeconds % 3600) ~/ 60;
+    final int s = totalSeconds % 60;
+    final String hh = h.toString().padLeft(2, '0');
+    final String mm = m.toString().padLeft(2, '0');
+    final String ss = s.toString().padLeft(2, '0');
     return '$hh:$mm:$ss';
   }
 
@@ -368,7 +368,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final gold = const Color(0xFFC8A96E);
+    const gold = Color(0xFFC8A96E);
     final pref = ref.watch(preferencesProvider);
 
     return Dialog(
@@ -653,7 +653,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: GoogleFonts.outfit(color: Colors.white24, fontSize: 15),
-            counterText: "",
+            counterText: '',
             filled: true,
             fillColor: Colors.white.withValues(alpha: 0.05),
             contentPadding: const EdgeInsets.all(16),
@@ -667,7 +667,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(width: 1, color: Colors.white10),
+              borderSide: const BorderSide(width: 1, color: Colors.white10),
             ),
           ),
         ),
@@ -873,7 +873,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                 _customGrinderController.clear();
                 _isOtherGrinder = false;
               }),
-              child: Icon(
+              child: const Icon(
                 Icons.close_rounded,
                 color: Colors.white24,
                 size: 16,
@@ -1077,8 +1077,8 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                 onChanged: (val) {
                   if (val.length >= 2) {
                     if (val.length > 2) {
-                      String carry = val.substring(2);
-                      String current = val.substring(0, 2);
+                      final String carry = val.substring(2);
+                      final String current = val.substring(0, 2);
                       pc.min.text = current;
                       pc.sec.text = carry;
                       _secFocusNodes[index].requestFocus();
@@ -1186,7 +1186,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: GoogleFonts.outfit(color: Colors.white24, fontSize: 11),
-            counterText: "",
+            counterText: '',
             filled: true,
             fillColor: Colors.white.withValues(alpha: 0.05),
             contentPadding: const EdgeInsets.symmetric(

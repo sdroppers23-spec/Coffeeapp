@@ -282,7 +282,7 @@ void main() {
       // Regions (Prefix with Country name translated)
       regionEn, regionEn, regionEn, regionEn, regionEn, regionEn, regionEn,
       regionEn, regionEn, regionEn,
-      "0", "0",
+      '0', '0',
       // Varieties
       varietiesEn, varietiesEn, varietiesEn, varietiesEn, varietiesEn,
       varietiesEn, varietiesEn, varietiesEn, varietiesEn, varietiesEn,
@@ -312,9 +312,9 @@ void main() {
       descEn, descUk, descEn, descEn, descEn, descEn, descEn, descEn, descEn,
       descEn,
       // Roast
-      "Light", "Світле", "Light", "Hell", "Clair", "Claro", "Chiaro", "Claro",
-      "Light", "Açık",
-      lot, sca, "{}", "{}", "0.0", "[]", "", "", "", "", "false",
+      'Light', 'Світле', 'Light', 'Hell', 'Clair', 'Claro', 'Chiaro', 'Claro',
+      'Light', 'Açık',
+      lot, sca, '{}', '{}', '0.0', '[]', '', '', '', '', 'false',
     ];
     beansCsv.writeln(
       row.map((e) => '"${e.toString().replaceAll('"', '""')}"').join(','),

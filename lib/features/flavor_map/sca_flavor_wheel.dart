@@ -304,7 +304,7 @@ class _ScaWheelPainter extends CustomPainter {
         Colors.white,
         11.0,
         true,
-        isOtherSection: cat.key == "wheel_cat_others",
+        isOtherSection: cat.key == 'wheel_cat_others',
       );
 
       // 2. Draw Middle Ring (Subcategory)
@@ -347,7 +347,7 @@ class _ScaWheelPainter extends CustomPainter {
             Colors.white,
             7.5,
             true,
-            isOtherSection: cat.key == "wheel_cat_others",
+            isOtherSection: cat.key == 'wheel_cat_others',
           );
         }
 
@@ -393,7 +393,7 @@ class _ScaWheelPainter extends CustomPainter {
                 Colors.white.withValues(alpha: 0.9 * labelOpacity),
                 8.5,
                 false,
-                isOtherSection: cat.key == "wheel_cat_others",
+                isOtherSection: cat.key == 'wheel_cat_others',
               );
             }
           }
@@ -504,7 +504,7 @@ class _ScaWheelPainter extends CustomPainter {
 
     // Flip text if it's in the bottom half of the circle
     // If it's the "Others" section, we FORCE flip as per user request to have it "upside down"
-    bool shouldFlip = isOtherSection || 
+    final bool shouldFlip = isOtherSection || 
                       (middleAngle > (math.pi / 2 + 0.2) && 
                        middleAngle < (3 * math.pi / 2 - 0.2));
     if (shouldFlip) {
@@ -512,7 +512,7 @@ class _ScaWheelPainter extends CustomPainter {
     }
 
     // Calculate scaling factor based on the widest line, with a clamp for uniformity
-    double maxWidth = painters.fold<double>(
+    final double maxWidth = painters.fold<double>(
       0,
       (max, p) => math.max(max, p.width),
     );

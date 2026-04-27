@@ -166,33 +166,33 @@ class CoffeeDataSeed {
     if (!isEmpty && !force) return;
 
     // Provide a tiny fallback seed so it's not totally empty if cloud sync fails
-    final bean = LocalizedBeansV2Companion(
-      id: const Value(1),
-      scaScore: const Value('88+'),
-      cupsScore: const Value(88.5),
-      processingMethodsJson: const Value('["Washed"]'),
+    const bean = LocalizedBeansV2Companion(
+      id: Value(1),
+      scaScore: Value('88+'),
+      cupsScore: Value(88.5),
+      processingMethodsJson: Value('["Washed"]'),
     );
 
     final translations = [
-      LocalizedBeanTranslationsV2Companion(
-        beanId: const Value(1),
-        languageCode: const Value('uk'),
-        country: const Value('Ефіопія'),
-        region: const Value('Їргачеффе'),
-        varieties: const Value('Heirloom'),
-        flavorNotes: const Value('["Жасмин", "Бергамот", "Чорний чай"]'),
-        processMethod: const Value('Мита'),
-        description: const Value('Класична ефіопська кава з яскравим квітковим профілем.'),
+      const LocalizedBeanTranslationsV2Companion(
+        beanId: Value(1),
+        languageCode: Value('uk'),
+        country: Value('Ефіопія'),
+        region: Value('Їргачеффе'),
+        varieties: Value('Heirloom'),
+        flavorNotes: Value('["Жасмин", "Бергамот", "Чорний чай"]'),
+        processMethod: Value('Мита'),
+        description: Value('Класична ефіопська кава з яскравим квітковим профілем.'),
       ),
-      LocalizedBeanTranslationsV2Companion(
-        beanId: const Value(1),
-        languageCode: const Value('en'),
-        country: const Value('Ethiopia'),
-        region: const Value('Yirgacheffe'),
-        varieties: const Value('Heirloom'),
-        flavorNotes: const Value('["Jasmine", "Bergamot", "Black Tea"]'),
-        processMethod: const Value('Washed'),
-        description: const Value('Classic Ethiopian coffee with a bright floral profile.'),
+      const LocalizedBeanTranslationsV2Companion(
+        beanId: Value(1),
+        languageCode: Value('en'),
+        country: Value('Ethiopia'),
+        region: Value('Yirgacheffe'),
+        varieties: Value('Heirloom'),
+        flavorNotes: Value('["Jasmine", "Bergamot", "Black Tea"]'),
+        processMethod: Value('Washed'),
+        description: Value('Classic Ethiopian coffee with a bright floral profile.'),
       ),
     ];
 
@@ -206,7 +206,7 @@ class CoffeeDataSeed {
       {
         'main': BrewingRecipesCompanion.insert(
           methodKey: 'v60',
-          imageUrl: const Value('p_v60.png'),
+          imageUrl: const Value('p_v60.webp'),
         ),
         'trans': [
           BrewingRecipeTranslationsCompanion.insert(recipeKey: 'v60', languageCode: 'en', name: const Value('V60 Pour Over'), description: const Value('Classic pour-over method for clarity and sweetness.')),
@@ -216,7 +216,7 @@ class CoffeeDataSeed {
       {
         'main': BrewingRecipesCompanion.insert(
           methodKey: 'chemex',
-          imageUrl: const Value('p_chemex.png'),
+          imageUrl: const Value('p_chemex.webp'),
         ),
         'trans': [
           BrewingRecipeTranslationsCompanion.insert(recipeKey: 'chemex', languageCode: 'en', name: const Value('Chemex'), description: const Value('Elegant glass brewer for a clean, tea-like body.')),
@@ -226,7 +226,7 @@ class CoffeeDataSeed {
       {
         'main': BrewingRecipesCompanion.insert(
           methodKey: 'aeropress',
-          imageUrl: const Value('p_aeropress.png'),
+          imageUrl: const Value('p_aeropress.webp'),
         ),
         'trans': [
           BrewingRecipeTranslationsCompanion.insert(recipeKey: 'aeropress', languageCode: 'en', name: const Value('AeroPress'), description: const Value('Versatile and portable pressure brewer.')),

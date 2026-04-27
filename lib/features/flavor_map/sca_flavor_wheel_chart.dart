@@ -22,114 +22,114 @@ class FlavorNode {
 
 // Minimal hierarchical representation of the SCA wheel
 final List<FlavorNode> scaWheelData = [
-  FlavorNode(
+  const FlavorNode(
     nameKey: 'flavor_fruity',
     descKey: 'desc_fruity',
-    color: const Color(0xFFDD2C00),
+    color: Color(0xFFDD2C00),
     children: [
       FlavorNode(
         nameKey: 'note_berry',
-        color: const Color(0xFFC51162),
+        color: Color(0xFFC51162),
         descKey: 'desc_note_berry',
       ),
       FlavorNode(
         nameKey: 'note_citrus',
-        color: const Color(0xFFFF6D00),
+        color: Color(0xFFFF6D00),
         descKey: 'desc_note_citrus',
       ),
       FlavorNode(
         nameKey: 'note_stone_fruit',
-        color: const Color(0xFFFFAB00),
+        color: Color(0xFFFFAB00),
         descKey: 'desc_note_stone_fruit',
       ),
     ],
   ),
-  FlavorNode(
+  const FlavorNode(
     nameKey: 'flavor_floral',
     descKey: 'desc_floral',
-    color: const Color(0xFFF50057),
+    color: Color(0xFFF50057),
     children: [
       FlavorNode(
         nameKey: 'note_jasmine',
-        color: const Color(0xFFFF80AB),
+        color: Color(0xFFFF80AB),
         descKey: 'desc_note_jasmine',
       ),
       FlavorNode(
         nameKey: 'note_tea',
-        color: const Color(0xFF8D6E63),
+        color: Color(0xFF8D6E63),
         descKey: 'desc_note_tea',
       ),
     ],
   ),
-  FlavorNode(
+  const FlavorNode(
     nameKey: 'flavor_sweet',
     descKey: 'desc_sweet',
-    color: const Color(0xFFFF9100),
+    color: Color(0xFFFF9100),
     children: [
       FlavorNode(
         nameKey: 'note_caramel',
-        color: const Color(0xFFFFAB40),
+        color: Color(0xFFFFAB40),
         descKey: 'desc_note_caramel',
       ),
       FlavorNode(
         nameKey: 'note_honey',
-        color: const Color(0xFFFFD180),
+        color: Color(0xFFFFD180),
         descKey: 'desc_note_honey',
       ),
       FlavorNode(
         nameKey: 'note_vanilla',
-        color: const Color(0xFFFFE57F),
+        color: Color(0xFFFFE57F),
         descKey: 'desc_note_vanilla',
       ),
     ],
   ),
-  FlavorNode(
+  const FlavorNode(
     nameKey: 'flavor_nutty',
     descKey: 'desc_nutty',
-    color: const Color(0xFF5D4037),
+    color: Color(0xFF5D4037),
     children: [
       FlavorNode(
         nameKey: 'note_chocolate',
-        color: const Color(0xFF3E2723),
+        color: Color(0xFF3E2723),
         descKey: 'desc_note_chocolate',
       ),
       FlavorNode(
         nameKey: 'note_hazelnut',
-        color: const Color(0xFF6D4C41),
+        color: Color(0xFF6D4C41),
         descKey: 'desc_note_hazelnut',
       ),
     ],
   ),
-  FlavorNode(
+  const FlavorNode(
     nameKey: 'flavor_spicy',
     descKey: 'desc_spicy',
-    color: const Color(0xFFC2185B),
+    color: Color(0xFFC2185B),
     children: [
       FlavorNode(
         nameKey: 'note_cinnamon',
-        color: const Color(0xFFAD1457),
+        color: Color(0xFFAD1457),
         descKey: 'desc_note_cinnamon',
       ),
       FlavorNode(
         nameKey: 'note_pepper',
-        color: const Color(0xFF880E4F),
+        color: Color(0xFF880E4F),
         descKey: 'desc_note_pepper',
       ),
     ],
   ),
-  FlavorNode(
+  const FlavorNode(
     nameKey: 'flavor_earthy',
     descKey: 'desc_earthy',
-    color: const Color(0xFF2E7D32),
+    color: Color(0xFF2E7D32),
     children: [
       FlavorNode(
         nameKey: 'note_forest',
-        color: const Color(0xFF1B5E20),
+        color: Color(0xFF1B5E20),
         descKey: 'desc_note_forest',
       ),
       FlavorNode(
         nameKey: 'note_tobacco',
-        color: const Color(0xFF795548),
+        color: Color(0xFF795548),
         descKey: 'desc_note_tobacco',
       ),
     ],
@@ -167,7 +167,7 @@ class _ScaFlavorWheelChartState extends ConsumerState<ScaFlavorWheelChart> {
       return;
     }
 
-    final totalAngle = 2 * math.pi;
+    const totalAngle = 2 * math.pi;
     double currentAngle = 0.0;
 
     FlavorNode? tappedNode;
@@ -353,7 +353,7 @@ class _ScaWheelPainter extends CustomPainter {
       (acc, n) =>
           acc + (n.children.isEmpty ? 1.0 : n.children.length.toDouble()),
     );
-    final totalAngle = 2 * math.pi;
+    const totalAngle = 2 * math.pi;
 
     // Offset by -pi/2 so 0 is at the top
     double currentAngle = -math.pi / 2;

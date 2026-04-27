@@ -1258,7 +1258,7 @@ class ScaFlavorWheelL10n {
   }
 
   static String _humanize(String key) {
-    var base = key
+    final base = key
         .replaceFirst('wheel_note_', '')
         .replaceFirst('wheel_sub_', '')
         .replaceFirst('wheel_cat_', '')

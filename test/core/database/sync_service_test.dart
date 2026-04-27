@@ -38,14 +38,14 @@ void main() {
   });
 
   test('pullUserContent should NOT overwrite local unsynced coffee lots', () async {
-    final lotId = 'test-lot-id';
-    final initialSensory = '{"aroma": 5}';
+    const lotId = 'test-lot-id';
+    const initialSensory = '{"aroma": 5}';
     
     await db.into(db.coffeeLots).insert(CoffeeLotsCompanion.insert(
       id: lotId,
       userId: 'user-123',
       coffeeName: const Value('Test Coffee'),
-      sensoryJson: Value(initialSensory),
+      sensoryJson: const Value(initialSensory),
       isSynced: const Value(false),
       createdAt: Value(DateTime.now()),
       updatedAt: Value(DateTime.now()),
@@ -63,7 +63,7 @@ void main() {
         'id': lotId,
         'user_id': 'user-123',
         'coffee_name': 'Test Coffee',
-        'sensory_json': {"aroma": 0}, 
+        'sensory_json': {'aroma': 0}, 
         'is_synced': true,
         'created_at': DateTime.now().toIso8601String(),
         'updated_at': DateTime.now().toIso8601String(),

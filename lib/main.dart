@@ -17,7 +17,7 @@ void main() async {
 
   try {
     prefs = await SharedPreferences.getInstance();
-    await dotenv.load(fileName: ".env");
+    await dotenv.load(fileName: '.env');
 
     final url = dotenv.env['SUPABASE_URL'] ?? '';
     final anonKey = dotenv.env['SUPABASE_ANON_KEY'] ?? '';

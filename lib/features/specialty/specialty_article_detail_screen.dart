@@ -209,55 +209,55 @@ class _SpecialtyArticleDetailScreenState
                       Html(
                         data: CoffeeTextProcessor.process(content),
                         style: {
-                          "body": Style(
+                          'body': Style(
                             margin: Margins.zero,
                             padding: HtmlPaddings.zero,
                             fontSize: FontSize(17),
-                            lineHeight: LineHeight(1.8),
+                            lineHeight: const LineHeight(1.8),
                             color: Colors.white.withValues(alpha: 0.9),
                             fontFamily: GoogleFonts.outfit().fontFamily,
                           ),
-                          "h1,h2,h3": Style(
+                          'h1,h2,h3': Style(
                             color: gold,
                             fontFamily: GoogleFonts.cormorantGaramond().fontFamily,
                             margin: Margins.only(top: 24, bottom: 12),
                           ),
-                          "h1": Style(fontSize: FontSize(36), fontWeight: FontWeight.w700),
-                          "h2": Style(fontSize: FontSize(28), fontWeight: FontWeight.w700),
-                          "h3": Style(fontSize: FontSize(20), fontWeight: FontWeight.w600),
-                          "p": Style(
+                          'h1': Style(fontSize: FontSize(36), fontWeight: FontWeight.w700),
+                          'h2': Style(fontSize: FontSize(28), fontWeight: FontWeight.w700),
+                          'h3': Style(fontSize: FontSize(20), fontWeight: FontWeight.w600),
+                          'p': Style(
                             margin: Margins.only(bottom: 16),
                           ),
-                          "strong": Style(
+                          'strong': Style(
                             color: gold,
                             fontWeight: FontWeight.w700,
                           ),
-                          ".coffee-serif": Style(
+                          '.coffee-serif': Style(
                             fontFamily: GoogleFonts.cormorantGaramond().fontFamily,
                             fontWeight: FontWeight.w600,
                           ),
-                          ".coffee-gold": Style(
+                          '.coffee-gold': Style(
                             color: gold,
                             fontWeight: FontWeight.bold,
                           ),
-                          ".coffee-accent": Style(
+                          '.coffee-accent': Style(
                             color: gold.withValues(alpha: 0.5),
                           ),
-                          ".coffee-accent-gold": Style(
+                          '.coffee-accent-gold': Style(
                             color: gold.withValues(alpha: 0.8),
                             fontWeight: FontWeight.bold,
                           ),
-                          "ol, ul": Style(
+                          'ol, ul': Style(
                             margin: Margins.only(top: 16, bottom: 16),
                             padding: HtmlPaddings.only(left: 4),
                           ),
-                          "li": Style(
+                          'li': Style(
                             fontSize: FontSize(17),
-                            lineHeight: LineHeight(1.6),
+                            lineHeight: const LineHeight(1.6),
                             margin: Margins.only(bottom: 8),
                             color: Colors.white.withValues(alpha: 0.9),
                           ),
-                          "li::marker": Style(
+                          'li::marker': Style(
                             color: gold,
                             fontWeight: FontWeight.bold,
                             fontSize: FontSize(18), // Larger numbering

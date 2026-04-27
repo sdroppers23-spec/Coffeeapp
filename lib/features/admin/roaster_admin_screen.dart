@@ -180,8 +180,8 @@ class _TrendChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return LineChart(
       LineChartData(
-        gridData: FlGridData(show: true),
-        titlesData: FlTitlesData(
+        gridData: const FlGridData(show: true),
+        titlesData: const FlTitlesData(
           show: true,
           bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true)),
           leftTitles: AxisTitles(

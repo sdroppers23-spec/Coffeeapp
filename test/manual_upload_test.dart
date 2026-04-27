@@ -12,7 +12,7 @@ void main() {
     TestWidgetsFlutterBinding.ensureInitialized();
 
     // 1. Load .env
-    await dotenv.load(fileName: ".env");
+    await dotenv.load(fileName: '.env');
     final url = dotenv.env['SUPABASE_URL']!;
     final anonKey = dotenv.env['SUPABASE_ANON_KEY']!;
 

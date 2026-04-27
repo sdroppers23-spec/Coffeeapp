@@ -171,7 +171,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     final pref = ref.read(preferencesProvider);
     String altitudeStr = widget.initialLot?.altitude ?? '';
     if (altitudeStr.isNotEmpty && pref.lengthUnit == LengthUnit.feet) {
-      double? m = double.tryParse(altitudeStr);
+      final double? m = double.tryParse(altitudeStr);
       if (m != null) {
         altitudeStr = (m * 3.28084).toStringAsFixed(0);
       }
@@ -330,7 +330,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       }
 
       // 2. Prepare Processing Method
-      String processStr = (_selectedProcess == 'Other' || _selectedProcess == null)
+      final String processStr = (_selectedProcess == 'Other' || _selectedProcess == null)
           ? _processController.text
           : _selectedProcess!;
       
@@ -1320,7 +1320,7 @@ class GlobalCoffeeInputFormatter extends TextInputFormatter {
     
 
     for (int i = 0; i < text.length; i++) {
-      String char = text[i];
+      final String char = text[i];
       
       // If we encounter a dot sequence
       if (char == '.') {
@@ -1416,7 +1416,7 @@ class ScaScoreInputFormatter extends TextInputFormatter {
       }
       return TextEditingValue(
         text: '${text.substring(0, 2)}.${text.substring(2)}',
-        selection: TextSelection.collapsed(offset: 4),
+        selection: const TextSelection.collapsed(offset: 4),
       );
     }
 
@@ -1434,7 +1434,7 @@ class ScaScoreInputFormatter extends TextInputFormatter {
 class AltitudeInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    String text = newValue.text;
+    final String text = newValue.text;
     if (text.isEmpty) return newValue;
 
     // 1. Max 8 digits total

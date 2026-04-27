@@ -117,7 +117,7 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                       isFavorite: liveLot?.isFavorite ?? liveBean?.isFavorite ?? false,
                       onToggleFavorite: () async {
                         final db = ref.read(databaseProvider);
-                        bool currentlyFavorite = liveLot?.isFavorite ?? liveBean?.isFavorite ?? false;
+                        final bool currentlyFavorite = liveLot?.isFavorite ?? liveBean?.isFavorite ?? false;
                         
                         if (liveLot != null) {
                           await db.toggleLotFavorite(liveLot.id, !currentlyFavorite);
@@ -185,7 +185,7 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                   backgroundColor: theme.colorScheme.primary,
                   foregroundColor: Colors.black,
                   label: Text(
-                    ref.t("add_recipe"),
+                    ref.t('add_recipe'),
                     style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
                   ),
                   icon: const Icon(Icons.add_rounded, size: 24),

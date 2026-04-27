@@ -50,7 +50,7 @@ class LotDetailRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // If value is null, empty or just whitespace, we use "N/A" as requested by the user
-    final displayValue = (value.trim().isEmpty) ? "N/A" : value;
+    final displayValue = (value.trim().isEmpty) ? 'N/A' : value;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -93,7 +93,7 @@ class LotCompactStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final displayValue = (value.trim().isEmpty) ? "N/A" : value;
+    final displayValue = (value.trim().isEmpty) ? 'N/A' : value;
 
     return GestureDetector(
       onTap: onTap,

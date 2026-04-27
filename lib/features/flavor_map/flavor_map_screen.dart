@@ -283,7 +283,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                       // Tab 2: Flavor Wheel
                       Column(
                         children: [
-                          const SizedBox(height: 6),
+                          const SizedBox(height: 2),
                           Text(
                             ref.t('tab_wheel').toUpperCase(),
                             style: GoogleFonts.outfit(
@@ -293,7 +293,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                               letterSpacing: 1.5,
                             ),
                           ),
-                          const SizedBox(height: 6),
+                          const SizedBox(height: 2),
                           Expanded(
                             child: ScaFlavorWheel(onSelect: _onFlavorSelect),
                           ),

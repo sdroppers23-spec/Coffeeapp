@@ -135,7 +135,8 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
           constraints.maxHeight,
         );
 
-        return Center(
+        return Align(
+          alignment: Alignment.topCenter,
           child: AspectRatio(
             aspectRatio: 1,
             child: ShaderMask(

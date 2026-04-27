@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'sca_flavor_wheel_data.dart';
-import '../../../core/l10n/app_localizations.dart';
-import '../../../core/l10n/sca_flavor_wheel_l10n.dart';
+import '../../core/l10n/app_localizations.dart';
+import '../../core/l10n/sca_flavor_wheel_l10n.dart';
 
 class ScaFlavorWheel extends ConsumerStatefulWidget {
   final double size;
@@ -130,15 +130,14 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final currentSize = math.min(
-          constraints.maxWidth,
-          constraints.maxHeight,
-        );
+        // Increase size to occupy more vertical space
+        final currentSize = constraints.maxHeight * 0.95;
 
         return Align(
           alignment: Alignment.topCenter,
-          child: AspectRatio(
-            aspectRatio: 1,
+          child: SizedBox(
+            width: constraints.maxWidth,
+            height: constraints.maxHeight,
             child: ShaderMask(
               shaderCallback: (Rect bounds) {
                 return LinearGradient(
@@ -148,19 +147,20 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
                     Colors.black.withValues(alpha: 0.0),
                     Colors.black,
                     Colors.black,
+                    Colors.black.withValues(alpha: 0.3),
                     Colors.black.withValues(alpha: 0.0),
                   ],
-                  stops: const [0.0, 0.04, 0.96, 1.0],
+                  stops: const [0.0, 0.02, 0.88, 0.96, 1.0],
                 ).createShader(bounds);
               },
               blendMode: BlendMode.dstIn,
               child: InteractiveViewer(
                 transformationController: _transformationController,
-                minScale: 1.0,
+                minScale: 0.5, // Allow zooming out
                 maxScale: 4.0,
-                panEnabled: _transformationController.value.getMaxScaleOnAxis() > 1.05,
-                boundaryMargin: EdgeInsets.zero,
-                constrained: true,
+                panEnabled: true,
+                boundaryMargin: const EdgeInsets.all(100), // Allow panning outside
+                constrained: false, // Important for larger child
                 child: GestureDetector(
                   onTapUp: (details) =>
                       _handleTap(details.localPosition, currentSize),

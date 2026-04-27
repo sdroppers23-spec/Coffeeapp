@@ -96,23 +96,30 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
 
     _notesController.text = recipe?.notes ?? '';
 
-    final initialGrinder = recipe?.grinderName ?? 'Other';
-    final presets = [
-      'Other',
-      'Comandante',
-      'EK43',
-      'Fellow Ode',
-      'Wilfa',
-      'Timemore',
-    ];
-    if (presets.contains(initialGrinder)) {
-      _isOtherGrinder = initialGrinder == 'Other';
-      _grinderNameController.text = initialGrinder;
-      _customGrinderController.text = '';
+    final initialGrinder = recipe?.grinderName;
+    if (initialGrinder == null || initialGrinder.isEmpty) {
+      _isOtherGrinder = false;
+      _grinderNameController.text = '';
+      _isGrinderExpanded = false;
     } else {
-      _isOtherGrinder = true;
-      _grinderNameController.text = 'Other';
-      _customGrinderController.text = initialGrinder;
+      _isGrinderExpanded = true;
+      final presets = [
+        'Comandante',
+        'EK43',
+        'Fellow Ode',
+        'Wilfa',
+        'Timemore',
+        'Other',
+      ];
+      if (presets.contains(initialGrinder)) {
+        _isOtherGrinder = initialGrinder == 'Other';
+        _grinderNameController.text = initialGrinder;
+        _customGrinderController.text = '';
+      } else {
+        _isOtherGrinder = true;
+        _grinderNameController.text = 'Other';
+        _customGrinderController.text = initialGrinder;
+      }
     }
 
     // Listeners for Ratio

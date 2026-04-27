@@ -67,7 +67,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
           children: [
             // Top Bar: Matches Discover Screen Style
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               child: Row(
                 children: [
                   Expanded(
@@ -95,42 +95,42 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
 
             // Internal Tab Bar Segmented Control: Matches Screenshot
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1D1B1A), // Dark brown matte
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1D1B1A), // Dark brown matte
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _TabOption(
+                        icon: Icons.radar,
+                        label: ref.t('tab_profile'),
+                        isSelected: _selectedTab == 0,
+                        onTap: () => _setTab(0),
+                      ),
+                    ),
+                    Expanded(
+                      child: _TabOption(
+                        icon: Icons.public,
+                        label: ref.t('tab_sphere'),
+                        isSelected: _selectedTab == 1,
+                        onTap: () => _setTab(1),
+                      ),
+                    ),
+                    Expanded(
+                      child: _TabOption(
+                        icon: Icons.pie_chart_outline,
+                        label: ref.t('tab_wheel'),
+                        isSelected: _selectedTab == 2,
+                        onTap: () => _setTab(2),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: _TabOption(
-                      icon: Icons.radar,
-                      label: ref.t('tab_profile'),
-                      isSelected: _selectedTab == 0,
-                      onTap: () => _setTab(0),
-                    ),
-                  ),
-                  Expanded(
-                    child: _TabOption(
-                      icon: Icons.public,
-                      label: ref.t('tab_sphere'),
-                      isSelected: _selectedTab == 1,
-                      onTap: () => _setTab(1),
-                    ),
-                  ),
-                  Expanded(
-                    child: _TabOption(
-                      icon: Icons.pie_chart_outline,
-                      label: ref.t('tab_wheel'),
-                      isSelected: _selectedTab == 2,
-                      onTap: () => _setTab(2),
-                    ),
-                  ),
-                ],
-              ),
-            ),
 
             const SizedBox(height: 2),
 
@@ -283,17 +283,17 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                       // Tab 2: Flavor Wheel
                       Column(
                         children: [
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 6),
                           Text(
                             ref.t('tab_wheel').toUpperCase(),
                             style: GoogleFonts.outfit(
-                              fontSize: 20,
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: const Color(0xFFC8A96E),
                               letterSpacing: 1.5,
                             ),
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 6),
                           Expanded(
                             child: ScaFlavorWheel(onSelect: _onFlavorSelect),
                           ),

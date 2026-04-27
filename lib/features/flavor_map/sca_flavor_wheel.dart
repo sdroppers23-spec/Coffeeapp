@@ -161,7 +161,7 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
                 boundaryMargin: EdgeInsets.zero,
                 constrained: true,
                 child: GestureDetector(
-                  onTapDown: (details) =>
+                  onTapUp: (details) =>
                       _handleTap(details.localPosition, currentSize),
                   child: AnimatedBuilder(
                     animation: _controller,
@@ -499,7 +499,8 @@ class _ScaWheelPainter extends CustomPainter {
     canvas.rotate(middleAngle);
     canvas.translate(middleRadius, 0);
 
-    bool shouldFlip = middleAngle > math.pi / 2 && middleAngle < 3 * math.pi / 2;
+    // Flip threshold adjusted to pi/2 + 0.2 to avoid splitting categories at the bottom (like Nutty/Cocoa)
+    bool shouldFlip = middleAngle > (math.pi / 2 + 0.2) && middleAngle < (3 * math.pi / 2 - 0.2);
     if (shouldFlip) {
       canvas.rotate(math.pi);
     }

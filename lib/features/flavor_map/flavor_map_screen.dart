@@ -281,24 +281,27 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
                       ),
 
                       // Tab 2: Flavor Wheel
-                      Column(
-                        children: [
-                          const SizedBox(height: 2),
-                          Text(
-                            ref.t('tab_wheel').toUpperCase(),
-                            style: GoogleFonts.outfit(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xFFC8A96E),
-                              letterSpacing: 1.5,
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 90), // Lift above nav bar
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 2),
+                            Text(
+                              ref.t('tab_wheel').toUpperCase(),
+                              style: GoogleFonts.outfit(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFFC8A96E),
+                                letterSpacing: 1.5,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 2),
-                          Expanded(
-                            child: ScaFlavorWheel(onSelect: _onFlavorSelect),
-                          ),
-                          const SizedBox(height: 0),
-                        ],
+                            const SizedBox(height: 2),
+                            Expanded(
+                              child: ScaFlavorWheel(onSelect: _onFlavorSelect),
+                            ),
+                            const SizedBox(height: 0),
+                          ],
+                        ),
                       ),
                     ],
                   ),

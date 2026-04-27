@@ -130,11 +130,11 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Increase size to occupy more vertical space
-        final currentSize = constraints.maxHeight * 0.95;
+        // Set size to fit screen width exactly
+        final currentSize = constraints.maxWidth;
 
         return Align(
-          alignment: Alignment.topCenter,
+          alignment: Alignment.center,
           child: SizedBox(
             width: constraints.maxWidth,
             height: constraints.maxHeight,

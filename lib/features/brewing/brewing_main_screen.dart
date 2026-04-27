@@ -95,7 +95,7 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(44),
-          child: Container(
+          child: SizedBox(
             height: 44,
             child: TabBar(
               controller: _tabController,

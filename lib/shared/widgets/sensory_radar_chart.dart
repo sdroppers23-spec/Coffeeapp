@@ -68,14 +68,18 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                _TemplateChip(ref.t('process_washed'), ref.t('sensory_washed_desc'), const {
-                  'bitterness': 0.2,
-                  'acidity': 0.8,
-                  'sweetness': 0.6,
-                  'body': 0.4,
-                  'intensity': 0.7,
-                  'aftertaste': 0.6,
-                }),
+                _TemplateChip(
+                  ref.t('process_washed'),
+                  ref.t('sensory_washed_desc'),
+                  const {
+                    'bitterness': 0.2,
+                    'acidity': 0.8,
+                    'sweetness': 0.6,
+                    'body': 0.4,
+                    'intensity': 0.7,
+                    'aftertaste': 0.6,
+                  },
+                ),
                 const SizedBox(width: 8),
                 _TemplateChip(
                   ref.t('process_natural'),
@@ -202,7 +206,7 @@ class _SensoryRadarChartState extends ConsumerState<SensoryRadarChart> {
     final double newValue = ((distance / maxRadius * 5).round() / 5.0).clamp(
       0.2,
       1.0,
-    ); 
+    );
     ref
         .read(flavorValuesProvider.notifier)
         .updateValue(_draggingLabel!, newValue);
@@ -232,7 +236,7 @@ class RadarPainter extends CustomPainter {
 
     final maxRadius = min(size.width, size.height) / 2 - 55;
     final center = Offset(size.width / 2, size.height / 2);
-    
+
     // STRICT ORDER of the 6 axes
     final labels = [
       'bitterness',
@@ -245,12 +249,14 @@ class RadarPainter extends CustomPainter {
     final angleStep = 2 * pi / labels.length;
 
     final gridPaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.15) // Force subtle white for grid
+      ..color = Colors.white
+          .withValues(alpha: 0.15) // Force subtle white for grid
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
     final axisPaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.3) // Force visible white for axes
+      ..color = Colors.white
+          .withValues(alpha: 0.3) // Force visible white for axes
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 

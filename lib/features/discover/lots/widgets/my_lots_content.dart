@@ -16,7 +16,6 @@ import '../../widgets/discovery_action_bar.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../shared/services/toast_service.dart';
 
-
 class MyLotsContent extends ConsumerStatefulWidget {
   const MyLotsContent({super.key});
 
@@ -27,10 +26,9 @@ class MyLotsContent extends ConsumerStatefulWidget {
 class _MyLotsContentState extends ConsumerState<MyLotsContent> {
   final Set<String> _pendingDeleteIds = {};
   bool _isUndoVisible = false;
-  
+
   bool get _isSelectionMode => ref.watch(myLotsSelectedIdsProvider).isNotEmpty;
   late final ScrollController _scrollController;
-
 
   @override
   void initState() {
@@ -64,7 +62,9 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.05),
                     borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.1),
+                    ),
                   ),
                   child: Material(
                     color: Colors.transparent,
@@ -75,7 +75,9 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                           width: 64,
                           height: 64,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                            color: const Color(
+                              0xFFC8A96E,
+                            ).withValues(alpha: 0.1),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
@@ -114,7 +116,11 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(14),
                                     color: Colors.white.withValues(alpha: 0.05),
-                                    border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                                    border: Border.all(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                    ),
                                   ),
                                   alignment: Alignment.center,
                                   child: Text(
@@ -138,13 +144,18 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(14),
                                     color: Colors.redAccent, // Made opaque
-                                    border: Border.all(color: Colors.redAccent.withValues(alpha: 0.5)),
+                                    border: Border.all(
+                                      color: Colors.redAccent.withValues(
+                                        alpha: 0.5,
+                                      ),
+                                    ),
                                   ),
                                   alignment: Alignment.center,
                                   child: Text(
                                     context.t('delete').toUpperCase(),
                                     style: GoogleFonts.outfit(
-                                      color: Colors.white, // White text on red background
+                                      color: Colors
+                                          .white, // White text on red background
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12,
                                       letterSpacing: 1.2,
@@ -168,10 +179,15 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
     return result ?? false;
   }
 
-  void _showModernUndo(List<CoffeeLotDto> lots, BuildContext context, WidgetRef ref, {bool isArchive = false}) {
+  void _showModernUndo(
+    List<CoffeeLotDto> lots,
+    BuildContext context,
+    WidgetRef ref, {
+    bool isArchive = false,
+  }) {
     if (lots.isEmpty) return;
     String message;
-    
+
     final ids = lots.map((l) => l.id).toSet();
     setState(() {
       _pendingDeleteIds.addAll(ids);
@@ -206,7 +222,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
       onDismiss: () async {
         if (!mounted) return;
         final db = ref.read(databaseProvider);
-        
+
         // Physically delete/archive after timer
         for (final lot in lots) {
           if (isArchive) {
@@ -215,7 +231,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
             await db.deleteUserLot(lot.id);
           }
         }
-        
+
         if (mounted) {
           setState(() {
             _pendingDeleteIds.removeAll(ids);
@@ -234,7 +250,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
   void _selectAll(List<CoffeeLotDto> visibleLots) {
     final currentSelected = ref.read(myLotsSelectedIdsProvider);
     final visibleIds = visibleLots.map((l) => l.id).toSet();
-    
+
     // If all visible are already in global selection, remove them
     // (This is a simplified logic, matches encyclopedia behavior)
     if (visibleIds.every((id) => currentSelected.contains(id))) {
@@ -260,27 +276,30 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
             lotsAsync.when(
               data: (userLots) {
                 // Extract unique values for filter dialog
-                final countries = userLots
-                    .map((l) => l.originCountry ?? '')
-                    .where((c) => c.isNotEmpty)
-                    .toSet()
-                    .toList()
-                  ..sort();
-                
-                final flavors = userLots
-                    .map((l) => l.flavorProfile ?? '')
-                    .expand((f) => f.split(',').map((s) => s.trim()))
-                    .where((f) => f.isNotEmpty)
-                    .toSet()
-                    .toList()
-                  ..sort();
-                
-                final processes = userLots
-                    .map((l) => l.process ?? '')
-                    .where((p) => p.isNotEmpty)
-                    .toSet()
-                    .toList()
-                  ..sort();
+                final countries =
+                    userLots
+                        .map((l) => l.originCountry ?? '')
+                        .where((c) => c.isNotEmpty)
+                        .toSet()
+                        .toList()
+                      ..sort();
+
+                final flavors =
+                    userLots
+                        .map((l) => l.flavorProfile ?? '')
+                        .expand((f) => f.split(',').map((s) => s.trim()))
+                        .where((f) => f.isNotEmpty)
+                        .toSet()
+                        .toList()
+                      ..sort();
+
+                final processes =
+                    userLots
+                        .map((l) => l.process ?? '')
+                        .where((p) => p.isNotEmpty)
+                        .toSet()
+                        .toList()
+                      ..sort();
 
                 return DiscoveryActionBar(
                   filterProvider: myLotsFilterProvider,
@@ -299,9 +318,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
               loading: () => const SizedBox.shrink(),
               error: (error, stack) => const SizedBox.shrink(),
             ),
-            Expanded(
-              child: _buildListView(lotsAsync, filter),
-            ),
+            Expanded(child: _buildListView(lotsAsync, filter)),
           ],
         ),
 
@@ -325,21 +342,20 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                   ),
           ),
         ),
-        ScrollToTopButton(
-          scrollController: _scrollController,
-          threshold: 1000,
-        ),
+        ScrollToTopButton(scrollController: _scrollController, threshold: 1000),
       ],
     );
   }
 
-
-  Widget _buildListView(AsyncValue<List<CoffeeLotDto>> lotsAsync, DiscoveryFilterState filter) {
+  Widget _buildListView(
+    AsyncValue<List<CoffeeLotDto>> lotsAsync,
+    DiscoveryFilterState filter,
+  ) {
     return lotsAsync.when(
       data: (userLots) {
         final filteredByTab = userLots.where((lot) {
           if (_pendingDeleteIds.contains(lot.id)) return false;
-          
+
           if (filter.showFavoritesOnly) {
             return lot.isFavorite && !lot.isArchived;
           }
@@ -374,7 +390,9 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
             itemCount: filteredLots.length,
             itemBuilder: (context, index) {
               final lot = filteredLots[index];
-              final isSelected = ref.watch(myLotsSelectedIdsProvider).contains(lot.id);
+              final isSelected = ref
+                  .watch(myLotsSelectedIdsProvider)
+                  .contains(lot.id);
               return MyLotGridCard(
                 lot: lot,
                 isSelected: isSelected,
@@ -392,14 +410,14 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                   final db = ref.read(databaseProvider);
                   final newState = !lot.isFavorite;
                   await db.toggleLotFavorite(lot.id, newState);
-                  
+
                   if (context.mounted) {
-                    final msg = newState 
-                        ? context.t('toast_added_to_favorites') 
+                    final msg = newState
+                        ? context.t('toast_added_to_favorites')
                         : context.t('toast_removed_from_favorites');
                     ToastService.showSuccess(context, msg);
                   }
-                  
+
                   ref.invalidate(userLotsProvider);
                 },
               );
@@ -413,119 +431,156 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
           itemCount: filteredLots.length,
           itemBuilder: (context, index) {
             final lot = filteredLots[index];
-            final isSelected = ref.watch(myLotsSelectedIdsProvider).contains(lot.id);
-              return MyLotListCard(
-                lot: lot,
-                isSelected: isSelected,
-                isSelectionMode: _isSelectionMode,
-                onExpansionChanged: (isExpanded) {
-                  setState(() {});
-                },
-                onLongPress: (id) => _toggleLotSelection(id),
-                onTap: (id) {
-                  if (_isSelectionMode) {
-                    _toggleLotSelection(id);
-                  } else {
-                    context.push('/lot_details', extra: {'lot': lot});
-                  }
-                },
-                onFavoriteToggle: (lot) async {
-                  ref.read(settingsProvider.notifier).triggerSelectionVibrate();
-                  final db = ref.read(databaseProvider);
-                  final newState = !lot.isFavorite;
-                  await db.toggleLotFavorite(lot.id, newState);
-                  
-                  if (context.mounted) {
-                    final msg = newState 
-                        ? context.t('toast_added_to_favorites') 
-                        : context.t('toast_removed_from_favorites');
-                    ToastService.showSuccess(context, msg);
-                  }
-                  
-                  ref.invalidate(userLotsProvider);
-                },
-                onEditSwipe: filter.showArchivedOnly ? null : (lot) {
-                  context.push('/edit_lot', extra: lot);
-                },
-                onRestoreSwipe: filter.showArchivedOnly ? (lot) async {
-                  final db = ref.read(databaseProvider);
-                  await db.toggleLotArchive(lot.id, false);
-                  ref.invalidate(userLotsProvider);
-                  
-                  if (!context.mounted) return;
-                  ToastService.showSuccess(
-                    context, 
-                    context.t('toast_lot_restored')
-                  );
-                } : null,
-                onDeleteSwipe: (lot) async {
-                  final confirm = await _confirmDeleteDialog(lot);
-                  if (confirm) {
-                    if (context.mounted) {
-                      _showModernUndo([lot], context, ref, isArchive: false);
+            final isSelected = ref
+                .watch(myLotsSelectedIdsProvider)
+                .contains(lot.id);
+            return MyLotListCard(
+              lot: lot,
+              isSelected: isSelected,
+              isSelectionMode: _isSelectionMode,
+              onExpansionChanged: (isExpanded) {
+                setState(() {});
+              },
+              onLongPress: (id) => _toggleLotSelection(id),
+              onTap: (id) {
+                if (_isSelectionMode) {
+                  _toggleLotSelection(id);
+                } else {
+                  context.push('/lot_details', extra: {'lot': lot});
+                }
+              },
+              onFavoriteToggle: (lot) async {
+                ref.read(settingsProvider.notifier).triggerSelectionVibrate();
+                final db = ref.read(databaseProvider);
+                final newState = !lot.isFavorite;
+                await db.toggleLotFavorite(lot.id, newState);
+
+                if (context.mounted) {
+                  final msg = newState
+                      ? context.t('toast_added_to_favorites')
+                      : context.t('toast_removed_from_favorites');
+                  ToastService.showSuccess(context, msg);
+                }
+
+                ref.invalidate(userLotsProvider);
+              },
+              onEditSwipe: filter.showArchivedOnly
+                  ? null
+                  : (lot) {
+                      context.push('/edit_lot', extra: lot);
+                    },
+              onRestoreSwipe: filter.showArchivedOnly
+                  ? (lot) async {
+                      final db = ref.read(databaseProvider);
+                      await db.toggleLotArchive(lot.id, false);
+                      ref.invalidate(userLotsProvider);
+
+                      if (!context.mounted) return;
+                      ToastService.showSuccess(
+                        context,
+                        context.t('toast_lot_restored'),
+                      );
                     }
-                    return true;
+                  : null,
+              onDeleteSwipe: (lot) async {
+                final confirm = await _confirmDeleteDialog(lot);
+                if (confirm) {
+                  if (context.mounted) {
+                    _showModernUndo([lot], context, ref, isArchive: false);
                   }
-                  return false;
-                },
-              );
+                  return true;
+                }
+                return false;
+              },
+            );
           },
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator(color: Color(0xFFC8A96E))),
+      loading: () => const Center(
+        child: CircularProgressIndicator(color: Color(0xFFC8A96E)),
+      ),
       error: (e, s) => Center(child: Text('Error: $e')),
     );
   }
 
-  List<CoffeeLotDto> _applyFilters(List<CoffeeLotDto> lots, DiscoveryFilterState filter) {
+  List<CoffeeLotDto> _applyFilters(
+    List<CoffeeLotDto> lots,
+    DiscoveryFilterState filter,
+  ) {
     var result = lots.toList();
 
     // 1. Search
     if (filter.search.isNotEmpty) {
       final q = filter.search.toLowerCase();
-      result = result.where((l) => 
-        (l.coffeeName?.toLowerCase().contains(q) ?? false) || 
-        (l.roasteryName?.toLowerCase().contains(q) ?? false) ||
-        (l.originCountry?.toLowerCase().contains(q) ?? false) ||
-        (l.region?.toLowerCase().contains(q) ?? false)
-      ).toList();
+      result = result
+          .where(
+            (l) =>
+                (l.coffeeName?.toLowerCase().contains(q) ?? false) ||
+                (l.roasteryName?.toLowerCase().contains(q) ?? false) ||
+                (l.originCountry?.toLowerCase().contains(q) ?? false) ||
+                (l.region?.toLowerCase().contains(q) ?? false),
+          )
+          .toList();
     }
 
     // 2. Countries
     if (filter.selectedCountries.isNotEmpty) {
-      result = result.where((l) => filter.selectedCountries.contains(l.originCountry)).toList();
+      result = result
+          .where((l) => filter.selectedCountries.contains(l.originCountry))
+          .toList();
     }
 
     // 3. Flavor Notes
     if (filter.selectedFlavorNotes.isNotEmpty) {
       result = result.where((l) {
-        final notes = (l.flavorProfile ?? '').split(',').map((s) => s.trim()).toSet();
+        final notes = (l.flavorProfile ?? '')
+            .split(',')
+            .map((s) => s.trim())
+            .toSet();
         return filter.selectedFlavorNotes.any((f) => notes.contains(f));
       }).toList();
     }
 
     // 4. Process Methods
     if (filter.selectedProcesses.isNotEmpty) {
-      result = result.where((l) => filter.selectedProcesses.contains(l.process)).toList();
+      result = result
+          .where((l) => filter.selectedProcesses.contains(l.process))
+          .toList();
     }
 
     // 5. Sorting
     switch (filter.sortType) {
       case SortType.alphabetAsc:
-        result.sort((a, b) => (a.coffeeName ?? '').compareTo(b.coffeeName ?? ''));
+        result.sort(
+          (a, b) => (a.coffeeName ?? '').compareTo(b.coffeeName ?? ''),
+        );
         break;
       case SortType.alphabetDesc:
-        result.sort((a, b) => (b.coffeeName ?? '').compareTo(a.coffeeName ?? ''));
+        result.sort(
+          (a, b) => (b.coffeeName ?? '').compareTo(a.coffeeName ?? ''),
+        );
         break;
       case SortType.dateAsc:
-        result.sort((a, b) => (a.createdAt ?? DateTime(0)).compareTo(b.createdAt ?? DateTime(0)));
+        result.sort(
+          (a, b) => (a.createdAt ?? DateTime(0)).compareTo(
+            b.createdAt ?? DateTime(0),
+          ),
+        );
         break;
       case SortType.dateDesc:
-        result.sort((a, b) => (b.createdAt ?? DateTime(0)).compareTo(a.createdAt ?? DateTime(0)));
+        result.sort(
+          (a, b) => (b.createdAt ?? DateTime(0)).compareTo(
+            a.createdAt ?? DateTime(0),
+          ),
+        );
         break;
       default:
         // Default to newest first
-        result.sort((a, b) => (b.createdAt ?? DateTime(0)).compareTo(a.createdAt ?? DateTime(0)));
+        result.sort(
+          (a, b) => (b.createdAt ?? DateTime(0)).compareTo(
+            a.createdAt ?? DateTime(0),
+          ),
+        );
     }
 
     return result;
@@ -547,7 +602,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
               blurRadius: 20,
               spreadRadius: 2,
               offset: const Offset(0, 6),
-            )
+            ),
           ],
         ),
         child: Row(
@@ -608,7 +663,9 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                   Colors.redAccent,
                   () async {
                     final db = ref.read(databaseProvider);
-                    final idsToClear = Set<String>.from(ref.read(myLotsSelectedIdsProvider));
+                    final idsToClear = Set<String>.from(
+                      ref.read(myLotsSelectedIdsProvider),
+                    );
                     for (var id in idsToClear) {
                       await db.toggleLotFavorite(id, true);
                       ref.read(myLotsSelectedIdsProvider.notifier).remove(id);
@@ -624,8 +681,12 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                   Colors.white,
                   () async {
                     final db = ref.read(databaseProvider);
-                    final isArchive = ref.read(myLotsFilterProvider).showArchivedOnly;
-                    final idsToClear = Set<String>.from(ref.read(myLotsSelectedIdsProvider));
+                    final isArchive = ref
+                        .read(myLotsFilterProvider)
+                        .showArchivedOnly;
+                    final idsToClear = Set<String>.from(
+                      ref.read(myLotsSelectedIdsProvider),
+                    );
                     for (var id in idsToClear) {
                       await db.toggleLotArchive(id, !isArchive);
                       ref.read(myLotsSelectedIdsProvider.notifier).remove(id);
@@ -633,8 +694,8 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
 
                     if (mounted) {
                       ToastService.showSuccess(
-                        context, 
-                        context.t('toast_changes_saved')
+                        context,
+                        context.t('toast_changes_saved'),
                       );
                     }
                     setState(() {});
@@ -659,13 +720,25 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(24),
                               child: BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                                filter: ImageFilter.blur(
+                                  sigmaX: 10,
+                                  sigmaY: 10,
+                                ),
                                 child: Container(
-                                  padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+                                  padding: const EdgeInsets.fromLTRB(
+                                    24,
+                                    32,
+                                    24,
+                                    24,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: Colors.white.withValues(alpha: 0.05),
                                     borderRadius: BorderRadius.circular(24),
-                                    border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                                    border: Border.all(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                    ),
                                   ),
                                   child: Material(
                                     color: Colors.transparent,
@@ -676,7 +749,9 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                                           width: 64,
                                           height: 64,
                                           decoration: BoxDecoration(
-                                            color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                                            color: const Color(
+                                              0xFFC8A96E,
+                                            ).withValues(alpha: 0.1),
                                             shape: BoxShape.circle,
                                           ),
                                           child: const Icon(
@@ -687,7 +762,9 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                                         ),
                                         const SizedBox(height: 20),
                                         Text(
-                                          context.t('delete_confirm_batch_title'),
+                                          context.t(
+                                            'delete_confirm_batch_title',
+                                          ),
                                           style: GoogleFonts.outfit(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
@@ -696,7 +773,17 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                                         ),
                                         const SizedBox(height: 12),
                                         Text(
-                                          context.t('delete_confirm_batch_message', args: {'count': ref.read(myLotsSelectedIdsProvider).length.toString()}),
+                                          context.t(
+                                            'delete_confirm_batch_message',
+                                            args: {
+                                              'count': ref
+                                                  .read(
+                                                    myLotsSelectedIdsProvider,
+                                                  )
+                                                  .length
+                                                  .toString(),
+                                            },
+                                          ),
                                           textAlign: TextAlign.center,
                                           style: GoogleFonts.outfit(
                                             color: Colors.white70,
@@ -709,20 +796,35 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                                           children: [
                                             Expanded(
                                               child: GestureDetector(
-                                                onTap: () => Navigator.pop(ctx, false),
+                                                onTap: () =>
+                                                    Navigator.pop(ctx, false),
                                                 child: Container(
                                                   height: 48,
                                                   decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(14),
-                                                    color: Colors.white.withValues(alpha: 0.05),
-                                                    border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          14,
+                                                        ),
+                                                    color: Colors.white
+                                                        .withValues(
+                                                          alpha: 0.05,
+                                                        ),
+                                                    border: Border.all(
+                                                      color: Colors.white
+                                                          .withValues(
+                                                            alpha: 0.1,
+                                                          ),
+                                                    ),
                                                   ),
                                                   alignment: Alignment.center,
                                                   child: Text(
-                                                    context.t('cancel').toUpperCase(),
+                                                    context
+                                                        .t('cancel')
+                                                        .toUpperCase(),
                                                     style: GoogleFonts.outfit(
                                                       color: Colors.white70,
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 12,
                                                       letterSpacing: 1.2,
                                                     ),
@@ -733,20 +835,32 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                                             const SizedBox(width: 12),
                                             Expanded(
                                               child: GestureDetector(
-                                                onTap: () => Navigator.pop(ctx, true),
+                                                onTap: () =>
+                                                    Navigator.pop(ctx, true),
                                                 child: Container(
                                                   height: 48,
                                                   decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(14),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          14,
+                                                        ),
                                                     color: Colors.redAccent,
-                                                    border: Border.all(color: Colors.redAccent.withValues(alpha: 0.5)),
+                                                    border: Border.all(
+                                                      color: Colors.redAccent
+                                                          .withValues(
+                                                            alpha: 0.5,
+                                                          ),
+                                                    ),
                                                   ),
                                                   alignment: Alignment.center,
                                                   child: Text(
-                                                    context.t('delete').toUpperCase(),
+                                                    context
+                                                        .t('delete')
+                                                        .toUpperCase(),
                                                     style: GoogleFonts.outfit(
                                                       color: Colors.white,
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 12,
                                                       letterSpacing: 1.2,
                                                     ),
@@ -768,16 +882,27 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                     );
 
                     if (confirm == true) {
-                      final selectedIdsSnapshot = Set<String>.from(ref.read(myLotsSelectedIdsProvider));
-                      final selectedLots = (lotsAsync.value ?? []).where((l) => selectedIdsSnapshot.contains(l.id)).toList();
-                      final isArchive = ref.read(myLotsFilterProvider).showArchivedOnly;
-                      
+                      final selectedIdsSnapshot = Set<String>.from(
+                        ref.read(myLotsSelectedIdsProvider),
+                      );
+                      final selectedLots = (lotsAsync.value ?? [])
+                          .where((l) => selectedIdsSnapshot.contains(l.id))
+                          .toList();
+                      final isArchive = ref
+                          .read(myLotsFilterProvider)
+                          .showArchivedOnly;
+
                       for (final id in selectedIdsSnapshot) {
                         ref.read(myLotsSelectedIdsProvider.notifier).remove(id);
                       }
-                      
+
                       if (mounted) {
-                        _showModernUndo(selectedLots, context, ref, isArchive: isArchive);
+                        _showModernUndo(
+                          selectedLots,
+                          context,
+                          ref,
+                          isArchive: isArchive,
+                        );
                       }
                     }
                   },
@@ -790,8 +915,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
     );
   }
 
-  Widget _buildSelectionAction(
-      IconData icon, Color color, VoidCallback onTap) {
+  Widget _buildSelectionAction(IconData icon, Color color, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
@@ -807,7 +931,8 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
     // Simple declension for "Обрано X лотів/лоти/лот"
     if (count % 10 == 1 && count % 100 != 11) {
       return 'Обрано $count лот';
-    } else if ([2, 3, 4].contains(count % 10) && ![12, 13, 14].contains(count % 100)) {
+    } else if ([2, 3, 4].contains(count % 10) &&
+        ![12, 13, 14].contains(count % 100)) {
       return 'Обрано $count лоти';
     } else {
       return 'Обрано $count лотів';
@@ -823,7 +948,8 @@ class _CountdownProgress extends StatefulWidget {
   State<_CountdownProgress> createState() => _CountdownProgressState();
 }
 
-class _CountdownProgressState extends State<_CountdownProgress> with SingleTickerProviderStateMixin {
+class _CountdownProgressState extends State<_CountdownProgress>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override

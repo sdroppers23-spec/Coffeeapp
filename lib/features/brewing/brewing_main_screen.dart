@@ -14,12 +14,14 @@ import '../../core/database/dtos.dart';
 class BrewingViewModeNotifier extends Notifier<bool> {
   @override
   bool build() => true; // true = grid, false = list
-  
+
   void toggle() => state = !state;
   void setMode(bool isGrid) => state = isGrid;
 }
 
-final brewingViewModeProvider = NotifierProvider<BrewingViewModeNotifier, bool>(() => BrewingViewModeNotifier());
+final brewingViewModeProvider = NotifierProvider<BrewingViewModeNotifier, bool>(
+  () => BrewingViewModeNotifier(),
+);
 
 class BrewingMainScreen extends ConsumerStatefulWidget {
   const BrewingMainScreen({super.key});
@@ -86,7 +88,8 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
                       : Icons.grid_view_rounded,
                   color: accentColor,
                 ),
-                onPressed: () => ref.read(brewingViewModeProvider.notifier).toggle(),
+                onPressed: () =>
+                    ref.read(brewingViewModeProvider.notifier).toggle(),
               );
             },
           ),
@@ -117,29 +120,29 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
       floatingActionButton: ListenableBuilder(
         listenable: _tabController,
         builder: (context, _) => _tabController.index == 1
-          ? FloatingActionButton.extended(
-              onPressed: () async {
-                final result = await showDialog<bool>(
-                  context: context,
-                  builder: (context) => const AddRecipeDialog(),
-                );
-                if (result == true) {
-                  ref.invalidate(globalCustomRecipesProvider);
-                }
-              },
-              icon: const Icon(Icons.add_rounded),
-              label: Text(
-                ref.t('add_recipe'),
-                style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
-              ),
-              backgroundColor: const Color(0xFFC8A96E),
-              foregroundColor: Colors.black,
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-            )
-          : const SizedBox.shrink(),
+            ? FloatingActionButton.extended(
+                onPressed: () async {
+                  final result = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => const AddRecipeDialog(),
+                  );
+                  if (result == true) {
+                    ref.invalidate(globalCustomRecipesProvider);
+                  }
+                },
+                icon: const Icon(Icons.add_rounded),
+                label: Text(
+                  ref.t('add_recipe'),
+                  style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+                ),
+                backgroundColor: const Color(0xFFC8A96E),
+                foregroundColor: Colors.black,
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              )
+            : const SizedBox.shrink(),
       ),
       body: TabBarView(
         controller: _tabController,
@@ -147,8 +150,6 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
       ),
     );
   }
-
-
 }
 
 class _BrewingMethodsContent extends ConsumerWidget {
@@ -176,31 +177,33 @@ class _BrewingMethodsContent extends ConsumerWidget {
               List<CustomRecipeDto> customList,
             ) {
               final grouped = <String, List<BrewingRecipeDto>>{};
-              
+
               // 1. Add guide recipes
               for (var r in guideList) {
                 final guide = r.copyWith(isGuide: true);
                 grouped.putIfAbsent(guide.methodKey, () => []).add(guide);
               }
-              
+
               // 2. Add custom recipes (mapped to DTO)
               for (var cr in customList) {
                 // Determine if this custom recipe belongs to an existing guide method or is a new one
                 // For simplicity, we only show custom recipes that match guide method keys on these tiles
                 if (grouped.containsKey(cr.methodKey)) {
-                  grouped[cr.methodKey]!.add(BrewingRecipeDto(
-                    id: cr.id.hashCode,
-                    methodKey: cr.methodKey,
-                    name: cr.name,
-                    description: cr.notes,
-                    imageUrl: '', 
-                    category: cr.recipeType,
-                    difficulty: 'Medium',
-                    totalTimeSec: cr.extractionTimeSeconds,
-                    tempC: cr.brewTempC,
-                    ratioGramsPerMl: cr.brewRatio,
-                    isGuide: false,
-                  ));
+                  grouped[cr.methodKey]!.add(
+                    BrewingRecipeDto(
+                      id: cr.id.hashCode,
+                      methodKey: cr.methodKey,
+                      name: cr.name,
+                      description: cr.notes,
+                      imageUrl: '',
+                      category: cr.recipeType,
+                      difficulty: 'Medium',
+                      totalTimeSec: cr.extractionTimeSeconds,
+                      tempC: cr.brewTempC,
+                      ratioGramsPerMl: cr.brewRatio,
+                      isGuide: false,
+                    ),
+                  );
                 }
               }
               return grouped;
@@ -218,86 +221,93 @@ class _BrewingMethodsContent extends ConsumerWidget {
             final espressoMethods = espressoGrouped.values.toList();
             final filterMethods = filterGrouped.values.toList();
 
-        return CustomScrollView(
-          slivers: [
-            // Top spacer (replaces padding.top)
-            const SliverToBoxAdapter(child: SizedBox(height: 170)),
+            return CustomScrollView(
+              slivers: [
+                // Top spacer (replaces padding.top)
+                const SliverToBoxAdapter(child: SizedBox(height: 170)),
 
-              if (espressoMethods.isNotEmpty) ...[
-              if (isGrid)
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  sliver: SliverGrid(
-                    delegate: SliverChildBuilderDelegate(
-                      (c, i) => MethodTile(methodRecipes: espressoMethods[i]),
-                      childCount: espressoMethods.length,
-                    ),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 16,
-                      crossAxisSpacing: 16,
-                      childAspectRatio: 0.85,
-                    ),
-                  ),
-                )
-              else
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (c, i) => Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: SizedBox(
-                          height: 180,
-                          child: MethodTile(methodRecipes: espressoMethods[i]),
+                if (espressoMethods.isNotEmpty) ...[
+                  if (isGrid)
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      sliver: SliverGrid(
+                        delegate: SliverChildBuilderDelegate(
+                          (c, i) =>
+                              MethodTile(methodRecipes: espressoMethods[i]),
+                          childCount: espressoMethods.length,
+                        ),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 16,
+                              crossAxisSpacing: 16,
+                              childAspectRatio: 0.85,
+                            ),
+                      ),
+                    )
+                  else
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      sliver: SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (c, i) => Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: SizedBox(
+                              height: 180,
+                              child: MethodTile(
+                                methodRecipes: espressoMethods[i],
+                              ),
+                            ),
+                          ),
+                          childCount: espressoMethods.length,
                         ),
                       ),
-                      childCount: espressoMethods.length,
                     ),
-                  ),
-                ),
-              const SliverToBoxAdapter(child: SizedBox(height: 32)),
-            ],
+                  const SliverToBoxAdapter(child: SizedBox(height: 32)),
+                ],
 
-            if (filterMethods.isNotEmpty) ...[
-              if (isGrid)
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  sliver: SliverGrid(
-                    delegate: SliverChildBuilderDelegate(
-                      (c, i) => MethodTile(methodRecipes: filterMethods[i]),
-                      childCount: filterMethods.length,
-                    ),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 16,
-                      crossAxisSpacing: 16,
-                      childAspectRatio: 0.85,
-                    ),
-                  ),
-                )
-              else
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (c, i) => Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: SizedBox(
-                          height: 180,
-                          child: MethodTile(methodRecipes: filterMethods[i]),
+                if (filterMethods.isNotEmpty) ...[
+                  if (isGrid)
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      sliver: SliverGrid(
+                        delegate: SliverChildBuilderDelegate(
+                          (c, i) => MethodTile(methodRecipes: filterMethods[i]),
+                          childCount: filterMethods.length,
+                        ),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 16,
+                              crossAxisSpacing: 16,
+                              childAspectRatio: 0.85,
+                            ),
+                      ),
+                    )
+                  else
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      sliver: SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (c, i) => Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: SizedBox(
+                              height: 180,
+                              child: MethodTile(
+                                methodRecipes: filterMethods[i],
+                              ),
+                            ),
+                          ),
+                          childCount: filterMethods.length,
                         ),
                       ),
-                      childCount: filterMethods.length,
                     ),
-                  ),
-                ),
-            ],
+                ],
 
-            // Bottom spacer (replaces padding.bottom)
-            SliverToBoxAdapter(child: SizedBox(height: navHeight + 48)),
-          ],
-        );
+                // Bottom spacer (replaces padding.bottom)
+                SliverToBoxAdapter(child: SizedBox(height: navHeight + 48)),
+              ],
+            );
           },
         );
       },

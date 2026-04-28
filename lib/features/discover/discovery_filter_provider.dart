@@ -102,32 +102,24 @@ class DiscoveryFilterNotifier extends Notifier<DiscoveryFilterState> {
 
   void toggleViewMode() => state = state.copyWith(isGrid: !state.isGrid);
 
-  void toggleFavoritesOnly() =>
-      state = state.copyWith(
-        showFavoritesOnly: !state.showFavoritesOnly,
-        showArchivedOnly: false,
-      );
+  void toggleFavoritesOnly() => state = state.copyWith(
+    showFavoritesOnly: !state.showFavoritesOnly,
+    showArchivedOnly: false,
+  );
 
-  void toggleArchivedOnly() =>
-      state = state.copyWith(
-        showArchivedOnly: !state.showArchivedOnly,
-        showFavoritesOnly: false,
-      );
+  void toggleArchivedOnly() => state = state.copyWith(
+    showArchivedOnly: !state.showArchivedOnly,
+    showFavoritesOnly: false,
+  );
 
-  void showAll() => state = state.copyWith(
-        showFavoritesOnly: false,
-        showArchivedOnly: false,
-      );
+  void showAll() =>
+      state = state.copyWith(showFavoritesOnly: false, showArchivedOnly: false);
 
-  void showFavorites() => state = state.copyWith(
-        showFavoritesOnly: true,
-        showArchivedOnly: false,
-      );
+  void showFavorites() =>
+      state = state.copyWith(showFavoritesOnly: true, showArchivedOnly: false);
 
-  void showArchived() => state = state.copyWith(
-        showFavoritesOnly: false,
-        showArchivedOnly: true,
-      );
+  void showArchived() =>
+      state = state.copyWith(showFavoritesOnly: false, showArchivedOnly: true);
 
   void clearFilters() {
     state = state.copyWith(

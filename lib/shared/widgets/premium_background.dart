@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
 class PremiumBackground extends ConsumerWidget {
   final Widget child;
   const PremiumBackground({super.key, required this.child});
@@ -11,11 +10,7 @@ class PremiumBackground extends ConsumerWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        const DecoratedBox(
-          decoration: BoxDecoration(
-            color: Color(0xFF0A0908), 
-          ),
-        ),
+        const DecoratedBox(decoration: BoxDecoration(color: Color(0xFF0A0908))),
 
         // 2. Minimal Ambient Depth
         Positioned.fill(

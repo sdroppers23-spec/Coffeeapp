@@ -56,7 +56,7 @@ class RecipeCard extends ConsumerWidget {
       case 'intermediate':
         return const Color(0xFFFFC107);
       case 'hard':
-        return const Color(0xFFFF5722);
+        return const Color(0xFFF44336);
       case 'advanced':
         return const Color(0xFFE91E63);
       case 'master':
@@ -70,7 +70,9 @@ class RecipeCard extends ConsumerWidget {
     final profile = (recipe.flavorProfile ?? '').toLowerCase();
     if (profile.contains('light') || profile.contains('легка')) {
       return ref.t('intensity_light');
-    } else if (profile.contains('bold') || profile.contains('сильна') || profile.contains('strong')) {
+    } else if (profile.contains('bold') ||
+        profile.contains('сильна') ||
+        profile.contains('strong')) {
       return ref.t('intensity_bold');
     } else if (profile.contains('medium') || profile.contains('середня')) {
       return ref.t('intensity_medium');
@@ -193,23 +195,28 @@ class RecipeCard extends ConsumerWidget {
             ),
 
             // ── Intensity Tag ─────────────────────────────────────────────
-            if (recipe.flavorProfile != null && recipe.flavorProfile!.isNotEmpty)
+            if (recipe.flavorProfile != null &&
+                recipe.flavorProfile!.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: gold.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
-                    border:
-                        Border.all(color: gold.withValues(alpha: 0.25)),
+                    border: Border.all(color: gold.withValues(alpha: 0.25)),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.auto_awesome_rounded,
-                          size: 11, color: gold.withValues(alpha: 0.8)),
+                      Icon(
+                        Icons.auto_awesome_rounded,
+                        size: 11,
+                        color: gold.withValues(alpha: 0.8),
+                      ),
                       const SizedBox(width: 5),
                       Text(
                         _getIntensityLabel(ref),
@@ -285,7 +292,11 @@ class _DifficultyCell extends StatelessWidget {
   final Color color;
   final WidgetRef ref;
 
-  const _DifficultyCell({required this.label, required this.color, required this.ref});
+  const _DifficultyCell({
+    required this.label,
+    required this.color,
+    required this.ref,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -298,7 +309,9 @@ class _DifficultyCell extends StatelessWidget {
             decoration: BoxDecoration(
               color: color,
               shape: BoxShape.circle,
-              boxShadow: [BoxShadow(color: color.withValues(alpha: 0.5), blurRadius: 6)],
+              boxShadow: [
+                BoxShadow(color: color.withValues(alpha: 0.5), blurRadius: 6),
+              ],
             ),
           ),
           const SizedBox(height: 4),

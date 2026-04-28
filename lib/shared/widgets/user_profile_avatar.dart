@@ -26,7 +26,7 @@ class UserProfileAvatar extends ConsumerWidget {
         backgroundImage: avatarUrl.startsWith('http')
             ? NetworkImage(avatarUrl)
             : const AssetImage('assets/images/placeholder_avatar.jpg')
-                as ImageProvider,
+                  as ImageProvider,
         onBackgroundImageError: (_, _) {},
         child: (avatarUrl.isEmpty)
             ? Icon(Icons.person, color: Colors.white54, size: radius * 0.8)
@@ -72,10 +72,13 @@ class UserProfileAvatar extends ConsumerWidget {
                     CircleAvatar(
                       radius: 30,
                       backgroundColor: Colors.white12,
-                      backgroundImage: avatarUrlFromMeta(meta, user?.id).startsWith('http')
+                      backgroundImage:
+                          avatarUrlFromMeta(meta, user?.id).startsWith('http')
                           ? NetworkImage(avatarUrlFromMeta(meta, user?.id))
-                          : const AssetImage('assets/images/placeholder_avatar.jpg')
-                              as ImageProvider,
+                          : const AssetImage(
+                                  'assets/images/placeholder_avatar.jpg',
+                                )
+                                as ImageProvider,
                     ),
                     const SizedBox(width: 16),
                     Column(
@@ -101,14 +104,25 @@ class UserProfileAvatar extends ConsumerWidget {
                   ],
                 ),
                 const SizedBox(height: 12),
-                _buildMenuItem(context, Icons.person_outline, 'Редагувати профіль', onTap: () {
-                  context.pop();
-                  context.push('/profile');
-                }),
-                _buildMenuItem(context, Icons.logout, 'Вийти', color: Colors.redAccent, onTap: () async {
-                  context.pop();
-                  await ref.read(supabaseProvider).auth.signOut();
-                }),
+                _buildMenuItem(
+                  context,
+                  Icons.person_outline,
+                  'Редагувати профіль',
+                  onTap: () {
+                    context.pop();
+                    context.push('/profile');
+                  },
+                ),
+                _buildMenuItem(
+                  context,
+                  Icons.logout,
+                  'Вийти',
+                  color: Colors.redAccent,
+                  onTap: () async {
+                    context.pop();
+                    await ref.read(supabaseProvider).auth.signOut();
+                  },
+                ),
                 const SizedBox(height: 12),
               ],
             ),
@@ -144,7 +158,10 @@ class UserProfileAvatar extends ConsumerWidget {
       leading: Icon(icon, color: color ?? const Color(0xFFC8A96E)),
       title: Text(
         title,
-        style: GoogleFonts.poppins(color: color ?? Colors.white70, fontSize: 14),
+        style: GoogleFonts.poppins(
+          color: color ?? Colors.white70,
+          fontSize: 14,
+        ),
       ),
       trailing: trailing != null
           ? Text(

@@ -21,7 +21,7 @@ class DiscoverScreen extends ConsumerStatefulWidget {
 }
 
 class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
-  String _selectedTabId = ''; 
+  String _selectedTabId = '';
   final ScrollController _reorderController = ScrollController();
   late PageController _pageController;
   final Map<String, GlobalKey> _tabKeys = {};
@@ -57,7 +57,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
   void _scrollToActiveTab(String tabId) {
     final key = _tabKeys[tabId];
     if (key == null || key.currentContext == null) return;
-    
+
     Scrollable.ensureVisible(
       key.currentContext!,
       duration: const Duration(milliseconds: 350),
@@ -158,9 +158,12 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                     final type = tabOrder[index];
                     final tabId = type.name;
                     final isSelected = _selectedTabId == tabId;
-                    
+
                     // Assign or reuse key
-                    final tabKey = _tabKeys.putIfAbsent(tabId, () => GlobalKey());
+                    final tabKey = _tabKeys.putIfAbsent(
+                      tabId,
+                      () => GlobalKey(),
+                    );
 
                     return ReorderableDelayedDragStartListener(
                       key: ValueKey(tabId),
@@ -168,22 +171,24 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                       child: Container(
                         key: tabKey,
                         child: _CapsuleTab(
-                        label: _getTabLabel(type),
-                        isSelected: isSelected,
-                        onTap: () {
-                          ref.read(settingsProvider.notifier).triggerHaptic();
-                          ref.read(navBarVisibleProvider.notifier).show(); // FORCE SHOW NAVBAR
-                          setState(() {
-                            _selectedTabId = tabId;
-                          });
-                          if (_pageController.hasClients) {
-                             _pageController.animateToPage(
-                               index,
-                               duration: const Duration(milliseconds: 300),
-                               curve: Curves.easeInOut,
-                             );
-                          }
-                        },
+                          label: _getTabLabel(type),
+                          isSelected: isSelected,
+                          onTap: () {
+                            ref.read(settingsProvider.notifier).triggerHaptic();
+                            ref
+                                .read(navBarVisibleProvider.notifier)
+                                .show(); // FORCE SHOW NAVBAR
+                            setState(() {
+                              _selectedTabId = tabId;
+                            });
+                            if (_pageController.hasClients) {
+                              _pageController.animateToPage(
+                                index,
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                            }
+                          },
                         ),
                       ),
                     );
@@ -199,18 +204,22 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
               child: PageView.builder(
                 controller: _pageController,
                 onPageChanged: (index) {
-                   if (index >= 0 && index < tabOrder.length) {
-                      final newTabId = tabOrder[index].name;
-                       if (_selectedTabId != newTabId) {
-                          ref.read(navBarVisibleProvider.notifier).show(); // FORCE SHOW NAVBAR
-                          setState(() { _selectedTabId = newTabId; });
-                          _scrollToActiveTab(newTabId);
-                       }
-                   }
+                  if (index >= 0 && index < tabOrder.length) {
+                    final newTabId = tabOrder[index].name;
+                    if (_selectedTabId != newTabId) {
+                      ref
+                          .read(navBarVisibleProvider.notifier)
+                          .show(); // FORCE SHOW NAVBAR
+                      setState(() {
+                        _selectedTabId = newTabId;
+                      });
+                      _scrollToActiveTab(newTabId);
+                    }
+                  }
                 },
                 itemCount: tabOrder.length,
                 itemBuilder: (context, index) {
-                   return _buildTabContent(tabOrder[index].name);
+                  return _buildTabContent(tabOrder[index].name);
                 },
               ),
             ),

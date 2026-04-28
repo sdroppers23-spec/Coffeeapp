@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class WheelCategory {
   final String key;
-  final String name; 
+  final String name;
   final Color color;
   final List<WheelSub> sub;
   WheelCategory({
@@ -15,7 +15,7 @@ class WheelCategory {
 
 class WheelSub {
   final String key;
-  final String name; 
+  final String name;
   final Color color;
   final List<String> noteKeys;
   WheelSub({

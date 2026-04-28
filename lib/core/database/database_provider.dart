@@ -20,9 +20,8 @@ final coffeeDataSeedProvider = Provider<CoffeeDataSeed>((ref) {
 });
 
 final databaseInitializerProvider = FutureProvider<void>((ref) async {
-
   final seeder = ref.read(coffeeDataSeedProvider);
-  
+
   try {
     final db = ref.read(databaseProvider);
     final brandsEmpty = await db.brandsIsEmpty();
@@ -33,19 +32,15 @@ final databaseInitializerProvider = FutureProvider<void>((ref) async {
     if (brandsEmpty || farmersEmpty || encyclopediaEmpty || articlesEmpty) {
       debugPrint('DatabaseProvider: Core tables empty, triggering re-seed...');
       await seeder.seedAll();
-    }
- else {
-
-    }
+    } else {}
   } catch (e) {
     // Silent fail in production as per hardening guidelines
   }
-  
+
   final syncService = ref.read(syncServiceProvider);
 
   debugPrint('DatabaseProvider: Starting background sync...');
   unawaited(syncService.syncAll());
-
 });
 
 final syncServiceProvider = Provider<SyncService>((ref) {
@@ -56,7 +51,7 @@ final syncServiceProvider = Provider<SyncService>((ref) {
 final beanProvider = StreamProvider.family<LocalizedBeanDto?, int>((ref, id) {
   final db = ref.watch(databaseProvider);
   final lang = ref.watch(localeProvider);
-  return db.watchBeanById(id, lang); 
+  return db.watchBeanById(id, lang);
 });
 
 final lotProvider = StreamProvider.family<CoffeeLotDto?, String>((ref, id) {

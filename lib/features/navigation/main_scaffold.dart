@@ -169,7 +169,6 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                             child: ConstrainedBox(
                               constraints: const BoxConstraints(maxWidth: 330),
                               child: GlassContainer(
-
                                 borderRadius: 40,
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 1,
@@ -178,7 +177,9 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                                 backgroundGradient: null,
                                 borderColor: isDark
                                     ? Colors.white.withValues(alpha: 0.25)
-                                    : theme.colorScheme.primary.withValues(alpha: 0.2),
+                                    : theme.colorScheme.primary.withValues(
+                                        alpha: 0.2,
+                                      ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -218,25 +219,30 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
 
                           PressableScale(
                             onTap: () async {
-                              ref.read(settingsProvider.notifier).triggerSelectionVibrate();
+                              ref
+                                  .read(settingsProvider.notifier)
+                                  .triggerSelectionVibrate();
                               await context.push('/settings');
                               if (context.mounted) {
                                 ref.read(navBarVisibleProvider.notifier).show();
                               }
                             },
                             child: GlassContainer(
-
                               width: 52,
                               height: 52,
                               borderRadius: 26,
                               backgroundGradient: null,
                               borderColor: isDark
                                   ? Colors.white.withValues(alpha: 0.25)
-                                  : theme.colorScheme.primary.withValues(alpha: 0.2),
+                                  : theme.colorScheme.primary.withValues(
+                                      alpha: 0.2,
+                                    ),
                               child: Center(
                                 child: Icon(
                                   Icons.settings_rounded,
-                                  color: isDark ? Colors.white : theme.colorScheme.primary,
+                                  color: isDark
+                                      ? Colors.white
+                                      : theme.colorScheme.primary,
                                   size: 24,
                                 ),
                               ),
@@ -325,8 +331,12 @@ class _NavBarItemState extends ConsumerState<_NavBarItem>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final activeColor = isDark ? const Color(0xFFC8A96E) : theme.colorScheme.primary;
-    final inactiveColor = isDark ? Colors.white54 : theme.colorScheme.onSurfaceVariant;
+    final activeColor = isDark
+        ? const Color(0xFFC8A96E)
+        : theme.colorScheme.primary;
+    final inactiveColor = isDark
+        ? Colors.white54
+        : theme.colorScheme.onSurfaceVariant;
 
     return PressableScale(
       onTap: widget.onTap,
@@ -344,7 +354,11 @@ class _NavBarItemState extends ConsumerState<_NavBarItem>
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: widget.isSelected
-                        ? (isDark ? Colors.white10 : theme.colorScheme.primary.withValues(alpha: 0.1))
+                        ? (isDark
+                              ? Colors.white10
+                              : theme.colorScheme.primary.withValues(
+                                  alpha: 0.1,
+                                ))
                         : Colors.transparent,
                     shape: BoxShape.circle,
                     boxShadow: widget.isSelected
@@ -430,10 +444,7 @@ class _FrostedCapsuleToast extends StatefulWidget {
   final String message;
   final VoidCallback onFinished;
 
-  const _FrostedCapsuleToast({
-    required this.message,
-    required this.onFinished,
-  });
+  const _FrostedCapsuleToast({required this.message, required this.onFinished});
 
   @override
   State<_FrostedCapsuleToast> createState() => _FrostedCapsuleToastState();
@@ -454,9 +465,10 @@ class _FrostedCapsuleToastState extends State<_FrostedCapsuleToast>
     );
 
     _fade = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
-    _scale = Tween<double>(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOutBack),
-    );
+    _scale = Tween<double>(
+      begin: 0.8,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
 
     _controller.forward();
 
@@ -489,7 +501,10 @@ class _FrostedCapsuleToastState extends State<_FrostedCapsuleToast>
               color: Colors.transparent,
               child: GlassContainer(
                 borderRadius: 30,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
                 backgroundGradient: LinearGradient(
                   colors: [
                     Colors.white.withValues(alpha: 0.15),

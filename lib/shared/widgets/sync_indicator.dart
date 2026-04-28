@@ -60,7 +60,7 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
     }
 
     // 2. Continuous Sync Logic
-    const resyncKey = 'force_resync_v20_unified_content'; 
+    const resyncKey = 'force_resync_v20_unified_content';
     final hasResyncedVersion = prefs.getBool(resyncKey) ?? false;
 
     if (isOnline) {
@@ -69,12 +69,10 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
           await syncEverything(force: true);
           await prefs.setBool(resyncKey, true);
           _hasPerformedSessionSync = true;
-
         });
       } else if (!_hasPerformedSessionSync) {
         _hasPerformedSessionSync = true;
         Future.microtask(() => pullFromCloud());
-
       }
     }
 
@@ -83,31 +81,37 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
       final prevList = previous?.value;
       final nextList = next.value;
 
-      final wasOffline = prevList == null || prevList.contains(ConnectivityResult.none);
-      final isNowOnline = nextList != null && !nextList.contains(ConnectivityResult.none);
+      final wasOffline =
+          prevList == null || prevList.contains(ConnectivityResult.none);
+      final isNowOnline =
+          nextList != null && !nextList.contains(ConnectivityResult.none);
 
       if (wasOffline && isNowOnline && _hasPerformedSessionSync) {
-
         Future.microtask(() => syncEverything());
       }
     });
 
     if (!isOnline) {
-      return SyncStatusData(state: SyncState.offline, lastMessage: 'OFFLINE MODE');
+      return SyncStatusData(
+        state: SyncState.offline,
+        lastMessage: 'OFFLINE MODE',
+      );
     }
-    
+
     // For initial return, we use idle or syncing based on _hasPerformedSessionSync
     if (!_hasPerformedSessionSync && isOnline) {
-      return SyncStatusData(state: SyncState.syncing, lastMessage: 'Initializing...');
+      return SyncStatusData(
+        state: SyncState.syncing,
+        lastMessage: 'Initializing...',
+      );
     }
-    
+
     return SyncStatusData(state: SyncState.idle);
   }
 
   SyncService get _syncService => ref.read(syncServiceProvider);
 
   void invalidateData() {
-
     ref.invalidate(farmersProvider);
     ref.invalidate(specialtyArticlesProvider);
     ref.invalidate(specialtyEncyclopediaProvider);
@@ -119,10 +123,10 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
 
   Future<void> syncEverything({bool force = false}) async {
     state = state.copyWith(state: SyncState.syncing, lastError: null);
-    
+
     // 1. Tiny delay to ensure UI updates before heavy sync work begins
     await Future.delayed(const Duration(milliseconds: 300));
-    
+
     try {
       await _syncService.syncAll(
         force: force,
@@ -134,10 +138,10 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
           );
         },
       );
-      
+
       // 2. Perform vital invalidation
       invalidateData();
-      
+
       state = state.copyWith(state: SyncState.success, currentProgress: 1.0);
       await Future.delayed(const Duration(seconds: 3));
       state = state.copyWith(state: SyncState.idle);
@@ -151,9 +155,11 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
   Future<void> pullFromCloud() => syncEverything();
 }
 
-final syncStatusProvider = NotifierProvider<SyncStatusNotifier, SyncStatusData>(() {
-  return SyncStatusNotifier();
-});
+final syncStatusProvider = NotifierProvider<SyncStatusNotifier, SyncStatusData>(
+  () {
+    return SyncStatusNotifier();
+  },
+);
 
 class SyncIndicator extends ConsumerWidget {
   const SyncIndicator({super.key});
@@ -214,8 +220,12 @@ class SyncIndicator extends ConsumerWidget {
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
                   color: const Color(0xFFC8A96E),
-                  value: syncData.currentProgress > 0.05 ? syncData.currentProgress : null,
-                  backgroundColor: const Color(0xFFC8A96E).withValues(alpha: 0.2),
+                  value: syncData.currentProgress > 0.05
+                      ? syncData.currentProgress
+                      : null,
+                  backgroundColor: const Color(
+                    0xFFC8A96E,
+                  ).withValues(alpha: 0.2),
                 ),
               )
             else

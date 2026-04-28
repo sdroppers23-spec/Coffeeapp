@@ -10,7 +10,7 @@ class DiscoveryTabOrderNotifier extends Notifier<List<DiscoverTabType>> {
   List<DiscoverTabType> build() {
     final prefs = ref.watch(sharedPreferencesProvider);
     final savedOrder = prefs.getStringList(_storageKey);
-    
+
     if (savedOrder != null) {
       try {
         return savedOrder
@@ -20,7 +20,7 @@ class DiscoveryTabOrderNotifier extends Notifier<List<DiscoverTabType>> {
         // Fallback to default if enum names changed
       }
     }
-    
+
     return [
       DiscoverTabType.history,
       DiscoverTabType.encyclopedia,
@@ -38,7 +38,7 @@ class DiscoveryTabOrderNotifier extends Notifier<List<DiscoverTabType>> {
     final item = next.removeAt(oldIndex);
     next.insert(newIndex, item);
     state = next;
-    
+
     // Persist
     final prefs = ref.read(sharedPreferencesProvider);
     await prefs.setStringList(_storageKey, state.map((e) => e.name).toList());

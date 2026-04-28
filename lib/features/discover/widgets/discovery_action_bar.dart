@@ -9,7 +9,8 @@ import '../../navigation/navigation_providers.dart';
 import '../../../core/providers/settings_provider.dart';
 
 class DiscoveryActionBar extends ConsumerWidget {
-  final NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState> filterProvider;
+  final NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState>
+  filterProvider;
   final dynamic selectionProvider;
   final VoidCallback onCompareTap;
   final VoidCallback? onSelectAll;
@@ -56,8 +57,8 @@ class DiscoveryActionBar extends ConsumerWidget {
                 const SizedBox(width: 8),
                 _ControlChip(
                   icon: Icons.compare_arrows_rounded,
-                  label: selectedLots.isEmpty 
-                      ? context.t('compare') 
+                  label: selectedLots.isEmpty
+                      ? context.t('compare')
                       : '${context.t('compare')} (${selectedLots.length})',
                   isActive: selectedLots.isNotEmpty,
                   onTap: onCompareTap,
@@ -89,7 +90,8 @@ class DiscoveryActionBar extends ConsumerWidget {
                 Expanded(
                   child: _SubTabCapsule(
                     label: context.t('all'),
-                    isSelected: !state.showFavoritesOnly && !state.showArchivedOnly,
+                    isSelected:
+                        !state.showFavoritesOnly && !state.showArchivedOnly,
                     onTap: () => ref.read(filterProvider.notifier).showAll(),
                   ),
                 ),
@@ -98,7 +100,8 @@ class DiscoveryActionBar extends ConsumerWidget {
                   child: _SubTabCapsule(
                     label: context.t('favorites'),
                     isSelected: state.showFavoritesOnly,
-                    onTap: () => ref.read(filterProvider.notifier).showFavorites(),
+                    onTap: () =>
+                        ref.read(filterProvider.notifier).showFavorites(),
                     icon: Icons.favorite_rounded,
                   ),
                 ),
@@ -107,7 +110,8 @@ class DiscoveryActionBar extends ConsumerWidget {
                   child: _SubTabCapsule(
                     label: context.t('archive'),
                     isSelected: state.showArchivedOnly,
-                    onTap: () => ref.read(filterProvider.notifier).showArchived(),
+                    onTap: () =>
+                        ref.read(filterProvider.notifier).showArchived(),
                     icon: Icons.archive_rounded,
                   ),
                 ),
@@ -157,8 +161,8 @@ class _ControlChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: isActive 
-              ? const Color(0xFFC8A96E) 
+          color: isActive
+              ? const Color(0xFFC8A96E)
               : Colors.white.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
@@ -238,9 +242,7 @@ class _SubTabCapsule extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: isSelected 
-              ? const Color(0xFFC8A96E) 
-              : Colors.transparent,
+          color: isSelected ? const Color(0xFFC8A96E) : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Row(

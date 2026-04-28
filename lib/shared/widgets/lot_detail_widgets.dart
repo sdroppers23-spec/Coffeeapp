@@ -188,9 +188,7 @@ class SensoryIndicator extends StatelessWidget {
               return Expanded(
                 child: Container(
                   height: 3.5,
-                  margin: EdgeInsets.only(
-                    right: index == 4 ? 0 : 3,
-                  ),
+                  margin: EdgeInsets.only(right: index == 4 ? 0 : 3),
                   decoration: BoxDecoration(
                     color: isFilled
                         ? const Color(0xFFC8A96E)
@@ -247,7 +245,9 @@ class CompactSensoryBar extends StatelessWidget {
               height: 3.5,
               margin: const EdgeInsets.only(right: 2.0),
               decoration: BoxDecoration(
-                color: isFilled ? theme.colorScheme.primary : const Color(0xFFC8A96E).withValues(alpha: 0.05),
+                color: isFilled
+                    ? theme.colorScheme.primary
+                    : const Color(0xFFC8A96E).withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(1.5),
               ),
             );

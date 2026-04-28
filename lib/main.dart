@@ -24,13 +24,11 @@ void main() async {
     final anonKey = dotenv.env['SUPABASE_ANON_KEY'] ?? '';
 
     if (url.isEmpty || url.contains('placeholder') || anonKey.isEmpty) {
-
       supabaseError = true;
     } else {
       await Supabase.initialize(url: url, anonKey: anonKey);
     }
   } catch (e) {
-
     supabaseError = true;
   }
 
@@ -38,9 +36,7 @@ void main() async {
 
   runApp(
     ProviderScope(
-      overrides: [
-        sharedPreferencesProvider.overrideWithValue(prefs),
-      ],
+      overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
       child: SpecialtyTrackerApp(initializationError: supabaseError),
     ),
   );

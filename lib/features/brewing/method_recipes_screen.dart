@@ -19,11 +19,11 @@ class MethodRecipesScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<MethodRecipesScreen> createState() => _MethodRecipesScreenState();
+  ConsumerState<MethodRecipesScreen> createState() =>
+      _MethodRecipesScreenState();
 }
 
 class _MethodRecipesScreenState extends ConsumerState<MethodRecipesScreen> {
-
   @override
   void dispose() {
     // Restore nav bar when leaving the screen
@@ -93,16 +93,13 @@ class _MethodRecipesScreenState extends ConsumerState<MethodRecipesScreen> {
                   height: 1,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [
-                        gold.withValues(alpha: 0.4),
-                        Colors.transparent,
-                      ],
+                      colors: [gold.withValues(alpha: 0.4), Colors.transparent],
                     ),
                   ),
                 ),
               ),
             ),
-  
+
             // ── Header Info Strip ─────────────────────────────────────────────
             SliverToBoxAdapter(
               child: Padding(
@@ -111,18 +108,22 @@ class _MethodRecipesScreenState extends ConsumerState<MethodRecipesScreen> {
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: gold.withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(10),
-                        border:
-                            Border.all(color: gold.withValues(alpha: 0.3)),
+                        border: Border.all(color: gold.withValues(alpha: 0.3)),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.menu_book_rounded,
-                              size: 13, color: Color(0xFFC8A96E)),
+                          const Icon(
+                            Icons.menu_book_rounded,
+                            size: 13,
+                            color: Color(0xFFC8A96E),
+                          ),
                           const SizedBox(width: 6),
                           Text(
                             '${widget.recipes.length} ${_getPluralLabel(ref, widget.recipes.length)}',
@@ -139,7 +140,7 @@ class _MethodRecipesScreenState extends ConsumerState<MethodRecipesScreen> {
                 ),
               ),
             ),
-  
+
             // ── Recipe Cards ──────────────────────────────────────────────────
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
@@ -163,8 +164,8 @@ class _MethodRecipesScreenState extends ConsumerState<MethodRecipesScreen> {
     final String key = count == 1
         ? 'recipe_1'
         : (count >= 2 && count <= 4)
-            ? 'recipe_2_4'
-            : 'recipe_5_plus';
+        ? 'recipe_2_4'
+        : 'recipe_5_plus';
     return ref.t(key);
   }
 }

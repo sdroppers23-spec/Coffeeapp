@@ -3,13 +3,13 @@ import 'dart:io';
 void main() {
   final file = File('lib/core/l10n/app_localizations.dart');
   final lines = file.readAsLinesSync();
-  
+
   bool inEn = false;
   bool inUk = false;
-  
+
   final Map<String, int> enKeys = {};
   final Map<String, int> ukKeys = {};
-  
+
   for (int i = 0; i < lines.length; i++) {
     final line = lines[i].trim();
     if (line.contains("'en': {")) {
@@ -26,7 +26,7 @@ void main() {
       inEn = false;
       inUk = false;
     }
-    
+
     if (inEn || inUk) {
       final match = RegExp(r"^\'(.+?)\':").firstMatch(line);
       if (match != null) {
@@ -34,13 +34,17 @@ void main() {
         if (inEn) {
           if (enKeys.containsKey(key)) {
             // ignore: avoid_print
-            print('Duplicate EN key: $key at line ${i + 1} (previous at line ${enKeys[key]})');
+            print(
+              'Duplicate EN key: $key at line ${i + 1} (previous at line ${enKeys[key]})',
+            );
           }
           enKeys[key] = i + 1;
         } else {
           if (ukKeys.containsKey(key)) {
             // ignore: avoid_print
-            print('Duplicate UK key: $key at line ${i + 1} (previous at line ${ukKeys[key]})');
+            print(
+              'Duplicate UK key: $key at line ${i + 1} (previous at line ${ukKeys[key]})',
+            );
           }
           ukKeys[key] = i + 1;
         }

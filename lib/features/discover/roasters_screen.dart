@@ -77,7 +77,9 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.1),
+                  ),
                 ),
                 child: Material(
                   color: Colors.transparent,
@@ -91,8 +93,11 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                           color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.warning_amber_rounded,
-                            color: Color(0xFFC8A96E), size: 32),
+                        child: const Icon(
+                          Icons.warning_amber_rounded,
+                          color: Color(0xFFC8A96E),
+                          size: 32,
+                        ),
                       ),
                       const SizedBox(height: 20),
                       Text(
@@ -105,58 +110,75 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        context.t('delete_roaster_confirm', args: {'name': name}),
+                        context.t(
+                          'delete_roaster_confirm',
+                          args: {'name': name},
+                        ),
                         textAlign: TextAlign.center,
                         style: GoogleFonts.outfit(
-                            color: Colors.white70, fontSize: 14, height: 1.4),
+                          color: Colors.white70,
+                          fontSize: 14,
+                          height: 1.4,
+                        ),
                       ),
                       const SizedBox(height: 28),
-                      Row(children: [
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () => Navigator.pop(ctx, false),
-                            child: Container(
-                              height: 48,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
-                                color: Colors.white.withValues(alpha: 0.05),
-                                border: Border.all(
-                                    color: Colors.white.withValues(alpha: 0.1)),
-                              ),
-                              alignment: Alignment.center,
-                              child: Text(context.t('cancel_uppercase'),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () => Navigator.pop(ctx, false),
+                              child: Container(
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(14),
+                                  color: Colors.white.withValues(alpha: 0.05),
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.1),
+                                  ),
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  context.t('cancel_uppercase'),
                                   style: GoogleFonts.outfit(
-                                      color: Colors.white70,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                      letterSpacing: 1.2)),
+                                    color: Colors.white70,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                    letterSpacing: 1.2,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () => Navigator.pop(ctx, true),
-                            child: Container(
-                              height: 48,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
-                                color: Colors.redAccent,
-                                border: Border.all(
-                                    color:
-                                        Colors.redAccent.withValues(alpha: 0.5)),
-                              ),
-                              alignment: Alignment.center,
-                              child: Text(context.t('delete_uppercase'),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () => Navigator.pop(ctx, true),
+                              child: Container(
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(14),
+                                  color: Colors.redAccent,
+                                  border: Border.all(
+                                    color: Colors.redAccent.withValues(
+                                      alpha: 0.5,
+                                    ),
+                                  ),
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  context.t('delete_uppercase'),
                                   style: GoogleFonts.outfit(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                      letterSpacing: 1.2)),
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                    letterSpacing: 1.2,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ]),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -197,8 +219,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
         leading: _isSelectionMode
             ? IconButton(
                 onPressed: _clearSelection,
-                icon: const Icon(Icons.close_rounded,
-                    color: Color(0xFFC8A96E)),
+                icon: const Icon(Icons.close_rounded, color: Color(0xFFC8A96E)),
               )
             : null,
         title: Text(
@@ -215,41 +236,46 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
           if (_isSelectionMode) ...[
             // Масовий архів
             brandsAsync.whenData((brands) {
-              return IconButton(
-                onPressed: () async {
-                  final db = ref.read(databaseProvider);
-                  final l10n = AppLocalizations.of(context);
-                  final isArchiving = _tabController.index != 2;
-                  
-                  for (final id in _selectedIds) {
-                    await db.toggleBrandArchive(id, isArchiving);
-                  }
-                  
-                  _clearSelection();
-                  ref.invalidate(brandsProvider);
-                  
-                  if (context.mounted) {
-                    ToastService.showSuccess(
-                      context, 
-                      isArchiving 
-                        ? l10n.translate('toast_roasters_archived')
-                        : l10n.translate('toast_roasters_restored')
-                    );
-                  }
-                },
-                icon: Icon(
-                  _tabController.index == 2
-                      ? Icons.unarchive_outlined
-                      : Icons.archive_outlined,
-                  color: Colors.white70,
-                ),
-              );
-            }).value ?? const SizedBox(),
+                  return IconButton(
+                    onPressed: () async {
+                      final db = ref.read(databaseProvider);
+                      final l10n = AppLocalizations.of(context);
+                      final isArchiving = _tabController.index != 2;
+
+                      for (final id in _selectedIds) {
+                        await db.toggleBrandArchive(id, isArchiving);
+                      }
+
+                      _clearSelection();
+                      ref.invalidate(brandsProvider);
+
+                      if (context.mounted) {
+                        ToastService.showSuccess(
+                          context,
+                          isArchiving
+                              ? l10n.translate('toast_roasters_archived')
+                              : l10n.translate('toast_roasters_restored'),
+                        );
+                      }
+                    },
+                    icon: Icon(
+                      _tabController.index == 2
+                          ? Icons.unarchive_outlined
+                          : Icons.archive_outlined,
+                      color: Colors.white70,
+                    ),
+                  );
+                }).value ??
+                const SizedBox(),
             // Масове видалення
             IconButton(
               onPressed: () async {
-                final confirm =
-                    await _confirmDeleteDialog(context.t('selection_roasters_5_plus', args: {'count': _selectedIds.length.toString()}));
+                final confirm = await _confirmDeleteDialog(
+                  context.t(
+                    'selection_roasters_5_plus',
+                    args: {'count': _selectedIds.length.toString()},
+                  ),
+                );
                 if (confirm) {
                   final db = ref.read(databaseProvider);
                   for (final id in _selectedIds) {
@@ -259,8 +285,10 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                   ref.invalidate(brandsProvider);
                 }
               },
-              icon: const Icon(Icons.delete_outline_rounded,
-                  color: Colors.orangeAccent),
+              icon: const Icon(
+                Icons.delete_outline_rounded,
+                color: Colors.orangeAccent,
+              ),
             ),
           ] else ...[
             Padding(
@@ -273,10 +301,14 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                     color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                     border: Border.all(
-                        color: const Color(0xFFC8A96E).withValues(alpha: 0.3)),
+                      color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
+                    ),
                   ),
-                  child: const Icon(Icons.add,
-                      size: 20, color: Color(0xFFC8A96E)),
+                  child: const Icon(
+                    Icons.add,
+                    size: 20,
+                    color: Color(0xFFC8A96E),
+                  ),
                 ),
               ),
             ),
@@ -287,152 +319,175 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
         children: [
           Column(
             children: [
-          // ── Sub-tabs ────────────────────────────────────────────────────
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Container(
-              height: 44,
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.03),
-                borderRadius: BorderRadius.circular(22),
-                border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.05)),
-              ),
-              child: TabBar(
-                controller: _tabController,
-                dividerColor: Colors.transparent,
-                indicator: BoxDecoration(
-                  color: const Color(0xFFC8A96E),
-                  borderRadius: BorderRadius.circular(20),
+              // ── Sub-tabs ────────────────────────────────────────────────────
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
                 ),
-                indicatorSize: TabBarIndicatorSize.tab,
-                labelColor: Colors.black,
-                unselectedLabelColor: Colors.white54,
-                labelStyle: GoogleFonts.outfit(
-                    fontSize: 13, fontWeight: FontWeight.bold),
-                tabs: [
-                  Tab(text: context.t('tab_all')),
-                  Tab(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.favorite_rounded, size: 14),
-                        const SizedBox(width: 4),
-                        Text(context.t('tab_favorites')),
-                      ],
+                child: Container(
+                  height: 44,
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.03),
+                    borderRadius: BorderRadius.circular(22),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.05),
                     ),
                   ),
-                  Tab(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.archive_outlined, size: 14),
-                        const SizedBox(width: 4),
-                        Text(context.t('tab_archive')),
-                      ],
+                  child: TabBar(
+                    controller: _tabController,
+                    dividerColor: Colors.transparent,
+                    indicator: BoxDecoration(
+                      color: const Color(0xFFC8A96E),
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          // ── List ────────────────────────────────────────────────────────
-          Expanded(
-            child: brandsAsync.when(
-              loading: () => Center(
-                child: _PremiumPulsingLoader(
-                  message: context.t('loading_roasters'),
-                ),
-              ),
-      error: (e, _) => Center(
-          child: Text('${context.t('error')}: $e',
-              style: const TextStyle(color: Colors.red))),
-      data: (brands) {
-        final filtered = brands.where((b) {
-          if (_pendingDeleteIds.contains(b.id)) return false;
-          if (_tabController.index == 0) return !b.isArchived;
-          if (_tabController.index == 1) {
-            return b.isFavorite && !b.isArchived;
-          }
-          if (_tabController.index == 2) return b.isArchived;
-          return !b.isArchived;
-        }).toList();
-
-        return Stack(
-          children: [
-            if (filtered.isEmpty)
-              _buildEmptyState()
-            else
-              ListView.builder(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
-                itemCount: filtered.length,
-                itemBuilder: (context, index) {
-                  final brand = filtered[index];
-                  return _buildSwipeableBrandCard(brand);
-                },
-              ),
-            // FAB добавити обсмажчика - Shown only if list is empty
-            brandsAsync.whenData((brands) {
-              if (brands.isEmpty && !_isSelectionMode) {
-                return Align(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 90, right: 24),
-                    child: GestureDetector(
-                      onTap: () => _showAddRoasterDialog(context, ref),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 28, vertical: 16),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFB8955A),
-                          borderRadius: BorderRadius.circular(50),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFFC8A96E)
-                                  .withValues(alpha: 0.35),
-                              blurRadius: 20,
-                              spreadRadius: 2,
-                              offset: const Offset(0, 6),
-                            ),
-                          ],
-                        ),
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    labelColor: Colors.black,
+                    unselectedLabelColor: Colors.white54,
+                    labelStyle: GoogleFonts.outfit(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    tabs: [
+                      Tab(text: context.t('tab_all')),
+                      Tab(
                         child: Row(
-                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.add_rounded,
-                                color: Colors.black87, size: 20),
-                            const SizedBox(width: 8),
-                            Text(
-                              context.t('add_roaster_uppercase'),
-                              style: GoogleFonts.outfit(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 12,
-                                letterSpacing: 1.5,
-                                color: Colors.black87,
-                              ),
-                            ),
+                            const Icon(Icons.favorite_rounded, size: 14),
+                            const SizedBox(width: 4),
+                            Text(context.t('tab_favorites')),
                           ],
                         ),
                       ),
+                      Tab(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.archive_outlined, size: 14),
+                            const SizedBox(width: 4),
+                            Text(context.t('tab_archive')),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // ── List ────────────────────────────────────────────────────────
+              Expanded(
+                child: brandsAsync.when(
+                  loading: () => Center(
+                    child: _PremiumPulsingLoader(
+                      message: context.t('loading_roasters'),
                     ),
                   ),
-                );
-              }
-              return const SizedBox.shrink();
-            }).value ?? const SizedBox.shrink(),
-          ],
-        );
-      },
-    ),
-  ),
-],
-),
-],
-),
-);
-}
+                  error: (e, _) => Center(
+                    child: Text(
+                      '${context.t('error')}: $e',
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  ),
+                  data: (brands) {
+                    final filtered = brands.where((b) {
+                      if (_pendingDeleteIds.contains(b.id)) return false;
+                      if (_tabController.index == 0) return !b.isArchived;
+                      if (_tabController.index == 1) {
+                        return b.isFavorite && !b.isArchived;
+                      }
+                      if (_tabController.index == 2) return b.isArchived;
+                      return !b.isArchived;
+                    }).toList();
+
+                    return Stack(
+                      children: [
+                        if (filtered.isEmpty)
+                          _buildEmptyState()
+                        else
+                          ListView.builder(
+                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
+                            itemCount: filtered.length,
+                            itemBuilder: (context, index) {
+                              final brand = filtered[index];
+                              return _buildSwipeableBrandCard(brand);
+                            },
+                          ),
+                        // FAB добавити обсмажчика - Shown only if list is empty
+                        brandsAsync.whenData((brands) {
+                              if (brands.isEmpty && !_isSelectionMode) {
+                                return Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                      bottom: 90,
+                                      right: 24,
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: () =>
+                                          _showAddRoasterDialog(context, ref),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 28,
+                                          vertical: 16,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFB8955A),
+                                          borderRadius: BorderRadius.circular(
+                                            50,
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: const Color(
+                                                0xFFC8A96E,
+                                              ).withValues(alpha: 0.35),
+                                              blurRadius: 20,
+                                              spreadRadius: 2,
+                                              offset: const Offset(0, 6),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Icon(
+                                              Icons.add_rounded,
+                                              color: Colors.black87,
+                                              size: 20,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              context.t(
+                                                'add_roaster_uppercase',
+                                              ),
+                                              style: GoogleFonts.outfit(
+                                                fontWeight: FontWeight.w800,
+                                                fontSize: 12,
+                                                letterSpacing: 1.5,
+                                                color: Colors.black87,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                              return const SizedBox.shrink();
+                            }).value ??
+                            const SizedBox.shrink(),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
   // ─── Swipeable Card ────────────────────────────────────────────────────────
 
@@ -444,10 +499,10 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
       child: GlassSwipeWrapper(
         dismissibleKey: ValueKey('brand_swipe_${brand.id}'),
         leftAction: GlassSwipeAction(
-          icon: isArchiveTab ? Icons.unarchive_outlined : Icons.archive_outlined,
-          label: isArchiveTab 
-            ? context.t('restore')
-            : context.t('archive'),
+          icon: isArchiveTab
+              ? Icons.unarchive_outlined
+              : Icons.archive_outlined,
+          label: isArchiveTab ? context.t('restore') : context.t('archive'),
           color: const Color(0xFF3A7BBF),
           onTap: () async {
             final db = ref.read(databaseProvider);
@@ -455,10 +510,10 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
             ref.invalidate(brandsProvider);
             if (mounted) {
               ToastService.showSuccess(
-                context, 
+                context,
                 isArchiveTab
-                  ? context.t('toast_roaster_restored')
-                  : context.t('toast_roaster_archived')
+                    ? context.t('toast_roaster_restored')
+                    : context.t('toast_roaster_archived'),
               );
             }
           },
@@ -489,7 +544,8 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                 ref.read(settingsProvider.notifier).triggerHaptic();
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                      builder: (_) => BrandDetailsScreen(brand: brand)),
+                    builder: (_) => BrandDetailsScreen(brand: brand),
+                  ),
                 );
               }
             },
@@ -497,12 +553,18 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
               final db = ref.read(databaseProvider);
               final currentlyFavorite = brand.isFavorite;
               await db.toggleBrandFavorite(brand.id, !currentlyFavorite);
-              
+
               if (mounted) {
                 if (!currentlyFavorite) {
-                  ToastService.showSuccess(context, context.t('toast_added_to_favorites'));
+                  ToastService.showSuccess(
+                    context,
+                    context.t('toast_added_to_favorites'),
+                  );
                 } else {
-                  ToastService.showInfo(context, context.t('toast_removed_from_favorites'));
+                  ToastService.showInfo(
+                    context,
+                    context.t('toast_removed_from_favorites'),
+                  );
                 }
               }
               ref.invalidate(brandsProvider);
@@ -522,20 +584,20 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
     final String title = isArchiveTab
         ? context.t('empty_archive_title')
         : isFavoritesTab
-            ? context.t('empty_favorites_title')
-            : context.t('empty_roasters_title');
+        ? context.t('empty_favorites_title')
+        : context.t('empty_roasters_title');
 
     final String description = isArchiveTab
         ? context.t('empty_archive_desc')
         : isFavoritesTab
-            ? context.t('empty_favorites_desc')
-            : context.t('empty_roasters_desc');
+        ? context.t('empty_favorites_desc')
+        : context.t('empty_roasters_desc');
 
     final IconData icon = isArchiveTab
         ? Icons.archive_outlined
         : isFavoritesTab
-            ? Icons.favorite_border_rounded
-            : Icons.store_rounded;
+        ? Icons.favorite_border_rounded
+        : Icons.store_rounded;
 
     return Center(
       child: SingleChildScrollView(
@@ -601,7 +663,8 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
     final String key;
     if (count % 10 == 1 && count % 100 != 11) {
       key = 'selection_roasters_1';
-    } else if ([2, 3, 4].contains(count % 10) && ![12, 13, 14].contains(count % 100)) {
+    } else if ([2, 3, 4].contains(count % 10) &&
+        ![12, 13, 14].contains(count % 100)) {
       key = 'selection_roasters_2_4';
     } else {
       key = 'selection_roasters_5_plus';
@@ -628,26 +691,39 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
         title: Text(
           context.t('add_roaster_title'),
           style: GoogleFonts.poppins(
-              color: const Color(0xFFC8A96E), fontWeight: FontWeight.bold),
+            color: const Color(0xFFC8A96E),
+            fontWeight: FontWeight.bold,
+          ),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             _buildDialogField(
-                nameController, context.t('roaster_name_label'), Icons.business_rounded),
+              nameController,
+              context.t('roaster_name_label'),
+              Icons.business_rounded,
+            ),
             const SizedBox(height: 12),
             _buildDialogField(
-                locationController, context.t('city_country_label'), Icons.location_on_rounded),
+              locationController,
+              context.t('city_country_label'),
+              Icons.location_on_rounded,
+            ),
             const SizedBox(height: 12),
-            _buildDialogField(shortDescController, context.t('short_desc_label'),
-                Icons.description_rounded),
+            _buildDialogField(
+              shortDescController,
+              context.t('short_desc_label'),
+              Icons.description_rounded,
+            ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text(context.t('cancel'),
-                style: GoogleFonts.poppins(color: Colors.white38)),
+            child: Text(
+              context.t('cancel'),
+              style: GoogleFonts.poppins(color: Colors.white38),
+            ),
           ),
           TextButton(
             onPressed: () async {
@@ -666,8 +742,9 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
             child: Text(
               context.t('save'),
               style: GoogleFonts.poppins(
-                  color: const Color(0xFFC8A96E),
-                  fontWeight: FontWeight.bold),
+                color: const Color(0xFFC8A96E),
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
@@ -731,107 +808,120 @@ class _PremiumRoasterCard extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-                    // Checkbox або Лого
-                    if (isSelectionMode)
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        width: 28,
-                        height: 28,
-                        margin: const EdgeInsets.only(right: 14),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: isSelected
-                              ? const Color(0xFFC8A96E)
-                              : Colors.white.withValues(alpha: 0.1),
-                          border: Border.all(
-                            color: isSelected
-                                ? const Color(0xFFC8A96E)
-                                : Colors.white24,
-                            width: 1.5,
-                          ),
-                        ),
-                        child: isSelected
-                            ? const Icon(Icons.check_rounded,
-                                color: Colors.black, size: 16)
-                            : null,
-                      )
-                    else
-                      Container(
-                        width: 56,
-                        height: 56,
-                        margin: const EdgeInsets.only(right: 14),
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.05),
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: Colors.white12),
-                        ),
-                        child: _BrandLogo(url: brand.logoUrl),
-                      ),
-                    // Info
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            brand.name,
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xFFC8A96E),
-                            ),
-                          ),
-                          if (brand.location.isNotEmpty) ...[
-                            const SizedBox(height: 2),
-                            Row(children: [
-                              const Icon(Icons.location_on_rounded,
-                                  size: 12, color: Colors.white38),
-                              const SizedBox(width: 4),
-                              Text(brand.location,
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 12, color: Colors.white38)),
-                            ]),
-                          ],
-                          if (brand.shortDesc.isNotEmpty) ...[
-                            const SizedBox(height: 6),
-                            Text(
-                              brand.shortDesc,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.poppins(
-                                  fontSize: 13,
-                                  color: Colors.white60,
-                                  height: 1.4),
-                            ),
-                          ],
-                        ],
+              // Checkbox або Лого
+              if (isSelectionMode)
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: 28,
+                  height: 28,
+                  margin: const EdgeInsets.only(right: 14),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isSelected
+                        ? const Color(0xFFC8A96E)
+                        : Colors.white.withValues(alpha: 0.1),
+                    border: Border.all(
+                      color: isSelected
+                          ? const Color(0xFFC8A96E)
+                          : Colors.white24,
+                      width: 1.5,
+                    ),
+                  ),
+                  child: isSelected
+                      ? const Icon(
+                          Icons.check_rounded,
+                          color: Colors.black,
+                          size: 16,
+                        )
+                      : null,
+                )
+              else
+                Container(
+                  width: 56,
+                  height: 56,
+                  margin: const EdgeInsets.only(right: 14),
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.05),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: Colors.white12),
+                  ),
+                  child: _BrandLogo(url: brand.logoUrl),
+                ),
+              // Info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      brand.name,
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFFC8A96E),
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    // Кнопка улюблене
-                    if (!isSelectionMode)
-                      GestureDetector(
-                        onTap: onFavoriteToggle,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Icon(
-                            brand.isFavorite
-                                ? Icons.favorite_rounded
-                                : Icons.favorite_border_rounded,
-                            color: brand.isFavorite
-                                ? Colors.redAccent
-                                : Colors.white30,
-                            size: 22,
+                    if (brand.location.isNotEmpty) ...[
+                      const SizedBox(height: 2),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.location_on_rounded,
+                            size: 12,
+                            color: Colors.white38,
                           ),
+                          const SizedBox(width: 4),
+                          Text(
+                            brand.location,
+                            style: GoogleFonts.poppins(
+                              fontSize: 12,
+                              color: Colors.white38,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                    if (brand.shortDesc.isNotEmpty) ...[
+                      const SizedBox(height: 6),
+                      Text(
+                        brand.shortDesc,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(
+                          fontSize: 13,
+                          color: Colors.white60,
+                          height: 1.4,
                         ),
                       ),
+                    ],
                   ],
                 ),
               ),
-            ),
-          );
-        }
-      }
+              const SizedBox(width: 8),
+              // Кнопка улюблене
+              if (!isSelectionMode)
+                GestureDetector(
+                  onTap: onFavoriteToggle,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Icon(
+                      brand.isFavorite
+                          ? Icons.favorite_rounded
+                          : Icons.favorite_border_rounded,
+                      color: brand.isFavorite
+                          ? Colors.redAccent
+                          : Colors.white30,
+                      size: 22,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 // ─── Brand Logo ───────────────────────────────────────────────────────────────
 
@@ -882,13 +972,15 @@ class _PremiumPulsingLoaderState extends State<_PremiumPulsingLoader>
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
 
-    _scaleAnimation = Tween<double>(begin: 0.85, end: 1.05).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 0.85,
+      end: 1.05,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
-    _opacityAnimation = Tween<double>(begin: 0.3, end: 0.8).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _opacityAnimation = Tween<double>(
+      begin: 0.3,
+      end: 0.8,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override

@@ -36,11 +36,7 @@ class AddLotScreen extends ConsumerStatefulWidget {
   final CoffeeLotDto? initialLot;
   final bool openAsAdd;
 
-  const AddLotScreen({
-    super.key,
-    this.initialLot,
-    this.openAsAdd = false,
-  });
+  const AddLotScreen({super.key, this.initialLot, this.openAsAdd = false});
 
   @override
   ConsumerState<AddLotScreen> createState() => _AddLotScreenState();
@@ -79,7 +75,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     'Thermal Shock',
     'Yeast Inoculation',
     'Koji Fermentation',
-    'Other'
+    'Other',
   ];
 
   final List<String> _decafMethods = [
@@ -87,7 +83,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     'Swiss Water',
     'CO2',
     'Mountain Water',
-    'Other'
+    'Other',
   ];
 
   final List<String> _roastLevels = [
@@ -98,7 +94,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     'Dark',
     'Filter',
     'Omni',
-    'Espresso'
+    'Espresso',
   ];
 
   String? _selectedProcess;
@@ -123,7 +119,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     _retailPrice1kController.dispose();
     _wholesalePrice250Controller.dispose();
     _wholesalePrice1kController.dispose();
-    
+
     // Ensure navbar is visible when leaving this screen
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(navBarVisibleProvider.notifier).show();
@@ -168,11 +164,19 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(() => setState(() {}));
 
-    _roasteryController = TextEditingController(text: widget.initialLot?.roasteryName ?? '');
-    _roasteryCountryController = TextEditingController(text: widget.initialLot?.roasteryCountry ?? 'Ukraine');
-    _originCountryController = TextEditingController(text: widget.initialLot?.originCountry ?? '');
-    _regionController = TextEditingController(text: widget.initialLot?.region ?? '');
-    
+    _roasteryController = TextEditingController(
+      text: widget.initialLot?.roasteryName ?? '',
+    );
+    _roasteryCountryController = TextEditingController(
+      text: widget.initialLot?.roasteryCountry ?? 'Ukraine',
+    );
+    _originCountryController = TextEditingController(
+      text: widget.initialLot?.originCountry ?? '',
+    );
+    _regionController = TextEditingController(
+      text: widget.initialLot?.region ?? '',
+    );
+
     // Altitude conversion for display
     final pref = ref.read(preferencesProvider);
     String altitudeStr = widget.initialLot?.altitude ?? '';
@@ -183,22 +187,46 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       }
     }
     _altitudeController = TextEditingController(text: altitudeStr);
-    _varietiesController = TextEditingController(text: widget.initialLot?.varieties ?? '');
-    _farmerController = TextEditingController(text: widget.initialLot?.farmer ?? '');
-    _washStationController = TextEditingController(text: widget.initialLot?.washStation ?? '');
-    _processController = TextEditingController(text: widget.initialLot?.process ?? 'Washed');
-    _flavorProfileController = TextEditingController(text: widget.initialLot?.flavorProfile ?? '');
-    _scaScoreController = TextEditingController(text: widget.initialLot?.scaScore ?? '85');
-    _lotNumberController = TextEditingController(text: widget.initialLot?.lotNumber ?? '');
-    _weightController = TextEditingController(text: widget.initialLot?.weight ?? '250g');
-    
+    _varietiesController = TextEditingController(
+      text: widget.initialLot?.varieties ?? '',
+    );
+    _farmerController = TextEditingController(
+      text: widget.initialLot?.farmer ?? '',
+    );
+    _washStationController = TextEditingController(
+      text: widget.initialLot?.washStation ?? '',
+    );
+    _processController = TextEditingController(
+      text: widget.initialLot?.process ?? 'Washed',
+    );
+    _flavorProfileController = TextEditingController(
+      text: widget.initialLot?.flavorProfile ?? '',
+    );
+    _scaScoreController = TextEditingController(
+      text: widget.initialLot?.scaScore ?? '85',
+    );
+    _lotNumberController = TextEditingController(
+      text: widget.initialLot?.lotNumber ?? '',
+    );
+    _weightController = TextEditingController(
+      text: widget.initialLot?.weight ?? '250g',
+    );
+
     // Initial controllers are set based on widget.initialLot in initState
-    
+
     final pricing = widget.initialLot?.pricing ?? {};
-    _priceController = TextEditingController(text: pricing['retail_250']?.toString() ?? '');
-    _retailPrice1kController = TextEditingController(text: pricing['retail_1k']?.toString() ?? '');
-    _wholesalePrice250Controller = TextEditingController(text: pricing['wholesale_250']?.toString() ?? '');
-    _wholesalePrice1kController = TextEditingController(text: pricing['wholesale_1k']?.toString() ?? '');
+    _priceController = TextEditingController(
+      text: pricing['retail_250']?.toString() ?? '',
+    );
+    _retailPrice1kController = TextEditingController(
+      text: pricing['retail_1k']?.toString() ?? '',
+    );
+    _wholesalePrice250Controller = TextEditingController(
+      text: pricing['wholesale_250']?.toString() ?? '',
+    );
+    _wholesalePrice1kController = TextEditingController(
+      text: pricing['wholesale_1k']?.toString() ?? '',
+    );
 
     if (widget.initialLot != null) {
       _currentImageUrl = widget.initialLot!.imageUrl;
@@ -206,11 +234,10 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     }
   }
 
-
   void _populateFields(CoffeeLotDto lot) {
     setState(() {
       _populateProcess(lot);
-      
+
       _roastLevel = lot.roastLevel ?? 'Medium';
       _roastDate = lot.roastDate ?? DateTime.now();
       _openedAt = lot.openedAt;
@@ -221,11 +248,14 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
 
       final sensory = lot.sensoryPoints;
       if (sensory.isNotEmpty) {
-        _bitterness = (sensory['bitterness'] ?? sensory['aroma'] ?? 3).toDouble();
+        _bitterness = (sensory['bitterness'] ?? sensory['aroma'] ?? 3)
+            .toDouble();
         _acidity = (sensory['acidity'] ?? 3).toDouble();
-        _sweetness = (sensory['sweetness'] ?? sensory['flavor'] ?? 3).toDouble();
+        _sweetness = (sensory['sweetness'] ?? sensory['flavor'] ?? 3)
+            .toDouble();
         _body = (sensory['body'] ?? 3).toDouble();
-        _intensity = (sensory['intensity'] ?? sensory['balance'] ?? 3).toDouble();
+        _intensity = (sensory['intensity'] ?? sensory['balance'] ?? 3)
+            .toDouble();
         _aftertaste = (sensory['aftertaste'] ?? 3).toDouble();
       }
     });
@@ -285,20 +315,19 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           _imageExtension = image.name.split('.').last.toLowerCase();
           _currentImageUrl = null; // New image replaces old one
         });
-
       }
     } catch (e) {
       // Production silent fail
     }
   }
 
-  bool get _canSave => 
-      _roasteryController.text.trim().isNotEmpty && 
+  bool get _canSave =>
+      _roasteryController.text.trim().isNotEmpty &&
       _originCountryController.text.trim().isNotEmpty;
 
   Future<void> _saveLot() async {
     if (!_canSave) return;
-    
+
     final user = Supabase.instance.client.auth.currentUser;
     final userId = user?.id ?? 'guest';
 
@@ -306,12 +335,13 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const Center(child: CircularProgressIndicator(color: Color(0xFFC8A96E))),
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(color: Color(0xFFC8A96E)),
+      ),
     );
 
     final db = ref.read(databaseProvider);
     final lotId = widget.initialLot?.id ?? const Uuid().v4();
-
 
     String finalImageUrl = _currentImageUrl ?? '';
 
@@ -320,26 +350,33 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       if (_imageBytes != null && _imageExtension != null) {
         try {
           final localPath = await LocalFileManager.saveImageLocal(
-            _imageBytes!, 
-            extension: '.$_imageExtension'
+            _imageBytes!,
+            extension: '.$_imageExtension',
           );
           finalImageUrl = localPath;
-          
+
           if (mounted) {
-            ToastService.showSuccess(context, context.t('toast_photo_saved_locally'));
+            ToastService.showSuccess(
+              context,
+              context.t('toast_photo_saved_locally'),
+            );
           }
         } catch (e) {
           if (mounted) {
-            ToastService.showError(context, '${context.t('error_saving_photo')}: $e');
+            ToastService.showError(
+              context,
+              '${context.t('error_saving_photo')}: $e',
+            );
           }
         }
       }
 
       // 2. Prepare Processing Method
-      final String processStr = (_selectedProcess == 'Other' || _selectedProcess == null)
+      final String processStr =
+          (_selectedProcess == 'Other' || _selectedProcess == null)
           ? _processController.text
           : _selectedProcess!;
-      
+
       final effectiveProcess = _isDecaf
           ? '$processStr ($_decafProcess)'
           : processStr;
@@ -360,8 +397,8 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         'wholesale_1k': _wholesalePrice1kController.text,
       };
 
-      final effectiveOpenedAt = (_isOpen || _isGround) 
-          ? (_openedAt ?? _roastDate) 
+      final effectiveOpenedAt = (_isOpen || _isGround)
+          ? (_openedAt ?? _roastDate)
           : null;
 
       // 3. Save to Local DB
@@ -408,8 +445,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           updatedAt: Value(DateTime.now()),
         ),
       );
-      
-
 
       if (mounted) {
         // Pop loading
@@ -484,12 +519,18 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 shape: BoxShape.circle,
                 color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
               ),
-              child: const Icon(Icons.close_rounded, color: Color(0xFFC8A96E), size: 18),
+              child: const Icon(
+                Icons.close_rounded,
+                color: Color(0xFFC8A96E),
+                size: 18,
+              ),
             ),
           ),
           const Spacer(),
           Text(
-            widget.initialLot != null ? context.t('edit_lot').toUpperCase() : context.t('add_lot').toUpperCase(),
+            widget.initialLot != null
+                ? context.t('edit_lot').toUpperCase()
+                : context.t('add_lot').toUpperCase(),
             style: GoogleFonts.outfit(
               fontSize: 13,
               fontWeight: FontWeight.bold,
@@ -516,7 +557,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               setState(() => _isFavorite = !_isFavorite);
             },
             child: Icon(
-              _isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+              _isFavorite
+                  ? Icons.favorite_rounded
+                  : Icons.favorite_border_rounded,
               color: _isFavorite ? Colors.red : const Color(0xFFC8A96E),
               size: 20,
             ),
@@ -540,14 +583,23 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         indicator: BoxDecoration(
           color: const Color(0xFF1A1714),
           borderRadius: BorderRadius.circular(50),
-          border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.4)),
+          border: Border.all(
+            color: const Color(0xFFC8A96E).withValues(alpha: 0.4),
+          ),
         ),
         indicatorSize: TabBarIndicatorSize.tab,
         dividerColor: Colors.transparent,
         labelColor: const Color(0xFFC8A96E),
         unselectedLabelColor: const Color(0xFFC8A96E).withValues(alpha: 0.38),
-        labelStyle: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 11, letterSpacing: 0.5),
-        unselectedLabelStyle: GoogleFonts.outfit(fontWeight: FontWeight.w500, fontSize: 11),
+        labelStyle: GoogleFonts.outfit(
+          fontWeight: FontWeight.bold,
+          fontSize: 11,
+          letterSpacing: 0.5,
+        ),
+        unselectedLabelStyle: GoogleFonts.outfit(
+          fontWeight: FontWeight.w500,
+          fontSize: 11,
+        ),
         tabs: [
           Tab(text: context.t('roasters').toUpperCase()),
           Tab(text: context.t('coffee').toUpperCase()),
@@ -566,12 +618,14 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         child: Container(
           height: 54,
           decoration: BoxDecoration(
-            color: _canSave ? const Color(0xFF1A1714) : const Color(0xFF1A1714).withValues(alpha: 0.5),
+            color: _canSave
+                ? const Color(0xFF1A1714)
+                : const Color(0xFF1A1714).withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(27),
             border: Border.all(
-              color: _canSave 
-                ? const Color(0xFFC8A96E).withValues(alpha: 0.4)
-                : const Color(0xFFC8A96E).withValues(alpha: 0.1)
+              color: _canSave
+                  ? const Color(0xFFC8A96E).withValues(alpha: 0.4)
+                  : const Color(0xFFC8A96E).withValues(alpha: 0.1),
             ),
           ),
           child: Center(
@@ -580,7 +634,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               style: GoogleFonts.outfit(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
-                color: _canSave ? const Color(0xFFC8A96E) : const Color(0xFFC8A96E).withValues(alpha: 0.3),
+                color: _canSave
+                    ? const Color(0xFFC8A96E)
+                    : const Color(0xFFC8A96E).withValues(alpha: 0.3),
                 letterSpacing: 1.2,
               ),
             ),
@@ -601,28 +657,36 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     }
   }
 
-
-
   // ─── Shared Widgets ───────────────────────────────────────────────
 
   Widget _sectionLabel(String text) => Padding(
-        padding: const EdgeInsets.fromLTRB(4, 20, 4, 10),
-        child: Text(
-          text,
-          style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-      );
+    padding: const EdgeInsets.fromLTRB(4, 20, 4, 10),
+    child: Text(
+      text,
+      style: GoogleFonts.outfit(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+    ),
+  );
 
   Widget _darkCard({required List<Widget> children}) => Container(
-        decoration: BoxDecoration(
-          color: const Color(0xFFC8A96E).withValues(alpha: 0.04),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        clipBehavior: Clip.hardEdge,
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: children),
-      );
+    decoration: BoxDecoration(
+      color: const Color(0xFFC8A96E).withValues(alpha: 0.04),
+      borderRadius: BorderRadius.circular(20),
+    ),
+    clipBehavior: Clip.hardEdge,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
+    ),
+  );
 
-  Widget _divider() => Divider(height: 1, color: const Color(0xFFC8A96E).withValues(alpha: 0.06));
+  Widget _divider() => Divider(
+    height: 1,
+    color: const Color(0xFFC8A96E).withValues(alpha: 0.06),
+  );
 
   Widget _fieldRow({
     required String label,
@@ -643,39 +707,65 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         children: [
           Text(
             label,
-            style: GoogleFonts.outfit(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 1.2),
+            style: GoogleFonts.outfit(
+              fontSize: 10,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.2,
+            ),
           ),
           const SizedBox(height: 2),
           Row(
             children: [
               Expanded(
                 child: TextField(
-                  controller: controller ?? TextEditingController(text: value ?? ''),
+                  controller:
+                      controller ?? TextEditingController(text: value ?? ''),
                   style: GoogleFonts.outfit(color: Colors.white, fontSize: 16),
-                  keyboardType: keyboardType ?? (
-                    type == _FieldType.numeric || type == _FieldType.scaScore || type == _FieldType.weight || type == _FieldType.altitude
-                      ? const TextInputType.numberWithOptions(decimal: true)
-                      : TextInputType.text
-                  ),
-                  enableInteractiveSelection: type != _FieldType.scaScore && type != _FieldType.lotNumber,
-                  textCapitalization: (type == _FieldType.scaScore || type == _FieldType.lotNumber) 
-                    ? TextCapitalization.none 
-                    : TextCapitalization.sentences,
-                  autocorrect: (type == _FieldType.scaScore || type == _FieldType.lotNumber) ? false : true,
-                  inputFormatters: inputFormatters ?? (
-                    type == _FieldType.scaScore
-                      ? [ScaScoreInputFormatter()]
-                      : type == _FieldType.lotNumber
-                        ? [LotNumberInputFormatter()]
-                        : type == _FieldType.altitude
+                  keyboardType:
+                      keyboardType ??
+                      (type == _FieldType.numeric ||
+                              type == _FieldType.scaScore ||
+                              type == _FieldType.weight ||
+                              type == _FieldType.altitude
+                          ? const TextInputType.numberWithOptions(decimal: true)
+                          : TextInputType.text),
+                  enableInteractiveSelection:
+                      type != _FieldType.scaScore &&
+                      type != _FieldType.lotNumber,
+                  textCapitalization:
+                      (type == _FieldType.scaScore ||
+                          type == _FieldType.lotNumber)
+                      ? TextCapitalization.none
+                      : TextCapitalization.sentences,
+                  autocorrect:
+                      (type == _FieldType.scaScore ||
+                          type == _FieldType.lotNumber)
+                      ? false
+                      : true,
+                  inputFormatters:
+                      inputFormatters ??
+                      (type == _FieldType.scaScore
+                          ? [ScaScoreInputFormatter()]
+                          : type == _FieldType.lotNumber
+                          ? [LotNumberInputFormatter()]
+                          : type == _FieldType.altitude
                           ? [AltitudeInputFormatter()]
-                        : (type == _FieldType.numeric || type == _FieldType.weight)
-                          ? [FilteringTextInputFormatter.allow(RegExp(r'[0-9\.,]'))]
-                          : [GlobalCoffeeInputFormatter()]
-                  ),
+                          : (type == _FieldType.numeric ||
+                                type == _FieldType.weight)
+                          ? [
+                              FilteringTextInputFormatter.allow(
+                                RegExp(r'[0-9\.,]'),
+                              ),
+                            ]
+                          : [GlobalCoffeeInputFormatter()]),
                   decoration: InputDecoration(
-                    hintText: placeholder ?? (type == _FieldType.scaScore ? '80-100' : null),
-                    hintStyle: GoogleFonts.outfit(color: Colors.white.withValues(alpha: 0.2)),
+                    hintText:
+                        placeholder ??
+                        (type == _FieldType.scaScore ? '80-100' : null),
+                    hintStyle: GoogleFonts.outfit(
+                      color: Colors.white.withValues(alpha: 0.2),
+                    ),
                     border: InputBorder.none,
                     isDense: true,
                   ),
@@ -686,7 +776,14 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 ),
               ),
               if (suffix != null)
-                Text(suffix, style: GoogleFonts.outfit(color: const Color(0xFFC8A96E), fontWeight: FontWeight.bold, fontSize: 13)),
+                Text(
+                  suffix,
+                  style: GoogleFonts.outfit(
+                    color: const Color(0xFFC8A96E),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                  ),
+                ),
             ],
           ),
           if (helperText != null) ...[
@@ -724,38 +821,65 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label,
-                    style: GoogleFonts.outfit(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 1.2)),
+                Text(
+                  label,
+                  style: GoogleFonts.outfit(
+                    fontSize: 10,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Text(display,
-                    style: GoogleFonts.outfit(color: const Color(0xFFC8A96E), fontSize: 15, fontWeight: FontWeight.w500)),
+                Text(
+                  display,
+                  style: GoogleFonts.outfit(
+                    color: const Color(0xFFC8A96E),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ],
             ),
-            const Icon(Icons.calendar_today_rounded, color: Color(0xFFC8A96E), size: 16),
+            const Icon(
+              Icons.calendar_today_rounded,
+              color: Color(0xFFC8A96E),
+              size: 16,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _toggleButton({required String label, required bool active, required VoidCallback onTap}) {
+  Widget _toggleButton({
+    required String label,
+    required bool active,
+    required VoidCallback onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: active ? const Color(0xFFC8A96E).withValues(alpha: 0.06) : Colors.transparent,
+          color: active
+              ? const Color(0xFFC8A96E).withValues(alpha: 0.06)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(50),
           border: Border.all(
-            color: active ? const Color(0xFFC8A96E) : const Color(0xFFC8A96E).withValues(alpha: 0.1),
+            color: active
+                ? const Color(0xFFC8A96E)
+                : const Color(0xFFC8A96E).withValues(alpha: 0.1),
           ),
         ),
         alignment: Alignment.center,
         child: Text(
           label,
           style: GoogleFonts.outfit(
-            color: active ? const Color(0xFFC8A96E) : const Color(0xFFC8A96E).withValues(alpha: 0.38),
+            color: active
+                ? const Color(0xFFC8A96E)
+                : const Color(0xFFC8A96E).withValues(alpha: 0.38),
             fontSize: 11,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.0,
@@ -794,11 +918,21 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 value: value,
                 isExpanded: true,
                 dropdownColor: const Color(0xFF1A1714),
-                icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFFC8A96E), size: 18),
-                style: GoogleFonts.outfit(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+                icon: const Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  color: Color(0xFFC8A96E),
+                  size: 18,
+                ),
+                style: GoogleFonts.outfit(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                ),
                 items: items.map((e) {
-                  final text = localizationPrefix != null 
-                      ? context.t('$localizationPrefix${e.toLowerCase().replaceAll(' ', '_')}')
+                  final text = localizationPrefix != null
+                      ? context.t(
+                          '$localizationPrefix${e.toLowerCase().replaceAll(' ', '_')}',
+                        )
                       : e;
                   return DropdownMenuItem(value: e, child: Text(text));
                 }).toList(),
@@ -815,7 +949,13 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     setState(fn);
   }
 
-  Widget _sensorySlider(String label, double value, Function(double) onChanged, {required ThemeData theme, bool enabled = true}) {
+  Widget _sensorySlider(
+    String label,
+    double value,
+    Function(double) onChanged, {
+    required ThemeData theme,
+    bool enabled = true,
+  }) {
     return IgnorePointer(
       ignoring: !enabled,
       child: Opacity(
@@ -828,10 +968,23 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(label,
-                      style: GoogleFonts.outfit(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 1.0)),
-                  Text(value.toInt().toString(),
-                      style: GoogleFonts.outfit(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold)),
+                  Text(
+                    label,
+                    style: GoogleFonts.outfit(
+                      fontSize: 10,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.0,
+                    ),
+                  ),
+                  Text(
+                    value.toInt().toString(),
+                    style: GoogleFonts.outfit(
+                      fontSize: 13,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
               SliderTheme(
@@ -841,7 +994,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                   thumbColor: Colors.white,
                   overlayColor: Colors.white.withValues(alpha: 0.2),
                   trackHeight: 2,
-                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
+                  thumbShape: const RoundSliderThumbShape(
+                    enabledThumbRadius: 7,
+                  ),
                 ),
                 child: Slider(
                   value: value,
@@ -849,7 +1004,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                   max: 5,
                   divisions: 4,
                   onChanged: (v) {
-                    ref.read(settingsProvider.notifier).triggerSelectionVibrate();
+                    ref
+                        .read(settingsProvider.notifier)
+                        .triggerSelectionVibrate();
                     onChanged(v);
                   },
                 ),
@@ -860,8 +1017,14 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: List.generate(
                     5,
-                    (i) => Text('${i + 1}',
-                        style: GoogleFonts.outfit(fontSize: 8, color: Colors.white24, fontWeight: FontWeight.bold)),
+                    (i) => Text(
+                      '${i + 1}',
+                      style: GoogleFonts.outfit(
+                        fontSize: 8,
+                        color: Colors.white24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -872,4 +1035,3 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     );
   }
 }
-

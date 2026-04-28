@@ -64,7 +64,7 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
     super.initState();
     _secondsRemaining = widget.duration.inSeconds;
     _controller = AnimationController(vsync: this, duration: widget.duration);
-    
+
     // Add listener for smooth, frame-by-frame progress updates
     _controller.addListener(() {
       if (mounted) setState(() {});
@@ -114,11 +114,12 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
   void _onGlobalTap(PointerDownEvent event) {
     if (_isDismissed) return;
 
-    final RenderBox? renderBox = _barKey.currentContext?.findRenderObject() as RenderBox?;
+    final RenderBox? renderBox =
+        _barKey.currentContext?.findRenderObject() as RenderBox?;
     if (renderBox != null) {
       final Offset localOffset = renderBox.globalToLocal(event.position);
       final bool isInside = renderBox.paintBounds.contains(localOffset);
-      
+
       if (!isInside) {
         // Tapped outside the bar
         _handleDismiss();
@@ -149,7 +150,9 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.12),
+                    ),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.4),
@@ -169,8 +172,12 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
                             CircularProgressIndicator(
                               value: 1.0 - _controller.value,
                               strokeWidth: 2,
-                              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFC8A96E)),
-                              backgroundColor: Colors.white.withValues(alpha: 0.05),
+                              valueColor: const AlwaysStoppedAnimation<Color>(
+                                Color(0xFFC8A96E),
+                              ),
+                              backgroundColor: Colors.white.withValues(
+                                alpha: 0.05,
+                              ),
                             ),
                             Text(
                               '$_secondsRemaining',
@@ -200,7 +207,9 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
                         style: TextButton.styleFrom(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           backgroundColor: const Color(0xFFC8A96E),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
                         child: Text(
                           context.t('undo'),

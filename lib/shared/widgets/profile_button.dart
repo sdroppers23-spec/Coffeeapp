@@ -105,7 +105,6 @@ class _ProfileSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef innerRef) {
-
     return Container(
       margin: EdgeInsets.fromLTRB(16, 0, 16, 32 + bottomPad),
       padding: const EdgeInsets.all(24),

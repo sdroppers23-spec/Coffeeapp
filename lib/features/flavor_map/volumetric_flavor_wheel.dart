@@ -27,10 +27,7 @@ final List<FlavorNode> volumetricFlavorData = [
         nameKey: 'note_berry',
         color: Color(0xFFFF4081),
         children: [
-          FlavorNode(
-            nameKey: 'note_strawberry',
-            color: Color(0xFFF06292),
-          ),
+          FlavorNode(nameKey: 'note_strawberry', color: Color(0xFFF06292)),
           FlavorNode(nameKey: 'note_raspberry', color: Color(0xFFEC407A)),
           FlavorNode(nameKey: 'note_blueberry', color: Color(0xFFD81B60)),
         ],
@@ -75,9 +72,7 @@ final List<FlavorNode> volumetricFlavorData = [
       FlavorNode(
         nameKey: 'note_jasmine',
         color: Color(0xFFEA80FC),
-        children: [
-          FlavorNode(nameKey: 'note_tea', color: Color(0xFFBCAAA4)),
-        ],
+        children: [FlavorNode(nameKey: 'note_tea', color: Color(0xFFBCAAA4))],
       ),
     ],
   ),

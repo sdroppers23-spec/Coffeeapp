@@ -27,14 +27,14 @@ class PremiumAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: BackdropFilter(
         filter: ui.ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: AppBar(
-          backgroundColor: isDark 
+          backgroundColor: isDark
               ? Colors.black.withValues(alpha: 0.2)
               : theme.colorScheme.surface.withValues(alpha: 0.7),
           elevation: 0,
           scrolledUnderElevation: 0,
           toolbarHeight: toolbarHeight,
-          leading: showBackButton 
-              ? BackButton(color: theme.colorScheme.onSurface) 
+          leading: showBackButton
+              ? BackButton(color: theme.colorScheme.onSurface)
               : null,
           title: Text(
             title,

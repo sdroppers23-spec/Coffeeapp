@@ -9,18 +9,21 @@ import '../discover/discovery_filter_provider.dart';
 
 /// Notifier for the Encyclopedia search query
 // DEPRECATED: Use encyclopediaFilterProvider instead
-final encyclopediaSearchQueryProvider =
-    Provider<String>((ref) => ref.watch(encyclopediaFilterProvider).search);
+final encyclopediaSearchQueryProvider = Provider<String>(
+  (ref) => ref.watch(encyclopediaFilterProvider).search,
+);
 
 /// Provider for the current sorting state of the Encyclopedia
 // DEPRECATED: Use encyclopediaFilterProvider instead
-final encyclopediaSortProvider =
-    Provider<SortType>((ref) => ref.watch(encyclopediaFilterProvider).sortType);
+final encyclopediaSortProvider = Provider<SortType>(
+  (ref) => ref.watch(encyclopediaFilterProvider).sortType,
+);
 
 /// Reactive stream of Encyclopedia entries from the local database.
 /// This ensures offline availability and high performance.
-final localEncyclopediaStreamProvider =
-    StreamProvider<List<LocalizedBeanDto>>((ref) {
+final localEncyclopediaStreamProvider = StreamProvider<List<LocalizedBeanDto>>((
+  ref,
+) {
   final db = ref.watch(databaseProvider);
   final lang = ref.watch(localeProvider);
 
@@ -46,18 +49,23 @@ final localEncyclopediaStreamProvider =
 });
 
 /// Final processed data for the Encyclopedia UI (sorted and filtered).
-final encyclopediaDataProvider = Provider<AsyncValue<List<LocalizedBeanDto>>>((ref) {
+final encyclopediaDataProvider = Provider<AsyncValue<List<LocalizedBeanDto>>>((
+  ref,
+) {
   final entriesAsync = ref.watch(localEncyclopediaStreamProvider);
   final filterState = ref.watch(encyclopediaFilterProvider);
   final search = filterState.search.toLowerCase();
 
   return entriesAsync.whenData((entries) {
-    debugPrint('EncyclopediaProvider: Received ${entries.length} entries from stream');
+    debugPrint(
+      'EncyclopediaProvider: Received ${entries.length} entries from stream',
+    );
     // 1. Filter by search query, countries, flavors, and processes
     final filtered = entries.where((e) {
       // Search
       if (search.isNotEmpty) {
-        final matchesSearch = e.country.toLowerCase().contains(search) ||
+        final matchesSearch =
+            e.country.toLowerCase().contains(search) ||
             e.region.toLowerCase().contains(search) ||
             e.varieties.toLowerCase().contains(search);
         if (!matchesSearch) return false;
@@ -71,7 +79,9 @@ final encyclopediaDataProvider = Provider<AsyncValue<List<LocalizedBeanDto>>>((r
 
       // Flavor Notes
       if (filterState.selectedFlavorNotes.isNotEmpty) {
-        final matchesFlavor = e.flavorNotes.any((f) => filterState.selectedFlavorNotes.contains(f));
+        final matchesFlavor = e.flavorNotes.any(
+          (f) => filterState.selectedFlavorNotes.contains(f),
+        );
         if (!matchesFlavor) return false;
       }
 
@@ -136,23 +146,42 @@ final favoriteIdsProvider = StreamProvider<Set<int>>((ref) {
 });
 
 /// Legacy compatibility - should be migrated to encyclopediaDataProvider
-final supabaseEncyclopediaProvider = Provider<AsyncValue<List<LocalizedBeanDto>>>((ref) {
-  return ref.watch(encyclopediaDataProvider);
-});
+final supabaseEncyclopediaProvider =
+    Provider<AsyncValue<List<LocalizedBeanDto>>>((ref) {
+      return ref.watch(encyclopediaDataProvider);
+    });
 
 final availableEncyclopediaCountriesProvider = Provider<List<String>>((ref) {
-  final entries = ref.watch(localEncyclopediaStreamProvider).asData?.value ?? [];
-  return entries.map((e) => e.country).where((c) => c.isNotEmpty).toSet().toList()..sort();
+  final entries =
+      ref.watch(localEncyclopediaStreamProvider).asData?.value ?? [];
+  return entries
+      .map((e) => e.country)
+      .where((c) => c.isNotEmpty)
+      .toSet()
+      .toList()
+    ..sort();
 });
 
 final availableEncyclopediaFlavorsProvider = Provider<List<String>>((ref) {
-  final entries = ref.watch(localEncyclopediaStreamProvider).asData?.value ?? [];
-  return entries.expand((e) => e.flavorNotes).where((f) => f.isNotEmpty).toSet().toList()..sort();
+  final entries =
+      ref.watch(localEncyclopediaStreamProvider).asData?.value ?? [];
+  return entries
+      .expand((e) => e.flavorNotes)
+      .where((f) => f.isNotEmpty)
+      .toSet()
+      .toList()
+    ..sort();
 });
 
 final availableEncyclopediaProcessesProvider = Provider<List<String>>((ref) {
-  final entries = ref.watch(localEncyclopediaStreamProvider).asData?.value ?? [];
-  return entries.map((e) => e.processMethod).where((p) => p.isNotEmpty).toSet().toList()..sort();
+  final entries =
+      ref.watch(localEncyclopediaStreamProvider).asData?.value ?? [];
+  return entries
+      .map((e) => e.processMethod)
+      .where((p) => p.isNotEmpty)
+      .toSet()
+      .toList()
+    ..sort();
 });
 
 // ─── Comparison Selection ────────────────────────────────────────────────────
@@ -265,16 +294,21 @@ class ComparableCoffee {
   }
 }
 
-final allComparableCoffeesProvider = FutureProvider.family<List<ComparableCoffee>, ComparisonSource>((ref, source) async {
-  final db = ref.watch(databaseProvider);
-  final lang = ref.watch(localeProvider);
-  
-  if (source == ComparisonSource.encyclopedia) {
-    final encyclopediaEntries = await db.getAllEncyclopediaEntries(lang);
-    return encyclopediaEntries.map((e) => ComparableCoffee.fromEncyclopedia(e)).toList();
-  } else {
-    final userLots = await db.getAllCoffeeLots();
-    return userLots.map((l) => ComparableCoffee.fromUserLot(l)).toList();
-  }
-});
+final allComparableCoffeesProvider =
+    FutureProvider.family<List<ComparableCoffee>, ComparisonSource>((
+      ref,
+      source,
+    ) async {
+      final db = ref.watch(databaseProvider);
+      final lang = ref.watch(localeProvider);
 
+      if (source == ComparisonSource.encyclopedia) {
+        final encyclopediaEntries = await db.getAllEncyclopediaEntries(lang);
+        return encyclopediaEntries
+            .map((e) => ComparableCoffee.fromEncyclopedia(e))
+            .toList();
+      } else {
+        final userLots = await db.getAllCoffeeLots();
+        return userLots.map((l) => ComparableCoffee.fromUserLot(l)).toList();
+      }
+    });

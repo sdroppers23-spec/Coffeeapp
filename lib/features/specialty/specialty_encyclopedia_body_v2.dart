@@ -90,7 +90,7 @@ class SpecialtyArticleCard extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Premium Title
                 Text(
                   title,
@@ -102,9 +102,9 @@ class SpecialtyArticleCard extends StatelessWidget {
                     letterSpacing: -0.5,
                   ),
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Preview text (stripped HTML/Markdown)
                 Text(
                   ContentUtils.getPreviewText(content, limit: 150),
@@ -116,9 +116,9 @@ class SpecialtyArticleCard extends StatelessWidget {
                     color: Colors.white.withValues(alpha: 0.7),
                   ),
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Read More Action
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,

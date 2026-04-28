@@ -34,7 +34,11 @@ extension _RecipeGrinderSection on _AddRecipeDialogState {
       return Center(
         child: TextButton.icon(
           onPressed: () => _updateState(() => _isGrinderExpanded = true),
-          icon: Icon(Icons.settings_input_component_rounded, color: gold, size: 20),
+          icon: Icon(
+            Icons.settings_input_component_rounded,
+            color: gold,
+            size: 20,
+          ),
           label: Text(
             ref.t('choose_grinder'),
             style: GoogleFonts.outfit(
@@ -82,19 +86,18 @@ extension _RecipeGrinderSection on _AddRecipeDialogState {
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
-          initialValue:
-              _grinderNameController.text.isNotEmpty
-                  ? ([
-                        'Comandante',
-                        'EK43',
-                        'Fellow Ode',
-                        'Wilfa',
-                        'Timemore',
-                        'Other',
-                      ].contains(_grinderNameController.text)
-                      ? _grinderNameController.text
-                      : 'Other')
-                  : null,
+          initialValue: _grinderNameController.text.isNotEmpty
+              ? ([
+                      'Comandante',
+                      'EK43',
+                      'Fellow Ode',
+                      'Wilfa',
+                      'Timemore',
+                      'Other',
+                    ].contains(_grinderNameController.text)
+                    ? _grinderNameController.text
+                    : 'Other')
+              : null,
           hint: Text(
             ref.t('select_from_list'),
             style: GoogleFonts.outfit(color: Colors.white24, fontSize: 14),
@@ -122,12 +125,11 @@ extension _RecipeGrinderSection on _AddRecipeDialogState {
                     ),
                   )
                   .toList(),
-          onChanged:
-              (val) => _updateState(() {
-                _grinderNameController.text = val!;
-                _isOtherGrinder = val == 'Other';
-                _isGrinderExpanded = true;
-              }),
+          onChanged: (val) => _updateState(() {
+            _grinderNameController.text = val!;
+            _isOtherGrinder = val == 'Other';
+            _isGrinderExpanded = true;
+          }),
         ),
         if (_isOtherGrinder) ...[
           const SizedBox(height: 12),
@@ -135,11 +137,8 @@ extension _RecipeGrinderSection on _AddRecipeDialogState {
             controller: _customGrinderController,
             label: ref.t('enter_grinder_name'),
             hint: ref.t('grinder_name_label'),
-            validator:
-                (val) =>
-                    val == null || val.isEmpty
-                        ? ref.t('required')
-                        : null,
+            validator: (val) =>
+                val == null || val.isEmpty ? ref.t('required') : null,
           ),
         ],
         const SizedBox(height: 12),

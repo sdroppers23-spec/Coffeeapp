@@ -7,7 +7,7 @@ import '../discover/discovery_filter_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import 'widgets/encyclopedia_card_widgets.dart';
 import 'coffee_lot_detail_screen.dart';
-import 'comparison_screen.dart'; 
+import 'comparison_screen.dart';
 import '../../shared/widgets/premium_app_bar.dart';
 import '../../shared/widgets/premium_background.dart';
 import '../../shared/widgets/profile_button.dart';
@@ -51,7 +51,9 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
                 filterProvider: encyclopediaFilterProvider,
                 selectionProvider: encyclopediaSelectedIdsProvider,
                 onCompareTap: () {
-                  final selectedCount = ref.read(encyclopediaSelectedIdsProvider).length;
+                  final selectedCount = ref
+                      .read(encyclopediaSelectedIdsProvider)
+                      .length;
                   if (selectedCount == 0) {
                     Navigator.push(
                       context,
@@ -62,7 +64,10 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
                       ),
                     );
                   } else if (selectedCount == 1) {
-                    ToastService.showInfo(context, context.t('toast_select_second_lot'));
+                    ToastService.showInfo(
+                      context,
+                      context.t('toast_select_second_lot'),
+                    );
                   } else {
                     Navigator.push(
                       context,
@@ -74,11 +79,15 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
                     );
                   }
                 },
-                availableCountries:
-                    ref.watch(availableEncyclopediaCountriesProvider),
-                availableFlavors: ref.watch(availableEncyclopediaFlavorsProvider),
-                availableProcesses:
-                    ref.watch(availableEncyclopediaProcessesProvider),
+                availableCountries: ref.watch(
+                  availableEncyclopediaCountriesProvider,
+                ),
+                availableFlavors: ref.watch(
+                  availableEncyclopediaFlavorsProvider,
+                ),
+                availableProcesses: ref.watch(
+                  availableEncyclopediaProcessesProvider,
+                ),
                 showFavoritesButton: true,
               ),
 
@@ -103,9 +112,7 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
     );
   }
 
-  Widget _buildList(
-    AsyncValue<List<LocalizedBeanDto>> originsAsync,
-  ) {
+  Widget _buildList(AsyncValue<List<LocalizedBeanDto>> originsAsync) {
     final filterState = ref.watch(encyclopediaFilterProvider);
     final isGrid = filterState.isGrid;
     final showFavoritesOnly = filterState.showFavoritesOnly;
@@ -133,10 +140,7 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
         ),
       ),
       error: (e, _) => Center(
-        child: Text(
-          'Error: $e',
-          style: const TextStyle(color: Colors.white70),
-        ),
+        child: Text('Error: $e', style: const TextStyle(color: Colors.white70)),
       ),
       data: (filtered) {
         if (filtered.isEmpty) {
@@ -149,14 +153,19 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
           } else if (search.isNotEmpty) {
             emptyMessage = '${context.t('no_results')} "$search"';
           }
-          
+
           return _EmptyState(message: emptyMessage);
         }
 
         if (isGrid) {
           return GridView.builder(
             controller: _scrollController,
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 220),
+            padding: const EdgeInsets.only(
+              left: 16,
+              right: 16,
+              top: 16,
+              bottom: 220,
+            ),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               mainAxisSpacing: 12,
@@ -176,7 +185,12 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
 
         return ListView.separated(
           controller: _scrollController,
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 180),
+          padding: const EdgeInsets.only(
+            left: 16,
+            right: 16,
+            top: 16,
+            bottom: 180,
+          ),
           itemCount: filtered.length,
           separatorBuilder: (context, index) => const SizedBox(height: 12),
           itemBuilder: (context, i) {
@@ -212,13 +226,12 @@ class EncyclopediaScreen extends ConsumerWidget {
       extendBodyBehindAppBar: true,
       appBar: PremiumAppBar(
         title: ref.t('encyclopedia'),
-        actions: const [
-          _CloudStatusBadge(),
-          ProfileButton(),
-        ],
+        actions: const [_CloudStatusBadge(), ProfileButton()],
       ),
       body: const Padding(
-        padding: EdgeInsets.only(top: kToolbarHeight + 40), // Offset for blurred bar
+        padding: EdgeInsets.only(
+          top: kToolbarHeight + 40,
+        ), // Offset for blurred bar
         child: EncyclopediaBody(),
       ),
     );

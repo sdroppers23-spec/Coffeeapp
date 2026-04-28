@@ -19,7 +19,6 @@ import '../../features/navigation/main_scaffold.dart';
 import '../../features/brewing/brewing_main_screen.dart';
 import '../../shared/widgets/lot_detail_view.dart';
 
-
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorSpecialtyKey = GlobalKey<NavigatorState>(
   debugLabel: 'specialty_shell',
@@ -35,8 +34,8 @@ class RouterRefreshNotifier extends ChangeNotifier {
   RouterRefreshNotifier(Ref ref) {
     _subscription = ref.listen(authStateProvider, (_, next) {
       final event = next.value?.event;
-      if (event == AuthChangeEvent.signedIn || 
-          event == AuthChangeEvent.signedOut || 
+      if (event == AuthChangeEvent.signedIn ||
+          event == AuthChangeEvent.signedOut ||
           event == AuthChangeEvent.initialSession) {
         notifyListeners();
       }
@@ -77,11 +76,8 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       return null;
     },
-    errorBuilder: (context, state) => const Scaffold(
-      body: Center(
-        child: Text('Page not found'),
-      ),
-    ),
+    errorBuilder: (context, state) =>
+        const Scaffold(body: Center(child: Text('Page not found'))),
     routes: [
       GoRoute(path: '/auth', builder: (context, state) => const AuthScreen()),
       // Catch legacy/invalid recipe routes and redirect to recipes tab
@@ -89,7 +85,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/edit_recipe', redirect: (context, state) => '/recipes'),
       GoRoute(path: '/add-recipe', redirect: (context, state) => '/recipes'),
       GoRoute(path: '/edit-recipe', redirect: (context, state) => '/recipes'),
-      
+
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return MainScaffold(navigationShell: navigationShell);
@@ -135,7 +131,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/compare',
         builder: (context, state) {
-          final source = state.extra as ComparisonSource? ?? ComparisonSource.encyclopedia;
+          final source =
+              state.extra as ComparisonSource? ?? ComparisonSource.encyclopedia;
           return ComparisonScreen(source: source);
         },
       ),
@@ -165,7 +162,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           final extra = state.extra as Map<String, dynamic>?;
           final lot = extra?['lot'] as CoffeeLotDto?;
           final entry = extra?['entry'] as EncyclopediaEntry?;
-          
+
           if (lot == null && entry == null) {
             return Scaffold(
               appBar: AppBar(title: const Text('Lot Detail')),
@@ -184,14 +181,10 @@ final routerProvider = Provider<GoRouter>((ref) {
               ),
             );
           }
-          
-          return LotDetailView(
-            lot: lot,
-            entry: entry,
-          );
+
+          return LotDetailView(lot: lot, entry: entry);
         },
       ),
-
     ],
   );
 });

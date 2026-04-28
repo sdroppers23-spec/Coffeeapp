@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-
 class GlassContainer extends ConsumerWidget {
   final Widget child;
   final double blur;
@@ -55,10 +54,13 @@ class GlassContainer extends ConsumerWidget {
     const double effectiveBaseOpacity = 0.4;
 
     final effectiveBorderRadius = borderRadius;
-    
-    final effectiveBorderColor = borderColor ?? Colors.white.withValues(alpha: 0.12);
 
-    final effectiveBaseColor = Colors.black.withValues(alpha: effectiveBaseOpacity);
+    final effectiveBorderColor =
+        borderColor ?? Colors.white.withValues(alpha: 0.12);
+
+    final effectiveBaseColor = Colors.black.withValues(
+      alpha: effectiveBaseOpacity,
+    );
 
     final effectiveTintColor = color ?? Colors.white;
 
@@ -72,7 +74,8 @@ class GlassContainer extends ConsumerWidget {
           if (enableBlur && effectiveBlur > 0)
             Positioned.fill(
               child: Opacity(
-                opacity: 0.999, // Hack to force BackdropFilter visibility on Windows
+                opacity:
+                    0.999, // Hack to force BackdropFilter visibility on Windows
                 child: BackdropFilter(
                   filter: ImageFilter.blur(
                     sigmaX: effectiveBlur,
@@ -82,11 +85,9 @@ class GlassContainer extends ConsumerWidget {
                 ),
               ),
             ),
-          
+
           // Layer 2: Base Backdrop Color/Tint
-          Positioned.fill(
-            child: Container(color: effectiveBaseColor),
-          ),
+          Positioned.fill(child: Container(color: effectiveBaseColor)),
 
           // Layer 3: Main decoration and content
           Container(
@@ -96,14 +97,12 @@ class GlassContainer extends ConsumerWidget {
                   ? effectiveTintColor.withValues(alpha: effectiveOpacity)
                   : null,
               borderRadius: BorderRadius.circular(effectiveBorderRadius),
-              border: Border.all(
-                color: effectiveBorderColor,
-                width: 1.0,
-              ),
+              border: Border.all(color: effectiveBorderColor, width: 1.0),
               image: imageUrl != null
                   ? DecorationImage(
                       image: imageUrl!.startsWith('http')
-                          ? CachedNetworkImageProvider(imageUrl!) as ImageProvider
+                          ? CachedNetworkImageProvider(imageUrl!)
+                                as ImageProvider
                           : AssetImage(imageUrl!),
                       fit: BoxFit.cover,
                       colorFilter: ColorFilter.mode(
@@ -114,14 +113,15 @@ class GlassContainer extends ConsumerWidget {
                   : null,
               gradient: imageUrl != null
                   ? null
-                  : (backgroundGradient ?? LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Colors.white.withValues(alpha: 0.1),
-                          Colors.white.withValues(alpha: 0.02),
-                        ],
-                      )),
+                  : (backgroundGradient ??
+                        LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Colors.white.withValues(alpha: 0.1),
+                            Colors.white.withValues(alpha: 0.02),
+                          ],
+                        )),
             ),
             child: child,
           ),
@@ -139,30 +139,27 @@ class GlassContainer extends ConsumerWidget {
       height: height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(effectiveBorderRadius),
-        boxShadow: (enableShadow) 
-          ? (shadows ??
-            [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.3),
-                blurRadius: 20,
-                spreadRadius: 0,
-                offset: const Offset(0, 4),
-              ),
-            ])
-          : null,
+        boxShadow: (enableShadow)
+            ? (shadows ??
+                  [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.3),
+                      blurRadius: 20,
+                      spreadRadius: 0,
+                      offset: const Offset(0, 4),
+                    ),
+                  ])
+            : null,
       ),
-      child: useOuterClip 
-        ? ClipRRect(
-            borderRadius: BorderRadius.circular(effectiveBorderRadius),
-            clipBehavior: Clip.antiAlias,
-            child: mainContent,
-          )
-        : mainContent,
+      child: useOuterClip
+          ? ClipRRect(
+              borderRadius: BorderRadius.circular(effectiveBorderRadius),
+              clipBehavior: Clip.antiAlias,
+              child: mainContent,
+            )
+          : mainContent,
     );
 
-    return Padding(
-      padding: margin ?? EdgeInsets.zero,
-      child: finalCard,
-    );
+    return Padding(padding: margin ?? EdgeInsets.zero, child: finalCard);
   }
 }

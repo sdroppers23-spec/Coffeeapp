@@ -594,7 +594,9 @@ class AppDatabase extends _$AppDatabase {
     ]);
 
     return query.watch().map((rows) {
-      debugPrint('AppDatabase: watchAllEncyclopediaEntries found ${rows.length} rows for lang $lang');
+      debugPrint(
+        'AppDatabase: watchAllEncyclopediaEntries found ${rows.length} rows for lang $lang',
+      );
       if (rows.isNotEmpty) {
         final first = rows.first.readTable(localizedBeansV2);
         debugPrint('AppDatabase: Sample row ID: ${first.id}');
@@ -1158,18 +1160,26 @@ class AppDatabase extends _$AppDatabase {
   Future<void> claimGuestData(String newUserId) async {
     await transaction(() async {
       // Update Lots
-      await (update(coffeeLots)..where((t) => t.userId.equals('guest') | t.userId.equals('local_user')))
-          .write(CoffeeLotsCompanion(
-            userId: Value(newUserId),
-            isSynced: const Value(false),
-          ));
-          
+      await (update(coffeeLots)..where(
+            (t) => t.userId.equals('guest') | t.userId.equals('local_user'),
+          ))
+          .write(
+            CoffeeLotsCompanion(
+              userId: Value(newUserId),
+              isSynced: const Value(false),
+            ),
+          );
+
       // Update Recipes
-      await (update(customRecipes)..where((t) => t.userId.equals('guest') | t.userId.equals('local_user')))
-          .write(CustomRecipesCompanion(
-            userId: Value(newUserId),
-            isSynced: const Value(false),
-          ));
+      await (update(customRecipes)..where(
+            (t) => t.userId.equals('guest') | t.userId.equals('local_user'),
+          ))
+          .write(
+            CustomRecipesCompanion(
+              userId: Value(newUserId),
+              isSynced: const Value(false),
+            ),
+          );
     });
   }
 

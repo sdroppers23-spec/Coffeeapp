@@ -2,7 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'settings_provider.dart';
 
 enum TempUnit { celsius, fahrenheit }
+
 enum LengthUnit { meters, feet }
+
 enum Currency { uah, eur, usd }
 
 class UserPreferences {
@@ -37,7 +39,7 @@ class PreferencesNotifier extends Notifier<UserPreferences> {
   @override
   UserPreferences build() {
     final prefs = ref.watch(sharedPreferencesProvider);
-    
+
     final tempIndex = prefs.getInt(_tempKey) ?? 0;
     final lengthIndex = prefs.getInt(_lengthKey) ?? 0;
     final currencyStr = prefs.getString(_currencyKey) ?? 'UAH';
@@ -51,17 +53,23 @@ class PreferencesNotifier extends Notifier<UserPreferences> {
 
   Currency _parseCurrency(String val) {
     switch (val.toUpperCase()) {
-      case 'EUR': return Currency.eur;
-      case 'USD': return Currency.usd;
-      default: return Currency.uah;
+      case 'EUR':
+        return Currency.eur;
+      case 'USD':
+        return Currency.usd;
+      default:
+        return Currency.uah;
     }
   }
 
   String _currencyToString(Currency c) {
     switch (c) {
-      case Currency.eur: return 'EUR';
-      case Currency.usd: return 'USD';
-      case Currency.uah: return 'UAH';
+      case Currency.eur:
+        return 'EUR';
+      case Currency.usd:
+        return 'USD';
+      case Currency.uah:
+        return 'UAH';
     }
   }
 
@@ -86,11 +94,12 @@ class PreferencesNotifier extends Notifier<UserPreferences> {
   // Conversion helpers
   double celsiusToFahrenheit(double c) => (c * 9 / 5) + 32;
   double fahrenheitToCelsius(double f) => (f - 32) * 5 / 9;
-  
+
   double metersToFeet(double m) => m * 3.28084;
   double feetToMeters(double ft) => ft / 3.28084;
 }
 
-final preferencesProvider = NotifierProvider<PreferencesNotifier, UserPreferences>(() {
-  return PreferencesNotifier();
-});
+final preferencesProvider =
+    NotifierProvider<PreferencesNotifier, UserPreferences>(() {
+      return PreferencesNotifier();
+    });

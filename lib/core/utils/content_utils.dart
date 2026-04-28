@@ -4,8 +4,10 @@ class ContentUtils {
   /// Robust regex to match any technical key in formats like {p1}, {/p1}, [li], etc.
   /// Robust regex to match any technical key in formats like {p1}, {/p1}, [li], etc.
   /// EXCLUDES our new styling tags: {gold}, {serif}, {accent}, {size}
-  static final RegExp _technicalKeyRegex = RegExp(r'\{/?(?!(gold|serif|accent|size))[\w\d]+\}|\[/?[\w\d]+\]');
-  
+  static final RegExp _technicalKeyRegex = RegExp(
+    r'\{/?(?!(gold|serif|accent|size))[\w\d]+\}|\[/?[\w\d]+\]',
+  );
+
   /// Matches any standard HTML tag
   static final RegExp _htmlTagRegex = RegExp(r'<[^>]*>');
 
@@ -25,23 +27,29 @@ class ContentUtils {
     cleaned = cleaned.replaceAll('{h1}', '\n# ');
     cleaned = cleaned.replaceAll('{h2}', '\n## ');
     cleaned = cleaned.replaceAll('{h3}', '\n### ');
-    
+
     // 3. Strip all remaining opening/closing technical keys and HTML tags
     cleaned = cleaned.replaceAll(_technicalKeyRegex, '');
     cleaned = cleaned.replaceAll(_htmlTagRegex, '');
 
     // 4. Robust artifact removal
-    // We only remove a Markdown character at the end of a line if it's isolated 
+    // We only remove a Markdown character at the end of a line if it's isolated
     // or looks like a stray decorator from a removed key.
-    cleaned = cleaned.split('\n').map((line) {
-      String trimmed = line.trimRight();
-      // Only strip trailing hashes/stars if they were likely ornaments (surrounded by space or at end of line)
-      // We don't want to kill valid Markdown titles that might have trailing space
-      while (trimmed.length > 2 && (trimmed.endsWith(' #') || trimmed.endsWith(' *') || trimmed.endsWith(' _'))) {
-        trimmed = trimmed.substring(0, trimmed.length - 2).trimRight();
-      }
-      return trimmed;
-    }).join('\n');
+    cleaned = cleaned
+        .split('\n')
+        .map((line) {
+          String trimmed = line.trimRight();
+          // Only strip trailing hashes/stars if they were likely ornaments (surrounded by space or at end of line)
+          // We don't want to kill valid Markdown titles that might have trailing space
+          while (trimmed.length > 2 &&
+              (trimmed.endsWith(' #') ||
+                  trimmed.endsWith(' *') ||
+                  trimmed.endsWith(' _'))) {
+            trimmed = trimmed.substring(0, trimmed.length - 2).trimRight();
+          }
+          return trimmed;
+        })
+        .join('\n');
 
     // 5. Final sanitation: normalize multiple newlines to max 2
     cleaned = cleaned.replaceAll(RegExp(r'\n{3,}'), '\n\n');
@@ -52,15 +60,18 @@ class ContentUtils {
   /// Specialized version for text previews (strips all formatting, headers, etc.)
   static String getPreviewText(String raw, {int limit = 150}) {
     if (raw.isEmpty) return '';
-    
+
     String cleaned = raw.replaceAll(RegExp(r'\{[^}]*\}|\[[^\]]*\]'), '');
-    
+
     // Then flatten HTML and standard Markdown
     cleaned = cleaned
         .replaceAll(_htmlTagRegex, '')
         .replaceAll(RegExp(r'^#+\s*', multiLine: true), '') // Headers
         .replaceAll(RegExp(r'\*\*|\*|__|_'), '') // Bold/Italic
-        .replaceAll(RegExp(r'^\s*[\*\-]\s+', multiLine: true), '') // List markers
+        .replaceAll(
+          RegExp(r'^\s*[\*\-]\s+', multiLine: true),
+          '',
+        ) // List markers
         .replaceAll('\\n', ' ') // Escaped newlines
         .replaceAll('\n', ' ') // Regular newlines
         .replaceAll(RegExp(r'\s{2,}'), ' ') // Normalize spaces

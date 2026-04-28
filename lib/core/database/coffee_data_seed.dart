@@ -9,7 +9,8 @@ class CoffeeDataSeed {
   final AppDatabase db;
   CoffeeDataSeed(this.db);
 
-  static const String baseUrl = 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public';
+  static const String baseUrl =
+      'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public';
   static const String articlesBucket = '$baseUrl/specialty-articles/';
   static const String farmersBucket = '$baseUrl/Farmers/';
   static const String methodsBucket = '$baseUrl/Methods/';
@@ -21,9 +22,7 @@ class CoffeeDataSeed {
   }) async {
     onProgress?.call('Initializing database sync...');
 
-
     if (force || await db.brandsIsEmpty()) {
-
       await db.transaction(() async {
         await (db.delete(db.localizedBeans)).go();
         await (db.delete(db.localizedBeanTranslations)).go();
@@ -33,7 +32,6 @@ class CoffeeDataSeed {
         await (db.delete(db.specialtyArticles)).go();
         await (db.delete(db.localizedFarmers)).go();
       });
-
     }
 
     onProgress?.call('Seeding Brands...');
@@ -47,7 +45,7 @@ class CoffeeDataSeed {
     onProgress?.call('Seeding Catalog...');
     await _seedMadHeadsOrigins();
     await _seed3ChampsOrigins();
-    
+
     try {
       onProgress?.call('Seeding Recommended Recipes...');
       await _seedRecommendedRecipes();
@@ -55,7 +53,6 @@ class CoffeeDataSeed {
       await _seedBrewingRecipes();
 
       onProgress?.call('All systems synchronized [STABLE]');
-
     } catch (e) {
       onProgress?.call('Synchronization error: $e');
     }
@@ -80,12 +77,19 @@ class CoffeeDataSeed {
     if (!isEmpty && !force) return;
 
     try {
-      final jsonString = await rootBundle.loadString('assets/data/clean_farmers.json');
+      final jsonString = await rootBundle.loadString(
+        'assets/data/clean_farmers.json',
+      );
       final List<dynamic> jsonList = jsonDecode(jsonString);
 
       for (final item in jsonList) {
         final farmer = LocalizedFarmersV2Companion(
-          id: Value(int.tryParse(item['id'].toString().replaceAll(RegExp(r'[^0-9]'), '')) ?? 0),
+          id: Value(
+            int.tryParse(
+                  item['id'].toString().replaceAll(RegExp(r'[^0-9]'), ''),
+                ) ??
+                0,
+          ),
           imageUrl: Value(item['image_url_portrait'] as String? ?? ''),
         );
 
@@ -120,18 +124,21 @@ class CoffeeDataSeed {
     if (!isEmpty && !force) return;
 
     try {
-      final jsonString = await rootBundle.loadString('assets/data/specialty_encyclopedia.json');
+      final jsonString = await rootBundle.loadString(
+        'assets/data/specialty_encyclopedia.json',
+      );
       final Map<String, dynamic> data = jsonDecode(jsonString);
       final List<dynamic> modules = data['modules'] as List<dynamic>? ?? [];
 
       for (var i = 0; i < modules.length; i++) {
         final module = modules[i];
-        final List<dynamic> contentList = module['content'] as List<dynamic>? ?? [];
-        
+        final List<dynamic> contentList =
+            module['content'] as List<dynamic>? ?? [];
+
         for (var j = 0; j < contentList.length; j++) {
           final item = contentList[j];
           final topic = item['topic'] as String? ?? 'Topic $j';
-          
+
           final article = SpecialtyArticlesV2Companion(
             id: Value(i * 100 + j),
             imageUrl: const Value(''),
@@ -182,7 +189,9 @@ class CoffeeDataSeed {
         varieties: Value('Heirloom'),
         flavorNotes: Value('["Жасмин", "Бергамот", "Чорний чай"]'),
         processMethod: Value('Мита'),
-        description: Value('Класична ефіопська кава з яскравим квітковим профілем.'),
+        description: Value(
+          'Класична ефіопська кава з яскравим квітковим профілем.',
+        ),
       ),
       const LocalizedBeanTranslationsV2Companion(
         beanId: Value(1),
@@ -192,7 +201,9 @@ class CoffeeDataSeed {
         varieties: Value('Heirloom'),
         flavorNotes: Value('["Jasmine", "Bergamot", "Black Tea"]'),
         processMethod: Value('Washed'),
-        description: Value('Classic Ethiopian coffee with a bright floral profile.'),
+        description: Value(
+          'Classic Ethiopian coffee with a bright floral profile.',
+        ),
       ),
     ];
 
@@ -200,8 +211,6 @@ class CoffeeDataSeed {
   }
 
   Future<void> _seedBrewingRecipes() async {
-
-    
     final List<Map<String, dynamic>> recipes = [
       {
         'main': BrewingRecipesCompanion.insert(
@@ -209,8 +218,22 @@ class CoffeeDataSeed {
           imageUrl: const Value('p_v60.webp'),
         ),
         'trans': [
-          BrewingRecipeTranslationsCompanion.insert(recipeKey: 'v60', languageCode: 'en', name: const Value('V60 Pour Over'), description: const Value('Classic pour-over method for clarity and sweetness.')),
-          BrewingRecipeTranslationsCompanion.insert(recipeKey: 'v60', languageCode: 'uk', name: const Value('V60 Пур-овер'), description: const Value('Класичний метод для чистоти та солодкості.')),
+          BrewingRecipeTranslationsCompanion.insert(
+            recipeKey: 'v60',
+            languageCode: 'en',
+            name: const Value('V60 Pour Over'),
+            description: const Value(
+              'Classic pour-over method for clarity and sweetness.',
+            ),
+          ),
+          BrewingRecipeTranslationsCompanion.insert(
+            recipeKey: 'v60',
+            languageCode: 'uk',
+            name: const Value('V60 Пур-овер'),
+            description: const Value(
+              'Класичний метод для чистоти та солодкості.',
+            ),
+          ),
         ],
       },
       {
@@ -219,8 +242,22 @@ class CoffeeDataSeed {
           imageUrl: const Value('p_chemex.webp'),
         ),
         'trans': [
-          BrewingRecipeTranslationsCompanion.insert(recipeKey: 'chemex', languageCode: 'en', name: const Value('Chemex'), description: const Value('Elegant glass brewer for a clean, tea-like body.')),
-          BrewingRecipeTranslationsCompanion.insert(recipeKey: 'chemex', languageCode: 'uk', name: const Value('Чемекс'), description: const Value('Елегантний метод для найчистішого тіла напою.')),
+          BrewingRecipeTranslationsCompanion.insert(
+            recipeKey: 'chemex',
+            languageCode: 'en',
+            name: const Value('Chemex'),
+            description: const Value(
+              'Elegant glass brewer for a clean, tea-like body.',
+            ),
+          ),
+          BrewingRecipeTranslationsCompanion.insert(
+            recipeKey: 'chemex',
+            languageCode: 'uk',
+            name: const Value('Чемекс'),
+            description: const Value(
+              'Елегантний метод для найчистішого тіла напою.',
+            ),
+          ),
         ],
       },
       {
@@ -229,8 +266,20 @@ class CoffeeDataSeed {
           imageUrl: const Value('p_aeropress.webp'),
         ),
         'trans': [
-          BrewingRecipeTranslationsCompanion.insert(recipeKey: 'aeropress', languageCode: 'en', name: const Value('AeroPress'), description: const Value('Versatile and portable pressure brewer.')),
-          BrewingRecipeTranslationsCompanion.insert(recipeKey: 'aeropress', languageCode: 'uk', name: const Value('Аеропрес'), description: const Value('Універсальний та портативний ручний прес.')),
+          BrewingRecipeTranslationsCompanion.insert(
+            recipeKey: 'aeropress',
+            languageCode: 'en',
+            name: const Value('AeroPress'),
+            description: const Value('Versatile and portable pressure brewer.'),
+          ),
+          BrewingRecipeTranslationsCompanion.insert(
+            recipeKey: 'aeropress',
+            languageCode: 'uk',
+            name: const Value('Аеропрес'),
+            description: const Value(
+              'Універсальний та портативний ручний прес.',
+            ),
+          ),
         ],
       },
     ];

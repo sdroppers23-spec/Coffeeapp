@@ -82,16 +82,26 @@ class _CoffeeLotDetailScreenState extends ConsumerState<CoffeeLotDetailScreen>
                   final isFavorite = ids.contains(entry.id);
                   return IconButton(
                     icon: Icon(
-                      isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                      isFavorite
+                          ? Icons.favorite_rounded
+                          : Icons.favorite_border_rounded,
                       color: isFavorite ? Colors.redAccent : Colors.white70,
                     ),
                     onPressed: () async {
-                      ref.read(databaseProvider).toggleFavorite(entry.id, !isFavorite);
+                      ref
+                          .read(databaseProvider)
+                          .toggleFavorite(entry.id, !isFavorite);
                       if (context.mounted) {
                         if (isFavorite) {
-                          ToastService.showInfo(context, context.t('toast_removed_from_favorites'));
+                          ToastService.showInfo(
+                            context,
+                            context.t('toast_removed_from_favorites'),
+                          );
                         } else {
-                          ToastService.showSuccess(context, context.t('toast_added_to_favorites'));
+                          ToastService.showSuccess(
+                            context,
+                            context.t('toast_added_to_favorites'),
+                          );
                         }
                       }
                     },
@@ -141,8 +151,8 @@ class _CoffeeLotDetailScreenState extends ConsumerState<CoffeeLotDetailScreen>
                             child: Icon(
                               Icons.coffee_rounded,
                               size: 64,
-                              color: theme.colorScheme.primary.withValues(alpha: 
-                                0.1,
+                              color: theme.colorScheme.primary.withValues(
+                                alpha: 0.1,
                               ),
                             ),
                           )
@@ -326,7 +336,10 @@ class _InfoTabState extends ConsumerState<_InfoTab> {
                   Expanded(
                     child: LotCompactStat(
                       label: ref.t('altitude'),
-                      value: _formatAltitude(entry.altitudeMin, entry.altitudeMax),
+                      value: _formatAltitude(
+                        entry.altitudeMin,
+                        entry.altitudeMax,
+                      ),
                     ),
                   ),
                 ],
@@ -464,9 +477,9 @@ class _InfoTabState extends ConsumerState<_InfoTab> {
   String _formatAltitude(int? min, int? max) {
     final pref = ref.watch(preferencesProvider);
     final unit = pref.lengthUnit;
-    
+
     if (min == null && max == null) return 'N/A';
-    
+
     if (unit == LengthUnit.feet) {
       final minFt = min != null ? (min * 3.28084).toStringAsFixed(0) : 'N/A';
       final maxFt = max != null ? (max * 3.28084).toStringAsFixed(0) : 'N/A';
@@ -479,7 +492,7 @@ class _InfoTabState extends ConsumerState<_InfoTab> {
   TableRow _priceRow(String weight, String? retail, String? wholesale) {
     final pref = ref.watch(preferencesProvider);
     final symbol = _getCurrencySymbol(pref.currency);
-    
+
     if ((retail == null || retail == '---') &&
         (wholesale == null || wholesale == '---')) {
       return const TableRow(children: [SizedBox(), SizedBox(), SizedBox()]);
@@ -488,16 +501,23 @@ class _InfoTabState extends ConsumerState<_InfoTab> {
       children: [
         _Cell(weight),
         _Cell(retail != null && retail != '---' ? '$retail $symbol' : '---'),
-        _Cell(wholesale != null && wholesale != '---' ? '$wholesale $symbol' : '---'),
+        _Cell(
+          wholesale != null && wholesale != '---'
+              ? '$wholesale $symbol'
+              : '---',
+        ),
       ],
     );
   }
 
   String _getCurrencySymbol(Currency c) {
     switch (c) {
-      case Currency.uah: return '₴';
-      case Currency.eur: return '€';
-      case Currency.usd: return r'$';
+      case Currency.uah:
+        return '₴';
+      case Currency.eur:
+        return '€';
+      case Currency.usd:
+        return r'$';
     }
   }
 }
@@ -648,8 +668,8 @@ class _ProfileTab extends ConsumerWidget {
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: theme.colorScheme.primary.withValues(alpha: 
-                  0.1,
+                backgroundColor: theme.colorScheme.primary.withValues(
+                  alpha: 0.1,
                 ),
                 foregroundColor: theme.colorScheme.primary,
                 side: BorderSide(
@@ -669,14 +689,20 @@ class _ProfileTab extends ConsumerWidget {
       ],
     );
   }
-}class _RecipesTab extends ConsumerWidget {
+}
+
+class _RecipesTab extends ConsumerWidget {
   final LocalizedBeanDto entry;
   const _RecipesTab({required this.entry});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recommendedAsync = ref.watch(recommendedRecipesForLotProvider(entry.id));
-    final customRecipesAsync = ref.watch(customRecipesForLotProvider(entry.id.toString()));
+    final recommendedAsync = ref.watch(
+      recommendedRecipesForLotProvider(entry.id),
+    );
+    final customRecipesAsync = ref.watch(
+      customRecipesForLotProvider(entry.id.toString()),
+    );
     final navHeight = ref.watch(navBarHeightProvider);
 
     return ListView(
@@ -712,7 +738,7 @@ class _ProfileTab extends ConsumerWidget {
                   ...recipes.map((r) => _CustomRecipeCardWrapper(recipe: r)),
                   const SizedBox(height: 24),
                 ],
-                
+
                 // Add Recipe Button
                 SizedBox(
                   width: double.infinity,
@@ -730,7 +756,9 @@ class _ProfileTab extends ConsumerWidget {
                               context: context,
                               builder: (context) => AddRecipeDialog(
                                 lotId: entry.id.toString(),
-                                initialMethod: type == 'espresso' ? 'espresso' : 'v60',
+                                initialMethod: type == 'espresso'
+                                    ? 'espresso'
+                                    : 'v60',
                               ),
                             );
                           },
@@ -755,13 +783,17 @@ class _ProfileTab extends ConsumerWidget {
                     ),
                   ),
                 ),
-                if (recipes.isEmpty && (recommendedAsync.value?.isEmpty ?? true))
+                if (recipes.isEmpty &&
+                    (recommendedAsync.value?.isEmpty ?? true))
                   Padding(
                     padding: const EdgeInsets.only(top: 40),
                     child: Center(
                       child: Text(
                         ref.t('no_recipes_for_lot'),
-                        style: const TextStyle(color: Colors.white24, fontSize: 13),
+                        style: const TextStyle(
+                          color: Colors.white24,
+                          fontSize: 13,
+                        ),
                       ),
                     ),
                   ),
@@ -802,7 +834,7 @@ class _CustomRecipeCardWrapper extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final isUk = LocaleService.currentLocale == 'uk';
-    
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: GlassContainer(
@@ -839,40 +871,74 @@ class _CustomRecipeCardWrapper extends ConsumerWidget {
               children: [
                 _Stat(isUk ? 'КАВА' : 'COFFEE', '${recipe.coffeeGrams}g'),
                 const SizedBox(width: 24),
-                _Stat(recipe.recipeType == 'espresso' ? (isUk ? 'ВИХІД' : 'YIELD') : (isUk ? 'ВОДА' : 'WATER'), '${recipe.totalWaterMl}ml'),
+                _Stat(
+                  recipe.recipeType == 'espresso'
+                      ? (isUk ? 'ВИХІД' : 'YIELD')
+                      : (isUk ? 'ВОДА' : 'WATER'),
+                  '${recipe.totalWaterMl}ml',
+                ),
                 const SizedBox(width: 24),
                 _Stat('TEMP', _formatTemp(ref, recipe.brewTempC)),
                 const Spacer(),
                 IconButton(
-                  icon: const Icon(Icons.play_arrow_rounded, color: Color(0xFFC8A96E)),
+                  icon: const Icon(
+                    Icons.play_arrow_rounded,
+                    color: Color(0xFFC8A96E),
+                  ),
                   onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => CustomRecipeTimerScreen(recipe: recipe)),
+                    MaterialPageRoute(
+                      builder: (_) => CustomRecipeTimerScreen(recipe: recipe),
+                    ),
                   ),
                 ),
                 PopupMenuButton<String>(
-                  icon: const Icon(Icons.more_vert_rounded, color: Colors.white54, size: 20),
+                  icon: const Icon(
+                    Icons.more_vert_rounded,
+                    color: Colors.white54,
+                    size: 20,
+                  ),
                   color: const Color(0xFF1E1E1E),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   onSelected: (val) async {
                     if (val == 'delete') {
                       final confirmed = await showDialog<bool>(
                         context: context,
                         builder: (context) => AlertDialog(
                           backgroundColor: const Color(0xFF1E1E1E),
-                          title: Text(isUk ? 'Видалити рецепт?' : 'Delete Recipe?', style: const TextStyle(color: Colors.white)),
-                          content: Text(isUk ? 'Цю дію неможливо скасувати.' : 'This action cannot be undone.', style: const TextStyle(color: Colors.white70)),
+                          title: Text(
+                            isUk ? 'Видалити рецепт?' : 'Delete Recipe?',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          content: Text(
+                            isUk
+                                ? 'Цю дію неможливо скасувати.'
+                                : 'This action cannot be undone.',
+                            style: const TextStyle(color: Colors.white70),
+                          ),
                           actions: [
-                            TextButton(onPressed: () => Navigator.pop(context, false), child: Text(isUk ? 'СКАСУВАТИ' : 'CANCEL')),
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, false),
+                              child: Text(isUk ? 'СКАСУВАТИ' : 'CANCEL'),
+                            ),
                             TextButton(
                               onPressed: () => Navigator.pop(context, true),
-                              child: Text(isUk ? 'ВИДАЛИТИ' : 'DELETE', style: const TextStyle(color: Colors.redAccent)),
+                              child: Text(
+                                isUk ? 'ВИДАЛИТИ' : 'DELETE',
+                                style: const TextStyle(color: Colors.redAccent),
+                              ),
                             ),
                           ],
                         ),
                       );
                       if (confirmed == true) {
-                        await ref.read(databaseProvider).deleteCustomRecipe(recipe.id);
-                        ref.invalidate(customRecipesForLotProvider(recipe.lotId ?? ''));
+                        await ref
+                            .read(databaseProvider)
+                            .deleteCustomRecipe(recipe.id);
+                        ref.invalidate(
+                          customRecipesForLotProvider(recipe.lotId ?? ''),
+                        );
                       }
                     } else if (val == 'edit') {
                       await showDialog(
@@ -882,7 +948,9 @@ class _CustomRecipeCardWrapper extends ConsumerWidget {
                           existingRecipe: recipe,
                         ),
                       );
-                      ref.invalidate(customRecipesForLotProvider(recipe.lotId ?? ''));
+                      ref.invalidate(
+                        customRecipesForLotProvider(recipe.lotId ?? ''),
+                      );
                     }
                   },
                   itemBuilder: (context) => [
@@ -890,9 +958,16 @@ class _CustomRecipeCardWrapper extends ConsumerWidget {
                       value: 'edit',
                       child: Row(
                         children: [
-                          const Icon(Icons.edit_rounded, size: 18, color: Colors.white70),
+                          const Icon(
+                            Icons.edit_rounded,
+                            size: 18,
+                            color: Colors.white70,
+                          ),
                           const SizedBox(width: 12),
-                          Text(isUk ? 'Редагувати' : 'Edit', style: const TextStyle(color: Colors.white)),
+                          Text(
+                            isUk ? 'Редагувати' : 'Edit',
+                            style: const TextStyle(color: Colors.white),
+                          ),
                         ],
                       ),
                     ),
@@ -900,9 +975,16 @@ class _CustomRecipeCardWrapper extends ConsumerWidget {
                       value: 'delete',
                       child: Row(
                         children: [
-                          const Icon(Icons.delete_outline_rounded, size: 18, color: Colors.redAccent),
+                          const Icon(
+                            Icons.delete_outline_rounded,
+                            size: 18,
+                            color: Colors.redAccent,
+                          ),
                           const SizedBox(width: 12),
-                          Text(isUk ? 'Видалити' : 'Delete', style: const TextStyle(color: Colors.redAccent)),
+                          Text(
+                            isUk ? 'Видалити' : 'Delete',
+                            style: const TextStyle(color: Colors.redAccent),
+                          ),
                         ],
                       ),
                     ),
@@ -959,7 +1041,7 @@ class _RecommendedCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isUk = LocaleService.currentLocale == 'uk';
-    
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: GlassContainer(
@@ -979,7 +1061,10 @@ class _RecommendedCard extends ConsumerWidget {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.amber.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(6),

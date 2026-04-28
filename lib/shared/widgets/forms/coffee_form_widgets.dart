@@ -14,8 +14,8 @@ class CoffeeSectionLabel extends StatelessWidget {
       child: Text(
         text,
         style: GoogleFonts.outfit(
-          fontSize: 16, 
-          fontWeight: FontWeight.bold, 
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
       ),
@@ -37,7 +37,7 @@ class CoffeeDarkCard extends StatelessWidget {
       ),
       clipBehavior: Clip.hardEdge,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start, 
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: children,
       ),
     );
@@ -50,7 +50,7 @@ class CoffeeDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Divider(
-      height: 1, 
+      height: 1,
       color: const Color(0xFFC8A96E).withValues(alpha: 0.06),
     );
   }
@@ -94,9 +94,9 @@ class CoffeeFieldRow extends StatelessWidget {
           Text(
             label,
             style: GoogleFonts.outfit(
-              fontSize: 10, 
-              color: Colors.white, 
-              fontWeight: FontWeight.bold, 
+              fontSize: 10,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
               letterSpacing: 1.2,
             ),
           ),
@@ -125,10 +125,10 @@ class CoffeeFieldRow extends StatelessWidget {
               ),
               if (suffix != null)
                 Text(
-                  suffix!, 
+                  suffix!,
                   style: GoogleFonts.outfit(
-                    color: const Color(0xFFC8A96E), 
-                    fontWeight: FontWeight.bold, 
+                    color: const Color(0xFFC8A96E),
+                    fontWeight: FontWeight.bold,
                     fontSize: 13,
                   ),
                 ),
@@ -170,7 +170,7 @@ class CoffeeDateRow extends StatelessWidget {
     final display = date != null
         ? '${date!.day.toString().padLeft(2, '0')}.${date!.month.toString().padLeft(2, '0')}.${date!.year}'
         : (placeholder ?? '—');
-        
+
     return InkWell(
       onTap: onTap,
       child: Padding(
@@ -184,9 +184,9 @@ class CoffeeDateRow extends StatelessWidget {
                 Text(
                   label,
                   style: GoogleFonts.outfit(
-                    fontSize: 10, 
-                    color: Colors.white, 
-                    fontWeight: FontWeight.bold, 
+                    fontSize: 10,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                     letterSpacing: 1.2,
                   ),
                 ),
@@ -194,14 +194,18 @@ class CoffeeDateRow extends StatelessWidget {
                 Text(
                   display,
                   style: GoogleFonts.outfit(
-                    color: const Color(0xFFC8A96E), 
-                    fontSize: 15, 
+                    color: const Color(0xFFC8A96E),
+                    fontSize: 15,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
             ),
-            const Icon(Icons.calendar_today_rounded, color: Color(0xFFC8A96E), size: 16),
+            const Icon(
+              Icons.calendar_today_rounded,
+              color: Color(0xFFC8A96E),
+              size: 16,
+            ),
           ],
         ),
       ),
@@ -229,17 +233,23 @@ class CoffeeToggleButton extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: active ? const Color(0xFFC8A96E).withValues(alpha: 0.06) : Colors.transparent,
+          color: active
+              ? const Color(0xFFC8A96E).withValues(alpha: 0.06)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(50),
           border: Border.all(
-            color: active ? const Color(0xFFC8A96E) : const Color(0xFFC8A96E).withValues(alpha: 0.1),
+            color: active
+                ? const Color(0xFFC8A96E)
+                : const Color(0xFFC8A96E).withValues(alpha: 0.1),
           ),
         ),
         alignment: Alignment.center,
         child: Text(
           label,
           style: GoogleFonts.outfit(
-            color: active ? const Color(0xFFC8A96E) : const Color(0xFFC8A96E).withValues(alpha: 0.38),
+            color: active
+                ? const Color(0xFFC8A96E)
+                : const Color(0xFFC8A96E).withValues(alpha: 0.38),
             fontSize: 11,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.0,
@@ -290,16 +300,24 @@ class CoffeeDropdownRow<T> extends StatelessWidget {
                 value: value,
                 isExpanded: true,
                 dropdownColor: const Color(0xFF1A1714),
-                icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFFC8A96E), size: 18),
+                icon: const Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  color: Color(0xFFC8A96E),
+                  size: 18,
+                ),
                 style: GoogleFonts.outfit(
-                  color: Colors.white, 
-                  fontSize: 13, 
+                  color: Colors.white,
+                  fontSize: 13,
                   fontWeight: FontWeight.w500,
                 ),
-                items: items.map((e) => DropdownMenuItem(
-                  value: e, 
-                  child: Text(itemLabelBuilder(e)),
-                )).toList(),
+                items: items
+                    .map(
+                      (e) => DropdownMenuItem(
+                        value: e,
+                        child: Text(itemLabelBuilder(e)),
+                      ),
+                    )
+                    .toList(),
                 onChanged: onChanged,
               ),
             ),

@@ -129,7 +129,7 @@ class LocalizedBeanDto {
       if (flagUrl.startsWith('assets/')) return flagUrl;
       return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/Flags/$flagUrl';
     }
-    
+
     // Fallback to name-based URL as per user feedback
     final fileName = '${country.toLowerCase().replaceAll(' ', '_')}.png';
     return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/Flags/$fileName';
@@ -191,7 +191,7 @@ class LocalizedFarmerDto {
     if (imageUrl.isEmpty) return '';
     if (imageUrl.startsWith('http')) return imageUrl;
     if (imageUrl.startsWith('assets/')) return imageUrl;
-    
+
     // Corrected to use the specific 'Farmers' bucket
     return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/Farmers/$imageUrl';
   }
@@ -232,7 +232,7 @@ class SpecialtyArticleDto {
     if (imageUrl.isEmpty) return '';
     if (imageUrl.startsWith('http')) return imageUrl;
     if (imageUrl.startsWith('assets/')) return imageUrl;
-    
+
     // Corrected to use 'specialty-articles' bucket directly
     return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/specialty-articles/$imageUrl';
   }
@@ -441,7 +441,7 @@ class CoffeeLotDto {
   String get sensoryJson => jsonEncode(sensoryPoints);
   String get priceJson => jsonEncode(pricing);
   String get processMethod => process ?? '';
-  
+
   String get effectiveFlagUrl {
     // Fallback to name-based URL based on origin country
     if (originCountry == null || originCountry!.isEmpty) return '';
@@ -632,7 +632,8 @@ class CustomRecipeDto {
       brewRatio: brewRatio ?? this.brewRatio,
       grinderName: grinderName ?? this.grinderName,
       sensoryJson: sensoryJson ?? this.sensoryJson,
-      extractionTimeSeconds: extractionTimeSeconds ?? this.extractionTimeSeconds,
+      extractionTimeSeconds:
+          extractionTimeSeconds ?? this.extractionTimeSeconds,
     );
   }
 }

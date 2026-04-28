@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 // ── Theme State Management ──────────────────────────────────────────────────
 
 class ThemeNotifier extends Notifier<ThemeMode> {
@@ -63,10 +62,7 @@ class AppTheme {
         outlineVariant: primary.withValues(alpha: 0.1),
       ),
       canvasColor: bg,
-      iconTheme: const IconThemeData(
-        color: accent,
-        size: 24,
-      ),
+      iconTheme: const IconThemeData(color: accent, size: 24),
       textTheme: GoogleFonts.outfitTextTheme(base.textTheme).copyWith(
         displayLarge: GoogleFonts.outfit(
           color: textPrimary,

@@ -8,7 +8,9 @@ import '../../core/database/dtos.dart';
 import 'method_tile.dart';
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
-final brewingRecipesProvider = FutureProvider<List<BrewingRecipeDto>>((ref) async {
+final brewingRecipesProvider = FutureProvider<List<BrewingRecipeDto>>((
+  ref,
+) async {
   final db = ref.watch(databaseProvider);
   final locale = ref.watch(localeProvider);
   final recipes = await db.getAllBrewingRecipes(locale);
@@ -43,7 +45,7 @@ class _BrewingGuideScreenState extends ConsumerState<BrewingGuideScreen> {
     final recipesAsync = ref.watch(brewingRecipesProvider);
 
     return Scaffold(
-        backgroundColor: const Color(0xFF0F0F0F),
+      backgroundColor: const Color(0xFF0F0F0F),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -96,9 +98,7 @@ class _BrewingGuideScreenState extends ConsumerState<BrewingGuideScreen> {
             itemBuilder: (context, i) {
               final methodKey = methods[i];
               final methodRecipes = grouped[methodKey]!;
-              return MethodTile(
-                methodRecipes: methodRecipes,
-              );
+              return MethodTile(methodRecipes: methodRecipes);
             },
           );
         },

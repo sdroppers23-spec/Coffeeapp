@@ -100,14 +100,14 @@ class _CustomLotDetailScreenState extends ConsumerState<CustomLotDetailScreen>
                       color: const Color(0xFF1A1714),
                       image: lot.imageUrl != null && lot.imageUrl!.isNotEmpty
                           ? (lot.imageUrl!.startsWith('http')
-                              ? DecorationImage(
-                                  image: NetworkImage(lot.imageUrl!),
-                                  fit: BoxFit.cover,
-                                )
-                              : DecorationImage(
-                                  image: FileImage(File(lot.imageUrl!)),
-                                  fit: BoxFit.cover,
-                                ))
+                                ? DecorationImage(
+                                    image: NetworkImage(lot.imageUrl!),
+                                    fit: BoxFit.cover,
+                                  )
+                                : DecorationImage(
+                                    image: FileImage(File(lot.imageUrl!)),
+                                    fit: BoxFit.cover,
+                                  ))
                           : null,
                     ),
                     child: lot.imageUrl == null || lot.imageUrl!.isEmpty
@@ -115,7 +115,9 @@ class _CustomLotDetailScreenState extends ConsumerState<CustomLotDetailScreen>
                             child: Icon(
                               Icons.coffee_rounded,
                               size: 64,
-                              color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                              color: theme.colorScheme.primary.withValues(
+                                alpha: 0.1,
+                              ),
                             ),
                           )
                         : null,
@@ -170,11 +172,14 @@ class _CustomLotDetailScreenState extends ConsumerState<CustomLotDetailScreen>
                       Row(
                         children: [
                           if (lot.scaScore != null)
-                            LotBadge(label: '${lot.scaScore} SCA', theme: theme),
+                            LotBadge(
+                              label: '${lot.scaScore} SCA',
+                              theme: theme,
+                            ),
                           if (lot.roastLevel != null) ...[
                             const SizedBox(width: 8),
                             LotBadge(
-                              label: lot.roastLevel!.toUpperCase(), 
+                              label: lot.roastLevel!.toUpperCase(),
                               theme: theme,
                               isPrimary: true,
                             ),
@@ -186,7 +191,7 @@ class _CustomLotDetailScreenState extends ConsumerState<CustomLotDetailScreen>
                 ),
               ],
             ),
-            
+
             TabBar(
               controller: _tabController,
               tabs: [
@@ -297,7 +302,9 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
                                       context: context,
                                       builder: (context) => AddRecipeDialog(
                                         lotId: widget.lot.id,
-                                        initialMethod: type == 'espresso' ? 'espresso' : 'v60',
+                                        initialMethod: type == 'espresso'
+                                            ? 'espresso'
+                                            : 'v60',
                                       ),
                                     );
                                     if (result == true) setState(() {});
@@ -644,11 +651,17 @@ class _InfoTab extends ConsumerWidget {
               ],
               if (lot.altitude?.isNotEmpty ?? false) ...[
                 const Divider(height: 24, color: Colors.white10),
-                LotCompactStat(label: ref.t('altitude'), value: _formatAltitude(ref, lot.altitude!)),
+                LotCompactStat(
+                  label: ref.t('altitude'),
+                  value: _formatAltitude(ref, lot.altitude!),
+                ),
               ],
               if (lot.varieties?.isNotEmpty ?? false) ...[
                 const Divider(height: 24, color: Colors.white10),
-                LotCompactStat(label: ref.t('varieties'), value: lot.varieties!),
+                LotCompactStat(
+                  label: ref.t('varieties'),
+                  value: lot.varieties!,
+                ),
               ],
             ],
           ),
@@ -691,9 +704,15 @@ class _InfoTab extends ConsumerWidget {
           value: lot.lotNumber ?? 'N/A',
         ),
         LotDetailRow(label: ref.t('weight'), value: lot.weight ?? 'N/A'),
-        LotDetailRow(label: ref.t('roast_level'), value: lot.roastLevel ?? 'N/A'),
+        LotDetailRow(
+          label: ref.t('roast_level'),
+          value: lot.roastLevel ?? 'N/A',
+        ),
         LotDetailRow(label: ref.t('farm'), value: lot.farm ?? 'N/A'),
-        LotDetailRow(label: ref.t('wash_station'), value: lot.washStation ?? 'N/A'),
+        LotDetailRow(
+          label: ref.t('wash_station'),
+          value: lot.washStation ?? 'N/A',
+        ),
         LotDetailRow(label: ref.t('farmer'), value: lot.farmer ?? 'N/A'),
       ],
     );
@@ -740,32 +759,44 @@ class _ProfileTab extends ConsumerWidget {
         const SizedBox(height: 16),
         SensoryIndicator(
           label: ref.t('bitterness'),
-          value: lot.sensoryPoints['bitterness'] != null ? (lot.sensoryPoints['bitterness'] as num).toDouble() / 5.0 : 0.2,
+          value: lot.sensoryPoints['bitterness'] != null
+              ? (lot.sensoryPoints['bitterness'] as num).toDouble() / 5.0
+              : 0.2,
           color: const Color(0xFFC8A96E),
         ),
         SensoryIndicator(
           label: ref.t('acidity'),
-          value: lot.sensoryPoints['acidity'] != null ? (lot.sensoryPoints['acidity'] as num).toDouble() / 5.0 : 0.2,
+          value: lot.sensoryPoints['acidity'] != null
+              ? (lot.sensoryPoints['acidity'] as num).toDouble() / 5.0
+              : 0.2,
           color: const Color(0xFFC8A96E),
         ),
         SensoryIndicator(
           label: ref.t('sweetness'),
-          value: lot.sensoryPoints['sweetness'] != null ? (lot.sensoryPoints['sweetness'] as num).toDouble() / 5.0 : 0.2,
+          value: lot.sensoryPoints['sweetness'] != null
+              ? (lot.sensoryPoints['sweetness'] as num).toDouble() / 5.0
+              : 0.2,
           color: const Color(0xFFC8A96E),
         ),
         SensoryIndicator(
           label: ref.t('body'),
-          value: lot.sensoryPoints['body'] != null ? (lot.sensoryPoints['body'] as num).toDouble() / 5.0 : 0.2,
+          value: lot.sensoryPoints['body'] != null
+              ? (lot.sensoryPoints['body'] as num).toDouble() / 5.0
+              : 0.2,
           color: const Color(0xFFC8A96E),
         ),
         SensoryIndicator(
           label: ref.t('intensity'),
-          value: lot.sensoryPoints['intensity'] != null ? (lot.sensoryPoints['intensity'] as num).toDouble() / 5.0 : 0.2,
+          value: lot.sensoryPoints['intensity'] != null
+              ? (lot.sensoryPoints['intensity'] as num).toDouble() / 5.0
+              : 0.2,
           color: const Color(0xFFC8A96E),
         ),
         SensoryIndicator(
           label: ref.t('aftertaste'),
-          value: lot.sensoryPoints['aftertaste'] != null ? (lot.sensoryPoints['aftertaste'] as num).toDouble() / 5.0 : 0.2,
+          value: lot.sensoryPoints['aftertaste'] != null
+              ? (lot.sensoryPoints['aftertaste'] as num).toDouble() / 5.0
+              : 0.2,
           color: const Color(0xFFC8A96E),
         ),
         const SizedBox(height: 16),
@@ -786,18 +817,23 @@ String _formatTemp(WidgetRef ref, double celsius) {
 String _formatAltitude(WidgetRef ref, String altitude) {
   final pref = ref.watch(preferencesProvider);
   if (pref.lengthUnit == LengthUnit.meters) return '$altitude m';
-  
+
   // Try to parse range like "1200-1500" or single value "1200"
   try {
-    final parts = altitude.split('-').map((s) => s.trim().replaceAll(RegExp(r'[^0-9]'), '')).toList();
+    final parts = altitude
+        .split('-')
+        .map((s) => s.trim().replaceAll(RegExp(r'[^0-9]'), ''))
+        .toList();
     if (parts.isEmpty) return altitude;
-    
-    final converted = parts.map((p) {
-      final val = int.tryParse(p);
-      if (val == null) return p;
-      return (val * 3.28084).toStringAsFixed(0);
-    }).join('-');
-    
+
+    final converted = parts
+        .map((p) {
+          final val = int.tryParse(p);
+          if (val == null) return p;
+          return (val * 3.28084).toStringAsFixed(0);
+        })
+        .join('-');
+
     return '$converted ft';
   } catch (e) {
     return altitude;

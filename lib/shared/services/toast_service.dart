@@ -4,7 +4,12 @@ import '../widgets/glass_container.dart';
 
 class ToastService {
   static void showSuccess(BuildContext context, String message) {
-    _showToast(context, message, Icons.check_circle_rounded, const Color(0xFFC8A96E));
+    _showToast(
+      context,
+      message,
+      Icons.check_circle_rounded,
+      const Color(0xFFC8A96E),
+    );
   }
 
   static void showInfo(BuildContext context, String message) {
@@ -12,14 +17,24 @@ class ToastService {
   }
 
   static void showWarning(BuildContext context, String message) {
-    _showToast(context, message, Icons.warning_amber_rounded, Colors.orangeAccent);
+    _showToast(
+      context,
+      message,
+      Icons.warning_amber_rounded,
+      Colors.orangeAccent,
+    );
   }
 
   static void showError(BuildContext context, String message) {
     _showToast(context, message, Icons.error_outline_rounded, Colors.redAccent);
   }
 
-  static void _showToast(BuildContext context, String message, IconData icon, Color accentColor) {
+  static void _showToast(
+    BuildContext context,
+    String message,
+    IconData icon,
+    Color accentColor,
+  ) {
     final overlay = Overlay.of(context);
     late OverlayEntry entry;
 
@@ -69,12 +84,14 @@ class _FrostedCapsuleToastState extends State<_FrostedCapsuleToast>
     );
 
     _fade = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
-    _scale = Tween<double>(begin: 0.85, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOutBack),
-    );
-    _slide = Tween<Offset>(begin: const Offset(0, 0.5), end: Offset.zero).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
-    );
+    _scale = Tween<double>(
+      begin: 0.85,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
+    _slide = Tween<Offset>(
+      begin: const Offset(0, 0.5),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
     _controller.forward();
 
@@ -109,7 +126,10 @@ class _FrostedCapsuleToastState extends State<_FrostedCapsuleToast>
                 color: Colors.transparent,
                 child: GlassContainer(
                   borderRadius: 30,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
                   backgroundGradient: LinearGradient(
                     colors: [
                       Colors.white.withValues(alpha: 0.12),

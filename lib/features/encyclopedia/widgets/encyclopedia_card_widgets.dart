@@ -26,24 +26,29 @@ class EncyclopediaLotGridCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     final selectedIds = ref.watch(encyclopediaSelectedIdsProvider);
     final isSelected = selectedIds.contains(entry.id.toString());
     final isSelectionMode = selectedIds.isNotEmpty;
 
     return PressableScale(
       onTap: isSelectionMode
-          ? () => ref.read(encyclopediaSelectedIdsProvider.notifier).toggle(entry.id.toString())
+          ? () => ref
+                .read(encyclopediaSelectedIdsProvider.notifier)
+                .toggle(entry.id.toString())
           : onTap,
       onLongPress: () {
         ref.read(settingsProvider.notifier).triggerVibrate();
-        ref.read(encyclopediaSelectedIdsProvider.notifier).toggle(entry.id.toString());
+        ref
+            .read(encyclopediaSelectedIdsProvider.notifier)
+            .toggle(entry.id.toString());
       },
       child: GlassContainer(
         padding: const EdgeInsets.all(12),
         opacity: isSelected ? 0.35 : 0.12,
         borderRadius: 24,
-        color: isSelected ? const Color(0xFFC8A96E) : Colors.white.withValues(alpha: 0.1),
+        color: isSelected
+            ? const Color(0xFFC8A96E)
+            : Colors.white.withValues(alpha: 0.1),
         borderColor: isSelected
             ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
             : Colors.white.withValues(alpha: 0.12),
@@ -75,11 +80,12 @@ class EncyclopediaLotGridCard extends ConsumerWidget {
                             ? CachedNetworkImage(
                                 imageUrl: entry.effectiveFlagUrl,
                                 fit: BoxFit.cover,
-                                errorWidget: (context, url, error) => const Icon(
-                                  Icons.public,
-                                  size: 20,
-                                  color: Color(0xFFC8A96E),
-                                ),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(
+                                      Icons.public,
+                                      size: 20,
+                                      color: Color(0xFFC8A96E),
+                                    ),
                               )
                             : const Icon(
                                 Icons.coffee_rounded,
@@ -92,12 +98,17 @@ class EncyclopediaLotGridCard extends ConsumerWidget {
                       bottom: -4,
                       right: -4,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           color: const Color(0xFF1A1714),
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                            color: const Color(0xFFC8A96E).withValues(alpha: 0.4),
+                            color: const Color(
+                              0xFFC8A96E,
+                            ).withValues(alpha: 0.4),
                             width: 1,
                           ),
                         ),
@@ -144,7 +155,8 @@ class EncyclopediaLotGridCard extends ConsumerWidget {
             const SizedBox(height: 4),
             // Varieties/Region
             Text(
-              (entry.varieties.isNotEmpty ? entry.varieties : entry.region).toUpperCase(),
+              (entry.varieties.isNotEmpty ? entry.varieties : entry.region)
+                  .toUpperCase(),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: GoogleFonts.outfit(
@@ -156,21 +168,40 @@ class EncyclopediaLotGridCard extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             // Sensory Bars
-            Builder(builder: (context) {
-              final theme = Theme.of(context);
-              final mappedSensory = SensoryUtils.map4To6Axis(entry.sensoryPoints);
-              
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CompactSensoryBar(label: ref.t('bitterness').toUpperCase(), value: (mappedSensory['bitterness'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
-                  const SizedBox(height: 6),
-                  CompactSensoryBar(label: ref.t('acidity').toUpperCase(), value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
-                  const SizedBox(height: 6),
-                  CompactSensoryBar(label: ref.t('sweetness').toUpperCase(), value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
-                ],
-              );
-            }),
+            Builder(
+              builder: (context) {
+                final theme = Theme.of(context);
+                final mappedSensory = SensoryUtils.map4To6Axis(
+                  entry.sensoryPoints,
+                );
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CompactSensoryBar(
+                      label: ref.t('bitterness').toUpperCase(),
+                      value: (mappedSensory['bitterness'] ?? 3).toDouble(),
+                      theme: theme,
+                      barHeight: 4.0,
+                    ),
+                    const SizedBox(height: 6),
+                    CompactSensoryBar(
+                      label: ref.t('acidity').toUpperCase(),
+                      value: (mappedSensory['acidity'] ?? 3).toDouble(),
+                      theme: theme,
+                      barHeight: 4.0,
+                    ),
+                    const SizedBox(height: 6),
+                    CompactSensoryBar(
+                      label: ref.t('sweetness').toUpperCase(),
+                      value: (mappedSensory['sweetness'] ?? 3).toDouble(),
+                      theme: theme,
+                      barHeight: 4.0,
+                    ),
+                  ],
+                );
+              },
+            ),
             const Spacer(),
             // Bottom Traits
             Container(
@@ -223,7 +254,6 @@ class EncyclopediaLotListCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     final selectedIds = ref.watch(selectedLotIdsProvider);
     final isSelected = selectedIds.contains(entry.id.toString());
     final isSelectionMode = selectedIds.isNotEmpty;
@@ -232,7 +262,9 @@ class EncyclopediaLotListCard extends ConsumerWidget {
       padding: const EdgeInsets.only(bottom: 12),
       child: PressableScale(
         onTap: isSelectionMode
-            ? () => ref.read(selectedLotIdsProvider.notifier).toggle(entry.id.toString())
+            ? () => ref
+                  .read(selectedLotIdsProvider.notifier)
+                  .toggle(entry.id.toString())
             : onTap,
         onLongPress: () {
           ref.read(settingsProvider.notifier).triggerVibrate();
@@ -272,12 +304,16 @@ class EncyclopediaLotListCard extends ConsumerWidget {
                               imageUrl: entry.effectiveFlagUrl,
                               fit: BoxFit.cover,
                               errorWidget: (context, url, error) => const Icon(
-                                  Icons.public,
-                                  color: Color(0xFFC8A96E),
-                                  size: 24),
+                                Icons.public,
+                                color: Color(0xFFC8A96E),
+                                size: 24,
+                              ),
                             )
-                          : const Icon(Icons.coffee_rounded,
-                              color: Color(0xFFC8A96E), size: 24),
+                          : const Icon(
+                              Icons.coffee_rounded,
+                              color: Color(0xFFC8A96E),
+                              size: 24,
+                            ),
                     ),
                   ),
                   Positioned(
@@ -285,7 +321,9 @@ class EncyclopediaLotListCard extends ConsumerWidget {
                     right: -2,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 2),
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: const Color(0xFF1A1714),
                         borderRadius: BorderRadius.circular(8),
@@ -337,19 +375,37 @@ class EncyclopediaLotListCard extends ConsumerWidget {
                     ),
                     const SizedBox(height: 12),
                     // Sensory Bars
-                    Builder(builder: (context) {
-                      final theme = Theme.of(context);
-                      final mappedSensory = SensoryUtils.map4To6Axis(entry.sensoryPoints);
-                      
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CompactSensoryBar(label: ref.t('bitterness').toUpperCase(), value: (mappedSensory['bitterness'] ?? 3).toDouble(), theme: theme),
-                          CompactSensoryBar(label: ref.t('acidity').toUpperCase(), value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme),
-                          CompactSensoryBar(label: ref.t('sweetness').toUpperCase(), value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme),
-                        ],
-                      );
-                    }),
+                    Builder(
+                      builder: (context) {
+                        final theme = Theme.of(context);
+                        final mappedSensory = SensoryUtils.map4To6Axis(
+                          entry.sensoryPoints,
+                        );
+
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CompactSensoryBar(
+                              label: ref.t('bitterness').toUpperCase(),
+                              value: (mappedSensory['bitterness'] ?? 3)
+                                  .toDouble(),
+                              theme: theme,
+                            ),
+                            CompactSensoryBar(
+                              label: ref.t('acidity').toUpperCase(),
+                              value: (mappedSensory['acidity'] ?? 3).toDouble(),
+                              theme: theme,
+                            ),
+                            CompactSensoryBar(
+                              label: ref.t('sweetness').toUpperCase(),
+                              value: (mappedSensory['sweetness'] ?? 3)
+                                  .toDouble(),
+                              theme: theme,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                     const SizedBox(height: 12),
                     Row(
                       children: [
@@ -395,16 +451,24 @@ class _FavoriteIcon extends ConsumerWidget {
         ref.read(databaseProvider).toggleFavorite(bean.id, !bean.isFavorite);
         if (context.mounted) {
           if (bean.isFavorite) {
-            ToastService.showInfo(context, context.t('toast_removed_from_favorites'));
+            ToastService.showInfo(
+              context,
+              context.t('toast_removed_from_favorites'),
+            );
           } else {
-            ToastService.showSuccess(context, context.t('toast_added_to_favorites'));
+            ToastService.showSuccess(
+              context,
+              context.t('toast_added_to_favorites'),
+            );
           }
         }
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Icon(
-          bean.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+          bean.isFavorite
+              ? Icons.favorite_rounded
+              : Icons.favorite_border_rounded,
           color: bean.isFavorite ? Colors.redAccent : Colors.white24,
           size: 24,
         ),
@@ -425,8 +489,9 @@ class _TraitBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(6),
-        border:
-            Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.1)),
+        border: Border.all(
+          color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+        ),
       ),
       child: Text(
         text.toUpperCase(),
@@ -442,4 +507,3 @@ class _TraitBadge extends StatelessWidget {
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-

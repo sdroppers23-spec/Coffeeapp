@@ -504,9 +504,10 @@ class _ScaWheelPainter extends CustomPainter {
 
     // Flip text if it's in the bottom half of the circle
     // If it's the "Others" section, we FORCE flip as per user request to have it "upside down"
-    final bool shouldFlip = isOtherSection || 
-                      (middleAngle > (math.pi / 2 + 0.2) && 
-                       middleAngle < (3 * math.pi / 2 - 0.2));
+    final bool shouldFlip =
+        isOtherSection ||
+        (middleAngle > (math.pi / 2 + 0.2) &&
+            middleAngle < (3 * math.pi / 2 - 0.2));
     if (shouldFlip) {
       canvas.rotate(math.pi);
     }

@@ -5,14 +5,13 @@ import 'package:markdown/markdown.dart' as md;
 
 /// Syntax parser for custom style tags like {gold}text{/gold}
 class StyleTagSyntax extends md.InlineSyntax {
-  StyleTagSyntax()
-      : super(r'\{(\w+[:\d.]*)\}([\s\S]*?)\{\/\1\}');
+  StyleTagSyntax() : super(r'\{(\w+[:\d.]*)\}([\s\S]*?)\{\/\1\}');
 
   @override
   bool onMatch(md.InlineParser parser, Match match) {
     final tag = match.group(1);
     final content = match.group(2);
-    
+
     final element = md.Element.text('style-tag', content ?? '');
     element.attributes['tag'] = tag ?? '';
     parser.addNode(element);
@@ -30,7 +29,7 @@ class StyleTagBuilder extends MarkdownElementBuilder {
   Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
     final tag = element.attributes['tag'] ?? '';
     final text = element.textContent;
-    
+
     TextStyle style = preferredStyle ?? const TextStyle();
     const goldColor = Color(0xFFC8A96E);
 
@@ -49,11 +48,6 @@ class StyleTagBuilder extends MarkdownElementBuilder {
       style = style.copyWith(fontSize: size);
     }
 
-    return Text.rich(
-      TextSpan(
-        text: text,
-        style: style,
-      ),
-    );
+    return Text.rich(TextSpan(text: text, style: style));
   }
 }

@@ -96,41 +96,41 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
             // Internal Tab Bar Segmented Control: Matches Screenshot
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1D1B1A), // Dark brown matte
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _TabOption(
-                        icon: Icons.radar,
-                        label: ref.t('tab_profile'),
-                        isSelected: _selectedTab == 0,
-                        onTap: () => _setTab(0),
-                      ),
-                    ),
-                    Expanded(
-                      child: _TabOption(
-                        icon: Icons.public,
-                        label: ref.t('tab_sphere'),
-                        isSelected: _selectedTab == 1,
-                        onTap: () => _setTab(1),
-                      ),
-                    ),
-                    Expanded(
-                      child: _TabOption(
-                        icon: Icons.pie_chart_outline,
-                        label: ref.t('tab_wheel'),
-                        isSelected: _selectedTab == 2,
-                        onTap: () => _setTab(2),
-                      ),
-                    ),
-                  ],
-                ),
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1D1B1A), // Dark brown matte
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
               ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _TabOption(
+                      icon: Icons.radar,
+                      label: ref.t('tab_profile'),
+                      isSelected: _selectedTab == 0,
+                      onTap: () => _setTab(0),
+                    ),
+                  ),
+                  Expanded(
+                    child: _TabOption(
+                      icon: Icons.public,
+                      label: ref.t('tab_sphere'),
+                      isSelected: _selectedTab == 1,
+                      onTap: () => _setTab(1),
+                    ),
+                  ),
+                  Expanded(
+                    child: _TabOption(
+                      icon: Icons.pie_chart_outline,
+                      label: ref.t('tab_wheel'),
+                      isSelected: _selectedTab == 2,
+                      onTap: () => _setTab(2),
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
             const SizedBox(height: 2),
 
@@ -282,7 +282,9 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
 
                       // Tab 2: Flavor Wheel
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 90), // Lift above nav bar
+                        padding: const EdgeInsets.only(
+                          bottom: 90,
+                        ), // Lift above nav bar
                         child: Column(
                           children: [
                             const SizedBox(height: 2),
@@ -580,30 +582,42 @@ class _InteractiveSpiderChartState
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _TemplateChip(ref.t('process_washed_label'), ref.t('clean_bright'), const {
-                'bitterness': 0.2,
-                'acidity': 0.9,
-                'sweetness': 0.4,
-                'body': 0.3,
-                'intensity': 0.4,
-                'aftertaste': 0.7,
-              }),
-              _TemplateChip(ref.t('process_natural_label'), ref.t('fruity_sweet'), const {
-                'bitterness': 0.4,
-                'acidity': 0.4,
-                'sweetness': 0.9,
-                'body': 0.8,
-                'intensity': 0.8,
-                'aftertaste': 0.7,
-              }),
-              _TemplateChip(ref.t('process_honey_label'), ref.t('sticky_balanced'), const {
-                'bitterness': 0.3,
-                'acidity': 0.6,
-                'sweetness': 0.8,
-                'body': 0.6,
-                'intensity': 0.6,
-                'aftertaste': 0.7,
-              }),
+              _TemplateChip(
+                ref.t('process_washed_label'),
+                ref.t('clean_bright'),
+                const {
+                  'bitterness': 0.2,
+                  'acidity': 0.9,
+                  'sweetness': 0.4,
+                  'body': 0.3,
+                  'intensity': 0.4,
+                  'aftertaste': 0.7,
+                },
+              ),
+              _TemplateChip(
+                ref.t('process_natural_label'),
+                ref.t('fruity_sweet'),
+                const {
+                  'bitterness': 0.4,
+                  'acidity': 0.4,
+                  'sweetness': 0.9,
+                  'body': 0.8,
+                  'intensity': 0.8,
+                  'aftertaste': 0.7,
+                },
+              ),
+              _TemplateChip(
+                ref.t('process_honey_label'),
+                ref.t('sticky_balanced'),
+                const {
+                  'bitterness': 0.3,
+                  'acidity': 0.6,
+                  'sweetness': 0.8,
+                  'body': 0.6,
+                  'intensity': 0.6,
+                  'aftertaste': 0.7,
+                },
+              ),
             ],
           ),
         ),

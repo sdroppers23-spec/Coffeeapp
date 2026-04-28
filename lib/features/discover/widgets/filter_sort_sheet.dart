@@ -80,7 +80,8 @@ class _FilterSortSheetState extends ConsumerState<FilterSortSheet> {
               ref,
               widget.availableCountries,
               state.selectedCountries,
-              (val) => ref.read(widget.filterProvider.notifier).toggleCountry(val),
+              (val) =>
+                  ref.read(widget.filterProvider.notifier).toggleCountry(val),
             ),
             const SizedBox(height: 24),
             _buildSectionTitle(ref.t('flavor_profile')),
@@ -89,7 +90,9 @@ class _FilterSortSheetState extends ConsumerState<FilterSortSheet> {
               ref,
               widget.availableFlavors,
               state.selectedFlavorNotes,
-              (val) => ref.read(widget.filterProvider.notifier).toggleFlavorNote(val),
+              (val) => ref
+                  .read(widget.filterProvider.notifier)
+                  .toggleFlavorNote(val),
             ),
             const SizedBox(height: 24),
             _buildSectionTitle(ref.t('processing')),
@@ -98,7 +101,8 @@ class _FilterSortSheetState extends ConsumerState<FilterSortSheet> {
               ref,
               widget.availableProcesses,
               state.selectedProcesses,
-              (val) => ref.read(widget.filterProvider.notifier).toggleProcess(val),
+              (val) =>
+                  ref.read(widget.filterProvider.notifier).toggleProcess(val),
             ),
             const SizedBox(height: 32),
             SafeArea(

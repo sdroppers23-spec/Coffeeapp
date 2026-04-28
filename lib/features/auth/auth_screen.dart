@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-
 import '../../core/supabase/supabase_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/database/database_provider.dart';
@@ -148,11 +147,15 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       labelStyle: const TextStyle(color: Colors.white54),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscurePassword ? Icons.visibility_off_rounded : Icons.visibility_rounded,
+                          _obscurePassword
+                              ? Icons.visibility_off_rounded
+                              : Icons.visibility_rounded,
                           color: Colors.white54,
                           size: 20,
                         ),
-                        onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                        onPressed: () => setState(
+                          () => _obscurePassword = !_obscurePassword,
+                        ),
                       ),
                     ),
                     obscureText: _obscurePassword,
@@ -202,7 +205,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     ),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
-                      side: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
+                      side: BorderSide(
+                        color: Colors.white.withValues(alpha: 0.3),
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -211,12 +216,17 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   const SizedBox(height: 16),
                   // Guest Mode Button
                   TextButton(
-                    onPressed: _isLoading ? null : () {
-                      ref.read(isGuestProvider.notifier).setGuest(true);
-                    },
+                    onPressed: _isLoading
+                        ? null
+                        : () {
+                            ref.read(isGuestProvider.notifier).setGuest(true);
+                          },
                     child: Text(
                       ref.t('continue_as_guest'),
-                      style: const TextStyle(color: Colors.white54, fontSize: 14),
+                      style: const TextStyle(
+                        color: Colors.white54,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                   TextButton(
@@ -248,10 +258,15 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             child: GestureDetector(
               onTap: () {
                 final current = ref.read(localeProvider);
-                ref.read(localeProvider.notifier).setLocale(current == 'uk' ? 'en' : 'uk');
+                ref
+                    .read(localeProvider.notifier)
+                    .setLocale(current == 'uk' ? 'en' : 'uk');
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(12),

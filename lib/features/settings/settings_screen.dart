@@ -43,7 +43,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(ref.t('sign_out_error', args: {'error': e.toString()})), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text(
+              ref.t('sign_out_error', args: {'error': e.toString()}),
+            ),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } finally {
@@ -93,11 +98,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     decoration: BoxDecoration(
                       color: Colors.orange.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+                      border: Border.all(
+                        color: Colors.orange.withValues(alpha: 0.3),
+                      ),
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.info_outline_rounded, color: Colors.orange),
+                        const Icon(
+                          Icons.info_outline_rounded,
+                          color: Colors.orange,
+                        ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
@@ -459,7 +469,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-
   Widget _buildSwitchPreference(
     BuildContext context, {
     required IconData icon,
@@ -612,5 +621,4 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       endIndent: 16,
     );
   }
-
 }

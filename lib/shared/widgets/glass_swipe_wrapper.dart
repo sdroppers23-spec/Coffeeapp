@@ -63,7 +63,8 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.isSwipeEnabled || (widget.leftAction == null && widget.rightAction == null)) {
+    if (!widget.isSwipeEnabled ||
+        (widget.leftAction == null && widget.rightAction == null)) {
       return widget.child;
     }
 
@@ -79,14 +80,14 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> {
               builder: (context, dir, child) {
                 if (dir == null) return const SizedBox.shrink();
 
-                final action = dir == DismissDirection.startToEnd 
-                    ? widget.leftAction 
+                final action = dir == DismissDirection.startToEnd
+                    ? widget.leftAction
                     : widget.rightAction;
 
                 if (action == null) return const SizedBox.shrink();
 
-                final alignment = dir == DismissDirection.startToEnd 
-                    ? Alignment.centerLeft 
+                final alignment = dir == DismissDirection.startToEnd
+                    ? Alignment.centerLeft
                     : Alignment.centerRight;
 
                 return ClipRRect(
@@ -96,7 +97,9 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> {
                     child: Container(
                       decoration: BoxDecoration(
                         color: action.color.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(widget.borderRadius),
+                        borderRadius: BorderRadius.circular(
+                          widget.borderRadius,
+                        ),
                         border: Border.all(
                           color: action.color.withValues(alpha: 0.3),
                           width: 1.0,
@@ -126,7 +129,7 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> {
               },
             ),
           ),
-          
+
           // 2. DISMISSIBLE LAYER (Transparent interactable)
           Dismissible(
             key: widget.dismissibleKey ?? UniqueKey(),
@@ -143,10 +146,10 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> {
               }
             },
             confirmDismiss: (direction) async {
-              final action = direction == DismissDirection.startToEnd 
-                  ? widget.leftAction 
+              final action = direction == DismissDirection.startToEnd
+                  ? widget.leftAction
                   : widget.rightAction;
-              
+
               if (action != null) {
                 action.onTap();
               }

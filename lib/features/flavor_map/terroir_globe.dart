@@ -94,7 +94,9 @@ class _TerroirGlobeState extends ConsumerState<TerroirGlobe>
     final double finalX = tx;
 
     // 3. Convert Cartesian to Lat/Lon
-    final double latRad = math.asin(-finalY / radius); // Invert Y to fix orientation
+    final double latRad = math.asin(
+      -finalY / radius,
+    ); // Invert Y to fix orientation
     final double lonRad = math.atan2(finalZ, finalX);
 
     final double lat = latRad * 180 / math.pi;
@@ -430,10 +432,7 @@ class _GlobePainter extends CustomPainter {
     // Draw dark chocolate/black background
     final bgPaint = Paint()
       ..shader = const RadialGradient(
-        colors: [
-          Color(0xFF0F0804),
-          Color(0xFF050302),
-        ],
+        colors: [Color(0xFF0F0804), Color(0xFF050302)],
         stops: [0.7, 1.0],
       ).createShader(Rect.fromCircle(center: center, radius: radius));
     canvas.drawCircle(center, radius, bgPaint);
@@ -481,8 +480,12 @@ class _GlobePainter extends CustomPainter {
           final pSize = (depthFactor * (isLand ? 2.5 : 1.0)).clamp(0.4, 3.5);
 
           paint.color = isLand
-              ? const Color(0xFFB8955A).withValues(alpha: opacity)   // Rich gold-brown land
-              : Colors.white.withValues(alpha: opacity * 0.08);      // Even fainter ocean
+              ? const Color(0xFFB8955A).withValues(
+                  alpha: opacity,
+                ) // Rich gold-brown land
+              : Colors.white.withValues(
+                  alpha: opacity * 0.08,
+                ); // Even fainter ocean
 
           canvas.drawCircle(pos, pSize, paint);
 
@@ -579,12 +582,8 @@ class _GlobePainter extends CustomPainter {
       canvas.drawCircle(pos, 8, glowPaint);
 
       // Outer Gold
-      canvas.drawCircle(
-        pos,
-        5,
-        Paint()..color = const Color(0xFFC8A96E),
-      );
-      
+      canvas.drawCircle(pos, 5, Paint()..color = const Color(0xFFC8A96E));
+
       // Inner Light Gold/White
       canvas.drawCircle(pos, 2, Paint()..color = const Color(0xFFFFE0B2));
     }
@@ -594,4 +593,3 @@ class _GlobePainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _GlobePainter oldDelegate) => true;
 }
-

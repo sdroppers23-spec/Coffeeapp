@@ -7,19 +7,57 @@ extension _SensoryTabSection on _AddLotScreenState {
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
       children: [
         _sectionLabel(context.t('sensory_profile_1_5')),
-        _darkCard(children: [
-          _sensorySlider(context.t('bitterness').toUpperCase(), _bitterness, (v) => _updateState(() => _bitterness = v), theme: theme, enabled: !_isSensoryLocked),
-          _divider(),
-          _sensorySlider(context.t('acidity').toUpperCase(), _acidity, (v) => _updateState(() => _acidity = v), theme: theme, enabled: !_isSensoryLocked),
-          _divider(),
-          _sensorySlider(context.t('sweetness').toUpperCase(), _sweetness, (v) => _updateState(() => _sweetness = v), theme: theme, enabled: !_isSensoryLocked),
-          _divider(),
-          _sensorySlider(context.t('body').toUpperCase(), _body, (v) => _updateState(() => _body = v), theme: theme, enabled: !_isSensoryLocked),
-          _divider(),
-          _sensorySlider(context.t('intensity').toUpperCase(), _intensity, (v) => _updateState(() => _intensity = v), theme: theme, enabled: !_isSensoryLocked),
-          _divider(),
-          _sensorySlider(context.t('aftertaste').toUpperCase(), _aftertaste, (v) => _updateState(() => _aftertaste = v), theme: theme, enabled: !_isSensoryLocked),
-        ]),
+        _darkCard(
+          children: [
+            _sensorySlider(
+              context.t('bitterness').toUpperCase(),
+              _bitterness,
+              (v) => _updateState(() => _bitterness = v),
+              theme: theme,
+              enabled: !_isSensoryLocked,
+            ),
+            _divider(),
+            _sensorySlider(
+              context.t('acidity').toUpperCase(),
+              _acidity,
+              (v) => _updateState(() => _acidity = v),
+              theme: theme,
+              enabled: !_isSensoryLocked,
+            ),
+            _divider(),
+            _sensorySlider(
+              context.t('sweetness').toUpperCase(),
+              _sweetness,
+              (v) => _updateState(() => _sweetness = v),
+              theme: theme,
+              enabled: !_isSensoryLocked,
+            ),
+            _divider(),
+            _sensorySlider(
+              context.t('body').toUpperCase(),
+              _body,
+              (v) => _updateState(() => _body = v),
+              theme: theme,
+              enabled: !_isSensoryLocked,
+            ),
+            _divider(),
+            _sensorySlider(
+              context.t('intensity').toUpperCase(),
+              _intensity,
+              (v) => _updateState(() => _intensity = v),
+              theme: theme,
+              enabled: !_isSensoryLocked,
+            ),
+            _divider(),
+            _sensorySlider(
+              context.t('aftertaste').toUpperCase(),
+              _aftertaste,
+              (v) => _updateState(() => _aftertaste = v),
+              theme: theme,
+              enabled: !_isSensoryLocked,
+            ),
+          ],
+        ),
         const SizedBox(height: 16),
         _sectionLabel(context.t('visualize_profile')),
         Container(
@@ -44,7 +82,9 @@ extension _SensoryTabSection on _AddLotScreenState {
         ),
         const SizedBox(height: 12),
         _toggleButton(
-          label: _isSensoryLocked ? context.t('unlock_sensory') : context.t('lock_sensory'),
+          label: _isSensoryLocked
+              ? context.t('unlock_sensory')
+              : context.t('lock_sensory'),
           active: !_isSensoryLocked,
           onTap: () => _updateState(() => _isSensoryLocked = !_isSensoryLocked),
         ),

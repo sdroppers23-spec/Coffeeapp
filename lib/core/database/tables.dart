@@ -71,7 +71,8 @@ class LocalizedBeanTranslations extends Table {
 
 class LocalizedBeansV2 extends Table {
   IntColumn get id => integer().autoIncrement()();
-  IntColumn get brandId => integer().nullable().references(LocalizedBrands, #id)();
+  IntColumn get brandId =>
+      integer().nullable().references(LocalizedBrands, #id)();
   TextColumn get countryEmoji => text().nullable()();
   IntColumn get altitudeMin => integer().nullable()();
   IntColumn get altitudeMax => integer().nullable()();
@@ -80,16 +81,20 @@ class LocalizedBeansV2 extends Table {
   RealColumn get cupsScore => real().withDefault(const Constant(82.0))();
   TextColumn get sensoryJson => text().withDefault(const Constant('{}'))();
   TextColumn get priceJson => text().withDefault(const Constant('{}'))();
-  TextColumn get plantationPhotosUrl => text().withDefault(const Constant('[]'))();
+  TextColumn get plantationPhotosUrl =>
+      text().withDefault(const Constant('[]'))();
   TextColumn get harvestSeason => text().nullable()();
   TextColumn get price => text().nullable()();
   TextColumn get weight => text().nullable()();
   TextColumn get roastDate => text().nullable()();
-  TextColumn get processingMethodsJson => text().withDefault(const Constant('[]'))();
+  TextColumn get processingMethodsJson =>
+      text().withDefault(const Constant('[]'))();
   BoolColumn get isPremium => boolean().withDefault(const Constant(false))();
-  TextColumn get detailedProcessMarkdown => text().withDefault(const Constant(''))();
+  TextColumn get detailedProcessMarkdown =>
+      text().withDefault(const Constant(''))();
   TextColumn get url => text().withDefault(const Constant(''))();
-  IntColumn get farmerId => integer().nullable().references(LocalizedFarmersV2, #id)();
+  IntColumn get farmerId =>
+      integer().nullable().references(LocalizedFarmersV2, #id)();
   BoolColumn get isDecaf => boolean().withDefault(const Constant(false))();
   TextColumn get farm => text().nullable()();
   TextColumn get farmPhotosUrlCover => text().nullable()();
@@ -105,7 +110,7 @@ class LocalizedBeansV2 extends Table {
 
 class LocalizedBeanTranslationsV2 extends Table {
   IntColumn get beanId => integer().references(LocalizedBeansV2, #id)();
-  TextColumn get languageCode => text()(); 
+  TextColumn get languageCode => text()();
 
   TextColumn get country => text().nullable()();
   TextColumn get region => text().nullable()();
@@ -129,7 +134,8 @@ class LocalizedBrands extends Table {
   TextColumn get siteUrl => text().nullable()();
   DateTimeColumn get createdAt => dateTime().nullable()();
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
-  BoolColumn get isDeletedLocal => boolean().withDefault(const Constant(false))();
+  BoolColumn get isDeletedLocal =>
+      boolean().withDefault(const Constant(false))();
   BoolColumn get isFavorite => boolean().withDefault(const Constant(false))();
   BoolColumn get isArchived => boolean().withDefault(const Constant(false))();
 }
@@ -150,9 +156,9 @@ class LocalizedBrandTranslations extends Table {
 // ─── LocalizedFarmers (Main + Translations) ──────────────────────────
 class LocalizedFarmers extends Table {
   IntColumn get id => integer().autoIncrement()();
-  
-  TextColumn get imageUrl => text().withDefault(const Constant(''))() ;
-  TextColumn get flagUrl => text().withDefault(const Constant(''))() ;
+
+  TextColumn get imageUrl => text().withDefault(const Constant(''))();
+  TextColumn get flagUrl => text().withDefault(const Constant(''))();
 
   // Coordinates & Metadata
   RealColumn get latitude => real().nullable()();
@@ -178,8 +184,8 @@ class LocalizedFarmerTranslations extends Table {
 
 class LocalizedFarmersV2 extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get imageUrl => text().withDefault(const Constant(''))() ;
-  TextColumn get flagUrl => text().withDefault(const Constant(''))() ;
+  TextColumn get imageUrl => text().withDefault(const Constant(''))();
+  TextColumn get flagUrl => text().withDefault(const Constant(''))();
   RealColumn get latitude => real().nullable()();
   RealColumn get longitude => real().nullable()();
   DateTimeColumn get createdAt => dateTime().nullable()();
@@ -187,7 +193,7 @@ class LocalizedFarmersV2 extends Table {
 
 class LocalizedFarmerTranslationsV2 extends Table {
   IntColumn get farmerId => integer().references(LocalizedFarmersV2, #id)();
-  TextColumn get languageCode => text()(); 
+  TextColumn get languageCode => text()();
 
   TextColumn get name => text().nullable()();
   TextColumn get descriptionHtml => text().nullable()();
@@ -228,9 +234,9 @@ class SphereRegionTranslations extends Table {
 
 class SpecialtyArticles extends Table {
   IntColumn get id => integer().autoIncrement()();
-  
-  TextColumn get imageUrl => text().withDefault(const Constant(''))() ;
-  TextColumn get flagUrl => text().withDefault(const Constant(''))() ;
+
+  TextColumn get imageUrl => text().withDefault(const Constant(''))();
+  TextColumn get flagUrl => text().withDefault(const Constant(''))();
   IntColumn get readTimeMin => integer().withDefault(const Constant(5))();
 }
 
@@ -248,8 +254,8 @@ class SpecialtyArticleTranslations extends Table {
 
 class SpecialtyArticlesV2 extends Table {
   IntColumn get id => integer().autoIncrement()();
-  TextColumn get imageUrl => text().withDefault(const Constant(''))() ;
-  TextColumn get flagUrl => text().withDefault(const Constant(''))() ;
+  TextColumn get imageUrl => text().withDefault(const Constant(''))();
+  TextColumn get flagUrl => text().withDefault(const Constant(''))();
   IntColumn get readTimeMin => integer().withDefault(const Constant(5))();
   DateTimeColumn get createdAt => dateTime().nullable()();
 }
@@ -337,16 +343,18 @@ class FermentationLogs extends Table {
 class BrewingRecipes extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get methodKey => text().unique()();
-  
-  TextColumn get imageUrl => text().withDefault(const Constant(''))() ;
+
+  TextColumn get imageUrl => text().withDefault(const Constant(''))();
 
   // Settings
   RealColumn get ratioGramsPerMl => real().withDefault(const Constant(0.066))();
   RealColumn get tempC => real().withDefault(const Constant(93.0))();
   IntColumn get totalTimeSec => integer().withDefault(const Constant(180))();
-  TextColumn get difficulty => text().withDefault(const Constant('Intermediate'))();
+  TextColumn get difficulty =>
+      text().withDefault(const Constant('Intermediate'))();
   TextColumn get stepsJson => text().withDefault(const Constant('[]'))();
-  TextColumn get flavorProfile => text().withDefault(const Constant('Balanced'))();
+  TextColumn get flavorProfile =>
+      text().withDefault(const Constant('Balanced'))();
   TextColumn get iconName => text().nullable()();
   TextColumn get category => text().withDefault(const Constant('filter'))();
 }
@@ -365,16 +373,18 @@ class BrewingRecipeTranslations extends Table {
 class BrewingRecipesV2 extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get methodKey => text().unique()();
-  TextColumn get imageUrl => text().withDefault(const Constant(''))() ;
+  TextColumn get imageUrl => text().withDefault(const Constant(''))();
   RealColumn get ratioGramsPerMl => real().withDefault(const Constant(0.066))();
   RealColumn get tempC => real().withDefault(const Constant(93.0))();
   IntColumn get totalTimeSec => integer().withDefault(const Constant(180))();
-  TextColumn get difficulty => text().withDefault(const Constant('Intermediate'))();
+  TextColumn get difficulty =>
+      text().withDefault(const Constant('Intermediate'))();
   TextColumn get stepsJson => text().withDefault(const Constant('[]'))();
-  TextColumn get flavorProfile => text().withDefault(const Constant('Balanced'))();
+  TextColumn get flavorProfile =>
+      text().withDefault(const Constant('Balanced'))();
   TextColumn get iconName => text().nullable()();
   TextColumn get category => text().withDefault(const Constant('filter'))();
-  
+
   // For V2, we also have translations but user specified it's EN-only for now
 }
 
@@ -388,7 +398,6 @@ class BrewingRecipeTranslationsV2 extends Table {
   @override
   Set<Column> get primaryKey => {recipeKey, languageCode};
 }
-
 
 // ─── RecommendedRecipes ──────────────────────────────────────────────────────
 class RecommendedRecipes extends Table {
@@ -430,7 +439,8 @@ class CustomRecipes extends Table {
 
   // Advanced Recipe Features
   IntColumn get microns => integer().nullable()();
-  TextColumn get recipeType => text().withDefault(const Constant('filter'))(); // 'espresso' or 'filter'
+  TextColumn get recipeType =>
+      text().withDefault(const Constant('filter'))(); // 'espresso' or 'filter'
   RealColumn get brewRatio => real().nullable()();
   TextColumn get grinderName => text().nullable()();
 

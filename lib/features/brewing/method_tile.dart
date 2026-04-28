@@ -15,10 +15,7 @@ import '../navigation/navigation_providers.dart';
 class MethodTile extends ConsumerWidget {
   final List<BrewingRecipeDto> methodRecipes;
 
-  const MethodTile({
-    super.key,
-    required this.methodRecipes,
-  });
+  const MethodTile({super.key, required this.methodRecipes});
 
   BrewingRecipeDto get _firstRecipe => methodRecipes.first;
   int get _count => methodRecipes.length;
@@ -32,7 +29,7 @@ class MethodTile extends ConsumerWidget {
     if (raw.isEmpty) return '';
     if (raw.startsWith('http')) return raw;
     if (raw.startsWith('assets/')) return raw;
-    
+
     // Resolved from 'Methods' bucket
     return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/Methods/$raw';
   }
@@ -41,7 +38,7 @@ class MethodTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final name = _getEffectiveName(context);
     final imageUrl = _getEffectiveImageUrl();
-    
+
     // Default gradient based on key if available, else standard gold
     final List<Color> gradient = _getGradient(_firstRecipe.methodKey);
 
@@ -49,13 +46,13 @@ class MethodTile extends ConsumerWidget {
       onTap: () {
         // Hide nav bar when entering detail view
         ref.read(navBarVisibleProvider.notifier).hide();
-        
+
         if (_count > 1) {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (_) => MethodRecipesScreen(
                 methodKey: _firstRecipe.methodKey,
-                methodName: name, 
+                methodName: name,
                 recipes: methodRecipes,
               ),
             ),
@@ -91,7 +88,9 @@ class MethodTile extends ConsumerWidget {
                         ),
                         child: const Center(
                           child: CircularProgressIndicator(
-                              strokeWidth: 2, color: Colors.white24),
+                            strokeWidth: 2,
+                            color: Colors.white24,
+                          ),
                         ),
                       ),
                       errorWidget: (context, url, error) => Container(
@@ -102,8 +101,11 @@ class MethodTile extends ConsumerWidget {
                             end: Alignment.bottomRight,
                           ),
                         ),
-                        child: Icon(_getIcon(_firstRecipe.methodKey),
-                            color: Colors.white24, size: 48),
+                        child: Icon(
+                          _getIcon(_firstRecipe.methodKey),
+                          color: Colors.white24,
+                          size: 48,
+                        ),
                       ),
                     )
                   : Container(
@@ -114,8 +116,11 @@ class MethodTile extends ConsumerWidget {
                           end: Alignment.bottomRight,
                         ),
                       ),
-                      child: Icon(_getIcon(_firstRecipe.methodKey),
-                          color: Colors.white24, size: 48),
+                      child: Icon(
+                        _getIcon(_firstRecipe.methodKey),
+                        color: Colors.white24,
+                        size: 48,
+                      ),
                     ),
             ),
 
@@ -135,7 +140,6 @@ class MethodTile extends ConsumerWidget {
                 ),
               ),
             ),
-
 
             // ── Bottom content ───────────────────────────────────────────
             Padding(
@@ -163,11 +167,15 @@ class MethodTile extends ConsumerWidget {
                   // Recipe count chip - only show if user has custom recipes
                   Consumer(
                     builder: (context, ref, child) {
-                      final customRecipesAsync = ref.watch(globalCustomRecipesProvider);
+                      final customRecipesAsync = ref.watch(
+                        globalCustomRecipesProvider,
+                      );
                       return customRecipesAsync.maybeWhen(
                         data: (allCustom) {
                           final count = allCustom
-                              .where((r) => r.methodKey == _firstRecipe.methodKey)
+                              .where(
+                                (r) => r.methodKey == _firstRecipe.methodKey,
+                              )
                               .length;
                           if (count == 0) return const SizedBox.shrink();
                           return _RecipeCountChip(count: count);
@@ -187,23 +195,35 @@ class MethodTile extends ConsumerWidget {
 
   List<Color> _getGradient(String key) {
     switch (key.toLowerCase()) {
-      case 'v60': return [const Color(0xFFD4A574), const Color(0xFF8B5E3C)];
-      case 'chemex': return [const Color(0xFFE8D5B7), const Color(0xFF9C7048)];
-      case 'aeropress': return [const Color(0xFFB8C4CC), const Color(0xFF5A7A8A)];
-      case 'french_press': return [const Color(0xFFC8A96E), const Color(0xFF7A5C2E)];
-      case 'espresso': return [const Color(0xFF8B2635), const Color(0xFF4A1520)];
-      case 'clever': return [const Color(0xFFB8860B), const Color(0xFF556B2F)];
-      case 'siphon': return [const Color(0xFF9370DB), const Color(0xFF4B0082)];
-      default: return [const Color(0xFF2C2C2E), const Color(0xFF1C1C1E)];
+      case 'v60':
+        return [const Color(0xFFD4A574), const Color(0xFF8B5E3C)];
+      case 'chemex':
+        return [const Color(0xFFE8D5B7), const Color(0xFF9C7048)];
+      case 'aeropress':
+        return [const Color(0xFFB8C4CC), const Color(0xFF5A7A8A)];
+      case 'french_press':
+        return [const Color(0xFFC8A96E), const Color(0xFF7A5C2E)];
+      case 'espresso':
+        return [const Color(0xFF8B2635), const Color(0xFF4A1520)];
+      case 'clever':
+        return [const Color(0xFFB8860B), const Color(0xFF556B2F)];
+      case 'siphon':
+        return [const Color(0xFF9370DB), const Color(0xFF4B0082)];
+      default:
+        return [const Color(0xFF2C2C2E), const Color(0xFF1C1C1E)];
     }
   }
 
   IconData _getIcon(String key) {
     switch (key.toLowerCase()) {
-      case 'cold_brew': return Icons.ac_unit_outlined;
-      case 'siphon': return Icons.science_outlined;
-      case 'aeropress': return Icons.compress_outlined;
-      default: return Icons.coffee_outlined;
+      case 'cold_brew':
+        return Icons.ac_unit_outlined;
+      case 'siphon':
+        return Icons.science_outlined;
+      case 'aeropress':
+        return Icons.compress_outlined;
+      default:
+        return Icons.coffee_outlined;
     }
   }
 }
@@ -211,20 +231,21 @@ class MethodTile extends ConsumerWidget {
 class _RecipeCountChip extends ConsumerWidget {
   final int count;
   const _RecipeCountChip({required this.count});
-  
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final customCount = count; // Actually, I should pass the pre-filtered count or filter here
+    final customCount =
+        count; // Actually, I should pass the pre-filtered count or filter here
     // Wait, MethodTile passes methodRecipes.length to _RecipeCountChip.
     // I should probably change what MethodTile passes.
-    
+
     if (customCount == 0) return const SizedBox.shrink();
 
     final String pluralKey = customCount == 1
         ? 'recipe_1'
         : (customCount >= 2 && customCount <= 4)
-            ? 'recipe_2_4'
-            : 'recipe_5_plus';
+        ? 'recipe_2_4'
+        : 'recipe_5_plus';
     final label = '$customCount ${ref.t(pluralKey)}';
 
     return Container(

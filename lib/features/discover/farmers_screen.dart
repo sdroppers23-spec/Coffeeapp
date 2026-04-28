@@ -40,7 +40,10 @@ class FarmersBody extends ConsumerWidget {
         ),
       ),
       error: (e, _) => Center(
-        child: Text('${context.t('error')}: $e', style: const TextStyle(color: Colors.red)),
+        child: Text(
+          '${context.t('error')}: $e',
+          style: const TextStyle(color: Colors.red),
+        ),
       ),
       data: (farmers) {
         if (farmers.isEmpty) {
@@ -183,16 +186,17 @@ class _PremiumFarmerCard extends ConsumerWidget {
                         Wrap(
                           spacing: 8,
                           children: [
-                             if (farmer.description.isNotEmpty)
-                               _buildMiniChip(farmer.description.split(',').first),
+                            if (farmer.description.isNotEmpty)
+                              _buildMiniChip(
+                                farmer.description.split(',').first,
+                              ),
                           ],
                         ),
                       ],
                     ),
                   ),
                   // Country Flag
-                  if (flagUrl.isNotEmpty)
-                    _buildFlag(flagUrl),
+                  if (flagUrl.isNotEmpty) _buildFlag(flagUrl),
                 ],
               ),
               const SizedBox(height: 20),
@@ -246,7 +250,11 @@ class _PremiumFarmerCard extends ConsumerWidget {
       placeholder: (context, url) => Container(color: Colors.white10),
       errorWidget: (context, url, error) => Container(
         color: const Color(0xFF1C1C1E),
-        child: const Icon(Icons.person_outline_rounded, color: Colors.white24, size: 32),
+        child: const Icon(
+          Icons.person_outline_rounded,
+          color: Colors.white24,
+          size: 32,
+        ),
       ),
     );
   }
@@ -259,11 +267,7 @@ class _PremiumFarmerCard extends ConsumerWidget {
         shape: BoxShape.circle,
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
         boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 8,
-            offset: Offset(0, 4),
-          ),
+          BoxShadow(color: Colors.black26, blurRadius: 8, offset: Offset(0, 4)),
         ],
       ),
       child: ClipOval(
@@ -288,7 +292,9 @@ class _PremiumFarmerCard extends ConsumerWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.2)),
+        border: Border.all(
+          color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
+        ),
       ),
       child: Text(
         label.trim(),

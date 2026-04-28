@@ -25,12 +25,11 @@ class LotDetailView extends ConsumerStatefulWidget {
   final EncyclopediaEntry? entry;
   final String? heroTag;
 
-  const LotDetailView({
-    super.key,
-    this.lot,
-    this.entry,
-    this.heroTag,
-  }) : assert(lot != null || entry != null, 'Either lot or entry must be provided');
+  const LotDetailView({super.key, this.lot, this.entry, this.heroTag})
+    : assert(
+        lot != null || entry != null,
+        'Either lot or entry must be provided',
+      );
 
   @override
   ConsumerState<LotDetailView> createState() => _LotDetailViewState();
@@ -66,31 +65,69 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
     final theme = Theme.of(context);
 
     // Reactively watch for updates if we have IDs
-    final lotAsync = widget.lot != null ? ref.watch(lotProvider(widget.lot!.id)) : const AsyncValue.data(null);
-    final beanAsync = widget.entry != null ? ref.watch(beanProvider(widget.entry!.id)) : const AsyncValue.data(null);
+    final lotAsync = widget.lot != null
+        ? ref.watch(lotProvider(widget.lot!.id))
+        : const AsyncValue.data(null);
+    final beanAsync = widget.entry != null
+        ? ref.watch(beanProvider(widget.entry!.id))
+        : const AsyncValue.data(null);
     final isUk = ref.watch(localeProvider) == 'uk';
 
     return lotAsync.when(
-      loading: () => const Scaffold(backgroundColor: Colors.black, body: Center(child: CircularProgressIndicator())),
-      error: (e, s) => Scaffold(backgroundColor: Colors.black, body: Center(child: Text('Error: $e', style: const TextStyle(color: Colors.white)))),
+      loading: () => const Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(child: CircularProgressIndicator()),
+      ),
+      error: (e, s) => Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(
+          child: Text('Error: $e', style: const TextStyle(color: Colors.white)),
+        ),
+      ),
       data: (liveLot) {
         return beanAsync.when(
-          loading: () => const Scaffold(backgroundColor: Colors.black, body: Center(child: CircularProgressIndicator())),
-          error: (e, s) => Scaffold(backgroundColor: Colors.black, body: Center(child: Text('Error: $e', style: const TextStyle(color: Colors.white)))),
+          loading: () => const Scaffold(
+            backgroundColor: Colors.black,
+            body: Center(child: CircularProgressIndicator()),
+          ),
+          error: (e, s) => Scaffold(
+            backgroundColor: Colors.black,
+            body: Center(
+              child: Text(
+                'Error: $e',
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
           data: (liveBean) {
             // Priority: Live Data -> Widget Extra (Fallback)
-            final String coffeeName = liveLot?.coffeeName ?? liveBean?.varieties ?? widget.lot?.coffeeName ?? widget.entry?.fullDisplayName ?? 'Unnamed';
-            final String roasteryName = liveLot?.roasteryName ?? 'Specialty Roaster';
-            
+            final String coffeeName =
+                liveLot?.coffeeName ??
+                liveBean?.varieties ??
+                widget.lot?.coffeeName ??
+                widget.entry?.fullDisplayName ??
+                'Unnamed';
+            final String roasteryName =
+                liveLot?.roasteryName ?? 'Specialty Roaster';
+
             // Priority: Live Lot Image -> Live Bean Image -> Entry Image -> Flag Fallback
-            final String? imageUrl = liveLot?.imageUrl ?? liveBean?.farmPhotosUrlCover ?? widget.lot?.imageUrl ?? widget.entry?.imageUrl;
-            
+            final String? imageUrl =
+                liveLot?.imageUrl ??
+                liveBean?.farmPhotosUrlCover ??
+                widget.lot?.imageUrl ??
+                widget.entry?.imageUrl;
+
             // Map sensory points using the shared utility
-            final Map<String, dynamic> rawPoints = liveLot?.sensoryPoints ?? 
-                liveBean?.sensoryPoints ?? 
-                (widget.entry?.radarPoints != null && widget.entry!.radarPoints.isNotEmpty ? widget.entry!.radarPoints : null) ??
-                widget.lot?.sensoryPoints ?? 
-                widget.entry?.sensoryPoints ?? {};
+            final Map<String, dynamic> rawPoints =
+                liveLot?.sensoryPoints ??
+                liveBean?.sensoryPoints ??
+                (widget.entry?.radarPoints != null &&
+                        widget.entry!.radarPoints.isNotEmpty
+                    ? widget.entry!.radarPoints
+                    : null) ??
+                widget.lot?.sensoryPoints ??
+                widget.entry?.sensoryPoints ??
+                {};
             final mappedPoints = SensoryUtils.map4To6Axis(rawPoints);
 
             return Scaffold(
@@ -112,25 +149,42 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                       lot: liveLot ?? widget.lot,
                       bean: liveBean ?? widget.entry,
                       heroTag: widget.heroTag,
-                      isImageVisible: _tabController.index < 2, // Hide on Recipes tab
+                      isImageVisible:
+                          _tabController.index < 2, // Hide on Recipes tab
                       onBack: () => Navigator.pop(context),
-                      isFavorite: liveLot?.isFavorite ?? liveBean?.isFavorite ?? false,
+                      isFavorite:
+                          liveLot?.isFavorite ?? liveBean?.isFavorite ?? false,
                       onToggleFavorite: () async {
                         final db = ref.read(databaseProvider);
-                        final bool currentlyFavorite = liveLot?.isFavorite ?? liveBean?.isFavorite ?? false;
-                        
+                        final bool currentlyFavorite =
+                            liveLot?.isFavorite ??
+                            liveBean?.isFavorite ??
+                            false;
+
                         if (liveLot != null) {
-                          await db.toggleLotFavorite(liveLot.id, !currentlyFavorite);
+                          await db.toggleLotFavorite(
+                            liveLot.id,
+                            !currentlyFavorite,
+                          );
                         } else if (liveBean != null) {
-                          await db.toggleFavorite(liveBean.id, !currentlyFavorite);
+                          await db.toggleFavorite(
+                            liveBean.id,
+                            !currentlyFavorite,
+                          );
                         }
 
                         if (!context.mounted) return;
                         if (mounted) {
                           if (!currentlyFavorite) {
-                            ToastService.showSuccess(context, context.t('toast_added_to_favorites'));
+                            ToastService.showSuccess(
+                              context,
+                              context.t('toast_added_to_favorites'),
+                            );
                           } else {
-                            ToastService.showInfo(context, context.t('toast_removed_from_favorites'));
+                            ToastService.showInfo(
+                              context,
+                              context.t('toast_removed_from_favorites'),
+                            );
                           }
                         }
 
@@ -138,12 +192,14 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                           await Vibration.vibrate(duration: 50);
                         }
                       },
-                      onEdit: liveLot != null ? () {
-                        if (!kIsWeb && !Platform.isWindows) {
-                          Vibration.vibrate(duration: 50);
-                        }
-                        context.push('/edit_lot', extra: liveLot);
-                      } : null,
+                      onEdit: liveLot != null
+                          ? () {
+                              if (!kIsWeb && !Platform.isWindows) {
+                                Vibration.vibrate(duration: 50);
+                              }
+                              context.push('/edit_lot', extra: liveLot);
+                            }
+                          : null,
                     ),
                     TabBar(
                       controller: _tabController,
@@ -153,7 +209,11 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                       unselectedLabelColor: Colors.white24,
                       tabAlignment: TabAlignment.start,
                       isScrollable: true,
-                      labelStyle: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 12, letterSpacing: 1.2),
+                      labelStyle: GoogleFonts.outfit(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                        letterSpacing: 1.2,
+                      ),
                       tabs: [
                         Tab(text: ref.t('tab_info')),
                         Tab(text: ref.t('tab_sensory')),
@@ -165,34 +225,61 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                       child: TabBarView(
                         controller: _tabController,
                         children: [
-                          _InfoTab(lot: liveLot ?? widget.lot, bean: liveBean ?? widget.entry),
-                          _SensoryTab(
-                            points: mappedPoints, 
-                            isUk: isUk, 
-                            lotId: liveLot?.id ?? widget.lot?.id ?? widget.entry?.lotNumber
+                          _InfoTab(
+                            lot: liveLot ?? widget.lot,
+                            bean: liveBean ?? widget.entry,
                           ),
-                          _RecipesTab(lotId: liveLot?.id ?? widget.lot?.id ?? widget.entry?.lotNumber ?? ''),
+                          _SensoryTab(
+                            points: mappedPoints,
+                            isUk: isUk,
+                            lotId:
+                                liveLot?.id ??
+                                widget.lot?.id ??
+                                widget.entry?.lotNumber,
+                          ),
+                          _RecipesTab(
+                            lotId:
+                                liveLot?.id ??
+                                widget.lot?.id ??
+                                widget.entry?.lotNumber ??
+                                '',
+                          ),
                         ],
                       ),
                     ),
                   ],
                 ),
               ),
-              floatingActionButton: _tabController.index == 2 ? Padding(
-                padding: const EdgeInsets.only(bottom: 20, right: 8),
-                child: FloatingActionButton.extended(
-                  onPressed: () => _showRecipeTypeSelector(context, ref, liveLot?.id ?? widget.lot?.id ?? liveBean?.id.toString() ?? widget.entry?.id.toString() ?? ''),
-                  backgroundColor: theme.colorScheme.primary,
-                  foregroundColor: Colors.black,
-                  label: Text(
-                    ref.t('add_recipe'),
-                    style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
-                  ),
-                  icon: const Icon(Icons.add_rounded, size: 24),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                ),
-              ) : null,
-              floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+              floatingActionButton: _tabController.index == 2
+                  ? Padding(
+                      padding: const EdgeInsets.only(bottom: 20, right: 8),
+                      child: FloatingActionButton.extended(
+                        onPressed: () => _showRecipeTypeSelector(
+                          context,
+                          ref,
+                          liveLot?.id ??
+                              widget.lot?.id ??
+                              liveBean?.id.toString() ??
+                              widget.entry?.id.toString() ??
+                              '',
+                        ),
+                        backgroundColor: theme.colorScheme.primary,
+                        foregroundColor: Colors.black,
+                        label: Text(
+                          ref.t('add_recipe'),
+                          style: GoogleFonts.outfit(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        icon: const Icon(Icons.add_rounded, size: 24),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                    )
+                  : null,
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.endFloat,
             );
           },
         );
@@ -200,11 +287,17 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
     );
   }
 
-  void _showRecipeTypeSelector(BuildContext context, WidgetRef ref, String lotId) async {
+  void _showRecipeTypeSelector(
+    BuildContext context,
+    WidgetRef ref,
+    String lotId,
+  ) async {
     final db = ref.read(databaseProvider);
     final recipes = await db.getCustomRecipesForLot(lotId);
-    
-    final espressoCount = recipes.where((r) => r.recipeType == 'espresso').length;
+
+    final espressoCount = recipes
+        .where((r) => r.recipeType == 'espresso')
+        .length;
     final filterCount = recipes.where((r) => r.recipeType == 'filter').length;
 
     if (!context.mounted) return;
@@ -221,12 +314,20 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
             Container(
               width: 40,
               height: 4,
-              decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(2)),
+              decoration: BoxDecoration(
+                color: Colors.white24,
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
             const SizedBox(height: 24),
             Text(
               ref.t('select_recipe_type'),
-              style: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.bold, color: const Color(0xFFC8A96E), letterSpacing: 2),
+              style: GoogleFonts.outfit(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFFC8A96E),
+                letterSpacing: 2,
+              ),
             ),
             const SizedBox(height: 24),
             Row(
@@ -241,10 +342,8 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                       Navigator.pop(ctx);
                       await showDialog(
                         context: context,
-                        builder: (context) => AddRecipeDialog(
-                          lotId: lotId,
-                          initialMethod: 'v60',
-                        ),
+                        builder: (context) =>
+                            AddRecipeDialog(lotId: lotId, initialMethod: 'v60'),
                       );
                     },
                   ),
@@ -305,24 +404,26 @@ class _RecipeTypeCard extends StatelessWidget {
           color: Colors.white.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: isLimitReached 
-              ? Colors.red.withValues(alpha: 0.3)
-              : theme.colorScheme.primary.withValues(alpha: 0.2),
+            color: isLimitReached
+                ? Colors.red.withValues(alpha: 0.3)
+                : theme.colorScheme.primary.withValues(alpha: 0.2),
           ),
         ),
         child: Column(
           children: [
             Icon(
-              icon, 
-              color: isLimitReached ? Colors.red.withValues(alpha: 0.5) : theme.colorScheme.primary, 
-              size: 32
+              icon,
+              color: isLimitReached
+                  ? Colors.red.withValues(alpha: 0.5)
+                  : theme.colorScheme.primary,
+              size: 32,
             ),
             const SizedBox(height: 12),
             Text(
               title,
               style: GoogleFonts.outfit(
-                fontSize: 14, 
-                fontWeight: FontWeight.bold, 
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
                 color: isLimitReached ? Colors.white24 : Colors.white,
               ),
             ),
@@ -330,7 +431,7 @@ class _RecipeTypeCard extends StatelessWidget {
             Text(
               '$count / 10',
               style: GoogleFonts.outfit(
-                fontSize: 11, 
+                fontSize: 11,
                 color: isLimitReached ? Colors.redAccent : Colors.white38,
               ),
             ),
@@ -338,7 +439,11 @@ class _RecipeTypeCard extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 context.t('limit'),
-                style: GoogleFonts.outfit(fontSize: 10, color: Colors.redAccent, fontWeight: FontWeight.bold),
+                style: GoogleFonts.outfit(
+                  fontSize: 10,
+                  color: Colors.redAccent,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ],
@@ -378,12 +483,15 @@ class _DetailHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     // Flag fallback logic
-    final effectiveImageUrl = (imageUrl != null && imageUrl!.isNotEmpty) 
-        ? imageUrl 
+    final effectiveImageUrl = (imageUrl != null && imageUrl!.isNotEmpty)
+        ? imageUrl
         : (lot?.effectiveFlagUrl ?? bean?.effectiveFlagUrl);
-    final hasImage = isImageVisible && effectiveImageUrl != null && effectiveImageUrl.isNotEmpty;
+    final hasImage =
+        isImageVisible &&
+        effectiveImageUrl != null &&
+        effectiveImageUrl.isNotEmpty;
 
     return Stack(
       children: [
@@ -394,10 +502,18 @@ class _DetailHeader extends StatelessWidget {
             height: isImageVisible ? 320 : 160,
             width: double.infinity,
             decoration: BoxDecoration(
-              image: hasImage 
-                  ? (effectiveImageUrl.startsWith('http') 
-                      ? DecorationImage(image: CachedNetworkImageProvider(effectiveImageUrl), fit: BoxFit.cover)
-                      : DecorationImage(image: FileImage(File(effectiveImageUrl)), fit: BoxFit.cover))
+              image: hasImage
+                  ? (effectiveImageUrl.startsWith('http')
+                        ? DecorationImage(
+                            image: CachedNetworkImageProvider(
+                              effectiveImageUrl,
+                            ),
+                            fit: BoxFit.cover,
+                          )
+                        : DecorationImage(
+                            image: FileImage(File(effectiveImageUrl)),
+                            fit: BoxFit.cover,
+                          ))
                   : null,
               color: Colors.black12,
             ),
@@ -420,8 +536,16 @@ class _DetailHeader extends StatelessWidget {
             child: Container(
               width: 40,
               height: 40,
-              decoration: BoxDecoration(color: Colors.black45, shape: BoxShape.circle, border: Border.all(color: Colors.white10)),
-              child: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
+              decoration: BoxDecoration(
+                color: Colors.black45,
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white10),
+              ),
+              child: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: Colors.white,
+                size: 20,
+              ),
             ),
           ),
         ),
@@ -437,9 +561,15 @@ class _DetailHeader extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: theme.colorScheme.primary.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
-                  border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.3)),
+                  border: Border.all(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                  ),
                 ),
-                child: Icon(Icons.edit_rounded, color: theme.colorScheme.primary, size: 20),
+                child: Icon(
+                  Icons.edit_rounded,
+                  color: theme.colorScheme.primary,
+                  size: 20,
+                ),
               ),
             ),
           ),
@@ -455,10 +585,16 @@ class _DetailHeader extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.black45,
                   shape: BoxShape.circle,
-                  border: Border.all(color: isFavorite ? Colors.red.withValues(alpha: 0.3) : Colors.white10),
+                  border: Border.all(
+                    color: isFavorite
+                        ? Colors.red.withValues(alpha: 0.3)
+                        : Colors.white10,
+                  ),
                 ),
                 child: Icon(
-                  isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                  isFavorite
+                      ? Icons.favorite_rounded
+                      : Icons.favorite_border_rounded,
                   color: isFavorite ? Colors.red : Colors.white,
                   size: 20,
                 ),
@@ -475,18 +611,18 @@ class _DetailHeader extends StatelessWidget {
               Text(
                 roasteryName.toUpperCase(),
                 style: GoogleFonts.outfit(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.6), 
-                  fontSize: 12, 
-                  fontWeight: FontWeight.bold, 
-                  letterSpacing: 2
+                  color: theme.colorScheme.primary.withValues(alpha: 0.6),
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 coffeeName,
                 style: GoogleFonts.cormorantGaramond(
-                  color: Colors.white, 
-                  fontSize: 36, 
+                  color: Colors.white,
+                  fontSize: 36,
                   fontWeight: FontWeight.bold,
                   height: 1.1, // Better spacing for multi-line
                 ),
@@ -505,16 +641,20 @@ class _InfoTab extends ConsumerWidget {
 
   const _InfoTab({this.lot, this.bean});
 
-  void _showProcessInfoSheet(BuildContext context, WidgetRef ref, String process) {
+  void _showProcessInfoSheet(
+    BuildContext context,
+    WidgetRef ref,
+    String process,
+  ) {
     final method = ProcessingMethodsRepository.getByMatchingName(process);
-    
-    final String title = method != null 
-        ? ref.t(method.nameKey) 
-        : process;
-        
+
+    final String title = method != null ? ref.t(method.nameKey) : process;
+
     final String description = method?.extendedInfoKey != null
         ? ref.t(method!.extendedInfoKey!)
-        : (method != null ? ref.t(method.descKey) : ref.t('process_info_missing'));
+        : (method != null
+              ? ref.t(method.descKey)
+              : ref.t('process_info_missing'));
 
     final String? characters = method?.characterKey != null
         ? ref.t(method!.characterKey!)
@@ -556,11 +696,16 @@ class _InfoTab extends ConsumerWidget {
               if (characters != null) ...[
                 const SizedBox(height: 12),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.1)),
+                    border: Border.all(
+                      color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                    ),
                   ),
                   child: Text(
                     characters.toUpperCase(),
@@ -601,7 +746,6 @@ class _InfoTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     // Grouping fields for a premium look
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -623,7 +767,11 @@ class _InfoTab extends ConsumerWidget {
                   Expanded(
                     child: LotCompactStat(
                       label: ref.t('altitude'),
-                      value: lot?.altitude ?? (bean?.altitudeMin != null ? '${bean!.altitudeMin}-${bean!.altitudeMax}m' : 'N/A'),
+                      value:
+                          lot?.altitude ??
+                          (bean?.altitudeMin != null
+                              ? '${bean!.altitudeMin}-${bean!.altitudeMax}m'
+                              : 'N/A'),
                     ),
                   ),
                 ],
@@ -636,10 +784,20 @@ class _InfoTab extends ConsumerWidget {
                       label: ref.t('process'),
                       value: lot?.process ?? bean?.processMethod ?? 'N/A',
                       onTap: () {
-                        final processName = (lot?.process ?? bean?.processMethod ?? '').toLowerCase();
-                        final recognizedMethod = ProcessingMethodsRepository.getByMatchingName(processName);
-                        if (recognizedMethod != null && recognizedMethod.extendedInfoKey != null) {
-                           _showProcessInfoSheet(context, ref, lot?.process ?? bean?.processMethod ?? '');
+                        final processName =
+                            (lot?.process ?? bean?.processMethod ?? '')
+                                .toLowerCase();
+                        final recognizedMethod =
+                            ProcessingMethodsRepository.getByMatchingName(
+                              processName,
+                            );
+                        if (recognizedMethod != null &&
+                            recognizedMethod.extendedInfoKey != null) {
+                          _showProcessInfoSheet(
+                            context,
+                            ref,
+                            lot?.process ?? bean?.processMethod ?? '',
+                          );
                         }
                       },
                     ),
@@ -664,9 +822,18 @@ class _InfoTab extends ConsumerWidget {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              _InfoRow(label: ref.t('coffee_name'), value: lot?.coffeeName ?? bean?.fullDisplayName),
-              _InfoRow(label: ref.t('country'), value: lot?.originCountry ?? bean?.country),
-              _InfoRow(label: ref.t('region'), value: lot?.region ?? bean?.region),
+              _InfoRow(
+                label: ref.t('coffee_name'),
+                value: lot?.coffeeName ?? bean?.fullDisplayName,
+              ),
+              _InfoRow(
+                label: ref.t('country'),
+                value: lot?.originCountry ?? bean?.country,
+              ),
+              _InfoRow(
+                label: ref.t('region'),
+                value: lot?.region ?? bean?.region,
+              ),
               _InfoRow(label: ref.t('farm'), value: lot?.farm),
               _InfoRow(label: ref.t('farmer'), value: lot?.farmer),
               _InfoRow(label: ref.t('station'), value: lot?.washStation),
@@ -681,17 +848,37 @@ class _InfoTab extends ConsumerWidget {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              _InfoRow(label: ref.t('variety'), value: lot?.varieties ?? bean?.varieties),
               _InfoRow(
-                label: ref.t('process'), 
-                value: lot?.process ?? bean?.processMethod,
-                onTap: (lot?.process ?? bean?.processMethod) != null 
-                  ? () => _showProcessInfoSheet(context, ref, lot?.process ?? bean?.processMethod ?? '')
-                  : null,
+                label: ref.t('variety'),
+                value: lot?.varieties ?? bean?.varieties,
               ),
-              _InfoRow(label: ref.t('decaf'), value: lot != null ? (lot!.isDecaf ? ref.t('yes') : ref.t('no')) : null),
-              _InfoRow(label: ref.t('ground'), value: lot != null ? (lot!.isGround ? ref.t('yes') : ref.t('no')) : null),
-              _InfoRow(label: 'SCA SCORE', value: lot?.scaScore ?? bean?.scaScore),
+              _InfoRow(
+                label: ref.t('process'),
+                value: lot?.process ?? bean?.processMethod,
+                onTap: (lot?.process ?? bean?.processMethod) != null
+                    ? () => _showProcessInfoSheet(
+                        context,
+                        ref,
+                        lot?.process ?? bean?.processMethod ?? '',
+                      )
+                    : null,
+              ),
+              _InfoRow(
+                label: ref.t('decaf'),
+                value: lot != null
+                    ? (lot!.isDecaf ? ref.t('yes') : ref.t('no'))
+                    : null,
+              ),
+              _InfoRow(
+                label: ref.t('ground'),
+                value: lot != null
+                    ? (lot!.isGround ? ref.t('yes') : ref.t('no'))
+                    : null,
+              ),
+              _InfoRow(
+                label: 'SCA SCORE',
+                value: lot?.scaScore ?? bean?.scaScore,
+              ),
             ],
           ),
         ),
@@ -704,17 +891,36 @@ class _InfoTab extends ConsumerWidget {
           child: Column(
             children: [
               _InfoRow(label: ref.t('roastery'), value: lot?.roasteryName),
-              _InfoRow(label: ref.t('roast_country'), value: lot?.roasteryCountry),
+              _InfoRow(
+                label: ref.t('roast_country'),
+                value: lot?.roasteryCountry,
+              ),
               _InfoRow(label: ref.t('roast_level'), value: lot?.roastLevel),
-              _InfoRow(label: ref.t('roast_date'), value: lot?.roastDate?.toString().split(' ')[0]),
-              _InfoRow(label: ref.t('opened_at'), value: lot?.openedAt?.toString().split(' ')[0]),
-              _InfoRow(label: ref.t('weight'), value: lot?.weight != null ? (lot!.weight!.endsWith('g') ? lot!.weight : '${lot!.weight}g') : null),
+              _InfoRow(
+                label: ref.t('roast_date'),
+                value: lot?.roastDate?.toString().split(' ')[0],
+              ),
+              _InfoRow(
+                label: ref.t('opened_at'),
+                value: lot?.openedAt?.toString().split(' ')[0],
+              ),
+              _InfoRow(
+                label: ref.t('weight'),
+                value: lot?.weight != null
+                    ? (lot!.weight!.endsWith('g')
+                          ? lot!.weight
+                          : '${lot!.weight}g')
+                    : null,
+              ),
               _InfoRow(label: 'ID Лоту', value: lot?.lotNumber),
             ],
           ),
         ),
         const SizedBox(height: 12),
-        if ((lot != null && lot!.pricing.isNotEmpty) || (bean != null && (bean!.userPricing.isNotEmpty || bean!.pricing.isNotEmpty))) ...[
+        if ((lot != null && lot!.pricing.isNotEmpty) ||
+            (bean != null &&
+                (bean!.userPricing.isNotEmpty ||
+                    bean!.pricing.isNotEmpty))) ...[
           _SectionTitle(title: ref.t('prices')),
           GlassContainer(
             padding: EdgeInsets.zero,
@@ -727,13 +933,27 @@ class _InfoTab extends ConsumerWidget {
                     _Cell(ref.t('wholesale'), isHeader: true),
                   ],
                 ),
-                _priceRow('250g', 
-                  (lot?.pricing['retail_250'] ?? bean?.userPricing['retail_250'] ?? bean?.pricing['retail_250'])?.toString(),
-                  (lot?.pricing['wholesale_250'] ?? bean?.userPricing['wholesale_250'] ?? bean?.pricing['wholesale_250'])?.toString()
+                _priceRow(
+                  '250g',
+                  (lot?.pricing['retail_250'] ??
+                          bean?.userPricing['retail_250'] ??
+                          bean?.pricing['retail_250'])
+                      ?.toString(),
+                  (lot?.pricing['wholesale_250'] ??
+                          bean?.userPricing['wholesale_250'] ??
+                          bean?.pricing['wholesale_250'])
+                      ?.toString(),
                 ),
-                _priceRow('1kg', 
-                  (lot?.pricing['retail_1k'] ?? bean?.userPricing['retail_1k'] ?? bean?.pricing['retail_1k'])?.toString(),
-                  (lot?.pricing['wholesale_1k'] ?? bean?.userPricing['wholesale_1k'] ?? bean?.pricing['wholesale_1k'])?.toString()
+                _priceRow(
+                  '1kg',
+                  (lot?.pricing['retail_1k'] ??
+                          bean?.userPricing['retail_1k'] ??
+                          bean?.pricing['retail_1k'])
+                      ?.toString(),
+                  (lot?.pricing['wholesale_1k'] ??
+                          bean?.userPricing['wholesale_1k'] ??
+                          bean?.pricing['wholesale_1k'])
+                      ?.toString(),
                 ),
               ],
             ),
@@ -742,7 +962,8 @@ class _InfoTab extends ConsumerWidget {
         const SizedBox(height: 24),
 
         // ── FLAVOR PROFILE ────────────────────────────────────────────────
-        if ((lot?.flavorProfile != null && lot!.flavorProfile!.isNotEmpty) || (bean?.description != null && bean!.description.isNotEmpty)) ...[
+        if ((lot?.flavorProfile != null && lot!.flavorProfile!.isNotEmpty) ||
+            (bean?.description != null && bean!.description.isNotEmpty)) ...[
           _SectionTitle(title: ref.t('flavor_profile_section')),
           GlassContainer(
             padding: const EdgeInsets.all(20),
@@ -782,7 +1003,8 @@ class _SensoryTab extends ConsumerWidget {
             height: 350,
             child: () {
               // Only lock if it's explicitly an encyclopedia entry
-              final isEncyclopedia = lotId != null && lotId!.startsWith('encyclopedia_');
+              final isEncyclopedia =
+                  lotId != null && lotId!.startsWith('encyclopedia_');
               return SensoryRadarChart(
                 interactive: !isEncyclopedia,
                 isLocked: isEncyclopedia,
@@ -835,8 +1057,16 @@ TableRow _priceRow(String weight, String? retail, String? wholesale) {
   return TableRow(
     children: [
       _Cell(weight),
-      _Cell(retail != null && retail.isNotEmpty && retail != '---' ? '$retail ₴' : '---'),
-      _Cell(wholesale != null && wholesale.isNotEmpty && wholesale != '---' ? '$wholesale ₴' : '---'),
+      _Cell(
+        retail != null && retail.isNotEmpty && retail != '---'
+            ? '$retail ₴'
+            : '---',
+      ),
+      _Cell(
+        wholesale != null && wholesale.isNotEmpty && wholesale != '---'
+            ? '$wholesale ₴'
+            : '---',
+      ),
     ],
   );
 }
@@ -863,7 +1093,6 @@ class _Cell extends StatelessWidget {
   }
 }
 
-
 class _RecipesTab extends ConsumerWidget {
   final String lotId;
 
@@ -872,11 +1101,13 @@ class _RecipesTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final db = ref.watch(databaseProvider);
-    
+
     return StreamBuilder<List<CustomRecipeDto>>(
       stream: db.watchCustomRecipesForLot(lotId),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
         final recipes = snapshot.data ?? [];
 
         if (recipes.isEmpty) {
@@ -884,11 +1115,20 @@ class _RecipesTab extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.coffee_maker_outlined, color: Colors.white10, size: 64),
+                const Icon(
+                  Icons.coffee_maker_outlined,
+                  color: Colors.white10,
+                  size: 64,
+                ),
                 const SizedBox(height: 16),
                 Text(
                   ref.t('no_recipes_lot'),
-                  style: GoogleFonts.outfit(color: Colors.white24, fontWeight: FontWeight.bold, fontSize: 12, letterSpacing: 1.2),
+                  style: GoogleFonts.outfit(
+                    color: Colors.white24,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                    letterSpacing: 1.2,
+                  ),
                 ),
               ],
             ),
@@ -900,11 +1140,15 @@ class _RecipesTab extends ConsumerWidget {
           itemCount: recipes.length + 1,
           itemBuilder: (context, index) {
             if (index == recipes.length) {
-              return const SizedBox(height: 140); 
+              return const SizedBox(height: 140);
             }
             return Padding(
               padding: const EdgeInsets.only(bottom: 12),
-              child: CustomRecipeCard(recipe: recipes[index], methodKey: recipes[index].methodKey, ref: ref),
+              child: CustomRecipeCard(
+                recipe: recipes[index],
+                methodKey: recipes[index].methodKey,
+                ref: ref,
+              ),
             );
           },
         );
@@ -924,7 +1168,12 @@ class _SectionTitle extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 16),
       child: Text(
         title,
-        style: GoogleFonts.outfit(color: const Color(0xFFC8A96E), fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 2),
+        style: GoogleFonts.outfit(
+          color: const Color(0xFFC8A96E),
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 2,
+        ),
       ),
     );
   }
@@ -940,7 +1189,7 @@ class _InfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final v = value;
-                // ignore: use_null_aware_elements
+    // ignore: use_null_aware_elements
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,

@@ -30,12 +30,11 @@ class GlobalCoffeeInputFormatter extends TextInputFormatter {
 
     // 5. Build logic: sign control and capitalization
     final sb = StringBuffer();
-    bool capitalizeNext = true; 
-    
+    bool capitalizeNext = true;
 
     for (int i = 0; i < text.length; i++) {
       final String char = text[i];
-      
+
       // If we encounter a dot sequence
       if (char == '.') {
         int dotCount = 0;
@@ -51,7 +50,7 @@ class GlobalCoffeeInputFormatter extends TextInputFormatter {
 
       // Check for other signs
       final isSign = RegExp(r'[\,\-\(\)]').hasMatch(char);
-      
+
       // After dot/tridot, no other sign allowed
       if (capitalizeNext && isSign) {
         continue; // Skip sign
@@ -73,9 +72,9 @@ class GlobalCoffeeInputFormatter extends TextInputFormatter {
         sb.write(char);
       }
     }
-    
+
     final finalResult = sb.toString();
-    
+
     // Correct selection offset
     int newOffset = newValue.selection.baseOffset;
     if (finalResult.length != newValue.text.length) {
@@ -92,7 +91,9 @@ class GlobalCoffeeInputFormatter extends TextInputFormatter {
 class ScaScoreInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     String text = newValue.text.replaceAll(',', '.').replaceAll(' ', '');
     // Strictly allow only digits and dot
     text = text.replaceAll(RegExp(r'[^0-9.]'), '');
@@ -147,7 +148,10 @@ class ScaScoreInputFormatter extends TextInputFormatter {
 
 class AltitudeInputFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     final String text = newValue.text;
     if (text.isEmpty) return newValue;
 
@@ -161,7 +165,10 @@ class AltitudeInputFormatter extends TextInputFormatter {
     }
 
     // 3. Prevent consecutive separators or invalid ones
-    if (text.contains('--') || text.contains('..') || text.contains('.-') || text.contains('-.')) {
+    if (text.contains('--') ||
+        text.contains('..') ||
+        text.contains('.-') ||
+        text.contains('-.')) {
       return oldValue;
     }
 
@@ -181,7 +188,10 @@ class AltitudeInputFormatter extends TextInputFormatter {
 
 class LotNumberInputFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     String text = newValue.text;
     if (text.isEmpty) return newValue;
 
@@ -190,10 +200,13 @@ class LotNumberInputFormatter extends TextInputFormatter {
     if (digitsLength > 6) return oldValue;
 
     // 2. Prevent consecutive dots or commas (or mix)
-    if (text.contains('..') || text.contains(',,') || text.contains('.,') || text.contains(',.')) {
+    if (text.contains('..') ||
+        text.contains(',,') ||
+        text.contains('.,') ||
+        text.contains(',.')) {
       return oldValue;
     }
-    
+
     // 3. Prevent starting with dot or comma
     if (text.startsWith('.') || text.startsWith(',')) {
       return oldValue;
@@ -219,10 +232,10 @@ class WeightInputFormatter extends TextInputFormatter {
     TextEditingValue newValue,
   ) {
     if (newValue.text.isEmpty) return newValue;
-    
+
     // Limit to 4 digits (up to 9999g)
     if (newValue.text.length > 4) return oldValue;
-    
+
     return newValue;
   }
 }

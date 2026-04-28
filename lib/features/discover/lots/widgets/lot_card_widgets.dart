@@ -49,179 +49,234 @@ class MyLotGridCard extends ConsumerWidget {
       child: RepaintBoundary(
         child: ClipRRect(
           borderRadius: BorderRadius.circular(24),
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        child: GlassContainer(
-          padding: const EdgeInsets.all(12),
-          opacity: isSelected ? 0.35 : 0.20,
-          borderRadius: 24,
-          color: isSelected ? const Color(0xFFC8A96E) : Colors.white10,
-          borderColor: isSelected
-              ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
-              : Colors.white.withValues(alpha: 0.12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header Row: Avatar + Score and Favorite
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      // Circular Avatar
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
-                          border: Border.all(
-                            color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
-                            width: 1,
-                          ),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(24),
-                          child: lot.imageUrl != null && lot.imageUrl!.isNotEmpty
-                              ? (lot.imageUrl!.startsWith('http')
-                                  ? Image.network(lot.imageUrl!, fit: BoxFit.cover,
-                                      errorBuilder: (ctx, err, stack) => const Icon(Icons.coffee_rounded, size: 20, color: Color(0xFFC8A96E)))
-                                  : Image.file(File(lot.imageUrl!), fit: BoxFit.cover,
-                                      errorBuilder: (ctx, err, stack) => const Icon(Icons.coffee_rounded, size: 20, color: Color(0xFFC8A96E))))
-                              : const Icon(Icons.coffee_rounded, size: 20, color: Color(0xFFC8A96E)),
-                        ),
-                      ),
-                      // Floating SCA Score Badge
-                      Positioned(
-                        bottom: -4,
-                        right: -4,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          child: GlassContainer(
+            padding: const EdgeInsets.all(12),
+            opacity: isSelected ? 0.35 : 0.20,
+            borderRadius: 24,
+            color: isSelected ? const Color(0xFFC8A96E) : Colors.white10,
+            borderColor: isSelected
+                ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
+                : Colors.white.withValues(alpha: 0.12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header Row: Avatar + Score and Favorite
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        // Circular Avatar
+                        Container(
+                          width: 48,
+                          height: 48,
                           decoration: BoxDecoration(
-                            color: const Color(0xFF1A1714),
-                            borderRadius: BorderRadius.circular(8),
+                            shape: BoxShape.circle,
+                            color: const Color(
+                              0xFFC8A96E,
+                            ).withValues(alpha: 0.05),
                             border: Border.all(
-                              color: const Color(0xFFC8A96E).withValues(alpha: 0.4),
+                              color: const Color(
+                                0xFFC8A96E,
+                              ).withValues(alpha: 0.2),
                               width: 1,
                             ),
                           ),
-                          child: Text(
-                            lot.scaScore ?? '85',
-                            style: GoogleFonts.outfit(
-                              fontSize: 8,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xFFC8A96E),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(24),
+                            child:
+                                lot.imageUrl != null && lot.imageUrl!.isNotEmpty
+                                ? (lot.imageUrl!.startsWith('http')
+                                      ? Image.network(
+                                          lot.imageUrl!,
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (ctx, err, stack) =>
+                                              const Icon(
+                                                Icons.coffee_rounded,
+                                                size: 20,
+                                                color: Color(0xFFC8A96E),
+                                              ),
+                                        )
+                                      : Image.file(
+                                          File(lot.imageUrl!),
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (ctx, err, stack) =>
+                                              const Icon(
+                                                Icons.coffee_rounded,
+                                                size: 20,
+                                                color: Color(0xFFC8A96E),
+                                              ),
+                                        ))
+                                : const Icon(
+                                    Icons.coffee_rounded,
+                                    size: 20,
+                                    color: Color(0xFFC8A96E),
+                                  ),
+                          ),
+                        ),
+                        // Floating SCA Score Badge
+                        Positioned(
+                          bottom: -4,
+                          right: -4,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF1A1714),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: const Color(
+                                  0xFFC8A96E,
+                                ).withValues(alpha: 0.4),
+                                width: 1,
+                              ),
+                            ),
+                            child: Text(
+                              lot.scaScore ?? '85',
+                              style: GoogleFonts.outfit(
+                                fontSize: 8,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFFC8A96E),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  
-                  // Favorite / Selection
-                  if (isSelectionMode)
-                    Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: isSelected ? const Color(0xFFC8A96E) : Colors.black45,
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: isSelected ? const Color(0xFFC8A96E) : Colors.white24,
-                          width: 1.5,
+                      ],
+                    ),
+
+                    // Favorite / Selection
+                    if (isSelectionMode)
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? const Color(0xFFC8A96E)
+                              : Colors.black45,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: isSelected
+                                ? const Color(0xFFC8A96E)
+                                : Colors.white24,
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.check,
+                          size: 10,
+                          color: isSelected ? Colors.black : Colors.transparent,
+                        ),
+                      )
+                    else
+                      PressableScale(
+                        onTap: () {
+                          if (!kIsWeb && !Platform.isWindows) {
+                            Vibration.vibrate(duration: 40, amplitude: 100);
+                          }
+                          onFavoriteToggle(lot);
+                        },
+                        child: Icon(
+                          lot.isFavorite
+                              ? Icons.favorite_rounded
+                              : Icons.favorite_border_rounded,
+                          size: 20,
+                          color: lot.isFavorite
+                              ? Colors.redAccent
+                              : Colors.white24,
                         ),
                       ),
-                      child: Icon(
-                        Icons.check,
-                        size: 10,
-                        color: isSelected ? Colors.black : Colors.transparent,
-                      ),
-                    )
-                  else
-                    PressableScale(
-                      onTap: () {
-                        if (!kIsWeb && !Platform.isWindows) {
-                          Vibration.vibrate(duration: 40, amplitude: 100);
-                        }
-                        onFavoriteToggle(lot);
-                      },
-                      child: Icon(
-                        lot.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                        size: 20,
-                        color: lot.isFavorite ? Colors.redAccent : Colors.white24,
-                      ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                // Coffee Name
+                Text(
+                  lot.coffeeName ?? 'Unnamed',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.outfit(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFFC8A96E),
+                    height: 1.1,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                // Roastery Name
+                Text(
+                  (lot.roasteryName ?? 'Personal').toUpperCase(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.outfit(
+                    fontSize: 8.5,
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.45),
+                    letterSpacing: 1.1,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                // Sensory Bars
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CompactSensoryBar(
+                      label: ref.t('bitterness').toUpperCase(),
+                      value: (mappedSensory['bitterness'] ?? 3).toDouble(),
+                      theme: theme,
+                      barHeight: 4.0,
                     ),
-                ],
-              ),
-            const SizedBox(height: 16),
-            // Coffee Name
-            Text(
-              lot.coffeeName ?? 'Unnamed',
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.outfit(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFFC8A96E),
-                height: 1.1,
-              ),
-            ),
-            const SizedBox(height: 4),
-            // Roastery Name
-            Text(
-              (lot.roasteryName ?? 'Personal').toUpperCase(),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.outfit(
-                fontSize: 8.5,
-                color: const Color(0xFFC8A96E).withValues(alpha: 0.45),
-                letterSpacing: 1.1,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 12),
-            // Sensory Bars
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CompactSensoryBar(label: ref.t('bitterness').toUpperCase(), value: (mappedSensory['bitterness'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
-                const SizedBox(height: 6),
-                CompactSensoryBar(label: ref.t('acidity').toUpperCase(), value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
-                const SizedBox(height: 6),
-                CompactSensoryBar(label: ref.t('sweetness').toUpperCase(), value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme, barHeight: 4.0),
+                    const SizedBox(height: 6),
+                    CompactSensoryBar(
+                      label: ref.t('acidity').toUpperCase(),
+                      value: (mappedSensory['acidity'] ?? 3).toDouble(),
+                      theme: theme,
+                      barHeight: 4.0,
+                    ),
+                    const SizedBox(height: 6),
+                    CompactSensoryBar(
+                      label: ref.t('sweetness').toUpperCase(),
+                      value: (mappedSensory['sweetness'] ?? 3).toDouble(),
+                      theme: theme,
+                      barHeight: 4.0,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+
+                const Spacer(),
+
+                // Bottom Traits
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.05),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    '${lot.originCountry} • ${lot.process}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.outfit(
+                      fontSize: 7.5,
+                      color: Colors.white.withValues(alpha: 0.5),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
               ],
             ),
-            const SizedBox(height: 12),
-
-            const Spacer(),
-            
-            // Bottom Traits
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.05),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Text(
-                '${lot.originCountry} • ${lot.process}',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.outfit(
-                  fontSize: 7.5, 
-                  color: Colors.white.withValues(alpha: 0.5),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
-      ),
-    ),
-  );
+    );
+  }
 }
-}
-
 
 class MyLotListCard extends ConsumerStatefulWidget {
   final CoffeeLotDto lot;
@@ -253,13 +308,14 @@ class MyLotListCard extends ConsumerStatefulWidget {
   ConsumerState<MyLotListCard> createState() => _MyLotListCardState();
 }
 
-class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTickerProviderStateMixin {
+class _MyLotListCardState extends ConsumerState<MyLotListCard>
+    with SingleTickerProviderStateMixin {
   bool _isExpanded = false;
   void _toggleExpanded() {
     setState(() {
       _isExpanded = !_isExpanded;
     });
-    
+
     if (_isExpanded) {
       // Small delay to let the animation start before scrolling
       Future.delayed(const Duration(milliseconds: 100), () {
@@ -292,10 +348,12 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
     final theme = Theme.of(context);
     final isSelected = widget.isSelected;
     final isSelectionMode = widget.isSelectionMode;
-    
+
     // Normalize sensory data
     final mappedSensory = SensoryUtils.map4To6Axis(widget.lot.sensoryPoints);
-    final radarValues = mappedSensory.map((key, value) => MapEntry(key, value / 5.0));
+    final radarValues = mappedSensory.map(
+      (key, value) => MapEntry(key, value / 5.0),
+    );
 
     final card = PressableScale(
       onLongPress: () => widget.onLongPress(widget.lot.id),
@@ -312,15 +370,13 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
           opacity: 0.15,
           blur: 30, // Increased blur for better readability on busy backgrounds
           borderRadius: 20,
-          color: isSelected
-              ? const Color(0xFFC8A96E)
-              : Colors.white,
+          color: isSelected ? const Color(0xFFC8A96E) : Colors.white,
           borderColor: isSelected
               ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
               : Colors.white.withValues(alpha: 0.12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               // Header: Title, Subtitle, Heart + NEW: Expand Arrow
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -340,11 +396,14 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        if (widget.lot.roasteryName != null && widget.lot.roasteryName!.isNotEmpty)
+                        if (widget.lot.roasteryName != null &&
+                            widget.lot.roasteryName!.isNotEmpty)
                           Text(
                             widget.lot.roasteryName!,
                             style: GoogleFonts.outfit(
-                              color: const Color(0xFFC8A96E).withValues(alpha: 0.38),
+                              color: const Color(
+                                0xFFC8A96E,
+                              ).withValues(alpha: 0.38),
                               fontSize: 12,
                             ),
                           ),
@@ -361,9 +420,13 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                         widget.onFavoriteToggle(widget.lot);
                       },
                       child: Icon(
-                        widget.lot.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                        widget.lot.isFavorite
+                            ? Icons.favorite_rounded
+                            : Icons.favorite_border_rounded,
                         size: 20,
-                        color: widget.lot.isFavorite ? Colors.redAccent : Colors.white24,
+                        color: widget.lot.isFavorite
+                            ? Colors.redAccent
+                            : Colors.white24,
                       ),
                     ),
                 ],
@@ -375,33 +438,50 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                 children: [
                   Stack(
                     children: [
-                      if (widget.lot.imageUrl != null && widget.lot.imageUrl!.isNotEmpty)
+                      if (widget.lot.imageUrl != null &&
+                          widget.lot.imageUrl!.isNotEmpty)
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(24), // Circular-ish but consistent
+                          borderRadius: BorderRadius.circular(
+                            24,
+                          ), // Circular-ish but consistent
                           child: widget.lot.imageUrl!.startsWith('http')
                               ? Image.network(
                                   widget.lot.imageUrl!,
                                   width: 54,
                                   height: 54,
                                   fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) => Container(
-                                    width: 54,
-                                    height: 54,
-                                    color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                                    child: const Icon(Icons.coffee_rounded, color: Color(0xFFC8A96E), size: 18),
-                                  ),
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Container(
+                                        width: 54,
+                                        height: 54,
+                                        color: const Color(
+                                          0xFFC8A96E,
+                                        ).withValues(alpha: 0.1),
+                                        child: const Icon(
+                                          Icons.coffee_rounded,
+                                          color: Color(0xFFC8A96E),
+                                          size: 18,
+                                        ),
+                                      ),
                                 )
                               : Image.file(
                                   File(widget.lot.imageUrl!),
                                   width: 54,
                                   height: 54,
                                   fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) => Container(
-                                    width: 54,
-                                    height: 54,
-                                    color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                                    child: const Icon(Icons.coffee_rounded, color: Color(0xFFC8A96E), size: 18),
-                                  ),
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Container(
+                                        width: 54,
+                                        height: 54,
+                                        color: const Color(
+                                          0xFFC8A96E,
+                                        ).withValues(alpha: 0.1),
+                                        child: const Icon(
+                                          Icons.coffee_rounded,
+                                          color: Color(0xFFC8A96E),
+                                          size: 18,
+                                        ),
+                                      ),
                                 ),
                         )
                       else
@@ -409,7 +489,9 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                           width: 54,
                           height: 54,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
+                            color: const Color(
+                              0xFFC8A96E,
+                            ).withValues(alpha: 0.05),
                             shape: BoxShape.circle,
                           ),
                           child: Center(
@@ -423,9 +505,10 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                             ),
                           ),
                         ),
-                      
+
                       // Small floating score if image is present
-                      if (widget.lot.imageUrl != null && widget.lot.imageUrl!.isNotEmpty)
+                      if (widget.lot.imageUrl != null &&
+                          widget.lot.imageUrl!.isNotEmpty)
                         Positioned(
                           bottom: 0,
                           right: 0,
@@ -434,7 +517,12 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                             decoration: BoxDecoration(
                               color: const Color(0xFF1A1714),
                               shape: BoxShape.circle,
-                              border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.4), width: 1),
+                              border: Border.all(
+                                color: const Color(
+                                  0xFFC8A96E,
+                                ).withValues(alpha: 0.4),
+                                width: 1,
+                              ),
                             ),
                             child: Text(
                               widget.lot.scaScore ?? '85',
@@ -457,11 +545,25 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            CompactSensoryBar(label: ref.t('bitterness').toUpperCase(), value: (mappedSensory['bitterness'] ?? 3).toDouble(), theme: theme),
+                            CompactSensoryBar(
+                              label: ref.t('bitterness').toUpperCase(),
+                              value: (mappedSensory['bitterness'] ?? 3)
+                                  .toDouble(),
+                              theme: theme,
+                            ),
                             const SizedBox(width: 8),
-                            CompactSensoryBar(label: ref.t('acidity').toUpperCase(), value: (mappedSensory['acidity'] ?? 3).toDouble(), theme: theme),
+                            CompactSensoryBar(
+                              label: ref.t('acidity').toUpperCase(),
+                              value: (mappedSensory['acidity'] ?? 3).toDouble(),
+                              theme: theme,
+                            ),
                             const SizedBox(width: 8),
-                            CompactSensoryBar(label: ref.t('sweetness').toUpperCase(), value: (mappedSensory['sweetness'] ?? 3).toDouble(), theme: theme),
+                            CompactSensoryBar(
+                              label: ref.t('sweetness').toUpperCase(),
+                              value: (mappedSensory['sweetness'] ?? 3)
+                                  .toDouble(),
+                              theme: theme,
+                            ),
                           ],
                         ),
                         const SizedBox(height: 12),
@@ -470,18 +572,30 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: [
-                              if (widget.lot.roastLevel != null && widget.lot.roastLevel!.isNotEmpty)
+                              if (widget.lot.roastLevel != null &&
+                                  widget.lot.roastLevel!.isNotEmpty)
                                 _TagChip(
-                                  icon: Icons.local_fire_department_rounded, 
-                                  text: widget.lot.roastLevel!.toUpperCase(), 
+                                  icon: Icons.local_fire_department_rounded,
+                                  text: widget.lot.roastLevel!.toUpperCase(),
                                   theme: theme,
-                                  color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                                  color: theme.colorScheme.primary.withValues(
+                                    alpha: 0.2,
+                                  ),
                                 ),
                               const SizedBox(width: 8),
-                              _TagChip(icon: Icons.location_on_outlined, text: widget.lot.originCountry, theme: theme),
+                              _TagChip(
+                                icon: Icons.location_on_outlined,
+                                text: widget.lot.originCountry,
+                                theme: theme,
+                              ),
                               const SizedBox(width: 8),
-                              if (widget.lot.process != null && widget.lot.process!.isNotEmpty)
-                                _TagChip(icon: Icons.water_drop_outlined, text: widget.lot.process, theme: theme),
+                              if (widget.lot.process != null &&
+                                  widget.lot.process!.isNotEmpty)
+                                _TagChip(
+                                  icon: Icons.water_drop_outlined,
+                                  text: widget.lot.process,
+                                  theme: theme,
+                                ),
                             ],
                           ),
                         ),
@@ -490,11 +604,13 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                   ),
                 ],
               ),
-              
+
               // EXPANDABLE AREA
               AnimatedCrossFade(
                 duration: const Duration(milliseconds: 300),
-                crossFadeState: _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                crossFadeState: _isExpanded
+                    ? CrossFadeState.showSecond
+                    : CrossFadeState.showFirst,
                 firstChild: const SizedBox(width: double.infinity),
                 secondChild: Column(
                   children: [
@@ -514,7 +630,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                   ],
                 ),
               ),
-  
+
               const SizedBox(height: 3),
               // Freshness Bar + Expand Arrow below
               Column(
@@ -526,7 +642,10 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                       onTap: _toggleExpanded,
                       behavior: HitTestBehavior.opaque,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
                         child: AnimatedRotation(
                           duration: const Duration(milliseconds: 300),
                           turns: _isExpanded ? 0.5 : 0,
@@ -540,42 +659,42 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                     ),
                 ],
               ),
-              ],
-            ),
+            ],
           ),
         ),
-      );
+      ),
+    );
 
-    final dismissibleCard = isSelectionMode 
-      ? card 
-      : GlassSwipeWrapper(
-          isSwipeEnabled: !_isExpanded,
-          dismissibleKey: Key('glass_swipe_${widget.lot.id}'),
-          leftAction: widget.onRestoreSwipe != null
-            ? GlassSwipeAction(
-                icon: Icons.unarchive_outlined,
-                label: context.t('restore'),
-                color: const Color(0xFF3A7BBF),
-                onTap: () => widget.onRestoreSwipe!(widget.lot),
-              )
-            : widget.onEditSwipe != null
-              ? GlassSwipeAction(
-                  icon: Icons.edit_outlined,
-                  label: context.t('edit'),
-                  color: const Color(0xFF39FF14),
-                  onTap: () => widget.onEditSwipe!(widget.lot),
-                )
-              : null,
-          rightAction: widget.onDeleteSwipe != null
-            ? GlassSwipeAction(
-                icon: Icons.delete_outline_rounded,
-                label: context.t('delete'),
-                color: Colors.redAccent,
-                onTap: () => widget.onDeleteSwipe!(widget.lot),
-              )
-            : null,
-          child: card,
-        );
+    final dismissibleCard = isSelectionMode
+        ? card
+        : GlassSwipeWrapper(
+            isSwipeEnabled: !_isExpanded,
+            dismissibleKey: Key('glass_swipe_${widget.lot.id}'),
+            leftAction: widget.onRestoreSwipe != null
+                ? GlassSwipeAction(
+                    icon: Icons.unarchive_outlined,
+                    label: context.t('restore'),
+                    color: const Color(0xFF3A7BBF),
+                    onTap: () => widget.onRestoreSwipe!(widget.lot),
+                  )
+                : widget.onEditSwipe != null
+                ? GlassSwipeAction(
+                    icon: Icons.edit_outlined,
+                    label: context.t('edit'),
+                    color: const Color(0xFF39FF14),
+                    onTap: () => widget.onEditSwipe!(widget.lot),
+                  )
+                : null,
+            rightAction: widget.onDeleteSwipe != null
+                ? GlassSwipeAction(
+                    icon: Icons.delete_outline_rounded,
+                    label: context.t('delete'),
+                    color: Colors.redAccent,
+                    onTap: () => widget.onDeleteSwipe!(widget.lot),
+                  )
+                : null,
+            child: card,
+          );
 
     if (isSelectionMode) {
       return Padding(
@@ -589,10 +708,14 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
                 width: 24,
                 height: 24,
                 decoration: BoxDecoration(
-                  color: isSelected ? const Color(0xFFC8A96E) : Colors.transparent,
+                  color: isSelected
+                      ? const Color(0xFFC8A96E)
+                      : Colors.transparent,
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: isSelected ? const Color(0xFFC8A96E) : const Color(0xFFC8A96E).withValues(alpha: 0.38),
+                    color: isSelected
+                        ? const Color(0xFFC8A96E)
+                        : const Color(0xFFC8A96E).withValues(alpha: 0.38),
                     width: 2,
                   ),
                 ),
@@ -614,14 +737,18 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard> with SingleTicker
   }
 }
 
-
 class _TagChip extends StatelessWidget {
   final IconData icon;
   final String? text;
   final ThemeData theme;
   final Color? color;
 
-  const _TagChip({required this.icon, this.text, required this.theme, this.color});
+  const _TagChip({
+    required this.icon,
+    this.text,
+    required this.theme,
+    this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -630,7 +757,9 @@ class _TagChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: color ?? const Color(0xFFC8A96E).withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFC8A96E).withValues(alpha: 0.03)),
+        border: Border.all(
+          color: const Color(0xFFC8A96E).withValues(alpha: 0.03),
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -640,9 +769,13 @@ class _TagChip extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               text!,
-              style: GoogleFonts.outfit(fontSize: 10, color: const Color(0xFFC8A96E), fontWeight: FontWeight.w500),
+              style: GoogleFonts.outfit(
+                fontSize: 10,
+                color: const Color(0xFFC8A96E),
+                fontWeight: FontWeight.w500,
+              ),
             ),
-          ]
+          ],
         ],
       ),
     );
@@ -668,17 +801,17 @@ class _FreshnessProgressBar extends StatelessWidget {
     }
 
     // 2. Determine Reference Date & Age
-    final DateTime refDate = (lot.isOpen || lot.isGround) 
-        ? (lot.openedAt ?? lot.roastDate ?? DateTime.now()) 
+    final DateTime refDate = (lot.isOpen || lot.isGround)
+        ? (lot.openedAt ?? lot.roastDate ?? DateTime.now())
         : (lot.roastDate ?? DateTime.now());
-    
+
     int ageDays = DateTime.now().difference(refDate).inDays;
     if (ageDays < 0) ageDays = 0; // Safeguard against future dates
 
     // 3. Calculate factor
     double factor = 1.0 - (ageDays / limit.toDouble());
     final bool isExpired = ageDays >= limit;
-    
+
     if (factor < 0.0) factor = 0.0;
     if (factor > 1.0) factor = 1.0;
 
@@ -686,13 +819,25 @@ class _FreshnessProgressBar extends StatelessWidget {
     Color getSmoothColor(double f) {
       if (f > 0.5) {
         // Interpolate between Yellow (0.5) and Teal (1.0)
-        return Color.lerp(const Color(0xFFFACC15), const Color(0xFF2DD4BF), (f - 0.5) / 0.5)!;
+        return Color.lerp(
+          const Color(0xFFFACC15),
+          const Color(0xFF2DD4BF),
+          (f - 0.5) / 0.5,
+        )!;
       } else if (f > 0.25) {
         // Interpolate between Orange (0.25) and Yellow (0.5)
-        return Color.lerp(const Color(0xFFFB923C), const Color(0xFFFACC15), (f - 0.25) / 0.25)!;
+        return Color.lerp(
+          const Color(0xFFFB923C),
+          const Color(0xFFFACC15),
+          (f - 0.25) / 0.25,
+        )!;
       } else {
         // Interpolate between Red (0.0) and Orange (0.25)
-        return Color.lerp(const Color(0xFFEF4444), const Color(0xFFFB923C), f / 0.25)!;
+        return Color.lerp(
+          const Color(0xFFEF4444),
+          const Color(0xFFFB923C),
+          f / 0.25,
+        )!;
       }
     }
 
@@ -702,7 +847,11 @@ class _FreshnessProgressBar extends StatelessWidget {
       labelText = context.t('expired');
     } else {
       final int daysLeft = (limit - ageDays).clamp(0, limit);
-      final key = daysLeft == 1 ? 'days_left_1' : (daysLeft >= 2 && daysLeft <= 4 ? 'days_left_2_4' : 'days_left_5_plus');
+      final key = daysLeft == 1
+          ? 'days_left_1'
+          : (daysLeft >= 2 && daysLeft <= 4
+                ? 'days_left_2_4'
+                : 'days_left_5_plus');
       labelText = context.t(key, args: {'count': daysLeft.toString()});
     }
 
@@ -712,18 +861,20 @@ class _FreshnessProgressBar extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(context.t('freshness'), 
+            Text(
+              context.t('freshness'),
               style: GoogleFonts.outfit(
-                fontSize: 10, 
-                color: const Color(0xFFC8A96E).withValues(alpha: 0.38)
-              )
+                fontSize: 10,
+                color: const Color(0xFFC8A96E).withValues(alpha: 0.38),
+              ),
             ),
-            Text(labelText, 
+            Text(
+              labelText,
               style: GoogleFonts.outfit(
-                fontSize: 10, 
-                color: statusColor, 
-                fontWeight: FontWeight.bold
-              )
+                fontSize: 10,
+                color: statusColor,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),
@@ -746,8 +897,8 @@ class _FreshnessProgressBar extends StatelessWidget {
                     BoxShadow(
                       color: statusColor.withValues(alpha: 0.3),
                       blurRadius: 6,
-                      spreadRadius: 0.5
-                    )
+                      spreadRadius: 0.5,
+                    ),
                 ],
               ),
             ),
@@ -757,6 +908,7 @@ class _FreshnessProgressBar extends StatelessWidget {
     );
   }
 }
+
 class _LotPropertyGrid extends ConsumerWidget {
   final CoffeeLotDto lot;
 
@@ -801,29 +953,55 @@ class _LotPropertyGrid extends ConsumerWidget {
         _buildGrid([
           _InfoItem(label: ref.t('varieties'), value: lot.varieties),
           _InfoItem(label: ref.t('process'), value: lot.process),
-          _InfoItem(label: ref.t('decaf'), value: lot.isDecaf ? ref.t('yes') : ref.t('no')),
-          _InfoItem(label: ref.t('ground'), value: lot.isGround ? ref.t('yes') : ref.t('no')),
+          _InfoItem(
+            label: ref.t('decaf'),
+            value: lot.isDecaf ? ref.t('yes') : ref.t('no'),
+          ),
+          _InfoItem(
+            label: ref.t('ground'),
+            value: lot.isGround ? ref.t('yes') : ref.t('no'),
+          ),
         ]),
         const SizedBox(height: 20),
         _buildSectionHeader(ref.t('roast_purchase_section')),
         const SizedBox(height: 12),
         _buildGrid([
           _InfoItem(label: ref.t('roast_level_label'), value: lot.roastLevel),
-          _InfoItem(label: ref.t('roast_date_label'), value: lot.roastDate?.toString().split(' ')[0]),
-          _InfoItem(label: ref.t('opened_at_label'), value: lot.openedAt?.toString().split(' ')[0]),
-          _InfoItem(label: ref.t('price'), value: (() {
-            final p1 = lot.pricing['retail'] ?? lot.pricing['retail_250'];
-            final p2 = lot.pricing['retail_1k'];
-            final val = (p1 != null && p1.toString().isNotEmpty) ? p1.toString() 
-                      : (p2 != null && p2.toString().isNotEmpty) ? p2.toString() : null;
-            if (val == null) return null;
-            
-            // If already has currency symbol, return as is
-            if (val.contains('₴') || val.contains(r'$') || val.contains('€') || val.toLowerCase().contains('uah')) return val;
-            
-            return '$val $currencySymbol';
-          })()),
-          _InfoItem(label: ref.t('weight'), value: lot.weight != null ? '${lot.weight}g' : null),
+          _InfoItem(
+            label: ref.t('roast_date_label'),
+            value: lot.roastDate?.toString().split(' ')[0],
+          ),
+          _InfoItem(
+            label: ref.t('opened_at_label'),
+            value: lot.openedAt?.toString().split(' ')[0],
+          ),
+          _InfoItem(
+            label: ref.t('price'),
+            value: (() {
+              final p1 = lot.pricing['retail'] ?? lot.pricing['retail_250'];
+              final p2 = lot.pricing['retail_1k'];
+              final val = (p1 != null && p1.toString().isNotEmpty)
+                  ? p1.toString()
+                  : (p2 != null && p2.toString().isNotEmpty)
+                  ? p2.toString()
+                  : null;
+              if (val == null) return null;
+
+              // If already has currency symbol, return as is
+              if (val.contains('₴') ||
+                  val.contains(r'$') ||
+                  val.contains('€') ||
+                  val.toLowerCase().contains('uah')) {
+                return val;
+              }
+
+              return '$val $currencySymbol';
+            })(),
+          ),
+          _InfoItem(
+            label: ref.t('weight'),
+            value: lot.weight != null ? '${lot.weight}g' : null,
+          ),
           _InfoItem(label: ref.t('lot_id_label'), value: lot.lotNumber),
         ]),
       ],
@@ -832,9 +1010,12 @@ class _LotPropertyGrid extends ConsumerWidget {
 
   String _getCurrencySymbol(Currency currency) {
     switch (currency) {
-      case Currency.uah: return '₴';
-      case Currency.usd: return r'$';
-      case Currency.eur: return '€';
+      case Currency.uah:
+        return '₴';
+      case Currency.usd:
+        return r'$';
+      case Currency.eur:
+        return '€';
     }
   }
 

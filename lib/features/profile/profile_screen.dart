@@ -17,7 +17,6 @@ import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/providers/settings_provider.dart';
 
-
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
@@ -63,10 +62,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               child: Container(color: Colors.transparent),
             ),
           ),
-          _EditProfileDialog(
-            user: user,
-            supabase: ref.read(supabaseProvider),
-          ),
+          _EditProfileDialog(user: user, supabase: ref.read(supabaseProvider)),
         ],
       ),
     ).then((_) => setState(() {})); // refresh UI
@@ -85,85 +81,98 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             ),
           ),
           Dialog(
-          backgroundColor: Colors.transparent,
-          child: GlassContainer(
-            borderRadius: 24,
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.mail_outline_rounded, color: Color(0xFFC8A96E), size: 48),
-                const SizedBox(height: 24),
-                Text(
-                  context.t('password_reset'),
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+            backgroundColor: Colors.transparent,
+            child: GlassContainer(
+              borderRadius: 24,
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.mail_outline_rounded,
+                    color: Color(0xFFC8A96E),
+                    size: 48,
                   ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  context.t('password_reset_instruction'),
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.outfit(color: Colors.white70),
-                ),
-                const SizedBox(height: 32),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          final messenger = ScaffoldMessenger.of(context);
-                          final successMessage = context.t('instruction_email_sent');
-                          Navigator.of(context).pop();
-                          try {
-                            await ref.read(supabaseProvider).auth.resetPasswordForEmail(email);
-                            messenger.showSnackBar(
-                              SnackBar(
-                                behavior: SnackBarBehavior.floating,
-                                backgroundColor: const Color(0xFFC8A96E),
-                                content: Text(
-                                  successMessage,
-                                  style: const TextStyle(color: Colors.black),
+                  const SizedBox(height: 24),
+                  Text(
+                    context.t('password_reset'),
+                    style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    context.t('password_reset_instruction'),
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.outfit(color: Colors.white70),
+                  ),
+                  const SizedBox(height: 32),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            final messenger = ScaffoldMessenger.of(context);
+                            final successMessage = context.t(
+                              'instruction_email_sent',
+                            );
+                            Navigator.of(context).pop();
+                            try {
+                              await ref
+                                  .read(supabaseProvider)
+                                  .auth
+                                  .resetPasswordForEmail(email);
+                              messenger.showSnackBar(
+                                SnackBar(
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: const Color(0xFFC8A96E),
+                                  content: Text(
+                                    successMessage,
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
                                 ),
-                              ),
-                            );
-                          } catch (e) {
-                            messenger.showSnackBar(
-                              SnackBar(content: Text(e.toString())),
-                            );
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFC8A96E),
-                          foregroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              );
+                            } catch (e) {
+                              messenger.showSnackBar(
+                                SnackBar(content: Text(e.toString())),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFC8A96E),
+                            foregroundColor: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: Text(context.t('ok')),
                         ),
-                        child: Text(context.t('ok')),
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.white54,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.white54,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: Text(context.t('cancel')),
                         ),
-                        child: Text(context.t('cancel')),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -178,7 +187,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.account_circle_outlined, size: 80, color: Colors.white24),
+                  const Icon(
+                    Icons.account_circle_outlined,
+                    size: 80,
+                    color: Colors.white24,
+                  ),
                   const SizedBox(height: 24),
                   Text(
                     context.t('profile_guest_title'),
@@ -207,7 +220,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       foregroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 16,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -235,14 +251,27 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final lotsAsync = ref.watch(userLotsStreamProvider);
     final favoritesAsync = ref.watch(favoriteLotsStreamProvider);
 
-    final recipesCount = recipesAsync.when(data: (d) => d.length, loading: () => 0, error: (e, s) => 0);
-    final lotsCount = lotsAsync.when(data: (d) => d.length, loading: () => 0, error: (e, s) => 0);
-    final favoritesCount = favoritesAsync.when(data: (d) => d.length, loading: () => 0, error: (e, s) => 0);
+    final recipesCount = recipesAsync.when(
+      data: (d) => d.length,
+      loading: () => 0,
+      error: (e, s) => 0,
+    );
+    final lotsCount = lotsAsync.when(
+      data: (d) => d.length,
+      loading: () => 0,
+      error: (e, s) => 0,
+    );
+    final favoritesCount = favoritesAsync.when(
+      data: (d) => d.length,
+      loading: () => 0,
+      error: (e, s) => 0,
+    );
 
     final createdAt = user.createdAt;
     final joinDate = DateFormat('dd.MM.yyyy').format(DateTime.parse(createdAt));
-    final isGoogleUser = user.appMetadata['provider'] == 'google' || 
-                        (user.identities?.any((i) => i.provider == 'google') ?? false);
+    final isGoogleUser =
+        user.appMetadata['provider'] == 'google' ||
+        (user.identities?.any((i) => i.provider == 'google') ?? false);
 
     return PremiumBackground(
       child: PopScope(
@@ -254,193 +283,207 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-          title: Text(
-            ref.t('profile'),
-            style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-          ),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_rounded),
-            onPressed: () {
-              ref.read(navBarVisibleProvider.notifier).show();
-              context.pop();
-            },
-          ),
-          actions: [
-            if (_isLoading)
-              const Center(
-                child: Padding(
-                  padding: EdgeInsets.only(right: 16),
-                  child: SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                ),
-              )
-            else ...[
-              IconButton(
-                icon: const Icon(Icons.logout),
-                tooltip: ref.t('sign_out'),
-                onPressed: _signOut,
-              ),
-            ],
-          ],
-        ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-          child: Column(
-            children: [
-              // Avatar
-              Center(
-                child: Stack(
-                  alignment: Alignment.bottomRight,
-                  children: [
-                    CircleAvatar(
-                      radius: 60,
-                      backgroundColor: Colors.white12,
-                      backgroundImage: NetworkImage(avatarUrl),
-                      onBackgroundImageError: (e, s) => const Icon(
-                        Icons.person,
-                        size: 60,
-                        color: Colors.white54,
-                      ),
-                    ),
-                    Container(
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFC8A96E),
-                        shape: BoxShape.circle,
-                      ),
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.edit,
-                          color: Colors.black,
-                          size: 20,
-                        ),
-                        onPressed: () => _editProfile(user),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                displayName,
-                style: GoogleFonts.poppins(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                user.email ?? '',
-                style: const TextStyle(fontSize: 14, color: Colors.white54),
-              ),
-              const SizedBox(height: 40),
-
-              // Stats Area
-              GlassContainer(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _StatColumn(ref.t('recipes'), recipesCount.toString(), Icons.receipt_long_rounded),
-                    _StatColumn(ref.t('lots'), lotsCount.toString(), Icons.inventory_2_rounded),
-                    _StatColumn(ref.t('favorites'), favoritesCount.toString(), Icons.favorite_rounded),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 32),
-              
-              // Account Details
-              GlassContainer(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    _InfoRow(
-                      label: ref.t('account_id'),
-                      value: '${user.id.substring(0, 8)}...',
-                      icon: Icons.fingerprint_rounded,
-                      onTap: () {
-                        Clipboard.setData(ClipboardData(text: user.id));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(ref.t('id_copied'))),
-                        );
-                      },
-                    ),
-                    const Divider(color: Colors.white12, height: 24),
-                    _InfoRow(
-                      label: ref.t('join_date'),
-                      value: joinDate,
-                      icon: Icons.calendar_today_rounded,
-                    ),
-                  ],
-                ),
-              ),
-
-              if (!isGoogleUser) ...[
-                const SizedBox(height: 32),
-                TextButton(
-                  onPressed: () => _showPasswordResetDialog(user.email!),
-                  child: Text(
-                    ref.t('forgot_password'),
-                    style: GoogleFonts.outfit(
-                      color: const Color(0xFFC8A96E),
-                      fontWeight: FontWeight.w600,
-                      decoration: TextDecoration.underline,
+            title: Text(
+              ref.t('profile'),
+              style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+            ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_rounded),
+              onPressed: () {
+                ref.read(navBarVisibleProvider.notifier).show();
+                context.pop();
+              },
+            ),
+            actions: [
+              if (_isLoading)
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 16),
+                    child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
                     ),
                   ),
+                )
+              else ...[
+                IconButton(
+                  icon: const Icon(Icons.logout),
+                  tooltip: ref.t('sign_out'),
+                  onPressed: _signOut,
                 ),
               ],
-
-              const SizedBox(height: 40),
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton.icon(
-                  onPressed: () => _editProfile(user),
-                  icon: const Icon(Icons.settings),
-                  label: Text(
-                    ref.t('edit_profile'),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFC8A96E),
-                    foregroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 60),
-              // App Logo at bottom
-              Image.asset(
-                'assets/images/Logo2.png',
-                height: 120,
-                fit: BoxFit.contain,
-              ),
-              const SizedBox(height: 12),
-              const Text(
-                'v1.0.0',
-                style: TextStyle(
-                  color: Colors.white24,
-                  fontSize: 10,
-                  letterSpacing: 2,
-                ),
-              ),
-              const SizedBox(height: 120), // Bottom padding for nav bar clearance
             ],
+          ),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+            child: Column(
+              children: [
+                // Avatar
+                Center(
+                  child: Stack(
+                    alignment: Alignment.bottomRight,
+                    children: [
+                      CircleAvatar(
+                        radius: 60,
+                        backgroundColor: Colors.white12,
+                        backgroundImage: NetworkImage(avatarUrl),
+                        onBackgroundImageError: (e, s) => const Icon(
+                          Icons.person,
+                          size: 60,
+                          color: Colors.white54,
+                        ),
+                      ),
+                      Container(
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFC8A96E),
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.edit,
+                            color: Colors.black,
+                            size: 20,
+                          ),
+                          onPressed: () => _editProfile(user),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  displayName,
+                  style: GoogleFonts.poppins(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  user.email ?? '',
+                  style: const TextStyle(fontSize: 14, color: Colors.white54),
+                ),
+                const SizedBox(height: 40),
+
+                // Stats Area
+                GlassContainer(
+                  padding: const EdgeInsets.all(20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _StatColumn(
+                        ref.t('recipes'),
+                        recipesCount.toString(),
+                        Icons.receipt_long_rounded,
+                      ),
+                      _StatColumn(
+                        ref.t('lots'),
+                        lotsCount.toString(),
+                        Icons.inventory_2_rounded,
+                      ),
+                      _StatColumn(
+                        ref.t('favorites'),
+                        favoritesCount.toString(),
+                        Icons.favorite_rounded,
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 32),
+
+                // Account Details
+                GlassContainer(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      _InfoRow(
+                        label: ref.t('account_id'),
+                        value: '${user.id.substring(0, 8)}...',
+                        icon: Icons.fingerprint_rounded,
+                        onTap: () {
+                          Clipboard.setData(ClipboardData(text: user.id));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(ref.t('id_copied'))),
+                          );
+                        },
+                      ),
+                      const Divider(color: Colors.white12, height: 24),
+                      _InfoRow(
+                        label: ref.t('join_date'),
+                        value: joinDate,
+                        icon: Icons.calendar_today_rounded,
+                      ),
+                    ],
+                  ),
+                ),
+
+                if (!isGoogleUser) ...[
+                  const SizedBox(height: 32),
+                  TextButton(
+                    onPressed: () => _showPasswordResetDialog(user.email!),
+                    child: Text(
+                      ref.t('forgot_password'),
+                      style: GoogleFonts.outfit(
+                        color: const Color(0xFFC8A96E),
+                        fontWeight: FontWeight.w600,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
+
+                const SizedBox(height: 40),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton.icon(
+                    onPressed: () => _editProfile(user),
+                    icon: const Icon(Icons.settings),
+                    label: Text(
+                      ref.t('edit_profile'),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFC8A96E),
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 60),
+                // App Logo at bottom
+                Image.asset(
+                  'assets/images/Logo2.png',
+                  height: 120,
+                  fit: BoxFit.contain,
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  'v1.0.0',
+                  style: TextStyle(
+                    color: Colors.white24,
+                    fontSize: 10,
+                    letterSpacing: 2,
+                  ),
+                ),
+                const SizedBox(
+                  height: 120,
+                ), // Bottom padding for nav bar clearance
+              ],
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }
 
 class _StatColumn extends StatelessWidget {
@@ -572,7 +615,10 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: $e', style: const TextStyle(color: Colors.white)),
+            content: Text(
+              'Error: $e',
+              style: const TextStyle(color: Colors.white),
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -612,25 +658,32 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
     try {
       final bytes = await pickedFile.readAsBytes();
       final fileExt = pickedFile.path.split('.').last;
-      final fileName = '${widget.user.id}_${DateTime.now().millisecondsSinceEpoch}.$fileExt';
+      final fileName =
+          '${widget.user.id}_${DateTime.now().millisecondsSinceEpoch}.$fileExt';
       final filePath = 'avatars/$fileName';
-      await widget.supabase.storage.from('Profiles').uploadBinary(
+      await widget.supabase.storage
+          .from('Profiles')
+          .uploadBinary(
             filePath,
             bytes,
             fileOptions: FileOptions(contentType: 'image/$fileExt'),
           );
-      final imageUrl = widget.supabase.storage.from('Profiles').getPublicUrl(filePath);
+      final imageUrl = widget.supabase.storage
+          .from('Profiles')
+          .getPublicUrl(filePath);
       setState(() => _avatarUrlController.text = imageUrl);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(ref.t('image_uploaded'))),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(ref.t('image_uploaded'))));
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(ref.t('upload_failed', args: {'error': e.toString()})),
+            content: Text(
+              ref.t('upload_failed', args: {'error': e.toString()}),
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -666,7 +719,7 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Avatar Section
                 Center(
                   child: Stack(
@@ -676,10 +729,15 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
                         height: 100,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: const Color(0xFFC8A96E), width: 2),
+                          border: Border.all(
+                            color: const Color(0xFFC8A96E),
+                            width: 2,
+                          ),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
+                              color: const Color(
+                                0xFFC8A96E,
+                              ).withValues(alpha: 0.2),
                               blurRadius: 15,
                               spreadRadius: 2,
                             ),
@@ -690,10 +748,23 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
                               ? CachedNetworkImage(
                                   imageUrl: _avatarUrlController.text,
                                   fit: BoxFit.cover,
-                                  placeholder: (context, url) => const Center(child: CircularProgressIndicator(strokeWidth: 2)),
-                                  errorWidget: (context, url, error) => const Icon(Icons.person_rounded, size: 50, color: Colors.white38),
+                                  placeholder: (context, url) => const Center(
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(
+                                        Icons.person_rounded,
+                                        size: 50,
+                                        color: Colors.white38,
+                                      ),
                                 )
-                              : const Icon(Icons.person_rounded, size: 50, color: Colors.white38),
+                              : const Icon(
+                                  Icons.person_rounded,
+                                  size: 50,
+                                  color: Colors.white38,
+                                ),
                         ),
                       ),
                       Positioned(
@@ -707,9 +778,20 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
                               color: Color(0xFFC8A96E),
                               shape: BoxShape.circle,
                             ),
-                            child: _isUploading 
-                              ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black))
-                              : const Icon(Icons.camera_alt_rounded, size: 16, color: Colors.black),
+                            child: _isUploading
+                                ? const SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.black,
+                                    ),
+                                  )
+                                : const Icon(
+                                    Icons.camera_alt_rounded,
+                                    size: 16,
+                                    color: Colors.black,
+                                  ),
                           ),
                         ),
                       ),
@@ -751,7 +833,9 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
                   style: OutlinedButton.styleFrom(
                     foregroundColor: const Color(0xFFC8A96E),
                     side: const BorderSide(color: Color(0xFFC8A96E)),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
                 ),
@@ -763,7 +847,10 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
                     Expanded(
                       child: TextButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: Text(ref.t('cancel'), style: const TextStyle(color: Colors.white60)),
+                        child: Text(
+                          ref.t('cancel'),
+                          style: const TextStyle(color: Colors.white60),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -773,13 +860,27 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFC8A96E),
                           foregroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
+                          ),
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           elevation: 0,
                         ),
                         child: _isSaving
-                            ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black))
-                            : Text(ref.t('save_profile'), style: const TextStyle(fontWeight: FontWeight.bold)),
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.black,
+                                ),
+                              )
+                            : Text(
+                                ref.t('save_profile'),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                       ),
                     ),
                   ],
@@ -806,7 +907,10 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
     );
   }
 
-  InputDecoration _inputDecoration({required String hint, required IconData icon}) {
+  InputDecoration _inputDecoration({
+    required String hint,
+    required IconData icon,
+  }) {
     return InputDecoration(
       hintText: hint,
       hintStyle: const TextStyle(color: Colors.white24, fontSize: 14),
@@ -835,7 +939,8 @@ class _ChangePasswordDialog extends ConsumerStatefulWidget {
   const _ChangePasswordDialog({required this.supabase});
 
   @override
-  ConsumerState<_ChangePasswordDialog> createState() => _ChangePasswordDialogState();
+  ConsumerState<_ChangePasswordDialog> createState() =>
+      _ChangePasswordDialogState();
 }
 
 class _ChangePasswordDialogState extends ConsumerState<_ChangePasswordDialog> {
@@ -864,7 +969,10 @@ class _ChangePasswordDialogState extends ConsumerState<_ChangePasswordDialog> {
       if (mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(ref.t('password_changed_success')), backgroundColor: Colors.green),
+          SnackBar(
+            content: Text(ref.t('password_changed_success')),
+            backgroundColor: Colors.green,
+          ),
         );
       }
     } catch (e) {
@@ -907,20 +1015,29 @@ class _ChangePasswordDialogState extends ConsumerState<_ChangePasswordDialog> {
                 const SizedBox(height: 8),
                 Text(
                   ref.t('new_password_req'),
-                  style: GoogleFonts.outfit(fontSize: 12, color: Colors.white38),
+                  style: GoogleFonts.outfit(
+                    fontSize: 12,
+                    color: Colors.white38,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
-                
+
                 _buildPasswordField(
                   label: ref.t('new_password_label'),
                   controller: _newPasswordController,
                   obscureText: _obscureNew,
                   onToggle: () => setState(() => _obscureNew = !_obscureNew),
                   validator: (val) {
-                    if (val == null || val.isEmpty) return ref.t('password_empty_error');
-                    if (val.length < 8) return ref.t('password_too_short_error');
-                    if (val.length > 40) return ref.t('password_too_long_error');
+                    if (val == null || val.isEmpty) {
+                      return ref.t('password_empty_error');
+                    }
+                    if (val.length < 8) {
+                      return ref.t('password_too_short_error');
+                    }
+                    if (val.length > 40) {
+                      return ref.t('password_too_long_error');
+                    }
                     return null;
                   },
                 ),
@@ -929,9 +1046,12 @@ class _ChangePasswordDialogState extends ConsumerState<_ChangePasswordDialog> {
                   label: ref.t('confirm_password_label'),
                   controller: _confirmPasswordController,
                   obscureText: _obscureConfirm,
-                  onToggle: () => setState(() => _obscureConfirm = !_obscureConfirm),
+                  onToggle: () =>
+                      setState(() => _obscureConfirm = !_obscureConfirm),
                   validator: (val) {
-                    if (val != _newPasswordController.text) return ref.t('passwords_not_match_error');
+                    if (val != _newPasswordController.text) {
+                      return ref.t('passwords_not_match_error');
+                    }
                     return null;
                   },
                 ),
@@ -942,7 +1062,10 @@ class _ChangePasswordDialogState extends ConsumerState<_ChangePasswordDialog> {
                     Expanded(
                       child: TextButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: Text(ref.t('cancel'), style: const TextStyle(color: Colors.white60)),
+                        child: Text(
+                          ref.t('cancel'),
+                          style: const TextStyle(color: Colors.white60),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -952,12 +1075,26 @@ class _ChangePasswordDialogState extends ConsumerState<_ChangePasswordDialog> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFC8A96E),
                           foregroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
+                          ),
                           padding: const EdgeInsets.symmetric(vertical: 14),
                         ),
                         child: _isLoading
-                            ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black))
-                            : Text(ref.t('save_changes'), style: const TextStyle(fontWeight: FontWeight.bold)),
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.black,
+                                ),
+                              )
+                            : Text(
+                                ref.t('save_changes'),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                       ),
                     ),
                   ],
@@ -982,7 +1119,10 @@ class _ChangePasswordDialogState extends ConsumerState<_ChangePasswordDialog> {
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 4, bottom: 8),
-          child: Text(label, style: GoogleFonts.outfit(fontSize: 13, color: Colors.white70)),
+          child: Text(
+            label,
+            style: GoogleFonts.outfit(fontSize: 13, color: Colors.white70),
+          ),
         ),
         TextFormField(
           controller: controller,
@@ -990,10 +1130,16 @@ class _ChangePasswordDialogState extends ConsumerState<_ChangePasswordDialog> {
           validator: validator,
           style: const TextStyle(color: Colors.white, fontSize: 15),
           decoration: InputDecoration(
-            prefixIcon: const Icon(Icons.lock_outline_rounded, color: Color(0xFFC8A96E), size: 20),
+            prefixIcon: const Icon(
+              Icons.lock_outline_rounded,
+              color: Color(0xFFC8A96E),
+              size: 20,
+            ),
             suffixIcon: IconButton(
               icon: Icon(
-                obscureText ? Icons.visibility_off_rounded : Icons.visibility_rounded,
+                obscureText
+                    ? Icons.visibility_off_rounded
+                    : Icons.visibility_rounded,
                 color: Colors.white38,
                 size: 18,
               ),
@@ -1003,18 +1149,26 @@ class _ChangePasswordDialogState extends ConsumerState<_ChangePasswordDialog> {
             hintStyle: const TextStyle(color: Colors.white24),
             filled: true,
             fillColor: Colors.white.withValues(alpha: 0.05),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+              borderSide: BorderSide(
+                color: Colors.white.withValues(alpha: 0.1),
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(color: Color(0xFFC8A96E), width: 1.5),
+              borderSide: const BorderSide(
+                color: Color(0xFFC8A96E),
+                width: 1.5,
+              ),
             ),
             errorStyle: const TextStyle(color: Colors.redAccent),
           ),

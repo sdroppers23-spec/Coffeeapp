@@ -22,7 +22,9 @@ class LocaleNotifier extends Notifier<String> {
   }
 }
 
-final localeProvider = NotifierProvider<LocaleNotifier, String>(() => LocaleNotifier());
+final localeProvider = NotifierProvider<LocaleNotifier, String>(
+  () => LocaleNotifier(),
+);
 
 // Compatibility layer for legacy code
 class LocaleService {
@@ -52,7 +54,9 @@ class AppLocalizations {
   static AppLocalizations of(BuildContext context) {
     // Attempt to get locale from ProviderScope if possible, otherwise use legacy
     try {
-      final languageCode = ProviderScope.containerOf(context).read(localeProvider);
+      final languageCode = ProviderScope.containerOf(
+        context,
+      ).read(localeProvider);
       return AppLocalizations(Locale(languageCode));
     } catch (_) {
       return AppLocalizations(Locale(LocaleService.currentLocale));
@@ -65,23 +69,28 @@ class AppLocalizations {
   }
 
   // Legacy alias
-  String t(String key, {Map<String, String>? args}) => translate(key, args: args);
+  String t(String key, {Map<String, String>? args}) =>
+      translate(key, args: args);
 
-  static String get(String key, String languageCode, {Map<String, String>? args}) {
+  static String get(
+    String key,
+    String languageCode, {
+    Map<String, String>? args,
+  }) {
     // Check if it's a flavor wheel key
     if (key.startsWith('wheel_')) {
       return ScaFlavorWheelL10n.translate(languageCode, key);
     }
 
     final map = _translations[languageCode] ?? _translations['en']!;
-    String value = map[key] ?? key;
-    
+    String value = map[key] ?? _translations['en']![key] ?? key;
+
     if (args != null) {
       args.forEach((k, v) {
         value = value.replaceAll('{$k}', v);
       });
     }
-    
+
     return value;
   }
 
@@ -249,8 +258,6 @@ class AppLocalizations {
       'radar_aftertaste': 'Aftertaste',
       'radar_sweetness': 'Sweetness',
       'radar_intensity': 'Intensity',
-      'water_g': 'Water (g)',
-      'pours_count': 'Pours: {count}',
       'bitterness': 'Bitterness',
       'acidity': 'Acidity',
       'sweetness': 'Sweetness',
@@ -433,29 +440,41 @@ class AppLocalizations {
       'note_berry': 'Berry',
       'note_citrus': 'Citrus',
       'note_stone_fruit': 'Stone Fruit',
-      'desc_fruity': 'Fruity notes in coffee often derive from the bean\'s origin and processing, ranging from bright berries to tropical fruits.',
-      'desc_note_berry': 'Bright, sweet, and slightly tart notes reminiscent of strawberries, raspberries, or blueberries.',
-      'desc_note_citrus': 'Zesty and vibrant notes like lemon, orange, or grapefruit, adding pleasant acidity.',
-      'desc_note_stone_fruit': 'Sweet, fleshy fruit notes like peach, plum, or apricot.',
+      'desc_fruity':
+          'Fruity notes in coffee often derive from the bean\'s origin and processing, ranging from bright berries to tropical fruits.',
+      'desc_note_berry':
+          'Bright, sweet, and slightly tart notes reminiscent of strawberries, raspberries, or blueberries.',
+      'desc_note_citrus':
+          'Zesty and vibrant notes like lemon, orange, or grapefruit, adding pleasant acidity.',
+      'desc_note_stone_fruit':
+          'Sweet, fleshy fruit notes like peach, plum, or apricot.',
       'flavor_floral': 'Floral',
       'note_jasmine': 'Jasmine',
       'note_tea': 'Tea',
-      'desc_floral': 'Floral aromatics are often found in high-altitude coffees, especially those from Ethiopia or Panama.',
-      'desc_note_jasmine': 'Definitive, sweet floral aroma that is a hallmark of high-quality Gesha coffees.',
-      'desc_note_tea': 'Light, clean, and herbal notes reminiscent of black or green tea.',
+      'desc_floral':
+          'Floral aromatics are often found in high-altitude coffees, especially those from Ethiopia or Panama.',
+      'desc_note_jasmine':
+          'Definitive, sweet floral aroma that is a hallmark of high-quality Gesha coffees.',
+      'desc_note_tea':
+          'Light, clean, and herbal notes reminiscent of black or green tea.',
       'flavor_sweet': 'Sweet',
       'note_caramel': 'Caramel',
       'note_honey': 'Honey',
       'note_vanilla': 'Vanilla',
-      'desc_sweet': 'Sweetness in coffee can manifest as sugar-like, honeyed, or creamy notes.',
-      'desc_note_caramel': 'Rich, toasted sugar sweetness often enhanced by the roasting process.',
-      'desc_note_honey': 'Soft, natural sweetness with a slightly viscous mouthfeel.',
+      'desc_sweet':
+          'Sweetness in coffee can manifest as sugar-like, honeyed, or creamy notes.',
+      'desc_note_caramel':
+          'Rich, toasted sugar sweetness often enhanced by the roasting process.',
+      'desc_note_honey':
+          'Soft, natural sweetness with a slightly viscous mouthfeel.',
       'desc_note_vanilla': 'Sweet, creamy, and aromatic spice note.',
       'flavor_nutty': 'Nutty / Cocoa',
       'note_chocolate': 'Chocolate',
       'note_hazelnut': 'Hazelnut',
-      'desc_nutty': 'Classic coffee notes involving roasted nuts and various forms of chocolate.',
-      'desc_note_chocolate': 'Deep, bitter-sweet notes ranging from milk to dark chocolate.',
+      'desc_nutty':
+          'Classic coffee notes involving roasted nuts and various forms of chocolate.',
+      'desc_note_chocolate':
+          'Deep, bitter-sweet notes ranging from milk to dark chocolate.',
       'desc_note_hazelnut': 'Mellow, oily, and sweet nuttiness.',
 
       'process_carbonic': 'Carbonic Maceration',
@@ -463,7 +482,6 @@ class AppLocalizations {
 
       'process_yeast': 'Yeast Inoculation',
       'process_koji': 'Koji Fermentation',
-
 
       'process_natural_character': 'Sweetness, Berries, Body',
       'process_washed_character': 'Cleanliness, Acidity, Elegance',
@@ -476,38 +494,59 @@ class AppLocalizations {
       'process_koji_character': 'Umami, Deep Sweetness, Depth',
       'process_wet_hulled_character': 'Earthy, Spicy, Thick Body',
 
+      'process_natural_desc':
+          '### Step 1: Sorting\nWhole cherries are spread on African beds.\n### Step 2: Drying\nTakes 2-4 weeks. The cherry dries, transferring sugars to the bean.\n### Step 3: Hulling\nDry skin is removed only after full drying. Gives a sweet cup with low acidity.',
+      'process_washed_desc':
+          '### Step 1: Depulping\nSkin and pulp are removed mechanically.\n### Step 2: Fermentation\nBeans in mucilage are submerged in water for 12-48 hours.\n### Step 3: Washing & Drying\nBeans are washed with clean water and dried. Gives a clean taste with bright acidity.',
+      'process_honey_desc':
+          '### Hybrid Method\nSkin is removed, but some mucilage is left on the bean during drying.\n### Categories\nWhite, Gold, Red, Black Honey depending on mucilage amount. Gives a sweet and syrupy cup.',
+      'process_anaerobic_desc':
+          '### Step 1: Sealing\nCherries are loaded into oxygen-free tanks.\n### Step 2: Fermentation\nLasts 48-120 hours. Absence of oxygen stimulates specific microbes for a funky tropical taste.',
+      'process_carbonic_desc':
+          '### Wine Technique\nWhole cherries are put in tanks filled with CO2.\n### Result\nCarbon displaces oxygen, slowing sugar breakdown. Taste is clean, structured, and winey.',
+      'process_thermal_desc':
+          '### Step 1: Hot Shock\nWashing cherries with 40°C water to open pores.\n### Step 2: Cold Shock\nQuick cooling with 12°C water to seal flavors inside. Very intense profile.',
+      'process_lactic_desc':
+          '### Lactic Fermentation\nFocus on Lactobacillus development.\n### Result\nHigh concentration of lactic acid gives an incredibly silky, creamy body and yogurt notes.',
+      'process_yeast_desc':
+          '### Controlled Fermentation\nAdding specific yeast strains (wine or coffee-specific).\n### Result\nFull control over the process. Yeast highlights specific floral or berry aromas.',
+      'process_koji_desc':
+          '### Japanese Tech\nUsing Aspergillus oryzae (Koji) mold.\n### Result\nKoji breaks down complex starches and proteins. Gives extreme sweetness and light umami.',
+      'process_wet_hulled_desc':
+          '### Giling Basah\nIndonesia traditional method. Skin is removed at high moisture (30-40%).\n### Result\nDried without parchment. Creates unique profile: low acidity, thick body, spice notes.',
 
-      'process_natural_desc': '### Step 1: Sorting\nWhole cherries are spread on African beds.\n### Step 2: Drying\nTakes 2-4 weeks. The cherry dries, transferring sugars to the bean.\n### Step 3: Hulling\nDry skin is removed only after full drying. Gives a sweet cup with low acidity.',
-      'process_washed_desc': '### Step 1: Depulping\nSkin and pulp are removed mechanically.\n### Step 2: Fermentation\nBeans in mucilage are submerged in water for 12-48 hours.\n### Step 3: Washing & Drying\nBeans are washed with clean water and dried. Gives a clean taste with bright acidity.',
-      'process_honey_desc': '### Hybrid Method\nSkin is removed, but some mucilage is left on the bean during drying.\n### Categories\nWhite, Gold, Red, Black Honey depending on mucilage amount. Gives a sweet and syrupy cup.',
-      'process_anaerobic_desc': '### Step 1: Sealing\nCherries are loaded into oxygen-free tanks.\n### Step 2: Fermentation\nLasts 48-120 hours. Absence of oxygen stimulates specific microbes for a funky tropical taste.',
-      'process_carbonic_desc': '### Wine Technique\nWhole cherries are put in tanks filled with CO2.\n### Result\nCarbon displaces oxygen, slowing sugar breakdown. Taste is clean, structured, and winey.',
-      'process_thermal_desc': '### Step 1: Hot Shock\nWashing cherries with 40°C water to open pores.\n### Step 2: Cold Shock\nQuick cooling with 12°C water to seal flavors inside. Very intense profile.',
-      'process_lactic_desc': '### Lactic Fermentation\nFocus on Lactobacillus development.\n### Result\nHigh concentration of lactic acid gives an incredibly silky, creamy body and yogurt notes.',
-      'process_yeast_desc': '### Controlled Fermentation\nAdding specific yeast strains (wine or coffee-specific).\n### Result\nFull control over the process. Yeast highlights specific floral or berry aromas.',
-      'process_koji_desc': '### Japanese Tech\nUsing Aspergillus oryzae (Koji) mold.\n### Result\nKoji breaks down complex starches and proteins. Gives extreme sweetness and light umami.',
-      'process_wet_hulled_desc': '### Giling Basah\nIndonesia traditional method. Skin is removed at high moisture (30-40%).\n### Result\nDried without parchment. Creates unique profile: low acidity, thick body, spice notes.',
-
-      'process_natural_extended': 'The simplest and oldest method. Coffee dries as whole cherries in the sun. Sugars from the pulp migrate to the bean, giving high sweetness and complex fruity notes.',
-      'process_washed_extended': 'The specialty gold standard. Removals happen immediately, letting the genetic potential and terroir shine. Taste is clean and transparent.',
-      'process_honey_extended': 'A bit of natural, a bit of washed. Some mucilage remains, adding caramel sweetness while maintaining washed-like clarity.',
-      'process_anaerobic_extended': 'Oxygen-free fermentation in sealed tanks. Encourages specific bacteria that create intense, exotic, juicy flavors.',
-      'process_carbonic_extended': 'Carbon-dioxide environment for fermentation. Allows precise control over temperature and pH for structured, winey texture.',
-      'process_thermal_extended': 'Innovation using temperature shocks. Seals flavor compounds inside for an explosive, vibrant, and unforgettable taste.',
-      'process_lactic_extended': 'Involves prolonged anaerobic fermentation focusing on lactic acid bacteria for a rich, creamy mouthfeel.',
-      'process_yeast_extended': 'Inoculation with selected yeasts for predictable, high-quality results and specific aroma enhancement.',
-      'process_koji_extended': 'Ancient fermentation science applied to coffee. Unlocks hidden sweetness and savory depth via enzymatic action.',
-      'process_wet_hulled_extended': 'Unique to Indonesia. Rapid processing creates distinct earthy, chocolatey, and low-acid profiles.',
+      'process_natural_extended':
+          'The simplest and oldest method. Coffee dries as whole cherries in the sun. Sugars from the pulp migrate to the bean, giving high sweetness and complex fruity notes.',
+      'process_washed_extended':
+          'The specialty gold standard. Removals happen immediately, letting the genetic potential and terroir shine. Taste is clean and transparent.',
+      'process_honey_extended':
+          'A bit of natural, a bit of washed. Some mucilage remains, adding caramel sweetness while maintaining washed-like clarity.',
+      'process_anaerobic_extended':
+          'Oxygen-free fermentation in sealed tanks. Encourages specific bacteria that create intense, exotic, juicy flavors.',
+      'process_carbonic_extended':
+          'Carbon-dioxide environment for fermentation. Allows precise control over temperature and pH for structured, winey texture.',
+      'process_thermal_extended':
+          'Innovation using temperature shocks. Seals flavor compounds inside for an explosive, vibrant, and unforgettable taste.',
+      'process_lactic_extended':
+          'Involves prolonged anaerobic fermentation focusing on lactic acid bacteria for a rich, creamy mouthfeel.',
+      'process_yeast_extended':
+          'Inoculation with selected yeasts for predictable, high-quality results and specific aroma enhancement.',
+      'process_koji_extended':
+          'Ancient fermentation science applied to coffee. Unlocks hidden sweetness and savory depth via enzymatic action.',
+      'process_wet_hulled_extended':
+          'Unique to Indonesia. Rapid processing creates distinct earthy, chocolatey, and low-acid profiles.',
       'flavor_spicy': 'Spicy',
       'note_cinnamon': 'Cinnamon',
       'note_pepper': 'Pepper',
-      'desc_spicy': 'Spicy notes can be warming (cinnamon) or pungent (black pepper).',
+      'desc_spicy':
+          'Spicy notes can be warming (cinnamon) or pungent (black pepper).',
       'desc_note_cinnamon': 'Sweet, woody, and warming spice aroma.',
       'desc_note_pepper': 'Sharp, pungent spice note that can add complexity.',
       'flavor_earthy': 'Earthy / Green',
       'note_forest': 'Forest / Pine',
       'note_tobacco': 'Tobacco',
-      'desc_earthy': 'Earthy and savory notes often found in Indonesian or some Brazilian coffees.',
+      'desc_earthy':
+          'Earthy and savory notes often found in Indonesian or some Brazilian coffees.',
       'desc_note_forest': 'Resinous, woody, and damp soil notes.',
       'desc_note_tobacco': 'Dry, smoky, and slightly sweet herbal notes.',
 
@@ -535,7 +574,8 @@ class AppLocalizations {
       'delete_confirm_title': 'Delete Lot?',
       'delete_confirm_message': 'Are you sure you want to delete this lot?',
       'delete_confirm_batch_title': 'Delete Lots?',
-      'delete_confirm_batch_message': 'Are you sure you want to delete {count} selected lots?',
+      'delete_confirm_batch_message':
+          'Are you sure you want to delete {count} selected lots?',
       'toast_select_second_lot': 'Select a second lot to compare',
 
       'vibration': 'Vibration',
@@ -577,6 +617,7 @@ class AppLocalizations {
       'brew_temp': 'Brew Temp',
       'extraction_time_hint': 'Extraction Time (mm:ss)',
       'coffee_g': 'Coffee (g)',
+      'water_g': 'Water (g)',
       'water_ml': 'Water (ml)',
       'yield_g': 'Yield (g)',
       'notes_placeholder': 'Your notes here...',
@@ -597,6 +638,11 @@ class AppLocalizations {
       'difficulty_easy': 'Easy',
       'difficulty_med': 'Medium',
       'difficulty_hard': 'Hard',
+      'difficulty_advanced': 'Advanced',
+      'difficulty_master': 'Master',
+      'intensity_light': 'Light',
+      'intensity_medium': 'Medium',
+      'intensity_bold': 'Bold',
       'time_min': 'min',
       'time_sec': 'sec',
       'stat_time': 'Time',
@@ -628,9 +674,13 @@ class AppLocalizations {
       'microns_label': 'Microns (µm)',
       'pour_schedule_label': 'Pour Schedule',
       'pour_num': 'Pour #{num}',
+      'pours_count': 'Pours count: {count}',
       'min_label': 'Min',
       'sec_label': 'Sec',
       'duration_label': 'Duration',
+      'unit_g': 'g',
+      'unit_ml': 'ml',
+      'unit_c': '°C',
       'notes_label': 'Notes',
       'notes_optional': 'Notes (optional)',
       'other': 'Other',
@@ -666,7 +716,8 @@ class AppLocalizations {
       'no_farmers_found': 'No farmers found. Syncing...',
       'error_loading_lots': 'Error loading lots: {error}',
       'password_reset': 'Password Reset',
-      'password_reset_instruction': 'We will send an email with instructions to change your password to your email.',
+      'password_reset_instruction':
+          'We will send an email with instructions to change your password to your email.',
       'instruction_email_sent': 'Instruction email has been sent to your mail',
       'account_id': 'Account ID',
       'id_copied': 'ID copied',
@@ -715,7 +766,8 @@ class AppLocalizations {
       'opened_at_label': 'Opened At',
       'lot_id_label': 'Lot ID',
       'continue_as_guest': 'Continue as Guest',
-      'guest_mode_notice': 'You are in guest mode. Cloud sync features are restricted.',
+      'guest_mode_notice':
+          'You are in guest mode. Cloud sync features are restricted.',
       'auth_required_title': 'Authorization Required',
       'auth_required_desc': 'To add this lot to your profile, please sign in.',
       'error_image_too_large': 'Image is too large (max. 5MB)',
@@ -820,7 +872,6 @@ class AppLocalizations {
       'roast_level': 'Рівень обсмаження',
       'ratio': 'Пропорція',
       'difficulty': 'Складність',
-      'intensity': 'Насиченість',
       'about_method': 'Про метод',
       'sort_by': 'Сортувати за',
       'date_added': 'Датою додавання',
@@ -832,7 +883,8 @@ class AppLocalizations {
       'tab_recipes': 'Рецепти',
       'tab_profile': 'Діаграма',
       'diagram': 'Діаграма',
-      'auth_greeting': 'Ласкаво просимо! Будь ласка авторизуйтесь або зареєструйтесь.',
+      'auth_greeting':
+          'Ласкаво просимо! Будь ласка авторизуйтесь або зареєструйтесь.',
       'tab_sphere': 'Сфера',
       'tab_wheel': 'Коло смаків',
       'name_field': 'Назва',
@@ -897,7 +949,6 @@ class AppLocalizations {
       'sensory_honey_desc': 'Липкий та збалансований',
       'add_lot': 'Додати лот',
       'edit_lot': 'Редагувати лот',
-
 
       'wheel_cat_floral': 'Квіткові',
       'wheel_cat_fruity': 'Фруктовї',
@@ -1063,32 +1114,42 @@ class AppLocalizations {
       'note_berry': 'Ягідні',
       'note_citrus': 'Цитрусові',
       'note_stone_fruit': 'Кісточкові фрукти',
-      'desc_fruity': 'Фруктові ноти в каві зазвичай походять від походження та обробки зерна, від яскравих ягід до тропічних фруктів.',
-      'desc_note_berry': 'Яскраві, солодкі та злегка кислі ноти, що нагадують полуницю, малину або лохину.',
-      'desc_note_citrus': 'Пікантні та живі ноти, такі як лимон, апельсин або грейпфрут, що додають приємної кислотності.',
-      'desc_note_stone_fruit': 'Солодкі ноти м\'ясистих фруктів, таких як персик, слива або абрикос.',
+      'desc_fruity':
+          'Фруктові ноти в каві зазвичай походять від походження та обробки зерна, від яскравих ягід до тропічних фруктів.',
+      'desc_note_berry':
+          'Яскраві, солодкі та злегка кислі ноти, що нагадують полуницю, малину або лохину.',
+      'desc_note_citrus':
+          'Пікантні та живі ноти, такі як лимон, апельсин або грейпфрут, що додають приємної кислотності.',
+      'desc_note_stone_fruit':
+          'Солодкі ноти м\'ясистих фруктів, таких як персик, слива або абрикос.',
       'flavor_floral': 'Квіткові',
       'note_jasmine': 'Жасмин',
       'note_tea': 'Чайні',
-      'desc_floral': 'Квіткові аромати часто зустрічаються у високогірній каві, особливо з Ефіопії або Панами.',
-      'desc_note_jasmine': 'Виражений солодкий квітковий аромат, який є візитною карткою високоякісної кави Геша.',
-      'desc_note_tea': 'Легкі, чисті та трав\'яні ноти, що нагадують чорний або зелений чай.',
+      'desc_floral':
+          'Квіткові аромати часто зустрічаються у високогірній каві, особливо з Ефіопії або Панами.',
+      'desc_note_jasmine':
+          'Виражений солодкий квітковий аромат, який є візитною карткою високоякісної кави Геша.',
+      'desc_note_tea':
+          'Легкі, чисті та трав\'яні ноти, що нагадують чорний або зелений чай.',
       'flavor_sweet': 'Солодкі',
       'note_caramel': 'Карамельні',
       'note_honey': 'Медові',
       'note_vanilla': 'Ванільні',
-      'desc_sweet': 'Солодкість у каві може проявлятися як цукрова, медова або кремова.',
-      'desc_note_caramel': 'Багата солодкість підсмаженого цукру, часто посилена процесом обсмажування.',
-      'desc_note_honey': 'М\'яка природна солодкість з трохи тягучим відчуттям у роті.',
+      'desc_sweet':
+          'Солодкість у каві може проявлятися як цукрова, медова або кремова.',
+      'desc_note_caramel':
+          'Багата солодкість підсмаженого цукру, часто посилена процесом обсмажування.',
+      'desc_note_honey':
+          'М\'яка природна солодкість з трохи тягучим відчуттям у роті.',
       'desc_note_vanilla': 'Солодка, кремова та ароматна пряна нота.',
       'flavor_nutty': 'Горіхові / Какао',
       'note_chocolate': 'Шоколадні',
       'note_hazelnut': 'Фундук',
-      'desc_nutty': 'Класичні кавові ноти, що включають смажені горіхи та різні види шоколаду.',
-      'desc_note_chocolate': 'Глибокі, гірко-солодкі ноти від молочного до темного шоколаду.',
+      'desc_nutty':
+          'Класичні кавові ноти, що включають смажені горіхи та різні види шоколаду.',
+      'desc_note_chocolate':
+          'Глибокі, гірко-солодкі ноти від молочного до темного шоколаду.',
       'desc_note_hazelnut': "М'яка масляниста солодкість горіха.",
-
-
 
       'process_natural_character': 'Солодкість, Ягідність, Тіло',
       'process_washed_character': 'Чистота, Кислотність, Елегантність',
@@ -1101,38 +1162,59 @@ class AppLocalizations {
       'process_koji_character': 'Умамі, Лубока солодкість, Глибина',
       'process_wet_hulled_character': 'Землистість, Спеції, Щільне тіло',
 
+      'process_natural_desc':
+          '### Етап 1: Сортування\nЦілі ягоди розкладають на африканських ліжках.\n### Етап 2: Сушка у ягоді\nТриває 2-4 тижні. Ягода засихає, віддаючи всі цукри зерну всередині.\n### Етап 3: Халлінг\nСуха оболонка знімається лише після повної сушки. Дає солодку чашку з низькою кислотністю.',
+      'process_washed_desc':
+          '### Етап 1: Депульпація\nЗнімається шкірка та м\'якоть механічним способом.\n### Етап 2: Ферментація\nЗерна у слизу занурюються у воду на 12-48 годин для очищення ферментами.\n### Етап 3: Промивка та Сушка\nЗерно промивають чистою водою та сушать до вологості 11-12%. Дає чистий смак з яскравою кислотністю.',
+      'process_honey_desc':
+          '### Гібридний метод\nШкірку знімають, але частину м\'якоті (мусіляж) залишають на зерні при сушці.\n### Категорії\nWhite, Gold, Red, Black Honey. Дає дуже солодку і маслянисту чашку.',
+      'process_anaerobic_desc':
+          '### Етап 1: Герметизація\nЯгоди або депульповане зерно завантажують у бочки без доступу кисню.\n### Етап 2: Ферментація\nТриває 48-120 годин. Відсутність кисню стимулює специфічні мікроорганізми, що створюють складний "фанкі" смак тропіків.',
+      'process_carbonic_desc':
+          '### Техніка з виноробства\nЦілі ягоди завантажуються в герметичні резервуари, які заповнюють вуглекислим газом.\n### Результат\nВуглець витісняє кисень, сповільнюючи розклад цукрів. Смак виходить дуже чистим, структурованим, часто з винними нотами.',
+      'process_thermal_desc':
+          '### Етап 1: Гарячий шок\nПромивання ягід водою 40°C для розкриття пор зерна.\n### Етап 2: Холодний шок\nРізке охолодження водою 12°C для "запечатування" смакових сполук усередині. Дуже інтенсивний та яскравий профіль.',
+      'process_lactic_desc':
+          '### Молочнокисла ферментація\nФокус на розвитку молочнокислих бактерій (Lactobacillus).\n### Результат\nСтворюється висока концентрація молочної кислоти. У чашці це дає неймовірно шовковисте, вершкове тіло та ноти йогурту.',
+      'process_yeast_desc':
+          '### Контрольована ферментація\nДодавання спеціальних штамів дріжджів (винних або спеціально виведених для кави).\n### Результат\nПовний контроль над процесом. Дріжджі підкреслюють конкретні аромати, роблячи смак чистішим.',
+      'process_koji_desc':
+          '### Японська технологія\nВикористання благородної плісняви Aspergillus oryzae (Коджі).\n### Результат\nКоджі розщеплює складні вуглеводи та білки. Дає надзвичайну солодкість, глибину та легкий умамі-присмак.',
+      'process_wet_hulled_desc':
+          '### Традиційний метод Індонезії (Giling Basah)\nШкірку знімають при дуже високій вологості (30-40%).\n### Результат\nЗерно сушиться без оболонки. Це створює унікальний профіль: низька кислотність, щільне тіло, ноти спецій та шоколаду.',
 
-      'process_natural_desc': '### Етап 1: Сортування\nЦілі ягоди розкладають на африканських ліжках.\n### Етап 2: Сушка у ягоді\nТриває 2-4 тижні. Ягода засихає, віддаючи всі цукри зерну всередині.\n### Етап 3: Халлінг\nСуха оболонка знімається лише після повної сушки. Дає солодку чашку з низькою кислотністю.',
-      'process_washed_desc': '### Етап 1: Депульпація\nЗнімається шкірка та м\'якоть механічним способом.\n### Етап 2: Ферментація\nЗерна у слизу занурюються у воду на 12-48 годин для очищення ферментами.\n### Етап 3: Промивка та Сушка\nЗерно промивають чистою водою та сушать до вологості 11-12%. Дає чистий смак з яскравою кислотністю.',
-      'process_honey_desc': '### Гібридний метод\nШкірку знімають, але частину м\'якоті (мусіляж) залишають на зерні при сушці.\n### Категорії\nWhite, Gold, Red, Black Honey. Дає дуже солодку і маслянисту чашку.',
-      'process_anaerobic_desc': '### Етап 1: Герметизація\nЯгоди або депульповане зерно завантажують у бочки без доступу кисню.\n### Етап 2: Ферментація\nТриває 48-120 годин. Відсутність кисню стимулює специфічні мікроорганізми, що створюють складний "фанкі" смак тропіків.',
-      'process_carbonic_desc': '### Техніка з виноробства\nЦілі ягоди завантажуються в герметичні резервуари, які заповнюють вуглекислим газом.\n### Результат\nВуглець витісняє кисень, сповільнюючи розклад цукрів. Смак виходить дуже чистим, структурованим, часто з винними нотами.',
-      'process_thermal_desc': '### Етап 1: Гарячий шок\nПромивання ягід водою 40°C для розкриття пор зерна.\n### Етап 2: Холодний шок\nРізке охолодження водою 12°C для "запечатування" смакових сполук усередині. Дуже інтенсивний та яскравий профіль.',
-      'process_lactic_desc': '### Молочнокисла ферментація\nФокус на розвитку молочнокислих бактерій (Lactobacillus).\n### Результат\nСтворюється висока концентрація молочної кислоти. У чашці це дає неймовірно шовковисте, вершкове тіло та ноти йогурту.',
-      'process_yeast_desc': '### Контрольована ферментація\nДодавання спеціальних штамів дріжджів (винних або спеціально виведених для кави).\n### Результат\nПовний контроль над процесом. Дріжджі підкреслюють конкретні аромати, роблячи смак чистішим.',
-      'process_koji_desc': '### Японська технологія\nВикористання благородної плісняви Aspergillus oryzae (Коджі).\n### Результат\nКоджі розщеплює складні вуглеводи та білки. Дає надзвичайну солодкість, глибину та легкий умамі-присмак.',
-      'process_wet_hulled_desc': '### Традиційний метод Індонезії (Giling Basah)\nШкірку знімають при дуже високій вологості (30-40%).\n### Результат\nЗерно сушиться без оболонки. Це створює унікальний профіль: низька кислотність, щільне тіло, ноти спецій та шоколаду.',
-
-      'process_natural_extended': 'Найпростіший і найдавніший метод. Кава сушиться цілими ягодами на сонці. Під час сушіння цукри з м’якоті переходять у зерно. Це дає каві високу солодкість, щільне тіло та виражені ноти фруктів, ягід або навіть вина.',
-      'process_washed_extended': "Золотий стандарт спешелті. Шкірка та м'якоть видаляються одразу після збору, а залишки клейковини змиваються під час ферментації у воді. Смак чистий, прозорий, з яскравою кислотністю.",
-      'process_honey_extended': "Трішки натуральної, трішки митої. Шкірка знімається, але частина м'якоті (клейковини) залишається на зерні під час сушіння. Це додає каві м’якості та карамельної солодкості.",
-      'process_anaerobic_extended': 'Ферментація без доступу кисню. Кава завантажується в герметичні резервуари. Це стимулює розвиток специфічних бактерій, що створюють дуже інтенсивні, екзотичні смаки.',
-      'process_carbonic_extended': 'Технологія запозичена у виноробів. Кава ферментується в середовищі, насиченому вуглекислим газом. Створює структуровану кислотність та винну текстуру.',
-      'process_thermal_extended': 'Новинка останніх років. Під час ферментації каву піддають різкій зміні температур. Смак виходить надзвичайно інтенсивним, вибуховим та незабутнім.',
-      'process_lactic_extended': 'Тривала анаеробна ферментація з фокусом на молочнокислі бактерії. Створює дуже щільне, шовковисте тіло та неповторну вершковість.',
-      'process_yeast_extended': 'Використання селекційних дріжджів забезпечує стабільний високий результат та дозволяє підкреслити специфічну ароматику (наприклад, квіткову).',
-      'process_koji_extended': 'Давня японська технологія, адаптована для кави. Ферментація за допомогою грибка Коджі розкриває приховану солодкість та глибину смаку.',
-      'process_wet_hulled_extended': 'Унікальний метод Індонезії. Швидка обробка при високій вологості створює впізнаваний шоколадно-пряний профіль з низькою кислотністю.',
+      'process_natural_extended':
+          'Найпростіший і найдавніший метод. Кава сушиться цілими ягодами на сонці. Під час сушіння цукри з м’якоті переходять у зерно. Це дає каві високу солодкість, щільне тіло та виражені ноти фруктів, ягід або навіть вина.',
+      'process_washed_extended':
+          "Золотий стандарт спешелті. Шкірка та м'якоть видаляються одразу після збору, а залишки клейковини змиваються під час ферментації у воді. Смак чистий, прозорий, з яскравою кислотністю.",
+      'process_honey_extended':
+          "Трішки натуральної, трішки митої. Шкірка знімається, але частина м'якоті (клейковини) залишається на зерні під час сушіння. Це додає каві м’якості та карамельної солодкості.",
+      'process_anaerobic_extended':
+          'Ферментація без доступу кисню. Кава завантажується в герметичні резервуари. Це стимулює розвиток специфічних бактерій, що створюють дуже інтенсивні, екзотичні смаки.',
+      'process_carbonic_extended':
+          'Технологія запозичена у виноробів. Кава ферментується в середовищі, насиченому вуглекислим газом. Створює структуровану кислотність та винну текстуру.',
+      'process_thermal_extended':
+          'Новинка останніх років. Під час ферментації каву піддають різкій зміні температур. Смак виходить надзвичайно інтенсивним, вибуховим та незабутнім.',
+      'process_lactic_extended':
+          'Тривала анаеробна ферментація з фокусом на молочнокислі бактерії. Створює дуже щільне, шовковисте тіло та неповторну вершковість.',
+      'process_yeast_extended':
+          'Використання селекційних дріжджів забезпечує стабільний високий результат та дозволяє підкреслити специфічну ароматику (наприклад, квіткову).',
+      'process_koji_extended':
+          'Давня японська технологія, адаптована для кави. Ферментація за допомогою грибка Коджі розкриває приховану солодкість та глибину смаку.',
+      'process_wet_hulled_extended':
+          'Унікальний метод Індонезії. Швидка обробка при високій вологості створює впізнаваний шоколадно-пряний профіль з низькою кислотністю.',
       'flavor_spicy': 'Пряні',
       'note_cinnamon': 'Кориця',
       'note_pepper': 'Перець',
-      'desc_spicy': 'Пряні ноти можуть бути зігріваючими (кориця) або гострими (чорний перець).',
+      'desc_spicy':
+          'Пряні ноти можуть бути зігріваючими (кориця) або гострими (чорний перець).',
       'desc_note_cinnamon': 'Солодкий, деревний та зігріваючий аромат спецій.',
       'desc_note_pepper': 'Різка, гостра нота прянощів, яка додає складності.',
       'flavor_earthy': 'Землисті / Зелені',
       'note_forest': 'Лісові / Хвоя',
       'note_tobacco': 'Тютюн',
-      'desc_earthy': 'Землисті та пікантні ноти, які часто зустрічаються в індонезійській або деякій бразильській каві.',
+      'desc_earthy':
+          'Землисті та пікантні ноти, які часто зустрічаються в індонезійській або деякій бразильській каві.',
       'desc_note_forest': 'Смолисті, деревні та ноти вологого ґрунту.',
       'desc_note_tobacco': 'Сухі, димні та злегка солодкі трав\'яні ноти.',
 
@@ -1161,7 +1243,8 @@ class AppLocalizations {
       'delete_confirm_title': 'Видалити лот?',
       'delete_confirm_message': 'Ви впевнені, що хочете видалити цей лот?',
       'delete_confirm_batch_title': 'Видалити лоти?',
-      'delete_confirm_batch_message': 'Ви впевнені, що хочете видалити {count} вибраних лотів?',
+      'delete_confirm_batch_message':
+          'Ви впевнені, що хочете видалити {count} вибраних лотів?',
       'toast_select_second_lot': 'Оберіть другий лот для порівняння',
 
       'delete': 'Видалити',
@@ -1190,7 +1273,7 @@ class AppLocalizations {
       'sticky_balanced': 'Тягуча та Збалансована',
       'start_brewing': 'ПОЧАТИ ЗАВАРЮВАННЯ',
       'at_min': 'на {min}хв',
-      'pour_number': 'Вливання #{n}',
+      'pour_number': 'Вливання №{n}',
       'remove_from_favorites': 'Прибрати з обраних',
       'add_to_favorites': 'Додати до обраних',
       'restore_from_archive': 'Відновити з архіву',
@@ -1204,9 +1287,9 @@ class AppLocalizations {
       'grinder_settings': 'Налаштування помелу',
       'brew_temp': 'Температура',
       'extraction_time_hint': 'Час екстракції (хв:сек)',
-      'coffee_g': 'Кава (g)',
-      'water_ml': 'Вода (ml)',
-      'yield_g': 'Вихід (g)',
+      'coffee_g': 'Кава (г)',
+      'water_ml': 'Вода (мл)',
+      'yield_g': 'Вихід (г)',
       'notes_placeholder': 'Ваші нотатки тут...',
       'sec': 'сек',
       'choose_grinder': 'Оберіть кавомолку',
@@ -1225,11 +1308,11 @@ class AppLocalizations {
       'roast_light_medium': 'Світле - Середнє',
       'profile_balanced': 'Чистий та збалансований',
       'stat_temp': 'Температура',
-      'stat_ratio': 'Вливання',
+      'stat_ratio': 'Пропорція',
       'difficulty_label': 'Рівень',
-      'difficulty_easy': 'Легко',
+      'difficulty_easy': 'Легкий',
       'difficulty_med': 'Середній',
-      'difficulty_hard': 'Важко',
+      'difficulty_hard': 'Важкий',
       'difficulty_advanced': 'Просунутий',
       'difficulty_master': 'Майстер',
       'intensity': 'Насиченість',
@@ -1260,12 +1343,15 @@ class AppLocalizations {
       'grind_setting': 'Налаштування помелу',
       'microns_label': 'Мікрони (µm)',
       'pour_schedule_label': 'Графік вливань',
-      'pour_num': 'Вливання {num}',
+      'pour_num': 'Вливання №{num}',
       'min_label': 'Хв',
       'sec_label': 'Сек',
       'duration_label': 'Тривалість',
       'water_g': 'Вода (г)',
-      'pours_count': 'Кількість вливань: {count}',
+      'pours_count': 'Кількість вливань',
+      'unit_g': 'г',
+      'unit_ml': 'мл',
+      'unit_c': '°C',
       'notes_label': 'Примітки',
       'notes_optional': 'Примітки (опціонально)',
       'other': 'Інше',
@@ -1301,7 +1387,8 @@ class AppLocalizations {
       'no_farmers_found': 'Жодного фермера не знайдено. Синхронізація...',
       'error_loading_lots': 'Помилка завантаження лотів: {error}',
       'password_reset': 'Відновлення паролю',
-      'password_reset_instruction': 'Ми надішлемо лист із інструкціями для зміни пароля на вашу пошту.',
+      'password_reset_instruction':
+          'Ми надішлемо лист із інструкціями для зміни пароля на вашу пошту.',
       'instruction_email_sent': 'Лист із інструкцією відправлено на пошту',
       'account_id': 'ID акаунту',
       'id_copied': 'ID скопійовано',
@@ -1349,9 +1436,11 @@ class AppLocalizations {
       'opened_at_label': 'Відкрито',
       'lot_id_label': 'ID лоту',
       'continue_as_guest': 'Увійти як гість',
-      'guest_mode_notice': 'Ви увійшли як гість. Деякі функції (хмарна синхронізація) будуть обмежені.',
+      'guest_mode_notice':
+          'Ви увійшли як гість. Деякі функції (хмарна синхронізація) будуть обмежені.',
       'auth_required_title': 'Потрібна авторизація',
-      'auth_required_desc': 'Щоб додати цей лот до свого профілю, будь ласка, увійдіть в акаунт.',
+      'auth_required_desc':
+          'Щоб додати цей лот до свого профілю, будь ласка, увійдіть в акаунт.',
       'error_image_too_large': 'Зображення занадто велике (макс. 5МБ)',
       'decaf': 'ДЕКАФ',
       'log_in_now': 'Увійти зараз',

@@ -54,7 +54,8 @@ class _CustomRecipeTimerScreenState
         _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
           setState(() {
             _elapsedSec++;
-            if (_elapsedSec >= 600) { // 10 minutes limit
+            if (_elapsedSec >= 600) {
+              // 10 minutes limit
               _isRunning = false;
               _timer?.cancel();
             }
@@ -107,7 +108,14 @@ class _CustomRecipeTimerScreenState
     if (isEspresso) {
       label = ref.t('extraction');
     } else {
-      label = isBloom ? ref.t('bloom') : ref.t('pour_num', args: {'num': (pour['pourNumber'] ?? (activeIndex + 1)).toString()});
+      label = isBloom
+          ? ref.t('bloom')
+          : ref.t(
+              'pour_num',
+              args: {
+                'num': (pour['pourNumber'] ?? (activeIndex + 1)).toString(),
+              },
+            );
     }
 
     String text = '$label: $ml ml';
@@ -260,7 +268,9 @@ class _CustomRecipeTimerScreenState
                 if (widget.recipe.brewTempC > 0)
                   _StatText('🌡 ${widget.recipe.brewTempC.toInt()}°C'),
                 if (widget.recipe.comandanteClicks > 0)
-                  _StatText('🔴 ${widget.recipe.comandanteClicks} ${ref.t('clicks')}'),
+                  _StatText(
+                    '🔴 ${widget.recipe.comandanteClicks} ${ref.t('clicks')}',
+                  ),
               ],
             ),
           ),
@@ -276,7 +286,9 @@ class _CustomRecipeTimerScreenState
                 final isPast = i < activeIndex;
                 final isActive = i == activeIndex;
                 final atMin = pour['atMinute'] as num?;
-                final pourSec = atMin != null ? (atMin.toDouble() * 60).round() : 0;
+                final pourSec = atMin != null
+                    ? (atMin.toDouble() * 60).round()
+                    : 0;
                 final ml = pour['waterMl'];
                 final n = pour['pourNumber'] ?? (i + 1);
                 final isBloom = i == 0;
@@ -326,7 +338,12 @@ class _CustomRecipeTimerScreenState
                             Text(
                               (i == 0 && widget.recipe.recipeType == 'espresso')
                                   ? ref.t('extraction')
-                                  : (isBloom ? ref.t('bloom') : ref.t('pour_num', args: {'num': n.toString()})),
+                                  : (isBloom
+                                        ? ref.t('bloom')
+                                        : ref.t(
+                                            'pour_num',
+                                            args: {'num': n.toString()},
+                                          )),
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,

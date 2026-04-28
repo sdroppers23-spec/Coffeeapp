@@ -38,7 +38,7 @@ extension _RecipeFilterParamsSection on _AddRecipeDialogState {
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
-                  _LtoRTimeMaskFormatter(),
+                  _TimeMaskFormatter(),
                 ],
               ),
             ),
@@ -46,7 +46,8 @@ extension _RecipeFilterParamsSection on _AddRecipeDialogState {
             Expanded(
               child: _buildTextField(
                 controller: _tempController,
-                label: '${ref.t('brew_temp')} (${pref.tempUnit == TempUnit.celsius ? '°C' : '°F'})',
+                label:
+                    '${ref.t('brew_temp')} (${pref.tempUnit == TempUnit.celsius ? '°C' : '°F'})',
                 hint: pref.tempUnit == TempUnit.celsius ? '93.0' : '199.4',
                 keyboardType: TextInputType.number,
                 maxLength: 5,

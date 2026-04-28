@@ -69,7 +69,7 @@ class ProcessingMethodsRepository {
       },
       traits: ['Syrupy', 'Balanced', 'Sweet'],
     ),
-    
+
     // Level 2: Advanced
     ProcessingMethodInfo(
       id: 'anaerobic',
@@ -195,20 +195,44 @@ class ProcessingMethodsRepository {
   static ProcessingMethodInfo? getByMatchingName(String name) {
     final lower = name.toLowerCase();
     for (final method in methods) {
-      if (lower.contains(method.id.replaceAll('_', ' '))) return method;
+      if (lower.contains(method.id.replaceAll('_', ' '))) {
+        return method;
+      }
     }
     // Specific hardcoded legacy mappings
-    if (lower.contains('natural') || lower.contains('натур')) return getById('natural');
-    if (lower.contains('wash') || lower.contains('мит')) return getById('washed');
-    if (lower.contains('honey') || lower.contains('хан')) return getById('honey');
-    if (lower.contains('anaerob') || lower.contains('анаер')) return getById('anaerobic');
-    if (lower.contains('thermal') || lower.contains('термал')) return getById('thermal');
-    if (lower.contains('wet hull') || lower.contains('giling') || lower.contains('вет-халд')) return getById('wet_hulled');
-    if (lower.contains('carbonic') || lower.contains('вуглекисл')) return getById('carbonic');
-    if (lower.contains('lactic') || lower.contains('молочн')) return getById('lactic');
-    if (lower.contains('yeast') || lower.contains('дріждж')) return getById('yeast');
-    if (lower.contains('koji') || lower.contains('коджі')) return getById('koji');
-    
+    if (lower.contains('natural') || lower.contains('натур')) {
+      return getById('natural');
+    }
+    if (lower.contains('wash') || lower.contains('мит')) {
+      return getById('washed');
+    }
+    if (lower.contains('honey') || lower.contains('хан')) {
+      return getById('honey');
+    }
+    if (lower.contains('anaerob') || lower.contains('анаер')) {
+      return getById('anaerobic');
+    }
+    if (lower.contains('thermal') || lower.contains('термал')) {
+      return getById('thermal');
+    }
+    if (lower.contains('wet hull') ||
+        lower.contains('giling') ||
+        lower.contains('вет-халд')) {
+      return getById('wet_hulled');
+    }
+    if (lower.contains('carbonic') || lower.contains('вуглекисл')) {
+      return getById('carbonic');
+    }
+    if (lower.contains('lactic') || lower.contains('молочн')) {
+      return getById('lactic');
+    }
+    if (lower.contains('yeast') || lower.contains('дріждж')) {
+      return getById('yeast');
+    }
+    if (lower.contains('koji') || lower.contains('коджі')) {
+      return getById('koji');
+    }
+
     return null;
   }
 }

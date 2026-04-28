@@ -27,18 +27,18 @@ class BrandDetailsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final lotsAsync = ref.watch(brandLotsProvider(brand.id));
 
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(brand.name, style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+        title: Text(
+          brand.name,
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-        ),
+        decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface),
         child: Column(
           children: [
             const SizedBox(height: 100),
@@ -52,14 +52,15 @@ class BrandDetailsScreen extends ConsumerWidget {
                     height: 120,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(32),
-                      border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+                      border: Border.all(
+                        color: Theme.of(context).colorScheme.outlineVariant,
                       ),
-                    child: _BrandLogo(
-                      url: brand.logoUrl,
-                      height: 80,
                     ),
+                    child: _BrandLogo(url: brand.logoUrl, height: 80),
                   ),
                 ),
               ),
@@ -69,25 +70,45 @@ class BrandDetailsScreen extends ConsumerWidget {
               child: Text(
                 brand.fullDesc,
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, height: 1.6),
+                style: TextStyle(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.7),
+                  fontSize: 13,
+                  height: 1.6,
+                ),
               ),
             ),
             const SizedBox(height: 24),
             const Divider(color: Colors.white10),
             Expanded(
               child: lotsAsync.when(
-                loading: () => const Center(child: CircularProgressIndicator(color: Color(0xFFC8A96E))),
-                error: (e, _) => Center(child: Text(ref.t('error_loading_lots', args: {'error': e.toString()}))),
+                loading: () => const Center(
+                  child: CircularProgressIndicator(color: Color(0xFFC8A96E)),
+                ),
+                error: (e, _) => Center(
+                  child: Text(
+                    ref.t('error_loading_lots', args: {'error': e.toString()}),
+                  ),
+                ),
                 data: (lots) {
                   if (lots.isEmpty) {
                     return Center(
-                      child: Text(ref.t('no_lots_found'), style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54))),
+                      child: Text(
+                        ref.t('no_lots_found'),
+                        style: TextStyle(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withValues(alpha: 0.54),
+                        ),
+                      ),
                     );
                   }
                   return ListView.builder(
                     padding: const EdgeInsets.all(16),
                     itemCount: lots.length,
-                    itemBuilder: (context, i) => _BrandProductCard(entry: lots[i]),
+                    itemBuilder: (context, i) =>
+                        _BrandProductCard(entry: lots[i]),
                   );
                 },
               ),
@@ -114,7 +135,10 @@ class _BrandProductCard extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Text(entry.countryEmoji ?? '', style: const TextStyle(fontSize: 24)),
+                Text(
+                  entry.countryEmoji ?? '',
+                  style: const TextStyle(fontSize: 24),
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -130,13 +154,21 @@ class _BrandProductCard extends ConsumerWidget {
                       ),
                       Text(
                         entry.country,
-                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54), fontSize: 12),
+                        style: TextStyle(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withValues(alpha: 0.54),
+                          fontSize: 12,
+                        ),
                       ),
                     ],
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
@@ -154,7 +186,7 @@ class _BrandProductCard extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             Text(
-            entry.varieties,
+              entry.varieties,
               style: TextStyle(
                 color: Theme.of(
                   context,
@@ -186,12 +218,25 @@ class _BrandProductCard extends ConsumerWidget {
                   onTap: () => _showProcessDetailSheet(context, entry, ref),
                   borderRadius: BorderRadius.circular(8),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     child: Row(
                       children: [
-                        const Icon(Icons.info_outline, size: 14, color: Color(0xFFC8A96E)),
+                        const Icon(
+                          Icons.info_outline,
+                          size: 14,
+                          color: Color(0xFFC8A96E),
+                        ),
                         const SizedBox(width: 4),
-                        Text(ref.t('process_detail'), style: const TextStyle(color: Color(0xFFC8A96E), fontSize: 11)),
+                        Text(
+                          ref.t('process_detail'),
+                          style: const TextStyle(
+                            color: Color(0xFFC8A96E),
+                            fontSize: 11,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -209,7 +254,13 @@ class _BrandProductCard extends ConsumerWidget {
                       ),
                     );
                   },
-                  child: Text(ref.t('details'), style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 12)),
+                  child: Text(
+                    ref.t('details'),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontSize: 12,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -224,10 +275,7 @@ class _BrandLogo extends StatelessWidget {
   final String url;
   final double? height;
 
-  const _BrandLogo({
-    required this.url,
-    this.height,
-  });
+  const _BrandLogo({required this.url, this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -246,7 +294,10 @@ class _BrandLogo extends StatelessWidget {
       imageUrl: url,
       height: height,
       errorWidget: (_, _, _) => _FallbackIcon(height: height),
-      placeholder: (context, url) => SizedBox(height: height, child: const Center(child: CircularProgressIndicator(strokeWidth: 2))),
+      placeholder: (context, url) => SizedBox(
+        height: height,
+        child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+      ),
     );
   }
 }
@@ -265,13 +316,18 @@ class _FallbackIcon extends StatelessWidget {
   }
 }
 
-
-void _showProcessDetailSheet(BuildContext context, EncyclopediaEntry entry, WidgetRef ref) {
+void _showProcessDetailSheet(
+  BuildContext context,
+  EncyclopediaEntry entry,
+  WidgetRef ref,
+) {
   showModalBottomSheet(
     context: context,
     backgroundColor: const Color(0xFF1A1A1A),
     isScrollControlled: true,
-    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
     builder: (ctx) => DraggableScrollableSheet(
       initialChildSize: 0.6,
       maxChildSize: 0.9,
@@ -280,7 +336,14 @@ void _showProcessDetailSheet(BuildContext context, EncyclopediaEntry entry, Widg
       builder: (ctx2, scrollController) => Column(
         children: [
           const SizedBox(height: 12),
-          Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.white10, borderRadius: BorderRadius.circular(2))),
+          Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: Colors.white10,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
           const SizedBox(height: 24),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -289,7 +352,13 @@ void _showProcessDetailSheet(BuildContext context, EncyclopediaEntry entry, Widg
                 const Icon(Icons.history_edu, color: Color(0xFFC8A96E)),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: Text(ref.t('process_detail').toUpperCase(), style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18)),
+                  child: Text(
+                    ref.t('process_detail').toUpperCase(),
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -297,7 +366,14 @@ void _showProcessDetailSheet(BuildContext context, EncyclopediaEntry entry, Widg
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Text(entry.processMethod.toUpperCase(), style: const TextStyle(color: Colors.white38, letterSpacing: 1.2, fontSize: 12)),
+            child: Text(
+              entry.processMethod.toUpperCase(),
+              style: const TextStyle(
+                color: Colors.white38,
+                letterSpacing: 1.2,
+                fontSize: 12,
+              ),
+            ),
           ),
           const Divider(height: 32, color: Colors.white10),
           Expanded(
@@ -305,8 +381,16 @@ void _showProcessDetailSheet(BuildContext context, EncyclopediaEntry entry, Widg
               controller: scrollController,
               data: _translateDetailedDescription(entry, ref),
               styleSheet: MarkdownStyleSheet(
-                h3: GoogleFonts.poppins(color: const Color(0xFFC8A96E), fontWeight: FontWeight.bold, fontSize: 16),
-                p: const TextStyle(color: Colors.white70, height: 1.6, fontSize: 14),
+                h3: GoogleFonts.poppins(
+                  color: const Color(0xFFC8A96E),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+                p: const TextStyle(
+                  color: Colors.white70,
+                  height: 1.6,
+                  fontSize: 14,
+                ),
                 listBullet: const TextStyle(color: Color(0xFFC8A96E)),
               ),
             ),
@@ -319,10 +403,20 @@ void _showProcessDetailSheet(BuildContext context, EncyclopediaEntry entry, Widg
 
 String _translateDetailedDescription(EncyclopediaEntry entry, WidgetRef ref) {
   final p = entry.processMethod.toLowerCase();
-  if (p.contains('natural') || p.contains('натур')) return ref.t('process_natural_desc');
-  if (p.contains('washed') || p.contains('мит')) return ref.t('process_washed_desc');
-  if (p.contains('anaerobic') || p.contains('анаероб')) return ref.t('process_anaerobic_desc');
-  if (p.contains('thermal') || p.contains('термал')) return ref.t('process_thermal_desc');
-  if (p.contains('honey') || p.contains('хані')) return ref.t('process_honey_desc');
+  if (p.contains('natural') || p.contains('натур')) {
+    return ref.t('process_natural_desc');
+  }
+  if (p.contains('washed') || p.contains('мит')) {
+    return ref.t('process_washed_desc');
+  }
+  if (p.contains('anaerobic') || p.contains('анаероб')) {
+    return ref.t('process_anaerobic_desc');
+  }
+  if (p.contains('thermal') || p.contains('термал')) {
+    return ref.t('process_thermal_desc');
+  }
+  if (p.contains('honey') || p.contains('хані')) {
+    return ref.t('process_honey_desc');
+  }
   return entry.detailedProcessMarkdown;
 }

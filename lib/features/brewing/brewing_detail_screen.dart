@@ -54,7 +54,6 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -66,28 +65,32 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
       child: Scaffold(
         extendBodyBehindAppBar: true,
         floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          final result = await showDialog<bool>(
-            context: context,
-            builder: (context) => AddRecipeDialog(
-              lotId: '',
-              initialMethod: widget.recipe.methodKey,
-            ),
-          );
-          if (result == true) {
-            ref.invalidate(customRecipesForMethodProvider(widget.recipe.methodKey));
-            ref.invalidate(globalCustomRecipesProvider);
-          }
-        },
-        icon: const Icon(Icons.add_rounded),
-        label: Text(
-          ref.t('add_recipe'),
-          style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
-        ),
-        backgroundColor: const Color(0xFFC8A96E),
-        foregroundColor: Colors.black,
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          onPressed: () async {
+            final result = await showDialog<bool>(
+              context: context,
+              builder: (context) => AddRecipeDialog(
+                lotId: '',
+                initialMethod: widget.recipe.methodKey,
+              ),
+            );
+            if (result == true) {
+              ref.invalidate(
+                customRecipesForMethodProvider(widget.recipe.methodKey),
+              );
+              ref.invalidate(globalCustomRecipesProvider);
+            }
+          },
+          icon: const Icon(Icons.add_rounded),
+          label: Text(
+            ref.t('add_recipe'),
+            style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+          ),
+          backgroundColor: const Color(0xFFC8A96E),
+          foregroundColor: Colors.black,
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
         ),
         backgroundColor: const Color(0xFF0F0E0D),
         body: PremiumBackground(
@@ -151,8 +154,11 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                 leading: IconButton(
                   icon: const CircleAvatar(
                     backgroundColor: Colors.black26,
-                    child: Icon(Icons.arrow_back_ios_new,
-                        color: Colors.white, size: 18),
+                    child: Icon(
+                      Icons.arrow_back_ios_new,
+                      color: Colors.white,
+                      size: 18,
+                    ),
                   ),
                   onPressed: () => Navigator.of(context).pop(),
                 ),
@@ -172,7 +178,11 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                       );
                       if (result == true) {
                         // Invalidate both potential providers
-                        ref.invalidate(customRecipesForMethodProvider(widget.recipe.methodKey));
+                        ref.invalidate(
+                          customRecipesForMethodProvider(
+                            widget.recipe.methodKey,
+                          ),
+                        );
                         ref.invalidate(globalCustomRecipesProvider);
                       }
                     },
@@ -188,57 +198,63 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                 ),
               ),
               SliverToBoxAdapter(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            const Icon(Icons.info_outline_rounded, color: Color(0xFFC8A96E), size: 20),
-                            const SizedBox(width: 8),
-                            Text(
-                              ref.t('about_method').toUpperCase(),
-                              style: GoogleFonts.outfit(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w900,
-                                color: const Color(0xFFC8A96E),
-                                letterSpacing: 1.5,
-                              ),
-                            ),
-                          ],
+                        const Icon(
+                          Icons.info_outline_rounded,
+                          color: Color(0xFFC8A96E),
+                          size: 20,
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(width: 8),
                         Text(
-                          widget.recipe.description,
+                          ref.t('about_method').toUpperCase(),
                           style: GoogleFonts.outfit(
-                            fontSize: 15,
-                            color: Colors.white.withValues(alpha: 0.8),
-                            height: 1.6,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w900,
+                            color: const Color(0xFFC8A96E),
+                            letterSpacing: 1.5,
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        const Divider(color: Colors.white10),
-                        const SizedBox(height: 16),
-                        Row(
-                          children: [
-                            _buildInfoPoint(
-                              ref.t('recommended_roast'),
-                              widget.recipe.methodKey.toLowerCase().contains('espresso') 
-                                ? ref.t('roast_medium_dark') 
-                                : ref.t('roast_light_medium'),
-                              Icons.local_fire_department_rounded,
-                            ),
-                            const Spacer(),
-                            _buildInfoPoint(
-                              ref.t('flavor_profile_label'),
-                              ref.t('profile_balanced'),
-                              Icons.analytics_rounded,
-                            ),
-                          ],
                         ),
                       ],
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 16),
+                    Text(
+                      widget.recipe.description,
+                      style: GoogleFonts.outfit(
+                        fontSize: 15,
+                        color: Colors.white.withValues(alpha: 0.8),
+                        height: 1.6,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    const Divider(color: Colors.white10),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        _buildInfoPoint(
+                          ref.t('recommended_roast'),
+                          widget.recipe.methodKey.toLowerCase().contains(
+                                'espresso',
+                              )
+                              ? ref.t('roast_medium_dark')
+                              : ref.t('roast_light_medium'),
+                          Icons.local_fire_department_rounded,
+                        ),
+                        const Spacer(),
+                        _buildInfoPoint(
+                          ref.t('flavor_profile_label'),
+                          ref.t('profile_balanced'),
+                          Icons.analytics_rounded,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
             body: CustomRecipeListTab(
               methodKey: widget.recipe.methodKey,
               showFab: false,
@@ -282,7 +298,9 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
   }
 
   Widget _buildHeroImage(String url) {
-    final assetPath = _methodMeta[widget.recipe.methodKey] ?? 'assets/images/methods/v60.webp';
+    final assetPath =
+        _methodMeta[widget.recipe.methodKey] ??
+        'assets/images/methods/v60.webp';
 
     if (url.startsWith('http')) {
       return CachedNetworkImage(
@@ -291,13 +309,17 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
         placeholder: (context, url) => Container(
           color: Colors.black,
           child: const Center(
-            child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFFC8A96E)),
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: Color(0xFFC8A96E),
+            ),
           ),
         ),
-        errorWidget: (context, url, error) => Image.asset(assetPath, fit: BoxFit.cover),
+        errorWidget: (context, url, error) =>
+            Image.asset(assetPath, fit: BoxFit.cover),
       );
     }
-    
+
     if (url.startsWith('assets/')) {
       return Image.asset(url, fit: BoxFit.cover);
     }
@@ -326,7 +348,7 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
       case 'intermediate':
         return const Color(0xFFFFC107);
       case 'hard':
-        return const Color(0xFFFF5722);
+        return const Color(0xFFF44336);
       case 'advanced':
         return const Color(0xFFE91E63);
       case 'master':
@@ -359,7 +381,9 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
     final p = (profile ?? '').toLowerCase();
     if (p.contains('light') || p.contains('легка')) {
       return t('intensity_light');
-    } else if (p.contains('bold') || p.contains('сильна') || p.contains('strong')) {
+    } else if (p.contains('bold') ||
+        p.contains('сильна') ||
+        p.contains('strong')) {
       return t('intensity_bold');
     } else if (p.contains('medium') || p.contains('середня')) {
       return t('intensity_medium');
@@ -422,7 +446,8 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
                   _HeaderDivider(),
                   _HeaderStat(
                     icon: Icons.balance_rounded,
-                    value: '1:${(1 / (recipe.ratioGramsPerMl ?? 0.066)).toStringAsFixed(0)}',
+                    value:
+                        '1:${(1 / (recipe.ratioGramsPerMl ?? 0.066)).toStringAsFixed(0)}',
                     label: t('stat_ratio'),
                     color: const Color(0xFFC8A96E),
                   ),

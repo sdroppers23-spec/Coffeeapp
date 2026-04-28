@@ -190,11 +190,11 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
     final int h = totalSeconds ~/ 3600;
     final int m = (totalSeconds % 3600) ~/ 60;
     final int s = totalSeconds % 60;
-    
+
     final String hh = h.toString().padLeft(2, '0');
     final String mm = m.toString().padLeft(2, '0');
     final String ss = s.toString().padLeft(2, '0');
-    
+
     if (h > 0) return '$hh:$mm:$ss';
     return '$mm:$ss';
   }
@@ -250,10 +250,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
 
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) {
-      ToastService.showError(
-        context,
-        ref.t('fill_required_fields'),
-      );
+      ToastService.showError(context, ref.t('fill_required_fields'));
       return;
     }
 
@@ -270,7 +267,9 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
       methodKey: _method,
       name: () {
         String name = _nameController.text.trim();
-        if (name.isEmpty) name = ref.t('recipes'); // Using existing 'recipes' for generic name
+        if (name.isEmpty) {
+          name = ref.t('recipes'); // Using existing 'recipes' for generic name
+        }
         final methodSuffix = '(${_method.toUpperCase()})';
         if (!name.contains(methodSuffix)) {
           return '$name $methodSuffix';
@@ -333,10 +332,12 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
     );
 
     try {
-      debugPrint('RecipeDialog: Attempting local save for recipe ${recipe.id.value}...');
+      debugPrint(
+        'RecipeDialog: Attempting local save for recipe ${recipe.id.value}...',
+      );
       await db.upsertCustomRecipe(recipe);
       debugPrint('RecipeDialog: Local save successful');
-      
+
       if (!mounted) return;
       ToastService.showSuccess(context, ref.t('toast_recipe_saved'));
       Navigator.pop(context, true);
@@ -361,14 +362,19 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             'brew_temp_c': recipe.brewTempC.value,
             'notes': recipe.notes.value,
             'rating': recipe.rating.value,
-            'created_at': (recipe.createdAt.value ?? DateTime.now()).toIso8601String(),
+            'created_at': (recipe.createdAt.value ?? DateTime.now())
+                .toIso8601String(),
             'updated_at': DateTime.now().toIso8601String(),
             'recipe_type': recipe.recipeType.value,
           });
 
           // Mark as synced locally
-          await db.upsertCustomRecipe(recipe.copyWith(isSynced: const Value(true)));
-          debugPrint('RecipeDialog: Cloud sync successful for recipe: ${recipe.id.value}');
+          await db.upsertCustomRecipe(
+            recipe.copyWith(isSynced: const Value(true)),
+          );
+          debugPrint(
+            'RecipeDialog: Cloud sync successful for recipe: ${recipe.id.value}',
+          );
         } catch (e) {
           debugPrint('RecipeDialog: Cloud sync error (non-fatal): $e');
           // We don't fail the local save if cloud sync fails
@@ -377,10 +383,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
     } catch (e) {
       debugPrint('RecipeDialog: FATAL ERROR during local save: $e');
       if (!mounted) return;
-      ToastService.showError(
-        context,
-        ref.t('error_saving_local'),
-      );
+      ToastService.showError(context, ref.t('error_saving_local'));
     }
   }
 
@@ -494,8 +497,8 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                         // SECTION: Кава та вода (Dynamic based on Type)
                         _buildSectionHeader(
                           _recipeType == 'filter'
-                                ? ref.t('coffee_and_water')
-                                : ref.t('espresso_parameters'),
+                              ? ref.t('coffee_and_water')
+                              : ref.t('espresso_parameters'),
                         ),
                         const SizedBox(height: 20),
                         // SECTION: Method Params
@@ -507,18 +510,14 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                         const SizedBox(height: 32),
 
                         // SECTION: Grinder Settings
-                        _buildSectionHeader(
-                          ref.t('grinder_settings'),
-                        ),
+                        _buildSectionHeader(ref.t('grinder_settings')),
                         const SizedBox(height: 20),
                         _buildGrinderSection(ref, gold),
                         const SizedBox(height: 32),
 
                         // SECTION: Dynamic (Pour Schedule for Filter)
                         if (_recipeType == 'filter') ...[
-                          _buildSectionHeader(
-                            ref.t('pour_schedule'),
-                          ),
+                          _buildSectionHeader(ref.t('pour_schedule')),
                           const SizedBox(height: 12),
                           if (_recipeType != 'espresso') ...[
                             _buildPourSchedule(ref, gold),
@@ -693,7 +692,6 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
     );
   }
 
-
   Widget _buildSmallTextFieldWithLabel({
     required String label,
     required String hint,
@@ -796,7 +794,10 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             style: GoogleFonts.outfit(color: Colors.white, fontSize: 13),
             decoration: InputDecoration(
               hintText: '0',
-              hintStyle: GoogleFonts.outfit(color: Colors.white24, fontSize: 13),
+              hintStyle: GoogleFonts.outfit(
+                color: Colors.white24,
+                fontSize: 13,
+              ),
               filled: true,
               fillColor: Colors.white.withValues(alpha: 0.05),
               contentPadding: const EdgeInsets.symmetric(
@@ -848,13 +849,8 @@ class _TimeMaskFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    // 1. Strip all non-digits
+    // 1. Strip non-digits
     String digits = newValue.text.replaceAll(RegExp(r'\D'), '');
-
-    // 2. Limit to 6 digits (HHMMSS)
-    if (digits.length > 6) {
-      digits = digits.substring(digits.length - 6);
-    }
 
     if (digits.isEmpty) {
       return const TextEditingValue(
@@ -863,40 +859,56 @@ class _TimeMaskFormatter extends TextInputFormatter {
       );
     }
 
-    // 3. Parse components and apply carry logic
-    final String padded = digits.padLeft(6, '0');
-    int hh = int.parse(padded.substring(0, 2));
-    int mm = int.parse(padded.substring(2, 4));
-    int ss = int.parse(padded.substring(4, 6));
-
-    // Apply carry
-    if (ss >= 60) {
-      mm += ss ~/ 60;
-      ss %= 60;
-    }
-    if (mm >= 60) {
-      hh += mm ~/ 60;
-      mm %= 60;
+    // 2. Limit to 6 digits (HHMMSS)
+    if (digits.length > 6) {
+      digits = digits.substring(0, 6);
     }
 
-    // Cap at 99:59:59
-    if (hh > 99) {
-      hh = 99;
-      mm = 59;
-      ss = 59;
+    // 3. Interpret as LTR input: 
+    // "1" -> 1s
+    // "12" -> 12s
+    // "123" -> 1m 23s
+    // "1234" -> 12m 34s
+    // "12345" -> 1h 23m 45s
+    // "123456" -> 12h 34m 56s
+    
+    int totalSeconds = 0;
+    if (digits.length <= 2) {
+      totalSeconds = int.tryParse(digits) ?? 0;
+    } else if (digits.length <= 4) {
+      final int m = int.tryParse(digits.substring(0, digits.length - 2)) ?? 0;
+      final int s = int.tryParse(digits.substring(digits.length - 2)) ?? 0;
+      totalSeconds = m * 60 + s;
+    } else {
+      final int h = int.tryParse(digits.substring(0, digits.length - 4)) ?? 0;
+      final int m =
+          int.tryParse(digits.substring(digits.length - 4, digits.length - 2)) ??
+              0;
+      final int s = int.tryParse(digits.substring(digits.length - 2)) ?? 0;
+      totalSeconds = h * 3600 + m * 60 + s;
     }
 
-    // 4. Build the result string
-    final String hStr = hh.toString().padLeft(2, '0');
-    final String mStr = mm.toString().padLeft(2, '0');
-    final String sStr = ss.toString().padLeft(2, '0');
+    // 4. Limit to 99:59:59 (359999 seconds)
+    if (totalSeconds > 359999) {
+      totalSeconds = 359999;
+    }
+
+    // 5. Format back to HH:MM:SS with minimal padding
+    final int h = totalSeconds ~/ 3600;
+    final int m = (totalSeconds % 3600) ~/ 60;
+    final int s = totalSeconds % 60;
 
     String result;
-    if (hh > 0 || digits.length > 4) {
-      result = '$hStr:$mStr:$sStr';
+    if (h > 0) {
+      result = '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
+    } else if (m > 0 || digits.length > 2) {
+      result = '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
     } else {
-      // For 1-4 digits, show MM:SS
-      result = '$mStr:$sStr';
+      // Single digit '0' should remain '0' to avoid '00' bug
+      result = s.toString();
+      if (digits.length > 1) {
+        result = result.padLeft(2, '0');
+      }
     }
 
     return TextEditingValue(
@@ -928,37 +940,4 @@ class _MaxIntFormatter extends TextInputFormatter {
   }
 }
 
-class _LtoRTimeMaskFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    // Standard left-to-right MM:SS input
-    String digits = newValue.text.replaceAll(RegExp(r'\D'), '');
-    
-    if (digits.length > 4) {
-      digits = digits.substring(0, 4);
-    }
-
-    if (digits.isEmpty) {
-      return const TextEditingValue(
-        text: '',
-        selection: TextSelection.collapsed(offset: 0),
-      );
-    }
-
-    String result = '';
-    if (digits.length <= 2) {
-      result = digits;
-    } else {
-      result = '${digits.substring(0, 2)}:${digits.substring(2)}';
-    }
-
-    return TextEditingValue(
-      text: result,
-      selection: TextSelection.collapsed(offset: result.length),
-    );
-  }
-}
-
+// _LtoRTimeMaskFormatter was merged into _TimeMaskFormatter

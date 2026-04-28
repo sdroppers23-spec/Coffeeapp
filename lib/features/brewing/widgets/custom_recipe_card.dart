@@ -63,15 +63,15 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
         }
         widget.onLongPress?.call();
       },
-      onTap: widget.isSelectionMode 
-        ? widget.onTap 
-        : () => setState(() => _isExpanded = !_isExpanded),
+      onTap: widget.isSelectionMode
+          ? widget.onTap
+          : () => setState(() => _isExpanded = !_isExpanded),
       child: GlassContainer(
         padding: const EdgeInsets.all(0),
         opacity: widget.isSelected ? 0.25 : 0.15,
-        borderColor: widget.isSelected 
-          ? const Color(0xFFC8A96E) 
-          : Colors.white.withValues(alpha: 0.1),
+        borderColor: widget.isSelected
+            ? const Color(0xFFC8A96E)
+            : Colors.white.withValues(alpha: 0.1),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -85,10 +85,12 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Icon(
-                        widget.isSelected 
-                          ? Icons.check_circle_rounded 
-                          : Icons.radio_button_unchecked_rounded,
-                        color: widget.isSelected ? const Color(0xFFC8A96E) : Colors.white24,
+                        widget.isSelected
+                            ? Icons.check_circle_rounded
+                            : Icons.radio_button_unchecked_rounded,
+                        color: widget.isSelected
+                            ? const Color(0xFFC8A96E)
+                            : Colors.white24,
                         size: 22,
                       ),
                     ),
@@ -126,12 +128,17 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                     Column(
                       children: [
                         _CircularIndicator(
-                          onTap: () => setState(() => _isExpanded = !_isExpanded),
+                          onTap: () =>
+                              setState(() => _isExpanded = !_isExpanded),
                           isExpanded: _isExpanded,
                         ),
                         const SizedBox(height: 4),
                         IconButton(
-                          icon: const Icon(Icons.more_horiz_rounded, color: Colors.white30, size: 20),
+                          icon: const Icon(
+                            Icons.more_horiz_rounded,
+                            color: Colors.white30,
+                            size: 20,
+                          ),
                           onPressed: () => _showActions(context),
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
@@ -160,20 +167,22 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                 children: [
                   _StatCell(
                     icon: Icons.timer_outlined,
-                    value: _formatSeconds(widget.recipe.extractionTimeSeconds ?? 0),
+                    value: _formatSeconds(
+                      widget.recipe.extractionTimeSeconds ?? 0,
+                    ),
                     label: widget.ref.t('stat_time'),
                   ),
                   _VerticalDivider(),
                   _StatCell(
                     icon: Icons.thermostat_rounded,
-                    value: '${widget.recipe.brewTempC.toInt()}°C',
+                    value: '${widget.recipe.brewTempC.toInt()}${widget.ref.t('unit_c')}',
                     label: widget.ref.t('stat_temp'),
                     color: const Color(0xFFFF8A65),
                   ),
                   _VerticalDivider(),
                   _StatCell(
                     icon: Icons.balance_rounded,
-                    value: widget.recipe.brewRatio != null 
+                    value: widget.recipe.brewRatio != null
                         ? '1:${widget.recipe.brewRatio!.toStringAsFixed(1)}'
                         : '—',
                     label: widget.ref.t('stat_ratio'),
@@ -182,7 +191,7 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                   _VerticalDivider(),
                   _StatCell(
                     icon: Icons.scale_rounded,
-                    value: '${widget.recipe.coffeeGrams.toStringAsFixed(1)}g',
+                    value: '${widget.recipe.coffeeGrams.toStringAsFixed(1)}${widget.ref.t('unit_g')}',
                     label: widget.ref.t('stat_coffee'),
                     color: Colors.white70,
                   ),
@@ -226,7 +235,10 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  widget.ref.t('pour_number', args: {'n': n.toString()}),
+                                  widget.ref.t(
+                                    'pour_number',
+                                    args: {'n': n.toString()},
+                                  ),
                                   style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 12,
@@ -236,7 +248,7 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                                 const SizedBox(height: 2),
                                 if (ml != null)
                                   Text(
-                                    '${ml}ml',
+                                    '$ml${widget.ref.t('unit_ml')}',
                                     style: const TextStyle(
                                       fontSize: 13,
                                       color: Colors.white,
@@ -245,7 +257,10 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                                   ),
                                 if (at != null)
                                   Text(
-                                    widget.ref.t('at_min', args: {'min': at.toString()}),
+                                    widget.ref.t(
+                                      'at_min',
+                                      args: {'min': at.toString()},
+                                    ),
                                     style: const TextStyle(
                                       fontSize: 11,
                                       color: Colors.white38,
@@ -271,7 +286,11 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Icon(Icons.notes_rounded, size: 14, color: Colors.white38),
+                            const Icon(
+                              Icons.notes_rounded,
+                              size: 14,
+                              color: Colors.white38,
+                            ),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
@@ -289,12 +308,19 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                     ),
 
                   // Grinder Info (Moved to expanded)
-                  if (widget.recipe.grinderName != 'Other' && widget.recipe.grinderName != null)
+                  if (widget.recipe.grinderName != 'Other' &&
+                      widget.recipe.grinderName != null)
                     Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
                       child: Row(
                         children: [
-                          Icon(Icons.settings_input_component_rounded, size: 14, color: const Color(0xFFC8A96E).withValues(alpha: 0.7)),
+                          Icon(
+                            Icons.settings_input_component_rounded,
+                            size: 14,
+                            color: const Color(
+                              0xFFC8A96E,
+                            ).withValues(alpha: 0.7),
+                          ),
                           const SizedBox(width: 8),
                           Text(
                             '${widget.recipe.grinderName}: ${_getGrinderValue()}',
@@ -303,9 +329,17 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                               color: Colors.white60,
                             ),
                           ),
-                          if (widget.recipe.microns != null && widget.recipe.microns! > 0) ...[
+                          if (widget.recipe.microns != null &&
+                              widget.recipe.microns! > 0) ...[
                             const SizedBox(width: 12),
-                            Container(width: 4, height: 4, decoration: const BoxDecoration(color: Colors.white10, shape: BoxShape.circle)),
+                            Container(
+                              width: 4,
+                              height: 4,
+                              decoration: const BoxDecoration(
+                                color: Colors.white10,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
                             const SizedBox(width: 12),
                             Text(
                               '${widget.recipe.microns}μm',
@@ -329,7 +363,9 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                         child: ElevatedButton(
                           onPressed: () => Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => CustomRecipeTimerScreen(recipe: widget.recipe),
+                              builder: (_) => CustomRecipeTimerScreen(
+                                recipe: widget.recipe,
+                              ),
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
@@ -359,7 +395,9 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                     ),
                 ],
               ),
-              crossFadeState: _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+              crossFadeState: _isExpanded
+                  ? CrossFadeState.showSecond
+                  : CrossFadeState.showFirst,
               duration: const Duration(milliseconds: 300),
             ),
           ],
@@ -414,11 +452,15 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
           children: [
             ListTile(
               leading: Icon(
-                widget.recipe.isFavorite ? Icons.favorite_rounded : Icons.favorite_outline_rounded,
-                color: widget.recipe.isFavorite ? Colors.redAccent : Colors.white70,
+                widget.recipe.isFavorite
+                    ? Icons.favorite_rounded
+                    : Icons.favorite_outline_rounded,
+                color: widget.recipe.isFavorite
+                    ? Colors.redAccent
+                    : Colors.white70,
               ),
               title: Text(
-                widget.recipe.isFavorite 
+                widget.recipe.isFavorite
                     ? widget.ref.t('remove_from_favorites')
                     : widget.ref.t('add_to_favorites'),
                 style: const TextStyle(color: Colors.white),
@@ -426,17 +468,22 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
               onTap: () async {
                 Navigator.pop(context);
                 final db = widget.ref.read(databaseProvider);
-                await db.toggleCustomRecipeFavorite(widget.recipe.id, !widget.recipe.isFavorite);
+                await db.toggleCustomRecipeFavorite(
+                  widget.recipe.id,
+                  !widget.recipe.isFavorite,
+                );
                 widget.ref.invalidate(globalCustomRecipesProvider);
               },
             ),
             ListTile(
               leading: Icon(
-                widget.recipe.isArchived ? Icons.unarchive_outlined : Icons.archive_outlined,
+                widget.recipe.isArchived
+                    ? Icons.unarchive_outlined
+                    : Icons.archive_outlined,
                 color: Colors.white70,
               ),
               title: Text(
-                widget.recipe.isArchived 
+                widget.recipe.isArchived
                     ? widget.ref.t('restore_from_archive')
                     : widget.ref.t('archive_recipe'),
                 style: const TextStyle(color: Colors.white),
@@ -444,21 +491,33 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
               onTap: () async {
                 Navigator.pop(context);
                 final db = widget.ref.read(databaseProvider);
-                await db.toggleCustomRecipeArchive(widget.recipe.id, !widget.recipe.isArchived);
+                await db.toggleCustomRecipeArchive(
+                  widget.recipe.id,
+                  !widget.recipe.isArchived,
+                );
                 widget.ref.invalidate(globalCustomRecipesProvider);
               },
             ),
             ListTile(
               leading: const Icon(Icons.edit_rounded, color: Colors.white70),
-              title: Text(widget.ref.t('edit_recipe'), style: const TextStyle(color: Colors.white)),
+              title: Text(
+                widget.ref.t('edit_recipe'),
+                style: const TextStyle(color: Colors.white),
+              ),
               onTap: () {
                 Navigator.pop(context);
                 _editRecipe(context);
               },
             ),
             ListTile(
-              leading: const Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
-              title: Text(widget.ref.t('delete_recipe'), style: const TextStyle(color: Colors.redAccent)),
+              leading: const Icon(
+                Icons.delete_outline_rounded,
+                color: Colors.redAccent,
+              ),
+              title: Text(
+                widget.ref.t('delete_recipe'),
+                style: const TextStyle(color: Colors.redAccent),
+              ),
               onTap: () {
                 Navigator.pop(context);
                 _showModernUndo(context);
@@ -501,8 +560,11 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
   }
 
   String _getGrinderValue() {
-    if (widget.recipe.grinderName == 'EK43') return widget.recipe.ek43Division.toString();
-    if (widget.recipe.grinderName != null && widget.recipe.grinderName!.contains('Comandante')) {
+    if (widget.recipe.grinderName == 'EK43') {
+      return widget.recipe.ek43Division.toString();
+    }
+    if (widget.recipe.grinderName != null &&
+        widget.recipe.grinderName!.contains('Comandante')) {
       return widget.recipe.comandanteClicks.toString();
     }
     return widget.recipe.grindNumber.toString();

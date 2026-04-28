@@ -165,35 +165,42 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
               padding: const EdgeInsets.fromLTRB(20, 14, 20, 18),
               child: Row(
                 children: [
-                  _StatCell(
-                    icon: Icons.timer_outlined,
-                    value: _formatSeconds(
-                      widget.recipe.extractionTimeSeconds ?? 0,
+                  Expanded(
+                    child: _StatCell(
+                      icon: Icons.timer_outlined,
+                      value: _formatSeconds(widget.recipe.extractionTimeSeconds ?? 0),
+                      label: widget.ref.t('stat_time'),
+                      color: Colors.white,
                     ),
-                    label: widget.ref.t('stat_time'),
                   ),
                   _VerticalDivider(),
-                  _StatCell(
-                    icon: Icons.thermostat_rounded,
-                    value: '${widget.recipe.brewTempC.toInt()}${widget.ref.t('unit_c')}',
-                    label: widget.ref.t('stat_temp'),
-                    color: const Color(0xFFFF8A65),
+                  Expanded(
+                    child: _StatCell(
+                      icon: Icons.thermostat_rounded,
+                      value: '${widget.recipe.brewTempC.toInt()}${widget.ref.t('unit_c')}',
+                      label: widget.ref.t('stat_temp'),
+                      color: const Color(0xFFFFAB91), // Brighter coral
+                    ),
                   ),
                   _VerticalDivider(),
-                  _StatCell(
-                    icon: Icons.balance_rounded,
-                    value: widget.recipe.brewRatio != null
-                        ? '1:${widget.recipe.brewRatio!.toStringAsFixed(1)}'
-                        : '—',
-                    label: widget.ref.t('stat_ratio'),
-                    color: const Color(0xFFC8A96E),
+                  Expanded(
+                    child: _StatCell(
+                      icon: Icons.balance_rounded,
+                      value: (widget.recipe.brewRatio != null && widget.recipe.brewRatio! > 0)
+                          ? '1:${widget.recipe.brewRatio!.toStringAsFixed(1)}'
+                          : '—',
+                      label: widget.ref.t('stat_ratio'),
+                      color: const Color(0xFFEBCB8B), // Brighter gold
+                    ),
                   ),
                   _VerticalDivider(),
-                  _StatCell(
-                    icon: Icons.scale_rounded,
-                    value: '${widget.recipe.coffeeGrams.toStringAsFixed(1)}${widget.ref.t('unit_g')}',
-                    label: widget.ref.t('stat_coffee'),
-                    color: Colors.white70,
+                  Expanded(
+                    child: _StatCell(
+                      icon: Icons.scale_rounded,
+                      value: '${widget.recipe.coffeeGrams.toStringAsFixed(1)}${widget.ref.t('unit_g')}',
+                      label: widget.ref.t('stat_coffee'),
+                      color: Colors.white.withValues(alpha: 0.9),
+                    ),
                   ),
                 ],
               ),
@@ -213,11 +220,15 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                      child: Row(
-                        children: pours.map<Widget>((pour) {
-                          final n = pour['pourNumber'] ?? '–';
-                          final ml = pour['waterMl'];
-                          final at = pour['atMinute'];
+                                            child: Row(
+                        children: pours.asMap().entries.map<Widget>((entry) {
+                          final index = entry.key;
+                          final pour = entry.value;
+                          final n = index + 1;
+                          final ml = pour['water'];
+                          final min = pour['min'] ?? 0;
+                          final sec = pour['sec'] ?? 0;
+                          
                           return Container(
                             margin: const EdgeInsets.only(right: 10),
                             padding: const EdgeInsets.symmetric(
@@ -234,17 +245,17 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  widget.ref.t(
-                                    'pour_number',
-                                    args: {'n': n.toString()},
+                                  Text(
+                                    widget.ref.t(
+                                      'pour_number',
+                                      args: {'n': n.toString()},
+                                    ),
+                                    style: GoogleFonts.outfit(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                      color: const Color(0xFFEBCB8B),
+                                    ),
                                   ),
-                                  style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                    color: const Color(0xFFC8A96E),
-                                  ),
-                                ),
                                 const SizedBox(height: 2),
                                 if (ml != null)
                                   Text(
@@ -255,17 +266,16 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                if (at != null)
-                                  Text(
-                                    widget.ref.t(
-                                      'at_min',
-                                      args: {'min': at.toString()},
-                                    ),
-                                    style: const TextStyle(
-                                      fontSize: 11,
-                                      color: Colors.white38,
-                                    ),
+                                Text(
+                                  widget.ref.t(
+                                    'at_min',
+                                    args: {'min': '$min:${sec.toString().padLeft(2, '0')}'},
                                   ),
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.white38,
+                                  ),
+                                ),
                               ],
                             ),
                           );
@@ -628,33 +638,37 @@ class _StatCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = color ?? Colors.white;
-    return Expanded(
-      child: Column(
-        children: [
-          Icon(icon, size: 15, color: c.withValues(alpha: 0.8)),
-          const SizedBox(height: 4),
-          Text(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 14, color: c.withValues(alpha: 0.8)),
+        const SizedBox(height: 4),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
             value,
             style: GoogleFonts.outfit(
-              fontSize: 13,
+              fontSize: 12,
               fontWeight: FontWeight.w700,
               color: c,
             ),
             maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 2),
-          Text(
+        ),
+        const SizedBox(height: 2),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
             label,
             style: GoogleFonts.outfit(
-              fontSize: 9,
+              fontSize: 8,
               color: Colors.white.withValues(alpha: 0.45),
-              letterSpacing: 0.3,
+              letterSpacing: 0.2,
             ),
             maxLines: 1,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -664,8 +678,9 @@ class _VerticalDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 1,
-      height: 36,
-      color: Colors.white.withValues(alpha: 0.07),
+      height: 24,
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      color: Colors.white.withValues(alpha: 0.08),
     );
   }
 }

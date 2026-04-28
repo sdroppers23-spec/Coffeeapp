@@ -299,12 +299,8 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
       pourScheduleJson: Value(
         jsonEncode(
           _pourControllers.map((pc) {
-            String mStr = pc.min.text;
-            String sStr = pc.sec.text;
-
-            // 1 -> 10 logic
-            if (mStr.length == 1 && mStr != '0') mStr = '${mStr}0';
-            if (sStr.length == 1 && sStr != '0') sStr = '${sStr}0';
+            final mStr = pc.min.text;
+            final sStr = pc.sec.text;
 
             return {
               'min': int.tryParse(mStr) ?? 0,
@@ -859,24 +855,36 @@ class _TimeMaskFormatter extends TextInputFormatter {
       );
     }
 
-    // 2. Limit to 6 digits (HHMMSS)
-    final String limited = digits.length > 6 ? digits.substring(0, 6) : digits;
+    // 2. Limit to 4 digits (MMSS) for mm:ss format
+    final limited = digits.length > 4 ? digits.substring(0, 4) : digits;
 
-    // 3. Format as LTR: XX:XX:XX
-    String result = '';
-    for (int i = 0; i < limited.length; i++) {
-      if (i > 0 && i % 2 == 0) {
-        result += ':';
-      }
-      result += limited[i];
+    // 3. Apply 59 limit for MM and SS
+    String formatted = '';
+    
+    if (limited.length <= 2) {
+      int val = int.parse(limited);
+      if (val > 59) val = 59;
+      formatted = val.toString().padLeft(limited.length, '0');
+    } else {
+      final mmStr = limited.substring(0, 2);
+      final ssStr = limited.substring(2);
+      
+      int mm = int.parse(mmStr);
+      if (mm > 59) mm = 59;
+      
+      int ss = int.parse(ssStr);
+      if (ss > 59) ss = 59;
+      
+      formatted = '${mm.toString().padLeft(2, '0')}:${ss.toString().padLeft(ssStr.length, '0')}';
     }
 
     return TextEditingValue(
-      text: result,
-      selection: TextSelection.collapsed(offset: result.length),
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
     );
   }
 }
+
 
 class _MaxIntFormatter extends TextInputFormatter {
   final int max;

@@ -445,25 +445,24 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
                   ),
                   _HeaderDivider(),
                   _HeaderStat(
+                    icon: Icons.thermostat_rounded,
+                    value: '${recipe.tempC?.toInt() ?? 93}${t('unit_c')}',
+                    label: t('stat_temp'),
+                    color: const Color(0xFFFF8A65),
+                  ),
+                  _HeaderDivider(),
+                  _HeaderStat(
                     icon: Icons.balance_rounded,
-                    value:
-                        '1:${(1 / (recipe.ratioGramsPerMl ?? 0.066)).toStringAsFixed(0)}',
+                    value: '1:${(1 / (recipe.ratioGramsPerMl ?? 0.066)).toStringAsFixed(1)}',
                     label: t('stat_ratio'),
                     color: const Color(0xFFC8A96E),
                   ),
                   _HeaderDivider(),
                   _HeaderStat(
-                    icon: Icons.bolt_rounded,
-                    value: _getDifficultyLabel(recipe.difficulty),
-                    label: t('difficulty_label'),
-                    color: _getDifficultyColor(recipe.difficulty),
-                  ),
-                  _HeaderDivider(),
-                  _HeaderStat(
                     icon: Icons.auto_awesome_rounded,
                     value: _getIntensityLabel(recipe.flavorProfile),
-                    label: t('intensity'),
-                    color: const Color(0xFF2DD4BF),
+                    label: t('intensity_label'),
+                    color: _getIntensityColor(recipe.flavorProfile),
                   ),
                 ],
               ),
@@ -502,29 +501,35 @@ class _HeaderStat extends StatelessWidget {
     final c = color ?? Colors.white;
     return Expanded(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 14, color: c.withValues(alpha: 0.8)),
           const SizedBox(height: 4),
-          Text(
-            value,
-            style: GoogleFonts.outfit(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: c,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              value,
+              style: GoogleFonts.outfit(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: c,
+              ),
+              maxLines: 1,
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 2),
-          Text(
-            label.toUpperCase(),
-            style: GoogleFonts.outfit(
-              fontSize: 8,
-              color: Colors.white.withValues(alpha: 0.4),
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0.5,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              label.toUpperCase(),
+              style: GoogleFonts.outfit(
+                fontSize: 8,
+                color: Colors.white.withValues(alpha: 0.4),
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
+              ),
+              maxLines: 1,
             ),
-            maxLines: 1,
           ),
         ],
       ),

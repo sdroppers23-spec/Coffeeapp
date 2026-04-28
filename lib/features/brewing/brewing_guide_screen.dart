@@ -90,7 +90,7 @@ class _BrewingGuideScreenState extends ConsumerState<BrewingGuideScreen> {
               crossAxisCount: 2,
               mainAxisSpacing: 16,
               crossAxisSpacing: 16,
-              childAspectRatio: 0.82,
+              childAspectRatio: 0.85,
             ),
             itemCount: methods.length,
             itemBuilder: (context, i) {

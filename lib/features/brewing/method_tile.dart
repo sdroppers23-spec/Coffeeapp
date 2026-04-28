@@ -138,7 +138,7 @@ class MethodTile extends ConsumerWidget {
 
             // ── Bottom content ───────────────────────────────────────────
             Padding(
-              padding: const EdgeInsets.all(14),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -150,16 +150,20 @@ class MethodTile extends ConsumerWidget {
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
                       color: Colors.white,
-                      height: 1.1,
+                      height: 1.2,
+                      letterSpacing: 0.2,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
 
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 8),
 
-                  // Recipe count chip
-                  _RecipeCountChip(count: methodRecipes.length),
+                  // Recipe count chip - only show if user has custom recipes
+                  if (methodRecipes.any((r) => !r.isGuide))
+                    _RecipeCountChip(
+                      count: methodRecipes.where((r) => !r.isGuide).length,
+                    ),
                 ],
               ),
             ),
@@ -212,7 +216,7 @@ class _RecipeCountChip extends ConsumerWidget {
     final label = '$customCount ${ref.t(pluralKey)}';
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(8),
@@ -225,13 +229,14 @@ class _RecipeCountChip extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Icon(Icons.menu_book_rounded, size: 11, color: Colors.white70),
-          const SizedBox(width: 4),
+          const SizedBox(width: 5),
           Text(
             label,
             style: GoogleFonts.outfit(
               fontSize: 10,
               fontWeight: FontWeight.w500,
               color: Colors.white.withValues(alpha: 0.9),
+              letterSpacing: 0.1,
             ),
           ),
         ],

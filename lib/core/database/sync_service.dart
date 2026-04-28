@@ -354,8 +354,8 @@ class SyncService {
           if (r.isDeletedLocal) {
             debugPrint('SyncService: Deleting recipe from cloud: ${r.id}');
             await supabase!.from('user_custom_recipes').delete().eq('id', r.id).eq('user_id', userId);
-            await db.deleteCustomRecipePermanently(r.id);
-            debugPrint('SyncService: Recipe deleted permanently from local: ${r.id}');
+            await (db.update(db.customRecipes)..where((t) => t.id.equals(r.id))).write(const CustomRecipesCompanion(isSynced: Value(true)));
+            debugPrint('SyncService: Recipe deletion synced to cloud: ${r.id}');
           } else {
             await supabase!.from('user_custom_recipes').upsert({
               'id': r.id,
@@ -392,8 +392,8 @@ class SyncService {
           if (l.isDeletedLocal) {
             debugPrint('SyncService: Deleting lot from cloud: ${l.id}');
             await supabase!.from('user_coffee_lots').delete().eq('id', l.id).eq('user_id', userId);
-            await db.deleteLotPermanently(l.id);
-            debugPrint('SyncService: Lot deleted permanently from local: ${l.id}');
+            await (db.update(db.coffeeLots)..where((t) => t.id.equals(l.id))).write(const CoffeeLotsCompanion(isSynced: Value(true)));
+            debugPrint('SyncService: Lot deletion synced to cloud: ${l.id}');
           } else {
             await supabase!.from('user_coffee_lots').upsert({
               'id': l.id,

@@ -236,7 +236,7 @@ class _BrewingMethodsContent extends ConsumerWidget {
                       crossAxisCount: 2,
                       mainAxisSpacing: 16,
                       crossAxisSpacing: 16,
-                      childAspectRatio: 0.82,
+                      childAspectRatio: 0.85,
                     ),
                   ),
                 )
@@ -272,7 +272,7 @@ class _BrewingMethodsContent extends ConsumerWidget {
                       crossAxisCount: 2,
                       mainAxisSpacing: 16,
                       crossAxisSpacing: 16,
-                      childAspectRatio: 0.82,
+                      childAspectRatio: 0.85,
                     ),
                   ),
                 )

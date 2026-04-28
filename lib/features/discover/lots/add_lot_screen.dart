@@ -765,6 +765,56 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     );
   }
 
+  Widget _dropdownRow({
+    required String label,
+    required String? value,
+    required List<String> items,
+    required ValueChanged<String?> onChanged,
+    String? localizationPrefix,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 80,
+            child: Text(
+              label,
+              style: GoogleFonts.outfit(
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFFC8A96E).withValues(alpha: 0.6),
+                letterSpacing: 1.0,
+              ),
+            ),
+          ),
+          Expanded(
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: value,
+                isExpanded: true,
+                dropdownColor: const Color(0xFF1A1714),
+                icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFFC8A96E), size: 18),
+                style: GoogleFonts.outfit(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+                items: items.map((e) {
+                  final text = localizationPrefix != null 
+                      ? context.t('$localizationPrefix${e.toLowerCase().replaceAll(' ', '_')}')
+                      : e;
+                  return DropdownMenuItem(value: e, child: Text(text));
+                }).toList(),
+                onChanged: onChanged,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _updateState(VoidCallback fn) {
+    setState(fn);
+  }
+
   Widget _sensorySlider(String label, double value, Function(double) onChanged, {required ThemeData theme, bool enabled = true}) {
     return IgnorePointer(
       ignoring: !enabled,
@@ -821,5 +871,5 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       ),
     );
   }
-}}
+}
 

@@ -1,6 +1,6 @@
 part of '../../add_lot_screen.dart';
 
-extension ProcessingMethodSection on _AddLotScreenState {
+extension _ProcessingMethodSection on _AddLotScreenState {
   Widget _buildProcessSection() {
     return Column(
       children: [
@@ -10,7 +10,7 @@ extension ProcessingMethodSection on _AddLotScreenState {
             value: _selectedProcess,
             items: _processingMethods,
             onChanged: (val) {
-              setState(() {
+              _updateState(() {
                 _selectedProcess = val;
                 _isOtherProcess = val == 'Other';
                 if (!_isOtherProcess) {
@@ -56,7 +56,7 @@ extension ProcessingMethodSection on _AddLotScreenState {
                 const Spacer(),
                 Switch(
                   value: _isDecaf,
-                  onChanged: (v) => setState(() => _isDecaf = v),
+                  onChanged: (v) => _updateState(() => _isDecaf = v),
                   activeThumbColor: const Color(0xFFC8A96E),
                   activeTrackColor: const Color(0xFFC8A96E).withValues(alpha: 0.5),
                 ),
@@ -70,7 +70,7 @@ extension ProcessingMethodSection on _AddLotScreenState {
               value: _decafMethods.contains(_decafProcess) ? _decafProcess : 'Other',
               items: _decafMethods,
               onChanged: (val) {
-                setState(() {
+                _updateState(() {
                   _decafProcess = val!;
                   _isOtherDecaf = val == 'Other';
                 });

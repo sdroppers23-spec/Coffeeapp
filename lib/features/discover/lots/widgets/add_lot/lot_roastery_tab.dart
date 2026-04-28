@@ -1,6 +1,6 @@
 part of '../../add_lot_screen.dart';
 
-extension RoasteryTabSection on _AddLotScreenState {
+extension _RoasteryTabSection on _AddLotScreenState {
   Widget _buildRoasteryTab() {
     final pref = ref.watch(preferencesProvider);
     final currencySymbol = _getCurrencySymbol(pref.currency);

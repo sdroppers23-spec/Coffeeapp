@@ -1,6 +1,6 @@
 part of '../../add_lot_screen.dart';
 
-extension CoffeeTabSection on _AddLotScreenState {
+extension _CoffeeTabSection on _AddLotScreenState {
   Widget _buildCoffeeTab() {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
@@ -27,7 +27,7 @@ extension CoffeeTabSection on _AddLotScreenState {
                   child: child!,
                 ),
               );
-              if (picked != null) setState(() => _roastDate = picked);
+              if (picked != null) _updateState(() => _roastDate = picked);
             },
           ),
           _divider(),
@@ -50,7 +50,7 @@ extension CoffeeTabSection on _AddLotScreenState {
                   child: child!,
                 ),
               );
-              if (picked != null) setState(() => _openedAt = picked);
+              if (picked != null) _updateState(() => _openedAt = picked);
             },
           ),
         ]),
@@ -62,7 +62,7 @@ extension CoffeeTabSection on _AddLotScreenState {
               child: _toggleButton(
                 label: context.t('bag_closed'), 
                 active: !_isOpen, 
-                onTap: () => setState(() => _isOpen = false),
+                onTap: () => _updateState(() => _isOpen = false),
               ),
             ),
             const SizedBox(width: 8),
@@ -71,7 +71,7 @@ extension CoffeeTabSection on _AddLotScreenState {
                 label: context.t('bag_opened'), 
                 active: _isOpen, 
                 onTap: () {
-                  setState(() {
+                  _updateState(() {
                     _isOpen = true;
                     _openedAt ??= _roastDate;
                   });
@@ -102,7 +102,7 @@ extension CoffeeTabSection on _AddLotScreenState {
                     DropdownMenuItem(value: true, child: Text(context.t('ground_coffee'), style: GoogleFonts.outfit(color: Colors.white))),
                   ],
                   onChanged: (v) {
-                    setState(() {
+                    _updateState(() {
                       _isGround = v ?? false;
                       if (_isGround) _openedAt ??= _roastDate;
                     });
@@ -145,7 +145,7 @@ extension CoffeeTabSection on _AddLotScreenState {
                     }).toList(),
                     onChanged: (String? newValue) {
                       if (newValue != null) {
-                        setState(() {
+                        _updateState(() {
                           _roastLevel = newValue;
                         });
                       }

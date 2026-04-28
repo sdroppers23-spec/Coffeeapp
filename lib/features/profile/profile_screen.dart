@@ -56,12 +56,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     showDialog(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.3),
-      builder: (context) => BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: _EditProfileDialog(
-          user: user,
-          supabase: ref.read(supabaseProvider),
-        ),
+      builder: (context) => Stack(
+        children: [
+          Positioned.fill(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Container(color: Colors.transparent),
+            ),
+          ),
+          _EditProfileDialog(
+            user: user,
+            supabase: ref.read(supabaseProvider),
+          ),
+        ],
       ),
     ).then((_) => setState(() {})); // refresh UI
   }
@@ -70,9 +77,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     showDialog(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.3),
-      builder: (context) => BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Dialog(
+      builder: (context) => Stack(
+        children: [
+          Positioned.fill(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Container(color: Colors.transparent),
+            ),
+          ),
+          Dialog(
           backgroundColor: Colors.transparent,
           child: GlassContainer(
             borderRadius: 24,
@@ -148,9 +161,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             ),
           ),
         ),
-      ),
-    );
-  }
+      ],
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {

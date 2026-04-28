@@ -47,6 +47,15 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> {
   final ValueNotifier<DismissDirection?> _swipeDir = ValueNotifier(null);
 
   @override
+  void didUpdateWidget(GlassSwipeWrapper oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Reset swipe state if the key changes (meaning it's a different item)
+    if (oldWidget.dismissibleKey != widget.dismissibleKey) {
+      _swipeDir.value = null;
+    }
+  }
+
+  @override
   void dispose() {
     _swipeDir.dispose();
     super.dispose();
@@ -141,6 +150,8 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> {
               if (action != null) {
                 action.onTap();
               }
+              // Force reset swipe state after action to prevent ghost highlights
+              _swipeDir.value = null;
               return false; // We don't dismiss the widget from the tree here
             },
             child: widget.child,

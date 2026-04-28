@@ -47,8 +47,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   void dispose() {
-    // Nav bar restoration is handled by PopScope for immediate feedback, 
-    // but we keep a fallback here.
     super.dispose();
   }
 
@@ -535,10 +533,8 @@ class _EditProfileDialog extends ConsumerStatefulWidget {
 class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
   late TextEditingController _nameController;
   late TextEditingController _avatarUrlController;
-  late TextEditingController _passwordController;
   bool _isSaving = false;
   bool _isUploading = false;
-  bool _obscurePassword = true;
 
   @override
   void initState() {
@@ -550,21 +546,18 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
     _avatarUrlController = TextEditingController(
       text: meta['avatar_url'] as String? ?? '',
     );
-    _passwordController = TextEditingController();
   }
 
   @override
   void dispose() {
     _nameController.dispose();
     _avatarUrlController.dispose();
-    _passwordController.dispose();
     super.dispose();
   }
 
   Future<void> _save() async {
     setState(() => _isSaving = true);
     try {
-      // 1. Update Metadata
       await widget.supabase.auth.updateUser(
         UserAttributes(
           data: {
@@ -573,23 +566,12 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
           },
         ),
       );
-      
-      // 2. Update Password if not empty
-      if (_passwordController.text.trim().isNotEmpty) {
-        await widget.supabase.auth.updateUser(
-          UserAttributes(password: _passwordController.text.trim()),
-        );
-      }
-
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              'Error: $e',
-              style: const TextStyle(color: Colors.white),
-            ),
+            content: Text('Error: $e', style: const TextStyle(color: Colors.white)),
             backgroundColor: Colors.red,
           ),
         );
@@ -599,6 +581,24 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
     }
   }
 
+  void _showChangePasswordDialog() {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withValues(alpha: 0.3),
+      builder: (context) => Stack(
+        children: [
+          Positioned.fill(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Container(color: Colors.transparent),
+            ),
+          ),
+          _ChangePasswordDialog(supabase: widget.supabase),
+        ],
+      ),
+    );
+  }
+
   Future<void> _pickAndUploadImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(
@@ -606,28 +606,20 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
       maxWidth: 800,
       maxHeight: 800,
     );
-
     if (pickedFile == null) return;
-
     setState(() => _isUploading = true);
     try {
       final bytes = await pickedFile.readAsBytes();
       final fileExt = pickedFile.path.split('.').last;
       final fileName = '${widget.user.id}_${DateTime.now().millisecondsSinceEpoch}.$fileExt';
       final filePath = 'avatars/$fileName';
-
       await widget.supabase.storage.from('Profiles').uploadBinary(
             filePath,
             bytes,
             fileOptions: FileOptions(contentType: 'image/$fileExt'),
           );
-
       final imageUrl = widget.supabase.storage.from('Profiles').getPublicUrl(filePath);
-
-      setState(() {
-        _avatarUrlController.text = imageUrl;
-      });
-      
+      setState(() => _avatarUrlController.text = imageUrl);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(ref.t('image_uploaded'))),
@@ -646,10 +638,12 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
       if (mounted) setState(() => _isUploading = false);
     }
   }
-  @override
+
+  @override
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.transparent,
+      elevation: 0,
       insetPadding: const EdgeInsets.symmetric(horizontal: 20),
       child: GlassContainer(
         borderRadius: 24,
@@ -663,7 +657,7 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
               children: [
                 Text(
                   ref.t('edit_profile_dialog_title'),
-                  style: GoogleFonts.cormorantGaramond(
+                  style: GoogleFonts.outfit(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -672,19 +666,34 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
                 ),
                 const SizedBox(height: 24),
                 
-                // Avatar Preview & Upload
+                // Avatar Section
                 Center(
                   child: Stack(
                     children: [
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundColor: Colors.white10,
-                        backgroundImage: _avatarUrlController.text.isNotEmpty
-                            ? NetworkImage(_avatarUrlController.text)
-                            : null,
-                        child: _avatarUrlController.text.isEmpty
-                            ? const Icon(Icons.person_rounded, size: 40, color: Colors.white38)
-                            : null,
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: const Color(0xFFC8A96E), width: 2),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
+                              blurRadius: 15,
+                              spreadRadius: 2,
+                            ),
+                          ],
+                        ),
+                        child: ClipOval(
+                          child: _avatarUrlController.text.isNotEmpty
+                              ? CachedNetworkImage(
+                                  imageUrl: _avatarUrlController.text,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                                  errorWidget: (context, url, error) => const Icon(Icons.person_rounded, size: 50, color: Colors.white38),
+                                )
+                              : const Icon(Icons.person_rounded, size: 50, color: Colors.white38),
+                        ),
                       ),
                       Positioned(
                         bottom: 0,
@@ -692,68 +701,68 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
                         child: GestureDetector(
                           onTap: _isUploading ? null : _pickAndUploadImage,
                           child: Container(
-                            padding: const EdgeInsets.all(6),
+                            padding: const EdgeInsets.all(8),
                             decoration: const BoxDecoration(
                               color: Color(0xFFC8A96E),
                               shape: BoxShape.circle,
                             ),
                             child: _isUploading 
-                              ? const SizedBox(width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black))
-                              : const Icon(Icons.camera_alt_rounded, size: 14, color: Colors.black),
+                              ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black))
+                              : const Icon(Icons.camera_alt_rounded, size: 16, color: Colors.black),
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 24),
-  
+                const SizedBox(height: 32),
+
                 // Name Field
-                _buildField(
-                  label: ref.t('display_name_label'),
+                _buildFieldLabel(ref.t('display_name_label')),
+                TextFormField(
                   controller: _nameController,
-                  icon: Icons.person_outline_rounded,
-                ),
-                const SizedBox(height: 16),
-  
-                // Avatar URL Field
-                _buildField(
-                  label: ref.t('avatar_url_label'),
-                  controller: _avatarUrlController,
-                  icon: Icons.link_rounded,
-                  hint: 'https://...',
-                ),
-                const SizedBox(height: 16),
-  
-                // Password Field
-                _buildField(
-                  label: ref.t('new_password_label'),
-                  controller: _passwordController,
-                  icon: Icons.lock_outline_rounded,
-                  obscureText: _obscurePassword,
-                  hint: ref.t('change_password_hint'),
-                  suffix: IconButton(
-                    icon: Icon(
-                      _obscurePassword ? Icons.visibility_off_rounded : Icons.visibility_rounded,
-                      color: Colors.white38,
-                      size: 18,
-                    ),
-                    onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                  style: const TextStyle(color: Colors.white),
+                  decoration: _inputDecoration(
+                    hint: 'Your Name',
+                    icon: Icons.person_outline_rounded,
                   ),
                 ),
-                
+                const SizedBox(height: 16),
+
+                // Avatar URL Field
+                _buildFieldLabel(ref.t('avatar_url_label')),
+                TextFormField(
+                  controller: _avatarUrlController,
+                  style: const TextStyle(color: Colors.white),
+                  onChanged: (_) => setState(() {}),
+                  decoration: _inputDecoration(
+                    hint: 'https://...',
+                    icon: Icons.link_rounded,
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Change Password Button
+                OutlinedButton.icon(
+                  onPressed: _showChangePasswordDialog,
+                  icon: const Icon(Icons.lock_reset_rounded, size: 18),
+                  label: Text(ref.t('change_password_button')),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: const Color(0xFFC8A96E),
+                    side: const BorderSide(color: Color(0xFFC8A96E)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                ),
                 const SizedBox(height: 32),
-  
+
                 // Action Buttons
                 Row(
                   children: [
                     Expanded(
                       child: TextButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: Text(
-                          ref.t('cancel'),
-                          style: const TextStyle(color: Colors.white60),
-                        ),
+                        child: Text(ref.t('cancel'), style: const TextStyle(color: Colors.white60)),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -763,10 +772,189 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFC8A96E),
                           foregroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          elevation: 0,
                         ),
                         child: _isSaving
+                            ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black))
+                            : Text(ref.t('save_profile'), style: const TextStyle(fontWeight: FontWeight.bold)),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFieldLabel(String label) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4, bottom: 8),
+      child: Text(
+        label,
+        style: GoogleFonts.outfit(
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+          color: Colors.white70,
+        ),
+      ),
+    );
+  }
+
+  InputDecoration _inputDecoration({required String hint, required IconData icon}) {
+    return InputDecoration(
+      hintText: hint,
+      hintStyle: const TextStyle(color: Colors.white24, fontSize: 14),
+      prefixIcon: Icon(icon, color: const Color(0xFFC8A96E), size: 20),
+      filled: true,
+      fillColor: Colors.white.withValues(alpha: 0.05),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(color: Color(0xFFC8A96E), width: 1.5),
+      ),
+    );
+  }
+}
+
+class _ChangePasswordDialog extends ConsumerStatefulWidget {
+  final SupabaseClient supabase;
+  const _ChangePasswordDialog({required this.supabase});
+
+  @override
+  ConsumerState<_ChangePasswordDialog> createState() => _ChangePasswordDialogState();
+}
+
+class _ChangePasswordDialogState extends ConsumerState<_ChangePasswordDialog> {
+  final _formKey = GlobalKey<FormState>();
+  final _newPasswordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  bool _isLoading = false;
+  bool _obscureNew = true;
+  bool _obscureConfirm = true;
+
+  @override
+  void dispose() {
+    _newPasswordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _updatePassword() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+    try {
+      await widget.supabase.auth.updateUser(
+        UserAttributes(password: _newPasswordController.text.trim()),
+      );
+      if (mounted) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(ref.t('password_changed_success')), backgroundColor: Colors.green),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+      child: GlassContainer(
+        borderRadius: 24,
+        borderColor: Colors.white.withValues(alpha: 0.1),
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  ref.t('change_password_title'),
+                  style: GoogleFonts.outfit(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  ref.t('new_password_req'),
+                  style: GoogleFonts.outfit(fontSize: 12, color: Colors.white38),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                
+                _buildPasswordField(
+                  label: ref.t('new_password_label'),
+                  controller: _newPasswordController,
+                  obscureText: _obscureNew,
+                  onToggle: () => setState(() => _obscureNew = !_obscureNew),
+                  validator: (val) {
+                    if (val == null || val.isEmpty) return ref.t('password_empty_error');
+                    if (val.length < 8) return ref.t('password_too_short_error');
+                    if (val.length > 40) return ref.t('password_too_long_error');
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                _buildPasswordField(
+                  label: ref.t('confirm_password_label'),
+                  controller: _confirmPasswordController,
+                  obscureText: _obscureConfirm,
+                  onToggle: () => setState(() => _obscureConfirm = !_obscureConfirm),
+                  validator: (val) {
+                    if (val != _newPasswordController.text) return ref.t('passwords_not_match_error');
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 32),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(ref.t('cancel'), style: const TextStyle(color: Colors.white60)),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: _isLoading ? null : _updatePassword,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFC8A96E),
+                          foregroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        child: _isLoading
                             ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black))
                             : Text(ref.t('save_changes'), style: const TextStyle(fontWeight: FontWeight.bold)),
                       ),
@@ -781,42 +969,53 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
     );
   }
 
-  Widget _buildField({
+  Widget _buildPasswordField({
     required String label,
     required TextEditingController controller,
-    required IconData icon,
-    bool obscureText = false,
-    String? hint,
-    Widget? suffix,
+    required bool obscureText,
+    required VoidCallback onToggle,
+    required String? Function(String?) validator,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 4, bottom: 6),
-          child: Text(
-            label,
-            style: GoogleFonts.outfit(fontSize: 12, color: Colors.white54),
-          ),
+          padding: const EdgeInsets.only(left: 4, bottom: 8),
+          child: Text(label, style: GoogleFonts.outfit(fontSize: 13, color: Colors.white70)),
         ),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.05),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.white10),
-          ),
-          child: TextField(
-            controller: controller,
-            obscureText: obscureText,
-            style: const TextStyle(color: Colors.white, fontSize: 14),
-            decoration: InputDecoration(
-              hintText: hint,
-              hintStyle: const TextStyle(color: Colors.white24, fontSize: 13),
-              prefixIcon: Icon(icon, size: 18, color: const Color(0xFFC8A96E).withValues(alpha: 0.7)),
-              suffixIcon: suffix,
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        TextFormField(
+          controller: controller,
+          obscureText: obscureText,
+          validator: validator,
+          style: const TextStyle(color: Colors.white, fontSize: 15),
+          decoration: InputDecoration(
+            prefixIcon: const Icon(Icons.lock_outline_rounded, color: Color(0xFFC8A96E), size: 20),
+            suffixIcon: IconButton(
+              icon: Icon(
+                obscureText ? Icons.visibility_off_rounded : Icons.visibility_rounded,
+                color: Colors.white38,
+                size: 18,
+              ),
+              onPressed: onToggle,
             ),
+            hintText: '••••••••',
+            hintStyle: const TextStyle(color: Colors.white24),
+            filled: true,
+            fillColor: Colors.white.withValues(alpha: 0.05),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide.none,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(color: Color(0xFFC8A96E), width: 1.5),
+            ),
+            errorStyle: const TextStyle(color: Colors.redAccent),
           ),
         ),
       ],

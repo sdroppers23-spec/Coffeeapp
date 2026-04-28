@@ -157,25 +157,65 @@ class _BrewingMethodsContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final recipesAsync = ref.watch(brewingRecipesProvider);
+    final customRecipesAsync = ref.watch(globalCustomRecipesProvider);
     final navHeight = ref.watch(navBarHeightProvider);
 
     return recipesAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, stack) => Center(child: Text('Error: $e')),
-      data: (recipes) {
-        final isGrid = ref.watch(brewingViewModeProvider);
+      data: (guideRecipes) {
+        return customRecipesAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, stack) => Center(child: Text('Error: $e')),
+          data: (customRecipes) {
+            final isGrid = ref.watch(brewingViewModeProvider);
 
-        // Group recipes by category and methodKey
-        Map<String, List<BrewingRecipeDto>> groupByMethod(List<BrewingRecipeDto> list) {
-          final grouped = <String, List<BrewingRecipeDto>>{};
-          for (var r in list) {
-            grouped.putIfAbsent(r.methodKey, () => []).add(r);
-          }
-          return grouped;
-        }
+            // Group recipes by category and methodKey
+            Map<String, List<BrewingRecipeDto>> groupByMethod(
+              List<BrewingRecipeDto> guideList,
+              List<CustomRecipeDto> customList,
+            ) {
+              final grouped = <String, List<BrewingRecipeDto>>{};
+              
+              // 1. Add guide recipes
+              for (var r in guideList) {
+                grouped.putIfAbsent(r.methodKey, () => []).add(r);
+              }
+              
+              // 2. Add custom recipes (mapped to DTO)
+              for (var cr in customList) {
+                // Determine if this custom recipe belongs to an existing guide method or is a new one
+                // For simplicity, we only show custom recipes that match guide method keys on these tiles
+                if (grouped.containsKey(cr.methodKey)) {
+                  grouped[cr.methodKey]!.add(BrewingRecipeDto(
+                    id: cr.id.hashCode,
+                    methodKey: cr.methodKey,
+                    name: cr.name,
+                    description: cr.notes,
+                    imageUrl: '', 
+                    category: cr.recipeType,
+                    difficulty: 'Medium',
+                    totalTimeSec: cr.extractionTimeSeconds,
+                    tempC: cr.brewTempC,
+                    ratioGramsPerMl: cr.brewRatio,
+                    isGuide: false,
+                  ));
+                }
+              }
+              return grouped;
+            }
 
-        final espressoMethods = groupByMethod(recipes.where((r) => r.category == 'espresso').toList()).values.toList();
-        final filterMethods = groupByMethod(recipes.where((r) => r.category != 'espresso').toList()).values.toList();
+            final espressoGrouped = groupByMethod(
+              guideRecipes.where((r) => r.category == 'espresso').toList(),
+              customRecipes,
+            );
+            final filterGrouped = groupByMethod(
+              guideRecipes.where((r) => r.category != 'espresso').toList(),
+              customRecipes,
+            );
+
+            final espressoMethods = espressoGrouped.values.toList();
+            final filterMethods = filterGrouped.values.toList();
 
         return CustomScrollView(
           slivers: [
@@ -257,8 +297,9 @@ class _BrewingMethodsContent extends ConsumerWidget {
             SliverToBoxAdapter(child: SizedBox(height: navHeight + 48)),
           ],
         );
+          },
+        );
       },
-
     );
   }
 }

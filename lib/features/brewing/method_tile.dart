@@ -182,7 +182,7 @@ class MethodTile extends ConsumerWidget {
                   const SizedBox(height: 6),
 
                   // Recipe count chip
-                  _RecipeCountChip(count: _count),
+                  _RecipeCountChip(count: methodRecipes.where((r) => !r.isGuide).length),
                 ],
               ),
             ),
@@ -221,14 +221,18 @@ class _RecipeCountChip extends ConsumerWidget {
   
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (count == 0) return const SizedBox.shrink();
+    final customCount = count; // Actually, I should pass the pre-filtered count or filter here
+    // Wait, MethodTile passes methodRecipes.length to _RecipeCountChip.
+    // I should probably change what MethodTile passes.
+    
+    if (customCount == 0) return const SizedBox.shrink();
 
-    final String pluralKey = count == 1
+    final String pluralKey = customCount == 1
         ? 'recipe_1'
-        : (count >= 2 && count <= 4)
+        : (customCount >= 2 && customCount <= 4)
             ? 'recipe_2_4'
             : 'recipe_5_plus';
-    final label = '$count ${ref.t(pluralKey)}';
+    final label = '$customCount ${ref.t(pluralKey)}';
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),

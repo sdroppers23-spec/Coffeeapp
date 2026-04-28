@@ -289,6 +289,7 @@ class BrewingRecipeDto {
   final String? flavorProfile;
   final String? iconName;
   final String category; // 'filter' or 'espresso'
+  final bool isGuide;
 
   BrewingRecipeDto({
     required this.id,
@@ -304,7 +305,42 @@ class BrewingRecipeDto {
     this.flavorProfile,
     this.iconName,
     this.category = 'filter',
+    this.isGuide = false,
   });
+
+  BrewingRecipeDto copyWith({
+    int? id,
+    String? methodKey,
+    String? name,
+    String? description,
+    String? imageUrl,
+    double? ratioGramsPerMl,
+    double? tempC,
+    int? totalTimeSec,
+    String? difficulty,
+    String? stepsJson,
+    String? flavorProfile,
+    String? iconName,
+    String? category,
+    bool? isGuide,
+  }) {
+    return BrewingRecipeDto(
+      id: id ?? this.id,
+      methodKey: methodKey ?? this.methodKey,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      imageUrl: imageUrl ?? this.imageUrl,
+      ratioGramsPerMl: ratioGramsPerMl ?? this.ratioGramsPerMl,
+      tempC: tempC ?? this.tempC,
+      totalTimeSec: totalTimeSec ?? this.totalTimeSec,
+      difficulty: difficulty ?? this.difficulty,
+      stepsJson: stepsJson ?? this.stepsJson,
+      flavorProfile: flavorProfile ?? this.flavorProfile,
+      iconName: iconName ?? this.iconName,
+      category: category ?? this.category,
+      isGuide: isGuide ?? this.isGuide,
+    );
+  }
 }
 
 class SphereRegionDto {

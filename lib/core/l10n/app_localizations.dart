@@ -1,12 +1,19 @@
-import 'package:flutter/widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'sca_flavor_wheel_l10n.dart';
+import '../providers/settings_provider.dart';
 
 class LocaleNotifier extends Notifier<String> {
-  @override
-  String build() => 'uk';
+  static const String _localeKey = 'app_locale';
 
-  void setLocale(String languageCode) {
+  @override
+  String build() {
+    final prefs = ref.watch(sharedPreferencesProvider);
+    final savedLocale = prefs.getString(_localeKey) ?? 'uk';
+    LocaleService.currentLocale = savedLocale;
+    return savedLocale;
+  }
+
+  Future<void> setLocale(String languageCode) async {
+    final prefs = ref.read(sharedPreferencesProvider);
+    await prefs.setString(_localeKey, languageCode);
     state = languageCode;
     LocaleService.currentLocale = languageCode;
   }
@@ -690,6 +697,22 @@ class AppLocalizations {
       'error_image_too_large': 'Image is too large (max. 5MB)',
       'decaf': 'DECAF',
       'log_in_now': 'Log In Now',
+      'edit_profile_dialog_title': 'Edit Profile',
+      'display_name_label': 'Display Name',
+      'avatar_url_label': 'Avatar URL',
+      'change_password_button': 'Change Password',
+      'save_profile': 'Save Profile',
+      'change_password_title': 'Change Password',
+      'new_password_req': 'Min 8, max 40 characters',
+      'new_password_label': 'New Password',
+      'confirm_password_label': 'Confirm Password',
+      'password_empty_error': 'Please enter a password',
+      'password_too_short_error': 'Password must be at least 8 characters',
+      'password_too_long_error': 'Password must be at most 40 characters',
+      'passwords_not_match_error': 'Passwords do not match',
+      'password_changed_success': 'Password changed successfully!',
+      'image_uploaded': 'Image uploaded successfully',
+      'upload_failed': 'Upload failed: {error}',
     },
     'uk': {
       'discover': 'Відкриття',
@@ -1297,6 +1320,22 @@ class AppLocalizations {
       'error_image_too_large': 'Зображення занадто велике (макс. 5МБ)',
       'decaf': 'ДЕКАФ',
       'log_in_now': 'Увійти зараз',
+      'edit_profile_dialog_title': 'Редагувати профіль',
+      'display_name_label': 'Ваше ім\'я',
+      'avatar_url_label': 'URL аватара',
+      'change_password_button': 'Змінити пароль',
+      'save_profile': 'Зберегти профіль',
+      'change_password_title': 'Зміна пароля',
+      'new_password_req': 'Мін 8, макс 40 символів',
+      'new_password_label': 'Новий пароль',
+      'confirm_password_label': 'Підтвердіть пароль',
+      'password_empty_error': 'Будь ласка, введіть пароль',
+      'password_too_short_error': 'Пароль має бути не менше 8 символів',
+      'password_too_long_error': 'Пароль має бути не більше 40 символів',
+      'passwords_not_match_error': 'Паролі не співпадають',
+      'password_changed_success': 'Пароль успішно змінено!',
+      'image_uploaded': 'Зображення завантажено',
+      'upload_failed': 'Помилка завантаження: {error}',
     },
   };
 }

@@ -11,7 +11,8 @@ import 'method_tile.dart';
 final brewingRecipesProvider = FutureProvider<List<BrewingRecipeDto>>((ref) async {
   final db = ref.watch(databaseProvider);
   final locale = ref.watch(localeProvider);
-  return db.getAllBrewingRecipes(locale);
+  final recipes = await db.getAllBrewingRecipes(locale);
+  return recipes.map((r) => r.copyWith(isGuide: true)).toList();
 });
 
 // ─── Screen ───────────────────────────────────────────────────────────────────

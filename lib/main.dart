@@ -92,6 +92,7 @@ class SpecialtyTrackerApp extends ConsumerWidget {
 
     final router = ref.watch(routerProvider);
     final themeMode = ref.watch(themeProvider);
+    final languageCode = ref.watch(localeProvider);
 
     // Watch the database initializer to trigger seeding and cloud sync at startup
     ref.watch(databaseInitializerProvider);
@@ -101,6 +102,7 @@ class SpecialtyTrackerApp extends ConsumerWidget {
       theme: AppTheme.darkTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,
+      locale: Locale(languageCode),
       routerConfig: router,
       debugShowCheckedModeBanner: false,
     );

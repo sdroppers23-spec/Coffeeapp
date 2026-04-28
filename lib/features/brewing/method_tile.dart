@@ -7,6 +7,7 @@ import '../../shared/widgets/glass_container.dart';
 import '../../core/l10n/app_localizations.dart';
 import 'brewing_detail_screen.dart';
 import 'method_recipes_screen.dart';
+import 'custom_recipe_list.dart';
 import '../navigation/navigation_providers.dart';
 
 // ─── Method metadata ─────────────────────────────────────────────────────────
@@ -160,10 +161,21 @@ class MethodTile extends ConsumerWidget {
                   const SizedBox(height: 8),
 
                   // Recipe count chip - only show if user has custom recipes
-                  if (methodRecipes.any((r) => !r.isGuide))
-                    _RecipeCountChip(
-                      count: methodRecipes.where((r) => !r.isGuide).length,
-                    ),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final customRecipesAsync = ref.watch(globalCustomRecipesProvider);
+                      return customRecipesAsync.maybeWhen(
+                        data: (allCustom) {
+                          final count = allCustom
+                              .where((r) => r.methodKey == _firstRecipe.methodKey)
+                              .length;
+                          if (count == 0) return const SizedBox.shrink();
+                          return _RecipeCountChip(count: count);
+                        },
+                        orElse: () => const SizedBox.shrink(),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),

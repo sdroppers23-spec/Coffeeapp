@@ -317,10 +317,60 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
 
   _StickyHeaderDelegate({required this.recipe, required this.t});
 
+  Color _getDifficultyColor(String? difficulty) {
+    switch ((difficulty ?? 'Medium').toLowerCase()) {
+      case 'easy':
+      case 'beginner':
+        return const Color(0xFF4CAF50);
+      case 'medium':
+      case 'intermediate':
+        return const Color(0xFFFFC107);
+      case 'hard':
+        return const Color(0xFFFF5722);
+      case 'advanced':
+        return const Color(0xFFE91E63);
+      case 'master':
+        return const Color(0xFF9C27B0);
+      default:
+        return const Color(0xFFFFC107);
+    }
+  }
+
+  String _getDifficultyLabel(String? difficulty) {
+    switch ((difficulty ?? 'Medium').toLowerCase()) {
+      case 'easy':
+      case 'beginner':
+        return t('difficulty_easy');
+      case 'medium':
+      case 'intermediate':
+        return t('difficulty_med');
+      case 'hard':
+        return t('difficulty_hard');
+      case 'advanced':
+        return t('difficulty_advanced');
+      case 'master':
+        return t('difficulty_master');
+      default:
+        return t('difficulty_med');
+    }
+  }
+
+  String _getIntensityLabel(String? profile) {
+    final p = (profile ?? '').toLowerCase();
+    if (p.contains('light') || p.contains('легка')) {
+      return t('intensity_light');
+    } else if (p.contains('bold') || p.contains('сильна') || p.contains('strong')) {
+      return t('intensity_bold');
+    } else if (p.contains('medium') || p.contains('середня')) {
+      return t('intensity_medium');
+    }
+    return profile ?? '';
+  }
+
   @override
-  double get minExtent => 160;
+  double get minExtent => 140;
   @override
-  double get maxExtent => 160;
+  double get maxExtent => 140;
 
   @override
   Widget build(
@@ -338,90 +388,66 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
               end: Alignment.bottomCenter,
               colors: [
                 const Color(0xFF0F0E0D).withValues(alpha: 0.4),
-                const Color(0xFF0F0E0D).withValues(alpha: 0.7),
-                const Color(0xFF0F0E0D).withValues(alpha: 0.9),
+                const Color(0xFF0F0E0D).withValues(alpha: 0.8),
                 const Color(0xFF0F0E0D),
               ],
-              stops: const [0.0, 0.3, 0.7, 1.0],
+              stops: const [0.0, 0.5, 1.0],
             ),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            recipe.name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.cormorantGaramond(
-              fontSize: 36, // Slightly smaller for sticky
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              height: 1.0,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
-                width: 1,
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                recipe.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.cormorantGaramond(
+                  fontSize: 34,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  height: 1.0,
+                ),
               ),
-              color: const Color(0xFF1A1918).withValues(alpha: 0.4),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: _ParameterItem(
-                      label: t('ratio'),
-                      value:
-                          '1:${(1 / (recipe.ratioGramsPerMl ?? 0.066)).toStringAsFixed(0)}',
-                    ),
+              const SizedBox(height: 16),
+              // Unified Stats Row
+              Row(
+                children: [
+                  _HeaderStat(
+                    icon: Icons.timer_outlined,
+                    value: _formatTime(recipe.totalTimeSec ?? 180),
+                    label: t('stat_time'),
                   ),
-                ),
-                Container(width: 1, height: 24, color: Colors.white10),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: _ParameterItem(
-                      label: t('timer'),
-                      value: _formatTime(recipe.totalTimeSec ?? 180),
-                    ),
+                  _HeaderDivider(),
+                  _HeaderStat(
+                    icon: Icons.balance_rounded,
+                    value: '1:${(1 / (recipe.ratioGramsPerMl ?? 0.066)).toStringAsFixed(0)}',
+                    label: t('stat_ratio'),
+                    color: const Color(0xFFC8A96E),
                   ),
-                ),
-                Container(width: 1, height: 24, color: Colors.white10),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: _ParameterItem(
-                      label: t('difficulty'),
-                      value: recipe.difficulty ?? t('difficulty_med'),
-                    ),
+                  _HeaderDivider(),
+                  _HeaderStat(
+                    icon: Icons.bolt_rounded,
+                    value: _getDifficultyLabel(recipe.difficulty),
+                    label: t('difficulty_label'),
+                    color: _getDifficultyColor(recipe.difficulty),
                   ),
-                ),
-                Container(width: 1, height: 24, color: Colors.white10),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: _ParameterItem(
-                      label: t('intensity'),
-                      value: recipe.flavorProfile ?? t('balanced'),
-                    ),
+                  _HeaderDivider(),
+                  _HeaderStat(
+                    icon: Icons.auto_awesome_rounded,
+                    value: _getIntensityLabel(recipe.flavorProfile),
+                    label: t('intensity'),
+                    color: const Color(0xFF2DD4BF),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
+            ],
           ),
-        ],
+        ),
       ),
-    ),
-   ),
-  );
- }
+    );
+  }
 
   String _formatTime(int seconds) {
     final int m = seconds ~/ 60;
@@ -433,42 +459,62 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(_StickyHeaderDelegate oldDelegate) => true;
 }
 
-// ─── Parameter Item ──────────────────────────────────────────────────────────
-class _ParameterItem extends StatelessWidget {
-  final String label;
+class _HeaderStat extends StatelessWidget {
+  final IconData icon;
   final String value;
-  const _ParameterItem({required this.label, required this.value});
+  final String label;
+  final Color? color;
+
+  const _HeaderStat({
+    required this.icon,
+    required this.value,
+    required this.label,
+    this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          label.toUpperCase(),
-          textAlign: TextAlign.center,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.outfit(
-            fontSize: 8,
-            color: const Color(0xFFC8A96E).withValues(alpha: 0.8),
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.5,
+    final c = color ?? Colors.white;
+    return Expanded(
+      child: Column(
+        children: [
+          Icon(icon, size: 14, color: c.withValues(alpha: 0.8)),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: GoogleFonts.outfit(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: c,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          textAlign: TextAlign.center,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.outfit(
-            fontSize: 13,
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
+          const SizedBox(height: 2),
+          Text(
+            label.toUpperCase(),
+            style: GoogleFonts.outfit(
+              fontSize: 8,
+              color: Colors.white.withValues(alpha: 0.4),
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.5,
+            ),
+            maxLines: 1,
           ),
-        ),
-      ],
+        ],
+      ),
+    );
+  }
+}
+
+class _HeaderDivider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 1,
+      height: 30,
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      color: Colors.white.withValues(alpha: 0.08),
     );
   }
 }

@@ -38,7 +38,7 @@ extension _RecipeFilterParamsSection on _AddRecipeDialogState {
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
-                  _TimeMaskFormatter(),
+                  _LtoRTimeMaskFormatter(),
                 ],
               ),
             ),

@@ -33,12 +33,15 @@ class RecipeCard extends ConsumerWidget {
       case 'easy':
       case 'beginner':
         return ref.t('difficulty_easy');
-      case 'intermediate':
       case 'medium':
+      case 'intermediate':
         return ref.t('difficulty_med');
-      case 'advanced':
       case 'hard':
         return ref.t('difficulty_hard');
+      case 'advanced':
+        return ref.t('difficulty_advanced');
+      case 'master':
+        return ref.t('difficulty_master');
       default:
         return ref.t('difficulty_med');
     }
@@ -49,12 +52,30 @@ class RecipeCard extends ConsumerWidget {
       case 'easy':
       case 'beginner':
         return const Color(0xFF4CAF50);
-      case 'intermediate':
       case 'medium':
+      case 'intermediate':
         return const Color(0xFFFFC107);
-      default:
+      case 'hard':
         return const Color(0xFFFF5722);
+      case 'advanced':
+        return const Color(0xFFE91E63);
+      case 'master':
+        return const Color(0xFF9C27B0);
+      default:
+        return const Color(0xFFFFC107);
     }
+  }
+
+  String _getIntensityLabel(WidgetRef ref) {
+    final profile = (recipe.flavorProfile ?? '').toLowerCase();
+    if (profile.contains('light') || profile.contains('легка')) {
+      return ref.t('intensity_light');
+    } else if (profile.contains('bold') || profile.contains('сильна') || profile.contains('strong')) {
+      return ref.t('intensity_bold');
+    } else if (profile.contains('medium') || profile.contains('середня')) {
+      return ref.t('intensity_medium');
+    }
+    return recipe.flavorProfile ?? '';
   }
 
   @override
@@ -171,7 +192,7 @@ class RecipeCard extends ConsumerWidget {
               ),
             ),
 
-            // ── Flavor Profile tag ────────────────────────────────────────
+            // ── Intensity Tag ─────────────────────────────────────────────
             if (recipe.flavorProfile != null && recipe.flavorProfile!.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
@@ -187,11 +208,11 @@ class RecipeCard extends ConsumerWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.local_florist_outlined,
+                      Icon(Icons.auto_awesome_rounded,
                           size: 11, color: gold.withValues(alpha: 0.8)),
                       const SizedBox(width: 5),
                       Text(
-                        recipe.flavorProfile!,
+                        _getIntensityLabel(ref),
                         style: GoogleFonts.outfit(
                           fontSize: 11,
                           fontWeight: FontWeight.w500,

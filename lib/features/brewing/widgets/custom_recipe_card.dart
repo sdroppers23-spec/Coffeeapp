@@ -77,16 +77,20 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
           children: [
             // Header
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 8, 4),
+              padding: const EdgeInsets.fromLTRB(20, 20, 12, 0),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (widget.isSelectionMode) ...[
-                    Icon(
-                      widget.isSelected 
-                        ? Icons.check_circle_rounded 
-                        : Icons.radio_button_unchecked_rounded,
-                      color: widget.isSelected ? const Color(0xFFC8A96E) : Colors.white24,
-                      size: 22,
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Icon(
+                        widget.isSelected 
+                          ? Icons.check_circle_rounded 
+                          : Icons.radio_button_unchecked_rounded,
+                        color: widget.isSelected ? const Color(0xFFC8A96E) : Colors.white24,
+                        size: 22,
+                      ),
                     ),
                     const SizedBox(width: 12),
                   ],
@@ -94,53 +98,43 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                widget.recipe.name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.outfit(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xFFC8A96E),
-                                ),
-                              ),
-                            ),
-                            if (widget.recipe.isFavorite)
-                              const Padding(
-                                padding: EdgeInsets.only(left: 8),
-                                child: Icon(Icons.favorite_rounded, color: Colors.redAccent, size: 16),
-                              ),
-                          ],
+                        Text(
+                          widget.recipe.name,
+                          style: GoogleFonts.cormorantGaramond(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            height: 1.1,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
+                        const SizedBox(height: 6),
                         Text(
                           '${widget.recipe.methodKey.toUpperCase()} • ${widget.recipe.totalWaterMl.toInt()}ml',
                           style: GoogleFonts.outfit(
-                            fontSize: 11,
-                            color: Colors.white38,
+                            fontSize: 13,
+                            color: Colors.white.withValues(alpha: 0.65),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
                     ),
                   ),
+                  const SizedBox(width: 12),
                   if (!widget.isSelectionMode)
-                    Row(
+                    Column(
                       children: [
-                        AnimatedRotation(
-                          duration: const Duration(milliseconds: 200),
-                          turns: _isExpanded ? 0.5 : 0,
-                          child: Icon(
-                            Icons.expand_more_rounded,
-                            color: _isExpanded ? const Color(0xFFC8A96E) : Colors.white38,
-                            size: 20,
-                          ),
+                        _CircularIndicator(
+                          onTap: () => setState(() => _isExpanded = !_isExpanded),
+                          isExpanded: _isExpanded,
                         ),
+                        const SizedBox(height: 4),
                         IconButton(
-                          icon: const Icon(Icons.more_horiz_rounded, color: Colors.white38),
+                          icon: const Icon(Icons.more_horiz_rounded, color: Colors.white30, size: 20),
                           onPressed: () => _showActions(context),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
                         ),
                       ],
                     ),
@@ -148,43 +142,50 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
               ),
             ),
 
-            // Key stats
+            const SizedBox(height: 16),
+
+            // Divider
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              child: Wrap(
-                spacing: 8,
-                runSpacing: 8,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Divider(
+                color: Colors.white.withValues(alpha: 0.08),
+                height: 1,
+              ),
+            ),
+
+            // Stats row (Standardized)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 14, 20, 18),
+              child: Row(
                 children: [
-                  _Tag(
-                    Icons.scale_rounded,
-                    '${widget.recipe.coffeeGrams.toStringAsFixed(1)}g',
+                  _StatCell(
+                    icon: Icons.timer_outlined,
+                    value: _formatSeconds(widget.recipe.extractionTimeSeconds ?? 0),
+                    label: widget.ref.t('stat_time'),
                   ),
-                  _Tag(
-                    Icons.water_drop_rounded,
-                    '${widget.recipe.totalWaterMl.toStringAsFixed(0)}ml',
+                  _VerticalDivider(),
+                  _StatCell(
+                    icon: Icons.thermostat_rounded,
+                    value: '${widget.recipe.brewTempC.toInt()}°C',
+                    label: widget.ref.t('stat_temp'),
+                    color: const Color(0xFFFF8A65),
                   ),
-                  if (widget.recipe.brewTempC > 0)
-                    _Tag(
-                      Icons.thermostat_rounded,
-                      '${widget.recipe.brewTempC.toInt()}°C',
-                    ),
-                  if (widget.recipe.brewRatio != null && widget.recipe.brewRatio! > 0)
-                    _Tag(
-                      Icons.balance_rounded,
-                      '1:${widget.recipe.brewRatio!.toStringAsFixed(1)}',
-                    ),
-                  if (widget.recipe.grinderName != 'Other' && widget.recipe.grinderName != null)
-                    _Tag(
-                      Icons.settings_input_component_rounded,
-                      '${widget.recipe.grinderName}: ${_getGrinderValue()}',
-                    ),
-                  if (widget.recipe.microns != null && widget.recipe.microns! > 0)
-                    _Tag(
-                      Icons.height_rounded, 
-                      '${widget.recipe.microns}μm',
-                    ),
-                  if (widget.recipe.totalPours > 1 && widget.recipe.recipeType != 'espresso')
-                    _Tag(Icons.opacity_rounded, widget.ref.t('pours_count', args: {'count': widget.recipe.totalPours.toString()})),
+                  _VerticalDivider(),
+                  _StatCell(
+                    icon: Icons.balance_rounded,
+                    value: widget.recipe.brewRatio != null 
+                        ? '1:${widget.recipe.brewRatio!.toStringAsFixed(1)}'
+                        : '—',
+                    label: widget.ref.t('stat_ratio'),
+                    color: const Color(0xFFC8A96E),
+                  ),
+                  _VerticalDivider(),
+                  _StatCell(
+                    icon: Icons.scale_rounded,
+                    value: '${widget.recipe.coffeeGrams.toStringAsFixed(1)}g',
+                    label: widget.ref.t('stat_coffee'),
+                    color: Colors.white70,
+                  ),
                 ],
               ),
             ),
@@ -284,6 +285,37 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                             ),
                           ],
                         ),
+                      ),
+                    ),
+
+                  // Grinder Info (Moved to expanded)
+                  if (widget.recipe.grinderName != 'Other' && widget.recipe.grinderName != null)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+                      child: Row(
+                        children: [
+                          Icon(Icons.settings_input_component_rounded, size: 14, color: const Color(0xFFC8A96E).withValues(alpha: 0.7)),
+                          const SizedBox(width: 8),
+                          Text(
+                            '${widget.recipe.grinderName}: ${_getGrinderValue()}',
+                            style: GoogleFonts.outfit(
+                              fontSize: 12,
+                              color: Colors.white60,
+                            ),
+                          ),
+                          if (widget.recipe.microns != null && widget.recipe.microns! > 0) ...[
+                            const SizedBox(width: 12),
+                            Container(width: 4, height: 4, decoration: const BoxDecoration(color: Colors.white10, shape: BoxShape.circle)),
+                            const SizedBox(width: 12),
+                            Text(
+                              '${widget.recipe.microns}μm',
+                              style: GoogleFonts.outfit(
+                                fontSize: 12,
+                                color: Colors.white60,
+                              ),
+                            ),
+                          ],
+                        ],
                       ),
                     ),
 
@@ -475,37 +507,103 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
     }
     return widget.recipe.grindNumber.toString();
   }
+
+  String _formatSeconds(int s) {
+    if (s <= 0) return '—';
+    if (s >= 3600) return '${(s / 3600).toStringAsFixed(1)} h';
+    final m = s ~/ 60;
+    final sec = s % 60;
+    if (m > 0) return '$m:${sec.toString().padLeft(2, '0')}';
+    return '$sec ${widget.ref.t('time_sec')}';
+  }
 }
 
-class _Tag extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  const _Tag(this.icon, this.label);
+class _CircularIndicator extends StatelessWidget {
+  final VoidCallback onTap;
+  final bool isExpanded;
+  const _CircularIndicator({required this.onTap, required this.isExpanded});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+    const gold = Color(0xFFC8A96E);
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          color: gold.withValues(alpha: 0.12),
+          shape: BoxShape.circle,
+          border: Border.all(color: gold.withValues(alpha: 0.3)),
+        ),
+        child: AnimatedRotation(
+          duration: const Duration(milliseconds: 200),
+          turns: isExpanded ? 0.5 : 0,
+          child: const Icon(
+            Icons.keyboard_arrow_down_rounded,
+            size: 20,
+            color: gold,
+          ),
+        ),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+    );
+  }
+}
+
+class _StatCell extends StatelessWidget {
+  final IconData icon;
+  final String value;
+  final String label;
+  final Color? color;
+
+  const _StatCell({
+    required this.icon,
+    required this.value,
+    required this.label,
+    this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final c = color ?? Colors.white;
+    return Expanded(
+      child: Column(
         children: [
-          Icon(icon, size: 12, color: const Color(0xFFC8A96E)),
-          const SizedBox(width: 6),
+          Icon(icon, size: 15, color: c.withValues(alpha: 0.8)),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: GoogleFonts.outfit(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: c,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 2),
           Text(
             label,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.white70,
-              fontWeight: FontWeight.w500,
+            style: GoogleFonts.outfit(
+              fontSize: 9,
+              color: Colors.white.withValues(alpha: 0.45),
+              letterSpacing: 0.3,
             ),
+            maxLines: 1,
           ),
         ],
       ),
+    );
+  }
+}
+
+class _VerticalDivider extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 1,
+      height: 36,
+      color: Colors.white.withValues(alpha: 0.07),
     );
   }
 }

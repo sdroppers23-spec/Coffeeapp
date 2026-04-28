@@ -186,13 +186,36 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
   }
 
   String _formatSecondsToHMS(int totalSeconds) {
+    if (totalSeconds == 0) return '';
     final int h = totalSeconds ~/ 3600;
     final int m = (totalSeconds % 3600) ~/ 60;
     final int s = totalSeconds % 60;
+    
     final String hh = h.toString().padLeft(2, '0');
     final String mm = m.toString().padLeft(2, '0');
     final String ss = s.toString().padLeft(2, '0');
-    return '$hh:$mm:$ss';
+    
+    if (h > 0) return '$hh:$mm:$ss';
+    return '$mm:$ss';
+  }
+
+  int _parseHMSToSeconds(String hms) {
+    if (hms.isEmpty) return 0;
+    final parts = hms.split(':');
+    int hh = 0, mm = 0, ss = 0;
+
+    if (parts.length == 3) {
+      hh = int.tryParse(parts[0]) ?? 0;
+      mm = int.tryParse(parts[1]) ?? 0;
+      ss = int.tryParse(parts[2]) ?? 0;
+    } else if (parts.length == 2) {
+      mm = int.tryParse(parts[0]) ?? 0;
+      ss = int.tryParse(parts[1]) ?? 0;
+    } else {
+      ss = int.tryParse(parts[0]) ?? 0;
+    }
+
+    return hh * 3600 + mm * 60 + ss;
   }
 
   @override
@@ -359,17 +382,6 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
         ref.t('error_saving_local'),
       );
     }
-  }
-
-  int _parseHMSToSeconds(String hms) {
-    if (!hms.contains(':')) return int.tryParse(hms) ?? 0;
-    final parts = hms.split(':');
-    if (parts.length == 3) {
-      return (int.tryParse(parts[0]) ?? 0) * 3600 +
-          (int.tryParse(parts[1]) ?? 0) * 60 +
-          (int.tryParse(parts[2]) ?? 0);
-    }
-    return int.tryParse(hms.replaceAll(':', '')) ?? 0;
   }
 
   @override
@@ -779,6 +791,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
               LengthLimitingTextInputFormatter(2),
+              _MaxIntFormatter(59),
             ],
             style: GoogleFonts.outfit(color: Colors.white, fontSize: 13),
             decoration: InputDecoration(
@@ -835,53 +848,116 @@ class _TimeMaskFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    // Strip all colons to get raw digits
-    final rawDigits = newValue.text.replaceAll(':', '');
+    // 1. Strip all non-digits
+    String digits = newValue.text.replaceAll(RegExp(r'\D'), '');
 
-    // Limit to 6 digits max (HH:MM:SS)
-    final digits = rawDigits.length > 6 ? rawDigits.substring(0, 6) : rawDigits;
-
-    if (digits.isEmpty) {
-      return newValue.copyWith(text: '', selection: const TextSelection.collapsed(offset: 0));
+    // 2. Limit to 6 digits (HHMMSS)
+    if (digits.length > 6) {
+      digits = digits.substring(digits.length - 6);
     }
 
-    // Parse the digit groups
-    // Format: HHMMSS — pad left with zeros if needed
-    final padded = digits.padLeft(6, '0');
+    if (digits.isEmpty) {
+      return const TextEditingValue(
+        text: '',
+        selection: TextSelection.collapsed(offset: 0),
+      );
+    }
+
+    // 3. Parse components and apply carry logic
+    final String padded = digits.padLeft(6, '0');
     int hh = int.parse(padded.substring(0, 2));
     int mm = int.parse(padded.substring(2, 4));
     int ss = int.parse(padded.substring(4, 6));
 
-    // Carry: seconds >= 60 → extra minutes
+    // Apply carry
     if (ss >= 60) {
       mm += ss ~/ 60;
-      ss = ss % 60;
+      ss %= 60;
     }
-    // Carry: minutes >= 60 → extra hours
     if (mm >= 60) {
       hh += mm ~/ 60;
-      mm = mm % 60;
+      mm %= 60;
     }
-    // Cap hours at 99
-    if (hh > 99) hh = 99;
 
-    // Build formatted string — show only what the user has typed so far
-    String res;
-    if (digits.length <= 2) {
-      // Only seconds entered so far
-      res = ss.toString().padLeft(2, '0');
-    } else if (digits.length <= 4) {
-      // MM:SS
-      res = '${mm.toString().padLeft(2, '0')}:${ss.toString().padLeft(2, '0')}';
+    // Cap at 99:59:59
+    if (hh > 99) {
+      hh = 99;
+      mm = 59;
+      ss = 59;
+    }
+
+    // 4. Build the result string
+    final String hStr = hh.toString().padLeft(2, '0');
+    final String mStr = mm.toString().padLeft(2, '0');
+    final String sStr = ss.toString().padLeft(2, '0');
+
+    String result;
+    if (hh > 0 || digits.length > 4) {
+      result = '$hStr:$mStr:$sStr';
     } else {
-      // HH:MM:SS
-      res = '${hh.toString().padLeft(2, '0')}:${mm.toString().padLeft(2, '0')}:${ss.toString().padLeft(2, '0')}';
-
+      // For 1-4 digits, show MM:SS
+      result = '$mStr:$sStr';
     }
 
     return TextEditingValue(
-      text: res,
-      selection: TextSelection.collapsed(offset: res.length),
+      text: result,
+      selection: TextSelection.collapsed(offset: result.length),
+    );
+  }
+}
+
+class _MaxIntFormatter extends TextInputFormatter {
+  final int max;
+  _MaxIntFormatter(this.max);
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+    final intValue = int.tryParse(newValue.text);
+    if (intValue == null) return oldValue;
+    if (intValue > max) {
+      return TextEditingValue(
+        text: max.toString(),
+        selection: TextSelection.collapsed(offset: max.toString().length),
+      );
+    }
+    return newValue;
+  }
+}
+
+class _LtoRTimeMaskFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    // Standard left-to-right MM:SS input
+    String digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+    
+    if (digits.length > 4) {
+      digits = digits.substring(0, 4);
+    }
+
+    if (digits.isEmpty) {
+      return const TextEditingValue(
+        text: '',
+        selection: TextSelection.collapsed(offset: 0),
+      );
+    }
+
+    String result = '';
+    if (digits.length <= 2) {
+      result = digits;
+    } else {
+      result = '${digits.substring(0, 2)}:${digits.substring(2)}';
+    }
+
+    return TextEditingValue(
+      text: result,
+      selection: TextSelection.collapsed(offset: result.length),
     );
   }
 }

@@ -472,7 +472,10 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
                             final next = Set<String>.from(selectedIds);
                             if (next.contains(r.id)) {
                               next.remove(r.id);
-                              if (next.isEmpty) setState(() => _isSelectionMode = false);
+                              if (next.isEmpty) {
+                                setState(() => _isSelectionMode = false);
+                                ref.read(navBarVisibleProvider.notifier).show();
+                              }
                             } else {
                               next.add(r.id);
                             }
@@ -483,6 +486,7 @@ class _GlobalCustomRecipeListState extends ConsumerState<GlobalCustomRecipeList>
                           if (!_isSelectionMode) {
                             setState(() => _isSelectionMode = true);
                             ref.read(brewingSelectedIdsProvider.notifier).updateState({r.id});
+                            ref.read(navBarVisibleProvider.notifier).hide();
                           }
                         },
                       ),

@@ -107,7 +107,7 @@ class _CustomRecipeTimerScreenState
     if (isEspresso) {
       label = ref.t('extraction');
     } else {
-      label = isBloom ? ref.t('bloom') : '${ref.t('pour')} #${pour['pourNumber'] ?? (activeIndex + 1)}';
+      label = isBloom ? ref.t('bloom') : ref.t('pour_num', args: {'num': (pour['pourNumber'] ?? (activeIndex + 1)).toString()});
     }
 
     String text = '$label: $ml ml';
@@ -326,7 +326,7 @@ class _CustomRecipeTimerScreenState
                             Text(
                               (i == 0 && widget.recipe.recipeType == 'espresso')
                                   ? ref.t('extraction')
-                                  : (isBloom ? ref.t('bloom') : '${ref.t('pour')} #$n'),
+                                  : (isBloom ? ref.t('bloom') : ref.t('pour_num', args: {'num': n.toString()})),
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,

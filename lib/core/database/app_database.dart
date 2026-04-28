@@ -41,7 +41,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? e]) : super(e ?? openConnection());
 
   @override
-  int get schemaVersion => 40;
+  int get schemaVersion => 41;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -137,6 +137,10 @@ class AppDatabase extends _$AppDatabase {
         // v40: Add isFavorite and isArchived to custom recipes
         await _safeAddColumn(m, customRecipes, customRecipes.isFavorite);
         await _safeAddColumn(m, customRecipes, customRecipes.isArchived);
+      }
+      if (from < 41) {
+        // v41: Add difficulty to custom recipes
+        await _safeAddColumn(m, customRecipes, customRecipes.difficulty);
       }
     },
     beforeOpen: (details) async {
@@ -1087,6 +1091,7 @@ class AppDatabase extends _$AppDatabase {
       brewRatio: r.brewRatio,
       grinderName: r.grinderName,
       extractionTimeSeconds: r.extractionTimeSeconds,
+      difficulty: r.difficulty,
     );
   }
 

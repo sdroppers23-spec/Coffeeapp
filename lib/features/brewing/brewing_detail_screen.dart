@@ -448,17 +448,17 @@ class _HeaderStat extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.15),
+            color: color.withValues(alpha: 0.02),
             shape: BoxShape.circle,
             border: Border.all(
-              color: color.withValues(alpha: 0.3),
-              width: 1.5,
+              color: color.withValues(alpha: 0.25),
+              width: 1.2,
             ),
             boxShadow: [
               BoxShadow(
-                color: color.withValues(alpha: 0.2),
-                blurRadius: 10,
-                spreadRadius: 1,
+                color: color.withValues(alpha: 0.08),
+                blurRadius: 8,
+                spreadRadius: 0,
               ),
             ],
           ),

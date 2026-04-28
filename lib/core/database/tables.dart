@@ -445,6 +445,8 @@ class CustomRecipes extends Table {
   TextColumn get grinderName => text().nullable()();
 
   IntColumn get extractionTimeSeconds => integer().nullable()();
+  TextColumn get difficulty => text().nullable()();
+
 
   TextColumn get sensoryJson => text().withDefault(const Constant('{}'))();
 

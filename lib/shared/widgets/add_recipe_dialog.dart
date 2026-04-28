@@ -57,6 +57,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
   final _customGrinderController = TextEditingController();
   bool _isOtherGrinder = false;
   bool _isGrinderExpanded = false;
+  String? _difficulty;
 
   // Pour Schedule
   final List<PourControllers> _pourControllers = [];
@@ -75,6 +76,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
         recipe?.recipeType ??
         (_method.toLowerCase() == 'espresso' ? 'espresso' : 'filter');
     _rating = recipe?.rating ?? 0;
+    _difficulty = recipe?.difficulty;
 
     _nameController.text = recipe?.name ?? '';
     _coffeeController.text = recipe?.coffeeGrams.toStringAsFixed(1) ?? '';
@@ -90,7 +92,9 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
 
     _grindController.text = recipe?.grindNumber.toString() ?? '';
     _micronsController.text = recipe?.microns?.toString() ?? '';
-    _ratioController.text = recipe?.brewRatio?.toStringAsFixed(1) ?? '';
+    _ratioController.text = recipe?.brewRatio != null
+        ? '1:${recipe!.brewRatio!.toStringAsFixed(1)}'
+        : '';
 
     if (recipe?.extractionTimeSeconds != null) {
       _extractionTimeController.text = _formatSecondsToHMS(
@@ -186,17 +190,12 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
   }
 
   String _formatSecondsToHMS(int totalSeconds) {
-    if (totalSeconds == 0) return '';
+    if (totalSeconds <= 0) return '00:00:00';
     final int h = totalSeconds ~/ 3600;
     final int m = (totalSeconds % 3600) ~/ 60;
     final int s = totalSeconds % 60;
 
-    final String hh = h.toString().padLeft(2, '0');
-    final String mm = m.toString().padLeft(2, '0');
-    final String ss = s.toString().padLeft(2, '0');
-
-    if (h > 0) return '$hh:$mm:$ss';
-    return '$mm:$ss';
+    return '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
   }
 
   int _parseHMSToSeconds(String hms) {
@@ -279,8 +278,16 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
       coffeeGrams: double.tryParse(_coffeeController.text) ?? 15.0,
       totalWaterMl: double.tryParse(_waterController.text) ?? 250.0,
       grindNumber: Value(int.tryParse(_grindController.text) ?? 0),
-      comandanteClicks: Value(widget.existingRecipe?.comandanteClicks ?? 0),
-      ek43Division: Value(widget.existingRecipe?.ek43Division ?? 0),
+      comandanteClicks: Value(
+        _grinderNameController.text == 'Comandante'
+            ? (int.tryParse(_grindController.text) ?? 0)
+            : 0,
+      ),
+      ek43Division: Value(
+        _grinderNameController.text == 'EK43'
+            ? (int.tryParse(_grindController.text) ?? 0)
+            : 0,
+      ),
       totalPours: Value(_pourControllers.length),
       isSynced: const Value(false),
       recipeType: Value(_recipeType),
@@ -296,6 +303,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
       extractionTimeSeconds: Value(
         _parseHMSToSeconds(_extractionTimeController.text),
       ),
+      difficulty: Value(_difficulty),
       pourScheduleJson: Value(
         jsonEncode(
           _pourControllers.map((pc) {
@@ -521,6 +529,12 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                           ],
                         ],
 
+                        // SECTION: Difficulty
+                        _buildSectionHeader(ref.t('difficulty')),
+                        const SizedBox(height: 16),
+                        _buildDifficultySelector(ref),
+                        const SizedBox(height: 32),
+
                         // SECTION: Notes
                         _buildSectionHeader(ref.t('notes_hint')),
                         const SizedBox(height: 20),
@@ -612,6 +626,92 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildDifficultySelector(WidgetRef ref) {
+    final options = [
+      {
+        'key': 'beginner',
+        'icon': Icons.sentiment_satisfied,
+        'color': Colors.greenAccent,
+      },
+      {
+        'key': 'intermediate',
+        'icon': Icons.sentiment_neutral,
+        'color': Colors.amberAccent,
+      },
+      {
+        'key': 'advanced',
+        'icon': Icons.sentiment_dissatisfied,
+        'color': Colors.orangeAccent,
+      },
+      {
+        'key': 'expert',
+        'icon': Icons.sentiment_very_dissatisfied,
+        'color': Colors.redAccent,
+      },
+    ];
+
+    return Row(
+      children:
+          options.map((opt) {
+            final isSelected = _difficulty == opt['key'];
+            final color = opt['color'] as Color;
+
+            return Expanded(
+              child: GestureDetector(
+                onTap: () => setState(() => _difficulty = opt['key'] as String),
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color:
+                        isSelected
+                            ? color.withValues(alpha: 0.15)
+                            : Colors.white.withValues(alpha: 0.05),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color:
+                          isSelected
+                              ? color.withValues(alpha: 0.5)
+                              : Colors.transparent,
+                      width: 1,
+                    ),
+                    boxShadow:
+                        isSelected
+                            ? [
+                              BoxShadow(
+                                color: color.withValues(alpha: 0.2),
+                                blurRadius: 8,
+                                spreadRadius: 1,
+                              ),
+                            ]
+                            : null,
+                  ),
+                  child: Column(
+                    children: [
+                      Icon(
+                        opt['icon'] as IconData,
+                        color: isSelected ? color : Colors.white24,
+                        size: 24,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        ref.t('difficulty_${opt['key']}'),
+                        style: GoogleFonts.outfit(
+                          fontSize: 12,
+                          color: isSelected ? color : Colors.white38,
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
     );
   }
 
@@ -845,38 +945,30 @@ class _TimeMaskFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    // 1. Strip non-digits
-    final String digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+    // 1. Get only digits
+    String digits = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
 
     if (digits.isEmpty) {
       return const TextEditingValue(
-        text: '',
-        selection: TextSelection.collapsed(offset: 0),
+        text: '00:00:00',
+        selection: TextSelection.collapsed(offset: 8),
       );
     }
 
-    // 2. Limit to 4 digits (MMSS) for mm:ss format
-    final limited = digits.length > 4 ? digits.substring(0, 4) : digits;
-
-    // 3. Apply 59 limit for MM and SS
-    String formatted = '';
-    
-    if (limited.length <= 2) {
-      int val = int.parse(limited);
-      if (val > 59) val = 59;
-      formatted = val.toString().padLeft(limited.length, '0');
-    } else {
-      final mmStr = limited.substring(0, 2);
-      final ssStr = limited.substring(2);
-      
-      int mm = int.parse(mmStr);
-      if (mm > 59) mm = 59;
-      
-      int ss = int.parse(ssStr);
-      if (ss > 59) ss = 59;
-      
-      formatted = '${mm.toString().padLeft(2, '0')}:${ss.toString().padLeft(ssStr.length, '0')}';
+    // 2. Limit to 6 digits
+    if (digits.length > 6) {
+      digits = digits.substring(digits.length - 6);
     }
+
+    // 3. Pad with zeros
+    final String padded = digits.padLeft(6, '0');
+
+    // 4. Format as HH:MM:SS
+    final String h = padded.substring(0, 2);
+    final String m = padded.substring(2, 4);
+    final String s = padded.substring(4, 6);
+
+    final String formatted = '$h:$m:$s';
 
     return TextEditingValue(
       text: formatted,

@@ -9760,6 +9760,17 @@ class $CustomRecipesTable extends CustomRecipes
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _difficultyMeta = const VerificationMeta(
+    'difficulty',
+  );
+  @override
+  late final GeneratedColumn<String> difficulty = GeneratedColumn<String>(
+    'difficulty',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _sensoryJsonMeta = const VerificationMeta(
     'sensoryJson',
   );
@@ -9856,6 +9867,7 @@ class $CustomRecipesTable extends CustomRecipes
     brewRatio,
     grinderName,
     extractionTimeSeconds,
+    difficulty,
     sensoryJson,
     isFavorite,
     isArchived,
@@ -10037,6 +10049,12 @@ class $CustomRecipesTable extends CustomRecipes
         ),
       );
     }
+    if (data.containsKey('difficulty')) {
+      context.handle(
+        _difficultyMeta,
+        difficulty.isAcceptableOrUnknown(data['difficulty']!, _difficultyMeta),
+      );
+    }
     if (data.containsKey('sensory_json')) {
       context.handle(
         _sensoryJsonMeta,
@@ -10170,6 +10188,10 @@ class $CustomRecipesTable extends CustomRecipes
         DriftSqlType.int,
         data['${effectivePrefix}extraction_time_seconds'],
       ),
+      difficulty: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}difficulty'],
+      ),
       sensoryJson: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}sensory_json'],
@@ -10222,6 +10244,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
   final double? brewRatio;
   final String? grinderName;
   final int? extractionTimeSeconds;
+  final String? difficulty;
   final String sensoryJson;
   final bool isFavorite;
   final bool isArchived;
@@ -10250,6 +10273,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     this.brewRatio,
     this.grinderName,
     this.extractionTimeSeconds,
+    this.difficulty,
     required this.sensoryJson,
     required this.isFavorite,
     required this.isArchived,
@@ -10294,6 +10318,9 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     }
     if (!nullToAbsent || extractionTimeSeconds != null) {
       map['extraction_time_seconds'] = Variable<int>(extractionTimeSeconds);
+    }
+    if (!nullToAbsent || difficulty != null) {
+      map['difficulty'] = Variable<String>(difficulty);
     }
     map['sensory_json'] = Variable<String>(sensoryJson);
     map['is_favorite'] = Variable<bool>(isFavorite);
@@ -10341,6 +10368,9 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       extractionTimeSeconds: extractionTimeSeconds == null && nullToAbsent
           ? const Value.absent()
           : Value(extractionTimeSeconds),
+      difficulty: difficulty == null && nullToAbsent
+          ? const Value.absent()
+          : Value(difficulty),
       sensoryJson: Value(sensoryJson),
       isFavorite: Value(isFavorite),
       isArchived: Value(isArchived),
@@ -10379,6 +10409,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       extractionTimeSeconds: serializer.fromJson<int?>(
         json['extractionTimeSeconds'],
       ),
+      difficulty: serializer.fromJson<String?>(json['difficulty']),
       sensoryJson: serializer.fromJson<String>(json['sensoryJson']),
       isFavorite: serializer.fromJson<bool>(json['isFavorite']),
       isArchived: serializer.fromJson<bool>(json['isArchived']),
@@ -10412,6 +10443,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       'brewRatio': serializer.toJson<double?>(brewRatio),
       'grinderName': serializer.toJson<String?>(grinderName),
       'extractionTimeSeconds': serializer.toJson<int?>(extractionTimeSeconds),
+      'difficulty': serializer.toJson<String?>(difficulty),
       'sensoryJson': serializer.toJson<String>(sensoryJson),
       'isFavorite': serializer.toJson<bool>(isFavorite),
       'isArchived': serializer.toJson<bool>(isArchived),
@@ -10443,6 +10475,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     Value<double?> brewRatio = const Value.absent(),
     Value<String?> grinderName = const Value.absent(),
     Value<int?> extractionTimeSeconds = const Value.absent(),
+    Value<String?> difficulty = const Value.absent(),
     String? sensoryJson,
     bool? isFavorite,
     bool? isArchived,
@@ -10473,6 +10506,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     extractionTimeSeconds: extractionTimeSeconds.present
         ? extractionTimeSeconds.value
         : this.extractionTimeSeconds,
+    difficulty: difficulty.present ? difficulty.value : this.difficulty,
     sensoryJson: sensoryJson ?? this.sensoryJson,
     isFavorite: isFavorite ?? this.isFavorite,
     isArchived: isArchived ?? this.isArchived,
@@ -10523,6 +10557,9 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       extractionTimeSeconds: data.extractionTimeSeconds.present
           ? data.extractionTimeSeconds.value
           : this.extractionTimeSeconds,
+      difficulty: data.difficulty.present
+          ? data.difficulty.value
+          : this.difficulty,
       sensoryJson: data.sensoryJson.present
           ? data.sensoryJson.value
           : this.sensoryJson,
@@ -10564,6 +10601,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
           ..write('brewRatio: $brewRatio, ')
           ..write('grinderName: $grinderName, ')
           ..write('extractionTimeSeconds: $extractionTimeSeconds, ')
+          ..write('difficulty: $difficulty, ')
           ..write('sensoryJson: $sensoryJson, ')
           ..write('isFavorite: $isFavorite, ')
           ..write('isArchived: $isArchived, ')
@@ -10597,6 +10635,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     brewRatio,
     grinderName,
     extractionTimeSeconds,
+    difficulty,
     sensoryJson,
     isFavorite,
     isArchived,
@@ -10629,6 +10668,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
           other.brewRatio == this.brewRatio &&
           other.grinderName == this.grinderName &&
           other.extractionTimeSeconds == this.extractionTimeSeconds &&
+          other.difficulty == this.difficulty &&
           other.sensoryJson == this.sensoryJson &&
           other.isFavorite == this.isFavorite &&
           other.isArchived == this.isArchived &&
@@ -10659,6 +10699,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
   final Value<double?> brewRatio;
   final Value<String?> grinderName;
   final Value<int?> extractionTimeSeconds;
+  final Value<String?> difficulty;
   final Value<String> sensoryJson;
   final Value<bool> isFavorite;
   final Value<bool> isArchived;
@@ -10688,6 +10729,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     this.brewRatio = const Value.absent(),
     this.grinderName = const Value.absent(),
     this.extractionTimeSeconds = const Value.absent(),
+    this.difficulty = const Value.absent(),
     this.sensoryJson = const Value.absent(),
     this.isFavorite = const Value.absent(),
     this.isArchived = const Value.absent(),
@@ -10718,6 +10760,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     this.brewRatio = const Value.absent(),
     this.grinderName = const Value.absent(),
     this.extractionTimeSeconds = const Value.absent(),
+    this.difficulty = const Value.absent(),
     this.sensoryJson = const Value.absent(),
     this.isFavorite = const Value.absent(),
     this.isArchived = const Value.absent(),
@@ -10752,6 +10795,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     Expression<double>? brewRatio,
     Expression<String>? grinderName,
     Expression<int>? extractionTimeSeconds,
+    Expression<String>? difficulty,
     Expression<String>? sensoryJson,
     Expression<bool>? isFavorite,
     Expression<bool>? isArchived,
@@ -10783,6 +10827,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
       if (grinderName != null) 'grinder_name': grinderName,
       if (extractionTimeSeconds != null)
         'extraction_time_seconds': extractionTimeSeconds,
+      if (difficulty != null) 'difficulty': difficulty,
       if (sensoryJson != null) 'sensory_json': sensoryJson,
       if (isFavorite != null) 'is_favorite': isFavorite,
       if (isArchived != null) 'is_archived': isArchived,
@@ -10815,6 +10860,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     Value<double?>? brewRatio,
     Value<String?>? grinderName,
     Value<int?>? extractionTimeSeconds,
+    Value<String?>? difficulty,
     Value<String>? sensoryJson,
     Value<bool>? isFavorite,
     Value<bool>? isArchived,
@@ -10846,6 +10892,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
       grinderName: grinderName ?? this.grinderName,
       extractionTimeSeconds:
           extractionTimeSeconds ?? this.extractionTimeSeconds,
+      difficulty: difficulty ?? this.difficulty,
       sensoryJson: sensoryJson ?? this.sensoryJson,
       isFavorite: isFavorite ?? this.isFavorite,
       isArchived: isArchived ?? this.isArchived,
@@ -10926,6 +10973,9 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
         extractionTimeSeconds.value,
       );
     }
+    if (difficulty.present) {
+      map['difficulty'] = Variable<String>(difficulty.value);
+    }
     if (sensoryJson.present) {
       map['sensory_json'] = Variable<String>(sensoryJson.value);
     }
@@ -10972,6 +11022,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
           ..write('brewRatio: $brewRatio, ')
           ..write('grinderName: $grinderName, ')
           ..write('extractionTimeSeconds: $extractionTimeSeconds, ')
+          ..write('difficulty: $difficulty, ')
           ..write('sensoryJson: $sensoryJson, ')
           ..write('isFavorite: $isFavorite, ')
           ..write('isArchived: $isArchived, ')
@@ -23269,6 +23320,7 @@ typedef $$CustomRecipesTableCreateCompanionBuilder =
       Value<double?> brewRatio,
       Value<String?> grinderName,
       Value<int?> extractionTimeSeconds,
+      Value<String?> difficulty,
       Value<String> sensoryJson,
       Value<bool> isFavorite,
       Value<bool> isArchived,
@@ -23300,6 +23352,7 @@ typedef $$CustomRecipesTableUpdateCompanionBuilder =
       Value<double?> brewRatio,
       Value<String?> grinderName,
       Value<int?> extractionTimeSeconds,
+      Value<String?> difficulty,
       Value<String> sensoryJson,
       Value<bool> isFavorite,
       Value<bool> isArchived,
@@ -23424,6 +23477,11 @@ class $$CustomRecipesTableFilterComposer
 
   ColumnFilters<int> get extractionTimeSeconds => $composableBuilder(
     column: $table.extractionTimeSeconds,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get difficulty => $composableBuilder(
+    column: $table.difficulty,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -23572,6 +23630,11 @@ class $$CustomRecipesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get difficulty => $composableBuilder(
+    column: $table.difficulty,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get sensoryJson => $composableBuilder(
     column: $table.sensoryJson,
     builder: (column) => ColumnOrderings(column),
@@ -23693,6 +23756,11 @@ class $$CustomRecipesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get difficulty => $composableBuilder(
+    column: $table.difficulty,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get sensoryJson => $composableBuilder(
     column: $table.sensoryJson,
     builder: (column) => column,
@@ -23770,6 +23838,7 @@ class $$CustomRecipesTableTableManager
                 Value<double?> brewRatio = const Value.absent(),
                 Value<String?> grinderName = const Value.absent(),
                 Value<int?> extractionTimeSeconds = const Value.absent(),
+                Value<String?> difficulty = const Value.absent(),
                 Value<String> sensoryJson = const Value.absent(),
                 Value<bool> isFavorite = const Value.absent(),
                 Value<bool> isArchived = const Value.absent(),
@@ -23799,6 +23868,7 @@ class $$CustomRecipesTableTableManager
                 brewRatio: brewRatio,
                 grinderName: grinderName,
                 extractionTimeSeconds: extractionTimeSeconds,
+                difficulty: difficulty,
                 sensoryJson: sensoryJson,
                 isFavorite: isFavorite,
                 isArchived: isArchived,
@@ -23830,6 +23900,7 @@ class $$CustomRecipesTableTableManager
                 Value<double?> brewRatio = const Value.absent(),
                 Value<String?> grinderName = const Value.absent(),
                 Value<int?> extractionTimeSeconds = const Value.absent(),
+                Value<String?> difficulty = const Value.absent(),
                 Value<String> sensoryJson = const Value.absent(),
                 Value<bool> isFavorite = const Value.absent(),
                 Value<bool> isArchived = const Value.absent(),
@@ -23859,6 +23930,7 @@ class $$CustomRecipesTableTableManager
                 brewRatio: brewRatio,
                 grinderName: grinderName,
                 extractionTimeSeconds: extractionTimeSeconds,
+                difficulty: difficulty,
                 sensoryJson: sensoryJson,
                 isFavorite: isFavorite,
                 isArchived: isArchived,

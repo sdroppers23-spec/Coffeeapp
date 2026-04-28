@@ -68,10 +68,18 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
           : () => setState(() => _isExpanded = !_isExpanded),
       child: GlassContainer(
         padding: const EdgeInsets.all(0),
-        opacity: widget.isSelected ? 0.25 : 0.15,
+        opacity: widget.isSelected ? 0.25 : 0.08,
+        backgroundGradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFF1B1411).withValues(alpha: 0.1),
+            const Color(0xFF0A0908).withValues(alpha: 0.2),
+          ],
+        ),
         borderColor: widget.isSelected
-            ? const Color(0xFFC8A96E)
-            : Colors.white.withValues(alpha: 0.1),
+            ? const Color(0xFFC8A96E).withValues(alpha: 0.4)
+            : Colors.white.withValues(alpha: 0.08),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -168,38 +176,58 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                   Expanded(
                     child: _StatCell(
                       icon: Icons.timer_outlined,
-                      value: _formatSeconds(widget.recipe.extractionTimeSeconds ?? 0),
+                      value: _formatSeconds(
+                        widget.recipe.extractionTimeSeconds ?? 0,
+                      ),
                       label: widget.ref.t('stat_time'),
-                      color: Colors.white,
+                      color: const Color(0xFF00E5FF), // Neon Cyan
                     ),
                   ),
                   _VerticalDivider(),
                   Expanded(
                     child: _StatCell(
                       icon: Icons.thermostat_rounded,
-                      value: '${widget.recipe.brewTempC.toInt()}${widget.ref.t('unit_c')}',
+                      value:
+                          '${widget.recipe.brewTempC.toInt()}${widget.ref.t('unit_c')}',
                       label: widget.ref.t('stat_temp'),
-                      color: const Color(0xFFFFAB91), // Brighter coral
-                    ),
-                  ),
-                  _VerticalDivider(),
-                  Expanded(
-                    child: _StatCell(
-                      icon: Icons.balance_rounded,
-                      value: (widget.recipe.brewRatio != null && widget.recipe.brewRatio! > 0)
-                          ? '1:${widget.recipe.brewRatio!.toStringAsFixed(1)}'
-                          : '—',
-                      label: widget.ref.t('stat_ratio'),
-                      color: const Color(0xFFEBCB8B), // Brighter gold
+                      color: const Color(0xFFFF5252), // Neon Red
                     ),
                   ),
                   _VerticalDivider(),
                   Expanded(
                     child: _StatCell(
                       icon: Icons.scale_rounded,
-                      value: '${widget.recipe.coffeeGrams.toStringAsFixed(1)}${widget.ref.t('unit_g')}',
+                      value:
+                          '${widget.recipe.coffeeGrams.toStringAsFixed(1)}${widget.ref.t('unit_g')}',
                       label: widget.ref.t('stat_coffee'),
-                      color: Colors.white.withValues(alpha: 0.9),
+                      color: const Color(0xFFFFD740), // Neon Amber
+                    ),
+                  ),
+                  _VerticalDivider(),
+                  Expanded(
+                    child: _StatCell(
+                      icon: Icons.balance_rounded,
+                      value:
+                          (widget.recipe.brewRatio != null &&
+                                  widget.recipe.brewRatio! > 0)
+                              ? '1:${widget.recipe.brewRatio!.toStringAsFixed(1)}'
+                              : '—',
+                      label: widget.ref.t('stat_ratio'),
+                      color: const Color(0xFF69F0AE), // Neon Green
+                    ),
+                  ),
+                  _VerticalDivider(),
+                  Expanded(
+                    child: _StatCell(
+                      icon: Icons.psychology_outlined,
+                      value:
+                          widget.recipe.difficulty != null
+                              ? widget.ref.t(
+                                'difficulty_${widget.recipe.difficulty}',
+                              )
+                              : '—',
+                      label: widget.ref.t('stat_difficulty'),
+                      color: _getDifficultyColor(widget.recipe.difficulty),
                     ),
                   ),
                 ],
@@ -571,22 +599,45 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
 
   String _getGrinderValue() {
     if (widget.recipe.grinderName == 'EK43') {
-      return widget.recipe.ek43Division.toString();
+      final div = widget.recipe.ek43Division;
+      return div > 0 ? div.toString() : widget.recipe.grindNumber.toString();
     }
     if (widget.recipe.grinderName != null &&
         widget.recipe.grinderName!.contains('Comandante')) {
-      return widget.recipe.comandanteClicks.toString();
+      final clicks = widget.recipe.comandanteClicks;
+      return clicks > 0
+          ? clicks.toString()
+          : widget.recipe.grindNumber.toString();
     }
     return widget.recipe.grindNumber.toString();
   }
 
-  String _formatSeconds(int s) {
-    if (s <= 0) return '—';
-    if (s >= 3600) return '${(s / 3600).toStringAsFixed(1)} h';
-    final m = s ~/ 60;
-    final sec = s % 60;
-    if (m > 0) return '$m:${sec.toString().padLeft(2, '0')}';
-    return '$sec ${widget.ref.t('time_sec')}';
+  String _formatSeconds(int totalSeconds) {
+    if (totalSeconds < 0) return '—';
+    if (totalSeconds == 0) return '00:00';
+    final int h = totalSeconds ~/ 3600;
+    final int m = (totalSeconds % 3600) ~/ 60;
+    final int s = totalSeconds % 60;
+
+    if (h > 0) {
+      return '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
+    }
+    return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
+  }
+
+  Color _getDifficultyColor(String? difficulty) {
+    switch (difficulty?.toLowerCase()) {
+      case 'beginner':
+        return Colors.greenAccent;
+      case 'intermediate':
+        return Colors.amberAccent;
+      case 'advanced':
+        return Colors.orangeAccent;
+      case 'expert':
+        return Colors.redAccent;
+      default:
+        return Colors.blueAccent;
+    }
   }
 }
 
@@ -641,16 +692,50 @@ class _StatCell extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 14, color: c.withValues(alpha: 0.8)),
-        const SizedBox(height: 4),
+        Container(
+          padding: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            color: c.withValues(alpha: 0.03),
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: c.withValues(alpha: 0.1),
+              width: 0.8,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: c.withValues(alpha: 0.02),
+                blurRadius: 2,
+                spreadRadius: 0,
+              ),
+            ],
+          ),
+          child: Icon(
+            icon,
+            size: 12,
+            color: c,
+            shadows: [
+              Shadow(
+                color: c.withValues(alpha: 0.3),
+                blurRadius: 4,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 6),
         FittedBox(
           fit: BoxFit.scaleDown,
           child: Text(
             value,
             style: GoogleFonts.outfit(
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
+              fontSize: 13,
+              fontWeight: FontWeight.w800,
               color: c,
+              shadows: [
+                Shadow(
+                  color: c.withValues(alpha: 0.3),
+                  blurRadius: 4,
+                ),
+              ],
             ),
             maxLines: 1,
           ),
@@ -659,11 +744,12 @@ class _StatCell extends StatelessWidget {
         FittedBox(
           fit: BoxFit.scaleDown,
           child: Text(
-            label,
+            label.toUpperCase(),
             style: GoogleFonts.outfit(
-              fontSize: 8,
-              color: Colors.white.withValues(alpha: 0.45),
-              letterSpacing: 0.2,
+              fontSize: 7,
+              fontWeight: FontWeight.bold,
+              color: Colors.white.withValues(alpha: 0.35),
+              letterSpacing: 0.3,
             ),
             maxLines: 1,
           ),

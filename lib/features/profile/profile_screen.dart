@@ -14,6 +14,7 @@ import '../../shared/widgets/premium_background.dart';
 import '../discover/lots/lots_providers.dart';
 import '../brewing/custom_recipe_list.dart';
 import 'package:intl/intl.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/providers/settings_provider.dart';
 
 
@@ -723,7 +724,7 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
                   controller: _nameController,
                   style: const TextStyle(color: Colors.white),
                   decoration: _inputDecoration(
-                    hint: 'Your Name',
+                    hint: ref.t('display_name_hint'),
                     icon: Icons.person_outline_rounded,
                   ),
                 ),
@@ -736,7 +737,7 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
                   style: const TextStyle(color: Colors.white),
                   onChanged: (_) => setState(() {}),
                   decoration: _inputDecoration(
-                    hint: 'https://...',
+                    hint: ref.t('avatar_url_hint'),
                     icon: Icons.link_rounded,
                   ),
                 ),
@@ -772,7 +773,7 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFC8A96E),
                           foregroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           elevation: 0,
                         ),
@@ -951,7 +952,7 @@ class _ChangePasswordDialogState extends ConsumerState<_ChangePasswordDialog> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFC8A96E),
                           foregroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
                           padding: const EdgeInsets.symmetric(vertical: 14),
                         ),
                         child: _isLoading

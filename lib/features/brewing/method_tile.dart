@@ -55,7 +55,7 @@ class MethodTile extends ConsumerWidget {
             MaterialPageRoute(
               builder: (_) => MethodRecipesScreen(
                 methodKey: _firstRecipe.methodKey,
-                methodNameUk: name, 
+                methodName: name, 
                 recipes: methodRecipes,
               ),
             ),
@@ -69,14 +69,14 @@ class MethodTile extends ConsumerWidget {
         }
       },
       child: GlassContainer(
-        borderRadius: 20,
+        borderRadius: 24,
         height: 190,
         child: Stack(
           fit: StackFit.expand,
           children: [
             // ── Background Image ───────────────────────────────────────────
             ClipRRect(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(24),
               child: imageUrl.isNotEmpty
                   ? CachedNetworkImage(
                       imageUrl: imageUrl,

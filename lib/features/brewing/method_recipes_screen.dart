@@ -4,16 +4,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/database/dtos.dart';
 import 'recipe_card.dart';
 import '../navigation/navigation_providers.dart';
+import '../../core/l10n/app_localizations.dart';
 
 class MethodRecipesScreen extends ConsumerStatefulWidget {
   final String methodKey;
-  final String methodNameUk;
+  final String methodName;
   final List<BrewingRecipeDto> recipes;
 
   const MethodRecipesScreen({
     super.key,
     required this.methodKey,
-    required this.methodNameUk,
+    required this.methodName,
     required this.recipes,
   });
 
@@ -68,7 +69,7 @@ class _MethodRecipesScreenState extends ConsumerState<MethodRecipesScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Спосіб заварювання',
+                    ref.t('brewing_method'),
                     style: GoogleFonts.outfit(
                       fontSize: 11,
                       color: gold.withValues(alpha: 0.7),
@@ -76,7 +77,7 @@ class _MethodRecipesScreenState extends ConsumerState<MethodRecipesScreen> {
                     ),
                   ),
                   Text(
-                    widget.methodNameUk,
+                    widget.methodName,
                     style: GoogleFonts.cormorantGaramond(
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
@@ -124,7 +125,7 @@ class _MethodRecipesScreenState extends ConsumerState<MethodRecipesScreen> {
                               size: 13, color: Color(0xFFC8A96E)),
                           const SizedBox(width: 6),
                           Text(
-                            '${widget.recipes.length} ${_recipesLabel(widget.recipes.length)}',
+                            '${widget.recipes.length} ${_getPluralLabel(ref, widget.recipes.length)}',
                             style: GoogleFonts.poppins(
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
@@ -158,9 +159,12 @@ class _MethodRecipesScreenState extends ConsumerState<MethodRecipesScreen> {
     );
   }
 
-  String _recipesLabel(int count) {
-    if (count == 1) return 'рецепт';
-    if (count >= 2 && count <= 4) return 'рецепти';
-    return 'рецептів';
+  String _getPluralLabel(WidgetRef ref, int count) {
+    final String key = count == 1
+        ? 'recipe_1'
+        : (count >= 2 && count <= 4)
+            ? 'recipe_2_4'
+            : 'recipe_5_plus';
+    return ref.t(key);
   }
 }

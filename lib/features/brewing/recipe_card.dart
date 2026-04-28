@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/database/dtos.dart';
 import '../../shared/widgets/glass_container.dart';
 import 'brewing_detail_screen.dart';
+import '../../core/l10n/app_localizations.dart';
 
-class RecipeCard extends StatelessWidget {
+class RecipeCard extends ConsumerWidget {
   final BrewingRecipeDto recipe;
 
   const RecipeCard({super.key, required this.recipe});
 
-  String get _formattedTime {
+  String _formattedTime(WidgetRef ref) {
     final s = recipe.totalTimeSec ?? 0;
-    if (s >= 3600) return '${(s / 3600).toStringAsFixed(1)} год';
-    if (s >= 60) return '${s ~/ 60} хв';
-    return '$s с';
+    if (s >= 3600) return '${(s / 3600).toStringAsFixed(1)} h';
+    if (s >= 60) return '${s ~/ 60} ${ref.t('time_min')}';
+    return '$s ${ref.t('time_sec')}';
   }
 
   String get _formattedRatio {
@@ -26,17 +28,19 @@ class RecipeCard extends StatelessWidget {
     return '—';
   }
 
-  String get _difficultyUk {
+  String _getDifficultyLabel(WidgetRef ref) {
     switch ((recipe.difficulty ?? 'Medium').toLowerCase()) {
       case 'easy':
       case 'beginner':
-        return 'Початковий';
+        return ref.t('difficulty_easy');
       case 'intermediate':
-        return 'Середній';
+      case 'medium':
+        return ref.t('difficulty_med');
       case 'advanced':
-        return 'Просунутий';
+      case 'hard':
+        return ref.t('difficulty_hard');
       default:
-        return recipe.difficulty ?? 'Середній';
+        return ref.t('difficulty_med');
     }
   }
 
@@ -46,6 +50,7 @@ class RecipeCard extends StatelessWidget {
       case 'beginner':
         return const Color(0xFF4CAF50);
       case 'intermediate':
+      case 'medium':
         return const Color(0xFFFFC107);
       default:
         return const Color(0xFFFF5722);
@@ -53,7 +58,7 @@ class RecipeCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     const gold = Color(0xFFC8A96E);
 
     return GestureDetector(
@@ -62,7 +67,7 @@ class RecipeCard extends StatelessWidget {
       ),
       child: GlassContainer(
         padding: EdgeInsets.zero,
-        borderRadius: 20,
+        borderRadius: 24,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -139,27 +144,28 @@ class RecipeCard extends StatelessWidget {
                 children: [
                   _StatCell(
                     icon: Icons.timer_outlined,
-                    value: _formattedTime,
-                    label: 'Час',
+                    value: _formattedTime(ref),
+                    label: ref.t('stat_time'),
                   ),
                   _VerticalDivider(),
                   _StatCell(
                     icon: Icons.thermostat_rounded,
                     value: '${recipe.tempC?.toInt() ?? 0}°C',
-                    label: 'Температура',
+                    label: ref.t('stat_temp'),
                     color: const Color(0xFFFF8A65),
                   ),
                   _VerticalDivider(),
                   _StatCell(
                     icon: Icons.balance_rounded,
                     value: _formattedRatio,
-                    label: 'Рецептура',
+                    label: ref.t('stat_ratio'),
                     color: gold,
                   ),
                   _VerticalDivider(),
                   _DifficultyCell(
-                    label: _difficultyUk,
+                    label: _getDifficultyLabel(ref),
                     color: _difficultyColor,
+                    ref: ref,
                   ),
                 ],
               ),
@@ -256,8 +262,9 @@ class _StatCell extends StatelessWidget {
 class _DifficultyCell extends StatelessWidget {
   final String label;
   final Color color;
+  final WidgetRef ref;
 
-  const _DifficultyCell({required this.label, required this.color});
+  const _DifficultyCell({required this.label, required this.color, required this.ref});
 
   @override
   Widget build(BuildContext context) {
@@ -287,7 +294,7 @@ class _DifficultyCell extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            'Рівень',
+            ref.t('difficulty_label'),
             style: GoogleFonts.outfit(
               fontSize: 9,
               color: Colors.white.withValues(alpha: 0.45),

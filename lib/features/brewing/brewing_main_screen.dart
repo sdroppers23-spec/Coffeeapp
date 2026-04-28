@@ -179,7 +179,8 @@ class _BrewingMethodsContent extends ConsumerWidget {
               
               // 1. Add guide recipes
               for (var r in guideList) {
-                grouped.putIfAbsent(r.methodKey, () => []).add(r);
+                final guide = r.copyWith(isGuide: true);
+                grouped.putIfAbsent(guide.methodKey, () => []).add(guide);
               }
               
               // 2. Add custom recipes (mapped to DTO)

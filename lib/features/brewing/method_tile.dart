@@ -6,7 +6,6 @@ import '../../core/database/dtos.dart';
 import '../../shared/widgets/glass_container.dart';
 import '../../core/l10n/app_localizations.dart';
 import 'brewing_detail_screen.dart';
-import 'method_recipes_screen.dart';
 import 'custom_recipe_list.dart';
 import '../navigation/navigation_providers.dart';
 
@@ -18,7 +17,7 @@ class MethodTile extends ConsumerWidget {
   const MethodTile({super.key, required this.methodRecipes});
 
   BrewingRecipeDto get _firstRecipe => methodRecipes.first;
-  int get _count => methodRecipes.length;
+
 
   String _getEffectiveName(BuildContext context) {
     return _firstRecipe.name;
@@ -47,23 +46,11 @@ class MethodTile extends ConsumerWidget {
         // Hide nav bar when entering detail view
         ref.read(navBarVisibleProvider.notifier).hide();
 
-        if (_count > 1) {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => MethodRecipesScreen(
-                methodKey: _firstRecipe.methodKey,
-                methodName: name,
-                recipes: methodRecipes,
-              ),
-            ),
-          );
-        } else {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => BrewingDetailScreen(recipe: _firstRecipe),
-            ),
-          );
-        }
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => BrewingDetailScreen(recipe: _firstRecipe),
+          ),
+        );
       },
       child: GlassContainer(
         borderRadius: 24,

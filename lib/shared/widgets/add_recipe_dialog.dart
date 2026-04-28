@@ -850,7 +850,7 @@ class _TimeMaskFormatter extends TextInputFormatter {
     TextEditingValue newValue,
   ) {
     // 1. Strip non-digits
-    String digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+    final String digits = newValue.text.replaceAll(RegExp(r'\D'), '');
 
     if (digits.isEmpty) {
       return const TextEditingValue(
@@ -860,55 +860,15 @@ class _TimeMaskFormatter extends TextInputFormatter {
     }
 
     // 2. Limit to 6 digits (HHMMSS)
-    if (digits.length > 6) {
-      digits = digits.substring(0, 6);
-    }
+    final String limited = digits.length > 6 ? digits.substring(0, 6) : digits;
 
-    // 3. Interpret as LTR input: 
-    // "1" -> 1s
-    // "12" -> 12s
-    // "123" -> 1m 23s
-    // "1234" -> 12m 34s
-    // "12345" -> 1h 23m 45s
-    // "123456" -> 12h 34m 56s
-    
-    int totalSeconds = 0;
-    if (digits.length <= 2) {
-      totalSeconds = int.tryParse(digits) ?? 0;
-    } else if (digits.length <= 4) {
-      final int m = int.tryParse(digits.substring(0, digits.length - 2)) ?? 0;
-      final int s = int.tryParse(digits.substring(digits.length - 2)) ?? 0;
-      totalSeconds = m * 60 + s;
-    } else {
-      final int h = int.tryParse(digits.substring(0, digits.length - 4)) ?? 0;
-      final int m =
-          int.tryParse(digits.substring(digits.length - 4, digits.length - 2)) ??
-              0;
-      final int s = int.tryParse(digits.substring(digits.length - 2)) ?? 0;
-      totalSeconds = h * 3600 + m * 60 + s;
-    }
-
-    // 4. Limit to 99:59:59 (359999 seconds)
-    if (totalSeconds > 359999) {
-      totalSeconds = 359999;
-    }
-
-    // 5. Format back to HH:MM:SS with minimal padding
-    final int h = totalSeconds ~/ 3600;
-    final int m = (totalSeconds % 3600) ~/ 60;
-    final int s = totalSeconds % 60;
-
-    String result;
-    if (h > 0) {
-      result = '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
-    } else if (m > 0 || digits.length > 2) {
-      result = '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
-    } else {
-      // Single digit '0' should remain '0' to avoid '00' bug
-      result = s.toString();
-      if (digits.length > 1) {
-        result = result.padLeft(2, '0');
+    // 3. Format as LTR: XX:XX:XX
+    String result = '';
+    for (int i = 0; i < limited.length; i++) {
+      if (i > 0 && i % 2 == 0) {
+        result += ':';
       }
+      result += limited[i];
     }
 
     return TextEditingValue(

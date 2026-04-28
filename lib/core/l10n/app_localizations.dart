@@ -1319,6 +1319,7 @@ class AppLocalizations {
       'intensity_light': 'Легка',
       'intensity_medium': 'Середня',
       'intensity_bold': 'Сильна',
+      'recommended_roast': 'Рекомендоване обсмаження',
       'flavor_profile_label': 'Профіль',
       'select_recipe_type': 'Оберіть тип рецепту',
       'limit': 'ЛІМІТ',

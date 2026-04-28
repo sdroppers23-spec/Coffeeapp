@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:ui' as ui;
 import '../../core/l10n/app_localizations.dart';
 import '../../shared/widgets/add_recipe_dialog.dart';
 import 'widgets/custom_recipe_card.dart';
@@ -179,15 +180,17 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      Text(
-                        widget.recipe.description,
-                        style: GoogleFonts.outfit(
-                          fontSize: 15,
-                          color: Colors.white.withValues(alpha: 0.8),
-                          height: 1.6,
+                      if (widget.recipe.description.isNotEmpty) ...[
+                        Text(
+                          widget.recipe.description,
+                          style: GoogleFonts.outfit(
+                            fontSize: 15,
+                            color: Colors.white.withValues(alpha: 0.8),
+                            height: 1.6,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 24),
+                        const SizedBox(height: 24),
+                      ],
                       const Divider(color: Colors.white10),
                       const SizedBox(height: 20),
                       Row(
@@ -195,9 +198,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                           Expanded(
                             child: _buildInfoPoint(
                               ref.t('recommended_roast'),
-                              widget.recipe.methodKey.toLowerCase().contains(
-                                    'espresso',
-                                  )
+                              widget.recipe.methodKey.toLowerCase().contains('espresso')
                                   ? ref.t('roast_medium_dark')
                                   : ref.t('roast_light_medium'),
                               Icons.local_fire_department_rounded,
@@ -325,83 +326,68 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
     }
   }
 
-  Color _getIntensityColor(String? profile) {
-    final p = (profile ?? '').toLowerCase();
-    if (p.contains('light') || p.contains('легка')) {
-      return const Color(0xFF81C784);
-    } else if (p.contains('bold') || p.contains('міцна')) {
-      return const Color(0xFFE57373);
-    }
-    return const Color(0xFF64B5F6);
-  }
-
-  String _getIntensityLabel(String? profile) {
-    final p = (profile ?? '').toLowerCase();
-    if (p.contains('light') || p.contains('легка')) {
-      return t('intensity_light');
-    } else if (p.contains('bold') || p.contains('міцна')) {
-      return t('intensity_bold');
-    }
-    return t('intensity_medium');
-  }
-
   @override
   Widget build(
     BuildContext context,
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    return Container(
-      height: 90,
-      decoration: BoxDecoration(
-        color: const Color(0xFF0A0A0A),
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.white.withValues(alpha: 0.08),
-            width: 1,
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          height: 90,
+          decoration: BoxDecoration(
+            color: const Color(0xFF0A0A0A).withValues(alpha: 0.8),
+            border: Border(
+              bottom: BorderSide(
+                color: Colors.white.withValues(alpha: 0.08),
+                width: 1,
+              ),
+            ),
           ),
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
-          children: [
-            Expanded(
-              child: _HeaderStat(
-                icon: Icons.timer_outlined,
-                value: '${recipe.extractionTimeSeconds ~/ 60}:${(recipe.extractionTimeSeconds % 60).toString().padLeft(2, '0')}',
-                label: t('stat_time'),
-                color: Colors.white,
-              ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _HeaderStat(
+                    icon: Icons.timer_outlined,
+                    value: '${recipe.extractionTimeSeconds ~/ 60}:${(recipe.extractionTimeSeconds % 60).toString().padLeft(2, '0')}',
+                    label: t('stat_time'),
+                    color: Colors.white,
+                  ),
+                ),
+                _HeaderDivider(),
+                Expanded(
+                  child: _HeaderStat(
+                    icon: Icons.thermostat_rounded,
+                    value: '${recipe.brewTempC.toInt()}°C',
+                    label: t('stat_temp'),
+                    color: const Color(0xFFFFAB91),
+                  ),
+                ),
+                _HeaderDivider(),
+                Expanded(
+                  child: _HeaderStat(
+                    icon: Icons.balance_rounded,
+                    value: '1:${(1 / (recipe.ratioGramsPerMl ?? 0.066)).toStringAsFixed(1)}',
+                    label: t('stat_ratio'),
+                    color: const Color(0xFFC8A96E),
+                  ),
+                ),
+                _HeaderDivider(),
+                Expanded(
+                  child: _HeaderStat(
+                    icon: Icons.bolt_rounded,
+                    value: _getDifficultyLabel(recipe.difficulty),
+                    label: t('difficulty_label'),
+                    color: _getDifficultyColor(recipe.difficulty),
+                  ),
+                ),
+              ],
             ),
-            _HeaderDivider(),
-            Expanded(
-              child: _HeaderStat(
-                icon: Icons.thermostat_rounded,
-                value: '${recipe.brewTempC.toInt()}°C',
-                label: t('stat_temp'),
-                color: const Color(0xFFFFAB91),
-              ),
-            ),
-            _HeaderDivider(),
-            Expanded(
-              child: _HeaderStat(
-                icon: Icons.balance_rounded,
-                value: '1:${(1 / (recipe.ratioGramsPerMl ?? 0.066)).toStringAsFixed(1)}',
-                label: t('stat_ratio'),
-                color: const Color(0xFFC8A96E),
-              ),
-            ),
-            _HeaderDivider(),
-            Expanded(
-              child: _HeaderStat(
-                icon: Icons.bolt_rounded,
-                value: _getDifficultyLabel(recipe.difficulty),
-                label: t('difficulty_label'),
-                color: _getDifficultyColor(recipe.difficulty),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

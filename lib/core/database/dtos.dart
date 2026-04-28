@@ -290,6 +290,7 @@ class BrewingRecipeDto {
   final String? iconName;
   final String category; // 'filter' or 'espresso'
   final bool isGuide;
+  final double? coffeeGrams;
 
   BrewingRecipeDto({
     required this.id,
@@ -306,6 +307,7 @@ class BrewingRecipeDto {
     this.iconName,
     this.category = 'filter',
     this.isGuide = false,
+    this.coffeeGrams,
   });
 
   BrewingRecipeDto copyWith({
@@ -323,6 +325,7 @@ class BrewingRecipeDto {
     String? iconName,
     String? category,
     bool? isGuide,
+    double? coffeeGrams,
   }) {
     return BrewingRecipeDto(
       id: id ?? this.id,
@@ -339,6 +342,7 @@ class BrewingRecipeDto {
       iconName: iconName ?? this.iconName,
       category: category ?? this.category,
       isGuide: isGuide ?? this.isGuide,
+      coffeeGrams: coffeeGrams ?? this.coffeeGrams,
     );
   }
 }

@@ -201,6 +201,7 @@ class _BrewingMethodsContent extends ConsumerWidget {
                       totalTimeSec: cr.extractionTimeSeconds,
                       tempC: cr.brewTempC,
                       ratioGramsPerMl: cr.brewRatio,
+                      coffeeGrams: cr.coffeeGrams,
                       isGuide: false,
                     ),
                   );

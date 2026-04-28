@@ -4,13 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'dart:ui' as ui;
 import '../../core/l10n/app_localizations.dart';
 import '../../shared/widgets/add_recipe_dialog.dart';
-import 'widgets/custom_recipe_card.dart';
-import 'widgets/custom_recipe_list_tab.dart';
-import '../../core/database/app_database.dart';
-import '../../shared/providers/recipe_provider.dart';
+import 'custom_recipe_list.dart';
+import '../../core/database/dtos.dart';
 
 class BrewingDetailScreen extends ConsumerStatefulWidget {
-  final Recipe recipe;
+  final BrewingRecipeDto recipe;
 
   const BrewingDetailScreen({
     super.key,
@@ -27,13 +25,13 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0A),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              const Color(0xFF1A1412),
-              const Color(0xFF0A0A0A),
+              Color(0xFF1A1412),
+              Color(0xFF0A0A0A),
             ],
           ),
         ),
@@ -238,27 +236,32 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
             Icon(icon, color: const Color(0xFFC8A96E), size: 14),
             const SizedBox(width: 6),
             Expanded(
-              child: Text(
-                label.toUpperCase(),
-                style: GoogleFonts.outfit(
-                  fontSize: 10,
-                  color: const Color(0xFFC8A96E),
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.1,
+              child: FittedBox(
+                alignment: Alignment.centerLeft,
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  label.toUpperCase(),
+                  style: GoogleFonts.outfit(
+                    fontSize: 10,
+                    color: const Color(0xFFC8A96E),
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.1,
+                  ),
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: GoogleFonts.outfit(
-            fontSize: 15,
-            color: Colors.white,
-            fontWeight: FontWeight.w500,
+        const SizedBox(height: 6),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            value,
+            style: GoogleFonts.outfit(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            ),
           ),
         ),
       ],
@@ -281,29 +284,29 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
 }
 
 class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
-  final Recipe recipe;
-  final String Function(String, {Map<String, dynamic>? args}) t;
+  final BrewingRecipeDto recipe;
+  final String Function(String, {Map<String, String>? args}) t;
 
-  _StickyHeaderDelegate({required this.recipe, required this.t});
+  _StickyHeaderDelegate({
+    required this.recipe,
+    required this.t,
+  });
 
-  Color _getDifficultyColor(String? difficulty) {
-    switch ((difficulty ?? 'Medium').toLowerCase()) {
-      case 'easy':
-      case 'beginner':
-        return const Color(0xFF4CAF50);
-      case 'medium':
-      case 'intermediate':
-        return const Color(0xFFFFC107);
-      case 'hard':
-        return const Color(0xFFF44336);
-      case 'pro':
-      case 'advanced':
-        return const Color(0xFFE91E63);
-      case 'master':
-        return const Color(0xFF9C27B0);
-      default:
-        return const Color(0xFFFFC107);
+  String _formattedTime() {
+    final s = recipe.totalTimeSec ?? 0;
+    if (s >= 3600) return '${(s / 3600).toStringAsFixed(1)} h';
+    final minutes = s ~/ 60;
+    final seconds = s % 60;
+    return '$minutes:${seconds.toString().padLeft(2, '0')}';
+  }
+
+  String get _formattedRatio {
+    final r = recipe.ratioGramsPerMl ?? 0.0;
+    if (r > 0 && r.isFinite) {
+      final inverse = (1 / r).round();
+      return '1:$inverse';
     }
+    return '—';
   }
 
   String _getDifficultyLabel(String? difficulty) {
@@ -316,13 +319,31 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
         return t('difficulty_med');
       case 'hard':
         return t('difficulty_hard');
-      case 'pro':
       case 'advanced':
         return t('difficulty_advanced');
       case 'master':
         return t('difficulty_master');
       default:
         return t('difficulty_med');
+    }
+  }
+
+  Color _getDifficultyColor(String? difficulty) {
+    switch ((difficulty ?? 'Medium').toLowerCase()) {
+      case 'easy':
+      case 'beginner':
+        return const Color(0xFF00FF88); // Neon Emerald
+      case 'medium':
+      case 'intermediate':
+        return const Color(0xFFFFEE00); // Neon Yellow
+      case 'hard':
+        return const Color(0xFFFF3366); // Neon Pink/Red
+      case 'advanced':
+        return const Color(0xFFCC00FF); // Neon Purple
+      case 'master':
+        return const Color(0xFF00D1FF); // Neon Sky Blue
+      default:
+        return const Color(0xFFFFEE00);
     }
   }
 
@@ -336,7 +357,7 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
       child: BackdropFilter(
         filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
-          height: 90,
+          height: 105,
           decoration: BoxDecoration(
             color: const Color(0xFF0A0A0A).withValues(alpha: 0.8),
             border: Border(
@@ -347,36 +368,41 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Row(
               children: [
                 Expanded(
                   child: _HeaderStat(
                     icon: Icons.timer_outlined,
-                    value: '${recipe.extractionTimeSeconds ~/ 60}:${(recipe.extractionTimeSeconds % 60).toString().padLeft(2, '0')}',
+                    value: _formattedTime(),
                     label: t('stat_time'),
-                    color: Colors.white,
+                    color: const Color(0xFF00E5FF), // Neon Cyan
                   ),
                 ),
-                _HeaderDivider(),
                 Expanded(
                   child: _HeaderStat(
                     icon: Icons.thermostat_rounded,
-                    value: '${recipe.brewTempC.toInt()}°C',
+                    value: '${recipe.tempC?.toInt() ?? 0}°C',
                     label: t('stat_temp'),
-                    color: const Color(0xFFFFAB91),
+                    color: const Color(0xFFFF5252), // Neon Red
                   ),
                 ),
-                _HeaderDivider(),
+                Expanded(
+                  child: _HeaderStat(
+                    icon: Icons.coffee_rounded,
+                    value: '${recipe.coffeeGrams?.toInt() ?? 0}g',
+                    label: t('stat_coffee'),
+                    color: const Color(0xFFFFD740), // Neon Amber
+                  ),
+                ),
                 Expanded(
                   child: _HeaderStat(
                     icon: Icons.balance_rounded,
-                    value: '1:${(1 / (recipe.ratioGramsPerMl ?? 0.066)).toStringAsFixed(1)}',
+                    value: _formattedRatio,
                     label: t('stat_ratio'),
-                    color: const Color(0xFFC8A96E),
+                    color: const Color(0xFF69F0AE), // Neon Green
                   ),
                 ),
-                _HeaderDivider(),
                 Expanded(
                   child: _HeaderStat(
                     icon: Icons.bolt_rounded,
@@ -394,9 +420,9 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => 90;
+  double get maxExtent => 105;
   @override
-  double get minExtent => 90;
+  double get minExtent => 105;
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => true;
 }
@@ -419,16 +445,50 @@ class _HeaderStat extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(icon, size: 18, color: color.withValues(alpha: 0.7)),
-        const SizedBox(height: 6),
+        Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.15),
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: color.withValues(alpha: 0.3),
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: color.withValues(alpha: 0.2),
+                blurRadius: 10,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          child: Icon(
+            icon,
+            size: 16,
+            color: color,
+            shadows: [
+              Shadow(
+                color: color.withValues(alpha: 0.5),
+                blurRadius: 8,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 8),
         FittedBox(
           fit: BoxFit.scaleDown,
           child: Text(
             value,
             style: GoogleFonts.outfit(
-              fontSize: 16,
+              fontSize: 14,
               fontWeight: FontWeight.w800,
-              color: Colors.white,
+              color: color,
+              shadows: [
+                Shadow(
+                  color: color.withValues(alpha: 0.4),
+                  blurRadius: 6,
+                ),
+              ],
             ),
           ),
         ),
@@ -438,10 +498,10 @@ class _HeaderStat extends StatelessWidget {
           child: Text(
             label.toUpperCase(),
             style: GoogleFonts.outfit(
-              fontSize: 9,
+              fontSize: 8,
               fontWeight: FontWeight.bold,
               color: Colors.white38,
-              letterSpacing: 0.5,
+              letterSpacing: 0.4,
             ),
           ),
         ),
@@ -450,14 +510,4 @@ class _HeaderStat extends StatelessWidget {
   }
 }
 
-class _HeaderDivider extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 30,
-      width: 1,
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      color: Colors.white10,
-    );
-  }
-}
+

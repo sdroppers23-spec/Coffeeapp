@@ -339,42 +339,16 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
 
   _StickyHeaderDelegate({required this.recipe, required this.t});
 
-  Color _getDifficultyColor(String? difficulty) {
-    switch ((difficulty ?? 'Medium').toLowerCase()) {
-      case 'easy':
-      case 'beginner':
-        return const Color(0xFF4CAF50);
-      case 'medium':
-      case 'intermediate':
-        return const Color(0xFFFFC107);
-      case 'hard':
-        return const Color(0xFFF44336);
-      case 'advanced':
-        return const Color(0xFFE91E63);
-      case 'master':
-        return const Color(0xFF9C27B0);
-      default:
-        return const Color(0xFFFFC107);
+  Color _getIntensityColor(String? profile) {
+    final p = (profile ?? '').toLowerCase();
+    if (p.contains('light') || p.contains('легка')) {
+      return const Color(0xFF81D4FA); // Light Blue
+    } else if (p.contains('bold') ||
+        p.contains('сильна') ||
+        p.contains('strong')) {
+      return const Color(0xFFFF8A65); // Warm Orange
     }
-  }
-
-  String _getDifficultyLabel(String? difficulty) {
-    switch ((difficulty ?? 'Medium').toLowerCase()) {
-      case 'easy':
-      case 'beginner':
-        return t('difficulty_easy');
-      case 'medium':
-      case 'intermediate':
-        return t('difficulty_med');
-      case 'hard':
-        return t('difficulty_hard');
-      case 'advanced':
-        return t('difficulty_advanced');
-      case 'master':
-        return t('difficulty_master');
-      default:
-        return t('difficulty_med');
-    }
+    return const Color(0xFFEBCB8B); // Gold/Medium
   }
 
   String _getIntensityLabel(String? profile) {

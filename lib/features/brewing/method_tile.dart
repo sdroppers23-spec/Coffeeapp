@@ -215,18 +215,20 @@ class MethodTile extends ConsumerWidget {
   }
 }
 
-class _RecipeCountChip extends StatelessWidget {
+class _RecipeCountChip extends ConsumerWidget {
   final int count;
   const _RecipeCountChip({required this.count});
-
+  
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (count == 0) return const SizedBox.shrink();
+
     final String pluralKey = count == 1
         ? 'recipe_1'
         : (count >= 2 && count <= 4)
             ? 'recipe_2_4'
             : 'recipe_5_plus';
-    final label = '$count ${context.t(pluralKey)}';
+    final label = '$count ${ref.t(pluralKey)}';
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),

@@ -10,7 +10,8 @@ import 'method_tile.dart';
 // ─── Provider ─────────────────────────────────────────────────────────────────
 final brewingRecipesProvider = FutureProvider<List<BrewingRecipeDto>>((ref) async {
   final db = ref.watch(databaseProvider);
-  return db.getAllBrewingRecipes('uk');
+  final locale = ref.watch(localeProvider);
+  return db.getAllBrewingRecipes(locale);
 });
 
 // ─── Screen ───────────────────────────────────────────────────────────────────

@@ -21,6 +21,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   final _passwordController = TextEditingController();
   bool _isLoading = false;
   bool _isLogin = true;
+  bool _obscurePassword = true;
 
   @override
   void dispose() {
@@ -145,8 +146,16 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     decoration: InputDecoration(
                       labelText: ref.t('password'),
                       labelStyle: const TextStyle(color: Colors.white54),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword ? Icons.visibility_off_rounded : Icons.visibility_rounded,
+                          color: Colors.white54,
+                          size: 20,
+                        ),
+                        onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                      ),
                     ),
-                    obscureText: true,
+                    obscureText: _obscurePassword,
                   ),
                   const SizedBox(height: 32),
                   ElevatedButton(

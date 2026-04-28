@@ -517,26 +517,23 @@ class _InfoRow extends StatelessWidget {
             ],
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _EditProfileDialog extends StatefulWidget {
+class _EditProfileDialog extends ConsumerStatefulWidget {
   final User user;
   final SupabaseClient supabase;
 
   const _EditProfileDialog({required this.user, required this.supabase});
 
   @override
-  State<_EditProfileDialog> createState() => _EditProfileDialogState();
+  ConsumerState<_EditProfileDialog> createState() => _EditProfileDialogState();
 }
 
-class _EditProfileDialogState extends State<_EditProfileDialog> {
+class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
   late TextEditingController _nameController;
   late TextEditingController _avatarUrlController;
+  late TextEditingController _passwordController;
   bool _isSaving = false;
   bool _isUploading = false;
+  bool _obscurePassword = true;
 
   @override
   void initState() {
@@ -548,18 +545,21 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
     _avatarUrlController = TextEditingController(
       text: meta['avatar_url'] as String? ?? '',
     );
+    _passwordController = TextEditingController();
   }
 
   @override
   void dispose() {
     _nameController.dispose();
     _avatarUrlController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
   Future<void> _save() async {
     setState(() => _isSaving = true);
     try {
+      // 1. Update Metadata
       await widget.supabase.auth.updateUser(
         UserAttributes(
           data: {
@@ -568,6 +568,14 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
           },
         ),
       );
+      
+      // 2. Update Password if not empty
+      if (_passwordController.text.trim().isNotEmpty) {
+        await widget.supabase.auth.updateUser(
+          UserAttributes(password: _passwordController.text.trim()),
+        );
+      }
+
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
       if (mounted) {
@@ -599,42 +607,33 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
     setState(() => _isUploading = true);
     try {
       final bytes = await pickedFile.readAsBytes();
-      final fileExt = pickedFile.name.split('.').last;
-      final fileName =
-          '${widget.user.id}-${DateTime.now().millisecondsSinceEpoch}.$fileExt';
+      final fileExt = pickedFile.path.split('.').last;
+      final fileName = '${widget.user.id}_${DateTime.now().millisecondsSinceEpoch}.$fileExt';
+      final filePath = 'avatars/$fileName';
 
-      final storage = widget.supabase.storage.from('avatars');
+      await widget.supabase.storage.from('Profiles').uploadBinary(
+            filePath,
+            bytes,
+            fileOptions: FileOptions(contentType: 'image/$fileExt'),
+          );
 
-      await storage.uploadBinary(
-        fileName,
-        bytes,
-        fileOptions: FileOptions(contentType: 'image/$fileExt', upsert: true),
-      );
-
-      final imageUrl = storage.getPublicUrl(fileName);
+      final imageUrl = widget.supabase.storage.from('Profiles').getPublicUrl(filePath);
 
       setState(() {
         _avatarUrlController.text = imageUrl;
       });
-
+      
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.t('image_uploaded')),
-            backgroundColor: Colors.green,
-          ),
+          SnackBar(content: Text(ref.t('image_uploaded'))),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              context.t('upload_failed', args: {'error': e.toString()}),
-              style: const TextStyle(color: Colors.white),
-            ),
+            content: Text(ref.t('upload_failed', args: {'error': e.toString()})),
             backgroundColor: Colors.red,
-            duration: const Duration(seconds: 4),
           ),
         );
       }
@@ -647,126 +646,177 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.transparent,
-      elevation: 0,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20),
       child: GlassContainer(
         borderRadius: 24,
-        padding: const EdgeInsets.all(24),
+        borderWidth: 1,
+        borderColor: Colors.white.withValues(alpha: 0.1),
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                context.t('edit_profile_dialog_title'),
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  ref.t('edit_profile_dialog_title'),
+                  style: GoogleFonts.cormorantGaramond(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              const SizedBox(height: 24),
-              TextField(
-                controller: _nameController,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  labelText: context.t('display_name_label'),
-                  labelStyle: const TextStyle(color: Colors.white54),
-                  filled: true,
-                  fillColor: Colors.white.withValues(alpha: 0.05),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
+                const SizedBox(height: 24),
+                
+                // Avatar Preview & Upload
+                Center(
+                  child: Stack(
+                    children: [
+                      CircleAvatar(
+                        radius: 40,
+                        backgroundColor: Colors.white10,
+                        backgroundImage: _avatarUrlController.text.isNotEmpty
+                            ? NetworkImage(_avatarUrlController.text)
+                            : null,
+                        child: _avatarUrlController.text.isEmpty
+                            ? const Icon(Icons.person_rounded, size: 40, color: Colors.white38)
+                            : null,
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: GestureDetector(
+                          onTap: _isUploading ? null : _pickAndUploadImage,
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFC8A96E),
+                              shape: BoxShape.circle,
+                            ),
+                            child: _isUploading 
+                              ? const SizedBox(width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black))
+                              : const Icon(Icons.camera_alt_rounded, size: 14, color: Colors.black),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _avatarUrlController,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                      ),
-                      decoration: InputDecoration(
-                        labelText: context.t('avatar_url_label'),
-                        labelStyle: const TextStyle(color: Colors.white54),
-                        filled: true,
-                        fillColor: Colors.white.withValues(alpha: 0.05),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
+                const SizedBox(height: 24),
+  
+                // Name Field
+                _buildField(
+                  label: ref.t('display_name_label'),
+                  controller: _nameController,
+                  icon: Icons.person_outline_rounded,
+                ),
+                const SizedBox(height: 16),
+  
+                // Avatar URL Field
+                _buildField(
+                  label: ref.t('avatar_url_label'),
+                  controller: _avatarUrlController,
+                  icon: Icons.link_rounded,
+                  hint: 'https://...',
+                ),
+                const SizedBox(height: 16),
+  
+                // Password Field
+                _buildField(
+                  label: ref.t('new_password_label'),
+                  controller: _passwordController,
+                  icon: Icons.lock_outline_rounded,
+                  obscureText: _obscurePassword,
+                  hint: ref.t('change_password_hint'),
+                  suffix: IconButton(
+                    icon: Icon(
+                      _obscurePassword ? Icons.visibility_off_rounded : Icons.visibility_rounded,
+                      color: Colors.white38,
+                      size: 18,
+                    ),
+                    onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                  ),
+                ),
+                
+                const SizedBox(height: 32),
+  
+                // Action Buttons
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(
+                          ref.t('cancel'),
+                          style: const TextStyle(color: Colors.white60),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    icon: _isUploading
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Color(0xFFC8A96E),
-                            ),
-                          )
-                        : const Icon(
-                            Icons.photo_library,
-                            color: Color(0xFFC8A96E),
-                          ),
-                    tooltip: context.t('upload_from_gallery'),
-                    onPressed: _isUploading ? null : _pickAndUploadImage,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 32),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text(
-                      context.t('cancel'),
-                      style: const TextStyle(color: Colors.white54),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  ElevatedButton(
-                    onPressed: _isSaving ? null : _save,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFC8A96E),
-                      foregroundColor: Colors.black,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 12,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: _isSaving ? null : _save,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFC8A96E),
+                          foregroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
+                        child: _isSaving
+                            ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black))
+                            : Text(ref.t('save_changes'), style: const TextStyle(fontWeight: FontWeight.bold)),
                       ),
                     ),
-                    child: _isSaving
-                        ? const SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.black,
-                            ),
-                          )
-                        : Text(
-                            context.t('save'),
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildField({
+    required String label,
+    required TextEditingController controller,
+    required IconData icon,
+    bool obscureText = false,
+    String? hint,
+    Widget? suffix,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 4, bottom: 6),
+          child: Text(
+            label,
+            style: GoogleFonts.outfit(fontSize: 12, color: Colors.white54),
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.white10),
+          ),
+          child: TextField(
+            controller: controller,
+            obscureText: obscureText,
+            style: const TextStyle(color: Colors.white, fontSize: 14),
+            decoration: InputDecoration(
+              hintText: hint,
+              hintStyle: const TextStyle(color: Colors.white24, fontSize: 13),
+              prefixIcon: Icon(icon, size: 18, color: const Color(0xFFC8A96E).withValues(alpha: 0.7)),
+              suffixIcon: suffix,
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

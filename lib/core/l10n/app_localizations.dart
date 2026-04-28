@@ -761,7 +761,7 @@ class AppLocalizations {
       'password': 'Пароль',
       'google_sign_in': 'Продовжити з Google',
       'language': 'Мова',
-      'bloom': 'Цвітіння',
+      'bloom': 'Передзмочування (Блум)',
       'no_favorites': 'У Вас ще немає улюблених лотів',
       'no_archived': 'Архів порожній',
       'recipe_saved': 'Рецепт збережено локально!',

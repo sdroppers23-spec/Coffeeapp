@@ -835,15 +835,48 @@ class _TimeMaskFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    var text = newValue.text.replaceAll(':', '');
-    if (text.length > 6) text = text.substring(0, 6);
+    // Strip all colons to get raw digits
+    final rawDigits = newValue.text.replaceAll(':', '');
 
-    var res = '';
-    for (var i = 0; i < text.length; i++) {
-      res += text[i];
-      if ((i == 1 || i == 3) && i != text.length - 1) {
-        res += ':';
-      }
+    // Limit to 6 digits max (HH:MM:SS)
+    final digits = rawDigits.length > 6 ? rawDigits.substring(0, 6) : rawDigits;
+
+    if (digits.isEmpty) {
+      return newValue.copyWith(text: '', selection: const TextSelection.collapsed(offset: 0));
+    }
+
+    // Parse the digit groups
+    // Format: HHMMSS — pad left with zeros if needed
+    final padded = digits.padLeft(6, '0');
+    int hh = int.parse(padded.substring(0, 2));
+    int mm = int.parse(padded.substring(2, 4));
+    int ss = int.parse(padded.substring(4, 6));
+
+    // Carry: seconds >= 60 → extra minutes
+    if (ss >= 60) {
+      mm += ss ~/ 60;
+      ss = ss % 60;
+    }
+    // Carry: minutes >= 60 → extra hours
+    if (mm >= 60) {
+      hh += mm ~/ 60;
+      mm = mm % 60;
+    }
+    // Cap hours at 99
+    if (hh > 99) hh = 99;
+
+    // Build formatted string — show only what the user has typed so far
+    String res;
+    if (digits.length <= 2) {
+      // Only seconds entered so far
+      res = ss.toString().padLeft(2, '0');
+    } else if (digits.length <= 4) {
+      // MM:SS
+      res = '${mm.toString().padLeft(2, '0')}:${ss.toString().padLeft(2, '0')}';
+    } else {
+      // HH:MM:SS
+      res = '${hh.toString().padLeft(2, '0')}:${mm.toString().padLeft(2, '0')}:${ss.toString().padLeft(2, '0')}';
+
     }
 
     return TextEditingValue(
@@ -852,3 +885,4 @@ class _TimeMaskFormatter extends TextInputFormatter {
     );
   }
 }
+

@@ -517,6 +517,11 @@ class _InfoRow extends StatelessWidget {
             ],
           ],
         ),
+      ),
+    );
+  }
+}
+
 class _EditProfileDialog extends ConsumerStatefulWidget {
   final User user;
   final SupabaseClient supabase;
@@ -641,15 +646,13 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
       if (mounted) setState(() => _isUploading = false);
     }
   }
-
-  @override
+  @override
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: const EdgeInsets.symmetric(horizontal: 20),
       child: GlassContainer(
         borderRadius: 24,
-        borderWidth: 1,
         borderColor: Colors.white.withValues(alpha: 0.1),
         child: SingleChildScrollView(
           child: Padding(

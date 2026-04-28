@@ -904,6 +904,12 @@ class AppDatabase extends _$AppDatabase {
     return row != null ? _mapLotRow(row) : null;
   }
 
+  Future<CustomRecipe?> findConflictRecipe(String id) async {
+    return await (select(
+      customRecipes,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
+  }
+
   Future<int> upsertUserLot(CoffeeLotsCompanion lot) {
     // Always mark as unsynced so the next push will pick it up
     final markedLot = lot.copyWith(

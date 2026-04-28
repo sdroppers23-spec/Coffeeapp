@@ -372,24 +372,46 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
               color: const Color(0xFF1A1918).withValues(alpha: 0.4),
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _ParameterItem(
-                  label: t('ratio'),
-                  value:
-                      '1:${(1 / (recipe.ratioGramsPerMl ?? 0.066)).toStringAsFixed(0)}',
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: _ParameterItem(
+                      label: t('ratio'),
+                      value:
+                          '1:${(1 / (recipe.ratioGramsPerMl ?? 0.066)).toStringAsFixed(0)}',
+                    ),
+                  ),
                 ),
-                _ParameterItem(
-                  label: t('timer'),
-                  value: _formatTime(recipe.totalTimeSec ?? 180),
+                Container(width: 1, height: 24, color: Colors.white10),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: _ParameterItem(
+                      label: t('timer'),
+                      value: _formatTime(recipe.totalTimeSec ?? 180),
+                    ),
+                  ),
                 ),
-                _ParameterItem(
-                  label: t('difficulty'),
-                  value: recipe.difficulty ?? t('difficulty_med'),
+                Container(width: 1, height: 24, color: Colors.white10),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: _ParameterItem(
+                      label: t('difficulty'),
+                      value: recipe.difficulty ?? t('difficulty_med'),
+                    ),
+                  ),
                 ),
-                _ParameterItem(
-                  label: t('intensity'),
-                  value: recipe.flavorProfile ?? t('balanced'),
+                Container(width: 1, height: 24, color: Colors.white10),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: _ParameterItem(
+                      label: t('intensity'),
+                      value: recipe.flavorProfile ?? t('balanced'),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -424,18 +446,24 @@ class _ParameterItem extends StatelessWidget {
       children: [
         Text(
           label.toUpperCase(),
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: GoogleFonts.outfit(
-            fontSize: 9,
-            color: const Color(0xFFC8A96E),
+            fontSize: 8,
+            color: const Color(0xFFC8A96E).withValues(alpha: 0.8),
             fontWeight: FontWeight.bold,
-            letterSpacing: 1.2,
+            letterSpacing: 0.5,
           ),
         ),
         const SizedBox(height: 4),
         Text(
           value,
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: GoogleFonts.outfit(
-            fontSize: 14,
+            fontSize: 13,
             color: Colors.white,
             fontWeight: FontWeight.w600,
           ),

@@ -38,7 +38,6 @@ class MethodTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const gold = Color(0xFFC8A96E);
     final name = _getEffectiveName(context);
     final imageUrl = _getEffectiveImageUrl();
     
@@ -136,28 +135,6 @@ class MethodTile extends ConsumerWidget {
               ),
             ),
 
-            // ── Top-right recipe count badge ─────────────────────────────
-            if (_count > 1)
-              Positioned(
-                top: 10,
-                right: 10,
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: gold.withValues(alpha: 0.85),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    '$_count',
-                    style: GoogleFonts.poppins(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
 
             // ── Bottom content ───────────────────────────────────────────
             Padding(
@@ -182,7 +159,7 @@ class MethodTile extends ConsumerWidget {
                   const SizedBox(height: 6),
 
                   // Recipe count chip
-                  _RecipeCountChip(count: methodRecipes.where((r) => !r.isGuide).length),
+                  _RecipeCountChip(count: methodRecipes.length),
                 ],
               ),
             ),

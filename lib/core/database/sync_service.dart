@@ -557,13 +557,16 @@ class SyncService {
 
       for (final item in remoteRecipes) {
         try {
-          if (item['is_deleted_local'] == true) {
-
+          final id = item['id'] as String;
+          
+          // CHECK: If recipe is deleted locally OR has unsynced changes, do not pull it back from cloud
+          final localRecipe = await db.findConflictRecipe(id);
+          if (localRecipe != null && (localRecipe.isDeletedLocal || !localRecipe.isSynced)) {
             continue;
           }
 
           await db.insertCustomRecipe(CustomRecipesCompanion(
-            id: Value(item['id'] as String),
+            id: Value(id),
             userId: Value(item['user_id'] as String),
             lotId: Value(item['lot_id'] as String?),
             methodKey: Value(item['method_key'] as String? ?? 'v60'),

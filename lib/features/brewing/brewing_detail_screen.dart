@@ -1,154 +1,111 @@
-import 'dart:io';
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import '../../core/database/dtos.dart';
-import 'custom_recipe_list.dart';
-import '../../shared/widgets/premium_background.dart';
-import '../../shared/widgets/add_recipe_dialog.dart';
-import '../navigation/navigation_providers.dart';
 import '../../core/l10n/app_localizations.dart';
-
-// ─── Method metadata (shared with BrewingGuideScreen) ──────────────────────────
-const _methodMeta = {
-  'v60': 'assets/images/methods/v60.webp',
-  'chemex': 'assets/images/methods/chemex.webp',
-  'aeropress': 'assets/images/methods/aeropress.webp',
-  'espresso': 'assets/images/methods/espresso.webp',
-  'cold_brew': 'assets/images/methods/cold_brew.webp',
-};
+import '../../shared/widgets/add_recipe_dialog.dart';
+import 'widgets/custom_recipe_card.dart';
+import 'widgets/custom_recipe_list_tab.dart';
+import '../../core/database/app_database.dart';
+import '../../shared/providers/recipe_provider.dart';
 
 class BrewingDetailScreen extends ConsumerStatefulWidget {
-  final BrewingRecipeDto recipe;
-  const BrewingDetailScreen({super.key, required this.recipe});
+  final Recipe recipe;
+
+  const BrewingDetailScreen({
+    super.key,
+    required this.recipe,
+  });
 
   @override
-  ConsumerState<BrewingDetailScreen> createState() =>
-      _BrewingDetailScreenState();
+  ConsumerState<BrewingDetailScreen> createState() => _BrewingDetailScreenState();
 }
 
 class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
-  final _scrollController = ScrollController();
-  bool _showTitleInAppBar = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(() {
-      final show = _scrollController.offset > 300;
-      if (show != _showTitleInAppBar) {
-        setState(() => _showTitleInAppBar = show);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    // Restore nav bar when leaving the screen
-    Future.microtask(() {
-      if (mounted) ref.read(navBarVisibleProvider.notifier).show();
-    });
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) {
-          ref.read(navBarVisibleProvider.notifier).show();
-        }
-      },
-      child: Scaffold(
-        extendBodyBehindAppBar: true,
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () async {
-            final result = await showDialog<bool>(
-              context: context,
-              builder: (context) => AddRecipeDialog(
-                lotId: '',
-                initialMethod: widget.recipe.methodKey,
-              ),
-            );
-            if (result == true) {
-              ref.invalidate(
-                customRecipesForMethodProvider(widget.recipe.methodKey),
-              );
-              ref.invalidate(globalCustomRecipesProvider);
-            }
-          },
-          icon: const Icon(Icons.add_rounded),
-          label: Text(
-            ref.t('add_recipe'),
-            style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
-          ),
-          backgroundColor: const Color(0xFFC8A96E),
-          foregroundColor: Colors.black,
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+    return Scaffold(
+      backgroundColor: const Color(0xFF0A0A0A),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              const Color(0xFF1A1412),
+              const Color(0xFF0A0A0A),
+            ],
           ),
         ),
-        backgroundColor: const Color(0xFF0F0E0D),
-        body: PremiumBackground(
+        child: SafeArea(
+          top: false,
           child: NestedScrollView(
-            controller: _scrollController,
-            headerSliverBuilder: (context, innerScrolled) => [
+            headerSliverBuilder: (context, innerBoxIsScrolled) => [
               SliverAppBar(
-                expandedHeight: 400,
+                expandedHeight: 280,
                 pinned: true,
                 stretch: true,
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                surfaceTintColor: Colors.transparent,
-                title: _showTitleInAppBar
-                    ? Text(
-                        ref.t('alternative'),
-                        style: GoogleFonts.outfit(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                backgroundColor: const Color(0xFF1A1412),
+                flexibleSpace: FlexibleSpaceBar(
+                  stretchModes: const [
+                    StretchMode.zoomBackground,
+                    StretchMode.blurBackground,
+                  ],
+                  background: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      _buildHeroImage(widget.recipe.imageUrl),
+                      const DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Colors.black87,
+                            ],
+                          ),
                         ),
-                      )
-                    : null,
-                centerTitle: true,
-                flexibleSpace: ClipRect(
-                  child: BackdropFilter(
-                    filter: ui.ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                    child: Container(
-                      color: const Color(0xFF0F0E0D).withValues(alpha: 0.6),
-                      child: FlexibleSpaceBar(
-                        stretchModes: const [
-                          StretchMode.zoomBackground,
-                          StretchMode.blurBackground,
-                        ],
-                        background: Stack(
-                          fit: StackFit.expand,
+                      ),
+                      Positioned(
+                        bottom: 20,
+                        left: 20,
+                        right: 20,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildHeroImage(widget.recipe.imageUrl),
-                            const DecoratedBox(
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
                               decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Colors.black87,
-                                    Colors.transparent,
-                                    Colors.transparent,
-                                    Colors.black45,
-                                    Color(0xFF0F0E0D),
-                                  ],
-                                  stops: [0.0, 0.2, 0.6, 0.9, 1.0],
+                                color: const Color(0xFFC8A96E),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                widget.recipe.methodKey.toUpperCase(),
+                                style: GoogleFonts.outfit(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.black,
+                                  letterSpacing: 1.2,
                                 ),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              widget.recipe.name,
+                              style: GoogleFonts.outfit(
+                                fontSize: 32,
+                                fontWeight: FontWeight.w900,
+                                color: Colors.white,
+                                letterSpacing: -0.5,
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
                 leading: IconButton(
@@ -177,7 +134,6 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                         ),
                       );
                       if (result == true) {
-                        // Invalidate both potential providers
                         ref.invalidate(
                           customRecipesForMethodProvider(
                             widget.recipe.methodKey,
@@ -198,60 +154,67 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                 ),
               ),
               SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.info_outline_rounded,
-                          color: Color(0xFFC8A96E),
-                          size: 20,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          ref.t('about_method').toUpperCase(),
-                          style: GoogleFonts.outfit(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w900,
-                            color: const Color(0xFFC8A96E),
-                            letterSpacing: 1.5,
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.info_outline_rounded,
+                            color: Color(0xFFC8A96E),
+                            size: 20,
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      widget.recipe.description,
-                      style: GoogleFonts.outfit(
-                        fontSize: 15,
-                        color: Colors.white.withValues(alpha: 0.8),
-                        height: 1.6,
+                          const SizedBox(width: 8),
+                          Text(
+                            ref.t('about_method').toUpperCase(),
+                            style: GoogleFonts.outfit(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w900,
+                              color: const Color(0xFFC8A96E),
+                              letterSpacing: 1.5,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Divider(color: Colors.white10),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        _buildInfoPoint(
-                          ref.t('recommended_roast'),
-                          widget.recipe.methodKey.toLowerCase().contains(
-                                'espresso',
-                              )
-                              ? ref.t('roast_medium_dark')
-                              : ref.t('roast_light_medium'),
-                          Icons.local_fire_department_rounded,
+                      const SizedBox(height: 16),
+                      Text(
+                        widget.recipe.description,
+                        style: GoogleFonts.outfit(
+                          fontSize: 15,
+                          color: Colors.white.withValues(alpha: 0.8),
+                          height: 1.6,
                         ),
-                        const Spacer(),
-                        _buildInfoPoint(
-                          ref.t('flavor_profile_label'),
-                          ref.t('profile_balanced'),
-                          Icons.analytics_rounded,
-                        ),
-                      ],
-                    ),
-                  ],
+                      ),
+                      const SizedBox(height: 24),
+                      const Divider(color: Colors.white10),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildInfoPoint(
+                              ref.t('recommended_roast'),
+                              widget.recipe.methodKey.toLowerCase().contains(
+                                    'espresso',
+                                  )
+                                  ? ref.t('roast_medium_dark')
+                                  : ref.t('roast_light_medium'),
+                              Icons.local_fire_department_rounded,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: _buildInfoPoint(
+                              ref.t('flavor_profile_label'),
+                              ref.t('profile_balanced'),
+                              Icons.analytics_rounded,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -273,13 +236,17 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
           children: [
             Icon(icon, color: const Color(0xFFC8A96E), size: 14),
             const SizedBox(width: 6),
-            Text(
-              label.toUpperCase(),
-              style: GoogleFonts.outfit(
-                fontSize: 10,
-                color: const Color(0xFFC8A96E),
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1.1,
+            Expanded(
+              child: Text(
+                label.toUpperCase(),
+                style: GoogleFonts.outfit(
+                  fontSize: 10,
+                  color: const Color(0xFFC8A96E),
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.1,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -298,77 +265,85 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
   }
 
   Widget _buildHeroImage(String url) {
-    final assetPath =
-        _methodMeta[widget.recipe.methodKey] ??
-        'assets/images/methods/v60.webp';
-
-    if (url.startsWith('http')) {
-      return CachedNetworkImage(
-        imageUrl: url,
-        fit: BoxFit.cover,
-        placeholder: (context, url) => Container(
-          color: Colors.black,
-          child: const Center(
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              color: Color(0xFFC8A96E),
-            ),
-          ),
-        ),
-        errorWidget: (context, url, error) =>
-            Image.asset(assetPath, fit: BoxFit.cover),
-      );
+    if (url.isEmpty) {
+      return Container(color: const Color(0xFF1A1412));
     }
-
-    if (url.startsWith('assets/')) {
-      return Image.asset(url, fit: BoxFit.cover);
-    }
-
-    if (url.isNotEmpty) {
-      return Image.file(File(url), fit: BoxFit.cover);
-    }
-
-    return Image.asset(assetPath, fit: BoxFit.cover);
+    return Image.network(
+      url,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) => Container(
+        color: const Color(0xFF1A1412),
+        child: const Icon(Icons.coffee_rounded, color: Colors.white24, size: 64),
+      ),
+    );
   }
 }
 
-// ─── Sticky Header Delegate ──────────────────────────────────────────────────
 class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
-  final BrewingRecipeDto recipe;
-  final String Function(String) t;
+  final Recipe recipe;
+  final String Function(String, {Map<String, dynamic>? args}) t;
 
   _StickyHeaderDelegate({required this.recipe, required this.t});
+
+  Color _getDifficultyColor(String? difficulty) {
+    switch ((difficulty ?? 'Medium').toLowerCase()) {
+      case 'easy':
+      case 'beginner':
+        return const Color(0xFF4CAF50);
+      case 'medium':
+      case 'intermediate':
+        return const Color(0xFFFFC107);
+      case 'hard':
+        return const Color(0xFFF44336);
+      case 'pro':
+      case 'advanced':
+        return const Color(0xFFE91E63);
+      case 'master':
+        return const Color(0xFF9C27B0);
+      default:
+        return const Color(0xFFFFC107);
+    }
+  }
+
+  String _getDifficultyLabel(String? difficulty) {
+    switch ((difficulty ?? 'Medium').toLowerCase()) {
+      case 'easy':
+      case 'beginner':
+        return t('difficulty_easy');
+      case 'medium':
+      case 'intermediate':
+        return t('difficulty_med');
+      case 'hard':
+        return t('difficulty_hard');
+      case 'pro':
+      case 'advanced':
+        return t('difficulty_advanced');
+      case 'master':
+        return t('difficulty_master');
+      default:
+        return t('difficulty_med');
+    }
+  }
 
   Color _getIntensityColor(String? profile) {
     final p = (profile ?? '').toLowerCase();
     if (p.contains('light') || p.contains('легка')) {
-      return const Color(0xFF81D4FA); // Light Blue
-    } else if (p.contains('bold') ||
-        p.contains('сильна') ||
-        p.contains('strong')) {
-      return const Color(0xFFFF8A65); // Warm Orange
+      return const Color(0xFF81C784);
+    } else if (p.contains('bold') || p.contains('міцна')) {
+      return const Color(0xFFE57373);
     }
-    return const Color(0xFFEBCB8B); // Gold/Medium
+    return const Color(0xFF64B5F6);
   }
 
   String _getIntensityLabel(String? profile) {
     final p = (profile ?? '').toLowerCase();
     if (p.contains('light') || p.contains('легка')) {
       return t('intensity_light');
-    } else if (p.contains('bold') ||
-        p.contains('сильна') ||
-        p.contains('strong')) {
+    } else if (p.contains('bold') || p.contains('міцна')) {
       return t('intensity_bold');
-    } else if (p.contains('medium') || p.contains('середня')) {
-      return t('intensity_medium');
     }
-    return profile ?? '';
+    return t('intensity_medium');
   }
-
-  @override
-  double get minExtent => 140;
-  @override
-  double get maxExtent => 140;
 
   @override
   Widget build(
@@ -376,137 +351,115 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    return ClipRect(
-      child: BackdropFilter(
-        filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                const Color(0xFF0F0E0D).withValues(alpha: 0.4),
-                const Color(0xFF0F0E0D).withValues(alpha: 0.8),
-                const Color(0xFF0F0E0D),
-              ],
-              stops: const [0.0, 0.5, 1.0],
+    return Container(
+      height: 90,
+      decoration: BoxDecoration(
+        color: const Color(0xFF0A0A0A),
+        border: Border(
+          bottom: BorderSide(
+            color: Colors.white.withValues(alpha: 0.08),
+            width: 1,
+          ),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
+          children: [
+            Expanded(
+              child: _HeaderStat(
+                icon: Icons.timer_outlined,
+                value: '${recipe.extractionTimeSeconds ~/ 60}:${(recipe.extractionTimeSeconds % 60).toString().padLeft(2, '0')}',
+                label: t('stat_time'),
+                color: Colors.white,
+              ),
             ),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                recipe.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.cormorantGaramond(
-                  fontSize: 34,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  height: 1.0,
-                ),
+            _HeaderDivider(),
+            Expanded(
+              child: _HeaderStat(
+                icon: Icons.thermostat_rounded,
+                value: '${recipe.brewTempC.toInt()}°C',
+                label: t('stat_temp'),
+                color: const Color(0xFFFFAB91),
               ),
-              const SizedBox(height: 16),
-              // Unified Stats Row
-              Row(
-                children: [
-                  _HeaderStat(
-                    icon: Icons.timer_outlined,
-                    value: _formatTime(recipe.totalTimeSec ?? 180),
-                    label: t('stat_time'),
-                  ),
-                  _HeaderDivider(),
-                  _HeaderStat(
-                    icon: Icons.thermostat_rounded,
-                    value: '${recipe.tempC?.toInt() ?? 93}${t('unit_c')}',
-                    label: t('stat_temp'),
-                    color: const Color(0xFFFF8A65),
-                  ),
-                  _HeaderDivider(),
-                  _HeaderStat(
-                    icon: Icons.balance_rounded,
-                    value: '1:${(1 / (recipe.ratioGramsPerMl ?? 0.066)).toStringAsFixed(1)}',
-                    label: t('stat_ratio'),
-                    color: const Color(0xFFC8A96E),
-                  ),
-                  _HeaderDivider(),
-                  _HeaderStat(
-                    icon: Icons.auto_awesome_rounded,
-                    value: _getIntensityLabel(recipe.flavorProfile),
-                    label: t('intensity_label'),
-                    color: _getIntensityColor(recipe.flavorProfile),
-                  ),
-                ],
+            ),
+            _HeaderDivider(),
+            Expanded(
+              child: _HeaderStat(
+                icon: Icons.balance_rounded,
+                value: '1:${(1 / (recipe.ratioGramsPerMl ?? 0.066)).toStringAsFixed(1)}',
+                label: t('stat_ratio'),
+                color: const Color(0xFFC8A96E),
               ),
-            ],
-          ),
+            ),
+            _HeaderDivider(),
+            Expanded(
+              child: _HeaderStat(
+                icon: Icons.bolt_rounded,
+                value: _getDifficultyLabel(recipe.difficulty),
+                label: t('difficulty_label'),
+                color: _getDifficultyColor(recipe.difficulty),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  String _formatTime(int seconds) {
-    final int m = seconds ~/ 60;
-    final int s = seconds % 60;
-    return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
-  }
-
   @override
-  bool shouldRebuild(_StickyHeaderDelegate oldDelegate) => true;
+  double get maxExtent => 90;
+  @override
+  double get minExtent => 90;
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => true;
 }
 
 class _HeaderStat extends StatelessWidget {
   final IconData icon;
   final String value;
   final String label;
-  final Color? color;
+  final Color color;
 
   const _HeaderStat({
     required this.icon,
     required this.value,
     required this.label,
-    this.color,
+    required this.color,
   });
 
   @override
   Widget build(BuildContext context) {
-    final c = color ?? Colors.white;
-    return Expanded(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14, color: c.withValues(alpha: 0.8)),
-          const SizedBox(height: 4),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              value,
-              style: GoogleFonts.outfit(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: c,
-              ),
-              maxLines: 1,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon, size: 18, color: color.withValues(alpha: 0.7)),
+        const SizedBox(height: 6),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            value,
+            style: GoogleFonts.outfit(
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+              color: Colors.white,
             ),
           ),
-          const SizedBox(height: 2),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              label.toUpperCase(),
-              style: GoogleFonts.outfit(
-                fontSize: 8,
-                color: Colors.white.withValues(alpha: 0.4),
-                fontWeight: FontWeight.bold,
-                letterSpacing: 0.5,
-              ),
-              maxLines: 1,
+        ),
+        const SizedBox(height: 2),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            label.toUpperCase(),
+            style: GoogleFonts.outfit(
+              fontSize: 9,
+              fontWeight: FontWeight.bold,
+              color: Colors.white38,
+              letterSpacing: 0.5,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -515,10 +468,10 @@ class _HeaderDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 1,
       height: 30,
+      width: 1,
       margin: const EdgeInsets.symmetric(horizontal: 4),
-      color: Colors.white.withValues(alpha: 0.08),
+      color: Colors.white10,
     );
   }
 }

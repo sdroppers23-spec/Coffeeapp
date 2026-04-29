@@ -210,40 +210,42 @@ class _BrewingMethodsContent extends ConsumerWidget {
               return grouped;
             }
 
-            final espressoGrouped = groupByMethod(
-              guideRecipes.where((r) => r.category == 'espresso').toList(),
-              customRecipes,
-            );
-            final filterGrouped = groupByMethod(
-              guideRecipes.where((r) => r.category != 'espresso').toList(),
+            final allGrouped = groupByMethod(
+              guideRecipes,
               customRecipes,
             );
 
-            final espressoMethods = espressoGrouped.values.toList();
-            final filterMethods = filterGrouped.values.toList();
+            // Convert to list of method groups
+            final allMethods = allGrouped.values.toList();
+
+            // Sort by sortOrder of the guide recipe in each group
+            allMethods.sort((a, b) {
+              final sortA = a.firstWhere((r) => r.isGuide, orElse: () => a.first).sortOrder;
+              final sortB = b.firstWhere((r) => r.isGuide, orElse: () => b.first).sortOrder;
+              return sortA.compareTo(sortB);
+            });
 
             return CustomScrollView(
               slivers: [
                 // Top spacer (replaces padding.top)
                 const SliverToBoxAdapter(child: SizedBox(height: 170)),
 
-                if (espressoMethods.isNotEmpty) ...[
+                if (allMethods.isNotEmpty) ...[
                   if (isGrid)
                     SliverPadding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       sliver: SliverGrid(
                         delegate: SliverChildBuilderDelegate(
-                          (c, i) =>
-                              MethodTile(methodRecipes: espressoMethods[i]),
-                          childCount: espressoMethods.length,
+                          (c, i) => MethodTile(methodRecipes: allMethods[i]),
+                          childCount: allMethods.length,
                         ),
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 16,
-                              crossAxisSpacing: 16,
-                              childAspectRatio: 0.85,
-                            ),
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 16,
+                          crossAxisSpacing: 16,
+                          childAspectRatio: 0.85,
+                        ),
                       ),
                     )
                   else
@@ -252,61 +254,17 @@ class _BrewingMethodsContent extends ConsumerWidget {
                       sliver: SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (c, i) => Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: SizedBox(
-                              height: 180,
-                              child: MethodTile(
-                                methodRecipes: espressoMethods[i],
-                              ),
-                            ),
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: MethodTile(methodRecipes: allMethods[i]),
                           ),
-                          childCount: espressoMethods.length,
-                        ),
-                      ),
-                    ),
-                  const SliverToBoxAdapter(child: SizedBox(height: 32)),
-                ],
-
-                if (filterMethods.isNotEmpty) ...[
-                  if (isGrid)
-                    SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      sliver: SliverGrid(
-                        delegate: SliverChildBuilderDelegate(
-                          (c, i) => MethodTile(methodRecipes: filterMethods[i]),
-                          childCount: filterMethods.length,
-                        ),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 16,
-                              crossAxisSpacing: 16,
-                              childAspectRatio: 0.85,
-                            ),
-                      ),
-                    )
-                  else
-                    SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      sliver: SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (c, i) => Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: SizedBox(
-                              height: 180,
-                              child: MethodTile(
-                                methodRecipes: filterMethods[i],
-                              ),
-                            ),
-                          ),
-                          childCount: filterMethods.length,
+                          childCount: allMethods.length,
                         ),
                       ),
                     ),
                 ],
 
-                // Bottom spacer (replaces padding.bottom)
-                SliverToBoxAdapter(child: SizedBox(height: navHeight + 48)),
+                // Bottom spacer for navbar
+                SliverToBoxAdapter(child: SizedBox(height: navHeight + 20)),
               ],
             );
           },

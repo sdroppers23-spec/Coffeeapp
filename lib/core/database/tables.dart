@@ -478,6 +478,8 @@ class AlternativeBrewing extends Table {
 
   RealColumn get weight => real().nullable()();
   RealColumn get coffeeGrams => real().nullable()();
+  TextColumn get nameUk => text().nullable()();
+  IntColumn get sortOrder => integer().withDefault(const Constant(0))();
   BoolColumn get isHiden => boolean().withDefault(const Constant(false))();
 
   // Sync Status

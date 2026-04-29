@@ -42,7 +42,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? e]) : super(e ?? openConnection());
 
   @override
-  int get schemaVersion => 42;
+  int get schemaVersion => 43;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -147,6 +147,22 @@ class AppDatabase extends _$AppDatabase {
         // v42: Create AlternativeBrewing tables
         await m.createTable(alternativeBrewing);
         await m.createTable(alternativeBrewingTranslations);
+      }
+      if (from < 43) {
+        // v43: Add new columns to AlternativeBrewing
+        await _safeAddColumn(m, alternativeBrewing, alternativeBrewing.nameUk);
+        await _safeAddColumn(
+          m,
+          alternativeBrewing,
+          alternativeBrewing.sortOrder,
+        );
+        await _safeAddColumn(m, alternativeBrewing, alternativeBrewing.isHiden);
+        await _safeAddColumn(m, alternativeBrewing, alternativeBrewing.weight);
+        await _safeAddColumn(
+          m,
+          alternativeBrewing,
+          alternativeBrewing.coffeeGrams,
+        );
       }
     },
     beforeOpen: (details) async {
@@ -421,7 +437,14 @@ class AppDatabase extends _$AppDatabase {
     List<AlternativeBrewingTranslationsCompanion> translations,
   ) async {
     await batch((batch) {
-      batch.insertAllOnConflictUpdate(alternativeBrewing, [recipe]);
+      batch.insert(
+        alternativeBrewing,
+        recipe,
+        onConflict: DoUpdate(
+          (old) => recipe,
+          target: [alternativeBrewing.methodKey],
+        ),
+      );
       batch.insertAllOnConflictUpdate(
         alternativeBrewingTranslations,
         translations,
@@ -443,7 +466,7 @@ class AppDatabase extends _$AppDatabase {
     ])..where(
       alternativeBrewing.isHiden.equals(false) &
           alternativeBrewing.isDeletedLocal.equals(false),
-    );
+    )..orderBy([OrderingTerm.asc(alternativeBrewing.sortOrder)]);
 
     final rows = await query.get();
     return rows.map((row) {
@@ -453,7 +476,7 @@ class AppDatabase extends _$AppDatabase {
       return AlternativeBrewingDto(
         id: recipe.id,
         methodKey: recipe.methodKey,
-        name: translation?.name ?? 'Unknown',
+        name: recipe.nameUk?.isNotEmpty == true ? recipe.nameUk! : (translation?.name ?? 'Unknown'),
         description: translation?.description ?? '',
         contentHtml: translation?.contentHtml ?? '',
         imageUrl: recipe.imageUrl ?? '',
@@ -467,6 +490,8 @@ class AppDatabase extends _$AppDatabase {
         category: recipe.category,
         weight: recipe.weight,
         coffeeGrams: recipe.coffeeGrams,
+        nameUk: recipe.nameUk,
+        sortOrder: recipe.sortOrder,
         isHiden: recipe.isHiden,
       );
     }).toList();
@@ -1211,31 +1236,29 @@ class AppDatabase extends _$AppDatabase {
   /// Reads from V2 table (populated by SyncService V2). English-only for brewing methods.
   Future<List<BrewingRecipeDto>> getAllBrewingRecipes(String lang) async {
     final altRecipes = await getAllAlternativeBrewing(lang);
-    if (altRecipes.isNotEmpty) {
-      return altRecipes
-          .map(
-            (e) => BrewingRecipeDto(
-              id: e.id,
-              methodKey: e.methodKey,
-              name: e.name,
-              description: e.description,
-              contentHtml: e.contentHtml,
-              imageUrl: e.imageUrl,
-              ratioGramsPerMl: e.ratioGramsPerMl ?? 0.066,
-              tempC: e.tempC ?? 93.0,
-              totalTimeSec: e.totalTimeSec ?? 180,
-              difficulty: e.difficulty ?? 'Intermediate',
-              stepsJson: e.stepsJson ?? '[]',
-              flavorProfile: e.flavorProfile ?? 'Balanced',
-              iconName: e.iconName,
-              category: e.category,
-              coffeeGrams: e.coffeeGrams,
-              weight: e.weight,
-            ),
-          )
-          .toList();
-    }
-    return getAllBrewingRecipesV2(lang);
+    return altRecipes
+        .map(
+          (e) => BrewingRecipeDto(
+            id: e.id,
+            methodKey: e.methodKey,
+            name: e.name,
+            description: e.description,
+            contentHtml: e.contentHtml,
+            imageUrl: e.imageUrl,
+            ratioGramsPerMl: e.ratioGramsPerMl ?? 0.066,
+            tempC: e.tempC ?? 93.0,
+            totalTimeSec: e.totalTimeSec ?? 180,
+            difficulty: e.difficulty ?? 'Intermediate',
+            stepsJson: e.stepsJson ?? '[]',
+            flavorProfile: e.flavorProfile ?? 'Balanced',
+            iconName: e.iconName,
+            category: e.category,
+            coffeeGrams: e.coffeeGrams,
+            weight: e.weight,
+            sortOrder: e.sortOrder,
+          ),
+        )
+        .toList();
   }
 
   Future<void> smartUpsertBrewingRecipe(

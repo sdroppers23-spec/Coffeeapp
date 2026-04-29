@@ -16181,6 +16181,27 @@ class $AlternativeBrewingTable extends AlternativeBrewing
     type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _nameUkMeta = const VerificationMeta('nameUk');
+  @override
+  late final GeneratedColumn<String> nameUk = GeneratedColumn<String>(
+    'name_uk',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _sortOrderMeta = const VerificationMeta(
+    'sortOrder',
+  );
+  @override
+  late final GeneratedColumn<int> sortOrder = GeneratedColumn<int>(
+    'sort_order',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   static const VerificationMeta _isHidenMeta = const VerificationMeta(
     'isHiden',
   );
@@ -16252,6 +16273,8 @@ class $AlternativeBrewingTable extends AlternativeBrewing
     category,
     weight,
     coffeeGrams,
+    nameUk,
+    sortOrder,
     isHiden,
     isSynced,
     isDeletedLocal,
@@ -16358,6 +16381,18 @@ class $AlternativeBrewingTable extends AlternativeBrewing
         ),
       );
     }
+    if (data.containsKey('name_uk')) {
+      context.handle(
+        _nameUkMeta,
+        nameUk.isAcceptableOrUnknown(data['name_uk']!, _nameUkMeta),
+      );
+    }
+    if (data.containsKey('sort_order')) {
+      context.handle(
+        _sortOrderMeta,
+        sortOrder.isAcceptableOrUnknown(data['sort_order']!, _sortOrderMeta),
+      );
+    }
     if (data.containsKey('is_hiden')) {
       context.handle(
         _isHidenMeta,
@@ -16446,6 +16481,14 @@ class $AlternativeBrewingTable extends AlternativeBrewing
         DriftSqlType.double,
         data['${effectivePrefix}coffee_grams'],
       ),
+      nameUk: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_uk'],
+      ),
+      sortOrder: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}sort_order'],
+      )!,
       isHiden: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_hiden'],
@@ -16486,6 +16529,8 @@ class AlternativeBrewingData extends DataClass
   final String category;
   final double? weight;
   final double? coffeeGrams;
+  final String? nameUk;
+  final int sortOrder;
   final bool isHiden;
   final bool isSynced;
   final bool isDeletedLocal;
@@ -16504,6 +16549,8 @@ class AlternativeBrewingData extends DataClass
     required this.category,
     this.weight,
     this.coffeeGrams,
+    this.nameUk,
+    required this.sortOrder,
     required this.isHiden,
     required this.isSynced,
     required this.isDeletedLocal,
@@ -16533,6 +16580,10 @@ class AlternativeBrewingData extends DataClass
     if (!nullToAbsent || coffeeGrams != null) {
       map['coffee_grams'] = Variable<double>(coffeeGrams);
     }
+    if (!nullToAbsent || nameUk != null) {
+      map['name_uk'] = Variable<String>(nameUk);
+    }
+    map['sort_order'] = Variable<int>(sortOrder);
     map['is_hiden'] = Variable<bool>(isHiden);
     map['is_synced'] = Variable<bool>(isSynced);
     map['is_deleted_local'] = Variable<bool>(isDeletedLocal);
@@ -16565,6 +16616,10 @@ class AlternativeBrewingData extends DataClass
       coffeeGrams: coffeeGrams == null && nullToAbsent
           ? const Value.absent()
           : Value(coffeeGrams),
+      nameUk: nameUk == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nameUk),
+      sortOrder: Value(sortOrder),
       isHiden: Value(isHiden),
       isSynced: Value(isSynced),
       isDeletedLocal: Value(isDeletedLocal),
@@ -16593,6 +16648,8 @@ class AlternativeBrewingData extends DataClass
       category: serializer.fromJson<String>(json['category']),
       weight: serializer.fromJson<double?>(json['weight']),
       coffeeGrams: serializer.fromJson<double?>(json['coffeeGrams']),
+      nameUk: serializer.fromJson<String?>(json['nameUk']),
+      sortOrder: serializer.fromJson<int>(json['sortOrder']),
       isHiden: serializer.fromJson<bool>(json['isHiden']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
       isDeletedLocal: serializer.fromJson<bool>(json['isDeletedLocal']),
@@ -16616,6 +16673,8 @@ class AlternativeBrewingData extends DataClass
       'category': serializer.toJson<String>(category),
       'weight': serializer.toJson<double?>(weight),
       'coffeeGrams': serializer.toJson<double?>(coffeeGrams),
+      'nameUk': serializer.toJson<String?>(nameUk),
+      'sortOrder': serializer.toJson<int>(sortOrder),
       'isHiden': serializer.toJson<bool>(isHiden),
       'isSynced': serializer.toJson<bool>(isSynced),
       'isDeletedLocal': serializer.toJson<bool>(isDeletedLocal),
@@ -16637,6 +16696,8 @@ class AlternativeBrewingData extends DataClass
     String? category,
     Value<double?> weight = const Value.absent(),
     Value<double?> coffeeGrams = const Value.absent(),
+    Value<String?> nameUk = const Value.absent(),
+    int? sortOrder,
     bool? isHiden,
     bool? isSynced,
     bool? isDeletedLocal,
@@ -16655,6 +16716,8 @@ class AlternativeBrewingData extends DataClass
     category: category ?? this.category,
     weight: weight.present ? weight.value : this.weight,
     coffeeGrams: coffeeGrams.present ? coffeeGrams.value : this.coffeeGrams,
+    nameUk: nameUk.present ? nameUk.value : this.nameUk,
+    sortOrder: sortOrder ?? this.sortOrder,
     isHiden: isHiden ?? this.isHiden,
     isSynced: isSynced ?? this.isSynced,
     isDeletedLocal: isDeletedLocal ?? this.isDeletedLocal,
@@ -16685,6 +16748,8 @@ class AlternativeBrewingData extends DataClass
       coffeeGrams: data.coffeeGrams.present
           ? data.coffeeGrams.value
           : this.coffeeGrams,
+      nameUk: data.nameUk.present ? data.nameUk.value : this.nameUk,
+      sortOrder: data.sortOrder.present ? data.sortOrder.value : this.sortOrder,
       isHiden: data.isHiden.present ? data.isHiden.value : this.isHiden,
       isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
       isDeletedLocal: data.isDeletedLocal.present
@@ -16710,6 +16775,8 @@ class AlternativeBrewingData extends DataClass
           ..write('category: $category, ')
           ..write('weight: $weight, ')
           ..write('coffeeGrams: $coffeeGrams, ')
+          ..write('nameUk: $nameUk, ')
+          ..write('sortOrder: $sortOrder, ')
           ..write('isHiden: $isHiden, ')
           ..write('isSynced: $isSynced, ')
           ..write('isDeletedLocal: $isDeletedLocal, ')
@@ -16733,6 +16800,8 @@ class AlternativeBrewingData extends DataClass
     category,
     weight,
     coffeeGrams,
+    nameUk,
+    sortOrder,
     isHiden,
     isSynced,
     isDeletedLocal,
@@ -16755,6 +16824,8 @@ class AlternativeBrewingData extends DataClass
           other.category == this.category &&
           other.weight == this.weight &&
           other.coffeeGrams == this.coffeeGrams &&
+          other.nameUk == this.nameUk &&
+          other.sortOrder == this.sortOrder &&
           other.isHiden == this.isHiden &&
           other.isSynced == this.isSynced &&
           other.isDeletedLocal == this.isDeletedLocal &&
@@ -16776,6 +16847,8 @@ class AlternativeBrewingCompanion
   final Value<String> category;
   final Value<double?> weight;
   final Value<double?> coffeeGrams;
+  final Value<String?> nameUk;
+  final Value<int> sortOrder;
   final Value<bool> isHiden;
   final Value<bool> isSynced;
   final Value<bool> isDeletedLocal;
@@ -16794,6 +16867,8 @@ class AlternativeBrewingCompanion
     this.category = const Value.absent(),
     this.weight = const Value.absent(),
     this.coffeeGrams = const Value.absent(),
+    this.nameUk = const Value.absent(),
+    this.sortOrder = const Value.absent(),
     this.isHiden = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.isDeletedLocal = const Value.absent(),
@@ -16813,6 +16888,8 @@ class AlternativeBrewingCompanion
     this.category = const Value.absent(),
     this.weight = const Value.absent(),
     this.coffeeGrams = const Value.absent(),
+    this.nameUk = const Value.absent(),
+    this.sortOrder = const Value.absent(),
     this.isHiden = const Value.absent(),
     this.isSynced = const Value.absent(),
     this.isDeletedLocal = const Value.absent(),
@@ -16832,6 +16909,8 @@ class AlternativeBrewingCompanion
     Expression<String>? category,
     Expression<double>? weight,
     Expression<double>? coffeeGrams,
+    Expression<String>? nameUk,
+    Expression<int>? sortOrder,
     Expression<bool>? isHiden,
     Expression<bool>? isSynced,
     Expression<bool>? isDeletedLocal,
@@ -16851,6 +16930,8 @@ class AlternativeBrewingCompanion
       if (category != null) 'category': category,
       if (weight != null) 'weight': weight,
       if (coffeeGrams != null) 'coffee_grams': coffeeGrams,
+      if (nameUk != null) 'name_uk': nameUk,
+      if (sortOrder != null) 'sort_order': sortOrder,
       if (isHiden != null) 'is_hiden': isHiden,
       if (isSynced != null) 'is_synced': isSynced,
       if (isDeletedLocal != null) 'is_deleted_local': isDeletedLocal,
@@ -16872,6 +16953,8 @@ class AlternativeBrewingCompanion
     Value<String>? category,
     Value<double?>? weight,
     Value<double?>? coffeeGrams,
+    Value<String?>? nameUk,
+    Value<int>? sortOrder,
     Value<bool>? isHiden,
     Value<bool>? isSynced,
     Value<bool>? isDeletedLocal,
@@ -16891,6 +16974,8 @@ class AlternativeBrewingCompanion
       category: category ?? this.category,
       weight: weight ?? this.weight,
       coffeeGrams: coffeeGrams ?? this.coffeeGrams,
+      nameUk: nameUk ?? this.nameUk,
+      sortOrder: sortOrder ?? this.sortOrder,
       isHiden: isHiden ?? this.isHiden,
       isSynced: isSynced ?? this.isSynced,
       isDeletedLocal: isDeletedLocal ?? this.isDeletedLocal,
@@ -16940,6 +17025,12 @@ class AlternativeBrewingCompanion
     if (coffeeGrams.present) {
       map['coffee_grams'] = Variable<double>(coffeeGrams.value);
     }
+    if (nameUk.present) {
+      map['name_uk'] = Variable<String>(nameUk.value);
+    }
+    if (sortOrder.present) {
+      map['sort_order'] = Variable<int>(sortOrder.value);
+    }
     if (isHiden.present) {
       map['is_hiden'] = Variable<bool>(isHiden.value);
     }
@@ -16971,6 +17062,8 @@ class AlternativeBrewingCompanion
           ..write('category: $category, ')
           ..write('weight: $weight, ')
           ..write('coffeeGrams: $coffeeGrams, ')
+          ..write('nameUk: $nameUk, ')
+          ..write('sortOrder: $sortOrder, ')
           ..write('isHiden: $isHiden, ')
           ..write('isSynced: $isSynced, ')
           ..write('isDeletedLocal: $isDeletedLocal, ')
@@ -29195,6 +29288,8 @@ typedef $$AlternativeBrewingTableCreateCompanionBuilder =
       Value<String> category,
       Value<double?> weight,
       Value<double?> coffeeGrams,
+      Value<String?> nameUk,
+      Value<int> sortOrder,
       Value<bool> isHiden,
       Value<bool> isSynced,
       Value<bool> isDeletedLocal,
@@ -29215,6 +29310,8 @@ typedef $$AlternativeBrewingTableUpdateCompanionBuilder =
       Value<String> category,
       Value<double?> weight,
       Value<double?> coffeeGrams,
+      Value<String?> nameUk,
+      Value<int> sortOrder,
       Value<bool> isHiden,
       Value<bool> isSynced,
       Value<bool> isDeletedLocal,
@@ -29342,6 +29439,16 @@ class $$AlternativeBrewingTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get nameUk => $composableBuilder(
+    column: $table.nameUk,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get sortOrder => $composableBuilder(
+    column: $table.sortOrder,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<bool> get isHiden => $composableBuilder(
     column: $table.isHiden,
     builder: (column) => ColumnFilters(column),
@@ -29466,6 +29573,16 @@ class $$AlternativeBrewingTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get nameUk => $composableBuilder(
+    column: $table.nameUk,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sortOrder => $composableBuilder(
+    column: $table.sortOrder,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isHiden => $composableBuilder(
     column: $table.isHiden,
     builder: (column) => ColumnOrderings(column),
@@ -29544,6 +29661,12 @@ class $$AlternativeBrewingTableAnnotationComposer
     column: $table.coffeeGrams,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get nameUk =>
+      $composableBuilder(column: $table.nameUk, builder: (column) => column);
+
+  GeneratedColumn<int> get sortOrder =>
+      $composableBuilder(column: $table.sortOrder, builder: (column) => column);
 
   GeneratedColumn<bool> get isHiden =>
       $composableBuilder(column: $table.isHiden, builder: (column) => column);
@@ -29635,6 +29758,8 @@ class $$AlternativeBrewingTableTableManager
                 Value<String> category = const Value.absent(),
                 Value<double?> weight = const Value.absent(),
                 Value<double?> coffeeGrams = const Value.absent(),
+                Value<String?> nameUk = const Value.absent(),
+                Value<int> sortOrder = const Value.absent(),
                 Value<bool> isHiden = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<bool> isDeletedLocal = const Value.absent(),
@@ -29653,6 +29778,8 @@ class $$AlternativeBrewingTableTableManager
                 category: category,
                 weight: weight,
                 coffeeGrams: coffeeGrams,
+                nameUk: nameUk,
+                sortOrder: sortOrder,
                 isHiden: isHiden,
                 isSynced: isSynced,
                 isDeletedLocal: isDeletedLocal,
@@ -29673,6 +29800,8 @@ class $$AlternativeBrewingTableTableManager
                 Value<String> category = const Value.absent(),
                 Value<double?> weight = const Value.absent(),
                 Value<double?> coffeeGrams = const Value.absent(),
+                Value<String?> nameUk = const Value.absent(),
+                Value<int> sortOrder = const Value.absent(),
                 Value<bool> isHiden = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
                 Value<bool> isDeletedLocal = const Value.absent(),
@@ -29691,6 +29820,8 @@ class $$AlternativeBrewingTableTableManager
                 category: category,
                 weight: weight,
                 coffeeGrams: coffeeGrams,
+                nameUk: nameUk,
+                sortOrder: sortOrder,
                 isHiden: isHiden,
                 isSynced: isSynced,
                 isDeletedLocal: isDeletedLocal,

@@ -293,6 +293,7 @@ class BrewingRecipeDto {
   final double? coffeeGrams;
   final String? contentHtml;
   final double? weight;
+  final int sortOrder;
 
   BrewingRecipeDto({
     required this.id,
@@ -312,6 +313,7 @@ class BrewingRecipeDto {
     this.coffeeGrams,
     this.contentHtml,
     this.weight,
+    this.sortOrder = 0,
   });
 
   BrewingRecipeDto copyWith({
@@ -332,6 +334,7 @@ class BrewingRecipeDto {
     double? coffeeGrams,
     String? contentHtml,
     double? weight,
+    int? sortOrder,
   }) {
     return BrewingRecipeDto(
       id: id ?? this.id,
@@ -351,6 +354,7 @@ class BrewingRecipeDto {
       coffeeGrams: coffeeGrams ?? this.coffeeGrams,
       contentHtml: contentHtml ?? this.contentHtml,
       weight: weight ?? this.weight,
+      sortOrder: sortOrder ?? this.sortOrder,
     );
   }
 }
@@ -372,6 +376,8 @@ class AlternativeBrewingDto {
   final String category;
   final double? weight;
   final double? coffeeGrams;
+  final String? nameUk;
+  final int sortOrder;
   final bool isHiden;
 
   AlternativeBrewingDto({
@@ -391,6 +397,8 @@ class AlternativeBrewingDto {
     this.category = 'filter',
     this.weight,
     this.coffeeGrams,
+    this.nameUk,
+    this.sortOrder = 0,
     this.isHiden = false,
   });
 

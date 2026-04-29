@@ -75,8 +75,8 @@ class SyncService {
 
       onProgress?.call('Syncing Methods...', 0.7);
       _progressController.add(0.7);
-      await syncBrewingRecipes();
-      await syncAlternativeBrewing();
+      // await syncBrewingRecipes(); // Old table
+      await syncAlternativeBrewing(); // New table
       await Future.delayed(const Duration(milliseconds: 200));
 
       onProgress?.call('Syncing Articles...', 0.85);
@@ -128,6 +128,31 @@ class SyncService {
               final id = (payload.newRecord['id'] as num).toInt();
               await syncSingleArticle(id);
             }
+          },
+        )
+        .subscribe();
+
+    // 2. Alternative Brewing Channel
+    supabase!
+        .channel('public:alternative_brewing')
+        .onPostgresChanges(
+          event: PostgresChangeEvent.all,
+          schema: 'public',
+          table: 'alternative_brewing',
+          callback: (payload) async {
+            await syncAlternativeBrewing();
+          },
+        )
+        .subscribe();
+
+    supabase!
+        .channel('public:alternative_brewing_translations')
+        .onPostgresChanges(
+          event: PostgresChangeEvent.all,
+          schema: 'public',
+          table: 'alternative_brewing_translations',
+          callback: (payload) async {
+            await syncAlternativeBrewing();
           },
         )
         .subscribe();
@@ -191,6 +216,19 @@ class SyncService {
               final key = payload.newRecord['method_key'] as String;
               await syncSingleBrewingRecipe(key);
             }
+          },
+        )
+        .subscribe();
+ 
+    // 5. Alternative Brewing Channel
+    supabase!
+        .channel('public:alternative_brewing')
+        .onPostgresChanges(
+          event: PostgresChangeEvent.all,
+          schema: 'public',
+          table: 'alternative_brewing',
+          callback: (payload) async {
+            await syncAlternativeBrewing();
           },
         )
         .subscribe();
@@ -856,6 +894,8 @@ class SyncService {
             category: Value(item['category'] as String? ?? 'filter'),
             weight: Value((item['weight'] as num?)?.toDouble()),
             coffeeGrams: Value((item['coffee_grams'] as num?)?.toDouble()),
+            nameUk: Value(item['name_uk'] as String?),
+            sortOrder: Value((item['sort_order'] as num?)?.toInt() ?? 0),
             isHiden: Value(item['is_hiden'] as bool? ?? false),
             stepsJson: Value(
               item['steps_json'] is List
@@ -896,6 +936,7 @@ class SyncService {
               .go();
         });
       }
+      _dataUpdateController.add(null);
     } catch (e) {
       // Silent fail
     }

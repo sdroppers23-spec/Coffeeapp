@@ -20,7 +20,7 @@ class PremiumBackground extends ConsumerWidget {
                 center: Alignment.topCenter,
                 radius: 1.2,
                 colors: [
-                  const Color(0xFF0A0908).withValues(alpha: 0.1), // Much darker base
+                  Colors.black.withValues(alpha: 0.05), // Purely neutral
                   Colors.transparent,
                 ],
               ),

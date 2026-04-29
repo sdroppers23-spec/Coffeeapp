@@ -73,7 +73,7 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFF1B1411).withValues(alpha: 0.1),
+            const Color(0xFF121212).withValues(alpha: 0.1),
             const Color(0xFF0A0908).withValues(alpha: 0.2),
           ],
         ),

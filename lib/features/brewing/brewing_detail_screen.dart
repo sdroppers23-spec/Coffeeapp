@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:ui' as ui;
+import 'package:flutter_html/flutter_html.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../shared/widgets/add_recipe_dialog.dart';
 import 'custom_recipe_list.dart';
 import '../../core/database/dtos.dart';
+import '../../core/utils/text_processor.dart';
 
 class BrewingDetailScreen extends ConsumerStatefulWidget {
   final BrewingRecipeDto recipe;
@@ -178,7 +180,29 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      if (widget.recipe.description.isNotEmpty) ...[
+                      if (widget.recipe.contentHtml != null &&
+                          widget.recipe.contentHtml!.isNotEmpty) ...[
+                        Html(
+                          data: CoffeeTextProcessor.process(
+                            widget.recipe.contentHtml!,
+                          ),
+                          style: {
+                            'body': Style(
+                              margin: Margins.zero,
+                              padding: HtmlPaddings.zero,
+                              fontSize: FontSize(15),
+                              lineHeight: const LineHeight(1.6),
+                              color: Colors.white.withValues(alpha: 0.8),
+                              fontFamily: GoogleFonts.outfit().fontFamily,
+                            ),
+                            'strong': Style(
+                              color: const Color(0xFFC8A96E),
+                              fontWeight: FontWeight.w700,
+                            ),
+                          },
+                        ),
+                        const SizedBox(height: 24),
+                      ] else if (widget.recipe.description.isNotEmpty) ...[
                         Text(
                           widget.recipe.description,
                           style: GoogleFonts.outfit(

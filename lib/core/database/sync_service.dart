@@ -76,6 +76,7 @@ class SyncService {
       onProgress?.call('Syncing Methods...', 0.7);
       _progressController.add(0.7);
       await syncBrewingRecipes();
+      await syncAlternativeBrewing();
       await Future.delayed(const Duration(milliseconds: 200));
 
       onProgress?.call('Syncing Articles...', 0.85);
@@ -805,6 +806,98 @@ class SyncService {
       }
     } catch (e) {
       // Production silent fail
+    }
+  }
+
+  /// Pulls alternative brewing methods from Supabase.
+  Future<void> syncAlternativeBrewing() async {
+    if (supabase == null) return;
+    try {
+      final data = await supabase!.from('alternative_brewing').select();
+      final translationsData =
+          await supabase!.from('alternative_brewing_translations').select();
+
+      final remoteKeys =
+          data.map((item) => item['method_key'] as String).toList();
+
+      // Group translations by recipe_key
+      final Map<String, List<Map<String, dynamic>>> translationMap = {};
+      for (final t in translationsData) {
+        final key = t['recipe_key'] as String;
+        translationMap.putIfAbsent(key, () => []).add(t);
+      }
+
+      for (final item in data) {
+        try {
+          final key = item['method_key'] as String;
+
+          String methodImageUrl = item['image_url'] as String? ?? '';
+          if (methodImageUrl.isNotEmpty &&
+              !methodImageUrl.startsWith('http') &&
+              !methodImageUrl.startsWith('assets/')) {
+            methodImageUrl = '$methodsBucket${methodImageUrl.split('/').last}';
+          }
+
+          final recipe = AlternativeBrewingCompanion(
+            methodKey: Value(key),
+            imageUrl: Value(methodImageUrl),
+            ratioGramsPerMl: Value(
+              (item['ratio_grams_per_ml'] as num?)?.toDouble() ?? 0.066,
+            ),
+            tempC: Value((item['temp_c'] as num?)?.toDouble() ?? 93.0),
+            totalTimeSec: Value(
+              (item['total_time_sec'] as num?)?.toInt() ?? 180,
+            ),
+            difficulty: Value(item['difficulty'] as String? ?? 'Intermediate'),
+            flavorProfile: Value(
+              item['flavor_profile'] as String? ?? 'Balanced',
+            ),
+            iconName: Value(item['icon_name'] as String?),
+            category: Value(item['category'] as String? ?? 'filter'),
+            weight: Value((item['weight'] as num?)?.toDouble()),
+            coffeeGrams: Value((item['coffee_grams'] as num?)?.toDouble()),
+            isHiden: Value(item['is_hiden'] as bool? ?? false),
+            stepsJson: Value(
+              item['steps_json'] is List
+                  ? jsonEncode(item['steps_json'])
+                  : (item['steps_json']?.toString() ?? '[]'),
+            ),
+            isSynced: const Value(true),
+            isDeletedLocal: const Value(false),
+            updatedAt: Value(
+              DateTime.tryParse(item['updated_at'] as String? ?? ''),
+            ),
+          );
+
+          final translations = (translationMap[key] ?? []).map((t) {
+            return AlternativeBrewingTranslationsCompanion(
+              recipeKey: Value(key),
+              languageCode: Value(t['language_code'] as String),
+              name: Value(t['name'] as String?),
+              description: Value(t['description'] as String?),
+              contentHtml: Value(t['content_html'] as String?),
+            );
+          }).toList();
+
+          await db.smartUpsertAlternativeBrewing(recipe, translations);
+        } catch (e) {
+          // Silent fail
+        }
+      }
+
+      // Cleanup local records not in remote
+      if (remoteKeys.isNotEmpty) {
+        await db.transaction(() async {
+          await (db.delete(db.alternativeBrewingTranslations)
+                ..where((t) => t.recipeKey.isIn(remoteKeys).not()))
+              .go();
+          await (db.delete(db.alternativeBrewing)
+                ..where((t) => t.methodKey.isIn(remoteKeys).not()))
+              .go();
+        });
+      }
+    } catch (e) {
+      // Silent fail
     }
   }
 

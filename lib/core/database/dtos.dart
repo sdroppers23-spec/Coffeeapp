@@ -308,6 +308,7 @@ class BrewingRecipeDto {
     this.category = 'filter',
     this.isGuide = false,
     this.coffeeGrams,
+    this.contentHtml,
   });
 
   BrewingRecipeDto copyWith({
@@ -326,6 +327,7 @@ class BrewingRecipeDto {
     String? category,
     bool? isGuide,
     double? coffeeGrams,
+    String? contentHtml,
   }) {
     return BrewingRecipeDto(
       id: id ?? this.id,
@@ -343,7 +345,95 @@ class BrewingRecipeDto {
       category: category ?? this.category,
       isGuide: isGuide ?? this.isGuide,
       coffeeGrams: coffeeGrams ?? this.coffeeGrams,
+      contentHtml: contentHtml ?? this.contentHtml,
     );
+  }
+}
+
+class AlternativeBrewingDto {
+  final int id;
+  final String methodKey;
+  final String name;
+  final String description;
+  final String contentHtml;
+  final String imageUrl;
+  final double? ratioGramsPerMl;
+  final double? tempC;
+  final int? totalTimeSec;
+  final String? difficulty;
+  final String? stepsJson;
+  final String? flavorProfile;
+  final String? iconName;
+  final String category;
+  final double? weight;
+  final double? coffeeGrams;
+  final bool isHiden;
+
+  AlternativeBrewingDto({
+    required this.id,
+    required this.methodKey,
+    required this.name,
+    required this.description,
+    required this.contentHtml,
+    required this.imageUrl,
+    this.ratioGramsPerMl,
+    this.tempC,
+    this.totalTimeSec,
+    this.difficulty,
+    this.stepsJson,
+    this.flavorProfile,
+    this.iconName,
+    this.category = 'filter',
+    this.weight,
+    this.coffeeGrams,
+    this.isHiden = false,
+  });
+
+  AlternativeBrewingDto copyWith({
+    int? id,
+    String? methodKey,
+    String? name,
+    String? description,
+    String? contentHtml,
+    String? imageUrl,
+    double? ratioGramsPerMl,
+    double? tempC,
+    int? totalTimeSec,
+    String? difficulty,
+    String? stepsJson,
+    String? flavorProfile,
+    String? iconName,
+    String? category,
+    double? weight,
+    double? coffeeGrams,
+    bool? isHiden,
+  }) {
+    return AlternativeBrewingDto(
+      id: id ?? this.id,
+      methodKey: methodKey ?? this.methodKey,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      contentHtml: contentHtml ?? this.contentHtml,
+      imageUrl: imageUrl ?? this.imageUrl,
+      ratioGramsPerMl: ratioGramsPerMl ?? this.ratioGramsPerMl,
+      tempC: tempC ?? this.tempC,
+      totalTimeSec: totalTimeSec ?? this.totalTimeSec,
+      difficulty: difficulty ?? this.difficulty,
+      stepsJson: stepsJson ?? this.stepsJson,
+      flavorProfile: flavorProfile ?? this.flavorProfile,
+      iconName: iconName ?? this.iconName,
+      category: category ?? this.category,
+      weight: weight ?? this.weight,
+      coffeeGrams: coffeeGrams ?? this.coffeeGrams,
+      isHiden: isHiden ?? this.isHiden,
+    );
+  }
+
+  String get effectiveImageUrl {
+    if (imageUrl.isEmpty) return '';
+    if (imageUrl.startsWith('http')) return imageUrl;
+    if (imageUrl.startsWith('assets/')) return imageUrl;
+    return 'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public/Methods/${imageUrl.split('/').last}';
   }
 }
 

@@ -16026,6 +16026,1357 @@ class BrewingRecipeTranslationsV2Companion
   }
 }
 
+class $AlternativeBrewingTable extends AlternativeBrewing
+    with TableInfo<$AlternativeBrewingTable, AlternativeBrewingData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AlternativeBrewingTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _methodKeyMeta = const VerificationMeta(
+    'methodKey',
+  );
+  @override
+  late final GeneratedColumn<String> methodKey = GeneratedColumn<String>(
+    'method_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
+    'imageUrl',
+  );
+  @override
+  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
+    'image_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _ratioGramsPerMlMeta = const VerificationMeta(
+    'ratioGramsPerMl',
+  );
+  @override
+  late final GeneratedColumn<double> ratioGramsPerMl = GeneratedColumn<double>(
+    'ratio_grams_per_ml',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0.066),
+  );
+  static const VerificationMeta _tempCMeta = const VerificationMeta('tempC');
+  @override
+  late final GeneratedColumn<double> tempC = GeneratedColumn<double>(
+    'temp_c',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(93.0),
+  );
+  static const VerificationMeta _totalTimeSecMeta = const VerificationMeta(
+    'totalTimeSec',
+  );
+  @override
+  late final GeneratedColumn<int> totalTimeSec = GeneratedColumn<int>(
+    'total_time_sec',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(180),
+  );
+  static const VerificationMeta _difficultyMeta = const VerificationMeta(
+    'difficulty',
+  );
+  @override
+  late final GeneratedColumn<String> difficulty = GeneratedColumn<String>(
+    'difficulty',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('Intermediate'),
+  );
+  static const VerificationMeta _stepsJsonMeta = const VerificationMeta(
+    'stepsJson',
+  );
+  @override
+  late final GeneratedColumn<String> stepsJson = GeneratedColumn<String>(
+    'steps_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('[]'),
+  );
+  static const VerificationMeta _flavorProfileMeta = const VerificationMeta(
+    'flavorProfile',
+  );
+  @override
+  late final GeneratedColumn<String> flavorProfile = GeneratedColumn<String>(
+    'flavor_profile',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('Balanced'),
+  );
+  static const VerificationMeta _iconNameMeta = const VerificationMeta(
+    'iconName',
+  );
+  @override
+  late final GeneratedColumn<String> iconName = GeneratedColumn<String>(
+    'icon_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _categoryMeta = const VerificationMeta(
+    'category',
+  );
+  @override
+  late final GeneratedColumn<String> category = GeneratedColumn<String>(
+    'category',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('filter'),
+  );
+  static const VerificationMeta _weightMeta = const VerificationMeta('weight');
+  @override
+  late final GeneratedColumn<double> weight = GeneratedColumn<double>(
+    'weight',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _coffeeGramsMeta = const VerificationMeta(
+    'coffeeGrams',
+  );
+  @override
+  late final GeneratedColumn<double> coffeeGrams = GeneratedColumn<double>(
+    'coffee_grams',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isHidenMeta = const VerificationMeta(
+    'isHiden',
+  );
+  @override
+  late final GeneratedColumn<bool> isHiden = GeneratedColumn<bool>(
+    'is_hiden',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_hiden" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isSyncedMeta = const VerificationMeta(
+    'isSynced',
+  );
+  @override
+  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
+    'is_synced',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_synced" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _isDeletedLocalMeta = const VerificationMeta(
+    'isDeletedLocal',
+  );
+  @override
+  late final GeneratedColumn<bool> isDeletedLocal = GeneratedColumn<bool>(
+    'is_deleted_local',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_deleted_local" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    methodKey,
+    imageUrl,
+    ratioGramsPerMl,
+    tempC,
+    totalTimeSec,
+    difficulty,
+    stepsJson,
+    flavorProfile,
+    iconName,
+    category,
+    weight,
+    coffeeGrams,
+    isHiden,
+    isSynced,
+    isDeletedLocal,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'alternative_brewing';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<AlternativeBrewingData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('method_key')) {
+      context.handle(
+        _methodKeyMeta,
+        methodKey.isAcceptableOrUnknown(data['method_key']!, _methodKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_methodKeyMeta);
+    }
+    if (data.containsKey('image_url')) {
+      context.handle(
+        _imageUrlMeta,
+        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
+      );
+    }
+    if (data.containsKey('ratio_grams_per_ml')) {
+      context.handle(
+        _ratioGramsPerMlMeta,
+        ratioGramsPerMl.isAcceptableOrUnknown(
+          data['ratio_grams_per_ml']!,
+          _ratioGramsPerMlMeta,
+        ),
+      );
+    }
+    if (data.containsKey('temp_c')) {
+      context.handle(
+        _tempCMeta,
+        tempC.isAcceptableOrUnknown(data['temp_c']!, _tempCMeta),
+      );
+    }
+    if (data.containsKey('total_time_sec')) {
+      context.handle(
+        _totalTimeSecMeta,
+        totalTimeSec.isAcceptableOrUnknown(
+          data['total_time_sec']!,
+          _totalTimeSecMeta,
+        ),
+      );
+    }
+    if (data.containsKey('difficulty')) {
+      context.handle(
+        _difficultyMeta,
+        difficulty.isAcceptableOrUnknown(data['difficulty']!, _difficultyMeta),
+      );
+    }
+    if (data.containsKey('steps_json')) {
+      context.handle(
+        _stepsJsonMeta,
+        stepsJson.isAcceptableOrUnknown(data['steps_json']!, _stepsJsonMeta),
+      );
+    }
+    if (data.containsKey('flavor_profile')) {
+      context.handle(
+        _flavorProfileMeta,
+        flavorProfile.isAcceptableOrUnknown(
+          data['flavor_profile']!,
+          _flavorProfileMeta,
+        ),
+      );
+    }
+    if (data.containsKey('icon_name')) {
+      context.handle(
+        _iconNameMeta,
+        iconName.isAcceptableOrUnknown(data['icon_name']!, _iconNameMeta),
+      );
+    }
+    if (data.containsKey('category')) {
+      context.handle(
+        _categoryMeta,
+        category.isAcceptableOrUnknown(data['category']!, _categoryMeta),
+      );
+    }
+    if (data.containsKey('weight')) {
+      context.handle(
+        _weightMeta,
+        weight.isAcceptableOrUnknown(data['weight']!, _weightMeta),
+      );
+    }
+    if (data.containsKey('coffee_grams')) {
+      context.handle(
+        _coffeeGramsMeta,
+        coffeeGrams.isAcceptableOrUnknown(
+          data['coffee_grams']!,
+          _coffeeGramsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('is_hiden')) {
+      context.handle(
+        _isHidenMeta,
+        isHiden.isAcceptableOrUnknown(data['is_hiden']!, _isHidenMeta),
+      );
+    }
+    if (data.containsKey('is_synced')) {
+      context.handle(
+        _isSyncedMeta,
+        isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
+      );
+    }
+    if (data.containsKey('is_deleted_local')) {
+      context.handle(
+        _isDeletedLocalMeta,
+        isDeletedLocal.isAcceptableOrUnknown(
+          data['is_deleted_local']!,
+          _isDeletedLocalMeta,
+        ),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  AlternativeBrewingData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AlternativeBrewingData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      methodKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}method_key'],
+      )!,
+      imageUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_url'],
+      ),
+      ratioGramsPerMl: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}ratio_grams_per_ml'],
+      )!,
+      tempC: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}temp_c'],
+      )!,
+      totalTimeSec: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}total_time_sec'],
+      )!,
+      difficulty: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}difficulty'],
+      )!,
+      stepsJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}steps_json'],
+      )!,
+      flavorProfile: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}flavor_profile'],
+      )!,
+      iconName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}icon_name'],
+      ),
+      category: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category'],
+      )!,
+      weight: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}weight'],
+      ),
+      coffeeGrams: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}coffee_grams'],
+      ),
+      isHiden: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_hiden'],
+      )!,
+      isSynced: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_synced'],
+      )!,
+      isDeletedLocal: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_deleted_local'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      ),
+    );
+  }
+
+  @override
+  $AlternativeBrewingTable createAlias(String alias) {
+    return $AlternativeBrewingTable(attachedDatabase, alias);
+  }
+}
+
+class AlternativeBrewingData extends DataClass
+    implements Insertable<AlternativeBrewingData> {
+  final int id;
+  final String methodKey;
+  final String? imageUrl;
+  final double ratioGramsPerMl;
+  final double tempC;
+  final int totalTimeSec;
+  final String difficulty;
+  final String stepsJson;
+  final String flavorProfile;
+  final String? iconName;
+  final String category;
+  final double? weight;
+  final double? coffeeGrams;
+  final bool isHiden;
+  final bool isSynced;
+  final bool isDeletedLocal;
+  final DateTime? updatedAt;
+  const AlternativeBrewingData({
+    required this.id,
+    required this.methodKey,
+    this.imageUrl,
+    required this.ratioGramsPerMl,
+    required this.tempC,
+    required this.totalTimeSec,
+    required this.difficulty,
+    required this.stepsJson,
+    required this.flavorProfile,
+    this.iconName,
+    required this.category,
+    this.weight,
+    this.coffeeGrams,
+    required this.isHiden,
+    required this.isSynced,
+    required this.isDeletedLocal,
+    this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['method_key'] = Variable<String>(methodKey);
+    if (!nullToAbsent || imageUrl != null) {
+      map['image_url'] = Variable<String>(imageUrl);
+    }
+    map['ratio_grams_per_ml'] = Variable<double>(ratioGramsPerMl);
+    map['temp_c'] = Variable<double>(tempC);
+    map['total_time_sec'] = Variable<int>(totalTimeSec);
+    map['difficulty'] = Variable<String>(difficulty);
+    map['steps_json'] = Variable<String>(stepsJson);
+    map['flavor_profile'] = Variable<String>(flavorProfile);
+    if (!nullToAbsent || iconName != null) {
+      map['icon_name'] = Variable<String>(iconName);
+    }
+    map['category'] = Variable<String>(category);
+    if (!nullToAbsent || weight != null) {
+      map['weight'] = Variable<double>(weight);
+    }
+    if (!nullToAbsent || coffeeGrams != null) {
+      map['coffee_grams'] = Variable<double>(coffeeGrams);
+    }
+    map['is_hiden'] = Variable<bool>(isHiden);
+    map['is_synced'] = Variable<bool>(isSynced);
+    map['is_deleted_local'] = Variable<bool>(isDeletedLocal);
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
+    return map;
+  }
+
+  AlternativeBrewingCompanion toCompanion(bool nullToAbsent) {
+    return AlternativeBrewingCompanion(
+      id: Value(id),
+      methodKey: Value(methodKey),
+      imageUrl: imageUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(imageUrl),
+      ratioGramsPerMl: Value(ratioGramsPerMl),
+      tempC: Value(tempC),
+      totalTimeSec: Value(totalTimeSec),
+      difficulty: Value(difficulty),
+      stepsJson: Value(stepsJson),
+      flavorProfile: Value(flavorProfile),
+      iconName: iconName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(iconName),
+      category: Value(category),
+      weight: weight == null && nullToAbsent
+          ? const Value.absent()
+          : Value(weight),
+      coffeeGrams: coffeeGrams == null && nullToAbsent
+          ? const Value.absent()
+          : Value(coffeeGrams),
+      isHiden: Value(isHiden),
+      isSynced: Value(isSynced),
+      isDeletedLocal: Value(isDeletedLocal),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
+    );
+  }
+
+  factory AlternativeBrewingData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AlternativeBrewingData(
+      id: serializer.fromJson<int>(json['id']),
+      methodKey: serializer.fromJson<String>(json['methodKey']),
+      imageUrl: serializer.fromJson<String?>(json['imageUrl']),
+      ratioGramsPerMl: serializer.fromJson<double>(json['ratioGramsPerMl']),
+      tempC: serializer.fromJson<double>(json['tempC']),
+      totalTimeSec: serializer.fromJson<int>(json['totalTimeSec']),
+      difficulty: serializer.fromJson<String>(json['difficulty']),
+      stepsJson: serializer.fromJson<String>(json['stepsJson']),
+      flavorProfile: serializer.fromJson<String>(json['flavorProfile']),
+      iconName: serializer.fromJson<String?>(json['iconName']),
+      category: serializer.fromJson<String>(json['category']),
+      weight: serializer.fromJson<double?>(json['weight']),
+      coffeeGrams: serializer.fromJson<double?>(json['coffeeGrams']),
+      isHiden: serializer.fromJson<bool>(json['isHiden']),
+      isSynced: serializer.fromJson<bool>(json['isSynced']),
+      isDeletedLocal: serializer.fromJson<bool>(json['isDeletedLocal']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'methodKey': serializer.toJson<String>(methodKey),
+      'imageUrl': serializer.toJson<String?>(imageUrl),
+      'ratioGramsPerMl': serializer.toJson<double>(ratioGramsPerMl),
+      'tempC': serializer.toJson<double>(tempC),
+      'totalTimeSec': serializer.toJson<int>(totalTimeSec),
+      'difficulty': serializer.toJson<String>(difficulty),
+      'stepsJson': serializer.toJson<String>(stepsJson),
+      'flavorProfile': serializer.toJson<String>(flavorProfile),
+      'iconName': serializer.toJson<String?>(iconName),
+      'category': serializer.toJson<String>(category),
+      'weight': serializer.toJson<double?>(weight),
+      'coffeeGrams': serializer.toJson<double?>(coffeeGrams),
+      'isHiden': serializer.toJson<bool>(isHiden),
+      'isSynced': serializer.toJson<bool>(isSynced),
+      'isDeletedLocal': serializer.toJson<bool>(isDeletedLocal),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
+    };
+  }
+
+  AlternativeBrewingData copyWith({
+    int? id,
+    String? methodKey,
+    Value<String?> imageUrl = const Value.absent(),
+    double? ratioGramsPerMl,
+    double? tempC,
+    int? totalTimeSec,
+    String? difficulty,
+    String? stepsJson,
+    String? flavorProfile,
+    Value<String?> iconName = const Value.absent(),
+    String? category,
+    Value<double?> weight = const Value.absent(),
+    Value<double?> coffeeGrams = const Value.absent(),
+    bool? isHiden,
+    bool? isSynced,
+    bool? isDeletedLocal,
+    Value<DateTime?> updatedAt = const Value.absent(),
+  }) => AlternativeBrewingData(
+    id: id ?? this.id,
+    methodKey: methodKey ?? this.methodKey,
+    imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
+    ratioGramsPerMl: ratioGramsPerMl ?? this.ratioGramsPerMl,
+    tempC: tempC ?? this.tempC,
+    totalTimeSec: totalTimeSec ?? this.totalTimeSec,
+    difficulty: difficulty ?? this.difficulty,
+    stepsJson: stepsJson ?? this.stepsJson,
+    flavorProfile: flavorProfile ?? this.flavorProfile,
+    iconName: iconName.present ? iconName.value : this.iconName,
+    category: category ?? this.category,
+    weight: weight.present ? weight.value : this.weight,
+    coffeeGrams: coffeeGrams.present ? coffeeGrams.value : this.coffeeGrams,
+    isHiden: isHiden ?? this.isHiden,
+    isSynced: isSynced ?? this.isSynced,
+    isDeletedLocal: isDeletedLocal ?? this.isDeletedLocal,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
+  );
+  AlternativeBrewingData copyWithCompanion(AlternativeBrewingCompanion data) {
+    return AlternativeBrewingData(
+      id: data.id.present ? data.id.value : this.id,
+      methodKey: data.methodKey.present ? data.methodKey.value : this.methodKey,
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      ratioGramsPerMl: data.ratioGramsPerMl.present
+          ? data.ratioGramsPerMl.value
+          : this.ratioGramsPerMl,
+      tempC: data.tempC.present ? data.tempC.value : this.tempC,
+      totalTimeSec: data.totalTimeSec.present
+          ? data.totalTimeSec.value
+          : this.totalTimeSec,
+      difficulty: data.difficulty.present
+          ? data.difficulty.value
+          : this.difficulty,
+      stepsJson: data.stepsJson.present ? data.stepsJson.value : this.stepsJson,
+      flavorProfile: data.flavorProfile.present
+          ? data.flavorProfile.value
+          : this.flavorProfile,
+      iconName: data.iconName.present ? data.iconName.value : this.iconName,
+      category: data.category.present ? data.category.value : this.category,
+      weight: data.weight.present ? data.weight.value : this.weight,
+      coffeeGrams: data.coffeeGrams.present
+          ? data.coffeeGrams.value
+          : this.coffeeGrams,
+      isHiden: data.isHiden.present ? data.isHiden.value : this.isHiden,
+      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      isDeletedLocal: data.isDeletedLocal.present
+          ? data.isDeletedLocal.value
+          : this.isDeletedLocal,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AlternativeBrewingData(')
+          ..write('id: $id, ')
+          ..write('methodKey: $methodKey, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('ratioGramsPerMl: $ratioGramsPerMl, ')
+          ..write('tempC: $tempC, ')
+          ..write('totalTimeSec: $totalTimeSec, ')
+          ..write('difficulty: $difficulty, ')
+          ..write('stepsJson: $stepsJson, ')
+          ..write('flavorProfile: $flavorProfile, ')
+          ..write('iconName: $iconName, ')
+          ..write('category: $category, ')
+          ..write('weight: $weight, ')
+          ..write('coffeeGrams: $coffeeGrams, ')
+          ..write('isHiden: $isHiden, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('isDeletedLocal: $isDeletedLocal, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    methodKey,
+    imageUrl,
+    ratioGramsPerMl,
+    tempC,
+    totalTimeSec,
+    difficulty,
+    stepsJson,
+    flavorProfile,
+    iconName,
+    category,
+    weight,
+    coffeeGrams,
+    isHiden,
+    isSynced,
+    isDeletedLocal,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AlternativeBrewingData &&
+          other.id == this.id &&
+          other.methodKey == this.methodKey &&
+          other.imageUrl == this.imageUrl &&
+          other.ratioGramsPerMl == this.ratioGramsPerMl &&
+          other.tempC == this.tempC &&
+          other.totalTimeSec == this.totalTimeSec &&
+          other.difficulty == this.difficulty &&
+          other.stepsJson == this.stepsJson &&
+          other.flavorProfile == this.flavorProfile &&
+          other.iconName == this.iconName &&
+          other.category == this.category &&
+          other.weight == this.weight &&
+          other.coffeeGrams == this.coffeeGrams &&
+          other.isHiden == this.isHiden &&
+          other.isSynced == this.isSynced &&
+          other.isDeletedLocal == this.isDeletedLocal &&
+          other.updatedAt == this.updatedAt);
+}
+
+class AlternativeBrewingCompanion
+    extends UpdateCompanion<AlternativeBrewingData> {
+  final Value<int> id;
+  final Value<String> methodKey;
+  final Value<String?> imageUrl;
+  final Value<double> ratioGramsPerMl;
+  final Value<double> tempC;
+  final Value<int> totalTimeSec;
+  final Value<String> difficulty;
+  final Value<String> stepsJson;
+  final Value<String> flavorProfile;
+  final Value<String?> iconName;
+  final Value<String> category;
+  final Value<double?> weight;
+  final Value<double?> coffeeGrams;
+  final Value<bool> isHiden;
+  final Value<bool> isSynced;
+  final Value<bool> isDeletedLocal;
+  final Value<DateTime?> updatedAt;
+  const AlternativeBrewingCompanion({
+    this.id = const Value.absent(),
+    this.methodKey = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.ratioGramsPerMl = const Value.absent(),
+    this.tempC = const Value.absent(),
+    this.totalTimeSec = const Value.absent(),
+    this.difficulty = const Value.absent(),
+    this.stepsJson = const Value.absent(),
+    this.flavorProfile = const Value.absent(),
+    this.iconName = const Value.absent(),
+    this.category = const Value.absent(),
+    this.weight = const Value.absent(),
+    this.coffeeGrams = const Value.absent(),
+    this.isHiden = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.isDeletedLocal = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  AlternativeBrewingCompanion.insert({
+    this.id = const Value.absent(),
+    required String methodKey,
+    this.imageUrl = const Value.absent(),
+    this.ratioGramsPerMl = const Value.absent(),
+    this.tempC = const Value.absent(),
+    this.totalTimeSec = const Value.absent(),
+    this.difficulty = const Value.absent(),
+    this.stepsJson = const Value.absent(),
+    this.flavorProfile = const Value.absent(),
+    this.iconName = const Value.absent(),
+    this.category = const Value.absent(),
+    this.weight = const Value.absent(),
+    this.coffeeGrams = const Value.absent(),
+    this.isHiden = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.isDeletedLocal = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  }) : methodKey = Value(methodKey);
+  static Insertable<AlternativeBrewingData> custom({
+    Expression<int>? id,
+    Expression<String>? methodKey,
+    Expression<String>? imageUrl,
+    Expression<double>? ratioGramsPerMl,
+    Expression<double>? tempC,
+    Expression<int>? totalTimeSec,
+    Expression<String>? difficulty,
+    Expression<String>? stepsJson,
+    Expression<String>? flavorProfile,
+    Expression<String>? iconName,
+    Expression<String>? category,
+    Expression<double>? weight,
+    Expression<double>? coffeeGrams,
+    Expression<bool>? isHiden,
+    Expression<bool>? isSynced,
+    Expression<bool>? isDeletedLocal,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (methodKey != null) 'method_key': methodKey,
+      if (imageUrl != null) 'image_url': imageUrl,
+      if (ratioGramsPerMl != null) 'ratio_grams_per_ml': ratioGramsPerMl,
+      if (tempC != null) 'temp_c': tempC,
+      if (totalTimeSec != null) 'total_time_sec': totalTimeSec,
+      if (difficulty != null) 'difficulty': difficulty,
+      if (stepsJson != null) 'steps_json': stepsJson,
+      if (flavorProfile != null) 'flavor_profile': flavorProfile,
+      if (iconName != null) 'icon_name': iconName,
+      if (category != null) 'category': category,
+      if (weight != null) 'weight': weight,
+      if (coffeeGrams != null) 'coffee_grams': coffeeGrams,
+      if (isHiden != null) 'is_hiden': isHiden,
+      if (isSynced != null) 'is_synced': isSynced,
+      if (isDeletedLocal != null) 'is_deleted_local': isDeletedLocal,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  AlternativeBrewingCompanion copyWith({
+    Value<int>? id,
+    Value<String>? methodKey,
+    Value<String?>? imageUrl,
+    Value<double>? ratioGramsPerMl,
+    Value<double>? tempC,
+    Value<int>? totalTimeSec,
+    Value<String>? difficulty,
+    Value<String>? stepsJson,
+    Value<String>? flavorProfile,
+    Value<String?>? iconName,
+    Value<String>? category,
+    Value<double?>? weight,
+    Value<double?>? coffeeGrams,
+    Value<bool>? isHiden,
+    Value<bool>? isSynced,
+    Value<bool>? isDeletedLocal,
+    Value<DateTime?>? updatedAt,
+  }) {
+    return AlternativeBrewingCompanion(
+      id: id ?? this.id,
+      methodKey: methodKey ?? this.methodKey,
+      imageUrl: imageUrl ?? this.imageUrl,
+      ratioGramsPerMl: ratioGramsPerMl ?? this.ratioGramsPerMl,
+      tempC: tempC ?? this.tempC,
+      totalTimeSec: totalTimeSec ?? this.totalTimeSec,
+      difficulty: difficulty ?? this.difficulty,
+      stepsJson: stepsJson ?? this.stepsJson,
+      flavorProfile: flavorProfile ?? this.flavorProfile,
+      iconName: iconName ?? this.iconName,
+      category: category ?? this.category,
+      weight: weight ?? this.weight,
+      coffeeGrams: coffeeGrams ?? this.coffeeGrams,
+      isHiden: isHiden ?? this.isHiden,
+      isSynced: isSynced ?? this.isSynced,
+      isDeletedLocal: isDeletedLocal ?? this.isDeletedLocal,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (methodKey.present) {
+      map['method_key'] = Variable<String>(methodKey.value);
+    }
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
+    if (ratioGramsPerMl.present) {
+      map['ratio_grams_per_ml'] = Variable<double>(ratioGramsPerMl.value);
+    }
+    if (tempC.present) {
+      map['temp_c'] = Variable<double>(tempC.value);
+    }
+    if (totalTimeSec.present) {
+      map['total_time_sec'] = Variable<int>(totalTimeSec.value);
+    }
+    if (difficulty.present) {
+      map['difficulty'] = Variable<String>(difficulty.value);
+    }
+    if (stepsJson.present) {
+      map['steps_json'] = Variable<String>(stepsJson.value);
+    }
+    if (flavorProfile.present) {
+      map['flavor_profile'] = Variable<String>(flavorProfile.value);
+    }
+    if (iconName.present) {
+      map['icon_name'] = Variable<String>(iconName.value);
+    }
+    if (category.present) {
+      map['category'] = Variable<String>(category.value);
+    }
+    if (weight.present) {
+      map['weight'] = Variable<double>(weight.value);
+    }
+    if (coffeeGrams.present) {
+      map['coffee_grams'] = Variable<double>(coffeeGrams.value);
+    }
+    if (isHiden.present) {
+      map['is_hiden'] = Variable<bool>(isHiden.value);
+    }
+    if (isSynced.present) {
+      map['is_synced'] = Variable<bool>(isSynced.value);
+    }
+    if (isDeletedLocal.present) {
+      map['is_deleted_local'] = Variable<bool>(isDeletedLocal.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AlternativeBrewingCompanion(')
+          ..write('id: $id, ')
+          ..write('methodKey: $methodKey, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('ratioGramsPerMl: $ratioGramsPerMl, ')
+          ..write('tempC: $tempC, ')
+          ..write('totalTimeSec: $totalTimeSec, ')
+          ..write('difficulty: $difficulty, ')
+          ..write('stepsJson: $stepsJson, ')
+          ..write('flavorProfile: $flavorProfile, ')
+          ..write('iconName: $iconName, ')
+          ..write('category: $category, ')
+          ..write('weight: $weight, ')
+          ..write('coffeeGrams: $coffeeGrams, ')
+          ..write('isHiden: $isHiden, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('isDeletedLocal: $isDeletedLocal, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $AlternativeBrewingTranslationsTable
+    extends AlternativeBrewingTranslations
+    with
+        TableInfo<
+          $AlternativeBrewingTranslationsTable,
+          AlternativeBrewingTranslation
+        > {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AlternativeBrewingTranslationsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _recipeKeyMeta = const VerificationMeta(
+    'recipeKey',
+  );
+  @override
+  late final GeneratedColumn<String> recipeKey = GeneratedColumn<String>(
+    'recipe_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES alternative_brewing (method_key)',
+    ),
+  );
+  static const VerificationMeta _languageCodeMeta = const VerificationMeta(
+    'languageCode',
+  );
+  @override
+  late final GeneratedColumn<String> languageCode = GeneratedColumn<String>(
+    'language_code',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _contentHtmlMeta = const VerificationMeta(
+    'contentHtml',
+  );
+  @override
+  late final GeneratedColumn<String> contentHtml = GeneratedColumn<String>(
+    'content_html',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    recipeKey,
+    languageCode,
+    name,
+    description,
+    contentHtml,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'alternative_brewing_translations';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<AlternativeBrewingTranslation> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('recipe_key')) {
+      context.handle(
+        _recipeKeyMeta,
+        recipeKey.isAcceptableOrUnknown(data['recipe_key']!, _recipeKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_recipeKeyMeta);
+    }
+    if (data.containsKey('language_code')) {
+      context.handle(
+        _languageCodeMeta,
+        languageCode.isAcceptableOrUnknown(
+          data['language_code']!,
+          _languageCodeMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_languageCodeMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('content_html')) {
+      context.handle(
+        _contentHtmlMeta,
+        contentHtml.isAcceptableOrUnknown(
+          data['content_html']!,
+          _contentHtmlMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {recipeKey, languageCode};
+  @override
+  AlternativeBrewingTranslation map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AlternativeBrewingTranslation(
+      recipeKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}recipe_key'],
+      )!,
+      languageCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}language_code'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      ),
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      contentHtml: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content_html'],
+      ),
+    );
+  }
+
+  @override
+  $AlternativeBrewingTranslationsTable createAlias(String alias) {
+    return $AlternativeBrewingTranslationsTable(attachedDatabase, alias);
+  }
+}
+
+class AlternativeBrewingTranslation extends DataClass
+    implements Insertable<AlternativeBrewingTranslation> {
+  final String recipeKey;
+  final String languageCode;
+  final String? name;
+  final String? description;
+  final String? contentHtml;
+  const AlternativeBrewingTranslation({
+    required this.recipeKey,
+    required this.languageCode,
+    this.name,
+    this.description,
+    this.contentHtml,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['recipe_key'] = Variable<String>(recipeKey);
+    map['language_code'] = Variable<String>(languageCode);
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || contentHtml != null) {
+      map['content_html'] = Variable<String>(contentHtml);
+    }
+    return map;
+  }
+
+  AlternativeBrewingTranslationsCompanion toCompanion(bool nullToAbsent) {
+    return AlternativeBrewingTranslationsCompanion(
+      recipeKey: Value(recipeKey),
+      languageCode: Value(languageCode),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      contentHtml: contentHtml == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contentHtml),
+    );
+  }
+
+  factory AlternativeBrewingTranslation.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AlternativeBrewingTranslation(
+      recipeKey: serializer.fromJson<String>(json['recipeKey']),
+      languageCode: serializer.fromJson<String>(json['languageCode']),
+      name: serializer.fromJson<String?>(json['name']),
+      description: serializer.fromJson<String?>(json['description']),
+      contentHtml: serializer.fromJson<String?>(json['contentHtml']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'recipeKey': serializer.toJson<String>(recipeKey),
+      'languageCode': serializer.toJson<String>(languageCode),
+      'name': serializer.toJson<String?>(name),
+      'description': serializer.toJson<String?>(description),
+      'contentHtml': serializer.toJson<String?>(contentHtml),
+    };
+  }
+
+  AlternativeBrewingTranslation copyWith({
+    String? recipeKey,
+    String? languageCode,
+    Value<String?> name = const Value.absent(),
+    Value<String?> description = const Value.absent(),
+    Value<String?> contentHtml = const Value.absent(),
+  }) => AlternativeBrewingTranslation(
+    recipeKey: recipeKey ?? this.recipeKey,
+    languageCode: languageCode ?? this.languageCode,
+    name: name.present ? name.value : this.name,
+    description: description.present ? description.value : this.description,
+    contentHtml: contentHtml.present ? contentHtml.value : this.contentHtml,
+  );
+  AlternativeBrewingTranslation copyWithCompanion(
+    AlternativeBrewingTranslationsCompanion data,
+  ) {
+    return AlternativeBrewingTranslation(
+      recipeKey: data.recipeKey.present ? data.recipeKey.value : this.recipeKey,
+      languageCode: data.languageCode.present
+          ? data.languageCode.value
+          : this.languageCode,
+      name: data.name.present ? data.name.value : this.name,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      contentHtml: data.contentHtml.present
+          ? data.contentHtml.value
+          : this.contentHtml,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AlternativeBrewingTranslation(')
+          ..write('recipeKey: $recipeKey, ')
+          ..write('languageCode: $languageCode, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('contentHtml: $contentHtml')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(recipeKey, languageCode, name, description, contentHtml);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AlternativeBrewingTranslation &&
+          other.recipeKey == this.recipeKey &&
+          other.languageCode == this.languageCode &&
+          other.name == this.name &&
+          other.description == this.description &&
+          other.contentHtml == this.contentHtml);
+}
+
+class AlternativeBrewingTranslationsCompanion
+    extends UpdateCompanion<AlternativeBrewingTranslation> {
+  final Value<String> recipeKey;
+  final Value<String> languageCode;
+  final Value<String?> name;
+  final Value<String?> description;
+  final Value<String?> contentHtml;
+  final Value<int> rowid;
+  const AlternativeBrewingTranslationsCompanion({
+    this.recipeKey = const Value.absent(),
+    this.languageCode = const Value.absent(),
+    this.name = const Value.absent(),
+    this.description = const Value.absent(),
+    this.contentHtml = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  AlternativeBrewingTranslationsCompanion.insert({
+    required String recipeKey,
+    required String languageCode,
+    this.name = const Value.absent(),
+    this.description = const Value.absent(),
+    this.contentHtml = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : recipeKey = Value(recipeKey),
+       languageCode = Value(languageCode);
+  static Insertable<AlternativeBrewingTranslation> custom({
+    Expression<String>? recipeKey,
+    Expression<String>? languageCode,
+    Expression<String>? name,
+    Expression<String>? description,
+    Expression<String>? contentHtml,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (recipeKey != null) 'recipe_key': recipeKey,
+      if (languageCode != null) 'language_code': languageCode,
+      if (name != null) 'name': name,
+      if (description != null) 'description': description,
+      if (contentHtml != null) 'content_html': contentHtml,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  AlternativeBrewingTranslationsCompanion copyWith({
+    Value<String>? recipeKey,
+    Value<String>? languageCode,
+    Value<String?>? name,
+    Value<String?>? description,
+    Value<String?>? contentHtml,
+    Value<int>? rowid,
+  }) {
+    return AlternativeBrewingTranslationsCompanion(
+      recipeKey: recipeKey ?? this.recipeKey,
+      languageCode: languageCode ?? this.languageCode,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      contentHtml: contentHtml ?? this.contentHtml,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (recipeKey.present) {
+      map['recipe_key'] = Variable<String>(recipeKey.value);
+    }
+    if (languageCode.present) {
+      map['language_code'] = Variable<String>(languageCode.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (contentHtml.present) {
+      map['content_html'] = Variable<String>(contentHtml.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AlternativeBrewingTranslationsCompanion(')
+          ..write('recipeKey: $recipeKey, ')
+          ..write('languageCode: $languageCode, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('contentHtml: $contentHtml, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -16077,6 +17428,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   );
   late final $BrewingRecipeTranslationsV2Table brewingRecipeTranslationsV2 =
       $BrewingRecipeTranslationsV2Table(this);
+  late final $AlternativeBrewingTable alternativeBrewing =
+      $AlternativeBrewingTable(this);
+  late final $AlternativeBrewingTranslationsTable
+  alternativeBrewingTranslations = $AlternativeBrewingTranslationsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -16106,6 +17461,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     localizedBeanTranslationsV2,
     brewingRecipesV2,
     brewingRecipeTranslationsV2,
+    alternativeBrewing,
+    alternativeBrewingTranslations,
   ];
 }
 
@@ -27823,6 +29180,941 @@ typedef $$BrewingRecipeTranslationsV2TableProcessedTableManager =
       BrewingRecipeTranslationsV2Data,
       PrefetchHooks Function({bool recipeKey})
     >;
+typedef $$AlternativeBrewingTableCreateCompanionBuilder =
+    AlternativeBrewingCompanion Function({
+      Value<int> id,
+      required String methodKey,
+      Value<String?> imageUrl,
+      Value<double> ratioGramsPerMl,
+      Value<double> tempC,
+      Value<int> totalTimeSec,
+      Value<String> difficulty,
+      Value<String> stepsJson,
+      Value<String> flavorProfile,
+      Value<String?> iconName,
+      Value<String> category,
+      Value<double?> weight,
+      Value<double?> coffeeGrams,
+      Value<bool> isHiden,
+      Value<bool> isSynced,
+      Value<bool> isDeletedLocal,
+      Value<DateTime?> updatedAt,
+    });
+typedef $$AlternativeBrewingTableUpdateCompanionBuilder =
+    AlternativeBrewingCompanion Function({
+      Value<int> id,
+      Value<String> methodKey,
+      Value<String?> imageUrl,
+      Value<double> ratioGramsPerMl,
+      Value<double> tempC,
+      Value<int> totalTimeSec,
+      Value<String> difficulty,
+      Value<String> stepsJson,
+      Value<String> flavorProfile,
+      Value<String?> iconName,
+      Value<String> category,
+      Value<double?> weight,
+      Value<double?> coffeeGrams,
+      Value<bool> isHiden,
+      Value<bool> isSynced,
+      Value<bool> isDeletedLocal,
+      Value<DateTime?> updatedAt,
+    });
+
+final class $$AlternativeBrewingTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $AlternativeBrewingTable,
+          AlternativeBrewingData
+        > {
+  $$AlternativeBrewingTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static MultiTypedResultKey<
+    $AlternativeBrewingTranslationsTable,
+    List<AlternativeBrewingTranslation>
+  >
+  _alternativeBrewingTranslationsRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.alternativeBrewingTranslations,
+        aliasName: $_aliasNameGenerator(
+          db.alternativeBrewing.methodKey,
+          db.alternativeBrewingTranslations.recipeKey,
+        ),
+      );
+
+  $$AlternativeBrewingTranslationsTableProcessedTableManager
+  get alternativeBrewingTranslationsRefs {
+    final manager =
+        $$AlternativeBrewingTranslationsTableTableManager(
+          $_db,
+          $_db.alternativeBrewingTranslations,
+        ).filter(
+          (f) => f.recipeKey.methodKey.sqlEquals(
+            $_itemColumn<String>('method_key')!,
+          ),
+        );
+
+    final cache = $_typedResult.readTableOrNull(
+      _alternativeBrewingTranslationsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$AlternativeBrewingTableFilterComposer
+    extends Composer<_$AppDatabase, $AlternativeBrewingTable> {
+  $$AlternativeBrewingTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get methodKey => $composableBuilder(
+    column: $table.methodKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get ratioGramsPerMl => $composableBuilder(
+    column: $table.ratioGramsPerMl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get tempC => $composableBuilder(
+    column: $table.tempC,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get totalTimeSec => $composableBuilder(
+    column: $table.totalTimeSec,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get difficulty => $composableBuilder(
+    column: $table.difficulty,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get stepsJson => $composableBuilder(
+    column: $table.stepsJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get flavorProfile => $composableBuilder(
+    column: $table.flavorProfile,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get iconName => $composableBuilder(
+    column: $table.iconName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get weight => $composableBuilder(
+    column: $table.weight,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get coffeeGrams => $composableBuilder(
+    column: $table.coffeeGrams,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isHiden => $composableBuilder(
+    column: $table.isHiden,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isDeletedLocal => $composableBuilder(
+    column: $table.isDeletedLocal,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> alternativeBrewingTranslationsRefs(
+    Expression<bool> Function(
+      $$AlternativeBrewingTranslationsTableFilterComposer f,
+    )
+    f,
+  ) {
+    final $$AlternativeBrewingTranslationsTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.methodKey,
+          referencedTable: $db.alternativeBrewingTranslations,
+          getReferencedColumn: (t) => t.recipeKey,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$AlternativeBrewingTranslationsTableFilterComposer(
+                $db: $db,
+                $table: $db.alternativeBrewingTranslations,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$AlternativeBrewingTableOrderingComposer
+    extends Composer<_$AppDatabase, $AlternativeBrewingTable> {
+  $$AlternativeBrewingTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get methodKey => $composableBuilder(
+    column: $table.methodKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get ratioGramsPerMl => $composableBuilder(
+    column: $table.ratioGramsPerMl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get tempC => $composableBuilder(
+    column: $table.tempC,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get totalTimeSec => $composableBuilder(
+    column: $table.totalTimeSec,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get difficulty => $composableBuilder(
+    column: $table.difficulty,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get stepsJson => $composableBuilder(
+    column: $table.stepsJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get flavorProfile => $composableBuilder(
+    column: $table.flavorProfile,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get iconName => $composableBuilder(
+    column: $table.iconName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get weight => $composableBuilder(
+    column: $table.weight,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get coffeeGrams => $composableBuilder(
+    column: $table.coffeeGrams,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isHiden => $composableBuilder(
+    column: $table.isHiden,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isDeletedLocal => $composableBuilder(
+    column: $table.isDeletedLocal,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$AlternativeBrewingTableAnnotationComposer
+    extends Composer<_$AppDatabase, $AlternativeBrewingTable> {
+  $$AlternativeBrewingTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get methodKey =>
+      $composableBuilder(column: $table.methodKey, builder: (column) => column);
+
+  GeneratedColumn<String> get imageUrl =>
+      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
+  GeneratedColumn<double> get ratioGramsPerMl => $composableBuilder(
+    column: $table.ratioGramsPerMl,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get tempC =>
+      $composableBuilder(column: $table.tempC, builder: (column) => column);
+
+  GeneratedColumn<int> get totalTimeSec => $composableBuilder(
+    column: $table.totalTimeSec,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get difficulty => $composableBuilder(
+    column: $table.difficulty,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get stepsJson =>
+      $composableBuilder(column: $table.stepsJson, builder: (column) => column);
+
+  GeneratedColumn<String> get flavorProfile => $composableBuilder(
+    column: $table.flavorProfile,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get iconName =>
+      $composableBuilder(column: $table.iconName, builder: (column) => column);
+
+  GeneratedColumn<String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => column);
+
+  GeneratedColumn<double> get weight =>
+      $composableBuilder(column: $table.weight, builder: (column) => column);
+
+  GeneratedColumn<double> get coffeeGrams => $composableBuilder(
+    column: $table.coffeeGrams,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isHiden =>
+      $composableBuilder(column: $table.isHiden, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSynced =>
+      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+
+  GeneratedColumn<bool> get isDeletedLocal => $composableBuilder(
+    column: $table.isDeletedLocal,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  Expression<T> alternativeBrewingTranslationsRefs<T extends Object>(
+    Expression<T> Function(
+      $$AlternativeBrewingTranslationsTableAnnotationComposer a,
+    )
+    f,
+  ) {
+    final $$AlternativeBrewingTranslationsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.methodKey,
+          referencedTable: $db.alternativeBrewingTranslations,
+          getReferencedColumn: (t) => t.recipeKey,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$AlternativeBrewingTranslationsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.alternativeBrewingTranslations,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$AlternativeBrewingTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $AlternativeBrewingTable,
+          AlternativeBrewingData,
+          $$AlternativeBrewingTableFilterComposer,
+          $$AlternativeBrewingTableOrderingComposer,
+          $$AlternativeBrewingTableAnnotationComposer,
+          $$AlternativeBrewingTableCreateCompanionBuilder,
+          $$AlternativeBrewingTableUpdateCompanionBuilder,
+          (AlternativeBrewingData, $$AlternativeBrewingTableReferences),
+          AlternativeBrewingData,
+          PrefetchHooks Function({bool alternativeBrewingTranslationsRefs})
+        > {
+  $$AlternativeBrewingTableTableManager(
+    _$AppDatabase db,
+    $AlternativeBrewingTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AlternativeBrewingTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AlternativeBrewingTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$AlternativeBrewingTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> methodKey = const Value.absent(),
+                Value<String?> imageUrl = const Value.absent(),
+                Value<double> ratioGramsPerMl = const Value.absent(),
+                Value<double> tempC = const Value.absent(),
+                Value<int> totalTimeSec = const Value.absent(),
+                Value<String> difficulty = const Value.absent(),
+                Value<String> stepsJson = const Value.absent(),
+                Value<String> flavorProfile = const Value.absent(),
+                Value<String?> iconName = const Value.absent(),
+                Value<String> category = const Value.absent(),
+                Value<double?> weight = const Value.absent(),
+                Value<double?> coffeeGrams = const Value.absent(),
+                Value<bool> isHiden = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<bool> isDeletedLocal = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+              }) => AlternativeBrewingCompanion(
+                id: id,
+                methodKey: methodKey,
+                imageUrl: imageUrl,
+                ratioGramsPerMl: ratioGramsPerMl,
+                tempC: tempC,
+                totalTimeSec: totalTimeSec,
+                difficulty: difficulty,
+                stepsJson: stepsJson,
+                flavorProfile: flavorProfile,
+                iconName: iconName,
+                category: category,
+                weight: weight,
+                coffeeGrams: coffeeGrams,
+                isHiden: isHiden,
+                isSynced: isSynced,
+                isDeletedLocal: isDeletedLocal,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String methodKey,
+                Value<String?> imageUrl = const Value.absent(),
+                Value<double> ratioGramsPerMl = const Value.absent(),
+                Value<double> tempC = const Value.absent(),
+                Value<int> totalTimeSec = const Value.absent(),
+                Value<String> difficulty = const Value.absent(),
+                Value<String> stepsJson = const Value.absent(),
+                Value<String> flavorProfile = const Value.absent(),
+                Value<String?> iconName = const Value.absent(),
+                Value<String> category = const Value.absent(),
+                Value<double?> weight = const Value.absent(),
+                Value<double?> coffeeGrams = const Value.absent(),
+                Value<bool> isHiden = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<bool> isDeletedLocal = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+              }) => AlternativeBrewingCompanion.insert(
+                id: id,
+                methodKey: methodKey,
+                imageUrl: imageUrl,
+                ratioGramsPerMl: ratioGramsPerMl,
+                tempC: tempC,
+                totalTimeSec: totalTimeSec,
+                difficulty: difficulty,
+                stepsJson: stepsJson,
+                flavorProfile: flavorProfile,
+                iconName: iconName,
+                category: category,
+                weight: weight,
+                coffeeGrams: coffeeGrams,
+                isHiden: isHiden,
+                isSynced: isSynced,
+                isDeletedLocal: isDeletedLocal,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$AlternativeBrewingTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({alternativeBrewingTranslationsRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (alternativeBrewingTranslationsRefs)
+                      db.alternativeBrewingTranslations,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (alternativeBrewingTranslationsRefs)
+                        await $_getPrefetchedData<
+                          AlternativeBrewingData,
+                          $AlternativeBrewingTable,
+                          AlternativeBrewingTranslation
+                        >(
+                          currentTable: table,
+                          referencedTable: $$AlternativeBrewingTableReferences
+                              ._alternativeBrewingTranslationsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$AlternativeBrewingTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).alternativeBrewingTranslationsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.recipeKey == item.methodKey,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$AlternativeBrewingTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $AlternativeBrewingTable,
+      AlternativeBrewingData,
+      $$AlternativeBrewingTableFilterComposer,
+      $$AlternativeBrewingTableOrderingComposer,
+      $$AlternativeBrewingTableAnnotationComposer,
+      $$AlternativeBrewingTableCreateCompanionBuilder,
+      $$AlternativeBrewingTableUpdateCompanionBuilder,
+      (AlternativeBrewingData, $$AlternativeBrewingTableReferences),
+      AlternativeBrewingData,
+      PrefetchHooks Function({bool alternativeBrewingTranslationsRefs})
+    >;
+typedef $$AlternativeBrewingTranslationsTableCreateCompanionBuilder =
+    AlternativeBrewingTranslationsCompanion Function({
+      required String recipeKey,
+      required String languageCode,
+      Value<String?> name,
+      Value<String?> description,
+      Value<String?> contentHtml,
+      Value<int> rowid,
+    });
+typedef $$AlternativeBrewingTranslationsTableUpdateCompanionBuilder =
+    AlternativeBrewingTranslationsCompanion Function({
+      Value<String> recipeKey,
+      Value<String> languageCode,
+      Value<String?> name,
+      Value<String?> description,
+      Value<String?> contentHtml,
+      Value<int> rowid,
+    });
+
+final class $$AlternativeBrewingTranslationsTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $AlternativeBrewingTranslationsTable,
+          AlternativeBrewingTranslation
+        > {
+  $$AlternativeBrewingTranslationsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $AlternativeBrewingTable _recipeKeyTable(_$AppDatabase db) =>
+      db.alternativeBrewing.createAlias(
+        $_aliasNameGenerator(
+          db.alternativeBrewingTranslations.recipeKey,
+          db.alternativeBrewing.methodKey,
+        ),
+      );
+
+  $$AlternativeBrewingTableProcessedTableManager get recipeKey {
+    final $_column = $_itemColumn<String>('recipe_key')!;
+
+    final manager = $$AlternativeBrewingTableTableManager(
+      $_db,
+      $_db.alternativeBrewing,
+    ).filter((f) => f.methodKey.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_recipeKeyTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$AlternativeBrewingTranslationsTableFilterComposer
+    extends Composer<_$AppDatabase, $AlternativeBrewingTranslationsTable> {
+  $$AlternativeBrewingTranslationsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get languageCode => $composableBuilder(
+    column: $table.languageCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get contentHtml => $composableBuilder(
+    column: $table.contentHtml,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$AlternativeBrewingTableFilterComposer get recipeKey {
+    final $$AlternativeBrewingTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.recipeKey,
+      referencedTable: $db.alternativeBrewing,
+      getReferencedColumn: (t) => t.methodKey,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AlternativeBrewingTableFilterComposer(
+            $db: $db,
+            $table: $db.alternativeBrewing,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AlternativeBrewingTranslationsTableOrderingComposer
+    extends Composer<_$AppDatabase, $AlternativeBrewingTranslationsTable> {
+  $$AlternativeBrewingTranslationsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get languageCode => $composableBuilder(
+    column: $table.languageCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get contentHtml => $composableBuilder(
+    column: $table.contentHtml,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$AlternativeBrewingTableOrderingComposer get recipeKey {
+    final $$AlternativeBrewingTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.recipeKey,
+      referencedTable: $db.alternativeBrewing,
+      getReferencedColumn: (t) => t.methodKey,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AlternativeBrewingTableOrderingComposer(
+            $db: $db,
+            $table: $db.alternativeBrewing,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$AlternativeBrewingTranslationsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $AlternativeBrewingTranslationsTable> {
+  $$AlternativeBrewingTranslationsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get languageCode => $composableBuilder(
+    column: $table.languageCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get contentHtml => $composableBuilder(
+    column: $table.contentHtml,
+    builder: (column) => column,
+  );
+
+  $$AlternativeBrewingTableAnnotationComposer get recipeKey {
+    final $$AlternativeBrewingTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.recipeKey,
+          referencedTable: $db.alternativeBrewing,
+          getReferencedColumn: (t) => t.methodKey,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$AlternativeBrewingTableAnnotationComposer(
+                $db: $db,
+                $table: $db.alternativeBrewing,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return composer;
+  }
+}
+
+class $$AlternativeBrewingTranslationsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $AlternativeBrewingTranslationsTable,
+          AlternativeBrewingTranslation,
+          $$AlternativeBrewingTranslationsTableFilterComposer,
+          $$AlternativeBrewingTranslationsTableOrderingComposer,
+          $$AlternativeBrewingTranslationsTableAnnotationComposer,
+          $$AlternativeBrewingTranslationsTableCreateCompanionBuilder,
+          $$AlternativeBrewingTranslationsTableUpdateCompanionBuilder,
+          (
+            AlternativeBrewingTranslation,
+            $$AlternativeBrewingTranslationsTableReferences,
+          ),
+          AlternativeBrewingTranslation,
+          PrefetchHooks Function({bool recipeKey})
+        > {
+  $$AlternativeBrewingTranslationsTableTableManager(
+    _$AppDatabase db,
+    $AlternativeBrewingTranslationsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AlternativeBrewingTranslationsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$AlternativeBrewingTranslationsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$AlternativeBrewingTranslationsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> recipeKey = const Value.absent(),
+                Value<String> languageCode = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String?> contentHtml = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AlternativeBrewingTranslationsCompanion(
+                recipeKey: recipeKey,
+                languageCode: languageCode,
+                name: name,
+                description: description,
+                contentHtml: contentHtml,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String recipeKey,
+                required String languageCode,
+                Value<String?> name = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String?> contentHtml = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AlternativeBrewingTranslationsCompanion.insert(
+                recipeKey: recipeKey,
+                languageCode: languageCode,
+                name: name,
+                description: description,
+                contentHtml: contentHtml,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$AlternativeBrewingTranslationsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({recipeKey = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (recipeKey) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.recipeKey,
+                                referencedTable:
+                                    $$AlternativeBrewingTranslationsTableReferences
+                                        ._recipeKeyTable(db),
+                                referencedColumn:
+                                    $$AlternativeBrewingTranslationsTableReferences
+                                        ._recipeKeyTable(db)
+                                        .methodKey,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$AlternativeBrewingTranslationsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $AlternativeBrewingTranslationsTable,
+      AlternativeBrewingTranslation,
+      $$AlternativeBrewingTranslationsTableFilterComposer,
+      $$AlternativeBrewingTranslationsTableOrderingComposer,
+      $$AlternativeBrewingTranslationsTableAnnotationComposer,
+      $$AlternativeBrewingTranslationsTableCreateCompanionBuilder,
+      $$AlternativeBrewingTranslationsTableUpdateCompanionBuilder,
+      (
+        AlternativeBrewingTranslation,
+        $$AlternativeBrewingTranslationsTableReferences,
+      ),
+      AlternativeBrewingTranslation,
+      PrefetchHooks Function({bool recipeKey})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -27911,5 +30203,13 @@ class $AppDatabaseManager {
       $$BrewingRecipeTranslationsV2TableTableManager(
         _db,
         _db.brewingRecipeTranslationsV2,
+      );
+  $$AlternativeBrewingTableTableManager get alternativeBrewing =>
+      $$AlternativeBrewingTableTableManager(_db, _db.alternativeBrewing);
+  $$AlternativeBrewingTranslationsTableTableManager
+  get alternativeBrewingTranslations =>
+      $$AlternativeBrewingTranslationsTableTableManager(
+        _db,
+        _db.alternativeBrewingTranslations,
       );
 }

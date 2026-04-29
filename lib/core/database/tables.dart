@@ -459,4 +459,45 @@ class CustomRecipes extends Table {
       boolean().withDefault(const Constant(false))();
 }
 
+// ─── AlternativeBrewing (Synchronized Methods) ─────────────────────────────
+class AlternativeBrewing extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get methodKey => text().unique()();
+  TextColumn get imageUrl => text().nullable()();
+  RealColumn get ratioGramsPerMl =>
+      real().withDefault(const Constant(0.066))();
+  RealColumn get tempC => real().withDefault(const Constant(93.0))();
+  IntColumn get totalTimeSec => integer().withDefault(const Constant(180))();
+  TextColumn get difficulty =>
+      text().withDefault(const Constant('Intermediate'))();
+  TextColumn get stepsJson => text().withDefault(const Constant('[]'))();
+  TextColumn get flavorProfile =>
+      text().withDefault(const Constant('Balanced'))();
+  TextColumn get iconName => text().nullable()();
+  TextColumn get category => text().withDefault(const Constant('filter'))();
+
+  RealColumn get weight => real().nullable()();
+  RealColumn get coffeeGrams => real().nullable()();
+  BoolColumn get isHiden => boolean().withDefault(const Constant(false))();
+
+  // Sync Status
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+  BoolColumn get isDeletedLocal =>
+      boolean().withDefault(const Constant(false))();
+  DateTimeColumn get updatedAt => dateTime().nullable()();
+}
+
+class AlternativeBrewingTranslations extends Table {
+  TextColumn get recipeKey =>
+      text().references(AlternativeBrewing, #methodKey)();
+  TextColumn get languageCode => text()();
+
+  @override
+  Set<Column> get primaryKey => {recipeKey, languageCode};
+
+  TextColumn get name => text().nullable()();
+  TextColumn get description => text().nullable()();
+  TextColumn get contentHtml => text().nullable()();
+}
+
 // BeanScans removed as per user request

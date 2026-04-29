@@ -33,15 +33,16 @@ part 'app_database.g.dart';
     SpecialtyArticleTranslationsV2,
     LocalizedBeansV2,
     LocalizedBeanTranslationsV2,
-    BrewingRecipesV2,
     BrewingRecipeTranslationsV2,
+    AlternativeBrewing,
+    AlternativeBrewingTranslations,
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? e]) : super(e ?? openConnection());
 
   @override
-  int get schemaVersion => 41;
+  int get schemaVersion => 42;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -141,6 +142,11 @@ class AppDatabase extends _$AppDatabase {
       if (from < 41) {
         // v41: Add difficulty to custom recipes
         await _safeAddColumn(m, customRecipes, customRecipes.difficulty);
+      }
+      if (from < 42) {
+        // v42: Create AlternativeBrewing tables
+        await m.createTable(alternativeBrewing);
+        await m.createTable(alternativeBrewingTranslations);
       }
     },
     beforeOpen: (details) async {
@@ -406,6 +412,59 @@ class AppDatabase extends _$AppDatabase {
         flavorProfile: recipe.flavorProfile,
         iconName: recipe.iconName,
         category: recipe.category,
+      );
+    }).toList();
+  }
+
+  Future<void> smartUpsertAlternativeBrewing(
+    AlternativeBrewingCompanion recipe,
+    List<AlternativeBrewingTranslationsCompanion> translations,
+  ) async {
+    await batch((batch) {
+      batch.insertAllOnConflictUpdate(alternativeBrewing, [recipe]);
+      batch.insertAllOnConflictUpdate(
+        alternativeBrewingTranslations,
+        translations,
+      );
+    });
+  }
+
+  Future<List<AlternativeBrewingDto>> getAllAlternativeBrewing(
+    String lang,
+  ) async {
+    final query = select(alternativeBrewing).join([
+      leftOuterJoin(
+        alternativeBrewingTranslations,
+        alternativeBrewingTranslations.recipeKey.equalsExp(
+              alternativeBrewing.methodKey,
+            ) &
+            alternativeBrewingTranslations.languageCode.equals(lang),
+      ),
+    ]);
+
+    final rows = await query.get();
+    return rows.map((row) {
+      final recipe = row.readTable(alternativeBrewing);
+      final translation = row.readTableOrNull(alternativeBrewingTranslations);
+
+      return AlternativeBrewingDto(
+        id: recipe.id,
+        methodKey: recipe.methodKey,
+        name: translation?.name ?? 'Unknown',
+        description: translation?.description ?? '',
+        contentHtml: translation?.contentHtml ?? '',
+        imageUrl: recipe.imageUrl ?? '',
+        ratioGramsPerMl: recipe.ratioGramsPerMl,
+        tempC: recipe.tempC,
+        totalTimeSec: recipe.totalTimeSec,
+        difficulty: recipe.difficulty,
+        stepsJson: recipe.stepsJson,
+        flavorProfile: recipe.flavorProfile,
+        iconName: recipe.iconName,
+        category: recipe.category,
+        weight: recipe.weight,
+        coffeeGrams: recipe.coffeeGrams,
+        isHiden: recipe.isHiden,
       );
     }).toList();
   }
@@ -1147,8 +1206,33 @@ class AppDatabase extends _$AppDatabase {
 
   // ── Brewing (Static Wide Table) ───────────────────────────────────────────
   /// Reads from V2 table (populated by SyncService V2). English-only for brewing methods.
-  Future<List<BrewingRecipeDto>> getAllBrewingRecipes(String lang) =>
-      getAllBrewingRecipesV2('en');
+  Future<List<BrewingRecipeDto>> getAllBrewingRecipes(String lang) async {
+    final altRecipes = await getAllAlternativeBrewing(lang);
+    if (altRecipes.isNotEmpty) {
+      return altRecipes
+          .map(
+            (e) => BrewingRecipeDto(
+              id: e.id,
+              methodKey: e.methodKey,
+              name: e.name,
+              description: e.description,
+              contentHtml: e.contentHtml,
+              imageUrl: e.imageUrl,
+              ratioGramsPerMl: e.ratioGramsPerMl ?? 0.066,
+              tempC: e.tempC ?? 93.0,
+              totalTimeSec: e.totalTimeSec ?? 180,
+              difficulty: e.difficulty ?? 'Intermediate',
+              stepsJson: e.stepsJson ?? '[]',
+              flavorProfile: e.flavorProfile ?? 'Balanced',
+              iconName: e.iconName,
+              category: e.category,
+              coffeeGrams: e.coffeeGrams,
+            ),
+          )
+          .toList();
+    }
+    return getAllBrewingRecipesV2(lang);
+  }
 
   Future<void> smartUpsertBrewingRecipe(
     BrewingRecipesCompanion recipe,

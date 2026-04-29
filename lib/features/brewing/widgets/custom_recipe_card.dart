@@ -207,11 +207,7 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                   Expanded(
                     child: _StatCell(
                       icon: Icons.balance_rounded,
-                      value:
-                          (widget.recipe.brewRatio != null &&
-                                  widget.recipe.brewRatio! > 0)
-                              ? '1:${widget.recipe.brewRatio!.toStringAsFixed(1)}'
-                              : '—',
+                      value: _getFormattedRatio(),
                       label: widget.ref.t('stat_ratio'),
                       color: const Color(0xFF69F0AE), // Neon Green
                     ),
@@ -220,12 +216,35 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                   Expanded(
                     child: _StatCell(
                       icon: Icons.psychology_outlined,
-                      value:
-                          widget.recipe.difficulty != null
-                              ? widget.ref.t(
-                                'difficulty_${widget.recipe.difficulty}',
-                              )
-                              : '—',
+                      value: '',
+                      customValue: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(5, (index) {
+                              final stars = _getDifficultyStars(widget.recipe.difficulty);
+                              final color = _getDifficultyColor(widget.recipe.difficulty);
+                              return Icon(
+                                index < stars ? Icons.star_rounded : Icons.star_outline_rounded,
+                                size: 9,
+                                color: index < stars ? color : color.withValues(alpha: 0.2),
+                              );
+                            }),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            _getDifficultyText(widget.recipe.difficulty, widget.ref),
+                            style: GoogleFonts.outfit(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w700,
+                              color: _getDifficultyColor(widget.recipe.difficulty),
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
                       label: widget.ref.t('stat_difficulty'),
                       color: _getDifficultyColor(widget.recipe.difficulty),
                     ),
@@ -612,6 +631,40 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
     return widget.recipe.grindNumber.toString();
   }
 
+  String _getFormattedRatio() {
+    // Priority 1: use stored brewRatio
+    if (widget.recipe.brewRatio != null && widget.recipe.brewRatio! > 0) {
+      return '1:${widget.recipe.brewRatio!.toStringAsFixed(1)}';
+    }
+    // Priority 2: calculate from water / coffee
+    final coffee = widget.recipe.coffeeGrams;
+    final water = widget.recipe.totalWaterMl;
+    if (coffee > 0 && water > 0) {
+      final ratio = water / coffee;
+      return '1:${ratio.toStringAsFixed(1)}';
+    }
+    return '—';
+  }
+
+  String _getDifficultyText(String? difficulty, WidgetRef ref) {
+    final d = (difficulty ?? 'intermediate').toLowerCase().trim();
+    switch (d) {
+      case '1': case 'easy': case 'beginner': return ref.t('difficulty_beginner');
+      case '2': case 'medium': case 'intermediate': return ref.t('difficulty_intermediate');
+      case '3': case 'hard': case 'advanced': return ref.t('difficulty_advanced');
+      case '4': case 'expert': return ref.t('difficulty_expert');
+      case '5': case 'master': return ref.t('difficulty_master');
+      default:
+        final n = int.tryParse(d);
+        if (n == 1) return ref.t('difficulty_beginner');
+        if (n == 2) return ref.t('difficulty_intermediate');
+        if (n == 3) return ref.t('difficulty_advanced');
+        if (n == 4) return ref.t('difficulty_expert');
+        if (n == 5) return ref.t('difficulty_master');
+        return ref.t('difficulty_intermediate');
+    }
+  }
+
   String _formatSeconds(int totalSeconds) {
     if (totalSeconds < 0) return '—';
     if (totalSeconds == 0) return '00:00';
@@ -626,17 +679,29 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
   }
 
   Color _getDifficultyColor(String? difficulty) {
-    switch (difficulty?.toLowerCase()) {
-      case 'beginner':
-        return Colors.greenAccent;
-      case 'intermediate':
-        return Colors.amberAccent;
-      case 'advanced':
-        return Colors.orangeAccent;
-      case 'expert':
-        return Colors.redAccent;
+    final d = (difficulty ?? 'intermediate').toLowerCase().trim();
+    switch (d) {
+      case '1': case 'easy': case 'beginner': return const Color(0xFF00FF88);
+      case '2': case 'intermediate': case 'medium': return const Color(0xFFFFEE00);
+      case '3': case 'hard': case 'advanced': return const Color(0xFFFF3333);
+      case '4': case 'expert': return const Color(0xFFFF3366);
+      case '5': case 'master': return const Color(0xFFCC00FF);
+      default: return const Color(0xFFFFEE00);
+    }
+  }
+
+  int _getDifficultyStars(String? difficulty) {
+    final d = (difficulty ?? 'intermediate').toLowerCase().trim();
+    switch (d) {
+      case '1': case 'easy': case 'beginner': return 1;
+      case '2': case 'medium': case 'intermediate': return 2;
+      case '3': case 'hard': case 'advanced': return 3;
+      case '4': case 'expert': return 4;
+      case '5': case 'master': return 5;
       default:
-        return Colors.blueAccent;
+        final n = int.tryParse(d);
+        if (n != null && n >= 1 && n <= 5) return n;
+        return 2;
     }
   }
 }
@@ -676,6 +741,7 @@ class _CircularIndicator extends StatelessWidget {
 class _StatCell extends StatelessWidget {
   final IconData icon;
   final String value;
+  final Widget? customValue;
   final String label;
   final Color? color;
 
@@ -683,6 +749,7 @@ class _StatCell extends StatelessWidget {
     required this.icon,
     required this.value,
     required this.label,
+    this.customValue,
     this.color,
   });
 
@@ -724,7 +791,7 @@ class _StatCell extends StatelessWidget {
         const SizedBox(height: 6),
         FittedBox(
           fit: BoxFit.scaleDown,
-          child: Text(
+          child: customValue ?? Text(
             value,
             style: GoogleFonts.outfit(
               fontSize: 13,

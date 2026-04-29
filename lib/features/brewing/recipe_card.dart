@@ -29,40 +29,43 @@ class RecipeCard extends ConsumerWidget {
   }
 
   String _getDifficultyLabel(WidgetRef ref) {
-    switch ((recipe.difficulty ?? 'Medium').toLowerCase()) {
-      case 'easy':
-      case 'beginner':
-        return ref.t('difficulty_easy');
-      case 'medium':
-      case 'intermediate':
-        return ref.t('difficulty_med');
-      case 'hard':
-        return ref.t('difficulty_hard');
-      case 'advanced':
-        return ref.t('difficulty_advanced');
-      case 'master':
-        return ref.t('difficulty_master');
-      default:
-        return ref.t('difficulty_med');
+    final d = (recipe.difficulty ?? 'intermediate').toLowerCase().trim();
+    // Support numeric 1-5
+    switch (d) {
+      case '1': case 'easy': case 'beginner': return ref.t('difficulty_beginner');
+      case '2': case 'medium': case 'intermediate': return ref.t('difficulty_intermediate');
+      case '3': case 'hard': case 'advanced': return ref.t('difficulty_advanced');
+      case '4': case 'expert': return ref.t('difficulty_expert');
+      case '5': case 'master': return ref.t('difficulty_master');
+      default: return ref.t('difficulty_intermediate');
     }
   }
 
   Color get _difficultyColor {
-    switch ((recipe.difficulty ?? 'Medium').toLowerCase()) {
-      case 'easy':
-      case 'beginner':
-        return const Color(0xFF4CAF50);
-      case 'medium':
-      case 'intermediate':
-        return const Color(0xFFFFC107);
-      case 'hard':
-        return const Color(0xFFF44336);
-      case 'advanced':
-        return const Color(0xFFE91E63);
-      case 'master':
-        return const Color(0xFF9C27B0);
+    final d = (recipe.difficulty ?? 'intermediate').toLowerCase().trim();
+    switch (d) {
+      case '1': case 'beginner': case 'easy': return const Color(0xFF00FF88);
+      case '2': case 'intermediate': case 'medium': return const Color(0xFFFFEE00);
+      case '3': case 'advanced': case 'hard': return const Color(0xFFFF3333);
+      case '4': case 'expert': return const Color(0xFFFF3366);
+      case '5': case 'master': return const Color(0xFFCC00FF);
+      default: return const Color(0xFFFFEE00);
+    }
+  }
+
+  int get _difficultyStars {
+    final d = (recipe.difficulty ?? 'intermediate').toLowerCase().trim();
+    switch (d) {
+      case '1': case 'easy': case 'beginner': return 1;
+      case '2': case 'medium': case 'intermediate': return 2;
+      case '3': case 'hard': case 'advanced': return 3;
+      case '4': case 'expert': return 4;
+      case '5': case 'master': return 5;
       default:
-        return const Color(0xFFFFC107);
+        // Try parsing as int
+        final n = int.tryParse(d);
+        if (n != null && n >= 1 && n <= 5) return n;
+        return 2;
     }
   }
 
@@ -187,6 +190,7 @@ class RecipeCard extends ConsumerWidget {
                   _VerticalDivider(),
                   _DifficultyCell(
                     label: _getDifficultyLabel(ref),
+                    stars: _difficultyStars,
                     color: _difficultyColor,
                     ref: ref,
                   ),
@@ -289,11 +293,13 @@ class _StatCell extends StatelessWidget {
 // ─── Difficulty Cell ──────────────────────────────────────────────────────────
 class _DifficultyCell extends StatelessWidget {
   final String label;
+  final int stars;
   final Color color;
   final WidgetRef ref;
 
   const _DifficultyCell({
     required this.label,
+    required this.stars,
     required this.color,
     required this.ref,
   });
@@ -303,22 +309,21 @@ class _DifficultyCell extends StatelessWidget {
     return Expanded(
       child: Column(
         children: [
-          Container(
-            width: 10,
-            height: 10,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(color: color.withValues(alpha: 0.5), blurRadius: 6),
-              ],
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(5, (index) {
+              return Icon(
+                index < stars ? Icons.star_rounded : Icons.star_outline_rounded,
+                size: 10,
+                color: index < stars ? color : color.withValues(alpha: 0.2),
+              );
+            }),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 2),
           Text(
             label,
             style: GoogleFonts.outfit(
-              fontSize: 11,
+              fontSize: 10,
               fontWeight: FontWeight.w700,
               color: color,
             ),

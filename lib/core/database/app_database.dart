@@ -42,7 +42,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? e]) : super(e ?? openConnection());
 
   @override
-  int get schemaVersion => 43;
+  int get schemaVersion => 47;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -163,6 +163,39 @@ class AppDatabase extends _$AppDatabase {
           alternativeBrewing,
           alternativeBrewing.coffeeGrams,
         );
+      }
+      if (from < 44) {
+        // v44: Add contentHtml to CustomRecipes
+        await _safeAddColumn(m, customRecipes, customRecipes.contentHtml);
+      }
+      if (from < 45) {
+        // v45: Add contentHtml to brewing method translations (raw SQL — TextColumn type mismatch with _safeAddColumn)
+        try {
+          await customStatement(
+            'ALTER TABLE brewing_recipe_translations ADD COLUMN content_html TEXT;',
+          );
+        } catch (_) {}
+        try {
+          await customStatement(
+            'ALTER TABLE brewing_recipe_translations_v2 ADD COLUMN content_html TEXT;',
+          );
+        } catch (_) {}
+      }
+      if (from < 46) {
+        // v46: Add contentHtml to AlternativeBrewingTranslations
+        try {
+          await customStatement(
+            'ALTER TABLE alternative_brewing_translations ADD COLUMN content_html TEXT;',
+          );
+        } catch (_) {}
+      }
+      if (from < 47) {
+        // v47: Add contentHtml to AlternativeBrewing main table
+        try {
+          await customStatement(
+            'ALTER TABLE alternative_brewing ADD COLUMN content_html TEXT;',
+          );
+        } catch (_) {}
       }
     },
     beforeOpen: (details) async {
@@ -428,6 +461,7 @@ class AppDatabase extends _$AppDatabase {
         flavorProfile: recipe.flavorProfile,
         iconName: recipe.iconName,
         category: recipe.category,
+        contentHtml: row.read(brewingRecipeTranslationsV2.contentHtml) ?? '',
       );
     }).toList();
   }
@@ -478,7 +512,9 @@ class AppDatabase extends _$AppDatabase {
         methodKey: recipe.methodKey,
         name: recipe.nameUk?.isNotEmpty == true ? recipe.nameUk! : (translation?.name ?? 'Unknown'),
         description: translation?.description ?? '',
-        contentHtml: translation?.contentHtml ?? '',
+        contentHtml: translation?.contentHtml?.isNotEmpty == true
+            ? translation!.contentHtml!
+            : (row.read(alternativeBrewing.contentHtml) ?? ''),
         imageUrl: recipe.imageUrl ?? '',
         ratioGramsPerMl: recipe.ratioGramsPerMl,
         tempC: recipe.tempC,
@@ -1179,6 +1215,7 @@ class AppDatabase extends _$AppDatabase {
       grinderName: r.grinderName,
       extractionTimeSeconds: r.extractionTimeSeconds,
       difficulty: r.difficulty,
+      contentHtml: r.contentHtml,
     );
   }
 

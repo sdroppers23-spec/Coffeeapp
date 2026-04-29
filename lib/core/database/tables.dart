@@ -365,6 +365,7 @@ class BrewingRecipeTranslations extends Table {
 
   TextColumn get name => text().nullable()();
   TextColumn get description => text().nullable()();
+  TextColumn get contentHtml => text().nullable()();
 
   @override
   Set<Column> get primaryKey => {recipeKey, languageCode};
@@ -394,6 +395,7 @@ class BrewingRecipeTranslationsV2 extends Table {
 
   TextColumn get name => text().nullable()();
   TextColumn get description => text().nullable()();
+  TextColumn get contentHtml => text().nullable()();
 
   @override
   Set<Column> get primaryKey => {recipeKey, languageCode};
@@ -449,6 +451,7 @@ class CustomRecipes extends Table {
 
 
   TextColumn get sensoryJson => text().withDefault(const Constant('{}'))();
+  TextColumn get contentHtml => text().nullable()();
 
   BoolColumn get isFavorite => boolean().withDefault(const Constant(false))();
   BoolColumn get isArchived => boolean().withDefault(const Constant(false))();
@@ -469,12 +472,13 @@ class AlternativeBrewing extends Table {
   RealColumn get tempC => real().withDefault(const Constant(93.0))();
   IntColumn get totalTimeSec => integer().withDefault(const Constant(180))();
   TextColumn get difficulty =>
-      text().withDefault(const Constant('Intermediate'))();
+      text().withDefault(const Constant('2'))();
   TextColumn get stepsJson => text().withDefault(const Constant('[]'))();
   TextColumn get flavorProfile =>
       text().withDefault(const Constant('Balanced'))();
   TextColumn get iconName => text().nullable()();
   TextColumn get category => text().withDefault(const Constant('filter'))();
+  TextColumn get contentHtml => text().nullable()();
 
   RealColumn get weight => real().nullable()();
   RealColumn get coffeeGrams => real().nullable()();

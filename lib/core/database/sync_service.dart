@@ -486,6 +486,9 @@ class SyncService {
                   DateTime.now().toIso8601String(),
               'updated_at': DateTime.now().toIso8601String(),
               'recipe_type': r.recipeType,
+              'extraction_time_seconds': r.extractionTimeSeconds,
+              'difficulty': r.difficulty,
+              'content_html': r.contentHtml,
             });
             await (db.update(db.customRecipes)..where((t) => t.id.equals(r.id)))
                 .write(const CustomRecipesCompanion(isSynced: Value(true)));
@@ -740,6 +743,11 @@ class SyncService {
               ),
               notes: Value(item['notes'] as String? ?? ''),
               rating: Value((item['rating'] as num?)?.toInt() ?? 0),
+              extractionTimeSeconds: Value(
+                (item['extraction_time_seconds'] as num?)?.toInt(),
+              ),
+              difficulty: Value(item['difficulty'] as String?),
+              contentHtml: Value(item['content_html'] as String?),
               updatedAt: Value(DateTime.now()),
               isSynced: const Value(true),
             ),
@@ -886,12 +894,13 @@ class SyncService {
             totalTimeSec: Value(
               (item['total_time_sec'] as num?)?.toInt() ?? 180,
             ),
-            difficulty: Value(item['difficulty'] as String? ?? 'Intermediate'),
+            difficulty: Value(_normalizeDifficulty(item['difficulty'])),
             flavorProfile: Value(
               item['flavor_profile'] as String? ?? 'Balanced',
             ),
             iconName: Value(item['icon_name'] as String?),
             category: Value(item['category'] as String? ?? 'filter'),
+            contentHtml: Value(item['content_html'] as String?),
             weight: Value((item['weight'] as num?)?.toDouble()),
             coffeeGrams: Value((item['coffee_grams'] as num?)?.toDouble()),
             nameUk: Value(item['name_uk'] as String?),
@@ -1938,6 +1947,22 @@ class SyncService {
       _dataUpdateController.add(null);
     } catch (e) {
       // Production silent fail
+    }
+  }
+
+  /// Converts any difficulty representation to canonical numeric string '1'–'5'.
+  String _normalizeDifficulty(dynamic raw) {
+    final s = (raw?.toString() ?? '').toLowerCase().trim();
+    switch (s) {
+      case '1': case 'easy': case 'beginner': return '1';
+      case '2': case 'medium': case 'intermediate': return '2';
+      case '3': case 'hard': case 'advanced': return '3';
+      case '4': case 'expert': return '4';
+      case '5': case 'master': return '5';
+      default:
+        final n = int.tryParse(s);
+        if (n != null && n >= 1 && n <= 5) return n.toString();
+        return '2'; // default to intermediate
     }
   }
 }

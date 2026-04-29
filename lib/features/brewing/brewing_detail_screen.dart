@@ -8,6 +8,7 @@ import '../../shared/widgets/add_recipe_dialog.dart';
 import 'custom_recipe_list.dart';
 import '../../core/database/dtos.dart';
 import '../../core/utils/text_processor.dart';
+import '../../shared/widgets/modals/description_glass_modal.dart';
 
 class BrewingDetailScreen extends ConsumerStatefulWidget {
   final BrewingRecipeDto recipe;
@@ -22,6 +23,31 @@ class BrewingDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
+  void _showFullDescription(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: '',
+      pageBuilder: (context, anim1, anim2) {
+        return DescriptionGlassModal(
+          title: ref.t('about_method'),
+          content: widget.recipe.description,
+          contentHtml: widget.recipe.contentHtml,
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+      transitionBuilder: (context, anim1, anim2, child) {
+        return FadeTransition(
+          opacity: anim1,
+          child: ScaleTransition(
+            scale: Tween<double>(begin: 0.95, end: 1.0).animate(anim1),
+            child: child,
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,36 +86,43 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.transparent,
-                              Colors.black87,
-                            ],
+                            colors: [Colors.transparent, Colors.black87],
                           ),
                         ),
                       ),
                       Positioned(
-                        bottom: 20,
+                        bottom: 25,
                         left: 20,
                         right: 20,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // Golden Tablet Header
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
+                                horizontal: 14,
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFC8A96E),
                                 borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(
+                                      0xFFC8A96E,
+                                    ).withValues(alpha: 0.3),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
                               ),
                               child: Text(
                                 widget.recipe.name,
                                 style: GoogleFonts.outfit(
                                   fontSize: 14,
-                                  fontWeight: FontWeight.w800,
+                                  fontWeight: FontWeight.w900,
                                   color: Colors.black,
-                                  letterSpacing: 0.5,
+                                  letterSpacing: 0.8,
                                 ),
                               ),
                             ),
@@ -119,10 +152,11 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                     onPressed: () async {
                       final result = await showDialog<bool>(
                         context: context,
-                        builder: (context) => AddRecipeDialog(
-                          lotId: '',
-                          initialMethod: widget.recipe.methodKey,
-                        ),
+                        builder:
+                            (context) => AddRecipeDialog(
+                              lotId: '',
+                              initialMethod: widget.recipe.methodKey,
+                            ),
                       );
                       if (result == true) {
                         ref.invalidate(
@@ -146,35 +180,73 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
               ),
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(24),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // About Method Header
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Icon(
-                            Icons.info_outline_rounded,
-                            color: Color(0xFFC8A96E),
-                            size: 20,
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.info_outline_rounded,
+                                color: Color(0xFFC8A96E),
+                                size: 18,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                ref.t('about_method').toUpperCase(),
+                                style: GoogleFonts.outfit(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w900,
+                                  color: const Color(0xFFC8A96E),
+                                  letterSpacing: 1.2,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 8),
-                          Text(
-                            ref.t('about_method').toUpperCase(),
-                            style: GoogleFonts.outfit(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w900,
-                              color: const Color(0xFFC8A96E),
-                              letterSpacing: 1.5,
+                          // Expand Trigger
+                          if (widget.recipe.description.length > 100 ||
+                              (widget.recipe.contentHtml?.isNotEmpty ?? false))
+                            GestureDetector(
+                              onTap: () => _showFullDescription(context),
+                              child: Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.05),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.1),
+                                  ),
+                                ),
+                                child: const Icon(
+                                  Icons.open_in_full_rounded,
+                                  color: Color(0xFFC8A96E),
+                                  size: 14,
+                                ),
+                              ),
                             ),
-                          ),
                         ],
                       ),
                       const SizedBox(height: 16),
-                      if (widget.recipe.contentHtml != null &&
-                          widget.recipe.contentHtml!.isNotEmpty) ...[
+                      // Description Text (Limited to 3 lines)
+                      if (widget.recipe.description.isNotEmpty)
+                        Text(
+                          widget.recipe.description,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.outfit(
+                            fontSize: 15,
+                            color: Colors.white.withValues(alpha: 0.7),
+                            height: 1.6,
+                          ),
+                        )
+                      else if (widget.recipe.contentHtml?.isNotEmpty ?? false)
                         Html(
                           data: CoffeeTextProcessor.process(
-                            widget.recipe.contentHtml!,
+                            widget.recipe.contentHtml ?? '',
                           ),
                           style: {
                             'body': Style(
@@ -182,77 +254,13 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                               padding: HtmlPaddings.zero,
                               fontSize: FontSize(15),
                               lineHeight: const LineHeight(1.6),
-                              color: Colors.white.withValues(alpha: 0.8),
-                              fontFamily: GoogleFonts.outfit().fontFamily,
-                            ),
-                            'strong': Style(
-                              color: const Color(0xFFC8A96E),
-                              fontWeight: FontWeight.w700,
+                              color: Colors.white.withValues(alpha: 0.7),
+                              fontFamily: 'Outfit',
+                              maxLines: 3,
+                              textOverflow: TextOverflow.ellipsis,
                             ),
                           },
                         ),
-                        const SizedBox(height: 24),
-                      ] else if (widget.recipe.description.isNotEmpty) ...[
-                        Text(
-                          widget.recipe.description,
-                          style: GoogleFonts.outfit(
-                            fontSize: 15,
-                            color: Colors.white.withValues(alpha: 0.8),
-                            height: 1.6,
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                      ],
-                      const Divider(color: Colors.white10),
-                      const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildInfoPoint(
-                              ref.t('recommended_roast'),
-                              widget.recipe.methodKey.toLowerCase().contains('espresso')
-                                  ? ref.t('roast_medium_dark')
-                                  : ref.t('roast_light_medium'),
-                              Icons.local_fire_department_rounded,
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: _buildInfoPoint(
-                              ref.t('flavor_profile_label'),
-                              ref.t('profile_balanced'),
-                              Icons.analytics_rounded,
-                            ),
-                          ),
-                        ],
-                      ),
-                      if (widget.recipe.coffeeGrams != null || widget.recipe.weight != null) ...[
-                        const SizedBox(height: 16),
-                        Row(
-                          children: [
-                            if (widget.recipe.coffeeGrams != null)
-                              Expanded(
-                                child: _buildInfoPoint(
-                                  ref.t('coffee_dose'),
-                                  '${widget.recipe.coffeeGrams != null ? (widget.recipe.coffeeGrams! % 1 == 0 ? widget.recipe.coffeeGrams!.toInt() : widget.recipe.coffeeGrams) : 0} ${ref.t('grams')}',
-                                  Icons.scale_rounded,
-                                ),
-                              ),
-                            if (widget.recipe.coffeeGrams != null && widget.recipe.weight != null)
-                              const SizedBox(width: 16),
-                            if (widget.recipe.weight != null)
-                              Expanded(
-                                child: _buildInfoPoint(
-                                  ref.t('total_yield'),
-                                  '${widget.recipe.weight != null ? (widget.recipe.weight! % 1 == 0 ? widget.recipe.weight!.toInt() : widget.recipe.weight) : 0} ${ref.t('grams')}',
-                                  Icons.water_drop_rounded,
-                                ),
-                              ),
-                            if (widget.recipe.weight != null && widget.recipe.coffeeGrams == null)
-                               const Spacer(),
-                          ],
-                        ),
-                      ],
                     ],
                   ),
                 ),
@@ -265,47 +273,6 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildInfoPoint(String label, String value, IconData icon) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(icon, color: const Color(0xFFC8A96E), size: 14),
-            const SizedBox(width: 6),
-            Expanded(
-              child: FittedBox(
-                alignment: Alignment.centerLeft,
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  label.toUpperCase(),
-                  style: GoogleFonts.outfit(
-                    fontSize: 10,
-                    color: const Color(0xFFC8A96E),
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.1,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 6),
-        FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Text(
-            value,
-            style: GoogleFonts.outfit(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ],
     );
   }
 
@@ -324,14 +291,60 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
   }
 }
 
+int _getDifficultyStars(String? difficulty) {
+  final d = (difficulty ?? 'intermediate').toLowerCase().trim();
+  switch (d) {
+    case '1': case 'easy': case 'beginner': return 1;
+    case '2': case 'medium': case 'intermediate': return 2;
+    case '3': case 'hard': case 'advanced': return 3;
+    case '4': case 'expert': return 4;
+    case '5': case 'master': return 5;
+    default:
+      final n = int.tryParse(d);
+      if (n != null && n >= 1 && n <= 5) return n;
+      return 2;
+  }
+}
+
+Color _getDifficultyColor(String? difficulty) {
+  final d = (difficulty ?? 'intermediate').toLowerCase().trim();
+  switch (d) {
+    case '1': case 'easy': case 'beginner': return const Color(0xFF00FF88);
+    case '2': case 'intermediate': case 'medium': return const Color(0xFFFFEE00);
+    case '3': case 'advanced': case 'hard': return const Color(0xFFFF3333);
+    case '4': case 'expert': return const Color(0xFFFF3366);
+    case '5': case 'master': return const Color(0xFFCC00FF);
+    default: return const Color(0xFFFFEE00);
+  }
+}
+
+String _getDifficultyLabel(
+  String? difficulty,
+  String Function(String, {Map<String, String>? args}) t,
+) {
+  final d = (difficulty ?? 'intermediate').toLowerCase().trim();
+  switch (d) {
+    case '1': case 'easy': case 'beginner': return t('difficulty_beginner');
+    case '2': case 'medium': case 'intermediate': return t('difficulty_intermediate');
+    case '3': case 'hard': case 'advanced': return t('difficulty_advanced');
+    case '4': case 'expert': return t('difficulty_expert');
+    case '5': case 'master': return t('difficulty_master');
+    default:
+      final n = int.tryParse(d);
+      if (n == 1) return t('difficulty_beginner');
+      if (n == 2) return t('difficulty_intermediate');
+      if (n == 3) return t('difficulty_advanced');
+      if (n == 4) return t('difficulty_expert');
+      if (n == 5) return t('difficulty_master');
+      return t('difficulty_intermediate');
+  }
+}
+
 class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
   final BrewingRecipeDto recipe;
   final String Function(String, {Map<String, String>? args}) t;
 
-  _StickyHeaderDelegate({
-    required this.recipe,
-    required this.t,
-  });
+  _StickyHeaderDelegate({required this.recipe, required this.t});
 
   String _formattedTime() {
     final s = recipe.totalTimeSec ?? 0;
@@ -339,53 +352,6 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
     final minutes = s ~/ 60;
     final seconds = s % 60;
     return '$minutes:${seconds.toString().padLeft(2, '0')}';
-  }
-
-  String get _formattedRatio {
-    final r = recipe.ratioGramsPerMl ?? 0.0;
-    if (r > 0 && r.isFinite) {
-      final inverse = (1 / r).round();
-      return '1:$inverse';
-    }
-    return '—';
-  }
-
-  String _getDifficultyLabel(String? difficulty) {
-    switch ((difficulty ?? 'Medium').toLowerCase()) {
-      case 'easy':
-      case 'beginner':
-        return t('difficulty_easy');
-      case 'medium':
-      case 'intermediate':
-        return t('difficulty_med');
-      case 'hard':
-        return t('difficulty_hard');
-      case 'advanced':
-        return t('difficulty_advanced');
-      case 'master':
-        return t('difficulty_master');
-      default:
-        return t('difficulty_med');
-    }
-  }
-
-  Color _getDifficultyColor(String? difficulty) {
-    switch ((difficulty ?? 'Medium').toLowerCase()) {
-      case 'easy':
-      case 'beginner':
-        return const Color(0xFF00FF88); // Neon Emerald
-      case 'medium':
-      case 'intermediate':
-        return const Color(0xFFFFEE00); // Neon Yellow
-      case 'hard':
-        return const Color(0xFFFF3366); // Neon Pink/Red
-      case 'advanced':
-        return const Color(0xFFCC00FF); // Neon Purple
-      case 'master':
-        return const Color(0xFF00D1FF); // Neon Sky Blue
-      default:
-        return const Color(0xFFFFEE00);
-    }
   }
 
   @override
@@ -447,7 +413,35 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
                 Expanded(
                   child: _HeaderStat(
                     icon: Icons.bolt_rounded,
-                    value: _getDifficultyLabel(recipe.difficulty),
+                    value: '',
+                    customValue: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(5, (index) {
+                            final stars = _getDifficultyStars(recipe.difficulty);
+                            final color = _getDifficultyColor(recipe.difficulty);
+                            return Icon(
+                              index < stars ? Icons.star_rounded : Icons.star_outline_rounded,
+                              size: 9,
+                              color: index < stars ? color : color.withValues(alpha: 0.2),
+                            );
+                          }),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          _getDifficultyLabel(recipe.difficulty, t),
+                          style: GoogleFonts.outfit(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w700,
+                            color: _getDifficultyColor(recipe.difficulty),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                     label: t('stat_difficulty'),
                     color: _getDifficultyColor(recipe.difficulty),
                   ),
@@ -471,12 +465,14 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
 class _HeaderStat extends StatelessWidget {
   final IconData icon;
   final String value;
+  final Widget? customValue;
   final String label;
   final Color color;
 
   const _HeaderStat({
     required this.icon,
     required this.value,
+    this.customValue,
     required this.label,
     required this.color,
   });
@@ -518,7 +514,7 @@ class _HeaderStat extends StatelessWidget {
         const SizedBox(height: 8),
         FittedBox(
           fit: BoxFit.scaleDown,
-          child: Text(
+          child: customValue ?? Text(
             value,
             style: GoogleFonts.outfit(
               fontSize: 14,

@@ -9,6 +9,7 @@ import 'custom_recipe_list.dart';
 import '../../core/database/dtos.dart';
 import '../../core/utils/text_processor.dart';
 import '../../shared/widgets/modals/description_glass_modal.dart';
+import '../navigation/navigation_providers.dart';
 
 class BrewingDetailScreen extends ConsumerStatefulWidget {
   final BrewingRecipeDto recipe;

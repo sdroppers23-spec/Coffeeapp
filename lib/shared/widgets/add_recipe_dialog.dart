@@ -404,11 +404,11 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF1B1411), // Deep Coffee Brown
-              Color(0xFF0A0908), // Near Black
+              Color(0xFF0A0908), // Near Black (Top)
+              Color(0xFF131110), // Dark Surface (Bottom)
             ],
           ),
         ),
@@ -948,27 +948,32 @@ class _TimeMaskFormatter extends TextInputFormatter {
     // 1. Get only digits
     String digits = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
 
-    if (digits.isEmpty) {
-      return const TextEditingValue(
-        text: '00:00:00',
-        selection: TextSelection.collapsed(offset: 8),
-      );
-    }
-
-    // 2. Limit to 6 digits
+    // 2. Limit to 6 digits (HHMMSS)
     if (digits.length > 6) {
-      digits = digits.substring(digits.length - 6);
+      digits = digits.substring(0, 6);
     }
 
-    // 3. Pad with zeros
-    final String padded = digits.padLeft(6, '0');
+    // 3. Process digits and validate segments (MM <= 59, SS <= 59)
+    String formatted = '';
+    for (int i = 0; i < digits.length; i++) {
+      String digit = digits[i];
 
-    // 4. Format as HH:MM:SS
-    final String h = padded.substring(0, 2);
-    final String m = padded.substring(2, 4);
-    final String s = padded.substring(4, 6);
+      // Minutes first digit (index 2) max 5
+      if (i == 2 && int.parse(digit) > 5) {
+        digit = '5';
+      }
+      // Seconds first digit (index 4) max 5
+      if (i == 4 && int.parse(digit) > 5) {
+        digit = '5';
+      }
 
-    final String formatted = '$h:$m:$s';
+      formatted += digit;
+
+      // Add colons at positions 2 and 4
+      if ((i == 1 || i == 3) && i != digits.length - 1) {
+        formatted += ':';
+      }
+    }
 
     return TextEditingValue(
       text: formatted,

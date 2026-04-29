@@ -53,7 +53,6 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
   final _ratioController = TextEditingController();
   final _extractionTimeController = TextEditingController();
   final _notesController = TextEditingController();
-  final _contentHtmlController = TextEditingController();
   final _grinderNameController = TextEditingController();
   final _customGrinderController = TextEditingController();
   bool _isOtherGrinder = false;
@@ -106,7 +105,6 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
     }
 
     _notesController.text = recipe?.notes ?? '';
-    _contentHtmlController.text = recipe?.contentHtml ?? '';
 
     final initialGrinder = recipe?.grinderName;
     if (initialGrinder == null || initialGrinder.isEmpty) {
@@ -232,7 +230,6 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
     _ratioController.dispose();
     _extractionTimeController.dispose();
     _notesController.dispose();
-    _contentHtmlController.dispose();
     _grinderNameController.dispose();
     _customGrinderController.dispose();
     for (var pc in _pourControllers) {
@@ -333,7 +330,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
         return rawTemp;
       }()),
       notes: Value(_notesController.text.trim()),
-      contentHtml: Value(_contentHtmlController.text.trim()),
+      contentHtml: Value(widget.existingRecipe?.contentHtml),
       rating: Value(_rating),
       createdAt: Value(widget.existingRecipe?.createdAt ?? DateTime.now()),
       updatedAt: Value(DateTime.now()),
@@ -539,16 +536,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                         _buildDifficultySelector(ref),
                         const SizedBox(height: 32),
 
-                        // SECTION: About Method (HTML)
-                        _buildSectionHeader(ref.t('about_method')),
-                        const SizedBox(height: 20),
-                        _buildTextField(
-                          controller: _contentHtmlController,
-                          label: ref.t('about_method'),
-                          hint: 'HTML content supported...',
-                          maxLines: 8,
-                        ),
-                        const SizedBox(height: 32),
+
 
                         // SECTION: Notes
                         _buildSectionHeader(ref.t('notes_hint')),

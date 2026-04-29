@@ -150,12 +150,7 @@ class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
         return Stack(
           children: [
             ListView.separated(
-              padding: EdgeInsets.fromLTRB(
-                16,
-                _isSelectionMode ? 16 : 16,
-                16,
-                120,
-              ),
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 120),
               itemCount: recipes.length,
               separatorBuilder: (_, _) => const SizedBox(height: 16),
               itemBuilder: (context, i) => CustomRecipeCard(

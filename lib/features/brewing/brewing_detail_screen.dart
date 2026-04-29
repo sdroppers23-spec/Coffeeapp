@@ -31,7 +31,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
             end: Alignment.bottomCenter,
             colors: [
               Colors.black,
-              const Color(0xFF0A0A0A),
+              Color(0xFF0A0A0A),
             ],
           ),
         ),

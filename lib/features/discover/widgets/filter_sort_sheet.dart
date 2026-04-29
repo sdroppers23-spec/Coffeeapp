@@ -51,7 +51,7 @@ class _FilterSortSheetState extends ConsumerState<FilterSortSheet> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
       decoration: const BoxDecoration(
-        color: const Color(0xFF121212),
+        color: Color(0xFF121212),
         borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
       ),
       child: SingleChildScrollView(

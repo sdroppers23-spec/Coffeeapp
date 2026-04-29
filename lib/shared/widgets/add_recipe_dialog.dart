@@ -408,7 +408,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             end: Alignment.bottomCenter,
             colors: [
               Colors.black, // Pure Black (Top)
-              const Color(0xFF121212), // Dark Surface (Bottom)
+              Color(0xFF121212), // Dark Surface (Bottom)
             ],
           ),
         ),

@@ -291,6 +291,8 @@ class BrewingRecipeDto {
   final String category; // 'filter' or 'espresso'
   final bool isGuide;
   final double? coffeeGrams;
+  final String? contentHtml;
+  final double? weight;
 
   BrewingRecipeDto({
     required this.id,

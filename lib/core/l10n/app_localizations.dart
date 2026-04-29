@@ -781,8 +781,6 @@ class AppLocalizations {
       'coffee_dose': 'Coffee Dose',
       'total_yield': 'Total Yield',
       'grams': 'g',
-      'flavor_profile_label': 'Flavor Profile',
-      'profile_balanced': 'Balanced',
     },
     'uk': {
       'discover': 'Відкриття',
@@ -1453,8 +1451,6 @@ class AppLocalizations {
       'coffee_dose': 'Дозування кави',
       'total_yield': 'Загальний вихід',
       'grams': 'г',
-      'flavor_profile_label': 'Профіль смаку',
-      'profile_balanced': 'Збалансований',
     },
   };
 }

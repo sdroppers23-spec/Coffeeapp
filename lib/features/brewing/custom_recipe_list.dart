@@ -58,6 +58,21 @@ class CustomRecipeListTab extends ConsumerStatefulWidget {
 class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
   bool _isSelectionMode = false;
   final Set<String> _selectedIds = {};
+  bool _isDisposed = false;
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    // Ensure nav bar is shown when leaving, but only if we were hiding it
+    if (_isSelectionMode) {
+      Future.microtask(() {
+        if (mounted) {
+          ref.read(navBarVisibleProvider.notifier).show();
+        }
+      });
+    }
+    super.dispose();
+  }
 
   void _toggleSelection(String id) {
     setState(() {
@@ -150,7 +165,7 @@ class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
         return Stack(
           children: [
             ListView.separated(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 120),
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 160),
               itemCount: recipes.length,
               separatorBuilder: (_, _) => const SizedBox(height: 16),
               itemBuilder: (context, i) => CustomRecipeCard(

@@ -200,68 +200,63 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                       ),
                       const SizedBox(height: 4),
                       // Description or Content HTML
-                      Stack(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: EdgeInsets.zero,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (widget.recipe.contentHtml?.isNotEmpty ?? false)
-                                  Html(
-                                    data: CoffeeTextProcessor.process(
-                                      widget.recipe.contentHtml ?? '',
-                                    ),
-                                    style: CoffeeTextProcessor.getHtmlStyles(
-                                      baseFontSize: 15,
-                                    )..addAll({
-                                      'body': Style(
-                                        margin: Margins.zero,
-                                        padding: HtmlPaddings.zero,
-                                        fontSize: FontSize(15),
-                                        lineHeight: const LineHeight(1.6),
-                                        color: Colors.white.withValues(alpha: 0.7),
-                                        fontFamily: 'Outfit',
-                                        maxLines: 3,
-                                        textOverflow: TextOverflow.ellipsis,
-                                      ),
-                                    }),
-                                  )
-                                else if (widget.recipe.description.isNotEmpty)
-                                  Text(
-                                    widget.recipe.description,
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.outfit(
-                                      fontSize: 15,
-                                      color: Colors.white.withValues(alpha: 0.7),
-                                      height: 1.6,
-                                    ),
-                                  ),
-                              ],
+                          if (widget.recipe.contentHtml?.isNotEmpty ?? false)
+                            Html(
+                              data: CoffeeTextProcessor.process(
+                                widget.recipe.contentHtml ?? '',
+                              ),
+                              style: CoffeeTextProcessor.getHtmlStyles(
+                                baseFontSize: 15,
+                              )..addAll({
+                                'body': Style(
+                                  margin: Margins.zero,
+                                  padding: HtmlPaddings.zero,
+                                  fontSize: FontSize(15),
+                                  lineHeight: const LineHeight(1.6),
+                                  color: Colors.white.withValues(alpha: 0.7),
+                                  fontFamily: 'Outfit',
+                                  maxLines: 3,
+                                  textOverflow: TextOverflow.ellipsis,
+                                ),
+                              }),
+                            )
+                          else if (widget.recipe.description.isNotEmpty)
+                            Text(
+                              widget.recipe.description,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.outfit(
+                                fontSize: 15,
+                                color: Colors.white.withValues(alpha: 0.7),
+                                height: 1.6,
+                              ),
                             ),
-                          ),
-                          // Expand Trigger - Now at Bottom Right
+                          // Expand Trigger - Now at Bottom Right within flow
                           if (widget.recipe.description.length > 100 ||
                               (widget.recipe.contentHtml?.isNotEmpty ?? false))
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: GestureDetector(
-                                onTap: () => _showFullDescription(context),
-                                child: Container(
-                                  padding: const EdgeInsets.all(6),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withValues(alpha: 0.05),
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(
-                                      color: Colors.white.withValues(alpha: 0.1),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: Align(
+                                alignment: Alignment.centerRight,
+                                child: GestureDetector(
+                                  onTap: () => _showFullDescription(context),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withValues(alpha: 0.05),
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: Colors.white.withValues(alpha: 0.1),
+                                      ),
                                     ),
-                                  ),
-                                  child: const Icon(
-                                    Icons.open_in_full_rounded,
-                                    color: Color(0xFFC8A96E),
-                                    size: 14,
+                                    child: const Icon(
+                                      Icons.open_in_full_rounded,
+                                      color: Color(0xFFC8A96E),
+                                      size: 14,
+                                    ),
                                   ),
                                 ),
                               ),

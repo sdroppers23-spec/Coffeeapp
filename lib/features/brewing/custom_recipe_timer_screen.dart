@@ -118,7 +118,7 @@ class _CustomRecipeTimerScreenState
             );
     }
 
-    String text = '$label: $ml ml';
+    String text = '$label: ${ml ?? 0} ml';
     if (notes != null && notes.isNotEmpty && notes != 'Extraction') {
       text += ' - $notes';
     }
@@ -368,7 +368,7 @@ class _CustomRecipeTimerScreenState
                         ),
                       ),
                       Text(
-                        '+$ml ml',
+                        '+${ml ?? 0} ml',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,

@@ -127,7 +127,7 @@ class MyLotGridCard extends ConsumerWidget {
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF1A1714),
+                              color: const Color(0xFF121212),
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
                                 color: const Color(

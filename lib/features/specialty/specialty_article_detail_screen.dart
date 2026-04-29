@@ -116,7 +116,7 @@ class _SpecialtyArticleDetailScreenState
                                 Colors.black45,
                                 Colors.transparent,
                                 Colors.transparent,
-                                Color(0xFF0A0908), // Match BG exactly
+                                Colors.black, // Match BG exactly
                               ],
                               stops: [0.0, 0.2, 0.5, 1.0], // Deeper bottom fade
                             ),

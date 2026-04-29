@@ -97,7 +97,7 @@ class _CustomLotDetailScreenState extends ConsumerState<CustomLotDetailScreen>
                     height: 320,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1A1714),
+                      color: Colors.black,
                       image: lot.imageUrl != null && lot.imageUrl!.isNotEmpty
                           ? (lot.imageUrl!.startsWith('http')
                                 ? DecorationImage(

@@ -74,7 +74,7 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
           end: Alignment.bottomRight,
           colors: [
             const Color(0xFF121212).withValues(alpha: 0.1),
-            const Color(0xFF0A0908).withValues(alpha: 0.2),
+            Colors.black.withValues(alpha: 0.2),
           ],
         ),
         borderColor: widget.isSelected

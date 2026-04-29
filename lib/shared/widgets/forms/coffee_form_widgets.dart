@@ -299,7 +299,7 @@ class CoffeeDropdownRow<T> extends StatelessWidget {
               child: DropdownButton<T>(
                 value: value,
                 isExpanded: true,
-                dropdownColor: const Color(0xFF1A1714),
+                dropdownColor: const Color(0xFF121212),
                 icon: const Icon(
                   Icons.keyboard_arrow_down_rounded,
                   color: Color(0xFFC8A96E),

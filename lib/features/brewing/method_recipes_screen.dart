@@ -36,7 +36,7 @@ class _MethodRecipesScreenState extends ConsumerState<MethodRecipesScreen> {
   @override
   Widget build(BuildContext context) {
     const gold = Color(0xFFC8A96E);
-    const bg = Color(0xFF0A0908);
+    const bg = Colors.black;
 
     return PopScope(
       onPopInvokedWithResult: (didPop, result) {

@@ -101,7 +101,7 @@ extension _CoffeeTabSection on _AddLotScreenState {
                   child: DropdownButton<bool>(
                     value: _isGround,
                     isExpanded: true,
-                    dropdownColor: const Color(0xFF1A1714),
+                    dropdownColor: const Color(0xFF121212),
                     icon: const Icon(
                       Icons.keyboard_arrow_down_rounded,
                       color: Color(0xFFC8A96E),
@@ -164,7 +164,7 @@ extension _CoffeeTabSection on _AddLotScreenState {
                           ? _roastLevel
                           : _roastLevels[2],
                       isExpanded: true,
-                      dropdownColor: const Color(0xFF1A1714),
+                      dropdownColor: const Color(0xFF121212),
                       icon: const Icon(
                         Icons.keyboard_arrow_down_rounded,
                         color: Color(0xFFC8A96E),
@@ -210,7 +210,7 @@ extension _CoffeeTabSection on _AddLotScreenState {
       child: Container(
         height: 180,
         decoration: BoxDecoration(
-          color: const Color(0xFF1A1714),
+          color: const Color(0xFF121212),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: const Color(0xFFC8A96E).withValues(alpha: 0.2),

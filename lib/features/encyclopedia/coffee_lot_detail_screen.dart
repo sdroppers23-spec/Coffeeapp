@@ -133,7 +133,7 @@ class _CoffeeLotDetailScreenState extends ConsumerState<CoffeeLotDetailScreen>
                     height: 320,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1A1714),
+                      color: Colors.black,
                       image: entry.imageUrl.isNotEmpty
                           ? DecorationImage(
                               image: NetworkImage(entry.imageUrl),

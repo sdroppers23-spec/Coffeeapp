@@ -476,7 +476,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         }
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFF0A0908),
+        backgroundColor: Colors.black,
         body: SafeArea(
           child: Column(
             children: [
@@ -581,7 +581,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       child: TabBar(
         controller: _tabController,
         indicator: BoxDecoration(
-          color: const Color(0xFF1A1714),
+          color: const Color(0xFF121212),
           borderRadius: BorderRadius.circular(50),
           border: Border.all(
             color: const Color(0xFFC8A96E).withValues(alpha: 0.4),
@@ -619,8 +619,8 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           height: 54,
           decoration: BoxDecoration(
             color: _canSave
-                ? const Color(0xFF1A1714)
-                : const Color(0xFF1A1714).withValues(alpha: 0.5),
+                ? const Color(0xFF121212)
+                : const Color(0xFF121212).withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(27),
             border: Border.all(
               color: _canSave

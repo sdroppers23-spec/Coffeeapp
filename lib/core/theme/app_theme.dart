@@ -24,7 +24,7 @@ final themeProvider = NotifierProvider<ThemeNotifier, ThemeMode>(() {
 
 class AppTheme {
   // ── Palette: Dark Roast ──────────────────────────────────────────────────
-  static const Color darkBg = Color(0xFF0A0908);
+  static const Color darkBg = Color(0xFF000000);
   static const Color darkSurface = Color(0xFF121212);
   static const Color darkPrimary = Color(0xFFD7CCC8); // Milk Foam
   static const Color darkAccent = Color(0xFFC6AC8F); // Crema Gold
@@ -83,6 +83,7 @@ class AppTheme {
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent, // Disable M3 tint
+        scrolledUnderElevation: 0, // Prevent tint on scroll
         elevation: 0,
         centerTitle: true,
         iconTheme: const IconThemeData(color: accent),

@@ -44,7 +44,7 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
   @override
   Widget build(BuildContext context) {
     const gold = Color(0xFFC8A96E);
-    const bg = Color(0xFF0A0908);
+    const bg = Colors.black;
 
     // Build unified Bio from description + story
     final bio = _buildBio(widget.farmer.description, widget.farmer.story);
@@ -116,7 +116,7 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                                 Colors.black45,
                                 Colors.transparent,
                                 Colors.transparent,
-                                Color(0xFF0A0908), // Match BG
+                                Colors.black, // Match BG
                               ],
                               stops: [
                                 0.0,

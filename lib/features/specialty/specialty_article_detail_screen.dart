@@ -53,7 +53,7 @@ class _SpecialtyArticleDetailScreenState
     final content = widget.article.contentHtml;
     final imageUrl = widget.article.effectiveImageUrl;
     const gold = Color(0xFFC8A96E);
-    const bg = Color(0xFF0A0908);
+    const bg = Colors.black;
 
     return PopScope(
       canPop: false,
@@ -102,7 +102,7 @@ class _SpecialtyArticleDetailScreenState
                               gradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
-                                colors: [Color(0xFF1A1208), Color(0xFF0D0D0D)],
+                                colors: [Colors.black, Color(0xFF0D0D0D)],
                               ),
                             ),
                           ),
@@ -314,7 +314,7 @@ class _SpecialtyArticleDetailScreenState
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF1A1208), Color(0xFF0D0D0D)],
+            colors: [Colors.black, Color(0xFF0D0D0D)],
           ),
         ),
       ),

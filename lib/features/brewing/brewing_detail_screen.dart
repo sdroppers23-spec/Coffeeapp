@@ -30,8 +30,8 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF1A1412),
-              Color(0xFF0A0A0A),
+              Colors.black,
+              const Color(0xFF0A0A0A),
             ],
           ),
         ),
@@ -43,7 +43,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                 expandedHeight: 280,
                 pinned: true,
                 stretch: true,
-                backgroundColor: const Color(0xFF1A1412),
+                backgroundColor: Colors.black,
                 flexibleSpace: FlexibleSpaceBar(
                   stretchModes: const [
                     StretchMode.zoomBackground,
@@ -270,13 +270,13 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
 
   Widget _buildHeroImage(String url) {
     if (url.isEmpty) {
-      return Container(color: const Color(0xFF1A1412));
+      return Container(color: Colors.black);
     }
     return Image.network(
       url,
       fit: BoxFit.cover,
       errorBuilder: (context, error, stackTrace) => Container(
-        color: const Color(0xFF1A1412),
+        color: Colors.black,
         child: const Icon(Icons.coffee_rounded, color: Colors.white24, size: 64),
       ),
     );

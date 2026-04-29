@@ -515,7 +515,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard>
                           child: Container(
                             padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF1A1714),
+                              color: const Color(0xFF121212),
                               shape: BoxShape.circle,
                               border: Border.all(
                                 color: const Color(

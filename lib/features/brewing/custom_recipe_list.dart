@@ -187,7 +187,7 @@ class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
                 right: 20,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1D1B1A),
+                    color: const Color(0xFF121212),
                     borderRadius: BorderRadius.circular(30),
                     border: Border.all(
                       color: Colors.white.withValues(alpha: 0.1),
@@ -598,7 +598,7 @@ class _GlobalCustomRecipeListState
                       right: 20,
                       child: Container(
                         decoration: BoxDecoration(
-                          color: const Color(0xFF1D1B1A),
+                          color: const Color(0xFF121212),
                           borderRadius: BorderRadius.circular(30),
                           border: Border.all(
                             color: Colors.white.withValues(alpha: 0.1),

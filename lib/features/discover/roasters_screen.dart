@@ -432,7 +432,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                                           vertical: 16,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFFB8955A),
+                                          color: const Color(0xFFC8A96E),
                                           borderRadius: BorderRadius.circular(
                                             50,
                                           ),

@@ -102,7 +102,7 @@ extension _RecipeGrinderSection on _AddRecipeDialogState {
             ref.t('select_from_list'),
             style: GoogleFonts.outfit(color: Colors.white24, fontSize: 14),
           ),
-          dropdownColor: const Color(0xFF1D1B1A),
+          dropdownColor: const Color(0xFF121212),
           style: GoogleFonts.outfit(color: Colors.white),
           decoration: InputDecoration(
             filled: true,

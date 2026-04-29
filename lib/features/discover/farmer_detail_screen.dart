@@ -102,7 +102,7 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                               gradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
-                                colors: [Color(0xFF1A1208), Color(0xFF120D08)],
+                                colors: [Colors.black, Colors.black],
                               ),
                             ),
                           ),

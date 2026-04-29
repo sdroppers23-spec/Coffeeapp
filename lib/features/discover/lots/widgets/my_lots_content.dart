@@ -594,7 +594,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
         decoration: BoxDecoration(
-          color: const Color(0xFFB8955A),
+          color: const Color(0xFFC8A96E),
           borderRadius: BorderRadius.circular(50),
           boxShadow: [
             BoxShadow(
@@ -629,7 +629,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF1D1B1A),
+        color: const Color(0xFF121212),
         borderRadius: BorderRadius.circular(30),
         border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
         boxShadow: [

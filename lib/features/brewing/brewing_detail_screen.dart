@@ -84,23 +84,13 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
-                                widget.recipe.methodKey.toUpperCase(),
+                                widget.recipe.name,
                                 style: GoogleFonts.outfit(
-                                  fontSize: 12,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w800,
                                   color: Colors.black,
-                                  letterSpacing: 1.2,
+                                  letterSpacing: 0.5,
                                 ),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              widget.recipe.name,
-                              style: GoogleFonts.outfit(
-                                fontSize: 32,
-                                fontWeight: FontWeight.w900,
-                                color: Colors.white,
-                                letterSpacing: -0.5,
                               ),
                             ),
                           ],
@@ -244,7 +234,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                               Expanded(
                                 child: _buildInfoPoint(
                                   ref.t('coffee_dose'),
-                                  '${widget.recipe.coffeeGrams} ${ref.t('grams')}',
+                                  '${widget.recipe.coffeeGrams != null ? (widget.recipe.coffeeGrams! % 1 == 0 ? widget.recipe.coffeeGrams!.toInt() : widget.recipe.coffeeGrams) : 0} ${ref.t('grams')}',
                                   Icons.scale_rounded,
                                 ),
                               ),
@@ -254,7 +244,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                               Expanded(
                                 child: _buildInfoPoint(
                                   ref.t('total_yield'),
-                                  '${widget.recipe.weight} ${ref.t('grams')}',
+                                  '${widget.recipe.weight != null ? (widget.recipe.weight! % 1 == 0 ? widget.recipe.weight!.toInt() : widget.recipe.weight) : 0} ${ref.t('grams')}',
                                   Icons.water_drop_rounded,
                                 ),
                               ),
@@ -441,16 +431,16 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
                 Expanded(
                   child: _HeaderStat(
                     icon: Icons.coffee_rounded,
-                    value: '${recipe.coffeeGrams?.toInt() ?? 0}g',
+                    value: '${recipe.coffeeGrams != null ? (recipe.coffeeGrams! % 1 == 0 ? recipe.coffeeGrams!.toInt() : recipe.coffeeGrams) : 0}${t('grams')}',
                     label: t('stat_coffee'),
                     color: const Color(0xFFFFD740), // Neon Amber
                   ),
                 ),
                 Expanded(
                   child: _HeaderStat(
-                    icon: Icons.balance_rounded,
-                    value: _formattedRatio,
-                    label: t('stat_ratio'),
+                    icon: Icons.water_drop_rounded,
+                    value: '${recipe.weight != null ? (recipe.weight! % 1 == 0 ? recipe.weight!.toInt() : recipe.weight) : 0}${t('grams')}',
+                    label: t('stat_yield'),
                     color: const Color(0xFF69F0AE), // Neon Green
                   ),
                 ),
@@ -458,7 +448,7 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
                   child: _HeaderStat(
                     icon: Icons.bolt_rounded,
                     value: _getDifficultyLabel(recipe.difficulty),
-                    label: t('difficulty_label'),
+                    label: t('stat_difficulty'),
                     color: _getDifficultyColor(recipe.difficulty),
                   ),
                 ),

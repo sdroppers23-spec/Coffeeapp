@@ -440,7 +440,10 @@ class AppDatabase extends _$AppDatabase {
             ) &
             alternativeBrewingTranslations.languageCode.equals(lang),
       ),
-    ]);
+    ])..where(
+      alternativeBrewing.isHiden.equals(false) &
+          alternativeBrewing.isDeletedLocal.equals(false),
+    );
 
     final rows = await query.get();
     return rows.map((row) {
@@ -1227,6 +1230,7 @@ class AppDatabase extends _$AppDatabase {
               iconName: e.iconName,
               category: e.category,
               coffeeGrams: e.coffeeGrams,
+              weight: e.weight,
             ),
           )
           .toList();

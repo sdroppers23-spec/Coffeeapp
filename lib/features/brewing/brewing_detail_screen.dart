@@ -236,6 +236,33 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                           ),
                         ],
                       ),
+                      if (widget.recipe.coffeeGrams != null || widget.recipe.weight != null) ...[
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            if (widget.recipe.coffeeGrams != null)
+                              Expanded(
+                                child: _buildInfoPoint(
+                                  ref.t('coffee_dose'),
+                                  '${widget.recipe.coffeeGrams} ${ref.t('grams')}',
+                                  Icons.scale_rounded,
+                                ),
+                              ),
+                            if (widget.recipe.coffeeGrams != null && widget.recipe.weight != null)
+                              const SizedBox(width: 16),
+                            if (widget.recipe.weight != null)
+                              Expanded(
+                                child: _buildInfoPoint(
+                                  ref.t('total_yield'),
+                                  '${widget.recipe.weight} ${ref.t('grams')}',
+                                  Icons.water_drop_rounded,
+                                ),
+                              ),
+                            if (widget.recipe.weight != null && widget.recipe.coffeeGrams == null)
+                               const Spacer(),
+                          ],
+                        ),
+                      ],
                     ],
                   ),
                 ),

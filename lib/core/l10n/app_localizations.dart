@@ -778,6 +778,11 @@ class AppLocalizations {
       'auth_required_desc': 'To add this lot to your profile, please sign in.',
       'error_image_too_large': 'Image is too large (max. 5MB)',
       'decaf': 'DECAF',
+      'coffee_dose': 'Coffee Dose',
+      'total_yield': 'Total Yield',
+      'grams': 'g',
+      'flavor_profile_label': 'Flavor Profile',
+      'profile_balanced': 'Balanced',
     },
     'uk': {
       'discover': 'Відкриття',
@@ -1445,6 +1450,11 @@ class AppLocalizations {
       'error_image_too_large': 'Зображення занадто велике (макс. 5МБ)',
       'decaf': 'ДЕКАФ',
       'log_in_now': 'Увійти зараз',
+      'coffee_dose': 'Дозування кави',
+      'total_yield': 'Загальний вихід',
+      'grams': 'г',
+      'flavor_profile_label': 'Профіль смаку',
+      'profile_balanced': 'Збалансований',
     },
   };
 }

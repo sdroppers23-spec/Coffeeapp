@@ -309,6 +309,7 @@ class BrewingRecipeDto {
     this.isGuide = false,
     this.coffeeGrams,
     this.contentHtml,
+    this.weight,
   });
 
   BrewingRecipeDto copyWith({
@@ -328,6 +329,7 @@ class BrewingRecipeDto {
     bool? isGuide,
     double? coffeeGrams,
     String? contentHtml,
+    double? weight,
   }) {
     return BrewingRecipeDto(
       id: id ?? this.id,
@@ -346,6 +348,7 @@ class BrewingRecipeDto {
       isGuide: isGuide ?? this.isGuide,
       coffeeGrams: coffeeGrams ?? this.coffeeGrams,
       contentHtml: contentHtml ?? this.contentHtml,
+      weight: weight ?? this.weight,
     );
   }
 }

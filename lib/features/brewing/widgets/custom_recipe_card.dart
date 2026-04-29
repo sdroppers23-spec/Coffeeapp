@@ -220,28 +220,41 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                       customValue: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(5, (index) {
-                              final stars = _getDifficultyStars(widget.recipe.difficulty);
-                              final color = _getDifficultyColor(widget.recipe.difficulty);
-                              return Icon(
-                                index < stars ? Icons.star_rounded : Icons.star_outline_rounded,
-                                size: 9,
-                                color: index < stars ? color : color.withValues(alpha: 0.2),
-                              );
-                            }),
-                          ),
-                          const SizedBox(height: 2),
                           Text(
-                            _getDifficultyText(widget.recipe.difficulty, widget.ref),
+                            _getDifficultyText(
+                              widget.recipe.difficulty,
+                              widget.ref,
+                            ),
                             style: GoogleFonts.outfit(
                               fontSize: 9,
                               fontWeight: FontWeight.w700,
-                              color: _getDifficultyColor(widget.recipe.difficulty),
+                              color: _getDifficultyColor(
+                                widget.recipe.difficulty,
+                              ),
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 2),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(5, (index) {
+                              final stars = _getDifficultyStars(
+                                widget.recipe.difficulty,
+                              );
+                              final color = _getDifficultyColor(
+                                widget.recipe.difficulty,
+                              );
+                              return Icon(
+                                index < stars
+                                    ? Icons.star_rounded
+                                    : Icons.star_outline_rounded,
+                                size: 9,
+                                color: index < stars
+                                    ? color
+                                    : color.withValues(alpha: 0.2),
+                              );
+                            }),
                           ),
                         ],
                       ),
@@ -267,7 +280,7 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                                            child: Row(
+                      child: Row(
                         children: pours.asMap().entries.map<Widget>((entry) {
                           final index = entry.key;
                           final pour = entry.value;
@@ -275,7 +288,7 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                           final ml = pour['water'];
                           final min = pour['min'] ?? 0;
                           final sec = pour['sec'] ?? 0;
-                          
+
                           return Container(
                             margin: const EdgeInsets.only(right: 10),
                             padding: const EdgeInsets.symmetric(
@@ -292,17 +305,17 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                  Text(
-                                    widget.ref.t(
-                                      'pour_number',
-                                      args: {'n': n.toString()},
-                                    ),
-                                    style: GoogleFonts.outfit(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13,
-                                      color: const Color(0xFFEBCB8B),
-                                    ),
+                                Text(
+                                  widget.ref.t(
+                                    'pour_number',
+                                    args: {'n': n.toString()},
                                   ),
+                                  style: GoogleFonts.outfit(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                    color: const Color(0xFFEBCB8B),
+                                  ),
+                                ),
                                 const SizedBox(height: 2),
                                 if (ml != null)
                                   Text(
@@ -316,7 +329,10 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                                 Text(
                                   widget.ref.t(
                                     'at_min',
-                                    args: {'min': '$min:${sec.toString().padLeft(2, '0')}'},
+                                    args: {
+                                      'min':
+                                          '$min:${sec.toString().padLeft(2, '0')}',
+                                    },
                                   ),
                                   style: const TextStyle(
                                     fontSize: 11,
@@ -649,11 +665,24 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
   String _getDifficultyText(String? difficulty, WidgetRef ref) {
     final d = (difficulty ?? 'intermediate').toLowerCase().trim();
     switch (d) {
-      case '1': case 'easy': case 'beginner': return ref.t('difficulty_beginner');
-      case '2': case 'medium': case 'intermediate': return ref.t('difficulty_intermediate');
-      case '3': case 'hard': case 'advanced': return ref.t('difficulty_advanced');
-      case '4': case 'expert': return ref.t('difficulty_expert');
-      case '5': case 'master': return ref.t('difficulty_master');
+      case '1':
+      case 'easy':
+      case 'beginner':
+        return ref.t('difficulty_beginner');
+      case '2':
+      case 'medium':
+      case 'intermediate':
+        return ref.t('difficulty_intermediate');
+      case '3':
+      case 'hard':
+      case 'advanced':
+        return ref.t('difficulty_advanced');
+      case '4':
+      case 'expert':
+        return ref.t('difficulty_expert');
+      case '5':
+      case 'master':
+        return ref.t('difficulty_master');
       default:
         final n = int.tryParse(d);
         if (n == 1) return ref.t('difficulty_beginner');
@@ -681,23 +710,50 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
   Color _getDifficultyColor(String? difficulty) {
     final d = (difficulty ?? 'intermediate').toLowerCase().trim();
     switch (d) {
-      case '1': case 'easy': case 'beginner': return const Color(0xFF00FF88);
-      case '2': case 'intermediate': case 'medium': return const Color(0xFFFFEE00);
-      case '3': case 'hard': case 'advanced': return const Color(0xFFFF3333);
-      case '4': case 'expert': return const Color(0xFFFF3366);
-      case '5': case 'master': return const Color(0xFFCC00FF);
-      default: return const Color(0xFFFFEE00);
+      case '1':
+      case 'easy':
+      case 'beginner':
+        return const Color(0xFF00FF88);
+      case '2':
+      case 'intermediate':
+      case 'medium':
+        return const Color(0xFFFFEE00);
+      case '3':
+      case 'hard':
+      case 'advanced':
+        return const Color(0xFFFF3333);
+      case '4':
+      case 'expert':
+        return const Color(0xFFFF3366);
+      case '5':
+      case 'master':
+        return const Color(0xFFCC00FF);
+      default:
+        return const Color(0xFFFFEE00);
     }
   }
 
   int _getDifficultyStars(String? difficulty) {
     final d = (difficulty ?? 'intermediate').toLowerCase().trim();
     switch (d) {
-      case '1': case 'easy': case 'beginner': return 1;
-      case '2': case 'medium': case 'intermediate': return 2;
-      case '3': case 'hard': case 'advanced': return 3;
-      case '4': case 'expert': return 4;
-      case '5': case 'master': return 5;
+      case '1':
+      case 'easy':
+      case 'beginner':
+        return 1;
+      case '2':
+      case 'medium':
+      case 'intermediate':
+        return 2;
+      case '3':
+      case 'hard':
+      case 'advanced':
+        return 3;
+      case '4':
+      case 'expert':
+        return 4;
+      case '5':
+      case 'master':
+        return 5;
       default:
         final n = int.tryParse(d);
         if (n != null && n >= 1 && n <= 5) return n;
@@ -764,10 +820,7 @@ class _StatCell extends StatelessWidget {
           decoration: BoxDecoration(
             color: c.withValues(alpha: 0.03),
             shape: BoxShape.circle,
-            border: Border.all(
-              color: c.withValues(alpha: 0.1),
-              width: 0.8,
-            ),
+            border: Border.all(color: c.withValues(alpha: 0.1), width: 0.8),
             boxShadow: [
               BoxShadow(
                 color: c.withValues(alpha: 0.02),
@@ -780,32 +833,26 @@ class _StatCell extends StatelessWidget {
             icon,
             size: 12,
             color: c,
-            shadows: [
-              Shadow(
-                color: c.withValues(alpha: 0.3),
-                blurRadius: 4,
-              ),
-            ],
+            shadows: [Shadow(color: c.withValues(alpha: 0.3), blurRadius: 4)],
           ),
         ),
         const SizedBox(height: 6),
         FittedBox(
           fit: BoxFit.scaleDown,
-          child: customValue ?? Text(
-            value,
-            style: GoogleFonts.outfit(
-              fontSize: 13,
-              fontWeight: FontWeight.w800,
-              color: c,
-              shadows: [
-                Shadow(
-                  color: c.withValues(alpha: 0.3),
-                  blurRadius: 4,
+          child:
+              customValue ??
+              Text(
+                value,
+                style: GoogleFonts.outfit(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w800,
+                  color: c,
+                  shadows: [
+                    Shadow(color: c.withValues(alpha: 0.3), blurRadius: 4),
+                  ],
                 ),
-              ],
-            ),
-            maxLines: 1,
-          ),
+                maxLines: 1,
+              ),
         ),
         const SizedBox(height: 2),
         FittedBox(

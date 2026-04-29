@@ -195,9 +195,10 @@ class _BrewingMethodsContent extends ConsumerWidget {
                       methodKey: cr.methodKey,
                       name: cr.name,
                       description: cr.notes,
+                      contentHtml: cr.contentHtml,
                       imageUrl: '',
                       category: cr.recipeType,
-                      difficulty: 'Medium',
+                      difficulty: cr.difficulty ?? 'Intermediate',
                       totalTimeSec: cr.extractionTimeSeconds,
                       tempC: cr.brewTempC,
                       ratioGramsPerMl: cr.brewRatio,
@@ -210,18 +211,19 @@ class _BrewingMethodsContent extends ConsumerWidget {
               return grouped;
             }
 
-            final allGrouped = groupByMethod(
-              guideRecipes,
-              customRecipes,
-            );
+            final allGrouped = groupByMethod(guideRecipes, customRecipes);
 
             // Convert to list of method groups
             final allMethods = allGrouped.values.toList();
 
             // Sort by sortOrder of the guide recipe in each group
             allMethods.sort((a, b) {
-              final sortA = a.firstWhere((r) => r.isGuide, orElse: () => a.first).sortOrder;
-              final sortB = b.firstWhere((r) => r.isGuide, orElse: () => b.first).sortOrder;
+              final sortA = a
+                  .firstWhere((r) => r.isGuide, orElse: () => a.first)
+                  .sortOrder;
+              final sortB = b
+                  .firstWhere((r) => r.isGuide, orElse: () => b.first)
+                  .sortOrder;
               return sortA.compareTo(sortB);
             });
 
@@ -241,11 +243,11 @@ class _BrewingMethodsContent extends ConsumerWidget {
                         ),
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 16,
-                          crossAxisSpacing: 16,
-                          childAspectRatio: 0.85,
-                        ),
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 16,
+                              crossAxisSpacing: 16,
+                              childAspectRatio: 0.85,
+                            ),
                       ),
                     )
                   else

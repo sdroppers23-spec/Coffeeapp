@@ -53,6 +53,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
   final _ratioController = TextEditingController();
   final _extractionTimeController = TextEditingController();
   final _notesController = TextEditingController();
+  final _contentHtmlController = TextEditingController();
   final _grinderNameController = TextEditingController();
   final _customGrinderController = TextEditingController();
   bool _isOtherGrinder = false;
@@ -105,6 +106,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
     }
 
     _notesController.text = recipe?.notes ?? '';
+    _contentHtmlController.text = recipe?.contentHtml ?? '';
 
     final initialGrinder = recipe?.grinderName;
     if (initialGrinder == null || initialGrinder.isEmpty) {
@@ -230,6 +232,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
     _ratioController.dispose();
     _extractionTimeController.dispose();
     _notesController.dispose();
+    _contentHtmlController.dispose();
     _grinderNameController.dispose();
     _customGrinderController.dispose();
     for (var pc in _pourControllers) {
@@ -329,7 +332,8 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
         }
         return rawTemp;
       }()),
-      notes: Value(_notesController.text),
+      notes: Value(_notesController.text.trim()),
+      contentHtml: Value(_contentHtmlController.text.trim()),
       rating: Value(_rating),
       createdAt: Value(widget.existingRecipe?.createdAt ?? DateTime.now()),
       updatedAt: Value(DateTime.now()),
@@ -535,6 +539,17 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                         _buildDifficultySelector(ref),
                         const SizedBox(height: 32),
 
+                        // SECTION: About Method (HTML)
+                        _buildSectionHeader(ref.t('about_method')),
+                        const SizedBox(height: 20),
+                        _buildTextField(
+                          controller: _contentHtmlController,
+                          label: ref.t('about_method'),
+                          hint: 'HTML content supported...',
+                          maxLines: 8,
+                        ),
+                        const SizedBox(height: 32),
+
                         // SECTION: Notes
                         _buildSectionHeader(ref.t('notes_hint')),
                         const SizedBox(height: 20),
@@ -631,87 +646,82 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
 
   Widget _buildDifficultySelector(WidgetRef ref) {
     final options = [
-      {
-        'key': 'beginner',
-        'icon': Icons.sentiment_satisfied,
-        'color': Colors.greenAccent,
-      },
-      {
-        'key': 'intermediate',
-        'icon': Icons.sentiment_neutral,
-        'color': Colors.amberAccent,
-      },
-      {
-        'key': 'advanced',
-        'icon': Icons.sentiment_dissatisfied,
-        'color': Colors.orangeAccent,
-      },
-      {
-        'key': 'expert',
-        'icon': Icons.sentiment_very_dissatisfied,
-        'color': Colors.redAccent,
-      },
+      {'key': 'beginner', 'stars': 1, 'color': const Color(0xFF00FF88)},
+      {'key': 'intermediate', 'stars': 2, 'color': const Color(0xFFFFEE00)},
+      {'key': 'advanced', 'stars': 3, 'color': const Color(0xFFFF3333)},
+      {'key': 'expert', 'stars': 4, 'color': const Color(0xFFFF3366)},
+      {'key': 'master', 'stars': 5, 'color': const Color(0xFFCC00FF)},
     ];
 
-    return Row(
-      children:
-          options.map((opt) {
-            final isSelected = _difficulty == opt['key'];
-            final color = opt['color'] as Color;
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: options.map((opt) {
+        final key = opt['key'] as String;
+        final isSelected = _difficulty == key;
+        final color = opt['color'] as Color;
 
-            return Expanded(
-              child: GestureDetector(
-                onTap: () => setState(() => _difficulty = opt['key'] as String),
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  decoration: BoxDecoration(
-                    color:
-                        isSelected
-                            ? color.withValues(alpha: 0.15)
-                            : Colors.white.withValues(alpha: 0.05),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color:
-                          isSelected
-                              ? color.withValues(alpha: 0.5)
-                              : Colors.transparent,
-                      width: 1,
-                    ),
-                    boxShadow:
-                        isSelected
-                            ? [
-                              BoxShadow(
-                                color: color.withValues(alpha: 0.2),
-                                blurRadius: 8,
-                                spreadRadius: 1,
-                              ),
-                            ]
-                            : null,
-                  ),
-                  child: Column(
-                    children: [
-                      Icon(
-                        opt['icon'] as IconData,
-                        color: isSelected ? color : Colors.white24,
-                        size: 24,
+        return InkWell(
+          onTap: () => setState(() => _difficulty = key),
+          borderRadius: BorderRadius.circular(16),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeOutCubic,
+            width: (MediaQuery.of(context).size.width - 100) / 3,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? color.withValues(alpha: 0.15)
+                  : Colors.white.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: isSelected
+                    ? color.withValues(alpha: 0.5)
+                    : Colors.white.withValues(alpha: 0.05),
+                width: 1.5,
+              ),
+              boxShadow: isSelected
+                  ? [
+                      BoxShadow(
+                        color: color.withValues(alpha: 0.2),
+                        blurRadius: 15,
+                        spreadRadius: -5,
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        ref.t('difficulty_${opt['key']}'),
-                        style: GoogleFonts.outfit(
-                          fontSize: 12,
-                          color: isSelected ? color : Colors.white38,
-                          fontWeight:
-                              isSelected ? FontWeight.bold : FontWeight.normal,
-                        ),
-                      ),
-                    ],
+                    ]
+                  : null,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(5, (i) {
+                    final active = i < (opt['stars'] as int);
+                    return Icon(
+                      Icons.star_rounded,
+                      color: active
+                          ? color
+                          : Colors.white.withValues(alpha: 0.05),
+                      size: 14,
+                    );
+                  }),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  ref.t('difficulty_$key'),
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.outfit(
+                    fontSize: 10,
+                    fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
+                    color: isSelected ? color : Colors.white38,
+                    letterSpacing: 0.5,
                   ),
                 ),
-              ),
-            );
-          }).toList(),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -981,7 +991,6 @@ class _TimeMaskFormatter extends TextInputFormatter {
     );
   }
 }
-
 
 class _MaxIntFormatter extends TextInputFormatter {
   final int max;

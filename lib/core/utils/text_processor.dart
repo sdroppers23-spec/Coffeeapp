@@ -63,4 +63,15 @@ class CoffeeTextProcessor {
           'color: #C8A96E; font-family: "Cormorant Garamond", serif; margin-top: 24px; margin-bottom: 12px;',
     };
   }
+
+  /// Strips all HTML and custom tags to return plain text.
+  static String stripHtml(String html) {
+    if (html.isEmpty) return '';
+    // Strip HTML tags
+    String stripped = html.replaceAll(RegExp(r'<[^>]*>|&[^;]+;'), ' ');
+    // Strip custom tags {tag}
+    stripped = stripped.replaceAll(RegExp(r'\{[^}]*\}'), ' ');
+    // Normalize spaces
+    return stripped.replaceAll(RegExp(r'\s+'), ' ').trim();
+  }
 }

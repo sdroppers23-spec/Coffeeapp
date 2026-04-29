@@ -657,7 +657,7 @@ class CustomRecipeDto {
   final String? grinderName;
   final int? extractionTimeSeconds;
   final String? difficulty;
-
+  final String? contentHtml;
 
   CustomRecipeDto({
     required this.id,
@@ -686,8 +686,8 @@ class CustomRecipeDto {
     this.sensoryJson,
     this.extractionTimeSeconds,
     this.difficulty,
+    this.contentHtml,
   });
-
 
   String get pourScheduleJson => jsonEncode(pours);
 
@@ -718,8 +718,8 @@ class CustomRecipeDto {
     String? sensoryJson,
     int? extractionTimeSeconds,
     String? difficulty,
+    String? contentHtml,
   }) {
-
     return CustomRecipeDto(
       id: id ?? this.id,
       lotId: lotId ?? this.lotId,
@@ -748,8 +748,8 @@ class CustomRecipeDto {
       extractionTimeSeconds:
           extractionTimeSeconds ?? this.extractionTimeSeconds,
       difficulty: difficulty ?? this.difficulty,
+      contentHtml: contentHtml ?? this.contentHtml,
     );
-
   }
 }
 

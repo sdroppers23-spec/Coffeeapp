@@ -219,7 +219,7 @@ class SyncService {
           },
         )
         .subscribe();
- 
+
     // 5. Alternative Brewing Channel
     supabase!
         .channel('public:alternative_brewing')
@@ -860,11 +860,13 @@ class SyncService {
     if (supabase == null) return;
     try {
       final data = await supabase!.from('alternative_brewing').select();
-      final translationsData =
-          await supabase!.from('alternative_brewing_translations').select();
+      final translationsData = await supabase!
+          .from('alternative_brewing_translations')
+          .select();
 
-      final remoteKeys =
-          data.map((item) => item['method_key'] as String).toList();
+      final remoteKeys = data
+          .map((item) => item['method_key'] as String)
+          .toList();
 
       // Group translations by recipe_key
       final Map<String, List<Map<String, dynamic>>> translationMap = {};
@@ -937,12 +939,12 @@ class SyncService {
       // Cleanup local records not in remote
       if (remoteKeys.isNotEmpty) {
         await db.transaction(() async {
-          await (db.delete(db.alternativeBrewingTranslations)
-                ..where((t) => t.recipeKey.isIn(remoteKeys).not()))
-              .go();
-          await (db.delete(db.alternativeBrewing)
-                ..where((t) => t.methodKey.isIn(remoteKeys).not()))
-              .go();
+          await (db.delete(
+            db.alternativeBrewingTranslations,
+          )..where((t) => t.recipeKey.isIn(remoteKeys).not())).go();
+          await (db.delete(
+            db.alternativeBrewing,
+          )..where((t) => t.methodKey.isIn(remoteKeys).not())).go();
         });
       }
       _dataUpdateController.add(null);
@@ -1954,11 +1956,24 @@ class SyncService {
   String _normalizeDifficulty(dynamic raw) {
     final s = (raw?.toString() ?? '').toLowerCase().trim();
     switch (s) {
-      case '1': case 'easy': case 'beginner': return '1';
-      case '2': case 'medium': case 'intermediate': return '2';
-      case '3': case 'hard': case 'advanced': return '3';
-      case '4': case 'expert': return '4';
-      case '5': case 'master': return '5';
+      case '1':
+      case 'easy':
+      case 'beginner':
+        return '1';
+      case '2':
+      case 'medium':
+      case 'intermediate':
+        return '2';
+      case '3':
+      case 'hard':
+      case 'advanced':
+        return '3';
+      case '4':
+      case 'expert':
+        return '4';
+      case '5':
+      case 'master':
+        return '5';
       default:
         final n = int.tryParse(s);
         if (n != null && n >= 1 && n <= 5) return n.toString();

@@ -449,7 +449,6 @@ class CustomRecipes extends Table {
   IntColumn get extractionTimeSeconds => integer().nullable()();
   TextColumn get difficulty => text().nullable()();
 
-
   TextColumn get sensoryJson => text().withDefault(const Constant('{}'))();
   TextColumn get contentHtml => text().nullable()();
 
@@ -467,12 +466,10 @@ class AlternativeBrewing extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get methodKey => text().unique()();
   TextColumn get imageUrl => text().nullable()();
-  RealColumn get ratioGramsPerMl =>
-      real().withDefault(const Constant(0.066))();
+  RealColumn get ratioGramsPerMl => real().withDefault(const Constant(0.066))();
   RealColumn get tempC => real().withDefault(const Constant(93.0))();
   IntColumn get totalTimeSec => integer().withDefault(const Constant(180))();
-  TextColumn get difficulty =>
-      text().withDefault(const Constant('2'))();
+  TextColumn get difficulty => text().withDefault(const Constant('2'))();
   TextColumn get stepsJson => text().withDefault(const Constant('[]'))();
   TextColumn get flavorProfile =>
       text().withDefault(const Constant('Balanced'))();

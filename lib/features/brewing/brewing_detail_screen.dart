@@ -13,13 +13,11 @@ import '../../shared/widgets/modals/description_glass_modal.dart';
 class BrewingDetailScreen extends ConsumerStatefulWidget {
   final BrewingRecipeDto recipe;
 
-  const BrewingDetailScreen({
-    super.key,
-    required this.recipe,
-  });
+  const BrewingDetailScreen({super.key, required this.recipe});
 
   @override
-  ConsumerState<BrewingDetailScreen> createState() => _BrewingDetailScreenState();
+  ConsumerState<BrewingDetailScreen> createState() =>
+      _BrewingDetailScreenState();
 }
 
 class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
@@ -57,10 +55,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Colors.black,
-              Color(0xFF0A0A0A),
-            ],
+            colors: [Colors.black, Color(0xFF0A0A0A)],
           ),
         ),
         child: SafeArea(
@@ -152,11 +147,10 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                     onPressed: () async {
                       final result = await showDialog<bool>(
                         context: context,
-                        builder:
-                            (context) => AddRecipeDialog(
-                              lotId: '',
-                              initialMethod: widget.recipe.methodKey,
-                            ),
+                        builder: (context) => AddRecipeDialog(
+                          lotId: '',
+                          initialMethod: widget.recipe.methodKey,
+                        ),
                       );
                       if (result == true) {
                         ref.invalidate(
@@ -231,19 +225,8 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      // Description Text (Limited to 3 lines)
-                      if (widget.recipe.description.isNotEmpty)
-                        Text(
-                          widget.recipe.description,
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.outfit(
-                            fontSize: 15,
-                            color: Colors.white.withValues(alpha: 0.7),
-                            height: 1.6,
-                          ),
-                        )
-                      else if (widget.recipe.contentHtml?.isNotEmpty ?? false)
+                      // Description or Content HTML
+                      if (widget.recipe.contentHtml?.isNotEmpty ?? false)
                         Html(
                           data: CoffeeTextProcessor.process(
                             widget.recipe.contentHtml ?? '',
@@ -260,6 +243,17 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                               textOverflow: TextOverflow.ellipsis,
                             ),
                           },
+                        )
+                      else if (widget.recipe.description.isNotEmpty)
+                        Text(
+                          widget.recipe.description,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.outfit(
+                            fontSize: 15,
+                            color: Colors.white.withValues(alpha: 0.7),
+                            height: 1.6,
+                          ),
                         ),
                     ],
                   ),
@@ -285,7 +279,11 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
       fit: BoxFit.cover,
       errorBuilder: (context, error, stackTrace) => Container(
         color: Colors.black,
-        child: const Icon(Icons.coffee_rounded, color: Colors.white24, size: 64),
+        child: const Icon(
+          Icons.coffee_rounded,
+          color: Colors.white24,
+          size: 64,
+        ),
       ),
     );
   }
@@ -294,11 +292,24 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
 int _getDifficultyStars(String? difficulty) {
   final d = (difficulty ?? 'intermediate').toLowerCase().trim();
   switch (d) {
-    case '1': case 'easy': case 'beginner': return 1;
-    case '2': case 'medium': case 'intermediate': return 2;
-    case '3': case 'hard': case 'advanced': return 3;
-    case '4': case 'expert': return 4;
-    case '5': case 'master': return 5;
+    case '1':
+    case 'easy':
+    case 'beginner':
+      return 1;
+    case '2':
+    case 'medium':
+    case 'intermediate':
+      return 2;
+    case '3':
+    case 'hard':
+    case 'advanced':
+      return 3;
+    case '4':
+    case 'expert':
+      return 4;
+    case '5':
+    case 'master':
+      return 5;
     default:
       final n = int.tryParse(d);
       if (n != null && n >= 1 && n <= 5) return n;
@@ -309,12 +320,26 @@ int _getDifficultyStars(String? difficulty) {
 Color _getDifficultyColor(String? difficulty) {
   final d = (difficulty ?? 'intermediate').toLowerCase().trim();
   switch (d) {
-    case '1': case 'easy': case 'beginner': return const Color(0xFF00FF88);
-    case '2': case 'intermediate': case 'medium': return const Color(0xFFFFEE00);
-    case '3': case 'advanced': case 'hard': return const Color(0xFFFF3333);
-    case '4': case 'expert': return const Color(0xFFFF3366);
-    case '5': case 'master': return const Color(0xFFCC00FF);
-    default: return const Color(0xFFFFEE00);
+    case '1':
+    case 'easy':
+    case 'beginner':
+      return const Color(0xFF00FF88);
+    case '2':
+    case 'intermediate':
+    case 'medium':
+      return const Color(0xFFFFEE00);
+    case '3':
+    case 'advanced':
+    case 'hard':
+      return const Color(0xFFFF3333);
+    case '4':
+    case 'expert':
+      return const Color(0xFFFF3366);
+    case '5':
+    case 'master':
+      return const Color(0xFFCC00FF);
+    default:
+      return const Color(0xFFFFEE00);
   }
 }
 
@@ -324,11 +349,24 @@ String _getDifficultyLabel(
 ) {
   final d = (difficulty ?? 'intermediate').toLowerCase().trim();
   switch (d) {
-    case '1': case 'easy': case 'beginner': return t('difficulty_beginner');
-    case '2': case 'medium': case 'intermediate': return t('difficulty_intermediate');
-    case '3': case 'hard': case 'advanced': return t('difficulty_advanced');
-    case '4': case 'expert': return t('difficulty_expert');
-    case '5': case 'master': return t('difficulty_master');
+    case '1':
+    case 'easy':
+    case 'beginner':
+      return t('difficulty_beginner');
+    case '2':
+    case 'medium':
+    case 'intermediate':
+      return t('difficulty_intermediate');
+    case '3':
+    case 'hard':
+    case 'advanced':
+      return t('difficulty_advanced');
+    case '4':
+    case 'expert':
+      return t('difficulty_expert');
+    case '5':
+    case 'master':
+      return t('difficulty_master');
     default:
       final n = int.tryParse(d);
       if (n == 1) return t('difficulty_beginner');
@@ -397,7 +435,8 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
                 Expanded(
                   child: _HeaderStat(
                     icon: Icons.coffee_rounded,
-                    value: '${recipe.coffeeGrams != null ? (recipe.coffeeGrams! % 1 == 0 ? recipe.coffeeGrams!.toInt() : recipe.coffeeGrams) : 0}${t('grams')}',
+                    value:
+                        '${recipe.coffeeGrams != null ? (recipe.coffeeGrams! % 1 == 0 ? recipe.coffeeGrams!.toInt() : recipe.coffeeGrams) : 0}${t('grams')}',
                     label: t('stat_coffee'),
                     color: const Color(0xFFFFD740), // Neon Amber
                   ),
@@ -405,7 +444,8 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
                 Expanded(
                   child: _HeaderStat(
                     icon: Icons.water_drop_rounded,
-                    value: '${recipe.weight != null ? (recipe.weight! % 1 == 0 ? recipe.weight!.toInt() : recipe.weight) : 0}${t('grams')}',
+                    value:
+                        '${recipe.weight != null ? (recipe.weight! % 1 == 0 ? recipe.weight!.toInt() : recipe.weight) : 0}${t('grams')}',
                     label: t('stat_yield'),
                     color: const Color(0xFF69F0AE), // Neon Green
                   ),
@@ -420,12 +460,20 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: List.generate(5, (index) {
-                            final stars = _getDifficultyStars(recipe.difficulty);
-                            final color = _getDifficultyColor(recipe.difficulty);
+                            final stars = _getDifficultyStars(
+                              recipe.difficulty,
+                            );
+                            final color = _getDifficultyColor(
+                              recipe.difficulty,
+                            );
                             return Icon(
-                              index < stars ? Icons.star_rounded : Icons.star_outline_rounded,
+                              index < stars
+                                  ? Icons.star_rounded
+                                  : Icons.star_outline_rounded,
                               size: 9,
-                              color: index < stars ? color : color.withValues(alpha: 0.2),
+                              color: index < stars
+                                  ? color
+                                  : color.withValues(alpha: 0.2),
                             );
                           }),
                         ),
@@ -459,7 +507,8 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
   @override
   double get minExtent => 105;
   @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => true;
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      true;
 }
 
 class _HeaderStat extends StatelessWidget {
@@ -504,30 +553,26 @@ class _HeaderStat extends StatelessWidget {
             size: 16,
             color: color,
             shadows: [
-              Shadow(
-                color: color.withValues(alpha: 0.5),
-                blurRadius: 8,
-              ),
+              Shadow(color: color.withValues(alpha: 0.5), blurRadius: 8),
             ],
           ),
         ),
         const SizedBox(height: 8),
         FittedBox(
           fit: BoxFit.scaleDown,
-          child: customValue ?? Text(
-            value,
-            style: GoogleFonts.outfit(
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-              color: color,
-              shadows: [
-                Shadow(
-                  color: color.withValues(alpha: 0.4),
-                  blurRadius: 6,
+          child:
+              customValue ??
+              Text(
+                value,
+                style: GoogleFonts.outfit(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w800,
+                  color: color,
+                  shadows: [
+                    Shadow(color: color.withValues(alpha: 0.4), blurRadius: 6),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
         ),
         const SizedBox(height: 2),
         FittedBox(
@@ -546,5 +591,3 @@ class _HeaderStat extends StatelessWidget {
     );
   }
 }
-
-

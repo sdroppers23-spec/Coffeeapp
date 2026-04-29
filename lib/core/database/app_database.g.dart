@@ -8626,12 +8626,24 @@ class $BrewingRecipeTranslationsTable extends BrewingRecipeTranslations
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _contentHtmlMeta = const VerificationMeta(
+    'contentHtml',
+  );
+  @override
+  late final GeneratedColumn<String> contentHtml = GeneratedColumn<String>(
+    'content_html',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     recipeKey,
     languageCode,
     name,
     description,
+    contentHtml,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -8679,6 +8691,15 @@ class $BrewingRecipeTranslationsTable extends BrewingRecipeTranslations
         ),
       );
     }
+    if (data.containsKey('content_html')) {
+      context.handle(
+        _contentHtmlMeta,
+        contentHtml.isAcceptableOrUnknown(
+          data['content_html']!,
+          _contentHtmlMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -8707,6 +8728,10 @@ class $BrewingRecipeTranslationsTable extends BrewingRecipeTranslations
         DriftSqlType.string,
         data['${effectivePrefix}description'],
       ),
+      contentHtml: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content_html'],
+      ),
     );
   }
 
@@ -8722,11 +8747,13 @@ class BrewingRecipeTranslation extends DataClass
   final String languageCode;
   final String? name;
   final String? description;
+  final String? contentHtml;
   const BrewingRecipeTranslation({
     required this.recipeKey,
     required this.languageCode,
     this.name,
     this.description,
+    this.contentHtml,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -8739,6 +8766,9 @@ class BrewingRecipeTranslation extends DataClass
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
     }
+    if (!nullToAbsent || contentHtml != null) {
+      map['content_html'] = Variable<String>(contentHtml);
+    }
     return map;
   }
 
@@ -8750,6 +8780,9 @@ class BrewingRecipeTranslation extends DataClass
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
+      contentHtml: contentHtml == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contentHtml),
     );
   }
 
@@ -8763,6 +8796,7 @@ class BrewingRecipeTranslation extends DataClass
       languageCode: serializer.fromJson<String>(json['languageCode']),
       name: serializer.fromJson<String?>(json['name']),
       description: serializer.fromJson<String?>(json['description']),
+      contentHtml: serializer.fromJson<String?>(json['contentHtml']),
     );
   }
   @override
@@ -8773,6 +8807,7 @@ class BrewingRecipeTranslation extends DataClass
       'languageCode': serializer.toJson<String>(languageCode),
       'name': serializer.toJson<String?>(name),
       'description': serializer.toJson<String?>(description),
+      'contentHtml': serializer.toJson<String?>(contentHtml),
     };
   }
 
@@ -8781,11 +8816,13 @@ class BrewingRecipeTranslation extends DataClass
     String? languageCode,
     Value<String?> name = const Value.absent(),
     Value<String?> description = const Value.absent(),
+    Value<String?> contentHtml = const Value.absent(),
   }) => BrewingRecipeTranslation(
     recipeKey: recipeKey ?? this.recipeKey,
     languageCode: languageCode ?? this.languageCode,
     name: name.present ? name.value : this.name,
     description: description.present ? description.value : this.description,
+    contentHtml: contentHtml.present ? contentHtml.value : this.contentHtml,
   );
   BrewingRecipeTranslation copyWithCompanion(
     BrewingRecipeTranslationsCompanion data,
@@ -8799,6 +8836,9 @@ class BrewingRecipeTranslation extends DataClass
       description: data.description.present
           ? data.description.value
           : this.description,
+      contentHtml: data.contentHtml.present
+          ? data.contentHtml.value
+          : this.contentHtml,
     );
   }
 
@@ -8808,13 +8848,15 @@ class BrewingRecipeTranslation extends DataClass
           ..write('recipeKey: $recipeKey, ')
           ..write('languageCode: $languageCode, ')
           ..write('name: $name, ')
-          ..write('description: $description')
+          ..write('description: $description, ')
+          ..write('contentHtml: $contentHtml')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(recipeKey, languageCode, name, description);
+  int get hashCode =>
+      Object.hash(recipeKey, languageCode, name, description, contentHtml);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -8822,7 +8864,8 @@ class BrewingRecipeTranslation extends DataClass
           other.recipeKey == this.recipeKey &&
           other.languageCode == this.languageCode &&
           other.name == this.name &&
-          other.description == this.description);
+          other.description == this.description &&
+          other.contentHtml == this.contentHtml);
 }
 
 class BrewingRecipeTranslationsCompanion
@@ -8831,12 +8874,14 @@ class BrewingRecipeTranslationsCompanion
   final Value<String> languageCode;
   final Value<String?> name;
   final Value<String?> description;
+  final Value<String?> contentHtml;
   final Value<int> rowid;
   const BrewingRecipeTranslationsCompanion({
     this.recipeKey = const Value.absent(),
     this.languageCode = const Value.absent(),
     this.name = const Value.absent(),
     this.description = const Value.absent(),
+    this.contentHtml = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   BrewingRecipeTranslationsCompanion.insert({
@@ -8844,6 +8889,7 @@ class BrewingRecipeTranslationsCompanion
     required String languageCode,
     this.name = const Value.absent(),
     this.description = const Value.absent(),
+    this.contentHtml = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : recipeKey = Value(recipeKey),
        languageCode = Value(languageCode);
@@ -8852,6 +8898,7 @@ class BrewingRecipeTranslationsCompanion
     Expression<String>? languageCode,
     Expression<String>? name,
     Expression<String>? description,
+    Expression<String>? contentHtml,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -8859,6 +8906,7 @@ class BrewingRecipeTranslationsCompanion
       if (languageCode != null) 'language_code': languageCode,
       if (name != null) 'name': name,
       if (description != null) 'description': description,
+      if (contentHtml != null) 'content_html': contentHtml,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -8868,6 +8916,7 @@ class BrewingRecipeTranslationsCompanion
     Value<String>? languageCode,
     Value<String?>? name,
     Value<String?>? description,
+    Value<String?>? contentHtml,
     Value<int>? rowid,
   }) {
     return BrewingRecipeTranslationsCompanion(
@@ -8875,6 +8924,7 @@ class BrewingRecipeTranslationsCompanion
       languageCode: languageCode ?? this.languageCode,
       name: name ?? this.name,
       description: description ?? this.description,
+      contentHtml: contentHtml ?? this.contentHtml,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -8894,6 +8944,9 @@ class BrewingRecipeTranslationsCompanion
     if (description.present) {
       map['description'] = Variable<String>(description.value);
     }
+    if (contentHtml.present) {
+      map['content_html'] = Variable<String>(contentHtml.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -8907,6 +8960,7 @@ class BrewingRecipeTranslationsCompanion
           ..write('languageCode: $languageCode, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
+          ..write('contentHtml: $contentHtml, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -9783,6 +9837,17 @@ class $CustomRecipesTable extends CustomRecipes
     requiredDuringInsert: false,
     defaultValue: const Constant('{}'),
   );
+  static const VerificationMeta _contentHtmlMeta = const VerificationMeta(
+    'contentHtml',
+  );
+  @override
+  late final GeneratedColumn<String> contentHtml = GeneratedColumn<String>(
+    'content_html',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _isFavoriteMeta = const VerificationMeta(
     'isFavorite',
   );
@@ -9869,6 +9934,7 @@ class $CustomRecipesTable extends CustomRecipes
     extractionTimeSeconds,
     difficulty,
     sensoryJson,
+    contentHtml,
     isFavorite,
     isArchived,
     isSynced,
@@ -10064,6 +10130,15 @@ class $CustomRecipesTable extends CustomRecipes
         ),
       );
     }
+    if (data.containsKey('content_html')) {
+      context.handle(
+        _contentHtmlMeta,
+        contentHtml.isAcceptableOrUnknown(
+          data['content_html']!,
+          _contentHtmlMeta,
+        ),
+      );
+    }
     if (data.containsKey('is_favorite')) {
       context.handle(
         _isFavoriteMeta,
@@ -10196,6 +10271,10 @@ class $CustomRecipesTable extends CustomRecipes
         DriftSqlType.string,
         data['${effectivePrefix}sensory_json'],
       )!,
+      contentHtml: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content_html'],
+      ),
       isFavorite: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_favorite'],
@@ -10246,6 +10325,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
   final int? extractionTimeSeconds;
   final String? difficulty;
   final String sensoryJson;
+  final String? contentHtml;
   final bool isFavorite;
   final bool isArchived;
   final bool isSynced;
@@ -10275,6 +10355,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     this.extractionTimeSeconds,
     this.difficulty,
     required this.sensoryJson,
+    this.contentHtml,
     required this.isFavorite,
     required this.isArchived,
     required this.isSynced,
@@ -10323,6 +10404,9 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       map['difficulty'] = Variable<String>(difficulty);
     }
     map['sensory_json'] = Variable<String>(sensoryJson);
+    if (!nullToAbsent || contentHtml != null) {
+      map['content_html'] = Variable<String>(contentHtml);
+    }
     map['is_favorite'] = Variable<bool>(isFavorite);
     map['is_archived'] = Variable<bool>(isArchived);
     map['is_synced'] = Variable<bool>(isSynced);
@@ -10372,6 +10456,9 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
           ? const Value.absent()
           : Value(difficulty),
       sensoryJson: Value(sensoryJson),
+      contentHtml: contentHtml == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contentHtml),
       isFavorite: Value(isFavorite),
       isArchived: Value(isArchived),
       isSynced: Value(isSynced),
@@ -10411,6 +10498,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       ),
       difficulty: serializer.fromJson<String?>(json['difficulty']),
       sensoryJson: serializer.fromJson<String>(json['sensoryJson']),
+      contentHtml: serializer.fromJson<String?>(json['contentHtml']),
       isFavorite: serializer.fromJson<bool>(json['isFavorite']),
       isArchived: serializer.fromJson<bool>(json['isArchived']),
       isSynced: serializer.fromJson<bool>(json['isSynced']),
@@ -10445,6 +10533,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       'extractionTimeSeconds': serializer.toJson<int?>(extractionTimeSeconds),
       'difficulty': serializer.toJson<String?>(difficulty),
       'sensoryJson': serializer.toJson<String>(sensoryJson),
+      'contentHtml': serializer.toJson<String?>(contentHtml),
       'isFavorite': serializer.toJson<bool>(isFavorite),
       'isArchived': serializer.toJson<bool>(isArchived),
       'isSynced': serializer.toJson<bool>(isSynced),
@@ -10477,6 +10566,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     Value<int?> extractionTimeSeconds = const Value.absent(),
     Value<String?> difficulty = const Value.absent(),
     String? sensoryJson,
+    Value<String?> contentHtml = const Value.absent(),
     bool? isFavorite,
     bool? isArchived,
     bool? isSynced,
@@ -10508,6 +10598,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
         : this.extractionTimeSeconds,
     difficulty: difficulty.present ? difficulty.value : this.difficulty,
     sensoryJson: sensoryJson ?? this.sensoryJson,
+    contentHtml: contentHtml.present ? contentHtml.value : this.contentHtml,
     isFavorite: isFavorite ?? this.isFavorite,
     isArchived: isArchived ?? this.isArchived,
     isSynced: isSynced ?? this.isSynced,
@@ -10563,6 +10654,9 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
       sensoryJson: data.sensoryJson.present
           ? data.sensoryJson.value
           : this.sensoryJson,
+      contentHtml: data.contentHtml.present
+          ? data.contentHtml.value
+          : this.contentHtml,
       isFavorite: data.isFavorite.present
           ? data.isFavorite.value
           : this.isFavorite,
@@ -10603,6 +10697,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
           ..write('extractionTimeSeconds: $extractionTimeSeconds, ')
           ..write('difficulty: $difficulty, ')
           ..write('sensoryJson: $sensoryJson, ')
+          ..write('contentHtml: $contentHtml, ')
           ..write('isFavorite: $isFavorite, ')
           ..write('isArchived: $isArchived, ')
           ..write('isSynced: $isSynced, ')
@@ -10637,6 +10732,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
     extractionTimeSeconds,
     difficulty,
     sensoryJson,
+    contentHtml,
     isFavorite,
     isArchived,
     isSynced,
@@ -10670,6 +10766,7 @@ class CustomRecipe extends DataClass implements Insertable<CustomRecipe> {
           other.extractionTimeSeconds == this.extractionTimeSeconds &&
           other.difficulty == this.difficulty &&
           other.sensoryJson == this.sensoryJson &&
+          other.contentHtml == this.contentHtml &&
           other.isFavorite == this.isFavorite &&
           other.isArchived == this.isArchived &&
           other.isSynced == this.isSynced &&
@@ -10701,6 +10798,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
   final Value<int?> extractionTimeSeconds;
   final Value<String?> difficulty;
   final Value<String> sensoryJson;
+  final Value<String?> contentHtml;
   final Value<bool> isFavorite;
   final Value<bool> isArchived;
   final Value<bool> isSynced;
@@ -10731,6 +10829,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     this.extractionTimeSeconds = const Value.absent(),
     this.difficulty = const Value.absent(),
     this.sensoryJson = const Value.absent(),
+    this.contentHtml = const Value.absent(),
     this.isFavorite = const Value.absent(),
     this.isArchived = const Value.absent(),
     this.isSynced = const Value.absent(),
@@ -10762,6 +10861,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     this.extractionTimeSeconds = const Value.absent(),
     this.difficulty = const Value.absent(),
     this.sensoryJson = const Value.absent(),
+    this.contentHtml = const Value.absent(),
     this.isFavorite = const Value.absent(),
     this.isArchived = const Value.absent(),
     this.isSynced = const Value.absent(),
@@ -10797,6 +10897,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     Expression<int>? extractionTimeSeconds,
     Expression<String>? difficulty,
     Expression<String>? sensoryJson,
+    Expression<String>? contentHtml,
     Expression<bool>? isFavorite,
     Expression<bool>? isArchived,
     Expression<bool>? isSynced,
@@ -10829,6 +10930,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
         'extraction_time_seconds': extractionTimeSeconds,
       if (difficulty != null) 'difficulty': difficulty,
       if (sensoryJson != null) 'sensory_json': sensoryJson,
+      if (contentHtml != null) 'content_html': contentHtml,
       if (isFavorite != null) 'is_favorite': isFavorite,
       if (isArchived != null) 'is_archived': isArchived,
       if (isSynced != null) 'is_synced': isSynced,
@@ -10862,6 +10964,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     Value<int?>? extractionTimeSeconds,
     Value<String?>? difficulty,
     Value<String>? sensoryJson,
+    Value<String?>? contentHtml,
     Value<bool>? isFavorite,
     Value<bool>? isArchived,
     Value<bool>? isSynced,
@@ -10894,6 +10997,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
           extractionTimeSeconds ?? this.extractionTimeSeconds,
       difficulty: difficulty ?? this.difficulty,
       sensoryJson: sensoryJson ?? this.sensoryJson,
+      contentHtml: contentHtml ?? this.contentHtml,
       isFavorite: isFavorite ?? this.isFavorite,
       isArchived: isArchived ?? this.isArchived,
       isSynced: isSynced ?? this.isSynced,
@@ -10979,6 +11083,9 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
     if (sensoryJson.present) {
       map['sensory_json'] = Variable<String>(sensoryJson.value);
     }
+    if (contentHtml.present) {
+      map['content_html'] = Variable<String>(contentHtml.value);
+    }
     if (isFavorite.present) {
       map['is_favorite'] = Variable<bool>(isFavorite.value);
     }
@@ -11024,6 +11131,7 @@ class CustomRecipesCompanion extends UpdateCompanion<CustomRecipe> {
           ..write('extractionTimeSeconds: $extractionTimeSeconds, ')
           ..write('difficulty: $difficulty, ')
           ..write('sensoryJson: $sensoryJson, ')
+          ..write('contentHtml: $contentHtml, ')
           ..write('isFavorite: $isFavorite, ')
           ..write('isArchived: $isArchived, ')
           ..write('isSynced: $isSynced, ')
@@ -15739,12 +15847,24 @@ class $BrewingRecipeTranslationsV2Table extends BrewingRecipeTranslationsV2
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _contentHtmlMeta = const VerificationMeta(
+    'contentHtml',
+  );
+  @override
+  late final GeneratedColumn<String> contentHtml = GeneratedColumn<String>(
+    'content_html',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     recipeKey,
     languageCode,
     name,
     description,
+    contentHtml,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -15792,6 +15912,15 @@ class $BrewingRecipeTranslationsV2Table extends BrewingRecipeTranslationsV2
         ),
       );
     }
+    if (data.containsKey('content_html')) {
+      context.handle(
+        _contentHtmlMeta,
+        contentHtml.isAcceptableOrUnknown(
+          data['content_html']!,
+          _contentHtmlMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -15820,6 +15949,10 @@ class $BrewingRecipeTranslationsV2Table extends BrewingRecipeTranslationsV2
         DriftSqlType.string,
         data['${effectivePrefix}description'],
       ),
+      contentHtml: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content_html'],
+      ),
     );
   }
 
@@ -15835,11 +15968,13 @@ class BrewingRecipeTranslationsV2Data extends DataClass
   final String languageCode;
   final String? name;
   final String? description;
+  final String? contentHtml;
   const BrewingRecipeTranslationsV2Data({
     required this.recipeKey,
     required this.languageCode,
     this.name,
     this.description,
+    this.contentHtml,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -15852,6 +15987,9 @@ class BrewingRecipeTranslationsV2Data extends DataClass
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
     }
+    if (!nullToAbsent || contentHtml != null) {
+      map['content_html'] = Variable<String>(contentHtml);
+    }
     return map;
   }
 
@@ -15863,6 +16001,9 @@ class BrewingRecipeTranslationsV2Data extends DataClass
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
+      contentHtml: contentHtml == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contentHtml),
     );
   }
 
@@ -15876,6 +16017,7 @@ class BrewingRecipeTranslationsV2Data extends DataClass
       languageCode: serializer.fromJson<String>(json['languageCode']),
       name: serializer.fromJson<String?>(json['name']),
       description: serializer.fromJson<String?>(json['description']),
+      contentHtml: serializer.fromJson<String?>(json['contentHtml']),
     );
   }
   @override
@@ -15886,6 +16028,7 @@ class BrewingRecipeTranslationsV2Data extends DataClass
       'languageCode': serializer.toJson<String>(languageCode),
       'name': serializer.toJson<String?>(name),
       'description': serializer.toJson<String?>(description),
+      'contentHtml': serializer.toJson<String?>(contentHtml),
     };
   }
 
@@ -15894,11 +16037,13 @@ class BrewingRecipeTranslationsV2Data extends DataClass
     String? languageCode,
     Value<String?> name = const Value.absent(),
     Value<String?> description = const Value.absent(),
+    Value<String?> contentHtml = const Value.absent(),
   }) => BrewingRecipeTranslationsV2Data(
     recipeKey: recipeKey ?? this.recipeKey,
     languageCode: languageCode ?? this.languageCode,
     name: name.present ? name.value : this.name,
     description: description.present ? description.value : this.description,
+    contentHtml: contentHtml.present ? contentHtml.value : this.contentHtml,
   );
   BrewingRecipeTranslationsV2Data copyWithCompanion(
     BrewingRecipeTranslationsV2Companion data,
@@ -15912,6 +16057,9 @@ class BrewingRecipeTranslationsV2Data extends DataClass
       description: data.description.present
           ? data.description.value
           : this.description,
+      contentHtml: data.contentHtml.present
+          ? data.contentHtml.value
+          : this.contentHtml,
     );
   }
 
@@ -15921,13 +16069,15 @@ class BrewingRecipeTranslationsV2Data extends DataClass
           ..write('recipeKey: $recipeKey, ')
           ..write('languageCode: $languageCode, ')
           ..write('name: $name, ')
-          ..write('description: $description')
+          ..write('description: $description, ')
+          ..write('contentHtml: $contentHtml')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(recipeKey, languageCode, name, description);
+  int get hashCode =>
+      Object.hash(recipeKey, languageCode, name, description, contentHtml);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -15935,7 +16085,8 @@ class BrewingRecipeTranslationsV2Data extends DataClass
           other.recipeKey == this.recipeKey &&
           other.languageCode == this.languageCode &&
           other.name == this.name &&
-          other.description == this.description);
+          other.description == this.description &&
+          other.contentHtml == this.contentHtml);
 }
 
 class BrewingRecipeTranslationsV2Companion
@@ -15944,12 +16095,14 @@ class BrewingRecipeTranslationsV2Companion
   final Value<String> languageCode;
   final Value<String?> name;
   final Value<String?> description;
+  final Value<String?> contentHtml;
   final Value<int> rowid;
   const BrewingRecipeTranslationsV2Companion({
     this.recipeKey = const Value.absent(),
     this.languageCode = const Value.absent(),
     this.name = const Value.absent(),
     this.description = const Value.absent(),
+    this.contentHtml = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   BrewingRecipeTranslationsV2Companion.insert({
@@ -15957,6 +16110,7 @@ class BrewingRecipeTranslationsV2Companion
     required String languageCode,
     this.name = const Value.absent(),
     this.description = const Value.absent(),
+    this.contentHtml = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : recipeKey = Value(recipeKey),
        languageCode = Value(languageCode);
@@ -15965,6 +16119,7 @@ class BrewingRecipeTranslationsV2Companion
     Expression<String>? languageCode,
     Expression<String>? name,
     Expression<String>? description,
+    Expression<String>? contentHtml,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -15972,6 +16127,7 @@ class BrewingRecipeTranslationsV2Companion
       if (languageCode != null) 'language_code': languageCode,
       if (name != null) 'name': name,
       if (description != null) 'description': description,
+      if (contentHtml != null) 'content_html': contentHtml,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -15981,6 +16137,7 @@ class BrewingRecipeTranslationsV2Companion
     Value<String>? languageCode,
     Value<String?>? name,
     Value<String?>? description,
+    Value<String?>? contentHtml,
     Value<int>? rowid,
   }) {
     return BrewingRecipeTranslationsV2Companion(
@@ -15988,6 +16145,7 @@ class BrewingRecipeTranslationsV2Companion
       languageCode: languageCode ?? this.languageCode,
       name: name ?? this.name,
       description: description ?? this.description,
+      contentHtml: contentHtml ?? this.contentHtml,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -16007,6 +16165,9 @@ class BrewingRecipeTranslationsV2Companion
     if (description.present) {
       map['description'] = Variable<String>(description.value);
     }
+    if (contentHtml.present) {
+      map['content_html'] = Variable<String>(contentHtml.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -16020,6 +16181,7 @@ class BrewingRecipeTranslationsV2Companion
           ..write('languageCode: $languageCode, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
+          ..write('contentHtml: $contentHtml, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -16112,7 +16274,7 @@ class $AlternativeBrewingTable extends AlternativeBrewing
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant('Intermediate'),
+    defaultValue: const Constant('2'),
   );
   static const VerificationMeta _stepsJsonMeta = const VerificationMeta(
     'stepsJson',
@@ -16160,6 +16322,17 @@ class $AlternativeBrewingTable extends AlternativeBrewing
     type: DriftSqlType.string,
     requiredDuringInsert: false,
     defaultValue: const Constant('filter'),
+  );
+  static const VerificationMeta _contentHtmlMeta = const VerificationMeta(
+    'contentHtml',
+  );
+  @override
+  late final GeneratedColumn<String> contentHtml = GeneratedColumn<String>(
+    'content_html',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _weightMeta = const VerificationMeta('weight');
   @override
@@ -16271,6 +16444,7 @@ class $AlternativeBrewingTable extends AlternativeBrewing
     flavorProfile,
     iconName,
     category,
+    contentHtml,
     weight,
     coffeeGrams,
     nameUk,
@@ -16364,6 +16538,15 @@ class $AlternativeBrewingTable extends AlternativeBrewing
       context.handle(
         _categoryMeta,
         category.isAcceptableOrUnknown(data['category']!, _categoryMeta),
+      );
+    }
+    if (data.containsKey('content_html')) {
+      context.handle(
+        _contentHtmlMeta,
+        contentHtml.isAcceptableOrUnknown(
+          data['content_html']!,
+          _contentHtmlMeta,
+        ),
       );
     }
     if (data.containsKey('weight')) {
@@ -16473,6 +16656,10 @@ class $AlternativeBrewingTable extends AlternativeBrewing
         DriftSqlType.string,
         data['${effectivePrefix}category'],
       )!,
+      contentHtml: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}content_html'],
+      ),
       weight: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}weight'],
@@ -16527,6 +16714,7 @@ class AlternativeBrewingData extends DataClass
   final String flavorProfile;
   final String? iconName;
   final String category;
+  final String? contentHtml;
   final double? weight;
   final double? coffeeGrams;
   final String? nameUk;
@@ -16547,6 +16735,7 @@ class AlternativeBrewingData extends DataClass
     required this.flavorProfile,
     this.iconName,
     required this.category,
+    this.contentHtml,
     this.weight,
     this.coffeeGrams,
     this.nameUk,
@@ -16574,6 +16763,9 @@ class AlternativeBrewingData extends DataClass
       map['icon_name'] = Variable<String>(iconName);
     }
     map['category'] = Variable<String>(category);
+    if (!nullToAbsent || contentHtml != null) {
+      map['content_html'] = Variable<String>(contentHtml);
+    }
     if (!nullToAbsent || weight != null) {
       map['weight'] = Variable<double>(weight);
     }
@@ -16610,6 +16802,9 @@ class AlternativeBrewingData extends DataClass
           ? const Value.absent()
           : Value(iconName),
       category: Value(category),
+      contentHtml: contentHtml == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contentHtml),
       weight: weight == null && nullToAbsent
           ? const Value.absent()
           : Value(weight),
@@ -16646,6 +16841,7 @@ class AlternativeBrewingData extends DataClass
       flavorProfile: serializer.fromJson<String>(json['flavorProfile']),
       iconName: serializer.fromJson<String?>(json['iconName']),
       category: serializer.fromJson<String>(json['category']),
+      contentHtml: serializer.fromJson<String?>(json['contentHtml']),
       weight: serializer.fromJson<double?>(json['weight']),
       coffeeGrams: serializer.fromJson<double?>(json['coffeeGrams']),
       nameUk: serializer.fromJson<String?>(json['nameUk']),
@@ -16671,6 +16867,7 @@ class AlternativeBrewingData extends DataClass
       'flavorProfile': serializer.toJson<String>(flavorProfile),
       'iconName': serializer.toJson<String?>(iconName),
       'category': serializer.toJson<String>(category),
+      'contentHtml': serializer.toJson<String?>(contentHtml),
       'weight': serializer.toJson<double?>(weight),
       'coffeeGrams': serializer.toJson<double?>(coffeeGrams),
       'nameUk': serializer.toJson<String?>(nameUk),
@@ -16694,6 +16891,7 @@ class AlternativeBrewingData extends DataClass
     String? flavorProfile,
     Value<String?> iconName = const Value.absent(),
     String? category,
+    Value<String?> contentHtml = const Value.absent(),
     Value<double?> weight = const Value.absent(),
     Value<double?> coffeeGrams = const Value.absent(),
     Value<String?> nameUk = const Value.absent(),
@@ -16714,6 +16912,7 @@ class AlternativeBrewingData extends DataClass
     flavorProfile: flavorProfile ?? this.flavorProfile,
     iconName: iconName.present ? iconName.value : this.iconName,
     category: category ?? this.category,
+    contentHtml: contentHtml.present ? contentHtml.value : this.contentHtml,
     weight: weight.present ? weight.value : this.weight,
     coffeeGrams: coffeeGrams.present ? coffeeGrams.value : this.coffeeGrams,
     nameUk: nameUk.present ? nameUk.value : this.nameUk,
@@ -16744,6 +16943,9 @@ class AlternativeBrewingData extends DataClass
           : this.flavorProfile,
       iconName: data.iconName.present ? data.iconName.value : this.iconName,
       category: data.category.present ? data.category.value : this.category,
+      contentHtml: data.contentHtml.present
+          ? data.contentHtml.value
+          : this.contentHtml,
       weight: data.weight.present ? data.weight.value : this.weight,
       coffeeGrams: data.coffeeGrams.present
           ? data.coffeeGrams.value
@@ -16773,6 +16975,7 @@ class AlternativeBrewingData extends DataClass
           ..write('flavorProfile: $flavorProfile, ')
           ..write('iconName: $iconName, ')
           ..write('category: $category, ')
+          ..write('contentHtml: $contentHtml, ')
           ..write('weight: $weight, ')
           ..write('coffeeGrams: $coffeeGrams, ')
           ..write('nameUk: $nameUk, ')
@@ -16798,6 +17001,7 @@ class AlternativeBrewingData extends DataClass
     flavorProfile,
     iconName,
     category,
+    contentHtml,
     weight,
     coffeeGrams,
     nameUk,
@@ -16822,6 +17026,7 @@ class AlternativeBrewingData extends DataClass
           other.flavorProfile == this.flavorProfile &&
           other.iconName == this.iconName &&
           other.category == this.category &&
+          other.contentHtml == this.contentHtml &&
           other.weight == this.weight &&
           other.coffeeGrams == this.coffeeGrams &&
           other.nameUk == this.nameUk &&
@@ -16845,6 +17050,7 @@ class AlternativeBrewingCompanion
   final Value<String> flavorProfile;
   final Value<String?> iconName;
   final Value<String> category;
+  final Value<String?> contentHtml;
   final Value<double?> weight;
   final Value<double?> coffeeGrams;
   final Value<String?> nameUk;
@@ -16865,6 +17071,7 @@ class AlternativeBrewingCompanion
     this.flavorProfile = const Value.absent(),
     this.iconName = const Value.absent(),
     this.category = const Value.absent(),
+    this.contentHtml = const Value.absent(),
     this.weight = const Value.absent(),
     this.coffeeGrams = const Value.absent(),
     this.nameUk = const Value.absent(),
@@ -16886,6 +17093,7 @@ class AlternativeBrewingCompanion
     this.flavorProfile = const Value.absent(),
     this.iconName = const Value.absent(),
     this.category = const Value.absent(),
+    this.contentHtml = const Value.absent(),
     this.weight = const Value.absent(),
     this.coffeeGrams = const Value.absent(),
     this.nameUk = const Value.absent(),
@@ -16907,6 +17115,7 @@ class AlternativeBrewingCompanion
     Expression<String>? flavorProfile,
     Expression<String>? iconName,
     Expression<String>? category,
+    Expression<String>? contentHtml,
     Expression<double>? weight,
     Expression<double>? coffeeGrams,
     Expression<String>? nameUk,
@@ -16928,6 +17137,7 @@ class AlternativeBrewingCompanion
       if (flavorProfile != null) 'flavor_profile': flavorProfile,
       if (iconName != null) 'icon_name': iconName,
       if (category != null) 'category': category,
+      if (contentHtml != null) 'content_html': contentHtml,
       if (weight != null) 'weight': weight,
       if (coffeeGrams != null) 'coffee_grams': coffeeGrams,
       if (nameUk != null) 'name_uk': nameUk,
@@ -16951,6 +17161,7 @@ class AlternativeBrewingCompanion
     Value<String>? flavorProfile,
     Value<String?>? iconName,
     Value<String>? category,
+    Value<String?>? contentHtml,
     Value<double?>? weight,
     Value<double?>? coffeeGrams,
     Value<String?>? nameUk,
@@ -16972,6 +17183,7 @@ class AlternativeBrewingCompanion
       flavorProfile: flavorProfile ?? this.flavorProfile,
       iconName: iconName ?? this.iconName,
       category: category ?? this.category,
+      contentHtml: contentHtml ?? this.contentHtml,
       weight: weight ?? this.weight,
       coffeeGrams: coffeeGrams ?? this.coffeeGrams,
       nameUk: nameUk ?? this.nameUk,
@@ -17019,6 +17231,9 @@ class AlternativeBrewingCompanion
     if (category.present) {
       map['category'] = Variable<String>(category.value);
     }
+    if (contentHtml.present) {
+      map['content_html'] = Variable<String>(contentHtml.value);
+    }
     if (weight.present) {
       map['weight'] = Variable<double>(weight.value);
     }
@@ -17060,6 +17275,7 @@ class AlternativeBrewingCompanion
           ..write('flavorProfile: $flavorProfile, ')
           ..write('iconName: $iconName, ')
           ..write('category: $category, ')
+          ..write('contentHtml: $contentHtml, ')
           ..write('weight: $weight, ')
           ..write('coffeeGrams: $coffeeGrams, ')
           ..write('nameUk: $nameUk, ')
@@ -23990,6 +24206,7 @@ typedef $$BrewingRecipeTranslationsTableCreateCompanionBuilder =
       required String languageCode,
       Value<String?> name,
       Value<String?> description,
+      Value<String?> contentHtml,
       Value<int> rowid,
     });
 typedef $$BrewingRecipeTranslationsTableUpdateCompanionBuilder =
@@ -23998,6 +24215,7 @@ typedef $$BrewingRecipeTranslationsTableUpdateCompanionBuilder =
       Value<String> languageCode,
       Value<String?> name,
       Value<String?> description,
+      Value<String?> contentHtml,
       Value<int> rowid,
     });
 
@@ -24061,6 +24279,11 @@ class $$BrewingRecipeTranslationsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get contentHtml => $composableBuilder(
+    column: $table.contentHtml,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$BrewingRecipesTableFilterComposer get recipeKey {
     final $$BrewingRecipesTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -24109,6 +24332,11 @@ class $$BrewingRecipeTranslationsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get contentHtml => $composableBuilder(
+    column: $table.contentHtml,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$BrewingRecipesTableOrderingComposer get recipeKey {
     final $$BrewingRecipesTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -24152,6 +24380,11 @@ class $$BrewingRecipeTranslationsTableAnnotationComposer
 
   GeneratedColumn<String> get description => $composableBuilder(
     column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get contentHtml => $composableBuilder(
+    column: $table.contentHtml,
     builder: (column) => column,
   );
 
@@ -24225,12 +24458,14 @@ class $$BrewingRecipeTranslationsTableTableManager
                 Value<String> languageCode = const Value.absent(),
                 Value<String?> name = const Value.absent(),
                 Value<String?> description = const Value.absent(),
+                Value<String?> contentHtml = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => BrewingRecipeTranslationsCompanion(
                 recipeKey: recipeKey,
                 languageCode: languageCode,
                 name: name,
                 description: description,
+                contentHtml: contentHtml,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -24239,12 +24474,14 @@ class $$BrewingRecipeTranslationsTableTableManager
                 required String languageCode,
                 Value<String?> name = const Value.absent(),
                 Value<String?> description = const Value.absent(),
+                Value<String?> contentHtml = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => BrewingRecipeTranslationsCompanion.insert(
                 recipeKey: recipeKey,
                 languageCode: languageCode,
                 name: name,
                 description: description,
+                contentHtml: contentHtml,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -24772,6 +25009,7 @@ typedef $$CustomRecipesTableCreateCompanionBuilder =
       Value<int?> extractionTimeSeconds,
       Value<String?> difficulty,
       Value<String> sensoryJson,
+      Value<String?> contentHtml,
       Value<bool> isFavorite,
       Value<bool> isArchived,
       Value<bool> isSynced,
@@ -24804,6 +25042,7 @@ typedef $$CustomRecipesTableUpdateCompanionBuilder =
       Value<int?> extractionTimeSeconds,
       Value<String?> difficulty,
       Value<String> sensoryJson,
+      Value<String?> contentHtml,
       Value<bool> isFavorite,
       Value<bool> isArchived,
       Value<bool> isSynced,
@@ -24937,6 +25176,11 @@ class $$CustomRecipesTableFilterComposer
 
   ColumnFilters<String> get sensoryJson => $composableBuilder(
     column: $table.sensoryJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get contentHtml => $composableBuilder(
+    column: $table.contentHtml,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -25090,6 +25334,11 @@ class $$CustomRecipesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get contentHtml => $composableBuilder(
+    column: $table.contentHtml,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isFavorite => $composableBuilder(
     column: $table.isFavorite,
     builder: (column) => ColumnOrderings(column),
@@ -25216,6 +25465,11 @@ class $$CustomRecipesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get contentHtml => $composableBuilder(
+    column: $table.contentHtml,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<bool> get isFavorite => $composableBuilder(
     column: $table.isFavorite,
     builder: (column) => column,
@@ -25290,6 +25544,7 @@ class $$CustomRecipesTableTableManager
                 Value<int?> extractionTimeSeconds = const Value.absent(),
                 Value<String?> difficulty = const Value.absent(),
                 Value<String> sensoryJson = const Value.absent(),
+                Value<String?> contentHtml = const Value.absent(),
                 Value<bool> isFavorite = const Value.absent(),
                 Value<bool> isArchived = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
@@ -25320,6 +25575,7 @@ class $$CustomRecipesTableTableManager
                 extractionTimeSeconds: extractionTimeSeconds,
                 difficulty: difficulty,
                 sensoryJson: sensoryJson,
+                contentHtml: contentHtml,
                 isFavorite: isFavorite,
                 isArchived: isArchived,
                 isSynced: isSynced,
@@ -25352,6 +25608,7 @@ class $$CustomRecipesTableTableManager
                 Value<int?> extractionTimeSeconds = const Value.absent(),
                 Value<String?> difficulty = const Value.absent(),
                 Value<String> sensoryJson = const Value.absent(),
+                Value<String?> contentHtml = const Value.absent(),
                 Value<bool> isFavorite = const Value.absent(),
                 Value<bool> isArchived = const Value.absent(),
                 Value<bool> isSynced = const Value.absent(),
@@ -25382,6 +25639,7 @@ class $$CustomRecipesTableTableManager
                 extractionTimeSeconds: extractionTimeSeconds,
                 difficulty: difficulty,
                 sensoryJson: sensoryJson,
+                contentHtml: contentHtml,
                 isFavorite: isFavorite,
                 isArchived: isArchived,
                 isSynced: isSynced,
@@ -28944,6 +29202,7 @@ typedef $$BrewingRecipeTranslationsV2TableCreateCompanionBuilder =
       required String languageCode,
       Value<String?> name,
       Value<String?> description,
+      Value<String?> contentHtml,
       Value<int> rowid,
     });
 typedef $$BrewingRecipeTranslationsV2TableUpdateCompanionBuilder =
@@ -28952,6 +29211,7 @@ typedef $$BrewingRecipeTranslationsV2TableUpdateCompanionBuilder =
       Value<String> languageCode,
       Value<String?> name,
       Value<String?> description,
+      Value<String?> contentHtml,
       Value<int> rowid,
     });
 
@@ -29015,6 +29275,11 @@ class $$BrewingRecipeTranslationsV2TableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get contentHtml => $composableBuilder(
+    column: $table.contentHtml,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$BrewingRecipesV2TableFilterComposer get recipeKey {
     final $$BrewingRecipesV2TableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -29063,6 +29328,11 @@ class $$BrewingRecipeTranslationsV2TableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get contentHtml => $composableBuilder(
+    column: $table.contentHtml,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$BrewingRecipesV2TableOrderingComposer get recipeKey {
     final $$BrewingRecipesV2TableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -29106,6 +29376,11 @@ class $$BrewingRecipeTranslationsV2TableAnnotationComposer
 
   GeneratedColumn<String> get description => $composableBuilder(
     column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get contentHtml => $composableBuilder(
+    column: $table.contentHtml,
     builder: (column) => column,
   );
 
@@ -29179,12 +29454,14 @@ class $$BrewingRecipeTranslationsV2TableTableManager
                 Value<String> languageCode = const Value.absent(),
                 Value<String?> name = const Value.absent(),
                 Value<String?> description = const Value.absent(),
+                Value<String?> contentHtml = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => BrewingRecipeTranslationsV2Companion(
                 recipeKey: recipeKey,
                 languageCode: languageCode,
                 name: name,
                 description: description,
+                contentHtml: contentHtml,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -29193,12 +29470,14 @@ class $$BrewingRecipeTranslationsV2TableTableManager
                 required String languageCode,
                 Value<String?> name = const Value.absent(),
                 Value<String?> description = const Value.absent(),
+                Value<String?> contentHtml = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => BrewingRecipeTranslationsV2Companion.insert(
                 recipeKey: recipeKey,
                 languageCode: languageCode,
                 name: name,
                 description: description,
+                contentHtml: contentHtml,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -29286,6 +29565,7 @@ typedef $$AlternativeBrewingTableCreateCompanionBuilder =
       Value<String> flavorProfile,
       Value<String?> iconName,
       Value<String> category,
+      Value<String?> contentHtml,
       Value<double?> weight,
       Value<double?> coffeeGrams,
       Value<String?> nameUk,
@@ -29308,6 +29588,7 @@ typedef $$AlternativeBrewingTableUpdateCompanionBuilder =
       Value<String> flavorProfile,
       Value<String?> iconName,
       Value<String> category,
+      Value<String?> contentHtml,
       Value<double?> weight,
       Value<double?> coffeeGrams,
       Value<String?> nameUk,
@@ -29426,6 +29707,11 @@ class $$AlternativeBrewingTableFilterComposer
 
   ColumnFilters<String> get category => $composableBuilder(
     column: $table.category,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get contentHtml => $composableBuilder(
+    column: $table.contentHtml,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -29563,6 +29849,11 @@ class $$AlternativeBrewingTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get contentHtml => $composableBuilder(
+    column: $table.contentHtml,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<double> get weight => $composableBuilder(
     column: $table.weight,
     builder: (column) => ColumnOrderings(column),
@@ -29653,6 +29944,11 @@ class $$AlternativeBrewingTableAnnotationComposer
 
   GeneratedColumn<String> get category =>
       $composableBuilder(column: $table.category, builder: (column) => column);
+
+  GeneratedColumn<String> get contentHtml => $composableBuilder(
+    column: $table.contentHtml,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<double> get weight =>
       $composableBuilder(column: $table.weight, builder: (column) => column);
@@ -29756,6 +30052,7 @@ class $$AlternativeBrewingTableTableManager
                 Value<String> flavorProfile = const Value.absent(),
                 Value<String?> iconName = const Value.absent(),
                 Value<String> category = const Value.absent(),
+                Value<String?> contentHtml = const Value.absent(),
                 Value<double?> weight = const Value.absent(),
                 Value<double?> coffeeGrams = const Value.absent(),
                 Value<String?> nameUk = const Value.absent(),
@@ -29776,6 +30073,7 @@ class $$AlternativeBrewingTableTableManager
                 flavorProfile: flavorProfile,
                 iconName: iconName,
                 category: category,
+                contentHtml: contentHtml,
                 weight: weight,
                 coffeeGrams: coffeeGrams,
                 nameUk: nameUk,
@@ -29798,6 +30096,7 @@ class $$AlternativeBrewingTableTableManager
                 Value<String> flavorProfile = const Value.absent(),
                 Value<String?> iconName = const Value.absent(),
                 Value<String> category = const Value.absent(),
+                Value<String?> contentHtml = const Value.absent(),
                 Value<double?> weight = const Value.absent(),
                 Value<double?> coffeeGrams = const Value.absent(),
                 Value<String?> nameUk = const Value.absent(),
@@ -29818,6 +30117,7 @@ class $$AlternativeBrewingTableTableManager
                 flavorProfile: flavorProfile,
                 iconName: iconName,
                 category: category,
+                contentHtml: contentHtml,
                 weight: weight,
                 coffeeGrams: coffeeGrams,
                 nameUk: nameUk,

@@ -18,7 +18,10 @@ extension _RecipePourScheduleSection on _AddRecipeDialogState {
             Row(
               children: [
                 Text(
-                  ref.t('pours_count', args: {'count': _pourControllers.length.toString()}),
+                  ref.t(
+                    'pours_count',
+                    args: {'count': _pourControllers.length.toString()},
+                  ),
                   style: GoogleFonts.outfit(
                     color: Colors.white38,
                     fontSize: 12,

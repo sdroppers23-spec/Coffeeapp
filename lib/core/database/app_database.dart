@@ -489,18 +489,21 @@ class AppDatabase extends _$AppDatabase {
   Future<List<AlternativeBrewingDto>> getAllAlternativeBrewing(
     String lang,
   ) async {
-    final query = select(alternativeBrewing).join([
-      leftOuterJoin(
-        alternativeBrewingTranslations,
-        alternativeBrewingTranslations.recipeKey.equalsExp(
-              alternativeBrewing.methodKey,
-            ) &
-            alternativeBrewingTranslations.languageCode.equals(lang),
-      ),
-    ])..where(
-      alternativeBrewing.isHiden.equals(false) &
-          alternativeBrewing.isDeletedLocal.equals(false),
-    )..orderBy([OrderingTerm.asc(alternativeBrewing.sortOrder)]);
+    final query =
+        select(alternativeBrewing).join([
+            leftOuterJoin(
+              alternativeBrewingTranslations,
+              alternativeBrewingTranslations.recipeKey.equalsExp(
+                    alternativeBrewing.methodKey,
+                  ) &
+                  alternativeBrewingTranslations.languageCode.equals(lang),
+            ),
+          ])
+          ..where(
+            alternativeBrewing.isHiden.equals(false) &
+                alternativeBrewing.isDeletedLocal.equals(false),
+          )
+          ..orderBy([OrderingTerm.asc(alternativeBrewing.sortOrder)]);
 
     final rows = await query.get();
     return rows.map((row) {
@@ -510,11 +513,13 @@ class AppDatabase extends _$AppDatabase {
       return AlternativeBrewingDto(
         id: recipe.id,
         methodKey: recipe.methodKey,
-        name: recipe.nameUk?.isNotEmpty == true ? recipe.nameUk! : (translation?.name ?? 'Unknown'),
+        name: recipe.nameUk?.isNotEmpty == true
+            ? recipe.nameUk!
+            : (translation?.name ?? 'Unknown'),
         description: translation?.description ?? '',
         contentHtml: translation?.contentHtml?.isNotEmpty == true
             ? translation!.contentHtml!
-            : (row.read(alternativeBrewing.contentHtml) ?? ''),
+            : (recipe.contentHtml ?? ''),
         imageUrl: recipe.imageUrl ?? '',
         ratioGramsPerMl: recipe.ratioGramsPerMl,
         tempC: recipe.tempC,

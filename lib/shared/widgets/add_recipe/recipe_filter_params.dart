@@ -36,9 +36,7 @@ extension _RecipeFilterParamsSection on _AddRecipeDialogState {
                 label: ref.t('extraction_time_hint'),
                 hint: '00:00:00',
                 keyboardType: TextInputType.number,
-                inputFormatters: [
-                  _TimeMaskFormatter(),
-                ],
+                inputFormatters: [_TimeMaskFormatter()],
               ),
             ),
             const SizedBox(width: 12),

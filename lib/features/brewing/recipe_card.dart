@@ -5,6 +5,7 @@ import '../../core/database/dtos.dart';
 import '../../shared/widgets/glass_container.dart';
 import 'brewing_detail_screen.dart';
 import '../../core/l10n/app_localizations.dart';
+import '../../core/utils/text_processor.dart';
 
 class RecipeCard extends ConsumerWidget {
   final BrewingRecipeDto recipe;
@@ -19,10 +20,17 @@ class RecipeCard extends ConsumerWidget {
   }
 
   String get _formattedRatio {
+    // Priority 1: use ratioGramsPerMl
     final r = recipe.ratioGramsPerMl ?? 0.0;
-    // Convert ratio g/ml to e.g. "1:15"
     if (r > 0) {
       final inverse = (1 / r).round();
+      return '1:$inverse';
+    }
+    // Priority 2: calculate from weight (water) / coffeeGrams
+    final weight = recipe.weight ?? 0.0;
+    final coffee = recipe.coffeeGrams ?? 0.0;
+    if (weight > 0 && coffee > 0) {
+      final inverse = (weight / coffee).round();
       return '1:$inverse';
     }
     return '—';
@@ -32,35 +40,76 @@ class RecipeCard extends ConsumerWidget {
     final d = (recipe.difficulty ?? 'intermediate').toLowerCase().trim();
     // Support numeric 1-5
     switch (d) {
-      case '1': case 'easy': case 'beginner': return ref.t('difficulty_beginner');
-      case '2': case 'medium': case 'intermediate': return ref.t('difficulty_intermediate');
-      case '3': case 'hard': case 'advanced': return ref.t('difficulty_advanced');
-      case '4': case 'expert': return ref.t('difficulty_expert');
-      case '5': case 'master': return ref.t('difficulty_master');
-      default: return ref.t('difficulty_intermediate');
+      case '1':
+      case 'easy':
+      case 'beginner':
+        return ref.t('difficulty_beginner');
+      case '2':
+      case 'medium':
+      case 'intermediate':
+        return ref.t('difficulty_intermediate');
+      case '3':
+      case 'hard':
+      case 'advanced':
+        return ref.t('difficulty_advanced');
+      case '4':
+      case 'expert':
+        return ref.t('difficulty_expert');
+      case '5':
+      case 'master':
+        return ref.t('difficulty_master');
+      default:
+        return ref.t('difficulty_intermediate');
     }
   }
 
   Color get _difficultyColor {
     final d = (recipe.difficulty ?? 'intermediate').toLowerCase().trim();
     switch (d) {
-      case '1': case 'beginner': case 'easy': return const Color(0xFF00FF88);
-      case '2': case 'intermediate': case 'medium': return const Color(0xFFFFEE00);
-      case '3': case 'advanced': case 'hard': return const Color(0xFFFF3333);
-      case '4': case 'expert': return const Color(0xFFFF3366);
-      case '5': case 'master': return const Color(0xFFCC00FF);
-      default: return const Color(0xFFFFEE00);
+      case '1':
+      case 'beginner':
+      case 'easy':
+        return const Color(0xFF00FF88);
+      case '2':
+      case 'intermediate':
+      case 'medium':
+        return const Color(0xFFFFEE00);
+      case '3':
+      case 'advanced':
+      case 'hard':
+        return const Color(0xFFFF3333);
+      case '4':
+      case 'expert':
+        return const Color(0xFFFF3366);
+      case '5':
+      case 'master':
+        return const Color(0xFFCC00FF);
+      default:
+        return const Color(0xFFFFEE00);
     }
   }
 
   int get _difficultyStars {
     final d = (recipe.difficulty ?? 'intermediate').toLowerCase().trim();
     switch (d) {
-      case '1': case 'easy': case 'beginner': return 1;
-      case '2': case 'medium': case 'intermediate': return 2;
-      case '3': case 'hard': case 'advanced': return 3;
-      case '4': case 'expert': return 4;
-      case '5': case 'master': return 5;
+      case '1':
+      case 'easy':
+      case 'beginner':
+        return 1;
+      case '2':
+      case 'medium':
+      case 'intermediate':
+        return 2;
+      case '3':
+      case 'hard':
+      case 'advanced':
+        return 3;
+      case '4':
+      case 'expert':
+        return 4;
+      case '5':
+      case 'master':
+        return 5;
       default:
         // Try parsing as int
         final n = int.tryParse(d);
@@ -116,10 +165,15 @@ class RecipeCard extends ConsumerWidget {
                             height: 1.1,
                           ),
                         ),
-                        if (recipe.description.isNotEmpty) ...[
+                        if (recipe.description.isNotEmpty ||
+                            (recipe.contentHtml?.isNotEmpty ?? false)) ...[
                           const SizedBox(height: 6),
                           Text(
-                            recipe.description,
+                            (recipe.contentHtml?.isNotEmpty ?? false)
+                                ? CoffeeTextProcessor.stripHtml(
+                                    recipe.contentHtml!,
+                                  )
+                                : recipe.description,
                             style: GoogleFonts.outfit(
                               fontSize: 13.5,
                               color: Colors.white.withValues(alpha: 0.65),
@@ -309,17 +363,6 @@ class _DifficultyCell extends StatelessWidget {
     return Expanded(
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(5, (index) {
-              return Icon(
-                index < stars ? Icons.star_rounded : Icons.star_outline_rounded,
-                size: 10,
-                color: index < stars ? color : color.withValues(alpha: 0.2),
-              );
-            }),
-          ),
-          const SizedBox(height: 2),
           Text(
             label,
             style: GoogleFonts.outfit(
@@ -330,6 +373,17 @@ class _DifficultyCell extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 2),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(5, (index) {
+              return Icon(
+                index < stars ? Icons.star_rounded : Icons.star_outline_rounded,
+                size: 10,
+                color: index < stars ? color : color.withValues(alpha: 0.2),
+              );
+            }),
           ),
           const SizedBox(height: 2),
           Text(

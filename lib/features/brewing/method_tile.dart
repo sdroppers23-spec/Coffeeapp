@@ -18,7 +18,6 @@ class MethodTile extends ConsumerWidget {
 
   BrewingRecipeDto get _firstRecipe => methodRecipes.first;
 
-
   String _getEffectiveName(BuildContext context) {
     return _firstRecipe.name;
   }

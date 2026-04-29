@@ -58,11 +58,11 @@ class CustomRecipeListTab extends ConsumerStatefulWidget {
 class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
   bool _isSelectionMode = false;
   final Set<String> _selectedIds = {};
-  bool _isDisposed = false;
+
 
   @override
   void dispose() {
-    _isDisposed = true;
+
     // Ensure nav bar is shown when leaving, but only if we were hiding it
     if (_isSelectionMode) {
       Future.microtask(() {

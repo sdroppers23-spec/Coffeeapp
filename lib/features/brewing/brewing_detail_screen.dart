@@ -47,6 +47,17 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
   }
 
   @override
+  void dispose() {
+    // Restore nav bar when leaving
+    Future.microtask(() {
+      if (mounted) {
+        ref.read(navBarVisibleProvider.notifier).show();
+      }
+    });
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0A),
@@ -198,7 +209,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 4),
+
                       // Description or Content HTML
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,6 +222,10 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                               style: CoffeeTextProcessor.getHtmlStyles(
                                 baseFontSize: 15,
                               )..addAll({
+                                'html': Style(
+                                  margin: Margins.zero,
+                                  padding: HtmlPaddings.zero,
+                                ),
                                 'body': Style(
                                   margin: Margins.zero,
                                   padding: HtmlPaddings.zero,
@@ -234,11 +249,11 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                                 height: 1.6,
                               ),
                             ),
-                          // Expand Trigger - Now at Bottom Right within flow
+                          // Expand Trigger - Now moved up closer to text
                           if (widget.recipe.description.length > 100 ||
                               (widget.recipe.contentHtml?.isNotEmpty ?? false))
-                            Padding(
-                              padding: const EdgeInsets.only(top: 4),
+                            Transform.translate(
+                              offset: const Offset(0, -12),
                               child: Align(
                                 alignment: Alignment.centerRight,
                                 child: GestureDetector(

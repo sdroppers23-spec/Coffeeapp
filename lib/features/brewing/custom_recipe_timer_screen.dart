@@ -84,9 +84,15 @@ class _CustomRecipeTimerScreenState
   int _getActivePourIndex() {
     if (_pours.isEmpty) return -1;
     for (int i = _pours.length - 1; i >= 0; i--) {
-      final atMin = _pours[i]['atMinute'] as num?;
-      if (atMin == null) continue;
-      final pourSec = (atMin.toDouble() * 60).round();
+      final p = _pours[i];
+      final min = p['min'] as num? ?? 0;
+      final sec = p['sec'] as num? ?? 0;
+      final atMin = p['atMinute'] as num?;
+      
+      final pourSec = atMin != null 
+          ? (atMin.toDouble() * 60).round() 
+          : (min * 60 + sec).toInt();
+
       if (_elapsedSec >= pourSec) {
         return i;
       }
@@ -101,7 +107,7 @@ class _CustomRecipeTimerScreenState
     final pour = _pours[activeIndex];
     final isEspresso = widget.recipe.recipeType == 'espresso';
     final isBloom = activeIndex == 0;
-    final ml = pour['waterMl'];
+    final ml = pour['water'] ?? pour['waterMl'] ?? 0;
     final notes = pour['notes']?.toString();
 
     String label;
@@ -118,7 +124,7 @@ class _CustomRecipeTimerScreenState
             );
     }
 
-    String text = '$label: ${ml ?? 0} ml';
+    String text = '$label: ${ml} ml';
     if (notes != null && notes.isNotEmpty && notes != 'Extraction') {
       text += ' - $notes';
     }
@@ -279,17 +285,23 @@ class _CustomRecipeTimerScreenState
           // ── Pours List ──────────────────────────────────────────────────────
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
               itemCount: _pours.length,
               itemBuilder: (context, i) {
                 final pour = _pours[i];
                 final isPast = i < activeIndex;
                 final isActive = i == activeIndex;
+                
+                // Get time from min/sec or atMinute
+                final min = pour['min'] as num? ?? 0;
+                final sec = pour['sec'] as num? ?? 0;
                 final atMin = pour['atMinute'] as num?;
-                final pourSec = atMin != null
-                    ? (atMin.toDouble() * 60).round()
-                    : 0;
-                final ml = pour['waterMl'];
+                
+                final pourSec = atMin != null 
+                    ? (atMin.toDouble() * 60).round() 
+                    : (min * 60 + sec).toInt();
+                    
+                final ml = pour['water'] ?? pour['waterMl'] ?? 0;
                 final n = pour['pourNumber'] ?? (i + 1);
                 final isBloom = i == 0;
 

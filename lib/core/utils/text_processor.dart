@@ -98,7 +98,7 @@ class CoffeeTextProcessor {
         color: goldColor,
         fontFamily: GoogleFonts.cormorantGaramond().fontFamily,
         fontWeight: FontWeight.w700,
-        margin: Margins.only(top: 8, bottom: 2),
+        margin: Margins.only(top: 0, bottom: 2),
       ),
       'h1': Style(fontSize: FontSize(baseFontSize * 1.4)),
       'h2': Style(fontSize: FontSize(baseFontSize * 1.25)),

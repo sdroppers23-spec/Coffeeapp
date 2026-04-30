@@ -557,169 +557,70 @@ class SyncService {
     }
     
     if (!internal) _isPushing = true;
-    
     debugPrint('SyncService: Starting cloud push...');
 
     try {
       final userId = supabase!.auth.currentUser!.id;
       debugPrint('SyncService: userId is $userId');
 
-      // 1. Sync Lot Recipes (Upsert & Delete)
-      onProgress?.call('Pushing Recipes...', 0.91);
-      final lotRecipesToSync = await (db.select(
-        db.userLotRecipes,
+      // 1. Sync User Brands (Upsert & Delete)
+      onProgress?.call('Pushing Brands...', 0.91);
+      final brandsToSync = await (db.select(
+        db.localizedBrands,
       )..where((t) => t.isSynced.equals(false))).get();
-      for (final r in lotRecipesToSync) {
+      for (final b in brandsToSync) {
         try {
-          if (r.isDeletedLocal) {
+          if (b.isDeletedLocal) {
+            debugPrint('SyncService: Deleting brand from cloud: ${b.id}');
             await supabase!
-                .from('user_lot_recipes')
+                .from('user_brands')
                 .delete()
-                .eq('id', r.id)
+                .eq('id', b.id)
                 .eq('user_id', userId)
                 .timeout(const Duration(seconds: 15));
-            await db.markUserLotRecipeSynced(r.id);
-            debugPrint('SyncService: Deleted lot recipe ${r.id} from cloud');
+            
+            await (db.delete(db.localizedBrands)..where((t) => t.id.equals(b.id))).go();
+            debugPrint('SyncService: Brand deleted permanently: ${b.id}');
           } else {
-            final data = {
-              'id': r.id,
-              'user_id': userId,
-              'lot_id': r.lotId,
-              'method_key': r.methodKey,
-              'name': r.name,
-              'coffee_grams': r.coffeeGrams,
-              'total_water_ml': r.totalWaterMl,
-              'grind_number': r.grindNumber,
-              'comandante_clicks': r.comandanteClicks,
-              'ek43_division': r.ek43Division,
-              'total_pours': r.totalPours,
-              'pour_schedule_json': _safeParsePours(r.pourScheduleJson),
-              'brew_temp_c': r.brewTempC,
-              'notes': r.notes,
-              'rating': r.rating,
-              'updated_at': DateTime.now().toIso8601String(),
-              'extraction_time_seconds': r.extractionTimeSeconds,
-              'difficulty': r.difficulty,
-              'content_html': r.contentHtml,
-              'custom_method_name': r.customMethodName,
-            };
-
             await supabase!
-                .from('user_lot_recipes')
-                .upsert(data)
+                .from('user_brands')
+                .upsert({
+                  'id': b.id,
+                  'user_id': userId,
+                  'name': b.name,
+                  'logo_url': b.logoUrl,
+                  'site_url': b.siteUrl,
+                  'updated_at': DateTime.now().toIso8601String(),
+                })
                 .timeout(const Duration(seconds: 15));
-            await db.markUserLotRecipeSynced(r.id);
-            debugPrint('SyncService: Pushed lot recipe ${r.id}');
+
+            final translations = await (db.select(db.localizedBrandTranslations)
+              ..where((t) => t.brandId.equals(b.id))).get();
+            
+            for (final t in translations) {
+              await supabase!
+                  .from('user_brand_translations')
+                  .upsert({
+                    'brand_id': t.brandId,
+                    'language_code': t.languageCode,
+                    'short_desc': t.shortDesc,
+                    'full_desc': t.fullDesc,
+                    'location': t.location,
+                  })
+                  .timeout(const Duration(seconds: 15));
+            }
+
+            await (db.update(db.localizedBrands)..where((t) => t.id.equals(b.id)))
+                .write(const LocalizedBrandsCompanion(isSynced: Value(true)));
+            debugPrint('SyncService: Brand synced to cloud: ${b.id}');
           }
         } catch (e) {
-          debugPrint('SyncService: Error syncing lot recipe ${r.id}: $e');
+          debugPrint('SyncService: Error syncing brand ${b.id}: $e');
         }
       }
 
-      // 2. Sync Encyclopedia Recipes (Upsert & Delete)
-      onProgress?.call('Pushing Encyclopedia...', 0.92);
-      final encRecipesToSync = await (db.select(
-        db.encyclopediaRecipes,
-      )..where((t) => t.isSynced.equals(false))).get();
-      for (final r in encRecipesToSync) {
-        try {
-          if (r.isDeletedLocal) {
-            await supabase!
-                .from('user_encyclopedia_recipes')
-                .delete()
-                .eq('id', r.id)
-                .eq('user_id', userId)
-                .timeout(const Duration(seconds: 15));
-            await db.markEncyclopediaRecipeSynced(r.id);
-            debugPrint('SyncService: Deleted encyclopedia recipe ${r.id} from cloud');
-          } else {
-            final data = {
-              'id': r.id,
-              'user_id': userId,
-              'lot_id': r.beanId,
-              'method_key': r.methodKey,
-              'name': r.name,
-              'coffee_grams': r.coffeeGrams,
-              'total_water_ml': r.totalWaterMl,
-              'grind_number': r.grindNumber,
-              'comandante_clicks': r.comandanteClicks,
-              'ek43_division': r.ek43Division,
-              'total_pours': r.totalPours,
-              'pour_schedule_json': _safeParsePours(r.pourScheduleJson),
-              'brew_temp_c': r.brewTempC,
-              'notes': r.notes,
-              'rating': r.rating,
-              'updated_at': DateTime.now().toIso8601String(),
-              'extraction_time_seconds': r.extractionTimeSeconds,
-              'difficulty': r.difficulty,
-              'content_html': r.contentHtml,
-              'custom_method_name': r.customMethodName,
-            };
-
-            await supabase!
-                .from('user_encyclopedia_recipes')
-                .upsert(data)
-                .timeout(const Duration(seconds: 15));
-            await db.markEncyclopediaRecipeSynced(r.id);
-            debugPrint('SyncService: Pushed encyclopedia recipe ${r.id}');
-          }
-        } catch (e) {
-          debugPrint('SyncService: Error syncing encyclopedia recipe ${r.id}: $e');
-        }
-      }
-
-      // 3. Sync Alternative Recipes (Upsert & Delete)
-      onProgress?.call('Pushing Alternative...', 0.93);
-      final altRecipesToSync = await (db.select(
-        db.alternativeRecipes,
-      )..where((t) => t.isSynced.equals(false))).get();
-      for (final r in altRecipesToSync) {
-        try {
-          if (r.isDeletedLocal) {
-            await supabase!
-                .from('user_alternative_recipes')
-                .delete()
-                .eq('id', r.id)
-                .eq('user_id', userId);
-            await db.markAlternativeRecipeSynced(r.id);
-            debugPrint('SyncService: Deleted alternative recipe ${r.id} from cloud');
-          } else {
-            final data = {
-              'id': r.id,
-              'user_id': userId,
-              'method_key': r.methodKey,
-              'name': r.name,
-              'coffee_grams': r.coffeeGrams,
-              'total_water_ml': r.totalWaterMl,
-              'grind_number': r.grindNumber,
-              'comandante_clicks': r.comandanteClicks,
-              'ek43_division': r.ek43Division,
-              'total_pours': r.totalPours,
-              'pour_schedule_json': _safeParsePours(r.pourScheduleJson),
-              'brew_temp_c': r.brewTempC,
-              'notes': r.notes,
-              'rating': r.rating,
-              'updated_at': DateTime.now().toIso8601String(),
-              'extraction_time_seconds': r.extractionTimeSeconds,
-              'difficulty': r.difficulty,
-              'content_html': r.contentHtml,
-              'custom_method_name': r.customMethodName,
-            };
-
-            await supabase!
-                .from('user_alternative_recipes')
-                .upsert(data)
-                .timeout(const Duration(seconds: 15));
-            await db.markAlternativeRecipeSynced(r.id);
-            debugPrint('SyncService: Pushed alternative recipe ${r.id}');
-          }
-        } catch (e) {
-          debugPrint('SyncService: Error syncing alternative recipe ${r.id}: $e');
-        }
-      }
-
-      // 4. Sync Personal Coffee Lots (Upsert & Delete)
-      onProgress?.call('Pushing Lots...', 0.94);
+      // 2. Sync Personal Coffee Lots (Upsert & Delete)
+      onProgress?.call('Pushing Lots...', 0.92);
       final lotsToSync = await (db.select(
         db.coffeeLots,
       )..where((t) => t.isSynced.equals(false))).get();
@@ -783,62 +684,117 @@ class SyncService {
         }
       }
 
-      // 5. Sync User Brands (Upsert & Delete)
-      onProgress?.call('Pushing Brands...', 0.95);
-      final brandsToSync = await (db.select(
-        db.localizedBrands,
+      // 3. Sync Lot Recipes (Upsert & Delete)
+      onProgress?.call('Pushing Recipes...', 0.93);
+      final lotRecipesToSync = await (db.select(
+        db.userLotRecipes,
       )..where((t) => t.isSynced.equals(false))).get();
-      for (final b in brandsToSync) {
+      for (final r in lotRecipesToSync) {
         try {
-          if (b.isDeletedLocal) {
-            debugPrint('SyncService: Deleting brand from cloud: ${b.id}');
+          if (r.isDeletedLocal) {
             await supabase!
-                .from('user_brands')
+                .from('user_lot_recipes')
                 .delete()
-                .eq('id', b.id)
+                .eq('id', r.id)
                 .eq('user_id', userId)
                 .timeout(const Duration(seconds: 15));
-            
-            await (db.delete(db.localizedBrands)..where((t) => t.id.equals(b.id))).go();
-            debugPrint('SyncService: Brand deleted permanently: ${b.id}');
+            await db.markUserLotRecipeSynced(r.id);
+            debugPrint('SyncService: Deleted lot recipe ${r.id} from cloud');
           } else {
+            final data = {
+              'id': r.id,
+              'user_id': userId,
+              'lot_id': r.lotId,
+              'method_key': r.methodKey,
+              'name': r.name,
+              'coffee_grams': r.coffeeGrams,
+              'total_water_ml': r.totalWaterMl,
+              'grind_number': r.grindNumber,
+              'comandante_clicks': r.comandanteClicks,
+              'ek43_division': r.ek43Division,
+              'total_pours': r.totalPours,
+              'pour_schedule_json': _safeParsePours(r.pourScheduleJson),
+              'brew_temp_c': r.brewTempC,
+              'notes': r.notes,
+              'rating': r.rating,
+              'created_at': r.createdAt?.toIso8601String(),
+              'updated_at': DateTime.now().toIso8601String(),
+              'extraction_time_seconds': r.extractionTimeSeconds,
+              'difficulty': r.difficulty,
+              'content_html': r.contentHtml,
+              'custom_method_name': r.customMethodName,
+            };
+
             await supabase!
-                .from('user_brands')
-                .upsert({
-                  'id': b.id,
-                  'user_id': userId,
-                  'name': b.name,
-                  'logo_url': b.logoUrl,
-                  'site_url': b.siteUrl,
-                  'updated_at': DateTime.now().toIso8601String(),
-                })
+                .from('user_lot_recipes')
+                .upsert(data)
                 .timeout(const Duration(seconds: 15));
-
-            final translations = await (db.select(db.localizedBrandTranslations)
-              ..where((t) => t.brandId.equals(b.id))).get();
-            
-            for (final t in translations) {
-              await supabase!
-                  .from('user_brand_translations')
-                  .upsert({
-                    'brand_id': t.brandId,
-                    'language_code': t.languageCode,
-                    'short_desc': t.shortDesc,
-                    'full_desc': t.fullDesc,
-                    'location': t.location,
-                  })
-                  .timeout(const Duration(seconds: 15));
-            }
-
-            await (db.update(db.localizedBrands)..where((t) => t.id.equals(b.id)))
-                .write(const LocalizedBrandsCompanion(isSynced: Value(true)));
-            debugPrint('SyncService: Brand synced to cloud: ${b.id}');
+            await db.markUserLotRecipeSynced(r.id);
+            debugPrint('SyncService: Pushed lot recipe ${r.id}');
           }
         } catch (e) {
-          debugPrint('SyncService: Error syncing brand ${b.id}: $e');
+          debugPrint('SyncService: Error syncing lot recipe ${r.id}: $e');
         }
       }
 
+      // 4. Sync Encyclopedia Recipes (Upsert & Delete)
+      onProgress?.call('Pushing Encyclopedia...', 0.94);
+      final encRecipesToSync = await (db.select(
+        db.encyclopediaRecipes,
+      )..where((t) => t.isSynced.equals(false))).get();
+      for (final r in encRecipesToSync) {
+        try {
+          if (r.isDeletedLocal) {
+            await supabase!
+                .from('user_encyclopedia_recipes')
+                .delete()
+                .eq('id', r.id)
+                .eq('user_id', userId)
+                .timeout(const Duration(seconds: 15));
+            await db.markEncyclopediaRecipeSynced(r.id);
+            debugPrint('SyncService: Deleted encyclopedia recipe ${r.id} from cloud');
+          } else {
+            final data = {
+              'id': r.id,
+              'user_id': userId,
+              'lot_id': r.beanId,
+              'method_key': r.methodKey,
+              'name': r.name,
+              'coffee_grams': r.coffeeGrams,
+              'total_water_ml': r.totalWaterMl,
+              'grind_number': r.grindNumber,
+              'comandante_clicks': r.comandanteClicks,
+              'ek43_division': r.ek43Division,
+              'total_pours': r.totalPours,
+              'pour_schedule_json': _safeParsePours(r.pourScheduleJson),
+              'brew_temp_c': r.brewTempC,
+              'notes': r.notes,
+              'rating': r.rating,
+              'created_at': r.createdAt?.toIso8601String(),
+              'updated_at': DateTime.now().toIso8601String(),
+              'extraction_time_seconds': r.extractionTimeSeconds,
+              'difficulty': r.difficulty,
+              'content_html': r.contentHtml,
+              'custom_method_name': r.customMethodName,
+            };
+
+            await supabase!
+                .from('user_encyclopedia_recipes')
+                .upsert(data)
+                .timeout(const Duration(seconds: 15));
+            await db.markEncyclopediaRecipeSynced(r.id);
+            debugPrint('SyncService: Pushed encyclopedia recipe ${r.id}');
+          }
+        } catch (e) {
+          debugPrint('SyncService: Error syncing encyclopedia recipe ${r.id}: $e');
+        }
+      }
+
+      // 5. Sync Alternative Recipes (Upsert & Delete)
+      onProgress?.call('Pushing Alternative...', 0.95);
+      final altRecipesToSync = await (db.select(
+        db.alternativeRecipes,
+      )..where((t) => t.isSynced.equals(false))).get();
       for (final r in altRecipesToSync) {
         try {
           if (r.isDeletedLocal) {
@@ -865,6 +821,7 @@ class SyncService {
               'brew_temp_c': r.brewTempC,
               'notes': r.notes,
               'rating': r.rating,
+              'created_at': r.createdAt?.toIso8601String(),
               'updated_at': DateTime.now().toIso8601String(),
               'extraction_time_seconds': r.extractionTimeSeconds,
               'difficulty': r.difficulty,

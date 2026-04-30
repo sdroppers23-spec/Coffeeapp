@@ -338,8 +338,10 @@ class _GlobalCustomRecipeListState
         child: Text('Error: $e', style: const TextStyle(color: Colors.white70)),
       ),
       data: (recipes) {
-        // 1. Filter by Sub-Tab (All / Favorites / Archive)
+        // 0. Filter out Encyclopedia recipes (they belong to Encyclopedia module only)
         List<CustomRecipeDto> filtered = recipes.where((r) {
+          if (r.segment == RecipeSegment.encyclopedia) return false;
+          
           if (filterState.showFavoritesOnly) return r.isFavorite;
           if (filterState.showArchivedOnly) return r.isArchived;
           return !r.isArchived; // "All" means everything not archived

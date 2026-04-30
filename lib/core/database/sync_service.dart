@@ -21,6 +21,8 @@ class SyncService {
   Stream<void> get dataUpdateStream => _dataUpdateController.stream;
   
   StreamSubscription? _autoSyncSub;
+  bool _isPushing = false;
+  Timer? _syncDebounceTimer;
 
   static const String baseUrl =
       'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public';
@@ -50,10 +52,11 @@ class SyncService {
         'fermentation_logs'
       };
 
-      final hasRelevantUpdate = updates.any((update) => relevantTables.contains(update.table));
+      final updatedTables = updates.map((u) => u.table).toSet();
+      final hasRelevantUpdate = updatedTables.any((t) => relevantTables.contains(t));
       
       if (hasRelevantUpdate) {
-        // Debounce sync slightly to avoid spamming
+        debugPrint('🔄 SyncService: Local changes detected in $updatedTables, scheduling push...');
         _debounceSync();
       }
     });
@@ -72,6 +75,12 @@ class SyncService {
     bool force = false,
     Function(String, double)? onProgress,
   }) async {
+    if (_isPushing) {
+      debugPrint('SyncService: Sync already in progress, skipping...');
+      return;
+    }
+    _isPushing = true;
+
     try {
       _progressController.add(0.05);
       onProgress?.call('Connecting to cloud...', 0.05);
@@ -90,47 +99,64 @@ class SyncService {
       }
 
       // 2. Sequential Stable Sync with real progress updates
-
       onProgress?.call('Syncing Brands...', 0.2);
-      _progressController.add(0.2);
-      await syncBrands();
-      await Future.delayed(const Duration(milliseconds: 200));
+      try {
+        await syncBrands();
+      } catch (e) {
+        debugPrint('SyncService: Error syncing brands: $e');
+      }
+      await Future.delayed(const Duration(milliseconds: 100));
 
       onProgress?.call('Syncing Farmers...', 0.3);
-      _progressController.add(0.3);
-      await syncFarmers();
-      await Future.delayed(const Duration(milliseconds: 200));
+      try {
+        await syncFarmers();
+      } catch (e) {
+        debugPrint('SyncService: Error syncing farmers: $e');
+      }
+      await Future.delayed(const Duration(milliseconds: 100));
 
       onProgress?.call('Syncing Encyclopedia...', 0.5);
-      _progressController.add(0.5);
-      await syncEncyclopedia();
-      await Future.delayed(const Duration(milliseconds: 200));
+      try {
+        await syncEncyclopedia();
+      } catch (e) {
+        debugPrint('SyncService: Error syncing encyclopedia: $e');
+      }
+      await Future.delayed(const Duration(milliseconds: 100));
 
       onProgress?.call('Syncing Methods...', 0.7);
-      _progressController.add(0.7);
-      // await syncBrewingRecipes(); // Old table
-      await syncAlternativeBrewing(); // New table
-      await Future.delayed(const Duration(milliseconds: 200));
+      try {
+        await syncAlternativeBrewing();
+      } catch (e) {
+        debugPrint('SyncService: Error syncing methods: $e');
+      }
+      await Future.delayed(const Duration(milliseconds: 100));
 
       onProgress?.call('Syncing Articles...', 0.85);
-      _progressController.add(0.85);
-      await syncArticles();
-      await Future.delayed(const Duration(milliseconds: 200));
+      try {
+        await syncArticles();
+      } catch (e) {
+        debugPrint('SyncService: Error syncing articles: $e');
+      }
+      await Future.delayed(const Duration(milliseconds: 100));
 
       onProgress?.call('Syncing User Data...', 0.95);
-      _progressController.add(0.95);
-      // Push local changes (including deletions) BEFORE pulling to prevent restored deleted items
-      await pushLocalUserContent();
-      await pullUserContent();
+      try {
+        // Push local changes (including deletions) BEFORE pulling
+        await pushLocalUserContent();
+        await pullUserContent();
+      } catch (e) {
+        debugPrint('SyncService: Error syncing user data: $e');
+      }
 
       onProgress?.call('Finalizing...', 0.98);
-
       _progressController.add(1.0);
       onProgress?.call('Cloud Connected', 1.0);
     } catch (e) {
-      _progressController.add(0.0);
+      debugPrint('SyncService: Global sync error: $e');
+      _progressController.add(1.0);
       onProgress?.call('Sync failed: $e', 1.0);
-      rethrow;
+    } finally {
+      _isPushing = false;
     }
   }
 
@@ -475,16 +501,37 @@ class SyncService {
 
   List<dynamic> _safeParsePours(String jsonString) {
     try {
+      if (jsonString.isEmpty || jsonString == '[]') return [];
       return jsonDecode(jsonString) as List<dynamic>;
     } catch (_) {
       return [];
     }
   }
 
+  dynamic _safeJsonDecode(String? source) {
+    if (source == null || source.isEmpty || source == '{}' || source == '[]') {
+      return source?.startsWith('[') == true ? [] : {};
+    }
+    try {
+      return jsonDecode(source);
+    } catch (_) {
+      return source.startsWith('[') ? [] : {};
+    }
+  }
+
   /// Pushes local user data (recipes and lots) to Supabase.
   /// Pushes local user data (recipes and lots) to Supabase, including deletions.
   Future<void> pushLocalUserContent() async {
-    if (supabase == null || supabase!.auth.currentUser == null) return;
+    if (supabase == null || supabase!.auth.currentUser == null) {
+      debugPrint('SyncService: No user or supabase, skipping push.');
+      return;
+    }
+    if (_isPushing) {
+      debugPrint('SyncService: Push already in progress, skipping...');
+      return;
+    }
+    _isPushing = true;
+    debugPrint('SyncService: Starting cloud push/pull...');
 
     try {
       final userId = supabase!.auth.currentUser!.id;
@@ -643,41 +690,45 @@ class SyncService {
                 .write(const CoffeeLotsCompanion(isSynced: Value(true)));
             debugPrint('SyncService: Lot deletion synced to cloud: ${l.id}');
           } else {
-            await supabase!.from('user_coffee_lots').upsert({
-              'id': l.id,
-              'user_id': userId,
-              'coffee_name': l.coffeeName,
-              'roastery_name': l.roasteryName,
-              'roastery_country': l.roasteryCountry,
-              'origin_country': l.originCountry,
-              'region': l.region,
-              'altitude': l.altitude,
-              'process': l.process,
-              'roast_level': l.roastLevel,
-              'roast_date': l.roastDate?.toIso8601String(),
-              'opened_at': l.openedAt?.toIso8601String(),
-              'weight': l.weight,
-              'lot_number': l.lotNumber,
-              'is_decaf': l.isDecaf,
-              'farm': l.farm,
-              'wash_station': l.washStation,
-              'farmer': l.farmer,
-              'varieties': l.varieties,
-              'flavor_profile': l.flavorProfile,
-              'sca_score': l.scaScore,
-              'is_favorite': l.isFavorite,
-              'is_archived': l.isArchived,
-              'is_open': l.isOpen,
-              'is_ground': l.isGround,
-              'sensory_json': jsonDecode(l.sensoryJson),
-              'price_json': jsonDecode(l.priceJson),
-              'brand_id': l.brandId,
-              'image_url': l.imageUrl,
-              'created_at':
-                  l.createdAt?.toIso8601String() ??
-                  DateTime.now().toIso8601String(),
-              'updated_at': DateTime.now().toIso8601String(),
-            });
+            try {
+              await supabase!.from('user_coffee_lots').upsert({
+                'id': l.id,
+                'user_id': userId,
+                'coffee_name': l.coffeeName,
+                'roastery_name': l.roasteryName,
+                'roastery_country': l.roasteryCountry,
+                'origin_country': l.originCountry,
+                'region': l.region,
+                'altitude': l.altitude,
+                'process': l.process,
+                'roast_level': l.roastLevel,
+                'roast_date': l.roastDate?.toIso8601String(),
+                'opened_at': l.openedAt?.toIso8601String(),
+                'weight': l.weight,
+                'lot_number': l.lotNumber,
+                'is_decaf': l.isDecaf,
+                'farm': l.farm,
+                'wash_station': l.washStation,
+                'farmer': l.farmer,
+                'varieties': l.varieties,
+                'flavor_profile': l.flavorProfile,
+                'sca_score': l.scaScore,
+                'is_favorite': l.isFavorite,
+                'is_archived': l.isArchived,
+                'is_open': l.isOpen,
+                'is_ground': l.isGround,
+                'sensory_json': _safeJsonDecode(l.sensoryJson),
+                'price_json': _safeJsonDecode(l.priceJson),
+                'brand_id': l.brandId,
+                'image_url': l.imageUrl,
+                'created_at':
+                    l.createdAt?.toIso8601String() ??
+                    DateTime.now().toIso8601String(),
+                'updated_at': DateTime.now().toIso8601String(),
+              });
+            } catch (e) {
+              debugPrint('SyncService: Error pushing lot ${l.id}: $e');
+            }
             await (db.update(db.coffeeLots)..where((t) => t.id.equals(l.id)))
                 .write(const CoffeeLotsCompanion(isSynced: Value(true)));
             debugPrint('SyncService: Lot synced to cloud: ${l.id}');
@@ -745,6 +796,9 @@ class SyncService {
       }
     } catch (e) {
       debugPrint('SyncService: Fatal error in pushLocalUserContent: $e');
+    } finally {
+      _isPushing = false;
+      debugPrint('SyncService: Cloud push/pull finished.');
     }
   }
 
@@ -819,7 +873,7 @@ class SyncService {
 
           await db.insertUserLot(lot);
         } catch (e) {
-          // Production silent fail
+          debugPrint('SyncService: Error importing remote lot: $e');
         }
       }
 
@@ -860,6 +914,7 @@ class SyncService {
               extractionTimeSeconds: Value((item['extraction_time_seconds'] as num?)?.toInt()),
               difficulty: Value(item['difficulty'] as String?),
               contentHtml: Value(item['content_html'] as String?),
+              customMethodName: Value(item['custom_method_name'] as String?),
               updatedAt: Value(DateTime.now()),
               isSynced: const Value(true),
             ),
@@ -906,6 +961,7 @@ class SyncService {
               extractionTimeSeconds: Value((item['extraction_time_seconds'] as num?)?.toInt()),
               difficulty: Value(item['difficulty'] as String?),
               contentHtml: Value(item['content_html'] as String?),
+              customMethodName: Value(item['custom_method_name'] as String?),
               updatedAt: Value(DateTime.now()),
               isSynced: const Value(true),
             ),
@@ -951,6 +1007,7 @@ class SyncService {
               extractionTimeSeconds: Value((item['extraction_time_seconds'] as num?)?.toInt()),
               difficulty: Value(item['difficulty'] as String?),
               contentHtml: Value(item['content_html'] as String?),
+              customMethodName: Value(item['custom_method_name'] as String?),
               updatedAt: Value(DateTime.now()),
               isSynced: const Value(true),
             ),

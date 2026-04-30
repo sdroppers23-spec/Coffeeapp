@@ -757,9 +757,7 @@ class _RecipesTab extends ConsumerWidget {
                               builder: (context) => AddRecipeDialog(
                                 lotId: entry.id.toString(),
                                 recipeSegment: RecipeSegment.encyclopedia,
-                                initialMethod: type == 'espresso'
-                                    ? 'espresso'
-                                    : 'v60',
+                                initialMethod: type,
                               ),
                             );
                             if (result == true) {

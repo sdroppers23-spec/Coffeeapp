@@ -176,11 +176,13 @@ class _BrewingMethodsContent extends ConsumerWidget {
 
               // 2. Add custom recipes (mapped to DTO)
               for (var cr in customList) {
-                // Filter out encyclopedia recipes from the general brewing methods view
-                if (cr.segment == RecipeSegment.encyclopedia) continue;
+                // HARD FILTER: Encyclopedia recipes MUST NOT appear here
+                if (cr.segment == RecipeSegment.encyclopedia) {
+                   debugPrint('BrewingMainScreen: Filtering out encyclopedia recipe: ${cr.name} (ID: ${cr.id})');
+                   continue;
+                }
 
                 // Determine if this custom recipe belongs to an existing guide method or is a new one
-                // For simplicity, we only show custom recipes that match guide method keys on these tiles
                 if (grouped.containsKey(cr.methodKey)) {
                   grouped[cr.methodKey]!.add(
                     BrewingRecipeDto(

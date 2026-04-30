@@ -418,6 +418,15 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             RecipeSegment.alternative => 'user_alternative_recipes',
           };
 
+          dynamic safeJson(String source) {
+            try {
+              if (source.isEmpty || source == '[]' || source == '{}') return source.startsWith('[') ? [] : {};
+              return jsonDecode(source);
+            } catch (_) {
+              return source.startsWith('[') ? [] : {};
+            }
+          }
+
           final Map<String, dynamic> cloudData = {
             'id': recipeId,
             'user_id': userId,
@@ -429,7 +438,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             'comandante_clicks': grinderName == 'Comandante' ? grindNumber : 0,
             'ek43_division': grinderName == 'EK43' ? grindNumber : 0,
             'total_pours': _pourControllers.length,
-            'pour_schedule_json': jsonDecode(pourScheduleJson),
+            'pour_schedule_json': safeJson(pourScheduleJson),
             'brew_temp_c': brewTempC,
             'notes': _notesController.text.trim(),
             'rating': _rating,
@@ -468,6 +477,9 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
               ));
               break;
           }
+          
+          // Trigger immediate global sync
+          ref.read(syncServiceProvider).syncAll();
         } catch (e) {
           debugPrint('RecipeDialog: Cloud sync error: $e');
         }

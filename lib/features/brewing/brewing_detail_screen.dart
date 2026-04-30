@@ -220,24 +220,27 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                               data: CoffeeTextProcessor.process(
                                 widget.recipe.contentHtml ?? '',
                               ),
-                              style: CoffeeTextProcessor.getHtmlStyles(
-                                baseFontSize: 15,
-                              )..addAll({
-                                'html': Style(
-                                  margin: Margins.zero,
-                                  padding: HtmlPaddings.zero,
-                                ),
-                                'body': Style(
-                                  margin: Margins.zero,
-                                  padding: HtmlPaddings.zero,
-                                  fontSize: FontSize(15),
-                                  lineHeight: const LineHeight(1.6),
-                                  color: Colors.white.withValues(alpha: 0.7),
-                                  fontFamily: 'Outfit',
-                                  maxLines: 3,
-                                  textOverflow: TextOverflow.ellipsis,
-                                ),
-                              }),
+                              style:
+                                  CoffeeTextProcessor.getHtmlStyles(
+                                    baseFontSize: 15,
+                                  )..addAll({
+                                    'html': Style(
+                                      margin: Margins.zero,
+                                      padding: HtmlPaddings.zero,
+                                    ),
+                                    'body': Style(
+                                      margin: Margins.zero,
+                                      padding: HtmlPaddings.zero,
+                                      fontSize: FontSize(15),
+                                      lineHeight: const LineHeight(1.6),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.7,
+                                      ),
+                                      fontFamily: 'Outfit',
+                                      maxLines: 3,
+                                      textOverflow: TextOverflow.ellipsis,
+                                    ),
+                                  }),
                             )
                           else if (widget.recipe.description.isNotEmpty)
                             Text(
@@ -254,7 +257,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                           if (widget.recipe.description.length > 100 ||
                               (widget.recipe.contentHtml?.isNotEmpty ?? false))
                             Transform.translate(
-                              offset: const Offset(0, -12),
+                              offset: const Offset(0, -60),
                               child: Align(
                                 alignment: Alignment.centerRight,
                                 child: GestureDetector(
@@ -262,10 +265,14 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                                   child: Container(
                                     padding: const EdgeInsets.all(6),
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withValues(alpha: 0.05),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.05,
+                                      ),
                                       borderRadius: BorderRadius.circular(8),
                                       border: Border.all(
-                                        color: Colors.white.withValues(alpha: 0.1),
+                                        color: Colors.white.withValues(
+                                          alpha: 0.1,
+                                        ),
                                       ),
                                     ),
                                     child: const Icon(

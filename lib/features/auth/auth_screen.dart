@@ -7,6 +7,9 @@ import '../../core/supabase/supabase_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/providers/settings_provider.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/foundation.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
@@ -78,15 +81,41 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   Future<void> _signInWithGoogle() async {
     setState(() => _isLoading = true);
     try {
-      // Use browser-based OAuth with deep link for a "global" fix that doesn't require SHA-1 fingerprints
-      // The redirect URL must be io.supabase.specialtytracker://login-callback
-      await ref
-          .read(supabaseProvider)
-          .auth
-          .signInWithOAuth(
-            OAuthProvider.google,
-            redirectTo: 'io.supabase.specialtytracker://login-callback',
-          );
+      final webClientId = dotenv.env['GOOGLE_WEB_CLIENT_ID'];
+
+      // GoogleSignIn version 7.x uses a singleton and needs initialization
+      final googleSignIn = GoogleSignIn.instance;
+      await googleSignIn.initialize(
+        // On mobile, providing a clientId can sometimes cause a mismatch if it's not the native ID.
+        // serverClientId is what Supabase needs to verify the idToken.
+        clientId: kIsWeb ? webClientId : null,
+        serverClientId: webClientId,
+      );
+
+      final googleUser = await googleSignIn.authenticate();
+      
+      final googleAuth = googleUser.authentication;
+      final idToken = googleAuth.idToken;
+
+      if (idToken == null) {
+        throw 'No ID Token found.';
+      }
+
+      final supabase = ref.read(supabaseProvider);
+      await supabase.auth.signInWithIdToken(
+        provider: OAuthProvider.google,
+        idToken: idToken,
+      );
+
+      // Same post-login logic as email login
+      if (mounted) {
+        final user = supabase.auth.currentUser;
+        if (user != null) {
+          await ref.read(syncServiceProvider).claimGuestData(user.id);
+          ref.read(isGuestProvider.notifier).setGuest(false);
+          ref.read(syncServiceProvider).syncAll();
+        }
+      }
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

@@ -701,7 +701,7 @@ class _RecipesTab extends ConsumerWidget {
       recommendedRecipesForLotProvider(entry.id),
     );
     final customRecipesAsync = ref.watch(
-      customRecipesForLotProvider(entry.id.toString()),
+      encyclopediaRecipesForLotProvider(entry.id.toString()),
     );
     final navHeight = ref.watch(navBarHeightProvider);
 
@@ -752,15 +752,23 @@ class _RecipesTab extends ConsumerWidget {
                           title: ref.t('choose_brewing_type'),
                           onTypeSelected: (type) async {
                             Navigator.pop(ctx);
-                            await showDialog(
+                            final result = await showDialog<bool>(
                               context: context,
                               builder: (context) => AddRecipeDialog(
                                 lotId: entry.id.toString(),
+                                recipeSegment: RecipeSegment.encyclopedia,
                                 initialMethod: type == 'espresso'
                                     ? 'espresso'
                                     : 'v60',
                               ),
                             );
+                            if (result == true) {
+                              ref.invalidate(
+                                encyclopediaRecipesForLotProvider(
+                                  entry.id.toString(),
+                                ),
+                              );
+                            }
                           },
                         ),
                       );
@@ -935,9 +943,9 @@ class _CustomRecipeCardWrapper extends ConsumerWidget {
                       if (confirmed == true) {
                         await ref
                             .read(databaseProvider)
-                            .deleteCustomRecipe(recipe.id);
+                            .deleteEncyclopediaRecipe(recipe.id);
                         ref.invalidate(
-                          customRecipesForLotProvider(recipe.lotId ?? ''),
+                          encyclopediaRecipesForLotProvider(recipe.lotId ?? ''),
                         );
                       }
                     } else if (val == 'edit') {
@@ -946,10 +954,11 @@ class _CustomRecipeCardWrapper extends ConsumerWidget {
                         builder: (context) => AddRecipeDialog(
                           lotId: recipe.lotId ?? '',
                           existingRecipe: recipe,
+                          recipeSegment: RecipeSegment.encyclopedia,
                         ),
                       );
                       ref.invalidate(
-                        customRecipesForLotProvider(recipe.lotId ?? ''),
+                        encyclopediaRecipesForLotProvider(recipe.lotId ?? ''),
                       );
                     }
                   },
@@ -1008,7 +1017,7 @@ final recommendedRecipesForLotProvider =
 final customRecipesForLotProvider =
     StreamProvider.family<List<CustomRecipeDto>, String>((ref, lotId) {
       final db = ref.watch(databaseProvider);
-      return db.watchCustomRecipesForLot(lotId);
+      return db.watchEncyclopediaRecipesForLot(lotId);
     });
 
 // Local widget _CompactStat removed in favor of shared widgets

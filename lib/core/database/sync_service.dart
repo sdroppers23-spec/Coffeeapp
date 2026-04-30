@@ -440,6 +440,14 @@ class SyncService {
     }
   }
 
+  List<dynamic> _safeParsePours(String jsonString) {
+    try {
+      return jsonDecode(jsonString) as List<dynamic>;
+    } catch (_) {
+      return [];
+    }
+  }
+
   /// Pushes local user data (recipes and lots) to Supabase.
   /// Pushes local user data (recipes and lots) to Supabase, including deletions.
   Future<void> pushLocalUserContent() async {
@@ -448,24 +456,22 @@ class SyncService {
     try {
       final userId = supabase!.auth.currentUser!.id;
 
-      // 1. Sync Custom Recipes (Upsert & Delete)
-      final recipesToSync = await (db.select(
-        db.customRecipes,
+      // 1. Sync Lot Recipes (Upsert & Delete)
+      final lotRecipesToSync = await (db.select(
+        db.userLotRecipes,
       )..where((t) => t.isSynced.equals(false))).get();
-      for (final r in recipesToSync) {
+      for (final r in lotRecipesToSync) {
         try {
           if (r.isDeletedLocal) {
-            debugPrint('SyncService: Deleting recipe from cloud: ${r.id}');
             await supabase!
-                .from('user_custom_recipes')
+                .from('user_lot_recipes')
                 .delete()
                 .eq('id', r.id)
                 .eq('user_id', userId);
-            await (db.update(db.customRecipes)..where((t) => t.id.equals(r.id)))
-                .write(const CustomRecipesCompanion(isSynced: Value(true)));
-            debugPrint('SyncService: Recipe deletion synced to cloud: ${r.id}');
+            await (db.update(db.userLotRecipes)..where((t) => t.id.equals(r.id)))
+                .write(const UserLotRecipesCompanion(isSynced: Value(true)));
           } else {
-            await supabase!.from('user_custom_recipes').upsert({
+            await supabase!.from('user_lot_recipes').upsert({
               'id': r.id,
               'user_id': userId,
               'lot_id': r.lotId,
@@ -477,25 +483,110 @@ class SyncService {
               'comandante_clicks': r.comandanteClicks,
               'ek43_division': r.ek43Division,
               'total_pours': r.totalPours,
-              'pour_schedule_json': jsonDecode(r.pourScheduleJson),
+              'pour_schedule_json': _safeParsePours(r.pourScheduleJson),
               'brew_temp_c': r.brewTempC,
               'notes': r.notes,
               'rating': r.rating,
-              'created_at':
-                  r.createdAt?.toIso8601String() ??
-                  DateTime.now().toIso8601String(),
+              'created_at': r.createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
               'updated_at': DateTime.now().toIso8601String(),
-              'recipe_type': r.recipeType,
               'extraction_time_seconds': r.extractionTimeSeconds,
               'difficulty': r.difficulty,
               'content_html': r.contentHtml,
             });
-            await (db.update(db.customRecipes)..where((t) => t.id.equals(r.id)))
-                .write(const CustomRecipesCompanion(isSynced: Value(true)));
-            debugPrint('SyncService: Recipe synced to cloud: ${r.id}');
+            await (db.update(db.userLotRecipes)..where((t) => t.id.equals(r.id)))
+                .write(const UserLotRecipesCompanion(isSynced: Value(true)));
           }
         } catch (e) {
-          debugPrint('SyncService: Error syncing recipe ${r.id}: $e');
+          debugPrint('SyncService: Error syncing lot recipe ${r.id}: $e');
+        }
+      }
+
+      // 1.1 Sync Encyclopedia Recipes (Upsert & Delete)
+      final encRecipesToSync = await (db.select(
+        db.encyclopediaRecipes,
+      )..where((t) => t.isSynced.equals(false))).get();
+      for (final r in encRecipesToSync) {
+        try {
+          if (r.isDeletedLocal) {
+            await supabase!
+                .from('user_encyclopedia_recipes')
+                .delete()
+                .eq('id', r.id)
+                .eq('user_id', userId);
+            await (db.update(db.encyclopediaRecipes)..where((t) => t.id.equals(r.id)))
+                .write(const EncyclopediaRecipesCompanion(isSynced: Value(true)));
+          } else {
+            await supabase!.from('user_encyclopedia_recipes').upsert({
+              'id': r.id,
+              'user_id': userId,
+              'lot_id': r.beanId,
+              'method_key': r.methodKey,
+              'name': r.name,
+              'coffee_grams': r.coffeeGrams,
+              'total_water_ml': r.totalWaterMl,
+              'grind_number': r.grindNumber,
+              'comandante_clicks': r.comandanteClicks,
+              'ek43_division': r.ek43Division,
+              'total_pours': r.totalPours,
+              'pour_schedule_json': _safeParsePours(r.pourScheduleJson),
+              'brew_temp_c': r.brewTempC,
+              'notes': r.notes,
+              'rating': r.rating,
+              'created_at': r.createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
+              'updated_at': DateTime.now().toIso8601String(),
+              'extraction_time_seconds': r.extractionTimeSeconds,
+              'difficulty': r.difficulty,
+              'content_html': r.contentHtml,
+            });
+            await (db.update(db.encyclopediaRecipes)..where((t) => t.id.equals(r.id)))
+                .write(const EncyclopediaRecipesCompanion(isSynced: Value(true)));
+          }
+        } catch (e) {
+          debugPrint('SyncService: Error syncing encyclopedia recipe ${r.id}: $e');
+        }
+      }
+
+      // 1.2 Sync Alternative Recipes (Upsert & Delete)
+      final altRecipesToSync = await (db.select(
+        db.alternativeRecipes,
+      )..where((t) => t.isSynced.equals(false))).get();
+      for (final r in altRecipesToSync) {
+        try {
+          if (r.isDeletedLocal) {
+            await supabase!
+                .from('user_alternative_recipes')
+                .delete()
+                .eq('id', r.id)
+                .eq('user_id', userId);
+            await (db.update(db.alternativeRecipes)..where((t) => t.id.equals(r.id)))
+                .write(const AlternativeRecipesCompanion(isSynced: Value(true)));
+          } else {
+            await supabase!.from('user_alternative_recipes').upsert({
+              'id': r.id,
+              'user_id': userId,
+              'method_key': r.methodKey,
+              'name': r.name,
+              'coffee_grams': r.coffeeGrams,
+              'total_water_ml': r.totalWaterMl,
+              'grind_number': r.grindNumber,
+              'comandante_clicks': r.comandanteClicks,
+              'ek43_division': r.ek43Division,
+              'total_pours': r.totalPours,
+              'pour_schedule_json': _safeParsePours(r.pourScheduleJson),
+              'brew_temp_c': r.brewTempC,
+              'notes': r.notes,
+              'rating': r.rating,
+              'created_at': r.createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
+              'updated_at': DateTime.now().toIso8601String(),
+              'extraction_time_seconds': r.extractionTimeSeconds,
+              'difficulty': r.difficulty,
+              'content_html': r.contentHtml,
+            });
+            await (db.update(db.alternativeRecipes)..where((t) => t.id.equals(r.id)))
+                .write(const AlternativeRecipesCompanion(isSynced: Value(true)));
+          }
+        } catch (e) {
+          debugPrint('SyncService: Error syncing alternative recipe ${r.id}: $e');
         }
       }
 
@@ -696,10 +787,10 @@ class SyncService {
         }
       }
 
-      // 2. Recipes
+      // 2. Recipes (User Lots)
 
       final remoteRecipes = await supabase!
-          .from('user_custom_recipes')
+          .from('user_lot_recipes')
           .select()
           .eq('user_id', userId);
 
@@ -707,7 +798,6 @@ class SyncService {
         try {
           final id = item['id'] as String;
 
-          // CHECK: If recipe is deleted locally OR has unsynced changes, do not pull it back from cloud
           final localRecipe = await db.findConflictRecipe(id);
           if (localRecipe != null &&
               (localRecipe.isDeletedLocal || !localRecipe.isSynced)) {
@@ -715,37 +805,114 @@ class SyncService {
           }
 
           await db.insertCustomRecipe(
-            CustomRecipesCompanion(
+            UserLotRecipesCompanion(
               id: Value(id),
               userId: Value(item['user_id'] as String),
               lotId: Value(item['lot_id'] as String?),
               methodKey: Value(item['method_key'] as String? ?? 'v60'),
               name: Value(item['name'] as String? ?? 'Recipe'),
-              coffeeGrams: Value(
-                (item['coffee_grams'] as num?)?.toDouble() ?? 0.0,
-              ),
-              totalWaterMl: Value(
-                (item['total_water_ml'] as num?)?.toDouble() ?? 0.0,
-              ),
+              coffeeGrams: Value((item['coffee_grams'] as num?)?.toDouble() ?? 0.0),
+              totalWaterMl: Value((item['total_water_ml'] as num?)?.toDouble() ?? 0.0),
               grindNumber: Value((item['grind_number'] as num?)?.toInt() ?? 0),
-              comandanteClicks: Value(
-                (item['comandante_clicks'] as num?)?.toInt() ?? 0,
-              ),
-              ek43Division: Value(
-                (item['ek43_division'] as num?)?.toInt() ?? 0,
-              ),
+              comandanteClicks: Value((item['comandante_clicks'] as num?)?.toInt() ?? 0),
+              ek43Division: Value((item['ek43_division'] as num?)?.toInt() ?? 0),
               totalPours: Value((item['total_pours'] as num?)?.toInt() ?? 1),
-              pourScheduleJson: Value(
-                item['pour_schedule_json']?.toString() ?? '[]',
-              ),
-              brewTempC: Value(
-                (item['brew_temp_c'] as num?)?.toDouble() ?? 93.0,
-              ),
+              pourScheduleJson: Value(item['pour_schedule_json']?.toString() ?? '[]'),
+              brewTempC: Value((item['brew_temp_c'] as num?)?.toDouble() ?? 93.0),
               notes: Value(item['notes'] as String? ?? ''),
               rating: Value((item['rating'] as num?)?.toInt() ?? 0),
-              extractionTimeSeconds: Value(
-                (item['extraction_time_seconds'] as num?)?.toInt(),
-              ),
+              extractionTimeSeconds: Value((item['extraction_time_seconds'] as num?)?.toInt()),
+              difficulty: Value(item['difficulty'] as String?),
+              contentHtml: Value(item['content_html'] as String?),
+              updatedAt: Value(DateTime.now()),
+              isSynced: const Value(true),
+            ),
+          );
+        } catch (e) {
+          // Production silent fail
+        }
+      }
+
+      // 3. Recipes (Encyclopedia)
+
+      final remoteEncRecipes = await supabase!
+          .from('user_encyclopedia_recipes')
+          .select()
+          .eq('user_id', userId);
+
+      for (final item in remoteEncRecipes) {
+        try {
+          final id = item['id'] as String;
+
+          final localRecipe = await db.findConflictEncyclopediaRecipe(id);
+          if (localRecipe != null &&
+              (localRecipe.isDeletedLocal || !localRecipe.isSynced)) {
+            continue;
+          }
+
+          await db.upsertEncyclopediaRecipe(
+            EncyclopediaRecipesCompanion(
+              id: Value(id),
+              userId: Value(item['user_id'] as String),
+              beanId: Value((item['lot_id'] as num?)?.toInt()),
+              methodKey: Value(item['method_key'] as String? ?? 'v60'),
+              name: Value(item['name'] as String? ?? 'Recipe'),
+              coffeeGrams: Value((item['coffee_grams'] as num?)?.toDouble() ?? 0.0),
+              totalWaterMl: Value((item['total_water_ml'] as num?)?.toDouble() ?? 0.0),
+              grindNumber: Value((item['grind_number'] as num?)?.toInt() ?? 0),
+              comandanteClicks: Value((item['comandante_clicks'] as num?)?.toInt() ?? 0),
+              ek43Division: Value((item['ek43_division'] as num?)?.toInt() ?? 0),
+              totalPours: Value((item['total_pours'] as num?)?.toInt() ?? 1),
+              pourScheduleJson: Value(item['pour_schedule_json']?.toString() ?? '[]'),
+              brewTempC: Value((item['brew_temp_c'] as num?)?.toDouble() ?? 93.0),
+              notes: Value(item['notes'] as String? ?? ''),
+              rating: Value((item['rating'] as num?)?.toInt() ?? 0),
+              extractionTimeSeconds: Value((item['extraction_time_seconds'] as num?)?.toInt()),
+              difficulty: Value(item['difficulty'] as String?),
+              contentHtml: Value(item['content_html'] as String?),
+              updatedAt: Value(DateTime.now()),
+              isSynced: const Value(true),
+            ),
+          );
+        } catch (e) {
+          // Production silent fail
+        }
+      }
+
+      // 4. Recipes (Alternative)
+
+      final remoteAltRecipes = await supabase!
+          .from('user_alternative_recipes')
+          .select()
+          .eq('user_id', userId);
+
+      for (final item in remoteAltRecipes) {
+        try {
+          final id = item['id'] as String;
+
+          final localRecipe = await db.findConflictAlternativeRecipe(id);
+          if (localRecipe != null &&
+              (localRecipe.isDeletedLocal || !localRecipe.isSynced)) {
+            continue;
+          }
+
+          await db.upsertAlternativeRecipe(
+            AlternativeRecipesCompanion(
+              id: Value(id),
+              userId: Value(item['user_id'] as String),
+              methodKey: Value(item['method_key'] as String? ?? 'v60'),
+              name: Value(item['name'] as String? ?? 'Recipe'),
+              coffeeGrams: Value((item['coffee_grams'] as num?)?.toDouble() ?? 0.0),
+              totalWaterMl: Value((item['total_water_ml'] as num?)?.toDouble() ?? 0.0),
+              grindNumber: Value((item['grind_number'] as num?)?.toInt() ?? 0),
+              comandanteClicks: Value((item['comandante_clicks'] as num?)?.toInt() ?? 0),
+              ek43Division: Value((item['ek43_division'] as num?)?.toInt() ?? 0),
+              totalPours: Value((item['total_pours'] as num?)?.toInt() ?? 1),
+              pourScheduleJson: Value(item['pour_schedule_json']?.toString() ?? '[]'),
+              brewTempC: Value((item['brew_temp_c'] as num?)?.toDouble() ?? 93.0),
+              notes: Value(item['notes'] as String? ?? ''),
+              rating: Value((item['rating'] as num?)?.toInt() ?? 0),
+              extractionTimeSeconds: Value((item['extraction_time_seconds'] as num?)?.toInt()),
               difficulty: Value(item['difficulty'] as String?),
               contentHtml: Value(item['content_html'] as String?),
               updatedAt: Value(DateTime.now()),

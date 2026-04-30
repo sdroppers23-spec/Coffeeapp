@@ -25,7 +25,9 @@ part 'app_database.g.dart';
     BrewingRecipes,
     BrewingRecipeTranslations,
     RecommendedRecipes,
-    CustomRecipes,
+    UserLotRecipes,
+    EncyclopediaRecipes,
+    AlternativeRecipes,
     // V2 Tables
     LocalizedFarmersV2,
     LocalizedFarmerTranslationsV2,
@@ -34,6 +36,7 @@ part 'app_database.g.dart';
     LocalizedBeansV2,
     LocalizedBeanTranslationsV2,
     BrewingRecipeTranslationsV2,
+    BrewingRecipesV2,
     AlternativeBrewing,
     AlternativeBrewingTranslations,
   ],
@@ -42,7 +45,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? e]) : super(e ?? openConnection());
 
   @override
-  int get schemaVersion => 47;
+  int get schemaVersion => 48;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -76,10 +79,11 @@ class AppDatabase extends _$AppDatabase {
       }
       if (from < 31) {
         // v31: Add advanced recipe columns
-        await _safeAddColumn(m, customRecipes, customRecipes.recipeType);
-        await _safeAddColumn(m, customRecipes, customRecipes.brewRatio);
-        await _safeAddColumn(m, customRecipes, customRecipes.grinderName);
-        await _safeAddColumn(m, customRecipes, customRecipes.microns);
+        // NOTE: Table renamed to userLotRecipes in v48
+        await _safeAddColumn(m, userLotRecipes, userLotRecipes.recipeType);
+        await _safeAddColumn(m, userLotRecipes, userLotRecipes.brewRatio);
+        await _safeAddColumn(m, userLotRecipes, userLotRecipes.grinderName);
+        await _safeAddColumn(m, userLotRecipes, userLotRecipes.microns);
       }
       if (from < 32) {
         // v32: Add sync flags to brands
@@ -128,20 +132,23 @@ class AppDatabase extends _$AppDatabase {
       }
       if (from < 39) {
         // v39: Add extractionTimeSeconds to custom recipes
+        // NOTE: Table renamed to userLotRecipes in v48
         await _safeAddColumn(
           m,
-          customRecipes,
-          customRecipes.extractionTimeSeconds,
+          userLotRecipes,
+          userLotRecipes.extractionTimeSeconds,
         );
       }
       if (from < 40) {
         // v40: Add isFavorite and isArchived to custom recipes
-        await _safeAddColumn(m, customRecipes, customRecipes.isFavorite);
-        await _safeAddColumn(m, customRecipes, customRecipes.isArchived);
+        // NOTE: Table renamed to userLotRecipes in v48
+        await _safeAddColumn(m, userLotRecipes, userLotRecipes.isFavorite);
+        await _safeAddColumn(m, userLotRecipes, userLotRecipes.isArchived);
       }
       if (from < 41) {
         // v41: Add difficulty to custom recipes
-        await _safeAddColumn(m, customRecipes, customRecipes.difficulty);
+        // NOTE: Table renamed to userLotRecipes in v48
+        await _safeAddColumn(m, userLotRecipes, userLotRecipes.difficulty);
       }
       if (from < 42) {
         // v42: Create AlternativeBrewing tables
@@ -166,7 +173,8 @@ class AppDatabase extends _$AppDatabase {
       }
       if (from < 44) {
         // v44: Add contentHtml to CustomRecipes
-        await _safeAddColumn(m, customRecipes, customRecipes.contentHtml);
+        // NOTE: Table renamed to userLotRecipes in v48
+        await _safeAddColumn(m, userLotRecipes, userLotRecipes.contentHtml);
       }
       if (from < 45) {
         // v45: Add contentHtml to brewing method translations (raw SQL — TextColumn type mismatch with _safeAddColumn)
@@ -197,6 +205,21 @@ class AppDatabase extends _$AppDatabase {
           );
         } catch (_) {}
       }
+      if (from < 48) {
+        // v48: Rename CustomRecipes and add Encyclopedia/Alternative tables
+        debugPrint('AppDatabase: Migrating to v48...');
+        try {
+          await customStatement('ALTER TABLE custom_recipes RENAME TO user_lot_recipes;');
+          debugPrint('AppDatabase: Renamed custom_recipes to user_lot_recipes');
+        } catch (e) {
+          debugPrint('AppDatabase: Could not rename table (maybe already renamed?): $e');
+          // If table doesn't exist or already renamed, ensure it exists
+          await m.createTable(userLotRecipes);
+        }
+        await m.createTable(encyclopediaRecipes);
+        await m.createTable(alternativeRecipes);
+        debugPrint('AppDatabase: Migration to v48 completed');
+      }
     },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -219,24 +242,6 @@ class AppDatabase extends _$AppDatabase {
   /// Reads from V2 table (populated by SyncService V2).
   Future<List<LocalizedFarmerDto>> getAllFarmers(String lang) =>
       getAllFarmersV2(lang);
-
-  Future<void> smartUpsertFarmer(
-    LocalizedFarmersCompanion f,
-    List<LocalizedFarmerTranslationsCompanion> translations,
-  ) async {
-    await batch((batch) {
-      batch.insertAllOnConflictUpdate(localizedFarmers, [f]);
-      batch.insertAllOnConflictUpdate(
-        localizedFarmerTranslations,
-        translations,
-      );
-    });
-  }
-
-  Future<void> upsertLocalizedFarmer(
-    LocalizedFarmersCompanion f,
-    List<LocalizedFarmerTranslationsCompanion> translations,
-  ) => smartUpsertFarmer(f, translations);
 
   // ── V2 Methods ──────────────────────────────────────────────────────────────
 
@@ -601,6 +606,16 @@ class AppDatabase extends _$AppDatabase {
       isFavorite: brand.isFavorite,
       isArchived: brand.isArchived,
     );
+  }
+
+  Future<void> smartUpsertFarmer(
+    LocalizedFarmersCompanion farmer,
+    List<LocalizedFarmerTranslationsCompanion> translations,
+  ) async {
+    await batch((batch) {
+      batch.insertAllOnConflictUpdate(localizedFarmers, [farmer]);
+      batch.insertAllOnConflictUpdate(localizedFarmerTranslations, translations);
+    });
   }
 
   Future<void> smartUpsertBrand(
@@ -1038,9 +1053,21 @@ class AppDatabase extends _$AppDatabase {
     return row != null ? _mapLotRow(row) : null;
   }
 
-  Future<CustomRecipe?> findConflictRecipe(String id) async {
+  Future<UserLotRecipe?> findConflictRecipe(String id) async {
     return await (select(
-      customRecipes,
+      userLotRecipes,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
+  }
+
+  Future<EncyclopediaRecipe?> findConflictEncyclopediaRecipe(String id) async {
+    return await (select(
+      encyclopediaRecipes,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
+  }
+
+  Future<AlternativeRecipe?> findConflictAlternativeRecipe(String id) async {
+    return await (select(
+      alternativeRecipes,
     )..where((t) => t.id.equals(id))).getSingleOrNull();
   }
 
@@ -1140,60 +1167,112 @@ class AppDatabase extends _$AppDatabase {
 
   Future<List<CustomRecipeDto>> getAllCustomRecipes() async {
     final rows = await (select(
-      customRecipes,
+      userLotRecipes,
     )..where((t) => t.isDeletedLocal.equals(false))).get();
-    return rows.map((r) => _mapCustomRecipe(r)).toList();
+    return rows.map((r) => _mapUserLotRecipe(r)).toList();
   }
 
   Future<List<CustomRecipeDto>> getCustomRecipesForMethod(
     String methodKey,
   ) async {
     final rows =
-        await (select(customRecipes)..where(
+        await (select(userLotRecipes)..where(
               (t) =>
                   t.methodKey.equals(methodKey) &
                   t.isDeletedLocal.equals(false),
             ))
             .get();
-    return rows.map((r) => _mapCustomRecipe(r)).toList();
+    return rows.map((r) => _mapUserLotRecipe(r)).toList();
   }
 
   Future<List<CustomRecipeDto>> getCustomRecipesForLot(String lotId) async {
     final rows =
-        await (select(customRecipes)..where(
+        await (select(userLotRecipes)..where(
               (t) => t.lotId.equals(lotId) & t.isDeletedLocal.equals(false),
             ))
             .get();
-    return rows.map((r) => _mapCustomRecipe(r)).toList();
+    return rows.map((r) => _mapUserLotRecipe(r)).toList();
   }
 
-  Stream<List<CustomRecipeDto>> watchCustomRecipesForLot(String lotId) {
-    final query = select(customRecipes)
-      ..where((t) => t.lotId.equals(lotId) & t.isDeletedLocal.equals(false));
-    return query.watch().map(
-      (rows) => rows.map((r) => _mapCustomRecipe(r)).toList(),
-    );
+  Stream<List<CustomRecipeDto>> watchUserLotRecipesForLot(String lotId) {
+    return (select(userLotRecipes)
+          ..where(
+            (t) => t.lotId.equals(lotId) & t.isDeletedLocal.equals(false),
+          ))
+        .watch()
+        .map((rows) => rows.map((r) => CustomRecipeDto.fromUserLot(r)).toList());
   }
 
-  Stream<List<CustomRecipeDto>> watchCustomRecipesForMethod(String methodKey) {
-    final query = select(customRecipes)
-      ..where(
-        (t) => t.methodKey.equals(methodKey) & t.isDeletedLocal.equals(false),
-      );
-    return query.watch().map(
-      (rows) => rows.map((r) => _mapCustomRecipe(r)).toList(),
-    );
+  Stream<List<CustomRecipeDto>> watchEncyclopediaRecipesForLot(String lotId) {
+    return (select(encyclopediaRecipes)
+          ..where(
+            (t) => t.beanId.equals(int.tryParse(lotId) ?? 0) & t.isDeletedLocal.equals(false),
+          ))
+        .watch()
+        .map((rows) => rows.map((r) => CustomRecipeDto.fromEncyclopedia(r)).toList());
+  }
+
+  Stream<List<CustomRecipeDto>> watchUserLotRecipesForMethod(String methodKey) {
+    return (select(userLotRecipes)
+          ..where(
+            (t) => t.methodKey.equals(methodKey) & t.isDeletedLocal.equals(false),
+          ))
+        .watch()
+        .map((rows) => rows.map((r) => CustomRecipeDto.fromUserLot(r)).toList());
+  }
+
+  Stream<List<CustomRecipeDto>> watchAllUserLotRecipes() {
+    return (select(userLotRecipes)..where((t) => t.isDeletedLocal.equals(false)))
+        .watch()
+        .map((rows) => rows.map((r) => CustomRecipeDto.fromUserLot(r)).toList());
+  }
+
+
+  Stream<List<CustomRecipeDto>> watchEncyclopediaRecipesForMethod(
+    String methodKey,
+  ) {
+    return (select(encyclopediaRecipes)
+          ..where(
+            (t) => t.methodKey.equals(methodKey) & t.isDeletedLocal.equals(false),
+          ))
+        .watch()
+        .map(
+          (rows) =>
+              rows.map((r) => CustomRecipeDto.fromEncyclopedia(r)).toList(),
+        );
+  }
+
+  Stream<List<CustomRecipeDto>> watchAllEncyclopediaRecipes() {
+    return (select(encyclopediaRecipes)
+          ..where((t) => t.isDeletedLocal.equals(false)))
+        .watch()
+        .map(
+          (rows) =>
+              rows.map((r) => CustomRecipeDto.fromEncyclopedia(r)).toList(),
+        );
+  }
+
+  Stream<List<CustomRecipeDto>> watchAlternativeRecipes([String? methodKey]) {
+    final query = select(alternativeRecipes)
+      ..where((t) => t.isDeletedLocal.equals(false));
+    if (methodKey != null) {
+      query.where((t) => t.methodKey.equals(methodKey));
+    }
+    return (query..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
+        .watch()
+        .map(
+          (rows) =>
+              rows.map((r) => CustomRecipeDto.fromAlternative(r)).toList(),
+        );
   }
 
   Stream<List<CustomRecipeDto>> watchAllCustomRecipes() {
-    final query = select(customRecipes)
-      ..where((t) => t.isDeletedLocal.equals(false));
-    return query.watch().map(
-      (rows) => rows.map((r) => _mapCustomRecipe(r)).toList(),
-    );
+    // This is now redundant but kept for compatibility. 
+    // We should use the unified provider instead.
+    return watchAllUserLotRecipes();
   }
 
-  CustomRecipeDto _mapCustomRecipe(CustomRecipe r) {
+  CustomRecipeDto _mapUserLotRecipe(UserLotRecipe r) {
     return CustomRecipeDto(
       id: r.id,
       lotId: r.lotId,
@@ -1221,50 +1300,145 @@ class AppDatabase extends _$AppDatabase {
       extractionTimeSeconds: r.extractionTimeSeconds,
       difficulty: r.difficulty,
       contentHtml: r.contentHtml,
+      segment: RecipeSegment.userLot,
     );
   }
 
-  Future<String> upsertCustomRecipe(CustomRecipesCompanion r) async {
+  Future<String> upsertUserLotRecipe(UserLotRecipesCompanion r) async {
     try {
       final row = await into(
-        customRecipes,
+        userLotRecipes,
       ).insertReturning(r, mode: InsertMode.insertOrReplace);
-      debugPrint('AppDatabase: Successfully upserted recipe ${row.id}');
+      debugPrint('AppDatabase: Successfully upserted user lot recipe ${row.id}');
       return row.id;
     } catch (e) {
-      debugPrint('AppDatabase: Error upserting recipe: $e');
+      debugPrint('AppDatabase: Error upserting user lot recipe: $e');
       rethrow;
     }
   }
 
-  Future<String> insertCustomRecipe(CustomRecipesCompanion r) =>
+  Future<String> upsertCustomRecipe(UserLotRecipesCompanion r) => upsertUserLotRecipe(r);
+
+  Future<String> insertCustomRecipe(UserLotRecipesCompanion r) =>
       upsertCustomRecipe(r);
 
-  Future<void> updateCustomRecipe(CustomRecipesCompanion r) async {
+  Future<String> upsertEncyclopediaRecipe(EncyclopediaRecipesCompanion r) async {
+    try {
+      final row = await into(
+        encyclopediaRecipes,
+      ).insertReturning(r, mode: InsertMode.insertOrReplace);
+      return row.id;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String> upsertAlternativeRecipe(AlternativeRecipesCompanion r) async {
+    try {
+      final row = await into(
+        alternativeRecipes,
+      ).insertReturning(r, mode: InsertMode.insertOrReplace);
+      return row.id;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> updateCustomRecipe(UserLotRecipesCompanion r) async {
     await upsertCustomRecipe(r);
   }
 
-  Future<int> deleteCustomRecipe(String id) async {
-    return (update(customRecipes)..where((t) => t.id.equals(id))).write(
-      const CustomRecipesCompanion(
+  Future<int> deleteUserLotRecipe(String id) async {
+    return (update(userLotRecipes)..where((t) => t.id.equals(id))).write(
+      const UserLotRecipesCompanion(
         isDeletedLocal: Value(true),
         isSynced: Value(false),
       ),
     );
   }
 
-  Future<int> toggleCustomRecipeFavorite(String id, bool isFavorite) async {
-    return (update(customRecipes)..where((t) => t.id.equals(id))).write(
-      CustomRecipesCompanion(
+  Future<int> deleteEncyclopediaRecipe(String id) async {
+    return (update(encyclopediaRecipes)..where((t) => t.id.equals(id))).write(
+      const EncyclopediaRecipesCompanion(
+        isDeletedLocal: Value(true),
+        isSynced: Value(false),
+      ),
+    );
+  }
+
+  Future<int> deleteAlternativeRecipe(String id) async {
+    return (update(alternativeRecipes)..where((t) => t.id.equals(id))).write(
+      const AlternativeRecipesCompanion(
+        isDeletedLocal: Value(true),
+        isSynced: Value(false),
+      ),
+    );
+  }
+
+  Future<int> deleteRecipeBySegment(String id, RecipeSegment segment) {
+    switch (segment) {
+      case RecipeSegment.userLot:
+        return deleteUserLotRecipe(id);
+      case RecipeSegment.encyclopedia:
+        return deleteEncyclopediaRecipe(id);
+      case RecipeSegment.alternative:
+        return deleteAlternativeRecipe(id);
+    }
+  }
+
+  Future<int> deleteCustomRecipe(String id) => deleteUserLotRecipe(id);
+
+  Future<int> toggleUserLotRecipeFavorite(String id, bool isFavorite) async {
+    return (update(userLotRecipes)..where((t) => t.id.equals(id))).write(
+      UserLotRecipesCompanion(
         isFavorite: Value(isFavorite),
         isSynced: const Value(false),
       ),
     );
   }
 
-  Future<int> toggleCustomRecipeArchive(String id, bool isArchived) async {
-    return (update(customRecipes)..where((t) => t.id.equals(id))).write(
-      CustomRecipesCompanion(
+  Future<int> toggleEncyclopediaRecipeFavorite(
+    String id,
+    bool isFavorite,
+  ) async {
+    return (update(encyclopediaRecipes)..where((t) => t.id.equals(id))).write(
+      EncyclopediaRecipesCompanion(
+        isFavorite: Value(isFavorite),
+        isSynced: const Value(false),
+      ),
+    );
+  }
+
+  Future<int> toggleAlternativeRecipeFavorite(String id, bool isFavorite) async {
+    return (update(alternativeRecipes)..where((t) => t.id.equals(id))).write(
+      AlternativeRecipesCompanion(
+        isFavorite: Value(isFavorite),
+        isSynced: const Value(false),
+      ),
+    );
+  }
+
+  Future<int> toggleUserLotRecipeArchive(String id, bool isArchived) async {
+    return (update(userLotRecipes)..where((t) => t.id.equals(id))).write(
+      UserLotRecipesCompanion(
+        isArchived: Value(isArchived),
+        isSynced: const Value(false),
+      ),
+    );
+  }
+
+  Future<int> toggleEncyclopediaRecipeArchive(String id, bool isArchived) async {
+    return (update(encyclopediaRecipes)..where((t) => t.id.equals(id))).write(
+      EncyclopediaRecipesCompanion(
+        isArchived: Value(isArchived),
+        isSynced: const Value(false),
+      ),
+    );
+  }
+
+  Future<int> toggleAlternativeRecipeArchive(String id, bool isArchived) async {
+    return (update(alternativeRecipes)..where((t) => t.id.equals(id))).write(
+      AlternativeRecipesCompanion(
         isArchived: Value(isArchived),
         isSynced: const Value(false),
       ),
@@ -1272,7 +1446,13 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<int> deleteCustomRecipePermanently(String id) =>
-      (delete(customRecipes)..where((t) => t.id.equals(id))).go();
+      (delete(userLotRecipes)..where((t) => t.id.equals(id))).go();
+
+  Future<int> deleteEncyclopediaRecipePermanently(String id) =>
+      (delete(encyclopediaRecipes)..where((t) => t.id.equals(id))).go();
+
+  Future<int> deleteAlternativeRecipePermanently(String id) =>
+      (delete(alternativeRecipes)..where((t) => t.id.equals(id))).go();
 
   // ── Brewing (Static Wide Table) ───────────────────────────────────────────
   /// Reads from V2 table (populated by SyncService V2). English-only for brewing methods.
@@ -1328,16 +1508,31 @@ class AppDatabase extends _$AppDatabase {
             ),
           );
 
-      // Update Recipes
-      await (update(customRecipes)..where(
+      // Update Recipes (All Segments)
+
+      await (update(userLotRecipes)..where(
             (t) => t.userId.equals('guest') | t.userId.equals('local_user'),
           ))
-          .write(
-            CustomRecipesCompanion(
-              userId: Value(newUserId),
-              isSynced: const Value(false),
-            ),
-          );
+          .write(UserLotRecipesCompanion(
+            userId: Value(newUserId),
+            isSynced: const Value(false),
+          ));
+
+      await (update(encyclopediaRecipes)..where(
+            (t) => t.userId.equals('guest') | t.userId.equals('local_user'),
+          ))
+          .write(EncyclopediaRecipesCompanion(
+            userId: Value(newUserId),
+            isSynced: const Value(false),
+          ));
+
+      await (update(alternativeRecipes)..where(
+            (t) => t.userId.equals('guest') | t.userId.equals('local_user'),
+          ))
+          .write(AlternativeRecipesCompanion(
+            userId: Value(newUserId),
+            isSynced: const Value(false),
+          ));
     });
   }
 

@@ -22,12 +22,14 @@ class AddRecipeDialog extends ConsumerStatefulWidget {
   final String lotId;
   final CustomRecipeDto? existingRecipe;
   final String? initialMethod;
+  final RecipeSegment recipeSegment;
 
   const AddRecipeDialog({
     super.key,
     this.lotId = '',
     this.existingRecipe,
     this.initialMethod,
+    this.recipeSegment = RecipeSegment.userLot,
   });
 
   @override
@@ -257,138 +259,217 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
     final supabase = ref.read(supabaseProvider);
     final user = supabase.auth.currentUser;
     final userId = user?.id ?? 'guest';
-    debugPrint('RecipeDialog: User state - user=${user?.email}, id=$userId');
 
-    final recipe = CustomRecipesCompanion.insert(
-      id: Value(widget.existingRecipe?.id ?? const Uuid().v4()),
-      userId: userId,
-      lotId: Value(widget.lotId.isEmpty ? null : widget.lotId),
-      methodKey: _method,
-      name: () {
-        String name = _nameController.text.trim();
-        if (name.isEmpty) {
-          name = ref.t('recipes'); // Using existing 'recipes' for generic name
-        }
-        final methodSuffix = '(${_method.toUpperCase()})';
-        if (!name.contains(methodSuffix)) {
-          return '$name $methodSuffix';
-        }
-        return name;
-      }(),
-      coffeeGrams: double.tryParse(_coffeeController.text) ?? 15.0,
-      totalWaterMl: double.tryParse(_waterController.text) ?? 250.0,
-      grindNumber: Value(int.tryParse(_grindController.text) ?? 0),
-      comandanteClicks: Value(
-        _grinderNameController.text == 'Comandante'
-            ? (int.tryParse(_grindController.text) ?? 0)
-            : 0,
-      ),
-      ek43Division: Value(
-        _grinderNameController.text == 'EK43'
-            ? (int.tryParse(_grindController.text) ?? 0)
-            : 0,
-      ),
-      totalPours: Value(_pourControllers.length),
-      isSynced: const Value(false),
-      recipeType: Value(_recipeType),
-      brewRatio: Value(
-        double.tryParse(_ratioController.text.replaceAll('1:', '')),
-      ),
-      grinderName: Value(
-        _isOtherGrinder
-            ? _customGrinderController.text
-            : _grinderNameController.text,
-      ),
-      microns: Value(int.tryParse(_micronsController.text)),
-      extractionTimeSeconds: Value(
-        _parseHMSToSeconds(_extractionTimeController.text),
-      ),
-      difficulty: Value(_difficulty),
-      pourScheduleJson: Value(
-        jsonEncode(
-          _pourControllers.map((pc) {
-            final mStr = pc.min.text;
-            final sStr = pc.sec.text;
+    final String recipeId = widget.existingRecipe?.id ?? const Uuid().v4();
+    final String recipeName = () {
+      String name = _nameController.text.trim();
+      if (name.isEmpty) {
+        name = ref.t('recipes');
+      }
+      final methodSuffix = '(${_method.toUpperCase()})';
+      if (!name.contains(methodSuffix)) {
+        return '$name $methodSuffix';
+      }
+      return name;
+    }();
 
-            return {
-              'min': int.tryParse(mStr) ?? 0,
-              'sec': int.tryParse(sStr) ?? 0,
-              'water': double.tryParse(pc.water.text) ?? 0.0,
-              'duration': _parseHMSToSeconds(pc.duration.text),
-              'notes': pc.notes.text,
-            };
-          }).toList(),
-        ),
-      ),
-      brewTempC: Value(() {
-        final rawTemp = double.tryParse(_tempController.text) ?? 93.0;
-        final pref = ref.read(preferencesProvider);
-        if (pref.tempUnit == TempUnit.fahrenheit) {
-          // Convert back to Celsius for storage
-          return (rawTemp - 32) * 5 / 9;
-        }
-        return rawTemp;
-      }()),
-      notes: Value(_notesController.text.trim()),
-      contentHtml: Value(widget.existingRecipe?.contentHtml),
-      rating: Value(_rating),
-      createdAt: Value(widget.existingRecipe?.createdAt ?? DateTime.now()),
-      updatedAt: Value(DateTime.now()),
+    final double coffeeGrams = double.tryParse(_coffeeController.text) ?? 15.0;
+    final double waterGrams = double.tryParse(_waterController.text) ?? 250.0;
+    final int grindNumber = int.tryParse(_grindController.text) ?? 0;
+    final String pourScheduleJson = jsonEncode(
+      _pourControllers.map((pc) {
+        return {
+          'min': int.tryParse(pc.min.text) ?? 0,
+          'sec': int.tryParse(pc.sec.text) ?? 0,
+          'water': double.tryParse(pc.water.text) ?? 0.0,
+          'duration': _parseHMSToSeconds(pc.duration.text),
+          'notes': pc.notes.text,
+        };
+      }).toList(),
     );
 
+    final double brewTempC = () {
+      final rawTemp = double.tryParse(_tempController.text) ?? 93.0;
+      final pref = ref.read(preferencesProvider);
+      if (pref.tempUnit == TempUnit.fahrenheit) {
+        return (rawTemp - 32) * 5 / 9;
+      }
+      return rawTemp;
+    }();
+
+    final String grinderName = _isOtherGrinder
+        ? _customGrinderController.text
+        : _grinderNameController.text;
+
+    final createdAt = widget.existingRecipe?.createdAt ?? DateTime.now();
+    final updatedAt = DateTime.now();
+
     try {
-      debugPrint(
-        'RecipeDialog: Attempting local save for recipe ${recipe.id.value}...',
-      );
-      await db.upsertCustomRecipe(recipe);
+      // Local Database Upsert
+      switch (widget.recipeSegment) {
+        case RecipeSegment.userLot:
+          await db.upsertUserLotRecipe(UserLotRecipesCompanion(
+            id: Value(recipeId),
+            userId: Value(userId),
+            lotId: Value(widget.lotId.isEmpty ? null : widget.lotId),
+            methodKey: Value(_method),
+            name: Value(recipeName),
+            coffeeGrams: Value(coffeeGrams),
+            totalWaterMl: Value(waterGrams),
+            grindNumber: Value(grindNumber),
+            comandanteClicks: Value(grinderName == 'Comandante' ? grindNumber : 0),
+            ek43Division: Value(grinderName == 'EK43' ? grindNumber : 0),
+            totalPours: Value(_pourControllers.length),
+            isSynced: const Value(false),
+            recipeType: Value(_recipeType),
+            brewRatio: Value(double.tryParse(_ratioController.text.replaceAll('1:', ''))),
+            grinderName: Value(grinderName),
+            microns: Value(int.tryParse(_micronsController.text)),
+            extractionTimeSeconds: Value(_parseHMSToSeconds(_extractionTimeController.text)),
+            difficulty: Value(_difficulty),
+            pourScheduleJson: Value(pourScheduleJson),
+            brewTempC: Value(brewTempC),
+            notes: Value(_notesController.text.trim()),
+            contentHtml: Value(widget.existingRecipe?.contentHtml),
+            rating: Value(_rating),
+            createdAt: Value(createdAt),
+            updatedAt: Value(updatedAt),
+          ));
+          break;
+
+        case RecipeSegment.encyclopedia:
+          await db.upsertEncyclopediaRecipe(EncyclopediaRecipesCompanion(
+            id: Value(recipeId),
+            userId: Value(userId),
+            beanId: Value(int.tryParse(widget.lotId)),
+            methodKey: Value(_method),
+            name: Value(recipeName),
+            coffeeGrams: Value(coffeeGrams),
+            totalWaterMl: Value(waterGrams),
+            grindNumber: Value(grindNumber),
+            comandanteClicks: Value(grinderName == 'Comandante' ? grindNumber : 0),
+            ek43Division: Value(grinderName == 'EK43' ? grindNumber : 0),
+            totalPours: Value(_pourControllers.length),
+            isSynced: const Value(false),
+            recipeType: Value(_recipeType),
+            brewRatio: Value(double.tryParse(_ratioController.text.replaceAll('1:', ''))),
+            grinderName: Value(grinderName),
+            microns: Value(int.tryParse(_micronsController.text)),
+            extractionTimeSeconds: Value(_parseHMSToSeconds(_extractionTimeController.text)),
+            difficulty: Value(_difficulty),
+            pourScheduleJson: Value(pourScheduleJson),
+            brewTempC: Value(brewTempC),
+            notes: Value(_notesController.text.trim()),
+            contentHtml: Value(widget.existingRecipe?.contentHtml),
+            rating: Value(_rating),
+            createdAt: Value(createdAt),
+            updatedAt: Value(updatedAt),
+          ));
+          break;
+
+        case RecipeSegment.alternative:
+          await db.upsertAlternativeRecipe(AlternativeRecipesCompanion(
+            id: Value(recipeId),
+            userId: Value(userId),
+            methodKey: Value(_method),
+            name: Value(recipeName),
+            coffeeGrams: Value(coffeeGrams),
+            totalWaterMl: Value(waterGrams),
+            grindNumber: Value(grindNumber),
+            comandanteClicks: Value(grinderName == 'Comandante' ? grindNumber : 0),
+            ek43Division: Value(grinderName == 'EK43' ? grindNumber : 0),
+            totalPours: Value(_pourControllers.length),
+            isSynced: const Value(false),
+            recipeType: Value(_recipeType),
+            brewRatio: Value(double.tryParse(_ratioController.text.replaceAll('1:', ''))),
+            grinderName: Value(grinderName),
+            microns: Value(int.tryParse(_micronsController.text)),
+            extractionTimeSeconds: Value(_parseHMSToSeconds(_extractionTimeController.text)),
+            difficulty: Value(_difficulty),
+            pourScheduleJson: Value(pourScheduleJson),
+            brewTempC: Value(brewTempC),
+            notes: Value(_notesController.text.trim()),
+            contentHtml: Value(widget.existingRecipe?.contentHtml),
+            rating: Value(_rating),
+            createdAt: Value(createdAt),
+            updatedAt: Value(updatedAt),
+          ));
+          break;
+      }
+
       debugPrint('RecipeDialog: Local save successful');
 
       if (!mounted) return;
       ToastService.showSuccess(context, ref.t('toast_recipe_saved'));
       Navigator.pop(context, true);
 
-      // Attempt cloud sync if logged in
+      // Cloud Sync
       if (user != null) {
-        debugPrint('RecipeDialog: Starting cloud sync for user $userId');
         try {
-          await supabase.from('user_custom_recipes').upsert({
-            'id': recipe.id.value,
+          final String cloudTable = switch (widget.recipeSegment) {
+            RecipeSegment.userLot => 'user_lot_recipes',
+            RecipeSegment.encyclopedia => 'user_encyclopedia_recipes',
+            RecipeSegment.alternative => 'user_alternative_recipes',
+          };
+
+          final Map<String, dynamic> cloudData = {
+            'id': recipeId,
             'user_id': userId,
-            'lot_id': recipe.lotId.value,
-            'method_key': recipe.methodKey.value,
-            'name': recipe.name.value,
-            'coffee_grams': recipe.coffeeGrams.value,
-            'total_water_ml': recipe.totalWaterMl.value,
-            'grind_number': recipe.grindNumber.value,
-            'comandante_clicks': recipe.comandanteClicks.value,
-            'ek43_division': recipe.ek43Division.value,
-            'total_pours': recipe.totalPours.value,
-            'pour_schedule_json': jsonDecode(recipe.pourScheduleJson.value),
-            'brew_temp_c': recipe.brewTempC.value,
-            'notes': recipe.notes.value,
-            'rating': recipe.rating.value,
-            'created_at': (recipe.createdAt.value ?? DateTime.now())
-                .toIso8601String(),
-            'updated_at': DateTime.now().toIso8601String(),
-            'recipe_type': recipe.recipeType.value,
-          });
+            'method_key': _method,
+            'name': recipeName,
+            'coffee_grams': coffeeGrams,
+            'total_water_ml': waterGrams,
+            'grind_number': grindNumber,
+            'comandante_clicks': grinderName == 'Comandante' ? grindNumber : 0,
+            'ek43_division': grinderName == 'EK43' ? grindNumber : 0,
+            'total_pours': _pourControllers.length,
+            'pour_schedule_json': jsonDecode(pourScheduleJson),
+            'brew_temp_c': brewTempC,
+            'notes': _notesController.text.trim(),
+            'rating': _rating,
+            'created_at': createdAt.toIso8601String(),
+            'updated_at': updatedAt.toIso8601String(),
+            'recipe_type': _recipeType,
+          };
+
+          if (widget.recipeSegment == RecipeSegment.userLot) {
+            cloudData['lot_id'] = widget.lotId.isEmpty ? null : widget.lotId;
+          } else if (widget.recipeSegment == RecipeSegment.encyclopedia) {
+            cloudData['bean_id'] = int.tryParse(widget.lotId);
+          }
+
+          await supabase.from(cloudTable).upsert(cloudData);
 
           // Mark as synced locally
-          await db.upsertCustomRecipe(
-            recipe.copyWith(isSynced: const Value(true)),
-          );
-          debugPrint(
-            'RecipeDialog: Cloud sync successful for recipe: ${recipe.id.value}',
-          );
+          switch (widget.recipeSegment) {
+            case RecipeSegment.userLot:
+              await db.upsertUserLotRecipe(UserLotRecipesCompanion(
+                id: Value(recipeId),
+                isSynced: const Value(true),
+              ));
+              break;
+            case RecipeSegment.encyclopedia:
+              await db.upsertEncyclopediaRecipe(EncyclopediaRecipesCompanion(
+                id: Value(recipeId),
+                isSynced: const Value(true),
+              ));
+              break;
+            case RecipeSegment.alternative:
+              await db.upsertAlternativeRecipe(AlternativeRecipesCompanion(
+                id: Value(recipeId),
+                isSynced: const Value(true),
+              ));
+              break;
+          }
         } catch (e) {
-          debugPrint('RecipeDialog: Cloud sync error (non-fatal): $e');
-          // We don't fail the local save if cloud sync fails
+          debugPrint('RecipeDialog: Cloud sync error: $e');
         }
       }
     } catch (e) {
-      debugPrint('RecipeDialog: FATAL ERROR during local save: $e');
-      if (!mounted) return;
-      ToastService.showError(context, ref.t('error_saving_local'));
+      debugPrint('RecipeDialog: Local save error: $e');
+      if (mounted) {
+        ToastService.showError(context, ref.t('error_saving_recipe'));
+      }
     }
   }
 

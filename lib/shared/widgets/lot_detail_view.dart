@@ -238,11 +238,13 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                                 widget.entry?.lotNumber,
                           ),
                           _RecipesTab(
-                            lotId:
-                                liveLot?.id ??
+                            lotId: liveLot?.id ??
                                 widget.lot?.id ??
                                 widget.entry?.lotNumber ??
                                 '',
+                            segment: (liveLot != null || widget.lot != null)
+                                ? RecipeSegment.userLot
+                                : RecipeSegment.encyclopedia,
                           ),
                         ],
                       ),
@@ -1095,21 +1097,20 @@ class _Cell extends StatelessWidget {
 
 class _RecipesTab extends ConsumerWidget {
   final String lotId;
+  final RecipeSegment segment;
 
-  const _RecipesTab({required this.lotId});
+  const _RecipesTab({required this.lotId, required this.segment});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final db = ref.watch(databaseProvider);
+    final recipesAsync = segment == RecipeSegment.userLot
+        ? ref.watch(userLotRecipesForLotProvider(lotId))
+        : ref.watch(encyclopediaRecipesForLotProvider(lotId));
 
-    return StreamBuilder<List<CustomRecipeDto>>(
-      stream: db.watchCustomRecipesForLot(lotId),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        final recipes = snapshot.data ?? [];
-
+    return recipesAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (err, stack) => Center(child: Text('Error: $err')),
+      data: (recipes) {
         if (recipes.isEmpty) {
           return Center(
             child: Column(
@@ -1146,6 +1147,7 @@ class _RecipesTab extends ConsumerWidget {
               padding: const EdgeInsets.only(bottom: 12),
               child: CustomRecipeCard(
                 recipe: recipes[index],
+                segment: segment,
                 methodKey: recipes[index].methodKey,
                 ref: ref,
               ),

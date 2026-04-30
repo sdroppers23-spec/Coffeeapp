@@ -415,13 +415,10 @@ class RecommendedRecipes extends Table {
   TextColumn get notes => text().withDefault(const Constant(''))();
 }
 
-// ─── CustomRecipes (User's Private) ──────────────────────────────────────────
-class CustomRecipes extends Table {
+// ─── Recipe Columns Mixin ──────────────────────────────────────────────────
+mixin RecipeColumns on Table {
   TextColumn get id => text().clientDefault(() => const Uuid().v4())();
-  @override
-  Set<Column> get primaryKey => {id};
   TextColumn get userId => text()();
-  TextColumn get lotId => text().nullable()();
   TextColumn get methodKey => text()();
   TextColumn get name => text()();
 
@@ -459,6 +456,31 @@ class CustomRecipes extends Table {
   BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
   BoolColumn get isDeletedLocal =>
       boolean().withDefault(const Constant(false))();
+}
+
+// ─── UserLotRecipes (User's Private - My Lots) ───────────────────────────────────
+class UserLotRecipes extends Table with RecipeColumns {
+  TextColumn get lotId => text().nullable().references(CoffeeLots, #id)();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+// ─── EncyclopediaRecipes (User's Private - Encyclopedia) ───────────────────────
+class EncyclopediaRecipes extends Table with RecipeColumns {
+  IntColumn get beanId => integer().nullable().references(LocalizedBeansV2, #id)();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+// ─── AlternativeRecipes (User's Private - Alternative) ─────────────────────────
+class AlternativeRecipes extends Table with RecipeColumns {
+  // methodKey is already in RecipeColumns, but we can add a reference here if needed
+  // references(AlternativeBrewing, #methodKey)
+  
+  @override
+  Set<Column> get primaryKey => {id};
 }
 
 // ─── AlternativeBrewing (Synchronized Methods) ─────────────────────────────

@@ -237,16 +237,13 @@ class _RecipesTab extends ConsumerStatefulWidget {
 class _RecipesTabState extends ConsumerState<_RecipesTab> {
   @override
   Widget build(BuildContext context) {
-    final db = ref.watch(databaseProvider);
 
-    return FutureBuilder<List<CustomRecipeDto>>(
-      future: db.getCustomRecipesForLot(widget.lot.id),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    final recipesAsync = ref.watch(userLotRecipesForLotProvider(widget.lot.id));
 
-        final recipes = snapshot.data ?? [];
+    return recipesAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (err, stack) => Center(child: Text('Error: $err')),
+      data: (recipes) {
         final limitReached = recipes.length >= 10;
 
         return Column(
@@ -298,16 +295,23 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
                                   title: ref.t('choose_brewing_type'),
                                   onTypeSelected: (type) async {
                                     Navigator.pop(ctx);
-                                    final result = await showDialog(
+                                    final result = await showDialog<bool>(
                                       context: context,
                                       builder: (context) => AddRecipeDialog(
                                         lotId: widget.lot.id,
+                                        recipeSegment: RecipeSegment.userLot,
                                         initialMethod: type == 'espresso'
                                             ? 'espresso'
                                             : 'v60',
                                       ),
                                     );
-                                    if (result == true) setState(() {});
+                                    if (result == true) {
+                                      ref.invalidate(
+                                        userLotRecipesForLotProvider(
+                                          widget.lot.id,
+                                        ),
+                                      );
+                                    }
                                   },
                                 ),
                               );
@@ -427,8 +431,8 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
                 if (confirmed) {
                   await ref
                       .read(databaseProvider)
-                      .deleteCustomRecipe(recipe.id);
-                  if (mounted) setState(() {});
+                      .deleteUserLotRecipe(recipe.id);
+                  ref.invalidate(userLotRecipesForLotProvider(widget.lot.id));
                 }
               },
             ),

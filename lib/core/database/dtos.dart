@@ -1,8 +1,8 @@
 library;
 
 import 'dart:convert';
-// Removed unused foundation.dart import
-// Removed unused drift and app_database imports
+import 'package:flutter/foundation.dart';
+import 'app_database.dart';
 
 /// Data Transfer Objects for the Specialty Coffee app.
 /// Optimized for the v17 schema with full sensory and pricing support.
@@ -19,6 +19,12 @@ enum EncyclopediaSortOption {
   priceWholesaleDesc,
   processAsc,
   newestFirst,
+}
+
+enum RecipeSegment {
+  userLot,
+  encyclopedia,
+  alternative,
 }
 
 class LocalizedBeanDto {
@@ -659,6 +665,8 @@ class CustomRecipeDto {
   final String? difficulty;
   final String? contentHtml;
 
+  final RecipeSegment segment;
+
   CustomRecipeDto({
     required this.id,
     this.lotId,
@@ -687,7 +695,113 @@ class CustomRecipeDto {
     this.extractionTimeSeconds,
     this.difficulty,
     this.contentHtml,
+    required this.segment,
   });
+
+  static List<dynamic> _parsePoursSafely(String jsonString) {
+    try {
+      return jsonDecode(jsonString) as List<dynamic>;
+    } catch (e) {
+      debugPrint('Error parsing pours JSON: $e\nData: $jsonString');
+      return []; // Return an empty list to prevent the UI from crashing
+    }
+  }
+
+  factory CustomRecipeDto.fromUserLot(UserLotRecipe r) {
+    return CustomRecipeDto(
+      id: r.id,
+      lotId: r.lotId,
+      methodKey: r.methodKey,
+      name: r.name,
+      coffeeGrams: r.coffeeGrams,
+      totalWaterMl: r.totalWaterMl,
+      grindNumber: r.grindNumber,
+      comandanteClicks: r.comandanteClicks,
+      ek43Division: r.ek43Division,
+      totalPours: r.totalPours,
+      pours: _parsePoursSafely(r.pourScheduleJson),
+      brewTempC: r.brewTempC,
+      notes: r.notes,
+      rating: r.rating,
+      createdAt: r.createdAt,
+      updatedAt: r.updatedAt,
+      isSynced: r.isSynced,
+      isFavorite: r.isFavorite,
+      isArchived: r.isArchived,
+      microns: r.microns,
+      recipeType: r.recipeType,
+      brewRatio: r.brewRatio,
+      grinderName: r.grinderName,
+      extractionTimeSeconds: r.extractionTimeSeconds,
+      difficulty: r.difficulty,
+      contentHtml: r.contentHtml,
+      segment: RecipeSegment.userLot,
+    );
+  }
+
+  factory CustomRecipeDto.fromEncyclopedia(EncyclopediaRecipe r) {
+    return CustomRecipeDto(
+      id: r.id,
+      lotId: r.beanId?.toString(),
+      methodKey: r.methodKey,
+      name: r.name,
+      coffeeGrams: r.coffeeGrams,
+      totalWaterMl: r.totalWaterMl,
+      grindNumber: r.grindNumber,
+      comandanteClicks: r.comandanteClicks,
+      ek43Division: r.ek43Division,
+      totalPours: r.totalPours,
+      pours: _parsePoursSafely(r.pourScheduleJson),
+      brewTempC: r.brewTempC,
+      notes: r.notes,
+      rating: r.rating,
+      createdAt: r.createdAt,
+      updatedAt: r.updatedAt,
+      isSynced: r.isSynced,
+      isFavorite: r.isFavorite,
+      isArchived: r.isArchived,
+      microns: r.microns,
+      recipeType: r.recipeType,
+      brewRatio: r.brewRatio,
+      grinderName: r.grinderName,
+      extractionTimeSeconds: r.extractionTimeSeconds,
+      difficulty: r.difficulty,
+      contentHtml: r.contentHtml,
+      segment: RecipeSegment.encyclopedia,
+    );
+  }
+
+  factory CustomRecipeDto.fromAlternative(AlternativeRecipe r) {
+    return CustomRecipeDto(
+      id: r.id,
+      lotId: null,
+      methodKey: r.methodKey,
+      name: r.name,
+      coffeeGrams: r.coffeeGrams,
+      totalWaterMl: r.totalWaterMl,
+      grindNumber: r.grindNumber,
+      comandanteClicks: r.comandanteClicks,
+      ek43Division: r.ek43Division,
+      totalPours: r.totalPours,
+      pours: _parsePoursSafely(r.pourScheduleJson),
+      brewTempC: r.brewTempC,
+      notes: r.notes,
+      rating: r.rating,
+      createdAt: r.createdAt,
+      updatedAt: r.updatedAt,
+      isSynced: r.isSynced,
+      isFavorite: r.isFavorite,
+      isArchived: r.isArchived,
+      microns: r.microns,
+      recipeType: r.recipeType,
+      brewRatio: r.brewRatio,
+      grinderName: r.grinderName,
+      extractionTimeSeconds: r.extractionTimeSeconds,
+      difficulty: r.difficulty,
+      contentHtml: r.contentHtml,
+      segment: RecipeSegment.alternative,
+    );
+  }
 
   String get pourScheduleJson => jsonEncode(pours);
 
@@ -719,6 +833,7 @@ class CustomRecipeDto {
     int? extractionTimeSeconds,
     String? difficulty,
     String? contentHtml,
+    RecipeSegment? segment,
   }) {
     return CustomRecipeDto(
       id: id ?? this.id,
@@ -749,6 +864,7 @@ class CustomRecipeDto {
           extractionTimeSeconds ?? this.extractionTimeSeconds,
       difficulty: difficulty ?? this.difficulty,
       contentHtml: contentHtml ?? this.contentHtml,
+      segment: segment ?? this.segment,
     );
   }
 }

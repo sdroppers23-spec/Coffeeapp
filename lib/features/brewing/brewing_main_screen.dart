@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/database/database_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../shared/widgets/add_recipe_dialog.dart';
 import '../../shared/widgets/profile_button.dart';
@@ -124,9 +125,12 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
                 onPressed: () async {
                   final result = await showDialog<bool>(
                     context: context,
-                    builder: (context) => const AddRecipeDialog(),
+                    builder: (context) => const AddRecipeDialog(
+                      recipeSegment: RecipeSegment.alternative,
+                    ),
                   );
                   if (result == true) {
+                    ref.invalidate(alternativeRecipesProvider);
                     ref.invalidate(globalCustomRecipesProvider);
                   }
                 },

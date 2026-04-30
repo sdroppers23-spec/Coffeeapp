@@ -26,19 +26,7 @@ final brewingSelectedIdsProvider =
       return BrewingSelectionNotifier();
     });
 
-// ─── Provider ─────────────────────────────────────────────────────────────────
-final customRecipesForMethodProvider =
-    StreamProvider.family<List<CustomRecipeDto>, String>((ref, methodKey) {
-      final db = ref.watch(databaseProvider);
-      return db.watchCustomRecipesForMethod(methodKey);
-    });
-
-final globalCustomRecipesProvider = StreamProvider<List<CustomRecipeDto>>((
-  ref,
-) {
-  final db = ref.watch(databaseProvider);
-  return db.watchAllCustomRecipes();
-});
+// Providers moved to database_provider.dart
 
 // ─── Tab widget (embedded inside BrewingDetailScreen Tab 2) ───────────────────
 class CustomRecipeListTab extends ConsumerStatefulWidget {
@@ -130,10 +118,15 @@ class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
       },
       onDismiss: () async {
         final db = ref.read(databaseProvider);
+        final currentRecipes = ref.read(allCustomRecipesForMethodProvider(widget.methodKey)).value ?? [];
+        
         for (final id in idsToDelete) {
-          await db.deleteCustomRecipe(id);
+          final recipe = currentRecipes.where((r) => r.id == id).firstOrNull;
+          if (recipe != null) {
+            await db.deleteRecipeBySegment(id, recipe.segment);
+          }
         }
-        ref.invalidate(customRecipesForMethodProvider(widget.methodKey));
+        ref.invalidate(allCustomRecipesForMethodProvider(widget.methodKey));
         ref.invalidate(globalCustomRecipesProvider);
       },
     );
@@ -141,9 +134,8 @@ class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
 
   @override
   Widget build(BuildContext context) {
-    final recipesAsync = ref.watch(
-      customRecipesForMethodProvider(widget.methodKey),
-    );
+    final recipesAsync =
+        ref.watch(allCustomRecipesForMethodProvider(widget.methodKey));
 
     return recipesAsync.when(
       loading: () => const Center(
@@ -170,6 +162,7 @@ class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
               separatorBuilder: (_, _) => const SizedBox(height: 16),
               itemBuilder: (context, i) => CustomRecipeCard(
                 recipe: recipes[i],
+                segment: recipes[i].segment,
                 methodKey: widget.methodKey,
                 ref: ref,
                 isSelectionMode: _isSelectionMode,
@@ -314,33 +307,21 @@ class _GlobalCustomRecipeListState
 
   Future<void> _deleteSelectedBatch() async {
     final selectedIds = ref.read(brewingSelectedIdsProvider);
-    final count = selectedIds.length;
-    final idsToDelete = List<String>.from(selectedIds);
+    if (selectedIds.isEmpty) return;
 
-    setState(() {
-      _isSelectionMode = false;
-      ref.read(brewingSelectedIdsProvider.notifier).updateState({});
-    });
+    final db = ref.read(databaseProvider);
+    final allRecipes = ref.read(globalCustomRecipesProvider).value ?? [];
+
+    for (var id in selectedIds) {
+      final recipe = allRecipes.where((r) => r.id == id).firstOrNull;
+      if (recipe != null) {
+        await db.deleteRecipeBySegment(id, recipe.segment);
+      }
+    }
+    ref.read(brewingSelectedIdsProvider.notifier).updateState({});
+    setState(() => _isSelectionMode = false);
     ref.read(navBarVisibleProvider.notifier).show();
-
-    final String deleteKey = count == 1
-        ? 'deleted_1'
-        : (count >= 2 && count <= 4)
-        ? 'deleted_2_4'
-        : 'deleted_5_plus';
-
-    ModernUndoTimer.show(
-      context,
-      message: ref.t(deleteKey, args: {'count': count.toString()}),
-      onUndo: () {},
-      onDismiss: () async {
-        final db = ref.read(databaseProvider);
-        for (final id in idsToDelete) {
-          await db.deleteCustomRecipe(id);
-        }
-        ref.invalidate(globalCustomRecipesProvider);
-      },
-    );
+    ref.invalidate(globalCustomRecipesProvider);
   }
 
   @override
@@ -513,6 +494,7 @@ class _GlobalCustomRecipeListState
                             padding: const EdgeInsets.only(bottom: 16),
                             child: CustomRecipeCard(
                               recipe: r,
+                              segment: r.segment,
                               methodKey: r.methodKey,
                               ref: ref,
                               isSelectionMode: _isSelectionMode,
@@ -560,6 +542,7 @@ class _GlobalCustomRecipeListState
                             padding: const EdgeInsets.only(bottom: 16),
                             child: CustomRecipeCard(
                               recipe: r,
+                              segment: r.segment,
                               methodKey: r.methodKey,
                               ref: ref,
                               isSelectionMode: _isSelectionMode,

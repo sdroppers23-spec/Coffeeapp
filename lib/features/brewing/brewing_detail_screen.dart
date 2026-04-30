@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:ui' as ui;
 import 'package:flutter_html/flutter_html.dart';
+import '../../core/database/database_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../shared/widgets/add_recipe_dialog.dart';
 import 'custom_recipe_list.dart';
@@ -162,11 +163,12 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                         builder: (context) => AddRecipeDialog(
                           lotId: '',
                           initialMethod: widget.recipe.methodKey,
+                          recipeSegment: RecipeSegment.alternative,
                         ),
                       );
                       if (result == true) {
                         ref.invalidate(
-                          customRecipesForMethodProvider(
+                          alternativeRecipesForMethodProvider(
                             widget.recipe.methodKey,
                           ),
                         );
@@ -433,7 +435,7 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
       child: BackdropFilter(
         filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
-          height: 105,
+          height: 130,
           decoration: BoxDecoration(
             color: const Color(0xFF0A0A0A).withValues(alpha: 0.8),
             border: Border(
@@ -443,9 +445,24 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
               ),
             ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 12, top: 12, bottom: 4),
+                child: Text(
+                  t('stat_base_characteristics').toUpperCase(),
+                  style: GoogleFonts.outfit(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white38,
+                    letterSpacing: 1.0,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
               children: [
                 Expanded(
                   child: _HeaderStat(
@@ -528,18 +545,20 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
               ],
             ),
           ),
-        ),
+        ],
       ),
-    );
-  }
+    ),
+  ),
+);
+}
 
-  @override
-  double get maxExtent => 105;
-  @override
-  double get minExtent => 105;
-  @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
-      true;
+@override
+double get maxExtent => 130;
+@override
+double get minExtent => 130;
+@override
+bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+    true;
 }
 
 class _HeaderStat extends StatelessWidget {

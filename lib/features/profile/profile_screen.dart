@@ -12,9 +12,9 @@ import '../navigation/navigation_providers.dart';
 import '../../shared/widgets/glass_container.dart';
 import '../../shared/widgets/premium_background.dart';
 import '../discover/lots/lots_providers.dart';
-import '../brewing/custom_recipe_list.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../core/database/database_provider.dart';
 import '../../core/providers/settings_provider.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {

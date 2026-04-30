@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +13,7 @@ import '../../core/database/database_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/supabase/supabase_provider.dart';
 import '../services/toast_service.dart';
+import 'sync_indicator.dart';
 
 part 'add_recipe/recipe_filter_params.dart';
 part 'add_recipe/recipe_espresso_params.dart';
@@ -478,15 +480,15 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
               break;
           }
           
-          // Trigger immediate global sync
-          ref.read(syncServiceProvider).syncAll();
+          // Trigger global sync with progress UI
+          unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
         } catch (e) {
           debugPrint('RecipeDialog: Cloud sync error: $e');
         }
+      } else {
+        // Even for guests, trigger a local-only refresh/sync if needed
+        unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
       }
-
-      // Trigger global push for immediate persistence of all related objects
-      ref.read(syncServiceProvider).pushLocalUserContent();
     } catch (e) {
       debugPrint('RecipeDialog: Local save error: $e');
       if (mounted) {

@@ -826,21 +826,25 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
                 ),
                 const SizedBox(height: 24),
 
-                // Change Password Button
-                OutlinedButton.icon(
-                  onPressed: _showChangePasswordDialog,
-                  icon: const Icon(Icons.lock_reset_rounded, size: 18),
-                  label: Text(ref.t('change_password_button')),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: const Color(0xFFC8A96E),
-                    side: const BorderSide(color: Color(0xFFC8A96E)),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                if (!(widget.user.appMetadata['provider'] == 'google' ||
+                    (widget.user.identities?.any((i) => i.provider == 'google') ??
+                        false))) ...[
+                  // Change Password Button
+                  OutlinedButton.icon(
+                    onPressed: _showChangePasswordDialog,
+                    icon: const Icon(Icons.lock_reset_rounded, size: 18),
+                    label: Text(ref.t('change_password_button')),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: const Color(0xFFC8A96E),
+                      side: const BorderSide(color: Color(0xFFC8A96E)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
-                ),
-                const SizedBox(height: 32),
+                  const SizedBox(height: 32),
+                ],
 
                 // Action Buttons
                 Row(

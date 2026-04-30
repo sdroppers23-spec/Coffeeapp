@@ -99,6 +99,7 @@ class SyncService {
 
       // 2. Sequential Stable Sync with real progress updates
       onProgress?.call('Syncing Brands...', 0.2);
+      _progressController.add(0.2);
       try {
         await syncBrands();
       } catch (e) {
@@ -107,6 +108,7 @@ class SyncService {
       await Future.delayed(const Duration(milliseconds: 100));
 
       onProgress?.call('Syncing Farmers...', 0.3);
+      _progressController.add(0.3);
       try {
         await syncFarmers();
       } catch (e) {
@@ -115,6 +117,7 @@ class SyncService {
       await Future.delayed(const Duration(milliseconds: 100));
 
       onProgress?.call('Syncing Encyclopedia...', 0.5);
+      _progressController.add(0.5);
       try {
         await syncEncyclopedia();
       } catch (e) {
@@ -123,6 +126,7 @@ class SyncService {
       await Future.delayed(const Duration(milliseconds: 100));
 
       onProgress?.call('Syncing Methods...', 0.7);
+      _progressController.add(0.7);
       try {
         await syncAlternativeBrewing();
       } catch (e) {
@@ -131,6 +135,7 @@ class SyncService {
       await Future.delayed(const Duration(milliseconds: 100));
 
       onProgress?.call('Syncing Articles...', 0.85);
+      _progressController.add(0.85);
       try {
         await syncArticles();
       } catch (e) {
@@ -139,10 +144,11 @@ class SyncService {
       await Future.delayed(const Duration(milliseconds: 100));
 
       onProgress?.call('Syncing User Data...', 0.95);
+      _progressController.add(0.95);
       try {
         // Push local changes (including deletions) BEFORE pulling
-        await pushLocalUserContent();
-        await pullUserContent();
+        await pushLocalUserContent(onProgress: onProgress);
+        await pullUserContent(onProgress: onProgress);
       } catch (e) {
         debugPrint('SyncService: Error syncing user data: $e');
       }
@@ -520,7 +526,7 @@ class SyncService {
 
   /// Pushes local user data (recipes and lots) to Supabase.
   /// Pushes local user data (recipes and lots) to Supabase, including deletions.
-  Future<void> pushLocalUserContent() async {
+  Future<void> pushLocalUserContent({Function(String, double)? onProgress}) async {
     if (supabase == null || supabase!.auth.currentUser == null) {
       debugPrint('SyncService: No user or supabase, skipping push.');
       return;
@@ -534,8 +540,10 @@ class SyncService {
 
     try {
       final userId = supabase!.auth.currentUser!.id;
+      debugPrint('SyncService: userId is $userId');
 
       // 1. Sync Lot Recipes (Upsert & Delete)
+      onProgress?.call('Pushing Recipes...', 0.91);
       final lotRecipesToSync = await (db.select(
         db.userLotRecipes,
       )..where((t) => t.isSynced.equals(false))).get();
@@ -581,7 +589,8 @@ class SyncService {
         }
       }
 
-      // 1.1 Sync Encyclopedia Recipes (Upsert & Delete)
+      // 2. Sync Encyclopedia Recipes (Upsert & Delete)
+      onProgress?.call('Pushing Encyclopedia...', 0.92);
       final encRecipesToSync = await (db.select(
         db.encyclopediaRecipes,
       )..where((t) => t.isSynced.equals(false))).get();
@@ -627,7 +636,8 @@ class SyncService {
         }
       }
 
-      // 1.2 Sync Alternative Recipes (Upsert & Delete)
+      // 3. Sync Alternative Recipes (Upsert & Delete)
+      onProgress?.call('Pushing Alternative...', 0.93);
       final altRecipesToSync = await (db.select(
         db.alternativeRecipes,
       )..where((t) => t.isSynced.equals(false))).get();
@@ -672,7 +682,8 @@ class SyncService {
         }
       }
 
-      // 2. Sync Personal Coffee Lots (Upsert & Delete)
+      // 4. Sync Personal Coffee Lots (Upsert & Delete)
+      onProgress?.call('Pushing Lots...', 0.94);
       final lotsToSync = await (db.select(
         db.coffeeLots,
       )..where((t) => t.isSynced.equals(false))).get();
@@ -681,7 +692,7 @@ class SyncService {
           if (l.isDeletedLocal) {
             debugPrint('SyncService: Deleting lot from cloud: ${l.id}');
             await supabase!
-                .from('user_coffee_lots')
+                .from('user_lots')
                 .delete()
                 .eq('id', l.id)
                 .eq('user_id', userId);
@@ -690,7 +701,7 @@ class SyncService {
             debugPrint('SyncService: Lot deletion synced to cloud: ${l.id}');
           } else {
             try {
-              await supabase!.from('user_coffee_lots').upsert({
+              await supabase!.from('user_lots').upsert({
                 'id': l.id,
                 'user_id': userId,
                 'coffee_name': l.coffeeName,
@@ -802,7 +813,7 @@ class SyncService {
   }
 
   /// Pulls user-specific lots and recipes from Supabase.
-  Future<void> pullUserContent() async {
+  Future<void> pullUserContent({Function(String, double)? onProgress}) async {
     if (supabase == null || supabase!.auth.currentUser == null) {
       return;
     }
@@ -811,9 +822,10 @@ class SyncService {
       final userId = supabase!.auth.currentUser!.id;
 
       // 1. Pull Lots
+      onProgress?.call('Pulling Lots...', 0.96);
 
       final lotsData = await supabase!
-          .from('user_coffee_lots')
+          .from('user_lots')
           .select()
           .eq('user_id', userId);
 
@@ -877,6 +889,7 @@ class SyncService {
       }
 
       // 2. Recipes (User Lots)
+      onProgress?.call('Pulling Recipes...', 0.97);
 
       final remoteRecipes = await supabase!
           .from('user_lot_recipes')
@@ -924,6 +937,7 @@ class SyncService {
       }
 
       // 3. Recipes (Encyclopedia)
+      onProgress?.call('Pulling Encyclopedia...', 0.98);
 
       final remoteEncRecipes = await supabase!
           .from('user_encyclopedia_recipes')
@@ -971,6 +985,7 @@ class SyncService {
       }
 
       // 4. Recipes (Alternative)
+      onProgress?.call('Pulling Alternative...', 0.99);
 
       final remoteAltRecipes = await supabase!
           .from('user_alternative_recipes')

@@ -106,19 +106,17 @@ final allCustomRecipesForMethodProvider =
     Provider.family<AsyncValue<List<CustomRecipeDto>>, String>(
         (ref, methodKey) {
   final s1 = ref.watch(userLotRecipesForMethodProvider(methodKey));
-  final s2 = ref.watch(encyclopediaRecipesForMethodProvider(methodKey));
+  // Removed s2 (encyclopedia recipes) to prevent duplication in Alternative Brewing list
   final s3 = ref.watch(alternativeRecipesForMethodProvider(methodKey));
 
-  if (s1.isLoading || s2.isLoading || s3.isLoading) {
+  if (s1.isLoading || s3.isLoading) {
     return const AsyncValue.loading();
   }
   if (s1.hasError) return AsyncValue.error(s1.error!, s1.stackTrace!);
-  if (s2.hasError) return AsyncValue.error(s2.error!, s2.stackTrace!);
   if (s3.hasError) return AsyncValue.error(s3.error!, s3.stackTrace!);
 
   final List<CustomRecipeDto> all = [
     ...(s1.value ?? []),
-    ...(s2.value ?? []),
     ...(s3.value ?? []),
   ];
   // Sort by date descending

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -447,15 +448,15 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       );
 
       if (mounted) {
-        // Pop loading
-        if (mounted) {
-          ToastService.showSuccess(context, context.t('toast_changes_saved'));
-        }
+        // Pop loading dialog
+        Navigator.of(context).pop();
+        
+        ToastService.showSuccess(context, context.t('toast_changes_saved'));
 
         ref.invalidate(userLotsProvider);
-        ref.read(syncStatusProvider.notifier).syncEverything();
+        unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
         ref.read(navBarVisibleProvider.notifier).show();
-        if (mounted) context.pop();
+        context.pop();
       }
     } catch (e) {
       if (mounted) {

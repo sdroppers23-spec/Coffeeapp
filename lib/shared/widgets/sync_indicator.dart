@@ -11,6 +11,7 @@ import '../../features/specialty/specialty_encyclopedia_provider.dart';
 import '../../features/discover/discovery_providers.dart';
 import '../../features/discover/farmers_screen.dart';
 import '../../features/brewing/brewing_guide_screen.dart';
+import '../../features/discover/lots/lots_providers.dart';
 
 class SyncStatusData {
   final SyncState state;
@@ -135,8 +136,11 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
     ref.invalidate(brewingRecipesProvider);
     
     // Add missing user data providers
+    ref.invalidate(userLotsStreamProvider);
     ref.invalidate(userLotsProvider);
     ref.invalidate(userLotRecipesProvider);
+    ref.invalidate(encyclopediaRecipesProvider);
+    ref.invalidate(alternativeRecipesProvider);
   }
 
   Future<void> syncEverything({bool force = false}) async {

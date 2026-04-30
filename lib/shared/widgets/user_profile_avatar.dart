@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/supabase/supabase_provider.dart';
 import '../../features/navigation/navigation_providers.dart';
+import '../../core/database/database_provider.dart';
 import 'glass_container.dart';
 
 class UserProfileAvatar extends ConsumerWidget {
@@ -120,6 +121,7 @@ class UserProfileAvatar extends ConsumerWidget {
                   color: Colors.redAccent,
                   onTap: () async {
                     context.pop();
+                    await ref.read(databaseProvider).clearUserData();
                     await ref.read(supabaseProvider).auth.signOut();
                   },
                 ),

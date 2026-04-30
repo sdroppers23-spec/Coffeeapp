@@ -8,6 +8,7 @@ import '../../core/providers/settings_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/providers/preferences_provider.dart';
 import '../../shared/widgets/premium_background.dart';
+import '../../core/database/database_provider.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -38,6 +39,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Future<void> _signOut() async {
     setState(() => _isLoading = true);
     try {
+      await ref.read(databaseProvider).clearUserData();
       await ref.read(supabaseProvider).auth.signOut();
       if (mounted) context.go('/auth');
     } catch (e) {

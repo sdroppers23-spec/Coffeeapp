@@ -1454,6 +1454,18 @@ class AppDatabase extends _$AppDatabase {
   Future<int> deleteAlternativeRecipePermanently(String id) =>
       (delete(alternativeRecipes)..where((t) => t.id.equals(id))).go();
 
+  /// Clears all user-specific data from the local database.
+  /// Call this upon user sign-out to prevent data leakage between accounts.
+  Future<void> clearUserData() async {
+    await transaction(() async {
+      await delete(userLotRecipes).go();
+      await delete(encyclopediaRecipes).go();
+      await delete(alternativeRecipes).go();
+      await delete(coffeeLots).go();
+      await delete(fermentationLogs).go();
+    });
+  }
+
   // ── Brewing (Static Wide Table) ───────────────────────────────────────────
   /// Reads from V2 table (populated by SyncService V2). English-only for brewing methods.
   Future<List<BrewingRecipeDto>> getAllBrewingRecipes(String lang) async {

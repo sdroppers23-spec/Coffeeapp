@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/supabase/supabase_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../features/navigation/navigation_providers.dart';
+import '../../core/database/database_provider.dart';
 
 /// Універсальна кнопка профілю для AppBar.
 /// Відображає аватар користувача, при натисканні відкриває меню з:
@@ -213,6 +214,7 @@ class _ProfileSheet extends ConsumerWidget {
             ),
             onTap: () async {
               Navigator.of(context).pop();
+              await innerRef.read(databaseProvider).clearUserData();
               await innerRef.read(supabaseProvider).auth.signOut();
             },
           ),

@@ -30,6 +30,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Future<void> _signOut() async {
     setState(() => _isLoading = true);
     try {
+      await ref.read(databaseProvider).clearUserData();
       await ref.read(supabaseProvider).auth.signOut();
     } finally {
       if (mounted) setState(() => _isLoading = false);

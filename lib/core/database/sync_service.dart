@@ -624,7 +624,9 @@ class SyncService {
       final lotsToSync = await (db.select(
         db.coffeeLots,
       )..where((t) => t.isSynced.equals(false))).get();
+      debugPrint('SyncService: Found ${lotsToSync.length} lots to sync.');
       for (final l in lotsToSync) {
+        debugPrint('SyncService: Processing lot ${l.id}, isDeletedLocal: ${l.isDeletedLocal}');
         try {
           if (l.isDeletedLocal) {
             debugPrint('SyncService: Deleting lot from cloud: ${l.id}');
@@ -659,13 +661,14 @@ class SyncService {
               'varieties': l.varieties,
               'flavor_profile': l.flavorProfile,
               'sca_score': l.scaScore,
+              'retail_price': l.retailPrice,
+              'wholesale_price': l.wholesalePrice,
               'is_favorite': l.isFavorite,
               'is_archived': l.isArchived,
               'is_open': l.isOpen,
               'is_ground': l.isGround,
               'sensory_json': _safeJsonDecode(l.sensoryJson),
               'price_json': _safeJsonDecode(l.priceJson),
-              'brand_id': l.brandId,
               'image_url': l.imageUrl,
               'created_at': l.createdAt?.toIso8601String(),
               'updated_at': DateTime.now().toIso8601String(),
@@ -680,7 +683,7 @@ class SyncService {
             debugPrint('SyncService: Lot synced to cloud successfully: ${l.id}');
           }
         } catch (e) {
-          debugPrint('SyncService: Error syncing lot ${l.id}: $e');
+          debugPrint('SyncService: CRITICAL Error syncing lot ${l.id}: $e');
         }
       }
 
@@ -906,6 +909,8 @@ class SyncService {
             varieties: Value(item['varieties'] as String?),
             flavorProfile: Value(item['flavor_profile'] as String?),
             scaScore: Value(item['sca_score'] as String?),
+            retailPrice: Value(item['retail_price'] as String?),
+            wholesalePrice: Value(item['wholesale_price'] as String?),
             isFavorite: Value(item['is_favorite'] as bool? ?? false),
             isArchived: Value(item['is_archived'] as bool? ?? false),
             isOpen: Value(item['is_open'] as bool? ?? false),
@@ -920,7 +925,6 @@ class SyncService {
                   ? jsonEncode(item['price_json'])
                   : '{}',
             ),
-            brandId: Value((item['brand_id'] as num?)?.toInt()),
             imageUrl: Value(item['image_url'] as String?),
             createdAt: Value(DateTime.tryParse(item['created_at'] ?? '')),
             updatedAt: Value(DateTime.now()),

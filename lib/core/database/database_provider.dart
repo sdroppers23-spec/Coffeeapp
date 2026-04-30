@@ -39,6 +39,7 @@ final databaseInitializerProvider = FutureProvider<void>((ref) async {
   }
 
   final syncService = ref.read(syncServiceProvider);
+  syncService.startAutoSync();
 
   // Initial sync
   debugPrint('DatabaseProvider: Starting background sync...');
@@ -49,7 +50,7 @@ final databaseInitializerProvider = FutureProvider<void>((ref) async {
     final event = next.value?.event;
     if (event == AuthChangeEvent.signedIn || event == AuthChangeEvent.userUpdated) {
       debugPrint('DatabaseProvider: Auth change detected ($event), triggering sync...');
-      unawaited(syncService.syncAll());
+      unawaited(syncService.pushLocalUserContent().then((_) => syncService.syncAll()));
     }
   });
 });

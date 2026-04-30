@@ -48,7 +48,9 @@ class MethodTile extends ConsumerWidget {
           MaterialPageRoute(
             builder: (_) => BrewingDetailScreen(recipe: _firstRecipe),
           ),
-        );
+        ).then((_) {
+          ref.read(navBarVisibleProvider.notifier).show();
+        });
       },
       child: GlassContainer(
         borderRadius: 24,

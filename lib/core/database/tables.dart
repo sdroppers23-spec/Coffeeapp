@@ -1,4 +1,4 @@
-// ─── Schema version: 28 (Brand Favorite/Archive Support) ──────────────────
+// ─── Schema version: 49 (Custom Method Names Support) ───────────────────────
 // All legacy per-language columns removed from main tables.
 // System now relies exclusively on companion *Translations tables.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -420,6 +420,7 @@ mixin RecipeColumns on Table {
   TextColumn get id => text().clientDefault(() => const Uuid().v4())();
   TextColumn get userId => text()();
   TextColumn get methodKey => text()();
+  TextColumn get customMethodName => text().withDefault(const Constant(''))();
   TextColumn get name => text()();
 
   DateTimeColumn get createdAt => dateTime().nullable()();

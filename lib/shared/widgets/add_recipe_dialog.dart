@@ -57,6 +57,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
   final _notesController = TextEditingController();
   final _grinderNameController = TextEditingController();
   final _customGrinderController = TextEditingController();
+  final _customMethodNameController = TextEditingController();
   bool _isOtherGrinder = false;
   bool _isGrinderExpanded = false;
   String? _difficulty;
@@ -79,6 +80,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
         (_method.toLowerCase() == 'espresso' ? 'espresso' : 'filter');
     _rating = recipe?.rating ?? 0;
     _difficulty = recipe?.difficulty;
+    _customMethodNameController.text = recipe?.customMethodName ?? '';
 
     _nameController.text = recipe?.name ?? '';
     _coffeeController.text = recipe?.coffeeGrams.toStringAsFixed(1) ?? '';
@@ -234,6 +236,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
     _notesController.dispose();
     _grinderNameController.dispose();
     _customGrinderController.dispose();
+    _customMethodNameController.dispose();
     for (var pc in _pourControllers) {
       pc.dispose();
     }
@@ -327,6 +330,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             microns: Value(int.tryParse(_micronsController.text)),
             extractionTimeSeconds: Value(_parseHMSToSeconds(_extractionTimeController.text)),
             difficulty: Value(_difficulty),
+            customMethodName: Value(_customMethodNameController.text.trim()),
             pourScheduleJson: Value(pourScheduleJson),
             brewTempC: Value(brewTempC),
             notes: Value(_notesController.text.trim()),
@@ -357,6 +361,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             microns: Value(int.tryParse(_micronsController.text)),
             extractionTimeSeconds: Value(_parseHMSToSeconds(_extractionTimeController.text)),
             difficulty: Value(_difficulty),
+            customMethodName: Value(_customMethodNameController.text.trim()),
             pourScheduleJson: Value(pourScheduleJson),
             brewTempC: Value(brewTempC),
             notes: Value(_notesController.text.trim()),
@@ -386,6 +391,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             microns: Value(int.tryParse(_micronsController.text)),
             extractionTimeSeconds: Value(_parseHMSToSeconds(_extractionTimeController.text)),
             difficulty: Value(_difficulty),
+            customMethodName: Value(_customMethodNameController.text.trim()),
             pourScheduleJson: Value(pourScheduleJson),
             brewTempC: Value(brewTempC),
             notes: Value(_notesController.text.trim()),
@@ -430,6 +436,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
             'created_at': createdAt.toIso8601String(),
             'updated_at': updatedAt.toIso8601String(),
             'recipe_type': _recipeType,
+            'custom_method_name': _customMethodNameController.text.trim(),
           };
 
           if (widget.recipeSegment == RecipeSegment.userLot) {
@@ -465,6 +472,9 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
           debugPrint('RecipeDialog: Cloud sync error: $e');
         }
       }
+
+      // Trigger global push for immediate persistence of all related objects
+      ref.read(syncServiceProvider).pushLocalUserContent();
     } catch (e) {
       debugPrint('RecipeDialog: Local save error: $e');
       if (mounted) {
@@ -550,6 +560,11 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                         _buildTextField(
                           controller: _nameController,
                           hint: ref.t('recipe_name'),
+                        ),
+                        const SizedBox(height: 20),
+                        _buildTextField(
+                          controller: _customMethodNameController,
+                          hint: 'Назва способу (напр. Hario Switch)',
                         ),
                         const SizedBox(height: 20),
                         Row(

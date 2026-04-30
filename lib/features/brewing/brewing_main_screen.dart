@@ -42,20 +42,6 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
     _tabController.addListener(() {
       if (mounted) {
         setState(() {}); // Rebuild for FAB visibility
-        if (_tabController.index == 1) {
-          ref.read(navBarVisibleProvider.notifier).hide();
-        } else {
-          ref.read(navBarVisibleProvider.notifier).show();
-        }
-      }
-    });
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        if (_tabController.index == 1) {
-          ref.read(navBarVisibleProvider.notifier).hide();
-        } else {
-          ref.read(navBarVisibleProvider.notifier).show();
-        }
       }
     });
   }
@@ -190,6 +176,9 @@ class _BrewingMethodsContent extends ConsumerWidget {
 
               // 2. Add custom recipes (mapped to DTO)
               for (var cr in customList) {
+                // Filter out encyclopedia recipes from the general brewing methods view
+                if (cr.segment == RecipeSegment.encyclopedia) continue;
+
                 // Determine if this custom recipe belongs to an existing guide method or is a new one
                 // For simplicity, we only show custom recipes that match guide method keys on these tiles
                 if (grouped.containsKey(cr.methodKey)) {

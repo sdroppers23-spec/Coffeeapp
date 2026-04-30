@@ -9605,6 +9605,18 @@ class $UserLotRecipesTable extends UserLotRecipes
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _customMethodNameMeta = const VerificationMeta(
+    'customMethodName',
+  );
+  @override
+  late final GeneratedColumn<String> customMethodName = GeneratedColumn<String>(
+    'custom_method_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -9916,6 +9928,7 @@ class $UserLotRecipesTable extends UserLotRecipes
     id,
     userId,
     methodKey,
+    customMethodName,
     name,
     createdAt,
     updatedAt,
@@ -9973,6 +9986,15 @@ class $UserLotRecipesTable extends UserLotRecipes
       );
     } else if (isInserting) {
       context.missing(_methodKeyMeta);
+    }
+    if (data.containsKey('custom_method_name')) {
+      context.handle(
+        _customMethodNameMeta,
+        customMethodName.isAcceptableOrUnknown(
+          data['custom_method_name']!,
+          _customMethodNameMeta,
+        ),
+      );
     }
     if (data.containsKey('name')) {
       context.handle(
@@ -10190,6 +10212,10 @@ class $UserLotRecipesTable extends UserLotRecipes
         DriftSqlType.string,
         data['${effectivePrefix}method_key'],
       )!,
+      customMethodName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}custom_method_name'],
+      )!,
       name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}name'],
@@ -10307,6 +10333,7 @@ class UserLotRecipe extends DataClass implements Insertable<UserLotRecipe> {
   final String id;
   final String userId;
   final String methodKey;
+  final String customMethodName;
   final String name;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -10337,6 +10364,7 @@ class UserLotRecipe extends DataClass implements Insertable<UserLotRecipe> {
     required this.id,
     required this.userId,
     required this.methodKey,
+    required this.customMethodName,
     required this.name,
     this.createdAt,
     this.updatedAt,
@@ -10370,6 +10398,7 @@ class UserLotRecipe extends DataClass implements Insertable<UserLotRecipe> {
     map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
     map['method_key'] = Variable<String>(methodKey);
+    map['custom_method_name'] = Variable<String>(customMethodName);
     map['name'] = Variable<String>(name);
     if (!nullToAbsent || createdAt != null) {
       map['created_at'] = Variable<DateTime>(createdAt);
@@ -10422,6 +10451,7 @@ class UserLotRecipe extends DataClass implements Insertable<UserLotRecipe> {
       id: Value(id),
       userId: Value(userId),
       methodKey: Value(methodKey),
+      customMethodName: Value(customMethodName),
       name: Value(name),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
@@ -10478,6 +10508,7 @@ class UserLotRecipe extends DataClass implements Insertable<UserLotRecipe> {
       id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       methodKey: serializer.fromJson<String>(json['methodKey']),
+      customMethodName: serializer.fromJson<String>(json['customMethodName']),
       name: serializer.fromJson<String>(json['name']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
@@ -10515,6 +10546,7 @@ class UserLotRecipe extends DataClass implements Insertable<UserLotRecipe> {
       'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
       'methodKey': serializer.toJson<String>(methodKey),
+      'customMethodName': serializer.toJson<String>(customMethodName),
       'name': serializer.toJson<String>(name),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
       'updatedAt': serializer.toJson<DateTime?>(updatedAt),
@@ -10548,6 +10580,7 @@ class UserLotRecipe extends DataClass implements Insertable<UserLotRecipe> {
     String? id,
     String? userId,
     String? methodKey,
+    String? customMethodName,
     String? name,
     Value<DateTime?> createdAt = const Value.absent(),
     Value<DateTime?> updatedAt = const Value.absent(),
@@ -10578,6 +10611,7 @@ class UserLotRecipe extends DataClass implements Insertable<UserLotRecipe> {
     id: id ?? this.id,
     userId: userId ?? this.userId,
     methodKey: methodKey ?? this.methodKey,
+    customMethodName: customMethodName ?? this.customMethodName,
     name: name ?? this.name,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
     updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
@@ -10612,6 +10646,9 @@ class UserLotRecipe extends DataClass implements Insertable<UserLotRecipe> {
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
       methodKey: data.methodKey.present ? data.methodKey.value : this.methodKey,
+      customMethodName: data.customMethodName.present
+          ? data.customMethodName.value
+          : this.customMethodName,
       name: data.name.present ? data.name.value : this.name,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
@@ -10679,6 +10716,7 @@ class UserLotRecipe extends DataClass implements Insertable<UserLotRecipe> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('methodKey: $methodKey, ')
+          ..write('customMethodName: $customMethodName, ')
           ..write('name: $name, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
@@ -10714,6 +10752,7 @@ class UserLotRecipe extends DataClass implements Insertable<UserLotRecipe> {
     id,
     userId,
     methodKey,
+    customMethodName,
     name,
     createdAt,
     updatedAt,
@@ -10748,6 +10787,7 @@ class UserLotRecipe extends DataClass implements Insertable<UserLotRecipe> {
           other.id == this.id &&
           other.userId == this.userId &&
           other.methodKey == this.methodKey &&
+          other.customMethodName == this.customMethodName &&
           other.name == this.name &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
@@ -10780,6 +10820,7 @@ class UserLotRecipesCompanion extends UpdateCompanion<UserLotRecipe> {
   final Value<String> id;
   final Value<String> userId;
   final Value<String> methodKey;
+  final Value<String> customMethodName;
   final Value<String> name;
   final Value<DateTime?> createdAt;
   final Value<DateTime?> updatedAt;
@@ -10811,6 +10852,7 @@ class UserLotRecipesCompanion extends UpdateCompanion<UserLotRecipe> {
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.methodKey = const Value.absent(),
+    this.customMethodName = const Value.absent(),
     this.name = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -10843,6 +10885,7 @@ class UserLotRecipesCompanion extends UpdateCompanion<UserLotRecipe> {
     this.id = const Value.absent(),
     required String userId,
     required String methodKey,
+    this.customMethodName = const Value.absent(),
     required String name,
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -10879,6 +10922,7 @@ class UserLotRecipesCompanion extends UpdateCompanion<UserLotRecipe> {
     Expression<String>? id,
     Expression<String>? userId,
     Expression<String>? methodKey,
+    Expression<String>? customMethodName,
     Expression<String>? name,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
@@ -10911,6 +10955,7 @@ class UserLotRecipesCompanion extends UpdateCompanion<UserLotRecipe> {
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
       if (methodKey != null) 'method_key': methodKey,
+      if (customMethodName != null) 'custom_method_name': customMethodName,
       if (name != null) 'name': name,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
@@ -10946,6 +10991,7 @@ class UserLotRecipesCompanion extends UpdateCompanion<UserLotRecipe> {
     Value<String>? id,
     Value<String>? userId,
     Value<String>? methodKey,
+    Value<String>? customMethodName,
     Value<String>? name,
     Value<DateTime?>? createdAt,
     Value<DateTime?>? updatedAt,
@@ -10978,6 +11024,7 @@ class UserLotRecipesCompanion extends UpdateCompanion<UserLotRecipe> {
       id: id ?? this.id,
       userId: userId ?? this.userId,
       methodKey: methodKey ?? this.methodKey,
+      customMethodName: customMethodName ?? this.customMethodName,
       name: name ?? this.name,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -11020,6 +11067,9 @@ class UserLotRecipesCompanion extends UpdateCompanion<UserLotRecipe> {
     }
     if (methodKey.present) {
       map['method_key'] = Variable<String>(methodKey.value);
+    }
+    if (customMethodName.present) {
+      map['custom_method_name'] = Variable<String>(customMethodName.value);
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
@@ -11113,6 +11163,7 @@ class UserLotRecipesCompanion extends UpdateCompanion<UserLotRecipe> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('methodKey: $methodKey, ')
+          ..write('customMethodName: $customMethodName, ')
           ..write('name: $name, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
@@ -13279,6 +13330,18 @@ class $EncyclopediaRecipesTable extends EncyclopediaRecipes
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _customMethodNameMeta = const VerificationMeta(
+    'customMethodName',
+  );
+  @override
+  late final GeneratedColumn<String> customMethodName = GeneratedColumn<String>(
+    'custom_method_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -13590,6 +13653,7 @@ class $EncyclopediaRecipesTable extends EncyclopediaRecipes
     id,
     userId,
     methodKey,
+    customMethodName,
     name,
     createdAt,
     updatedAt,
@@ -13647,6 +13711,15 @@ class $EncyclopediaRecipesTable extends EncyclopediaRecipes
       );
     } else if (isInserting) {
       context.missing(_methodKeyMeta);
+    }
+    if (data.containsKey('custom_method_name')) {
+      context.handle(
+        _customMethodNameMeta,
+        customMethodName.isAcceptableOrUnknown(
+          data['custom_method_name']!,
+          _customMethodNameMeta,
+        ),
+      );
     }
     if (data.containsKey('name')) {
       context.handle(
@@ -13864,6 +13937,10 @@ class $EncyclopediaRecipesTable extends EncyclopediaRecipes
         DriftSqlType.string,
         data['${effectivePrefix}method_key'],
       )!,
+      customMethodName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}custom_method_name'],
+      )!,
       name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}name'],
@@ -13982,6 +14059,7 @@ class EncyclopediaRecipe extends DataClass
   final String id;
   final String userId;
   final String methodKey;
+  final String customMethodName;
   final String name;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -14012,6 +14090,7 @@ class EncyclopediaRecipe extends DataClass
     required this.id,
     required this.userId,
     required this.methodKey,
+    required this.customMethodName,
     required this.name,
     this.createdAt,
     this.updatedAt,
@@ -14045,6 +14124,7 @@ class EncyclopediaRecipe extends DataClass
     map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
     map['method_key'] = Variable<String>(methodKey);
+    map['custom_method_name'] = Variable<String>(customMethodName);
     map['name'] = Variable<String>(name);
     if (!nullToAbsent || createdAt != null) {
       map['created_at'] = Variable<DateTime>(createdAt);
@@ -14097,6 +14177,7 @@ class EncyclopediaRecipe extends DataClass
       id: Value(id),
       userId: Value(userId),
       methodKey: Value(methodKey),
+      customMethodName: Value(customMethodName),
       name: Value(name),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
@@ -14153,6 +14234,7 @@ class EncyclopediaRecipe extends DataClass
       id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       methodKey: serializer.fromJson<String>(json['methodKey']),
+      customMethodName: serializer.fromJson<String>(json['customMethodName']),
       name: serializer.fromJson<String>(json['name']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
@@ -14190,6 +14272,7 @@ class EncyclopediaRecipe extends DataClass
       'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
       'methodKey': serializer.toJson<String>(methodKey),
+      'customMethodName': serializer.toJson<String>(customMethodName),
       'name': serializer.toJson<String>(name),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
       'updatedAt': serializer.toJson<DateTime?>(updatedAt),
@@ -14223,6 +14306,7 @@ class EncyclopediaRecipe extends DataClass
     String? id,
     String? userId,
     String? methodKey,
+    String? customMethodName,
     String? name,
     Value<DateTime?> createdAt = const Value.absent(),
     Value<DateTime?> updatedAt = const Value.absent(),
@@ -14253,6 +14337,7 @@ class EncyclopediaRecipe extends DataClass
     id: id ?? this.id,
     userId: userId ?? this.userId,
     methodKey: methodKey ?? this.methodKey,
+    customMethodName: customMethodName ?? this.customMethodName,
     name: name ?? this.name,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
     updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
@@ -14287,6 +14372,9 @@ class EncyclopediaRecipe extends DataClass
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
       methodKey: data.methodKey.present ? data.methodKey.value : this.methodKey,
+      customMethodName: data.customMethodName.present
+          ? data.customMethodName.value
+          : this.customMethodName,
       name: data.name.present ? data.name.value : this.name,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
@@ -14354,6 +14442,7 @@ class EncyclopediaRecipe extends DataClass
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('methodKey: $methodKey, ')
+          ..write('customMethodName: $customMethodName, ')
           ..write('name: $name, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
@@ -14389,6 +14478,7 @@ class EncyclopediaRecipe extends DataClass
     id,
     userId,
     methodKey,
+    customMethodName,
     name,
     createdAt,
     updatedAt,
@@ -14423,6 +14513,7 @@ class EncyclopediaRecipe extends DataClass
           other.id == this.id &&
           other.userId == this.userId &&
           other.methodKey == this.methodKey &&
+          other.customMethodName == this.customMethodName &&
           other.name == this.name &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
@@ -14455,6 +14546,7 @@ class EncyclopediaRecipesCompanion extends UpdateCompanion<EncyclopediaRecipe> {
   final Value<String> id;
   final Value<String> userId;
   final Value<String> methodKey;
+  final Value<String> customMethodName;
   final Value<String> name;
   final Value<DateTime?> createdAt;
   final Value<DateTime?> updatedAt;
@@ -14486,6 +14578,7 @@ class EncyclopediaRecipesCompanion extends UpdateCompanion<EncyclopediaRecipe> {
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.methodKey = const Value.absent(),
+    this.customMethodName = const Value.absent(),
     this.name = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -14518,6 +14611,7 @@ class EncyclopediaRecipesCompanion extends UpdateCompanion<EncyclopediaRecipe> {
     this.id = const Value.absent(),
     required String userId,
     required String methodKey,
+    this.customMethodName = const Value.absent(),
     required String name,
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -14554,6 +14648,7 @@ class EncyclopediaRecipesCompanion extends UpdateCompanion<EncyclopediaRecipe> {
     Expression<String>? id,
     Expression<String>? userId,
     Expression<String>? methodKey,
+    Expression<String>? customMethodName,
     Expression<String>? name,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
@@ -14586,6 +14681,7 @@ class EncyclopediaRecipesCompanion extends UpdateCompanion<EncyclopediaRecipe> {
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
       if (methodKey != null) 'method_key': methodKey,
+      if (customMethodName != null) 'custom_method_name': customMethodName,
       if (name != null) 'name': name,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
@@ -14621,6 +14717,7 @@ class EncyclopediaRecipesCompanion extends UpdateCompanion<EncyclopediaRecipe> {
     Value<String>? id,
     Value<String>? userId,
     Value<String>? methodKey,
+    Value<String>? customMethodName,
     Value<String>? name,
     Value<DateTime?>? createdAt,
     Value<DateTime?>? updatedAt,
@@ -14653,6 +14750,7 @@ class EncyclopediaRecipesCompanion extends UpdateCompanion<EncyclopediaRecipe> {
       id: id ?? this.id,
       userId: userId ?? this.userId,
       methodKey: methodKey ?? this.methodKey,
+      customMethodName: customMethodName ?? this.customMethodName,
       name: name ?? this.name,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -14695,6 +14793,9 @@ class EncyclopediaRecipesCompanion extends UpdateCompanion<EncyclopediaRecipe> {
     }
     if (methodKey.present) {
       map['method_key'] = Variable<String>(methodKey.value);
+    }
+    if (customMethodName.present) {
+      map['custom_method_name'] = Variable<String>(customMethodName.value);
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
@@ -14788,6 +14889,7 @@ class EncyclopediaRecipesCompanion extends UpdateCompanion<EncyclopediaRecipe> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('methodKey: $methodKey, ')
+          ..write('customMethodName: $customMethodName, ')
           ..write('name: $name, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
@@ -14855,6 +14957,18 @@ class $AlternativeRecipesTable extends AlternativeRecipes
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
+  );
+  static const VerificationMeta _customMethodNameMeta = const VerificationMeta(
+    'customMethodName',
+  );
+  @override
+  late final GeneratedColumn<String> customMethodName = GeneratedColumn<String>(
+    'custom_method_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
   );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
@@ -15155,6 +15269,7 @@ class $AlternativeRecipesTable extends AlternativeRecipes
     id,
     userId,
     methodKey,
+    customMethodName,
     name,
     createdAt,
     updatedAt,
@@ -15211,6 +15326,15 @@ class $AlternativeRecipesTable extends AlternativeRecipes
       );
     } else if (isInserting) {
       context.missing(_methodKeyMeta);
+    }
+    if (data.containsKey('custom_method_name')) {
+      context.handle(
+        _customMethodNameMeta,
+        customMethodName.isAcceptableOrUnknown(
+          data['custom_method_name']!,
+          _customMethodNameMeta,
+        ),
+      );
     }
     if (data.containsKey('name')) {
       context.handle(
@@ -15422,6 +15546,10 @@ class $AlternativeRecipesTable extends AlternativeRecipes
         DriftSqlType.string,
         data['${effectivePrefix}method_key'],
       )!,
+      customMethodName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}custom_method_name'],
+      )!,
       name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}name'],
@@ -15536,6 +15664,7 @@ class AlternativeRecipe extends DataClass
   final String id;
   final String userId;
   final String methodKey;
+  final String customMethodName;
   final String name;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -15565,6 +15694,7 @@ class AlternativeRecipe extends DataClass
     required this.id,
     required this.userId,
     required this.methodKey,
+    required this.customMethodName,
     required this.name,
     this.createdAt,
     this.updatedAt,
@@ -15597,6 +15727,7 @@ class AlternativeRecipe extends DataClass
     map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
     map['method_key'] = Variable<String>(methodKey);
+    map['custom_method_name'] = Variable<String>(customMethodName);
     map['name'] = Variable<String>(name);
     if (!nullToAbsent || createdAt != null) {
       map['created_at'] = Variable<DateTime>(createdAt);
@@ -15646,6 +15777,7 @@ class AlternativeRecipe extends DataClass
       id: Value(id),
       userId: Value(userId),
       methodKey: Value(methodKey),
+      customMethodName: Value(customMethodName),
       name: Value(name),
       createdAt: createdAt == null && nullToAbsent
           ? const Value.absent()
@@ -15699,6 +15831,7 @@ class AlternativeRecipe extends DataClass
       id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       methodKey: serializer.fromJson<String>(json['methodKey']),
+      customMethodName: serializer.fromJson<String>(json['customMethodName']),
       name: serializer.fromJson<String>(json['name']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
@@ -15735,6 +15868,7 @@ class AlternativeRecipe extends DataClass
       'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
       'methodKey': serializer.toJson<String>(methodKey),
+      'customMethodName': serializer.toJson<String>(customMethodName),
       'name': serializer.toJson<String>(name),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
       'updatedAt': serializer.toJson<DateTime?>(updatedAt),
@@ -15767,6 +15901,7 @@ class AlternativeRecipe extends DataClass
     String? id,
     String? userId,
     String? methodKey,
+    String? customMethodName,
     String? name,
     Value<DateTime?> createdAt = const Value.absent(),
     Value<DateTime?> updatedAt = const Value.absent(),
@@ -15796,6 +15931,7 @@ class AlternativeRecipe extends DataClass
     id: id ?? this.id,
     userId: userId ?? this.userId,
     methodKey: methodKey ?? this.methodKey,
+    customMethodName: customMethodName ?? this.customMethodName,
     name: name ?? this.name,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
     updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
@@ -15829,6 +15965,9 @@ class AlternativeRecipe extends DataClass
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
       methodKey: data.methodKey.present ? data.methodKey.value : this.methodKey,
+      customMethodName: data.customMethodName.present
+          ? data.customMethodName.value
+          : this.customMethodName,
       name: data.name.present ? data.name.value : this.name,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
@@ -15895,6 +16034,7 @@ class AlternativeRecipe extends DataClass
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('methodKey: $methodKey, ')
+          ..write('customMethodName: $customMethodName, ')
           ..write('name: $name, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
@@ -15929,6 +16069,7 @@ class AlternativeRecipe extends DataClass
     id,
     userId,
     methodKey,
+    customMethodName,
     name,
     createdAt,
     updatedAt,
@@ -15962,6 +16103,7 @@ class AlternativeRecipe extends DataClass
           other.id == this.id &&
           other.userId == this.userId &&
           other.methodKey == this.methodKey &&
+          other.customMethodName == this.customMethodName &&
           other.name == this.name &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
@@ -15993,6 +16135,7 @@ class AlternativeRecipesCompanion extends UpdateCompanion<AlternativeRecipe> {
   final Value<String> id;
   final Value<String> userId;
   final Value<String> methodKey;
+  final Value<String> customMethodName;
   final Value<String> name;
   final Value<DateTime?> createdAt;
   final Value<DateTime?> updatedAt;
@@ -16023,6 +16166,7 @@ class AlternativeRecipesCompanion extends UpdateCompanion<AlternativeRecipe> {
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.methodKey = const Value.absent(),
+    this.customMethodName = const Value.absent(),
     this.name = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -16054,6 +16198,7 @@ class AlternativeRecipesCompanion extends UpdateCompanion<AlternativeRecipe> {
     this.id = const Value.absent(),
     required String userId,
     required String methodKey,
+    this.customMethodName = const Value.absent(),
     required String name,
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -16089,6 +16234,7 @@ class AlternativeRecipesCompanion extends UpdateCompanion<AlternativeRecipe> {
     Expression<String>? id,
     Expression<String>? userId,
     Expression<String>? methodKey,
+    Expression<String>? customMethodName,
     Expression<String>? name,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
@@ -16120,6 +16266,7 @@ class AlternativeRecipesCompanion extends UpdateCompanion<AlternativeRecipe> {
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
       if (methodKey != null) 'method_key': methodKey,
+      if (customMethodName != null) 'custom_method_name': customMethodName,
       if (name != null) 'name': name,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
@@ -16154,6 +16301,7 @@ class AlternativeRecipesCompanion extends UpdateCompanion<AlternativeRecipe> {
     Value<String>? id,
     Value<String>? userId,
     Value<String>? methodKey,
+    Value<String>? customMethodName,
     Value<String>? name,
     Value<DateTime?>? createdAt,
     Value<DateTime?>? updatedAt,
@@ -16185,6 +16333,7 @@ class AlternativeRecipesCompanion extends UpdateCompanion<AlternativeRecipe> {
       id: id ?? this.id,
       userId: userId ?? this.userId,
       methodKey: methodKey ?? this.methodKey,
+      customMethodName: customMethodName ?? this.customMethodName,
       name: name ?? this.name,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -16226,6 +16375,9 @@ class AlternativeRecipesCompanion extends UpdateCompanion<AlternativeRecipe> {
     }
     if (methodKey.present) {
       map['method_key'] = Variable<String>(methodKey.value);
+    }
+    if (customMethodName.present) {
+      map['custom_method_name'] = Variable<String>(customMethodName.value);
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
@@ -16316,6 +16468,7 @@ class AlternativeRecipesCompanion extends UpdateCompanion<AlternativeRecipe> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('methodKey: $methodKey, ')
+          ..write('customMethodName: $customMethodName, ')
           ..write('name: $name, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
@@ -28195,6 +28348,7 @@ typedef $$UserLotRecipesTableCreateCompanionBuilder =
       Value<String> id,
       required String userId,
       required String methodKey,
+      Value<String> customMethodName,
       required String name,
       Value<DateTime?> createdAt,
       Value<DateTime?> updatedAt,
@@ -28228,6 +28382,7 @@ typedef $$UserLotRecipesTableUpdateCompanionBuilder =
       Value<String> id,
       Value<String> userId,
       Value<String> methodKey,
+      Value<String> customMethodName,
       Value<String> name,
       Value<DateTime?> createdAt,
       Value<DateTime?> updatedAt,
@@ -28306,6 +28461,11 @@ class $$UserLotRecipesTableFilterComposer
 
   ColumnFilters<String> get methodKey => $composableBuilder(
     column: $table.methodKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get customMethodName => $composableBuilder(
+    column: $table.customMethodName,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -28482,6 +28642,11 @@ class $$UserLotRecipesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get customMethodName => $composableBuilder(
+    column: $table.customMethodName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnOrderings(column),
@@ -28649,6 +28814,11 @@ class $$UserLotRecipesTableAnnotationComposer
   GeneratedColumn<String> get methodKey =>
       $composableBuilder(column: $table.methodKey, builder: (column) => column);
 
+  GeneratedColumn<String> get customMethodName => $composableBuilder(
+    column: $table.customMethodName,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
@@ -28813,6 +28983,7 @@ class $$UserLotRecipesTableTableManager
                 Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<String> methodKey = const Value.absent(),
+                Value<String> customMethodName = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
                 Value<DateTime?> updatedAt = const Value.absent(),
@@ -28844,6 +29015,7 @@ class $$UserLotRecipesTableTableManager
                 id: id,
                 userId: userId,
                 methodKey: methodKey,
+                customMethodName: customMethodName,
                 name: name,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
@@ -28877,6 +29049,7 @@ class $$UserLotRecipesTableTableManager
                 Value<String> id = const Value.absent(),
                 required String userId,
                 required String methodKey,
+                Value<String> customMethodName = const Value.absent(),
                 required String name,
                 Value<DateTime?> createdAt = const Value.absent(),
                 Value<DateTime?> updatedAt = const Value.absent(),
@@ -28908,6 +29081,7 @@ class $$UserLotRecipesTableTableManager
                 id: id,
                 userId: userId,
                 methodKey: methodKey,
+                customMethodName: customMethodName,
                 name: name,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
@@ -30637,6 +30811,7 @@ typedef $$EncyclopediaRecipesTableCreateCompanionBuilder =
       Value<String> id,
       required String userId,
       required String methodKey,
+      Value<String> customMethodName,
       required String name,
       Value<DateTime?> createdAt,
       Value<DateTime?> updatedAt,
@@ -30670,6 +30845,7 @@ typedef $$EncyclopediaRecipesTableUpdateCompanionBuilder =
       Value<String> id,
       Value<String> userId,
       Value<String> methodKey,
+      Value<String> customMethodName,
       Value<String> name,
       Value<DateTime?> createdAt,
       Value<DateTime?> updatedAt,
@@ -30756,6 +30932,11 @@ class $$EncyclopediaRecipesTableFilterComposer
 
   ColumnFilters<String> get methodKey => $composableBuilder(
     column: $table.methodKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get customMethodName => $composableBuilder(
+    column: $table.customMethodName,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -30932,6 +31113,11 @@ class $$EncyclopediaRecipesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get customMethodName => $composableBuilder(
+    column: $table.customMethodName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnOrderings(column),
@@ -31098,6 +31284,11 @@ class $$EncyclopediaRecipesTableAnnotationComposer
 
   GeneratedColumn<String> get methodKey =>
       $composableBuilder(column: $table.methodKey, builder: (column) => column);
+
+  GeneratedColumn<String> get customMethodName => $composableBuilder(
+    column: $table.customMethodName,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
@@ -31269,6 +31460,7 @@ class $$EncyclopediaRecipesTableTableManager
                 Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<String> methodKey = const Value.absent(),
+                Value<String> customMethodName = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
                 Value<DateTime?> updatedAt = const Value.absent(),
@@ -31300,6 +31492,7 @@ class $$EncyclopediaRecipesTableTableManager
                 id: id,
                 userId: userId,
                 methodKey: methodKey,
+                customMethodName: customMethodName,
                 name: name,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
@@ -31333,6 +31526,7 @@ class $$EncyclopediaRecipesTableTableManager
                 Value<String> id = const Value.absent(),
                 required String userId,
                 required String methodKey,
+                Value<String> customMethodName = const Value.absent(),
                 required String name,
                 Value<DateTime?> createdAt = const Value.absent(),
                 Value<DateTime?> updatedAt = const Value.absent(),
@@ -31364,6 +31558,7 @@ class $$EncyclopediaRecipesTableTableManager
                 id: id,
                 userId: userId,
                 methodKey: methodKey,
+                customMethodName: customMethodName,
                 name: name,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
@@ -31466,6 +31661,7 @@ typedef $$AlternativeRecipesTableCreateCompanionBuilder =
       Value<String> id,
       required String userId,
       required String methodKey,
+      Value<String> customMethodName,
       required String name,
       Value<DateTime?> createdAt,
       Value<DateTime?> updatedAt,
@@ -31498,6 +31694,7 @@ typedef $$AlternativeRecipesTableUpdateCompanionBuilder =
       Value<String> id,
       Value<String> userId,
       Value<String> methodKey,
+      Value<String> customMethodName,
       Value<String> name,
       Value<DateTime?> createdAt,
       Value<DateTime?> updatedAt,
@@ -31547,6 +31744,11 @@ class $$AlternativeRecipesTableFilterComposer
 
   ColumnFilters<String> get methodKey => $composableBuilder(
     column: $table.methodKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get customMethodName => $composableBuilder(
+    column: $table.customMethodName,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -31700,6 +31902,11 @@ class $$AlternativeRecipesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get customMethodName => $composableBuilder(
+    column: $table.customMethodName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnOrderings(column),
@@ -31843,6 +32050,11 @@ class $$AlternativeRecipesTableAnnotationComposer
 
   GeneratedColumn<String> get methodKey =>
       $composableBuilder(column: $table.methodKey, builder: (column) => column);
+
+  GeneratedColumn<String> get customMethodName => $composableBuilder(
+    column: $table.customMethodName,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
@@ -31995,6 +32207,7 @@ class $$AlternativeRecipesTableTableManager
                 Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<String> methodKey = const Value.absent(),
+                Value<String> customMethodName = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
                 Value<DateTime?> updatedAt = const Value.absent(),
@@ -32025,6 +32238,7 @@ class $$AlternativeRecipesTableTableManager
                 id: id,
                 userId: userId,
                 methodKey: methodKey,
+                customMethodName: customMethodName,
                 name: name,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
@@ -32057,6 +32271,7 @@ class $$AlternativeRecipesTableTableManager
                 Value<String> id = const Value.absent(),
                 required String userId,
                 required String methodKey,
+                Value<String> customMethodName = const Value.absent(),
                 required String name,
                 Value<DateTime?> createdAt = const Value.absent(),
                 Value<DateTime?> updatedAt = const Value.absent(),
@@ -32087,6 +32302,7 @@ class $$AlternativeRecipesTableTableManager
                 id: id,
                 userId: userId,
                 methodKey: methodKey,
+                customMethodName: customMethodName,
                 name: name,
                 createdAt: createdAt,
                 updatedAt: updatedAt,

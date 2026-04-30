@@ -664,6 +664,7 @@ class CustomRecipeDto {
   final int? extractionTimeSeconds;
   final String? difficulty;
   final String? contentHtml;
+  final String? customMethodName;
 
   final RecipeSegment segment;
 
@@ -695,6 +696,7 @@ class CustomRecipeDto {
     this.extractionTimeSeconds,
     this.difficulty,
     this.contentHtml,
+    this.customMethodName,
     required this.segment,
   });
 
@@ -735,6 +737,7 @@ class CustomRecipeDto {
       extractionTimeSeconds: r.extractionTimeSeconds,
       difficulty: r.difficulty,
       contentHtml: r.contentHtml,
+      customMethodName: r.customMethodName,
       segment: RecipeSegment.userLot,
     );
   }
@@ -767,6 +770,7 @@ class CustomRecipeDto {
       extractionTimeSeconds: r.extractionTimeSeconds,
       difficulty: r.difficulty,
       contentHtml: r.contentHtml,
+      customMethodName: r.customMethodName,
       segment: RecipeSegment.encyclopedia,
     );
   }
@@ -799,6 +803,7 @@ class CustomRecipeDto {
       extractionTimeSeconds: r.extractionTimeSeconds,
       difficulty: r.difficulty,
       contentHtml: r.contentHtml,
+      customMethodName: r.customMethodName,
       segment: RecipeSegment.alternative,
     );
   }

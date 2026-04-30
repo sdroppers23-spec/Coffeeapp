@@ -19,6 +19,8 @@ class SyncService {
   // Stream to notify UI when a record was updated in real-time
   final _dataUpdateController = StreamController<void>.broadcast();
   Stream<void> get dataUpdateStream => _dataUpdateController.stream;
+  
+  StreamSubscription? _autoSyncSub;
 
   static const String baseUrl =
       'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public';
@@ -26,12 +28,43 @@ class SyncService {
   static const String methodsBucket = '$baseUrl/Methods/';
   static const String flagsBucket = '$baseUrl/Flags/';
   static const String farmersBucket = '$baseUrl/Farmers/';
-
+ 
   SyncService(this.db, [this.supabase]);
 
   void dispose() {
+    _autoSyncSub?.cancel();
     _progressController.close();
     _dataUpdateController.close();
+  }
+
+  /// Starts listening to local database changes to trigger automatic cloud push.
+  void startAutoSync() {
+    _autoSyncSub?.cancel();
+    // Listen for changes in user-managed tables
+    _autoSyncSub = db.tableUpdates().listen((updates) {
+      final relevantTables = {
+        'user_lot_recipes',
+        'encyclopedia_recipes',
+        'alternative_recipes',
+        'coffee_lots',
+        'fermentation_logs'
+      };
+
+      final hasRelevantUpdate = updates.any((update) => relevantTables.contains(update.table));
+      
+      if (hasRelevantUpdate) {
+        // Debounce sync slightly to avoid spamming
+        _debounceSync();
+      }
+    });
+  }
+
+  Timer? _debounceTimer;
+  void _debounceSync() {
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(const Duration(seconds: 2), () {
+      pushLocalUserContent();
+    });
   }
 
   /// Synchronizes all systems.
@@ -492,6 +525,7 @@ class SyncService {
               'extraction_time_seconds': r.extractionTimeSeconds,
               'difficulty': r.difficulty,
               'content_html': r.contentHtml,
+              'custom_method_name': r.customMethodName,
             });
             await (db.update(db.userLotRecipes)..where((t) => t.id.equals(r.id)))
                 .write(const UserLotRecipesCompanion(isSynced: Value(true)));
@@ -537,6 +571,7 @@ class SyncService {
               'extraction_time_seconds': r.extractionTimeSeconds,
               'difficulty': r.difficulty,
               'content_html': r.contentHtml,
+              'custom_method_name': r.customMethodName,
             });
             await (db.update(db.encyclopediaRecipes)..where((t) => t.id.equals(r.id)))
                 .write(const EncyclopediaRecipesCompanion(isSynced: Value(true)));
@@ -581,6 +616,7 @@ class SyncService {
               'extraction_time_seconds': r.extractionTimeSeconds,
               'difficulty': r.difficulty,
               'content_html': r.contentHtml,
+              'custom_method_name': r.customMethodName,
             });
             await (db.update(db.alternativeRecipes)..where((t) => t.id.equals(r.id)))
                 .write(const AlternativeRecipesCompanion(isSynced: Value(true)));

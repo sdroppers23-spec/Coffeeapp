@@ -45,7 +45,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? e]) : super(e ?? openConnection());
 
   @override
-  int get schemaVersion => 48;
+  int get schemaVersion => 49;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -219,6 +219,13 @@ class AppDatabase extends _$AppDatabase {
         await m.createTable(encyclopediaRecipes);
         await m.createTable(alternativeRecipes);
         debugPrint('AppDatabase: Migration to v48 completed');
+      }
+      if (from < 49) {
+        // v49: Add customMethodName to all recipe tables
+        await _safeAddColumn(m, userLotRecipes, userLotRecipes.customMethodName);
+        await _safeAddColumn(m, encyclopediaRecipes, encyclopediaRecipes.customMethodName);
+        await _safeAddColumn(m, alternativeRecipes, alternativeRecipes.customMethodName);
+        debugPrint('AppDatabase: Migration to v49 completed');
       }
     },
     beforeOpen: (details) async {

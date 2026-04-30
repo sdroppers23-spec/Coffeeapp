@@ -133,6 +133,10 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
     ref.invalidate(brandsProvider);
     ref.invalidate(articlesProvider);
     ref.invalidate(brewingRecipesProvider);
+    
+    // Add missing user data providers
+    ref.invalidate(userLotsProvider);
+    ref.invalidate(userLotRecipesProvider);
   }
 
   Future<void> syncEverything({bool force = false}) async {

@@ -336,6 +336,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     showDialog(
       context: context,
       barrierDismissible: false,
+      useRootNavigator: true,
       builder: (context) => const Center(
         child: CircularProgressIndicator(color: Color(0xFFC8A96E)),
       ),
@@ -448,14 +449,13 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       );
 
       if (mounted) {
-        // Pop loading dialog
-        if (Navigator.canPop(context)) {
-          Navigator.pop(context);
-        }
+        // Pop loading dialog safely
+        Navigator.of(context, rootNavigator: true).pop();
+        if (!mounted) return;
         
         ToastService.showSuccess(context, context.t('toast_changes_saved'));
 
-        ref.invalidate(userLotsProvider);
+        ref.invalidate(userLotsStreamProvider);
         
         // 4. Trigger Sync
         unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
@@ -466,8 +466,8 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       }
     } catch (e) {
       if (mounted) {
-        // Pop loading
-        Navigator.of(context).pop();
+        // Pop loading safely
+        Navigator.of(context, rootNavigator: true).pop();
         ToastService.showError(context, '${context.t('error_saving_lot')}: $e');
       }
     }

@@ -766,9 +766,11 @@ class SyncService {
               'price_json': _safeJsonDecode(l.priceJson),
               'brand_id': l.brandId,
               'image_url': l.imageUrl,
+              'created_at': l.createdAt?.toIso8601String(),
               'updated_at': DateTime.now().toIso8601String(),
             };
 
+            debugPrint('SyncService: Pushing lot ${l.id} to cloud...');
             await supabase!
                 .from('user_coffee_lots')
                 .upsert(data)
@@ -912,6 +914,8 @@ class SyncService {
           .eq('user_id', userId)
           .timeout(const Duration(seconds: 30));
 
+      debugPrint('SyncService: Pulled ${lotsData.length} lots from cloud');
+
       for (final item in lotsData) {
         try {
           final id = item['id'] as String;
@@ -961,6 +965,7 @@ class SyncService {
             ),
             brandId: Value((item['brand_id'] as num?)?.toInt()),
             imageUrl: Value(item['image_url'] as String?),
+            createdAt: Value(DateTime.tryParse(item['created_at'] ?? '')),
             updatedAt: Value(DateTime.now()),
             isSynced: const Value(true),
           );

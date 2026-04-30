@@ -239,7 +239,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
             _pendingDeleteIds.removeAll(ids);
             _isUndoVisible = false;
           });
-          ref.invalidate(userLotsProvider);
+          ref.invalidate(userLotsStreamProvider);
           unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
         }
       },
@@ -270,7 +270,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
   @override
   Widget build(BuildContext context) {
     final filter = ref.watch(myLotsFilterProvider);
-    final lotsAsync = ref.watch(userLotsProvider);
+    final lotsAsync = ref.watch(userLotsStreamProvider);
 
     return Stack(
       children: [
@@ -421,7 +421,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                     ToastService.showSuccess(context, msg);
                   }
 
-                  ref.invalidate(userLotsProvider);
+                  ref.invalidate(userLotsStreamProvider);
                   unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
                 },
               );
@@ -466,7 +466,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                   ToastService.showSuccess(context, msg);
                 }
 
-                ref.invalidate(userLotsProvider);
+                ref.invalidate(userLotsStreamProvider);
                 unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
               },
               onEditSwipe: filter.showArchivedOnly
@@ -478,7 +478,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                   ? (lot) async {
                       final db = ref.read(databaseProvider);
                       await db.toggleLotArchive(lot.id, false);
-                      ref.invalidate(userLotsProvider);
+                      ref.invalidate(userLotsStreamProvider);
                       unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
 
                       if (!context.mounted) return;
@@ -676,7 +676,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                       await db.toggleLotFavorite(id, true);
                       ref.read(myLotsSelectedIdsProvider.notifier).remove(id);
                     }
-                    ref.invalidate(userLotsProvider);
+                    ref.invalidate(userLotsStreamProvider);
                     unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
                   },
                 ),
@@ -706,7 +706,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                       );
                     }
                     setState(() {});
-                    ref.invalidate(userLotsProvider);
+                    ref.invalidate(userLotsStreamProvider);
                     unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
                   },
                 ),

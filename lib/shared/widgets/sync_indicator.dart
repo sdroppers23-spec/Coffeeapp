@@ -184,10 +184,15 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
   void _onSyncingChanged() {
     final syncService = ref.read(syncServiceProvider);
     if (syncService.isSyncing.value) {
-      state = state.copyWith(
-        state: SyncState.syncing,
-        lastMessage: 'Pushing changes...',
-      );
+      if (state.state != SyncState.syncing) {
+        state = state.copyWith(
+          state: SyncState.syncing,
+          lastMessage: 'Syncing...',
+          currentProgress: 0.0,
+        );
+      }
+    } else if (state.state == SyncState.syncing) {
+      state = state.copyWith(state: SyncState.idle);
     }
   }
 

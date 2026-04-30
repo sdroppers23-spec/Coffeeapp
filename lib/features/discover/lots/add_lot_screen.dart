@@ -449,7 +449,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
 
       if (mounted) {
         // Pop loading dialog
-        Navigator.of(context).pop();
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        }
         
         ToastService.showSuccess(context, context.t('toast_changes_saved'));
 
@@ -459,9 +461,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
 
         // 5. Close screen
-        Navigator.of(context).pop();
-        
-        if (!mounted) return;
         ref.read(navBarVisibleProvider.notifier).show();
         context.pop();
       }

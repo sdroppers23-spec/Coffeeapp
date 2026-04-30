@@ -323,7 +323,8 @@ class SyncService {
       final data = await supabase!
           .from('localized_farmers')
           .select()
-          .order('id');
+          .order('id')
+          .timeout(const Duration(seconds: 30));
       final remoteIds = data
           .map((item) => (item['id'] as num).toInt())
           .toList();
@@ -421,7 +422,8 @@ class SyncService {
       final data = await supabase!
           .from('specialty_articles')
           .select()
-          .order('id');
+          .order('id')
+          .timeout(const Duration(seconds: 30));
       final remoteIds = data
           .map((item) => (item['id'] as num).toInt())
           .toList();
@@ -574,7 +576,8 @@ class SyncService {
                 .from('user_lot_recipes')
                 .delete()
                 .eq('id', r.id)
-                .eq('user_id', userId);
+                .eq('user_id', userId)
+                .timeout(const Duration(seconds: 15));
             await db.markUserLotRecipeSynced(r.id);
             debugPrint('SyncService: Deleted lot recipe ${r.id} from cloud');
           } else {
@@ -625,7 +628,8 @@ class SyncService {
                 .from('user_encyclopedia_recipes')
                 .delete()
                 .eq('id', r.id)
-                .eq('user_id', userId);
+                .eq('user_id', userId)
+                .timeout(const Duration(seconds: 15));
             await db.markEncyclopediaRecipeSynced(r.id);
             debugPrint('SyncService: Deleted encyclopedia recipe ${r.id} from cloud');
           } else {
@@ -727,7 +731,8 @@ class SyncService {
                 .from('user_coffee_lots')
                 .delete()
                 .eq('id', l.id)
-                .eq('user_id', userId);
+                .eq('user_id', userId)
+                .timeout(const Duration(seconds: 15));
             await db.markLotSynced(l.id);
             debugPrint('SyncService: Lot deletion synced to cloud: ${l.id}');
           } else {
@@ -789,7 +794,8 @@ class SyncService {
                 .from('user_brands')
                 .delete()
                 .eq('id', b.id)
-                .eq('user_id', userId);
+                .eq('user_id', userId)
+                .timeout(const Duration(seconds: 15));
             
             await (db.delete(db.localizedBrands)..where((t) => t.id.equals(b.id))).go();
             debugPrint('SyncService: Brand deleted permanently: ${b.id}');
@@ -1130,7 +1136,10 @@ class SyncService {
   Future<void> syncBrewingRecipes() async {
     if (supabase == null) return;
     try {
-      final data = await supabase!.from('brewing_recipes').select();
+      final data = await supabase!
+          .from('brewing_recipes')
+          .select()
+          .timeout(const Duration(seconds: 30));
       final remoteKeys = data
           .map((item) => item['method_key'] as String)
           .toList();
@@ -1225,10 +1234,14 @@ class SyncService {
   Future<void> syncAlternativeBrewing() async {
     if (supabase == null) return;
     try {
-      final data = await supabase!.from('alternative_brewing').select();
+      final data = await supabase!
+          .from('alternative_brewing')
+          .select()
+          .timeout(const Duration(seconds: 30));
       final translationsData = await supabase!
           .from('alternative_brewing_translations')
-          .select();
+          .select()
+          .timeout(const Duration(seconds: 30));
 
       final remoteKeys = data
           .map((item) => item['method_key'] as String)
@@ -1324,9 +1337,15 @@ class SyncService {
     if (supabase == null) return;
     try {
       // 1. Fetch all brands - try 'brands' table as it's the primary source in cloud
-      var data = await supabase!.from('brands').select();
+      var data = await supabase!
+          .from('brands')
+          .select()
+          .timeout(const Duration(seconds: 30));
       if (data.isEmpty) {
-        data = await supabase!.from('localized_brands').select();
+        data = await supabase!
+            .from('localized_brands')
+            .select()
+            .timeout(const Duration(seconds: 30));
       }
 
       final remoteIds = data
@@ -1344,7 +1363,8 @@ class SyncService {
       final allTranslations = await supabase!
           .from('localized_brand_translations')
           .select()
-          .inFilter('brand_id', remoteIds);
+          .inFilter('brand_id', remoteIds)
+          .timeout(const Duration(seconds: 30));
 
       // Group translations by brand_id
       final Map<int, List<Map<String, dynamic>>> translationMap = {};

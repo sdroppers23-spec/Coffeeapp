@@ -1,17 +1,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/database/database_provider.dart';
 import '../../../core/database/dtos.dart';
 
+import '../../../core/supabase/supabase_provider.dart';
+
 final userLotsProvider = FutureProvider<List<CoffeeLotDto>>((ref) async {
   final db = ref.watch(databaseProvider);
-  final userId = Supabase.instance.client.auth.currentUser?.id ?? 'guest';
+  final user = ref.watch(currentUserProvider);
+  final userId = user?.id ?? 'guest';
   return db.getUserLots(userId);
 });
 
 final userLotsStreamProvider = StreamProvider<List<CoffeeLotDto>>((ref) {
   final db = ref.watch(databaseProvider);
-  final userId = Supabase.instance.client.auth.currentUser?.id ?? 'guest';
+  final user = ref.watch(currentUserProvider);
+  final userId = user?.id ?? 'guest';
   return db.watchUserLots(userId);
 });
 

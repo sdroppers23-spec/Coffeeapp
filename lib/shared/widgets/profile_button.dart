@@ -6,18 +6,20 @@ import '../../core/supabase/supabase_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../features/navigation/navigation_providers.dart';
 import '../../core/database/database_provider.dart';
+import '../../core/providers/settings_provider.dart';
 
 /// Універсальна кнопка профілю для AppBar.
 /// Відображає аватар користувача, при натисканні відкриває меню з:
 ///   - переходом на ProfileScreen
 ///   - зміною мови
 ///   - виходом з акаунта
+
 class ProfileButton extends ConsumerWidget {
   const ProfileButton({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(supabaseProvider).auth.currentUser;
+    final user = ref.watch(currentUserProvider);
     final theme = Theme.of(context);
     final locale = ref.watch(localeProvider);
 
@@ -214,6 +216,17 @@ class _ProfileSheet extends ConsumerWidget {
             ),
             onTap: () async {
               Navigator.of(context).pop();
+              // Try to sync before clearing
+              if (!innerRef.read(isGuestProvider)) {
+                try {
+                  await innerRef
+                      .read(syncServiceProvider)
+                      .pushLocalUserContent()
+                      .timeout(const Duration(seconds: 10));
+                } catch (e) {
+                  debugPrint('Logout: Sync failed: $e');
+                }
+              }
               await innerRef.read(databaseProvider).clearUserData();
               await innerRef.read(supabaseProvider).auth.signOut();
             },

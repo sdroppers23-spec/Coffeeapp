@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -13,28 +14,32 @@ import '../../features/brewing/brewing_guide_screen.dart';
 
 class SyncStatusData {
   final SyncState state;
-  final String? lastError;
-  final String? lastMessage;
   final double currentProgress;
+  final String? lastMessage;
+  final String? lastError;
+  final DateTime? lastSyncedAt;
 
   SyncStatusData({
     required this.state,
-    this.lastError,
-    this.lastMessage,
     this.currentProgress = 0.0,
+    this.lastMessage,
+    this.lastError,
+    this.lastSyncedAt,
   });
 
   SyncStatusData copyWith({
     SyncState? state,
-    String? lastError,
-    String? lastMessage,
     double? currentProgress,
+    String? lastMessage,
+    String? lastError,
+    DateTime? lastSyncedAt,
   }) {
     return SyncStatusData(
       state: state ?? this.state,
-      lastError: lastError ?? this.lastError,
-      lastMessage: lastMessage ?? this.lastMessage,
       currentProgress: currentProgress ?? this.currentProgress,
+      lastMessage: lastMessage ?? this.lastMessage,
+      lastError: lastError ?? this.lastError,
+      lastSyncedAt: lastSyncedAt ?? this.lastSyncedAt,
     );
   }
 }
@@ -49,17 +54,28 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
   SyncStatusData build() {
     final isOnline = ref.watch(isOnlineProvider);
     final prefs = ref.watch(sharedPreferencesProvider);
+    final syncService = ref.watch(syncServiceProvider);
 
     // 1. Initialize Real-time Subscriptions (Once)
     if (isOnline && !_hasInitializedSubscriptions) {
       _hasInitializedSubscriptions = true;
       Future.microtask(() {
-        _syncService.subscribeToRealtimeUpdates();
-        _syncService.dataUpdateStream.listen((_) => invalidateData());
+        syncService.subscribeToRealtimeUpdates();
+        syncService.dataUpdateStream.listen((_) => invalidateData());
       });
     }
 
-    // 2. Continuous Sync Logic
+    // 2. Listen to SyncService internal state for "FACTUAL" updates
+    syncService.isSyncing.addListener(_onSyncingChanged);
+    syncService.lastSyncResult.addListener(_onSyncResultChanged);
+    
+    // Cleanup listeners when disposed
+    ref.onDispose(() {
+      syncService.isSyncing.removeListener(_onSyncingChanged);
+      syncService.lastSyncResult.removeListener(_onSyncingChanged);
+    });
+
+    // 3. Continuous Sync Logic
     const resyncKey = 'force_resync_v20_unified_content';
     final hasResyncedVersion = prefs.getBool(resyncKey) ?? false;
 
@@ -76,7 +92,7 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
       }
     }
 
-    // 3. Connectivity Recovery Sync (via ref.listen for side effects)
+    // 4. Connectivity Recovery Sync
     ref.listen(connectivityProvider, (previous, next) {
       final prevList = previous?.value;
       final nextList = next.value;
@@ -97,19 +113,17 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
         lastMessage: 'OFFLINE MODE',
       );
     }
+    
+    final lastSyncedMillis = prefs.getInt('last_synced_at_v2');
+    final lastSyncedAt = lastSyncedMillis != null
+        ? DateTime.fromMillisecondsSinceEpoch(lastSyncedMillis)
+        : null;
 
-    // For initial return, we use idle or syncing based on _hasPerformedSessionSync
-    if (!_hasPerformedSessionSync && isOnline) {
-      return SyncStatusData(
-        state: SyncState.syncing,
-        lastMessage: 'Initializing...',
-      );
-    }
-
-    return SyncStatusData(state: SyncState.idle);
+    return SyncStatusData(
+      state: SyncState.idle,
+      lastSyncedAt: lastSyncedAt,
+    );
   }
-
-  SyncService get _syncService => ref.read(syncServiceProvider);
 
   void invalidateData() {
     ref.invalidate(farmersProvider);
@@ -122,15 +136,18 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
   }
 
   Future<void> syncEverything({bool force = false}) async {
-    state = state.copyWith(state: SyncState.syncing, lastError: null);
-
-    // 1. Tiny delay to ensure UI updates before heavy sync work begins
-    await Future.delayed(const Duration(milliseconds: 300));
-
     try {
-      await _syncService.syncAll(
+      state = state.copyWith(
+        state: SyncState.syncing,
+        currentProgress: 0.0,
+        lastError: null,
+      );
+
+      final syncService = ref.read(syncServiceProvider);
+      await syncService.syncAll(
         force: force,
         onProgress: (m, p) {
+          if (state.state != SyncState.syncing) return;
           state = state.copyWith(
             state: SyncState.syncing,
             lastMessage: m,
@@ -142,7 +159,17 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
       // 2. Perform vital invalidation
       invalidateData();
 
-      state = state.copyWith(state: SyncState.success, currentProgress: 1.0);
+      final now = DateTime.now();
+      await ref.read(sharedPreferencesProvider).setInt(
+        'last_synced_at_v2',
+        now.millisecondsSinceEpoch,
+      );
+
+      state = state.copyWith(
+        state: SyncState.success,
+        currentProgress: 1.0,
+        lastSyncedAt: now,
+      );
       await Future.delayed(const Duration(seconds: 3));
       state = state.copyWith(state: SyncState.idle);
     } catch (e) {
@@ -153,6 +180,46 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
   // Deprecated individual methods (pointing to syncEverything)
   Future<void> pushToCloud() => syncEverything();
   Future<void> pullFromCloud() => syncEverything();
+
+  void _onSyncingChanged() {
+    final syncService = ref.read(syncServiceProvider);
+    if (syncService.isSyncing.value) {
+      state = state.copyWith(
+        state: SyncState.syncing,
+        lastMessage: 'Pushing changes...',
+      );
+    }
+  }
+
+  void _onSyncResultChanged() {
+    final syncService = ref.read(syncServiceProvider);
+    final result = syncService.lastSyncResult.value;
+    final prefs = ref.read(sharedPreferencesProvider);
+    final lastSyncedMillis = prefs.getInt('last_synced_at_v2');
+    final lastSyncedAt = lastSyncedMillis != null
+        ? DateTime.fromMillisecondsSinceEpoch(lastSyncedMillis)
+        : null;
+
+    if (result == SyncResult.success) {
+      invalidateData();
+      state = state.copyWith(
+        state: SyncState.success,
+        lastMessage: 'Sync successful',
+        lastSyncedAt: lastSyncedAt,
+      );
+      // Back to idle after a delay
+      Future.delayed(const Duration(seconds: 3), () {
+        if (state.state == SyncState.success) {
+          state = state.copyWith(state: SyncState.idle);
+        }
+      });
+    } else if (result == SyncResult.error) {
+      state = state.copyWith(
+        state: SyncState.error,
+        lastMessage: 'Sync failed',
+      );
+    }
+  }
 }
 
 final syncStatusProvider = NotifierProvider<SyncStatusNotifier, SyncStatusData>(
@@ -175,24 +242,31 @@ class SyncIndicator extends ConsumerWidget {
     switch (syncData.state) {
       case SyncState.idle:
         color = Colors.greenAccent;
-        icon = Icons.sensors; // Changed to indicate active listening
-        label = 'Cloud Active';
+        icon = Icons.sensors;
+        if (syncData.lastSyncedAt != null) {
+          final time =
+              '${syncData.lastSyncedAt!.hour}:${syncData.lastSyncedAt!.minute.toString().padLeft(2, '0')}';
+          label = 'Synced $time';
+        } else {
+          label = 'Cloud Active';
+        }
         break;
       case SyncState.offline:
         color = Colors.redAccent;
         icon = Icons.cloud_off;
-        label = 'Offline Mode';
+        label = 'Offline';
         break;
       case SyncState.syncing:
         color = const Color(0xFFC8A96E);
         icon = Icons.sync;
         final pct = (syncData.currentProgress * 100).toInt();
-        label = '${syncData.lastMessage ?? 'Syncing'} ($pct%)';
+        label = syncData.lastMessage ?? 'Syncing...';
+        if (pct > 0) label += ' ($pct%)';
         break;
       case SyncState.success:
         color = Colors.greenAccent;
         icon = Icons.cloud_done;
-        label = 'Sync Completed';
+        label = 'Sync Success';
         break;
       case SyncState.error:
         color = Colors.redAccent;

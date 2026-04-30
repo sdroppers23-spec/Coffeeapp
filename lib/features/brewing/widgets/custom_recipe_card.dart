@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ import '../../../shared/widgets/glass_swipe_wrapper.dart';
 import '../../../shared/widgets/pressable_scale.dart';
 import '../../../shared/widgets/modern_undo_timer.dart';
 import '../../../core/l10n/app_localizations.dart';
+import '../../../shared/widgets/sync_indicator.dart';
 
 class CustomRecipeCard extends StatefulWidget {
   final CustomRecipeDto recipe;
@@ -513,6 +515,7 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                 }
                 widget.ref.invalidate(globalCustomRecipesProvider);
                 widget.ref.invalidate(allCustomRecipesForMethodProvider(widget.methodKey));
+                unawaited(widget.ref.read(syncStatusProvider.notifier).syncEverything());
               },
             )
           : GlassSwipeAction(
@@ -538,6 +541,7 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                 }
                 widget.ref.invalidate(globalCustomRecipesProvider);
                 widget.ref.invalidate(allCustomRecipesForMethodProvider(widget.methodKey));
+                unawaited(widget.ref.read(syncStatusProvider.notifier).syncEverything());
               },
             ),
       child: card,
@@ -590,6 +594,7 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                 }
                 widget.ref.invalidate(globalCustomRecipesProvider);
                 widget.ref.invalidate(allCustomRecipesForMethodProvider(widget.methodKey));
+                unawaited(widget.ref.read(syncStatusProvider.notifier).syncEverything());
               },
             ),
             ListTile(
@@ -626,6 +631,7 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                 }
                 widget.ref.invalidate(globalCustomRecipesProvider);
                 widget.ref.invalidate(allCustomRecipesForMethodProvider(widget.methodKey));
+                unawaited(widget.ref.read(syncStatusProvider.notifier).syncEverything());
               },
             ),
             ListTile(
@@ -719,6 +725,7 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
         }
         widget.ref.invalidate(globalCustomRecipesProvider);
         widget.ref.invalidate(allCustomRecipesForMethodProvider(widget.methodKey));
+        unawaited(widget.ref.read(syncStatusProvider.notifier).syncEverything());
       },
     );
   }

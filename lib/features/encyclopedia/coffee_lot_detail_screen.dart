@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -20,6 +21,7 @@ import '../encyclopedia/encyclopedia_providers.dart';
 import '../brewing/custom_recipe_timer_screen.dart';
 import '../../shared/services/toast_service.dart';
 import '../../core/providers/preferences_provider.dart';
+import '../../shared/widgets/sync_indicator.dart';
 
 class CoffeeLotDetailScreen extends ConsumerStatefulWidget {
   final LocalizedBeanDto entry;
@@ -88,9 +90,11 @@ class _CoffeeLotDetailScreenState extends ConsumerState<CoffeeLotDetailScreen>
                       color: isFavorite ? Colors.redAccent : Colors.white70,
                     ),
                     onPressed: () async {
-                      ref
+                      await ref
                           .read(databaseProvider)
                           .toggleFavorite(entry.id, !isFavorite);
+                      unawaited(
+                          ref.read(syncStatusProvider.notifier).syncEverything());
                       if (context.mounted) {
                         if (isFavorite) {
                           ToastService.showInfo(
@@ -942,6 +946,7 @@ class _CustomRecipeCardWrapper extends ConsumerWidget {
                         await ref
                             .read(databaseProvider)
                             .deleteEncyclopediaRecipe(recipe.id);
+                        unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
                         ref.invalidate(
                           encyclopediaRecipesForLotProvider(recipe.lotId ?? ''),
                         );

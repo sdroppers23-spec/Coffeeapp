@@ -30,6 +30,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Future<void> _signOut() async {
     setState(() => _isLoading = true);
     try {
+      // 1. Try to sync before clearing (only if not guest)
+      if (!ref.read(isGuestProvider)) {
+        try {
+          await ref
+              .read(syncServiceProvider)
+              .pushLocalUserContent()
+              .timeout(const Duration(seconds: 10));
+        } catch (e) {
+          debugPrint('Logout: Pre-logout sync failed: $e');
+        }
+      }
+
       await ref.read(databaseProvider).clearUserData();
       await ref.read(supabaseProvider).auth.signOut();
     } finally {

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,6 +16,7 @@ import 'lot_card_widgets.dart';
 import '../../widgets/discovery_action_bar.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../shared/services/toast_service.dart';
+import '../../../../shared/widgets/sync_indicator.dart';
 
 class MyLotsContent extends ConsumerStatefulWidget {
   const MyLotsContent({super.key});
@@ -238,6 +240,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
             _isUndoVisible = false;
           });
           ref.invalidate(userLotsProvider);
+          unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
         }
       },
     );
@@ -419,6 +422,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                   }
 
                   ref.invalidate(userLotsProvider);
+                  unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
                 },
               );
             },
@@ -463,6 +467,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                 }
 
                 ref.invalidate(userLotsProvider);
+                unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
               },
               onEditSwipe: filter.showArchivedOnly
                   ? null
@@ -474,6 +479,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                       final db = ref.read(databaseProvider);
                       await db.toggleLotArchive(lot.id, false);
                       ref.invalidate(userLotsProvider);
+                      unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
 
                       if (!context.mounted) return;
                       ToastService.showSuccess(
@@ -671,6 +677,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                       ref.read(myLotsSelectedIdsProvider.notifier).remove(id);
                     }
                     ref.invalidate(userLotsProvider);
+                    unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
                   },
                 ),
                 const SizedBox(width: 16),
@@ -700,6 +707,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                     }
                     setState(() {});
                     ref.invalidate(userLotsProvider);
+                    unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
                   },
                 ),
                 const SizedBox(width: 16),

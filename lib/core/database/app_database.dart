@@ -1042,7 +1042,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Stream<List<CoffeeLotDto>> watchUserLots(String userId) {
-    final query = select(coffeeLots)..where((t) => t.userId.equals(userId));
+    final query = select(coffeeLots)..where((t) => t.userId.equals(userId) & t.isDeletedLocal.equals(false));
     return query.watch().map((rows) => rows.map((r) => _mapLotRow(r)).toList());
   }
 
@@ -1098,6 +1098,30 @@ class AppDatabase extends _$AppDatabase {
 
   Future<int> deleteLotPermanently(String id) =>
       (delete(coffeeLots)..where((t) => t.id.equals(id))).go();
+
+  Future<void> markLotSynced(String id) async {
+    await (update(coffeeLots)..where((t) => t.id.equals(id))).write(
+      const CoffeeLotsCompanion(isSynced: Value(true)),
+    );
+  }
+
+  Future<void> markUserLotRecipeSynced(String id) async {
+    await (update(userLotRecipes)..where((t) => t.id.equals(id))).write(
+      const UserLotRecipesCompanion(isSynced: Value(true)),
+    );
+  }
+
+  Future<void> markEncyclopediaRecipeSynced(String id) async {
+    await (update(encyclopediaRecipes)..where((t) => t.id.equals(id))).write(
+      const EncyclopediaRecipesCompanion(isSynced: Value(true)),
+    );
+  }
+
+  Future<void> markAlternativeRecipeSynced(String id) async {
+    await (update(alternativeRecipes)..where((t) => t.id.equals(id))).write(
+      const AlternativeRecipesCompanion(isSynced: Value(true)),
+    );
+  }
 
   Future<void> syncLotsInTx(List<CoffeeLotsCompanion> lots) {
     return transaction(() async {

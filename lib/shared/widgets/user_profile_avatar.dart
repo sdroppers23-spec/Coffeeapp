@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/supabase/supabase_provider.dart';
 import '../../features/navigation/navigation_providers.dart';
 import '../../core/database/database_provider.dart';
+import '../../core/providers/settings_provider.dart';
 import 'glass_container.dart';
 
 class UserProfileAvatar extends ConsumerWidget {
@@ -13,7 +14,7 @@ class UserProfileAvatar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(supabaseProvider).auth.currentUser;
+    final user = ref.watch(currentUserProvider);
     final meta = user?.userMetadata ?? {};
     final avatarUrl =
         meta['avatar_url'] as String? ??
@@ -121,6 +122,17 @@ class UserProfileAvatar extends ConsumerWidget {
                   color: Colors.redAccent,
                   onTap: () async {
                     context.pop();
+                    // Try to sync before clearing
+                    if (!ref.read(isGuestProvider)) {
+                      try {
+                        await ref
+                            .read(syncServiceProvider)
+                            .pushLocalUserContent()
+                            .timeout(const Duration(seconds: 10));
+                      } catch (e) {
+                        debugPrint('Logout: Sync failed: $e');
+                      }
+                    }
                     await ref.read(databaseProvider).clearUserData();
                     await ref.read(supabaseProvider).auth.signOut();
                   },

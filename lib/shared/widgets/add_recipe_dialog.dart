@@ -458,25 +458,16 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
 
           await supabase.from(cloudTable).upsert(cloudData);
 
-          // Mark as synced locally
+          // Mark as synced locally using specialized methods to avoid wiping data
           switch (widget.recipeSegment) {
             case RecipeSegment.userLot:
-              await db.upsertUserLotRecipe(UserLotRecipesCompanion(
-                id: Value(recipeId),
-                isSynced: const Value(true),
-              ));
+              await db.markUserLotRecipeSynced(recipeId);
               break;
             case RecipeSegment.encyclopedia:
-              await db.upsertEncyclopediaRecipe(EncyclopediaRecipesCompanion(
-                id: Value(recipeId),
-                isSynced: const Value(true),
-              ));
+              await db.markEncyclopediaRecipeSynced(recipeId);
               break;
             case RecipeSegment.alternative:
-              await db.upsertAlternativeRecipe(AlternativeRecipesCompanion(
-                id: Value(recipeId),
-                isSynced: const Value(true),
-              ));
+              await db.markAlternativeRecipeSynced(recipeId);
               break;
           }
           

@@ -454,7 +454,14 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         ToastService.showSuccess(context, context.t('toast_changes_saved'));
 
         ref.invalidate(userLotsProvider);
+        
+        // 4. Trigger Sync
         unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
+
+        // 5. Close screen
+        Navigator.of(context).pop();
+        
+        if (!mounted) return;
         ref.read(navBarVisibleProvider.notifier).show();
         context.pop();
       }

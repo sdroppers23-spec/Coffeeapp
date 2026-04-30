@@ -6,8 +6,8 @@ import 'app_database.dart';
 import 'package:flutter/foundation.dart';
 import '../utils/content_utils.dart';
 
-/// Service responsible for synchronizing user-managed coffee data.
-/// Updated in v17 to support full cloud-to-local sync for Encyclopedia.
+enum SyncResult { success, error }
+
 class SyncService {
   final AppDatabase db;
   final SupabaseClient? supabase;
@@ -20,8 +20,16 @@ class SyncService {
   final _dataUpdateController = StreamController<void>.broadcast();
   Stream<void> get dataUpdateStream => _dataUpdateController.stream;
   
+  final _isSyncingNotifier = ValueNotifier<bool>(false);
+  ValueListenable<bool> get isSyncing => _isSyncingNotifier;
+
+  final _lastSyncResultNotifier = ValueNotifier<SyncResult?>(null);
+  ValueListenable<SyncResult?> get lastSyncResult => _lastSyncResultNotifier;
+
   StreamSubscription? _autoSyncSub;
-  bool _isPushing = false;
+  
+  bool get _isPushing => _isSyncingNotifier.value;
+  set _isPushing(bool value) => _isSyncingNotifier.value = value;
 
   static const String baseUrl =
       'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public';
@@ -87,6 +95,7 @@ class SyncService {
       if (supabase == null) {
         _progressController.add(1.0);
         onProgress?.call('Supabase not available, skipping cloud sync.', 1.0);
+        _lastSyncResultNotifier.value = SyncResult.error;
         return;
       }
 
@@ -147,7 +156,8 @@ class SyncService {
       _progressController.add(0.95);
       try {
         // Push local changes (including deletions) BEFORE pulling
-        await pushLocalUserContent(onProgress: onProgress);
+        // We pass internal = true to bypass the _isPushing guard
+        await pushLocalUserContent(onProgress: onProgress, internal: true);
         await pullUserContent(onProgress: onProgress);
       } catch (e) {
         debugPrint('SyncService: Error syncing user data: $e');
@@ -160,10 +170,16 @@ class SyncService {
       debugPrint('SyncService: Global sync error: $e');
       _progressController.add(1.0);
       onProgress?.call('Sync failed: $e', 1.0);
+      _lastSyncResultNotifier.value = SyncResult.error;
     } finally {
+      if (_lastSyncResultNotifier.value != SyncResult.error) {
+        _lastSyncResultNotifier.value = SyncResult.success;
+      }
       _isPushing = false;
     }
   }
+
+
 
   /// Migrates local guest data to the authenticated user's account.
   Future<void> claimGuestData(String newUserId) async {
@@ -378,7 +394,7 @@ class SyncService {
 
           await db.smartUpsertFarmerV2(farmer, translations);
         } catch (e) {
-          // Production silent fail
+          debugPrint('SyncService: Error processing item: $e');
         }
       }
 
@@ -393,7 +409,7 @@ class SyncService {
         });
       }
     } catch (e) {
-      // Production silent fail
+      debugPrint('SyncService: General sync error: $e');
     }
   }
 
@@ -478,7 +494,7 @@ class SyncService {
 
           await db.smartUpsertArticleV2(article, translations);
         } catch (e) {
-          // Production silent fail
+          debugPrint('SyncService: Error processing item: $e');
         }
       }
 
@@ -493,7 +509,7 @@ class SyncService {
         });
       }
     } catch (e) {
-      // Production silent fail
+      debugPrint('SyncService: General sync error: $e');
     }
   }
 
@@ -524,19 +540,23 @@ class SyncService {
     }
   }
 
-  /// Pushes local user data (recipes and lots) to Supabase.
   /// Pushes local user data (recipes and lots) to Supabase, including deletions.
-  Future<void> pushLocalUserContent({Function(String, double)? onProgress}) async {
+  Future<void> pushLocalUserContent({
+    Function(String, double)? onProgress,
+    bool internal = false,
+  }) async {
     if (supabase == null || supabase!.auth.currentUser == null) {
       debugPrint('SyncService: No user or supabase, skipping push.');
       return;
     }
-    if (_isPushing) {
+    if (!internal && _isPushing) {
       debugPrint('SyncService: Push already in progress, skipping...');
       return;
     }
-    _isPushing = true;
-    debugPrint('SyncService: Starting cloud push/pull...');
+    
+    if (!internal) _isPushing = true;
+    
+    debugPrint('SyncService: Starting cloud push...');
 
     try {
       final userId = supabase!.auth.currentUser!.id;
@@ -555,10 +575,10 @@ class SyncService {
                 .delete()
                 .eq('id', r.id)
                 .eq('user_id', userId);
-            await (db.update(db.userLotRecipes)..where((t) => t.id.equals(r.id)))
-                .write(const UserLotRecipesCompanion(isSynced: Value(true)));
+            await db.markUserLotRecipeSynced(r.id);
+            debugPrint('SyncService: Deleted lot recipe ${r.id} from cloud');
           } else {
-            await supabase!.from('user_lot_recipes').upsert({
+            final data = {
               'id': r.id,
               'user_id': userId,
               'lot_id': r.lotId,
@@ -574,15 +594,19 @@ class SyncService {
               'brew_temp_c': r.brewTempC,
               'notes': r.notes,
               'rating': r.rating,
-              'created_at': r.createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
               'updated_at': DateTime.now().toIso8601String(),
               'extraction_time_seconds': r.extractionTimeSeconds,
               'difficulty': r.difficulty,
               'content_html': r.contentHtml,
               'custom_method_name': r.customMethodName,
-            });
-            await (db.update(db.userLotRecipes)..where((t) => t.id.equals(r.id)))
-                .write(const UserLotRecipesCompanion(isSynced: Value(true)));
+            };
+
+            await supabase!
+                .from('user_lot_recipes')
+                .upsert(data)
+                .timeout(const Duration(seconds: 15));
+            await db.markUserLotRecipeSynced(r.id);
+            debugPrint('SyncService: Pushed lot recipe ${r.id}');
           }
         } catch (e) {
           debugPrint('SyncService: Error syncing lot recipe ${r.id}: $e');
@@ -602,10 +626,10 @@ class SyncService {
                 .delete()
                 .eq('id', r.id)
                 .eq('user_id', userId);
-            await (db.update(db.encyclopediaRecipes)..where((t) => t.id.equals(r.id)))
-                .write(const EncyclopediaRecipesCompanion(isSynced: Value(true)));
+            await db.markEncyclopediaRecipeSynced(r.id);
+            debugPrint('SyncService: Deleted encyclopedia recipe ${r.id} from cloud');
           } else {
-            await supabase!.from('user_encyclopedia_recipes').upsert({
+            final data = {
               'id': r.id,
               'user_id': userId,
               'lot_id': r.beanId,
@@ -621,15 +645,19 @@ class SyncService {
               'brew_temp_c': r.brewTempC,
               'notes': r.notes,
               'rating': r.rating,
-              'created_at': r.createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
               'updated_at': DateTime.now().toIso8601String(),
               'extraction_time_seconds': r.extractionTimeSeconds,
               'difficulty': r.difficulty,
               'content_html': r.contentHtml,
               'custom_method_name': r.customMethodName,
-            });
-            await (db.update(db.encyclopediaRecipes)..where((t) => t.id.equals(r.id)))
-                .write(const EncyclopediaRecipesCompanion(isSynced: Value(true)));
+            };
+
+            await supabase!
+                .from('user_encyclopedia_recipes')
+                .upsert(data)
+                .timeout(const Duration(seconds: 15));
+            await db.markEncyclopediaRecipeSynced(r.id);
+            debugPrint('SyncService: Pushed encyclopedia recipe ${r.id}');
           }
         } catch (e) {
           debugPrint('SyncService: Error syncing encyclopedia recipe ${r.id}: $e');
@@ -649,10 +677,10 @@ class SyncService {
                 .delete()
                 .eq('id', r.id)
                 .eq('user_id', userId);
-            await (db.update(db.alternativeRecipes)..where((t) => t.id.equals(r.id)))
-                .write(const AlternativeRecipesCompanion(isSynced: Value(true)));
+            await db.markAlternativeRecipeSynced(r.id);
+            debugPrint('SyncService: Deleted alternative recipe ${r.id} from cloud');
           } else {
-            await supabase!.from('user_alternative_recipes').upsert({
+            final data = {
               'id': r.id,
               'user_id': userId,
               'method_key': r.methodKey,
@@ -667,15 +695,19 @@ class SyncService {
               'brew_temp_c': r.brewTempC,
               'notes': r.notes,
               'rating': r.rating,
-              'created_at': r.createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
               'updated_at': DateTime.now().toIso8601String(),
               'extraction_time_seconds': r.extractionTimeSeconds,
               'difficulty': r.difficulty,
               'content_html': r.contentHtml,
               'custom_method_name': r.customMethodName,
-            });
-            await (db.update(db.alternativeRecipes)..where((t) => t.id.equals(r.id)))
-                .write(const AlternativeRecipesCompanion(isSynced: Value(true)));
+            };
+
+            await supabase!
+                .from('user_alternative_recipes')
+                .upsert(data)
+                .timeout(const Duration(seconds: 15));
+            await db.markAlternativeRecipeSynced(r.id);
+            debugPrint('SyncService: Pushed alternative recipe ${r.id}');
           }
         } catch (e) {
           debugPrint('SyncService: Error syncing alternative recipe ${r.id}: $e');
@@ -692,63 +724,60 @@ class SyncService {
           if (l.isDeletedLocal) {
             debugPrint('SyncService: Deleting lot from cloud: ${l.id}');
             await supabase!
-                .from('user_lots')
+                .from('user_coffee_lots')
                 .delete()
                 .eq('id', l.id)
                 .eq('user_id', userId);
-            await (db.update(db.coffeeLots)..where((t) => t.id.equals(l.id)))
-                .write(const CoffeeLotsCompanion(isSynced: Value(true)));
+            await db.markLotSynced(l.id);
             debugPrint('SyncService: Lot deletion synced to cloud: ${l.id}');
           } else {
-            try {
-              await supabase!.from('user_lots').upsert({
-                'id': l.id,
-                'user_id': userId,
-                'coffee_name': l.coffeeName,
-                'roastery_name': l.roasteryName,
-                'roastery_country': l.roasteryCountry,
-                'origin_country': l.originCountry,
-                'region': l.region,
-                'altitude': l.altitude,
-                'process': l.process,
-                'roast_level': l.roastLevel,
-                'roast_date': l.roastDate?.toIso8601String(),
-                'opened_at': l.openedAt?.toIso8601String(),
-                'weight': l.weight,
-                'lot_number': l.lotNumber,
-                'is_decaf': l.isDecaf,
-                'farm': l.farm,
-                'wash_station': l.washStation,
-                'farmer': l.farmer,
-                'varieties': l.varieties,
-                'flavor_profile': l.flavorProfile,
-                'sca_score': l.scaScore,
-                'is_favorite': l.isFavorite,
-                'is_archived': l.isArchived,
-                'is_open': l.isOpen,
-                'is_ground': l.isGround,
-                'sensory_json': _safeJsonDecode(l.sensoryJson),
-                'price_json': _safeJsonDecode(l.priceJson),
-                'brand_id': l.brandId,
-                'image_url': l.imageUrl,
-                'created_at':
-                    l.createdAt?.toIso8601String() ??
-                    DateTime.now().toIso8601String(),
-                'updated_at': DateTime.now().toIso8601String(),
-              });
-            } catch (e) {
-              debugPrint('SyncService: Error pushing lot ${l.id}: $e');
-            }
-            await (db.update(db.coffeeLots)..where((t) => t.id.equals(l.id)))
-                .write(const CoffeeLotsCompanion(isSynced: Value(true)));
-            debugPrint('SyncService: Lot synced to cloud: ${l.id}');
+            final data = {
+              'id': l.id,
+              'user_id': userId,
+              'coffee_name': l.coffeeName,
+              'roastery_name': l.roasteryName,
+              'roastery_country': l.roasteryCountry,
+              'origin_country': l.originCountry,
+              'region': l.region,
+              'altitude': l.altitude,
+              'process': l.process,
+              'roast_level': l.roastLevel,
+              'roast_date': l.roastDate?.toIso8601String(),
+              'opened_at': l.openedAt?.toIso8601String(),
+              'weight': l.weight,
+              'lot_number': l.lotNumber,
+              'is_decaf': l.isDecaf,
+              'farm': l.farm,
+              'wash_station': l.washStation,
+              'farmer': l.farmer,
+              'varieties': l.varieties,
+              'flavor_profile': l.flavorProfile,
+              'sca_score': l.scaScore,
+              'is_favorite': l.isFavorite,
+              'is_archived': l.isArchived,
+              'is_open': l.isOpen,
+              'is_ground': l.isGround,
+              'sensory_json': _safeJsonDecode(l.sensoryJson),
+              'price_json': _safeJsonDecode(l.priceJson),
+              'brand_id': l.brandId,
+              'image_url': l.imageUrl,
+              'updated_at': DateTime.now().toIso8601String(),
+            };
+
+            await supabase!
+                .from('user_coffee_lots')
+                .upsert(data)
+                .timeout(const Duration(seconds: 15));
+            await db.markLotSynced(l.id);
+            debugPrint('SyncService: Lot synced to cloud successfully: ${l.id}');
           }
         } catch (e) {
           debugPrint('SyncService: Error syncing lot ${l.id}: $e');
         }
       }
 
-      // 3. Sync User Brands (Upsert & Delete)
+      // 5. Sync User Brands (Upsert & Delete)
+      onProgress?.call('Pushing Brands...', 0.95);
       final brandsToSync = await (db.select(
         db.localizedBrands,
       )..where((t) => t.isSynced.equals(false))).get();
@@ -761,42 +790,39 @@ class SyncService {
                 .delete()
                 .eq('id', b.id)
                 .eq('user_id', userId);
-            await (db.delete(
-              db.localizedBrands,
-            )..where((t) => t.id.equals(b.id))).go();
-            await (db.delete(
-              db.localizedBrandTranslations,
-            )..where((t) => t.brandId.equals(b.id))).go();
-            debugPrint(
-              'SyncService: Brand deleted permanently from local: ${b.id}',
-            );
+            
+            await (db.delete(db.localizedBrands)..where((t) => t.id.equals(b.id))).go();
+            debugPrint('SyncService: Brand deleted permanently: ${b.id}');
           } else {
-            await supabase!.from('user_brands').upsert({
-              'id': b.id,
-              'user_id': userId,
-              'name': b.name,
-              'logo_url': b.logoUrl,
-              'site_url': b.siteUrl,
-              'created_at':
-                  b.createdAt?.toIso8601String() ??
-                  DateTime.now().toIso8601String(),
-            });
+            await supabase!
+                .from('user_brands')
+                .upsert({
+                  'id': b.id,
+                  'user_id': userId,
+                  'name': b.name,
+                  'logo_url': b.logoUrl,
+                  'site_url': b.siteUrl,
+                  'updated_at': DateTime.now().toIso8601String(),
+                })
+                .timeout(const Duration(seconds: 15));
 
-            final translations = await (db.select(
-              db.localizedBrandTranslations,
-            )..where((t) => t.brandId.equals(b.id))).get();
+            final translations = await (db.select(db.localizedBrandTranslations)
+              ..where((t) => t.brandId.equals(b.id))).get();
+            
             for (final t in translations) {
-              await supabase!.from('user_brand_translations').upsert({
-                'brand_id': t.brandId,
-                'language_code': t.languageCode,
-                'short_desc': t.shortDesc,
-                'full_desc': t.fullDesc,
-                'location': t.location,
-              });
+              await supabase!
+                  .from('user_brand_translations')
+                  .upsert({
+                    'brand_id': t.brandId,
+                    'language_code': t.languageCode,
+                    'short_desc': t.shortDesc,
+                    'full_desc': t.fullDesc,
+                    'location': t.location,
+                  })
+                  .timeout(const Duration(seconds: 15));
             }
 
-            await (db.update(db.localizedBrands)
-                  ..where((t) => t.id.equals(b.id)))
+            await (db.update(db.localizedBrands)..where((t) => t.id.equals(b.id)))
                 .write(const LocalizedBrandsCompanion(isSynced: Value(true)));
             debugPrint('SyncService: Brand synced to cloud: ${b.id}');
           }
@@ -804,11 +830,61 @@ class SyncService {
           debugPrint('SyncService: Error syncing brand ${b.id}: $e');
         }
       }
+
+      for (final r in altRecipesToSync) {
+        try {
+          if (r.isDeletedLocal) {
+            await supabase!
+                .from('user_alternative_recipes')
+                .delete()
+                .eq('id', r.id)
+                .eq('user_id', userId);
+            await db.markAlternativeRecipeSynced(r.id);
+            debugPrint('SyncService: Deleted alternative recipe ${r.id} from cloud');
+          } else {
+            final data = {
+              'id': r.id,
+              'user_id': userId,
+              'method_key': r.methodKey,
+              'name': r.name,
+              'coffee_grams': r.coffeeGrams,
+              'total_water_ml': r.totalWaterMl,
+              'grind_number': r.grindNumber,
+              'comandante_clicks': r.comandanteClicks,
+              'ek43_division': r.ek43Division,
+              'total_pours': r.totalPours,
+              'pour_schedule_json': _safeParsePours(r.pourScheduleJson),
+              'brew_temp_c': r.brewTempC,
+              'notes': r.notes,
+              'rating': r.rating,
+              'updated_at': DateTime.now().toIso8601String(),
+              'extraction_time_seconds': r.extractionTimeSeconds,
+              'difficulty': r.difficulty,
+              'content_html': r.contentHtml,
+              'custom_method_name': r.customMethodName,
+            };
+
+            await supabase!
+                .from('user_alternative_recipes')
+                .upsert(data)
+                .timeout(const Duration(seconds: 15));
+            await db.markAlternativeRecipeSynced(r.id);
+            debugPrint('SyncService: Pushed alternative recipe ${r.id}');
+          }
+        } catch (e) {
+          debugPrint('SyncService: Error syncing alternative recipe ${r.id}: $e');
+        }
+      }
     } catch (e) {
       debugPrint('SyncService: Fatal error in pushLocalUserContent: $e');
+      if (!internal) _lastSyncResultNotifier.value = SyncResult.error;
     } finally {
-      _isPushing = false;
-      debugPrint('SyncService: Cloud push/pull finished.');
+      if (!internal) {
+        _isPushing = false;
+        if (_lastSyncResultNotifier.value != SyncResult.error) {
+          _lastSyncResultNotifier.value = SyncResult.success;
+        }
+      }
     }
   }
 
@@ -825,9 +901,10 @@ class SyncService {
       onProgress?.call('Pulling Lots...', 0.96);
 
       final lotsData = await supabase!
-          .from('user_lots')
+          .from('user_coffee_lots')
           .select()
-          .eq('user_id', userId);
+          .eq('user_id', userId)
+          .timeout(const Duration(seconds: 30));
 
       for (final item in lotsData) {
         try {
@@ -894,7 +971,8 @@ class SyncService {
       final remoteRecipes = await supabase!
           .from('user_lot_recipes')
           .select()
-          .eq('user_id', userId);
+          .eq('user_id', userId)
+          .timeout(const Duration(seconds: 30));
 
       for (final item in remoteRecipes) {
         try {
@@ -919,7 +997,11 @@ class SyncService {
               comandanteClicks: Value((item['comandante_clicks'] as num?)?.toInt() ?? 0),
               ek43Division: Value((item['ek43_division'] as num?)?.toInt() ?? 0),
               totalPours: Value((item['total_pours'] as num?)?.toInt() ?? 1),
-              pourScheduleJson: Value(item['pour_schedule_json']?.toString() ?? '[]'),
+              pourScheduleJson: Value(
+                item['pour_schedule_json'] != null
+                    ? jsonEncode(item['pour_schedule_json'])
+                    : '[]',
+              ),
               brewTempC: Value((item['brew_temp_c'] as num?)?.toDouble() ?? 93.0),
               notes: Value(item['notes'] as String? ?? ''),
               rating: Value((item['rating'] as num?)?.toInt() ?? 0),
@@ -932,7 +1014,7 @@ class SyncService {
             ),
           );
         } catch (e) {
-          // Production silent fail
+          debugPrint('SyncService: Error processing item: $e');
         }
       }
 
@@ -942,7 +1024,8 @@ class SyncService {
       final remoteEncRecipes = await supabase!
           .from('user_encyclopedia_recipes')
           .select()
-          .eq('user_id', userId);
+          .eq('user_id', userId)
+          .timeout(const Duration(seconds: 30));
 
       for (final item in remoteEncRecipes) {
         try {
@@ -967,7 +1050,11 @@ class SyncService {
               comandanteClicks: Value((item['comandante_clicks'] as num?)?.toInt() ?? 0),
               ek43Division: Value((item['ek43_division'] as num?)?.toInt() ?? 0),
               totalPours: Value((item['total_pours'] as num?)?.toInt() ?? 1),
-              pourScheduleJson: Value(item['pour_schedule_json']?.toString() ?? '[]'),
+              pourScheduleJson: Value(
+                item['pour_schedule_json'] != null
+                    ? jsonEncode(item['pour_schedule_json'])
+                    : '[]',
+              ),
               brewTempC: Value((item['brew_temp_c'] as num?)?.toDouble() ?? 93.0),
               notes: Value(item['notes'] as String? ?? ''),
               rating: Value((item['rating'] as num?)?.toInt() ?? 0),
@@ -980,7 +1067,7 @@ class SyncService {
             ),
           );
         } catch (e) {
-          // Production silent fail
+          debugPrint('SyncService: Error processing item: $e');
         }
       }
 
@@ -990,7 +1077,8 @@ class SyncService {
       final remoteAltRecipes = await supabase!
           .from('user_alternative_recipes')
           .select()
-          .eq('user_id', userId);
+          .eq('user_id', userId)
+          .timeout(const Duration(seconds: 30));
 
       for (final item in remoteAltRecipes) {
         try {
@@ -1014,7 +1102,11 @@ class SyncService {
               comandanteClicks: Value((item['comandante_clicks'] as num?)?.toInt() ?? 0),
               ek43Division: Value((item['ek43_division'] as num?)?.toInt() ?? 0),
               totalPours: Value((item['total_pours'] as num?)?.toInt() ?? 1),
-              pourScheduleJson: Value(item['pour_schedule_json']?.toString() ?? '[]'),
+              pourScheduleJson: Value(
+                item['pour_schedule_json'] != null
+                    ? jsonEncode(item['pour_schedule_json'])
+                    : '[]',
+              ),
               brewTempC: Value((item['brew_temp_c'] as num?)?.toDouble() ?? 93.0),
               notes: Value(item['notes'] as String? ?? ''),
               rating: Value((item['rating'] as num?)?.toInt() ?? 0),
@@ -1027,11 +1119,11 @@ class SyncService {
             ),
           );
         } catch (e) {
-          // Production silent fail
+          debugPrint('SyncService: Error processing item: $e');
         }
       }
     } catch (e) {
-      // Production silent fail
+      debugPrint('SyncService: General sync error: $e');
     }
   }
 
@@ -1110,7 +1202,7 @@ class SyncService {
 
           await db.smartUpsertBrewingRecipeV2(recipe, translations);
         } catch (e) {
-          // Production silent fail
+          debugPrint('SyncService: Error processing item: $e');
         }
       }
 
@@ -1125,7 +1217,7 @@ class SyncService {
         });
       }
     } catch (e) {
-      // Production silent fail
+      debugPrint('SyncService: General sync error: $e');
     }
   }
 
@@ -1356,7 +1448,7 @@ class SyncService {
 
           await db.smartUpsertBrand(companion, translations);
         } catch (e) {
-          // Production silent fail
+          debugPrint('SyncService: Error processing item: $e');
         }
       }
 
@@ -1381,7 +1473,7 @@ class SyncService {
         });
       }
     } catch (e) {
-      // Production silent fail
+      debugPrint('SyncService: General sync error: $e');
     }
   }
 
@@ -1397,7 +1489,7 @@ class SyncService {
         await db.delete(db.brewingRecipes).go();
       });
     } catch (e) {
-      // Production silent fail
+      debugPrint('SyncService: General sync error: $e');
     }
   }
 
@@ -1494,7 +1586,7 @@ class SyncService {
       await db.smartUpsertFarmer(farmer, translations);
       _dataUpdateController.add(null);
     } catch (e) {
-      // Production silent fail
+      debugPrint('SyncService: General sync error: $e');
     }
   }
 
@@ -1579,7 +1671,7 @@ class SyncService {
       await db.smartUpsertArticle(article, translations);
       _dataUpdateController.add(null);
     } catch (e) {
-      // Production silent fail
+      debugPrint('SyncService: General sync error: $e');
     }
   }
 
@@ -1588,7 +1680,7 @@ class SyncService {
     debugPrint('SyncService: Starting Encyclopedia sync...');
     try {
       // 1. Fetch main entries
-      final data = await supabase!.from('encyclopedia_entries').select();
+      final data = await supabase!.from('encyclopedia_entries').select().timeout(const Duration(seconds: 30));
       debugPrint(
         'SyncService: Supabase returned ${data.length} encyclopedia entries',
       );

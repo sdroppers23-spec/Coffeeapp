@@ -22,7 +22,6 @@ class SyncService {
   
   StreamSubscription? _autoSyncSub;
   bool _isPushing = false;
-  Timer? _syncDebounceTimer;
 
   static const String baseUrl =
       'https://lylnnqojnytndybhuicr.supabase.co/storage/v1/object/public';
@@ -914,7 +913,7 @@ class SyncService {
               extractionTimeSeconds: Value((item['extraction_time_seconds'] as num?)?.toInt()),
               difficulty: Value(item['difficulty'] as String?),
               contentHtml: Value(item['content_html'] as String?),
-              customMethodName: Value(item['custom_method_name'] as String?),
+              customMethodName: Value(item['custom_method_name'] as String? ?? ''),
               updatedAt: Value(DateTime.now()),
               isSynced: const Value(true),
             ),
@@ -961,7 +960,7 @@ class SyncService {
               extractionTimeSeconds: Value((item['extraction_time_seconds'] as num?)?.toInt()),
               difficulty: Value(item['difficulty'] as String?),
               contentHtml: Value(item['content_html'] as String?),
-              customMethodName: Value(item['custom_method_name'] as String?),
+              customMethodName: Value(item['custom_method_name'] as String? ?? ''),
               updatedAt: Value(DateTime.now()),
               isSynced: const Value(true),
             ),
@@ -1007,7 +1006,7 @@ class SyncService {
               extractionTimeSeconds: Value((item['extraction_time_seconds'] as num?)?.toInt()),
               difficulty: Value(item['difficulty'] as String?),
               contentHtml: Value(item['content_html'] as String?),
-              customMethodName: Value(item['custom_method_name'] as String?),
+              customMethodName: Value(item['custom_method_name'] as String? ?? ''),
               updatedAt: Value(DateTime.now()),
               isSynced: const Value(true),
             ),

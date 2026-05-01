@@ -281,37 +281,33 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 context,
                 child: Column(
                   children: [
-                    _buildSwitchPreference(
-                      context,
-                      icon: Icons.thermostat_rounded,
-                      title: ref.t('temperature'),
-                      value: prefs.tempUnit == TempUnit.fahrenheit,
-                      offLabel: '°C',
-                      onLabel: '°F',
-                      onChanged: (val) {
-                        ref
-                            .read(preferencesProvider.notifier)
-                            .setTempUnit(
-                              val ? TempUnit.fahrenheit : TempUnit.celsius,
-                            );
-                      },
-                    ),
-                    _buildDivider(theme),
-                    _buildSwitchPreference(
-                      context,
-                      icon: Icons.straighten_rounded,
-                      title: ref.t('distance'),
-                      value: prefs.lengthUnit == LengthUnit.feet,
-                      offLabel: ref.t('meters_short'),
-                      onLabel: ref.t('feet_short'),
-                      onChanged: (val) {
-                        ref
-                            .read(preferencesProvider.notifier)
-                            .setLengthUnit(
-                              val ? LengthUnit.feet : LengthUnit.meters,
-                            );
-                      },
-                    ),
+    _buildTogglePreference(
+      context,
+      icon: Icons.thermostat_rounded,
+      title: ref.t('temperature'),
+      value: prefs.tempUnit == TempUnit.fahrenheit,
+      offLabel: '°C',
+      onLabel: '°F',
+      onChanged: (val) {
+        ref.read(preferencesProvider.notifier).setTempUnit(
+              val ? TempUnit.fahrenheit : TempUnit.celsius,
+            );
+      },
+    ),
+    _buildDivider(theme),
+    _buildTogglePreference(
+      context,
+      icon: Icons.straighten_rounded,
+      title: ref.t('distance'),
+      value: prefs.lengthUnit == LengthUnit.feet,
+      offLabel: ref.t('meters_short'),
+      onLabel: ref.t('feet_short'),
+      onChanged: (val) {
+        ref.read(preferencesProvider.notifier).setLengthUnit(
+              val ? LengthUnit.feet : LengthUnit.meters,
+            );
+      },
+    ),
                     _buildDivider(theme),
                     _buildCurrencyPreference(context, ref, prefs),
                   ],
@@ -483,7 +479,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  Widget _buildSwitchPreference(
+  Widget _buildTogglePreference(
     BuildContext context, {
     required IconData icon,
     required String title,
@@ -494,7 +490,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [
           Icon(
@@ -513,31 +509,63 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
             ),
           ),
-          Text(
-            offLabel,
-            style: GoogleFonts.outfit(
-              color: !value ? theme.colorScheme.primary : Colors.white24,
-              fontSize: 14,
-              fontWeight: !value ? FontWeight.bold : FontWeight.w400,
+          Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(12),
             ),
-          ),
-          const SizedBox(width: 8),
-          Switch(
-            value: value,
-            activeTrackColor: theme.colorScheme.primary.withValues(alpha: 0.2),
-            activeThumbColor: theme.colorScheme.primary,
-            onChanged: onChanged,
-          ),
-          const SizedBox(width: 8),
-          Text(
-            onLabel,
-            style: GoogleFonts.outfit(
-              color: value ? theme.colorScheme.primary : Colors.white24,
-              fontSize: 14,
-              fontWeight: value ? FontWeight.bold : FontWeight.w400,
+            child: Row(
+              children: [
+                _buildToggleButton(
+                  context,
+                  label: offLabel,
+                  isSelected: !value,
+                  onTap: () => onChanged(false),
+                ),
+                _buildToggleButton(
+                  context,
+                  label: onLabel,
+                  isSelected: value,
+                  onTap: () => onChanged(true),
+                ),
+              ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildToggleButton(
+    BuildContext context, {
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    final theme = Theme.of(context);
+    return GestureDetector(
+      onTap: () {
+        ref.read(settingsProvider.notifier).triggerSelectionVibrate();
+        onTap();
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: isSelected ? theme.colorScheme.primary : Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          label,
+          style: GoogleFonts.outfit(
+            color: isSelected
+                ? Colors.black
+                : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+            fontSize: 13,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+          ),
+        ),
       ),
     );
   }

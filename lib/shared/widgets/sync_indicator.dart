@@ -73,7 +73,7 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
     // Cleanup listeners when disposed
     ref.onDispose(() {
       syncService.isSyncing.removeListener(_onSyncingChanged);
-      syncService.lastSyncResult.removeListener(_onSyncingChanged);
+      syncService.lastSyncResult.removeListener(_onSyncResultChanged);
     });
 
     // 3. Continuous Sync Logic

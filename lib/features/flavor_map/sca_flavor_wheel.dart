@@ -394,6 +394,7 @@ class _ScaWheelPainter extends CustomPainter {
                 8.5,
                 false,
                 isOtherSection: cat.key == 'wheel_cat_others',
+                noteKey: noteKey,
               );
             }
           }
@@ -457,6 +458,7 @@ class _ScaWheelPainter extends CustomPainter {
     double baseFontSize,
     bool bold, {
     bool isOtherSection = false,
+    String? noteKey,
   }) {
     final middleAngle = startAngle + sweepAngle / 2;
     final middleRadius = (rStart + rEnd) / 2;
@@ -504,10 +506,16 @@ class _ScaWheelPainter extends CustomPainter {
 
     // Flip text if it's in the bottom half of the circle
     // If it's the "Others" section, we FORCE flip as per user request to have it "upside down"
-    final bool shouldFlip =
+    // Also flip "Clove" specifically as per user request
+    bool shouldFlip =
         isOtherSection ||
         (middleAngle > (math.pi / 2 + 0.2) &&
             middleAngle < (3 * math.pi / 2 - 0.2));
+
+    if (noteKey == 'wheel_note_clove') {
+      shouldFlip = !shouldFlip;
+    }
+
     if (shouldFlip) {
       canvas.rotate(math.pi);
     }

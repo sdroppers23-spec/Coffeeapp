@@ -316,7 +316,8 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                       border: InputBorder.none,
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                      isDense: true,
+                      contentPadding: const EdgeInsets.only(left: 16, right: 16, bottom: 2),
                       filled: false,
                       prefixIcon: const Padding(
                         padding: EdgeInsets.only(left: 12, right: 8),

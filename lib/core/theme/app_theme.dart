@@ -52,7 +52,7 @@ class AppTheme {
         brightness: brightness,
         primary: primary,
         secondary: accent,
-        surface: bg, // Use black instead of darkSurface
+        surface: bg,
         surfaceContainerLowest: bg,
         surfaceContainerLow: bg,
         surfaceContainer: bg,
@@ -67,6 +67,9 @@ class AppTheme {
         outlineVariant: primary.withValues(alpha: 0.1),
       ),
       canvasColor: bg,
+      scaffoldBackgroundColor: bg,
+      cardColor: bg,
+      dialogBackgroundColor: bg,
       iconTheme: const IconThemeData(color: accent, size: 24),
       textTheme: GoogleFonts.outfitTextTheme(base.textTheme).copyWith(
         displayLarge: GoogleFonts.outfit(
@@ -124,7 +127,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: surface,
+        fillColor: bg, // Changed from surface to bg (black)
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,

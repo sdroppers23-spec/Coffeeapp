@@ -87,7 +87,9 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final navVisible = ref.watch(navBarVisibleProvider);
+    final viewInsets = MediaQuery.of(context).viewInsets;
+    final isKeyboardVisible = viewInsets.bottom > 0;
+    final navVisible = ref.watch(navBarVisibleProvider) && !isKeyboardVisible;
 
     return PopScope(
       canPop: false,
@@ -99,7 +101,10 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
           context.pop();
           // Force visibility immediately and after a short delay to account for animations
           ref.read(navBarVisibleProvider.notifier).show();
-          Future.delayed(const Duration(milliseconds: 300), () {
+          Future.delayed(const Duration(milliseconds: 100), () {
+            if (mounted) ref.read(navBarVisibleProvider.notifier).show();
+          });
+          Future.delayed(const Duration(milliseconds: 400), () {
             if (mounted) ref.read(navBarVisibleProvider.notifier).show();
           });
           return;

@@ -295,26 +295,40 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  height: 48,
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.05),
-                    borderRadius: BorderRadius.circular(16),
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(24),
                     border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.1),
+                      color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
                     ),
                   ),
                   child: TextField(
                     controller: _searchController,
                     onChanged: (v) => setState(() => _searchQuery = v),
-                    style: GoogleFonts.outfit(color: Colors.white),
+                    onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+                    onSubmitted: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+                    style: GoogleFonts.outfit(color: Colors.white, fontSize: 14),
+                    textAlignVertical: TextAlignVertical.center,
                     decoration: InputDecoration(
                       hintText: context.t('search_roasters'),
-                      hintStyle: GoogleFonts.outfit(color: Colors.white24),
+                      hintStyle: GoogleFonts.outfit(color: Colors.white24, fontSize: 14),
                       border: InputBorder.none,
-                      icon: const Icon(
-                        Icons.search_rounded,
-                        color: Color(0xFFC8A96E),
-                        size: 20,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                      filled: false,
+                      prefixIcon: const Padding(
+                        padding: EdgeInsets.only(left: 12, right: 8),
+                        child: Icon(
+                          Icons.search_rounded,
+                          color: Color(0xFFC8A96E),
+                          size: 20,
+                        ),
+                      ),
+                      prefixIconConstraints: const BoxConstraints(
+                        minWidth: 40,
+                        minHeight: 40,
                       ),
                     ),
                   ),

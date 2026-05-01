@@ -55,7 +55,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   bool _isDecaf = false;
   String _decafProcess = 'Sugar Cane';
   String _roastLevel = 'Medium';
-  DateTime _roastDate = DateTime.now();
+  DateTime? _roastDate;
   DateTime? _openedAt;
   bool _isOpen = false;
   bool _isGround = false;
@@ -245,7 +245,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       _populateProcess(lot);
 
       _roastLevel = lot.roastLevel ?? 'Medium';
-      _roastDate = lot.roastDate ?? DateTime.now();
+      _roastDate = lot.roastDate;
       _openedAt = lot.openedAt;
       _isOpen = lot.isOpen;
       _isGround = lot.isGround;

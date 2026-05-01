@@ -49,24 +49,40 @@ class DiscoveryActionBar extends ConsumerWidget {
           // ── Row 0: Search Bar ──────────────────────────────────────────────
           if (searchHint != null) ...[
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              height: 48,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.05),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(
+                  color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
+                ),
               ),
               child: TextField(
                 onChanged: (v) =>
                     ref.read(filterProvider.notifier).updateSearch(v),
+                onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+                onSubmitted: (_) => FocusManager.instance.primaryFocus?.unfocus(),
                 style: GoogleFonts.outfit(color: Colors.white, fontSize: 14),
+                textAlignVertical: TextAlignVertical.center,
                 decoration: InputDecoration(
                   hintText: searchHint,
-                  hintStyle: GoogleFonts.outfit(color: Colors.white24),
+                  hintStyle: GoogleFonts.outfit(color: Colors.white24, fontSize: 14),
                   border: InputBorder.none,
-                  icon: const Icon(
-                    Icons.search_rounded,
-                    color: Color(0xFFC8A96E),
-                    size: 20,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                  filled: false,
+                  prefixIcon: const Padding(
+                    padding: EdgeInsets.only(left: 12, right: 8),
+                    child: Icon(
+                      Icons.search_rounded,
+                      color: Color(0xFFC8A96E),
+                      size: 20,
+                    ),
+                  ),
+                  prefixIconConstraints: const BoxConstraints(
+                    minWidth: 40,
+                    minHeight: 40,
                   ),
                 ),
               ),

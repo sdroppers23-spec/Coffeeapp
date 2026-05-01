@@ -546,6 +546,17 @@ class SyncService {
     }
   }
 
+  DateTime? _parseDateTime(dynamic value) {
+    if (value == null) return null;
+    if (value is DateTime) return value;
+    if (value is String) {
+      if (value.isEmpty) return null;
+      // Try to parse standard ISO or other formats
+      return DateTime.tryParse(value);
+    }
+    return null;
+  }
+
   /// Pulls user roasters from Supabase.
   Future<void> syncUserRoasters() async {
     if (supabase == null || supabase!.auth.currentUser == null) return;
@@ -976,8 +987,8 @@ class SyncService {
             altitude: Value(item['altitude'] as String?),
             process: Value(item['process'] as String?),
             roastLevel: Value(item['roast_level'] as String?),
-            roastDate: Value(DateTime.tryParse(item['roast_date'] ?? '')),
-            openedAt: Value(DateTime.tryParse(item['opened_at'] ?? '')),
+            roastDate: Value(_parseDateTime(item['roast_date'])),
+            openedAt: Value(_parseDateTime(item['opened_at'])),
             weight: Value(item['weight'] as String?),
             lotNumber: Value(item['lot_number'] as String?),
             isDecaf: Value(item['is_decaf'] as bool? ?? false),

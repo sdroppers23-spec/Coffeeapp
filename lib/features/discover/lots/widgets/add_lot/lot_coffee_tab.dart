@@ -18,7 +18,7 @@ extension _CoffeeTabSection on _AddLotScreenState {
               onTap: () async {
                 final picked = await showDatePicker(
                   context: context,
-                  initialDate: _roastDate,
+                  initialDate: _roastDate ?? DateTime.now(),
                   firstDate: DateTime(2020),
                   lastDate: DateTime.now(),
                   builder: (ctx, child) => Theme(
@@ -39,13 +39,13 @@ extension _CoffeeTabSection on _AddLotScreenState {
               date: _openedAt,
               placeholder: context.t('not_opened'),
               onTap: () async {
+                final initial = (_openedAt != null && _openedAt!.isAfter(_roastDate ?? DateTime(2020)))
+                    ? _openedAt!
+                    : (_roastDate ?? DateTime.now());
                 final picked = await showDatePicker(
                   context: context,
-                  initialDate:
-                      (_openedAt != null && _openedAt!.isAfter(_roastDate))
-                      ? _openedAt!
-                      : _roastDate,
-                  firstDate: _roastDate,
+                  initialDate: initial,
+                  firstDate: _roastDate ?? DateTime(2020),
                   lastDate: DateTime.now(),
                   builder: (ctx, child) => Theme(
                     data: ThemeData.dark().copyWith(

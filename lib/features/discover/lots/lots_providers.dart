@@ -4,12 +4,23 @@ import '../../../core/database/dtos.dart';
 
 import '../../../core/supabase/supabase_provider.dart';
 
-final userLotsProvider = FutureProvider<List<CoffeeLotDto>>((ref) async {
-  final db = ref.watch(databaseProvider);
-  final user = ref.watch(currentUserProvider);
-  final userId = user?.id ?? 'guest';
-  return db.getUserLots(userId);
+final userLotsProvider = NotifierProvider<UserLotsNotifier, List<CoffeeLotDto>>(() {
+  return UserLotsNotifier();
 });
+
+class UserLotsNotifier extends Notifier<List<CoffeeLotDto>> {
+  @override
+  List<CoffeeLotDto> build() {
+    final stream = ref.watch(userLotsStreamProvider);
+    return stream.value ?? [];
+  }
+
+  Future<void> toggleFavorite(String lotId) async {
+    final db = ref.read(databaseProvider);
+    final lot = state.firstWhere((l) => l.id == lotId);
+    await db.toggleLotFavorite(lotId, !lot.isFavorite);
+  }
+}
 
 final userLotsStreamProvider = StreamProvider<List<CoffeeLotDto>>((ref) {
   final db = ref.watch(databaseProvider);

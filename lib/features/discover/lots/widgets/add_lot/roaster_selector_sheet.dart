@@ -101,7 +101,7 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                 onChanged: (v) => setState(() => _searchQuery = v),
                 style: GoogleFonts.outfit(color: Colors.white),
                 decoration: InputDecoration(
-                  hintText: context.t('search_recipes'), // Generic search hint
+                  hintText: context.t('search_roasters'),
                   hintStyle: GoogleFonts.outfit(color: Colors.white24),
                   border: InputBorder.none,
                   icon: const Icon(
@@ -111,6 +111,62 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                   ),
                 ),
               ),
+            ),
+          ),
+
+          // Add New Button (Raised and Half-Width)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            child: Row(
+              children: [
+                const Spacer(),
+                Expanded(
+                  child: PressableScale(
+                    onTap: () => _showAddEditRoasterDialog(),
+                    child: Container(
+                      height: 44,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            const Color(0xFFC8A96E),
+                            const Color(0xFFC8A96E).withValues(alpha: 0.8),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.add_rounded,
+                              color: Colors.black,
+                              size: 18,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              context.t('add_roaster_uppercase'),
+                              style: GoogleFonts.outfit(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
 
@@ -131,55 +187,8 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                   ),
           ),
 
-          // Add New Button
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: PressableScale(
-              onTap: () => _showAddEditRoasterDialog(),
-              child: Container(
-                height: 54,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      const Color(0xFFC8A96E),
-                      const Color(0xFFC8A96E).withValues(alpha: 0.8),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.add_rounded,
-                        color: Colors.black,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        context.t('add_roaster_uppercase'),
-                        style: GoogleFonts.outfit(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                          letterSpacing: 1.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
           ),
+          const SizedBox(height: 10),
         ],
       ),
     );

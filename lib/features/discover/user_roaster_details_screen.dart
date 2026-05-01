@@ -19,18 +19,33 @@ final userRoasterLotsProvider =
       return db.getLotsByUserRoaster(userId, roasterId);
     });
 
-class UserRoasterDetailsScreen extends ConsumerWidget {
+class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
   final UserRoasterDto roaster;
 
   const UserRoasterDetailsScreen({super.key, required this.roaster});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<UserRoasterDetailsScreen> createState() =>
+      _UserRoasterDetailsScreenState();
+}
+
+class _UserRoasterDetailsScreenState extends ConsumerState<UserRoasterDetailsScreen> {
+  final _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     // Watch for updates to this specific roaster
     final allRoasters = ref.watch(userRoastersProvider);
     final currentRoaster = allRoasters.firstWhere(
-      (r) => r.id == roaster.id,
-      orElse: () => roaster,
+      (r) => r.id == widget.roaster.id,
+      orElse: () => widget.roaster,
     );
 
     final lotsAsync = ref.watch(userRoasterLotsProvider(currentRoaster.id));
@@ -51,13 +66,15 @@ class UserRoasterDetailsScreen extends ConsumerWidget {
         ),
         actions: [
           IconButton(
+            icon: const Icon(Icons.edit_outlined, color: Colors.white),
+            onPressed: () => _showEditRoasterDialog(context, ref, currentRoaster),
+          ),
+          IconButton(
             icon: Icon(
               currentRoaster.isFavorite
                   ? Icons.favorite_rounded
                   : Icons.favorite_border_rounded,
-              color: currentRoaster.isFavorite
-                  ? Colors.redAccent
-                  : Colors.white,
+              color: currentRoaster.isFavorite ? Colors.redAccent : Colors.white,
             ),
             onPressed: () {
               ref
@@ -148,6 +165,35 @@ class UserRoasterDetailsScreen extends ConsumerWidget {
                 ),
               ),
             const SizedBox(height: 32),
+
+            // Search Bar
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.05),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                ),
+                child: TextField(
+                  controller: _searchController,
+                  onChanged: (v) => setState(() => _searchQuery = v),
+                  style: GoogleFonts.outfit(color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: context.t('search_lots'),
+                    hintStyle: GoogleFonts.outfit(color: Colors.white24),
+                    border: InputBorder.none,
+                    icon: const Icon(
+                      Icons.search_rounded,
+                      color: Color(0xFFC8A96E),
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Row(
@@ -199,7 +245,15 @@ class UserRoasterDetailsScreen extends ConsumerWidget {
                 ),
                 error: (error, _) => Center(child: Text(error.toString())),
                 data: (lots) {
-                  if (lots.isEmpty) {
+                  final filteredLots = lots.where((l) {
+                    final query = _searchQuery.toLowerCase();
+                    if (query.isEmpty) return true;
+                    return (l.coffeeName?.toLowerCase().contains(query) ?? false) ||
+                           (l.originCountry.toLowerCase().contains(query)) ||
+                           (l.region.toLowerCase().contains(query));
+                  }).toList();
+
+                  if (filteredLots.isEmpty) {
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -211,7 +265,9 @@ class UserRoasterDetailsScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            l10n.translate('no_lots_linked'),
+                            _searchQuery.isEmpty
+                                ? l10n.translate('no_lots_linked')
+                                : l10n.translate('empty_search_title'),
                             style: GoogleFonts.outfit(color: Colors.white24),
                           ),
                         ],
@@ -220,17 +276,21 @@ class UserRoasterDetailsScreen extends ConsumerWidget {
                   }
                   return ListView.builder(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
-                    itemCount: lots.length,
+                    itemCount: filteredLots.length,
                     itemBuilder: (context, i) => Padding(
                       padding: const EdgeInsets.only(bottom: 12),
                       child: MyLotListCard(
-                        lot: lots[i],
+                        lot: filteredLots[i],
                         isSelected: false,
                         isSelectionMode: false,
                         onLongPress: (_) {},
-                        onFavoriteToggle: (_) {},
+                        onFavoriteToggle: (lot) {
+                          // This would normally be handled by a dedicated lots notifier
+                          // For now, let's use the DB directly or a placeholder if needed
+                          // But we should probably have a way to toggle lot favorite
+                        },
                         onTap: (id) {
-                          context.push('/lot_details', extra: {'lot': lots[i]});
+                          context.push('/lot_details', extra: {'lot': filteredLots[i]});
                         },
                       ),
                     ),

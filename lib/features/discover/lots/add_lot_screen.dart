@@ -174,7 +174,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       text: widget.initialLot?.roasteryName ?? '',
     );
     _roasteryCountryController = TextEditingController(
-      text: widget.initialLot?.roasteryCountry ?? 'Ukraine',
+      text: widget.initialLot?.roasteryCountry ?? '',
     );
     _originCountryController = TextEditingController(
       text: widget.initialLot?.originCountry ?? '',
@@ -203,19 +203,19 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       text: widget.initialLot?.washStation ?? '',
     );
     _processController = TextEditingController(
-      text: widget.initialLot?.process ?? 'Washed',
+      text: widget.initialLot?.process ?? '',
     );
     _flavorProfileController = TextEditingController(
       text: widget.initialLot?.flavorProfile ?? '',
     );
     _scaScoreController = TextEditingController(
-      text: widget.initialLot?.scaScore ?? '85',
+      text: widget.initialLot?.scaScore ?? '',
     );
     _lotNumberController = TextEditingController(
       text: widget.initialLot?.lotNumber ?? '',
     );
     _weightController = TextEditingController(
-      text: widget.initialLot?.weight ?? '250g',
+      text: widget.initialLot?.weight ?? '',
     );
 
     // Initial controllers are set based on widget.initialLot in initState

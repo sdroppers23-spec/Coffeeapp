@@ -36,12 +36,15 @@ class _CustomHorizontalDragRecognizer extends HorizontalDragGestureRecognizer {
 
   @override
   void addAllowedPointer(PointerDownEvent event) {
-    // If we're already at an offset (e.g. card is open), don't enforce handle check
-    // This allows closing/moving the card from anywhere once it's already active.
-    // However, if we're at 'rest' (extent < 2.0), we MUST enforce the handle if grip mode is ON.
-    if (isGripMode && getExtent().abs() < 2.0) {
+    // If we're starting a new gesture from a 'closed' state (extent near zero),
+    // and Grip Mode is ON, we MUST enforce the handle check.
+    // If the card is already swiped open, we allow interaction from anywhere 
+    // to facilitate closing or further swiping.
+    final bool isAtRest = getExtent().abs() < 1.0;
+    
+    if (isGripMode && isAtRest) {
       if (!isWithinHandle(event.localPosition)) {
-        return;
+        return; // Do not allow this pointer to start the gesture
       }
     }
     super.addAllowedPointer(event);
@@ -253,7 +256,8 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
                 isWithinHandle: (localPosition) {
                   final dx = localPosition.dx;
                   final width = constraints.maxWidth;
-                  final handleWidth = math.min(60.0, width / 3);
+                  // Handle width is 50px from either side
+                  const handleWidth = 50.0;
                   return dx < handleWidth || dx > width - handleWidth;
                 },
               ),

@@ -696,6 +696,7 @@ class SyncService {
               'coffee_name': l.coffeeName,
               'roastery_name': l.roasteryName,
               'roastery_country': l.roasteryCountry,
+              'roastery_city': l.roasteryCity,
               'origin_country': l.originCountry,
               'region': l.region,
               'altitude': l.altitude,

@@ -111,6 +111,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     _tabController.dispose();
     _roasteryController.dispose();
     _roasteryCountryController.dispose();
+    _roasteryLocationController.dispose();
     _varietiesController.dispose();
     _farmerController.dispose();
     _washStationController.dispose();
@@ -134,6 +135,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   // Controllers to prevent cursor jumps and fix focus
   late final TextEditingController _roasteryController;
   late final TextEditingController _roasteryCountryController;
+  late final TextEditingController _roasteryLocationController;
   late final TextEditingController _originCountryController;
   late final TextEditingController _regionController;
   late final TextEditingController _altitudeController;
@@ -175,6 +177,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     );
     _roasteryCountryController = TextEditingController(
       text: widget.initialLot?.roasteryCountry ?? '',
+    );
+    _roasteryLocationController = TextEditingController(
+      text: widget.initialLot?.roasteryCity ?? '',
     );
     _originCountryController = TextEditingController(
       text: widget.initialLot?.originCountry ?? '',
@@ -415,6 +420,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           userId: Value(userId),
           roasteryName: Value(_roasteryController.text),
           roasteryCountry: Value(_roasteryCountryController.text),
+          roasteryCity: Value(_roasteryLocationController.text),
           coffeeName: Value(_originCountryController.text), // Fallback or clear
           originCountry: Value(_originCountryController.text),
           region: Value(_regionController.text),
@@ -627,7 +633,47 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: PressableScale(
-        onTap: _saveLot,
+        onTap: () async {
+          if (!_canSave) return;
+          final bool? shouldSave = await showDialog<bool>(
+            context: context,
+            builder: (context) => AlertDialog(
+              backgroundColor: const Color(0xFF1A1A1A),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+                side: BorderSide(color: const Color(0xFFC8A96E).withValues(alpha: 0.2)),
+              ),
+              title: Text(
+                context.t('save_lot_confirmation_title'),
+                style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+              content: Text(
+                context.t('save_lot_confirmation_desc'),
+                style: GoogleFonts.outfit(color: Colors.white70),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: Text(
+                    context.t('cancel'),
+                    style: GoogleFonts.outfit(color: Colors.white38),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  child: Text(
+                    context.t('save'),
+                    style: GoogleFonts.outfit(color: const Color(0xFFC8A96E), fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+          );
+
+          if (shouldSave == true) {
+            _saveLot();
+          }
+        },
         child: Container(
           height: 54,
           decoration: BoxDecoration(

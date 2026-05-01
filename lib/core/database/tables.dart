@@ -280,6 +280,7 @@ class CoffeeLots extends Table {
   // Roastery
   TextColumn get roasteryName => text().nullable()();
   TextColumn get roasteryCountry => text().nullable()();
+  TextColumn get roasteryCity => text().nullable()();
   TextColumn get userRoasterId => text().nullable()();
   IntColumn get brandId =>
       integer().nullable().references(LocalizedBrands, #id)();

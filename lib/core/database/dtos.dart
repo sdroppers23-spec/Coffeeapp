@@ -481,6 +481,7 @@ class CoffeeLotDto {
   final String? userId;
   final String? roasteryName;
   final String? roasteryCountry;
+  final String? roasteryCity;
   final String? coffeeName;
   final String? originCountry;
   final String? region;
@@ -517,6 +518,7 @@ class CoffeeLotDto {
     this.userId,
     this.roasteryName,
     this.roasteryCountry,
+    this.roasteryCity,
     this.coffeeName,
     this.originCountry,
     this.region,
@@ -565,6 +567,7 @@ class CoffeeLotDto {
     String? userId,
     String? roasteryName,
     String? roasteryCountry,
+    String? roasteryCity,
     String? coffeeName,
     String? originCountry,
     String? region,
@@ -601,6 +604,7 @@ class CoffeeLotDto {
       userId: userId ?? this.userId,
       roasteryName: roasteryName ?? this.roasteryName,
       roasteryCountry: roasteryCountry ?? this.roasteryCountry,
+      roasteryCity: roasteryCity ?? this.roasteryCity,
       coffeeName: coffeeName ?? this.coffeeName,
       originCountry: originCountry ?? this.originCountry,
       region: region ?? this.region,

@@ -5698,6 +5698,17 @@ class $CoffeeLotsTable extends CoffeeLots
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _roasteryCityMeta = const VerificationMeta(
+    'roasteryCity',
+  );
+  @override
+  late final GeneratedColumn<String> roasteryCity = GeneratedColumn<String>(
+    'roastery_city',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _userRoasterIdMeta = const VerificationMeta(
     'userRoasterId',
   );
@@ -6079,6 +6090,7 @@ class $CoffeeLotsTable extends CoffeeLots
     userId,
     roasteryName,
     roasteryCountry,
+    roasteryCity,
     userRoasterId,
     brandId,
     coffeeName,
@@ -6152,6 +6164,15 @@ class $CoffeeLotsTable extends CoffeeLots
         roasteryCountry.isAcceptableOrUnknown(
           data['roastery_country']!,
           _roasteryCountryMeta,
+        ),
+      );
+    }
+    if (data.containsKey('roastery_city')) {
+      context.handle(
+        _roasteryCityMeta,
+        roasteryCity.isAcceptableOrUnknown(
+          data['roastery_city']!,
+          _roasteryCityMeta,
         ),
       );
     }
@@ -6396,6 +6417,10 @@ class $CoffeeLotsTable extends CoffeeLots
         DriftSqlType.string,
         data['${effectivePrefix}roastery_country'],
       ),
+      roasteryCity: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}roastery_city'],
+      ),
       userRoasterId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}user_roaster_id'],
@@ -6538,6 +6563,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
   final String userId;
   final String? roasteryName;
   final String? roasteryCountry;
+  final String? roasteryCity;
   final String? userRoasterId;
   final int? brandId;
   final String? coffeeName;
@@ -6575,6 +6601,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
     required this.userId,
     this.roasteryName,
     this.roasteryCountry,
+    this.roasteryCity,
     this.userRoasterId,
     this.brandId,
     this.coffeeName,
@@ -6618,6 +6645,9 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
     }
     if (!nullToAbsent || roasteryCountry != null) {
       map['roastery_country'] = Variable<String>(roasteryCountry);
+    }
+    if (!nullToAbsent || roasteryCity != null) {
+      map['roastery_city'] = Variable<String>(roasteryCity);
     }
     if (!nullToAbsent || userRoasterId != null) {
       map['user_roaster_id'] = Variable<String>(userRoasterId);
@@ -6710,6 +6740,9 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
       roasteryCountry: roasteryCountry == null && nullToAbsent
           ? const Value.absent()
           : Value(roasteryCountry),
+      roasteryCity: roasteryCity == null && nullToAbsent
+          ? const Value.absent()
+          : Value(roasteryCity),
       userRoasterId: userRoasterId == null && nullToAbsent
           ? const Value.absent()
           : Value(userRoasterId),
@@ -6799,6 +6832,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
       userId: serializer.fromJson<String>(json['userId']),
       roasteryName: serializer.fromJson<String?>(json['roasteryName']),
       roasteryCountry: serializer.fromJson<String?>(json['roasteryCountry']),
+      roasteryCity: serializer.fromJson<String?>(json['roasteryCity']),
       userRoasterId: serializer.fromJson<String?>(json['userRoasterId']),
       brandId: serializer.fromJson<int?>(json['brandId']),
       coffeeName: serializer.fromJson<String?>(json['coffeeName']),
@@ -6841,6 +6875,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
       'userId': serializer.toJson<String>(userId),
       'roasteryName': serializer.toJson<String?>(roasteryName),
       'roasteryCountry': serializer.toJson<String?>(roasteryCountry),
+      'roasteryCity': serializer.toJson<String?>(roasteryCity),
       'userRoasterId': serializer.toJson<String?>(userRoasterId),
       'brandId': serializer.toJson<int?>(brandId),
       'coffeeName': serializer.toJson<String?>(coffeeName),
@@ -6881,6 +6916,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
     String? userId,
     Value<String?> roasteryName = const Value.absent(),
     Value<String?> roasteryCountry = const Value.absent(),
+    Value<String?> roasteryCity = const Value.absent(),
     Value<String?> userRoasterId = const Value.absent(),
     Value<int?> brandId = const Value.absent(),
     Value<String?> coffeeName = const Value.absent(),
@@ -6920,6 +6956,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
     roasteryCountry: roasteryCountry.present
         ? roasteryCountry.value
         : this.roasteryCountry,
+    roasteryCity: roasteryCity.present ? roasteryCity.value : this.roasteryCity,
     userRoasterId: userRoasterId.present
         ? userRoasterId.value
         : this.userRoasterId,
@@ -6971,6 +7008,9 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
       roasteryCountry: data.roasteryCountry.present
           ? data.roasteryCountry.value
           : this.roasteryCountry,
+      roasteryCity: data.roasteryCity.present
+          ? data.roasteryCity.value
+          : this.roasteryCity,
       userRoasterId: data.userRoasterId.present
           ? data.userRoasterId.value
           : this.userRoasterId,
@@ -7037,6 +7077,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
           ..write('userId: $userId, ')
           ..write('roasteryName: $roasteryName, ')
           ..write('roasteryCountry: $roasteryCountry, ')
+          ..write('roasteryCity: $roasteryCity, ')
           ..write('userRoasterId: $userRoasterId, ')
           ..write('brandId: $brandId, ')
           ..write('coffeeName: $coffeeName, ')
@@ -7079,6 +7120,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
     userId,
     roasteryName,
     roasteryCountry,
+    roasteryCity,
     userRoasterId,
     brandId,
     coffeeName,
@@ -7120,6 +7162,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
           other.userId == this.userId &&
           other.roasteryName == this.roasteryName &&
           other.roasteryCountry == this.roasteryCountry &&
+          other.roasteryCity == this.roasteryCity &&
           other.userRoasterId == this.userRoasterId &&
           other.brandId == this.brandId &&
           other.coffeeName == this.coffeeName &&
@@ -7159,6 +7202,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
   final Value<String> userId;
   final Value<String?> roasteryName;
   final Value<String?> roasteryCountry;
+  final Value<String?> roasteryCity;
   final Value<String?> userRoasterId;
   final Value<int?> brandId;
   final Value<String?> coffeeName;
@@ -7197,6 +7241,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
     this.userId = const Value.absent(),
     this.roasteryName = const Value.absent(),
     this.roasteryCountry = const Value.absent(),
+    this.roasteryCity = const Value.absent(),
     this.userRoasterId = const Value.absent(),
     this.brandId = const Value.absent(),
     this.coffeeName = const Value.absent(),
@@ -7236,6 +7281,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
     required String userId,
     this.roasteryName = const Value.absent(),
     this.roasteryCountry = const Value.absent(),
+    this.roasteryCity = const Value.absent(),
     this.userRoasterId = const Value.absent(),
     this.brandId = const Value.absent(),
     this.coffeeName = const Value.absent(),
@@ -7276,6 +7322,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
     Expression<String>? userId,
     Expression<String>? roasteryName,
     Expression<String>? roasteryCountry,
+    Expression<String>? roasteryCity,
     Expression<String>? userRoasterId,
     Expression<int>? brandId,
     Expression<String>? coffeeName,
@@ -7315,6 +7362,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
       if (userId != null) 'user_id': userId,
       if (roasteryName != null) 'roastery_name': roasteryName,
       if (roasteryCountry != null) 'roastery_country': roasteryCountry,
+      if (roasteryCity != null) 'roastery_city': roasteryCity,
       if (userRoasterId != null) 'user_roaster_id': userRoasterId,
       if (brandId != null) 'brand_id': brandId,
       if (coffeeName != null) 'coffee_name': coffeeName,
@@ -7356,6 +7404,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
     Value<String>? userId,
     Value<String?>? roasteryName,
     Value<String?>? roasteryCountry,
+    Value<String?>? roasteryCity,
     Value<String?>? userRoasterId,
     Value<int?>? brandId,
     Value<String?>? coffeeName,
@@ -7395,6 +7444,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
       userId: userId ?? this.userId,
       roasteryName: roasteryName ?? this.roasteryName,
       roasteryCountry: roasteryCountry ?? this.roasteryCountry,
+      roasteryCity: roasteryCity ?? this.roasteryCity,
       userRoasterId: userRoasterId ?? this.userRoasterId,
       brandId: brandId ?? this.brandId,
       coffeeName: coffeeName ?? this.coffeeName,
@@ -7445,6 +7495,9 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
     }
     if (roasteryCountry.present) {
       map['roastery_country'] = Variable<String>(roasteryCountry.value);
+    }
+    if (roasteryCity.present) {
+      map['roastery_city'] = Variable<String>(roasteryCity.value);
     }
     if (userRoasterId.present) {
       map['user_roaster_id'] = Variable<String>(userRoasterId.value);
@@ -7555,6 +7608,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
           ..write('userId: $userId, ')
           ..write('roasteryName: $roasteryName, ')
           ..write('roasteryCountry: $roasteryCountry, ')
+          ..write('roasteryCity: $roasteryCity, ')
           ..write('userRoasterId: $userRoasterId, ')
           ..write('brandId: $brandId, ')
           ..write('coffeeName: $coffeeName, ')
@@ -26257,6 +26311,7 @@ typedef $$CoffeeLotsTableCreateCompanionBuilder =
       required String userId,
       Value<String?> roasteryName,
       Value<String?> roasteryCountry,
+      Value<String?> roasteryCity,
       Value<String?> userRoasterId,
       Value<int?> brandId,
       Value<String?> coffeeName,
@@ -26297,6 +26352,7 @@ typedef $$CoffeeLotsTableUpdateCompanionBuilder =
       Value<String> userId,
       Value<String?> roasteryName,
       Value<String?> roasteryCountry,
+      Value<String?> roasteryCity,
       Value<String?> userRoasterId,
       Value<int?> brandId,
       Value<String?> coffeeName,
@@ -26400,6 +26456,11 @@ class $$CoffeeLotsTableFilterComposer
 
   ColumnFilters<String> get roasteryCountry => $composableBuilder(
     column: $table.roasteryCountry,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get roasteryCity => $composableBuilder(
+    column: $table.roasteryCity,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -26636,6 +26697,11 @@ class $$CoffeeLotsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get roasteryCity => $composableBuilder(
+    column: $table.roasteryCity,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get userRoasterId => $composableBuilder(
     column: $table.userRoasterId,
     builder: (column) => ColumnOrderings(column),
@@ -26840,6 +26906,11 @@ class $$CoffeeLotsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get roasteryCity => $composableBuilder(
+    column: $table.roasteryCity,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get userRoasterId => $composableBuilder(
     column: $table.userRoasterId,
     builder: (column) => column,
@@ -27038,6 +27109,7 @@ class $$CoffeeLotsTableTableManager
                 Value<String> userId = const Value.absent(),
                 Value<String?> roasteryName = const Value.absent(),
                 Value<String?> roasteryCountry = const Value.absent(),
+                Value<String?> roasteryCity = const Value.absent(),
                 Value<String?> userRoasterId = const Value.absent(),
                 Value<int?> brandId = const Value.absent(),
                 Value<String?> coffeeName = const Value.absent(),
@@ -27076,6 +27148,7 @@ class $$CoffeeLotsTableTableManager
                 userId: userId,
                 roasteryName: roasteryName,
                 roasteryCountry: roasteryCountry,
+                roasteryCity: roasteryCity,
                 userRoasterId: userRoasterId,
                 brandId: brandId,
                 coffeeName: coffeeName,
@@ -27116,6 +27189,7 @@ class $$CoffeeLotsTableTableManager
                 required String userId,
                 Value<String?> roasteryName = const Value.absent(),
                 Value<String?> roasteryCountry = const Value.absent(),
+                Value<String?> roasteryCity = const Value.absent(),
                 Value<String?> userRoasterId = const Value.absent(),
                 Value<int?> brandId = const Value.absent(),
                 Value<String?> coffeeName = const Value.absent(),
@@ -27154,6 +27228,7 @@ class $$CoffeeLotsTableTableManager
                 userId: userId,
                 roasteryName: roasteryName,
                 roasteryCountry: roasteryCountry,
+                roasteryCity: roasteryCity,
                 userRoasterId: userRoasterId,
                 brandId: brandId,
                 coffeeName: coffeeName,

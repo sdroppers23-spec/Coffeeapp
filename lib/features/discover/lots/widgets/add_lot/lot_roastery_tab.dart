@@ -25,6 +25,8 @@ extension _RoasteryTabSection on _AddLotScreenState {
                           _roasteryController.text = roaster.name;
                           _roasteryCountryController.text =
                               roaster.country ?? '';
+                          _roasteryLocationController.text =
+                              roaster.location ?? '';
                         });
                         Navigator.pop(context);
                       },
@@ -64,6 +66,25 @@ extension _RoasteryTabSection on _AddLotScreenState {
                           ),
                         ),
                       ),
+                      if (_userRoasterId != null)
+                        GestureDetector(
+                          onTap: () {
+                            updateState(() {
+                              _userRoasterId = null;
+                              _roasteryController.clear();
+                              _roasteryCountryController.clear();
+                              _roasteryLocationController.clear();
+                            });
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            child: Icon(
+                              Icons.close_rounded,
+                              color: Colors.white38,
+                              size: 20,
+                            ),
+                          ),
+                        ),
                       const Icon(
                         Icons.keyboard_arrow_down_rounded,
                         color: Colors.white38,
@@ -84,6 +105,12 @@ extension _RoasteryTabSection on _AddLotScreenState {
               _fieldRow(
                 label: context.t('country_field').toUpperCase(),
                 controller: _roasteryCountryController,
+                readOnly: true,
+              ),
+              _divider(),
+              _fieldRow(
+                label: context.t('location_field').toUpperCase(),
+                controller: _roasteryLocationController,
                 readOnly: true,
               ),
             ],

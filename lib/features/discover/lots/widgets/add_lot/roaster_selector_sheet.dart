@@ -305,6 +305,9 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
     final locationController = TextEditingController(
       text: existing?.location ?? '',
     );
+    final countryController = TextEditingController(
+      text: existing?.country ?? '',
+    );
     final logoUrlController = TextEditingController(
       text: existing?.logoUrl ?? '',
     );
@@ -378,7 +381,19 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                   controller: locationController,
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                    labelText: context.t('city_country_label'),
+                    labelText: context.t('location_label'),
+                    labelStyle: const TextStyle(color: Colors.white38),
+                    enabledBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white12),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: countryController,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    labelText: context.t('country_field'),
                     labelStyle: const TextStyle(color: Colors.white38),
                     enabledBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white12),
@@ -436,7 +451,9 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                     (r) =>
                         r!.name.toLowerCase() == name.toLowerCase() &&
                         (r.location?.toLowerCase() ?? '') ==
-                            location.toLowerCase(),
+                            location.toLowerCase() &&
+                        (r.country?.toLowerCase() ?? '') ==
+                            countryController.text.trim().toLowerCase(),
                     orElse: () => null,
                   );
 
@@ -455,6 +472,7 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                   id: existing?.id ?? const Uuid().v4(),
                   name: name,
                   location: location,
+                  country: countryController.text.trim(),
                   logoUrl: logoUrlController.text.trim().isNotEmpty
                       ? logoUrlController.text.trim()
                       : null,

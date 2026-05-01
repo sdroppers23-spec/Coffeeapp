@@ -46,7 +46,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? e]) : super(e ?? openConnection());
 
   @override
-  int get schemaVersion => 51;
+  int get schemaVersion => 52;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -251,6 +251,10 @@ class AppDatabase extends _$AppDatabase {
       if (from < 51) {
         await _safeAddColumn(m, coffeeLots, coffeeLots.userRoasterId);
         debugPrint('AppDatabase: Migration to v51 completed');
+      }
+      if (from < 52) {
+        await _safeAddColumn(m, coffeeLots, coffeeLots.roasteryCity);
+        debugPrint('AppDatabase: Migration to v52 completed');
       }
     },
     beforeOpen: (details) async {

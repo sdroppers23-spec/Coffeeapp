@@ -317,10 +317,10 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
                       isDense: true,
-                      contentPadding: const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 0),
+                      contentPadding: const EdgeInsets.only(left: 16, right: 16, top: 2, bottom: 0),
                       filled: false,
                       prefixIcon: const Padding(
-                        padding: EdgeInsets.only(left: 12, right: 8),
+                        padding: EdgeInsets.only(left: 12, right: 8, top: 11),
                         child: Icon(
                           Icons.search_rounded,
                           color: Color(0xFFC8A96E),
@@ -463,6 +463,8 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
       key: key,
       padding: const EdgeInsets.only(bottom: 16),
       child: GlassSwipeWrapper(
+        isGripMode: false,
+        isSwipeEnabled: true,
         dismissibleKey: ValueKey('roaster_swipe_${roaster.id}'),
         leftAction: GlassSwipeAction(
           icon: isArchiveTab

@@ -11,9 +11,9 @@ import 'lots/widgets/lot_card_widgets.dart';
 import 'lots/providers/roaster_providers.dart';
 import 'lots/lots_providers.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/providers/preferences_provider.dart';
 import '../../shared/services/roaster_image_service.dart';
 import '../../shared/widgets/pressable_scale.dart';
-
 
 final userRoasterLotsProvider =
     FutureProvider.family<List<CoffeeLotDto>, String>((ref, roasterId) async {
@@ -27,7 +27,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
   final UserRoasterDto roaster;
 
   const UserRoasterDetailsScreen({super.key, required this.roaster});
-  
+
   static Future<void> showEditRoasterDialog(
     BuildContext context,
     WidgetRef ref,
@@ -35,8 +35,9 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
   ) async {
     final notifier = ref.read(userRoastersProvider.notifier);
     final nameController = TextEditingController(text: roaster.name);
-    final shortDescController =
-        TextEditingController(text: roaster.description);
+    final shortDescController = TextEditingController(
+      text: roaster.description,
+    );
     final locationController = TextEditingController(text: roaster.location);
     final logoUrlController = TextEditingController(text: roaster.logoUrl);
     String? localPath = roaster.localLogoPath;
@@ -46,13 +47,19 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
       builder: (ctx) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
           backgroundColor: const Color(0xFF151515),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 20,
+          ),
           title: Text(
             context.t('edit_roaster_title'),
             style: GoogleFonts.poppins(
-                color: const Color(0xFFC8A96E), fontWeight: FontWeight.bold),
+              color: const Color(0xFFC8A96E),
+              fontWeight: FontWeight.bold,
+            ),
           ),
           content: SingleChildScrollView(
             child: Column(
@@ -75,36 +82,58 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                       image: localPath != null
                           ? DecorationImage(
                               image: FileImage(File(localPath!)),
-                              fit: BoxFit.cover)
+                              fit: BoxFit.cover,
+                            )
                           : null,
                     ),
                     child: localPath == null
-                        ? const Icon(Icons.add_a_photo_rounded,
-                            color: Color(0xFFC8A96E), size: 30)
+                        ? const Icon(
+                            Icons.add_a_photo_rounded,
+                            color: Color(0xFFC8A96E),
+                            size: 30,
+                          )
                         : null,
                   ),
                 ),
                 const SizedBox(height: 20),
-                buildDialogField(context, nameController,
-                    context.t('name_label'), Icons.business_rounded),
+                buildDialogField(
+                  context,
+                  nameController,
+                  context.t('name_label'),
+                  Icons.business_rounded,
+                ),
                 const SizedBox(height: 12),
-                buildDialogField(context, locationController,
-                    context.t('location_label'), Icons.location_on_rounded),
+                buildDialogField(
+                  context,
+                  locationController,
+                  context.t('location_label'),
+                  Icons.location_on_rounded,
+                ),
                 const SizedBox(height: 12),
-                buildDialogField(context, logoUrlController,
-                    'Logo URL (optional)', Icons.link_rounded),
+                buildDialogField(
+                  context,
+                  logoUrlController,
+                  'Logo URL (optional)',
+                  Icons.link_rounded,
+                ),
                 const SizedBox(height: 12),
-                buildDialogField(context, shortDescController,
-                    context.t('description_label'), Icons.description_rounded,
-                    maxLines: 3),
+                buildDialogField(
+                  context,
+                  shortDescController,
+                  context.t('description_label'),
+                  Icons.description_rounded,
+                  maxLines: 3,
+                ),
               ],
             ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text(context.t('cancel'),
-                  style: GoogleFonts.outfit(color: Colors.white38)),
+              child: Text(
+                context.t('cancel'),
+                style: GoogleFonts.outfit(color: Colors.white38),
+              ),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -124,10 +153,13 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                 backgroundColor: const Color(0xFFC8A96E),
                 foregroundColor: Colors.black,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
-              child: Text(context.t('save'),
-                  style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
+              child: Text(
+                context.t('save'),
+                style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
+              ),
             ),
           ],
         ),
@@ -144,8 +176,9 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
     final allLots = allLotsAsync.value ?? [];
 
     // Filter lots that are not already linked to this roaster
-    final availableLots =
-        allLots.where((l) => l.userRoasterId != roaster.id).toList();
+    final availableLots = allLots
+        .where((l) => l.userRoasterId != roaster.id)
+        .toList();
 
     if (availableLots.isEmpty) {
       if (context.mounted) {
@@ -171,7 +204,9 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
         title: Text(
           context.t('link_lot_title'),
           style: GoogleFonts.poppins(
-              color: const Color(0xFFC8A96E), fontWeight: FontWeight.bold),
+            color: const Color(0xFFC8A96E),
+            fontWeight: FontWeight.bold,
+          ),
         ),
         content: SizedBox(
           width: double.maxFinite,
@@ -185,10 +220,13 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: ListTile(
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16)),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                     tileColor: Colors.white.withValues(alpha: 0.03),
                     leading: Container(
                       width: 40,
@@ -197,21 +235,30 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                         color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(Icons.coffee_rounded,
-                          color: Color(0xFFC8A96E), size: 20),
+                      child: const Icon(
+                        Icons.coffee_rounded,
+                        color: Color(0xFFC8A96E),
+                        size: 20,
+                      ),
                     ),
                     title: Text(
                       lot.coffeeName ?? 'Unknown',
                       style: GoogleFonts.outfit(
-                          color: Colors.white, fontWeight: FontWeight.w600),
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     subtitle: Text(
                       lot.originCountry ?? '',
                       style: GoogleFonts.outfit(
-                          color: Colors.white38, fontSize: 12),
+                        color: Colors.white38,
+                        fontSize: 12,
+                      ),
                     ),
-                    trailing:
-                        const Icon(Icons.link_rounded, color: Color(0xFFC8A96E)),
+                    trailing: const Icon(
+                      Icons.link_rounded,
+                      color: Color(0xFFC8A96E),
+                    ),
                     onTap: () async {
                       await ref
                           .read(databaseProvider)
@@ -228,8 +275,10 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text(context.t('cancel'),
-                style: GoogleFonts.outfit(color: Colors.white38)),
+            child: Text(
+              context.t('cancel'),
+              style: GoogleFonts.outfit(color: Colors.white38),
+            ),
           ),
         ],
       ),
@@ -237,7 +286,9 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
   }
 
   static Future<bool> confirmDeleteDialog(
-      BuildContext context, String name) async {
+    BuildContext context,
+    String name,
+  ) async {
     return await showDialog<bool>(
           context: context,
           builder: (ctx) => AlertDialog(
@@ -253,13 +304,17 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(ctx, false),
-                child: Text(context.t('cancel'),
-                    style: const TextStyle(color: Colors.white38)),
+                child: Text(
+                  context.t('cancel'),
+                  style: const TextStyle(color: Colors.white38),
+                ),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(ctx, true),
-                child: Text(context.t('delete'),
-                    style: const TextStyle(color: Colors.redAccent)),
+                child: Text(
+                  context.t('delete'),
+                  style: const TextStyle(color: Colors.redAccent),
+                ),
               ),
             ],
           ),
@@ -268,7 +323,9 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
   }
 
   static Future<bool> confirmUnlinkDialog(
-      BuildContext context, String lotName) async {
+    BuildContext context,
+    String lotName,
+  ) async {
     return await showGeneralDialog<bool>(
           context: context,
           barrierDismissible: true,
@@ -289,8 +346,11 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.link_off_rounded,
-                        color: Colors.redAccent, size: 48),
+                    const Icon(
+                      Icons.link_off_rounded,
+                      color: Colors.redAccent,
+                      size: 48,
+                    ),
                     const SizedBox(height: 20),
                     Text(
                       context.t('unlink_lot_confirm_title'),
@@ -305,7 +365,10 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                       '${context.t('unlink_lot_confirm_desc')} "$lotName"?',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.outfit(
-                          color: Colors.white60, fontSize: 14, height: 1.5),
+                        color: Colors.white60,
+                        fontSize: 14,
+                        height: 1.5,
+                      ),
                     ),
                     const SizedBox(height: 32),
                     Row(
@@ -384,12 +447,17 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
         filled: true,
         fillColor: Colors.white.withValues(alpha: 0.03),
         border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
         enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
         focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Color(0xFFC8A96E), width: 1)),
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFFC8A96E), width: 1),
+        ),
       ),
     );
   }
@@ -399,7 +467,8 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
       _UserRoasterDetailsScreenState();
 }
 
-class _UserRoasterDetailsScreenState extends ConsumerState<UserRoasterDetailsScreen> {
+class _UserRoasterDetailsScreenState
+    extends ConsumerState<UserRoasterDetailsScreen> {
   final _searchController = TextEditingController();
   String _searchQuery = '';
 
@@ -438,16 +507,31 @@ class _UserRoasterDetailsScreenState extends ConsumerState<UserRoasterDetailsScr
           IconButton(
             icon: const Icon(Icons.add_link_rounded, color: Color(0xFFC8A96E)),
             tooltip: context.t('link_lot_title'),
-            onPressed: () => UserRoasterDetailsScreen.showLinkLotDialog(context, ref, currentRoaster),
+            onPressed: () => UserRoasterDetailsScreen.showLinkLotDialog(
+              context,
+              ref,
+              currentRoaster,
+            ),
           ),
           IconButton(
             icon: const Icon(Icons.edit_rounded, color: Colors.white70),
-            onPressed: () => UserRoasterDetailsScreen.showEditRoasterDialog(context, ref, currentRoaster),
+            onPressed: () => UserRoasterDetailsScreen.showEditRoasterDialog(
+              context,
+              ref,
+              currentRoaster,
+            ),
           ),
           IconButton(
-            icon: const Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
+            icon: const Icon(
+              Icons.delete_outline_rounded,
+              color: Colors.redAccent,
+            ),
             onPressed: () async {
-              final confirmed = await UserRoasterDetailsScreen.confirmDeleteDialog(context, currentRoaster.name);
+              final confirmed =
+                  await UserRoasterDetailsScreen.confirmDeleteDialog(
+                    context,
+                    currentRoaster.name,
+                  );
               if (confirmed && mounted) {
                 await ref
                     .read(userRoastersProvider.notifier)
@@ -461,7 +545,9 @@ class _UserRoasterDetailsScreenState extends ConsumerState<UserRoasterDetailsScr
               currentRoaster.isFavorite
                   ? Icons.favorite_rounded
                   : Icons.favorite_border_rounded,
-              color: currentRoaster.isFavorite ? Colors.redAccent : Colors.white,
+              color: currentRoaster.isFavorite
+                  ? Colors.redAccent
+                  : Colors.white,
             ),
             onPressed: () {
               ref
@@ -555,7 +641,10 @@ class _UserRoasterDetailsScreenState extends ConsumerState<UserRoasterDetailsScr
 
                 // Search Bar
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 8,
+                  ),
                   child: Container(
                     height: 48,
                     decoration: BoxDecoration(
@@ -572,20 +661,30 @@ class _UserRoasterDetailsScreenState extends ConsumerState<UserRoasterDetailsScr
                           FocusManager.instance.primaryFocus?.unfocus(),
                       onSubmitted: (_) =>
                           FocusManager.instance.primaryFocus?.unfocus(),
-                      style: GoogleFonts.outfit(color: Colors.white, fontSize: 14),
+                      style: GoogleFonts.outfit(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
                       textAlignVertical: TextAlignVertical.center,
                       decoration: InputDecoration(
                         hintText: context.t('search_lots'),
-                        hintStyle:
-                            GoogleFonts.outfit(color: Colors.white24, fontSize: 14),
+                        hintStyle: GoogleFonts.outfit(
+                          color: Colors.white24,
+                          fontSize: 14,
+                        ),
                         border: InputBorder.none,
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,
                         isDense: true,
-                        contentPadding: const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 0),
+                        contentPadding: const EdgeInsets.only(
+                          left: 16,
+                          right: 16,
+                          top: 10,
+                          bottom: 0,
+                        ),
                         filled: false,
                         prefixIcon: const Padding(
-                          padding: EdgeInsets.only(left: 12, right: 8),
+                          padding: EdgeInsets.only(left: 12, right: 8, top: 9),
                           child: Icon(
                             Icons.search_rounded,
                             color: Color(0xFFC8A96E),
@@ -621,7 +720,9 @@ class _UserRoasterDetailsScreenState extends ConsumerState<UserRoasterDetailsScr
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                            color: const Color(
+                              0xFFC8A96E,
+                            ).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
@@ -662,8 +763,8 @@ class _UserRoasterDetailsScreenState extends ConsumerState<UserRoasterDetailsScr
                 final query = _searchQuery.toLowerCase();
                 if (query.isEmpty) return true;
                 return (l.coffeeName?.toLowerCase().contains(query) ?? false) ||
-                       (l.originCountry?.toLowerCase().contains(query) ?? false) ||
-                       (l.region?.toLowerCase().contains(query) ?? false);
+                    (l.originCountry?.toLowerCase().contains(query) ?? false) ||
+                    (l.region?.toLowerCase().contains(query) ?? false);
               }).toList();
 
               if (filteredLots.isEmpty) {
@@ -679,7 +780,8 @@ class _UserRoasterDetailsScreenState extends ConsumerState<UserRoasterDetailsScr
                     (context, i) => Padding(
                       padding: const EdgeInsets.only(bottom: 12),
                       child: MyLotListCard(
-                      lot: filteredLots[i],
+                        forcedSwipeMode: LotSwipeMode.swipe,
+                        lot: filteredLots[i],
                         isSelected: false,
                         isSelectionMode: false,
                         onLongPress: (_) {},
@@ -687,19 +789,32 @@ class _UserRoasterDetailsScreenState extends ConsumerState<UserRoasterDetailsScr
                           ref
                               .read(databaseProvider)
                               .toggleLotFavorite(lot.id, !lot.isFavorite);
-                          ref.invalidate(userRoasterLotsProvider(currentRoaster.id));
+                          ref.invalidate(
+                            userRoasterLotsProvider(currentRoaster.id),
+                          );
                         },
                         onTap: (id) {
-                          context.push('/lot_details', extra: {'lot': filteredLots[i]});
+                          context.push(
+                            '/lot_details',
+                            extra: {'lot': filteredLots[i]},
+                          );
                         },
                         onEditSwipe: (lot) {
                           context.push('/edit_lot', extra: lot);
                         },
                         onDeleteSwipe: (lot) async {
-                          final confirmed = await UserRoasterDetailsScreen.confirmUnlinkDialog(context, lot.coffeeName ?? '');
+                          final confirmed =
+                              await UserRoasterDetailsScreen.confirmUnlinkDialog(
+                                context,
+                                lot.coffeeName ?? '',
+                              );
                           if (confirmed) {
-                            await ref.read(databaseProvider).linkLotToRoaster(lot.id, null);
-                            ref.invalidate(userRoasterLotsProvider(currentRoaster.id));
+                            await ref
+                                .read(databaseProvider)
+                                .linkLotToRoaster(lot.id, null);
+                            ref.invalidate(
+                              userRoasterLotsProvider(currentRoaster.id),
+                            );
                             return true;
                           }
                           return false;
@@ -777,7 +892,11 @@ class _UserRoasterDetailsScreenState extends ConsumerState<UserRoasterDetailsScr
             ),
             const SizedBox(height: 32),
             PressableScale(
-              onTap: () => UserRoasterDetailsScreen.showLinkLotDialog(context, ref, widget.roaster),
+              onTap: () => UserRoasterDetailsScreen.showLinkLotDialog(
+                context,
+                ref,
+                widget.roaster,
+              ),
               child: Container(
                 height: 50,
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -796,7 +915,11 @@ class _UserRoasterDetailsScreenState extends ConsumerState<UserRoasterDetailsScr
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.add_link_rounded, color: Colors.black87, size: 20),
+                    const Icon(
+                      Icons.add_link_rounded,
+                      color: Colors.black87,
+                      size: 20,
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       context.t('link_lot_title').toUpperCase(),
@@ -816,6 +939,7 @@ class _UserRoasterDetailsScreenState extends ConsumerState<UserRoasterDetailsScr
       ),
     );
   }
+
   Widget _buildLogo(UserRoasterDto roaster) {
     if (roaster.localLogoPath != null && roaster.localLogoPath!.isNotEmpty) {
       final file = File(roaster.localLogoPath!);
@@ -850,4 +974,3 @@ class _UserRoasterDetailsScreenState extends ConsumerState<UserRoasterDetailsScr
     );
   }
 }
-

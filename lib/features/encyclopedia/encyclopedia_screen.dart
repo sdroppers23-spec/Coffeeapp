@@ -90,6 +90,7 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
                   availableEncyclopediaProcessesProvider,
                 ),
                 showFavoritesButton: true,
+                showSwipeModeToggle: false,
               ),
 
               const SizedBox(height: 8),

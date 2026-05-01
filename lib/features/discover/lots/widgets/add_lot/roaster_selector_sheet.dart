@@ -8,6 +8,7 @@ import '../../../../../shared/widgets/pressable_scale.dart';
 import '../../providers/roaster_providers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../../shared/services/roaster_image_service.dart';
+import '../../../../../shared/services/toast_service.dart';
 import 'dart:io';
 
 class RoasterSelectorSheet extends ConsumerStatefulWidget {
@@ -423,12 +424,37 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
             ),
             TextButton(
               onPressed: () {
-                if (nameController.text.trim().isEmpty) return;
+                final name = nameController.text.trim();
+                final location = locationController.text.trim();
+
+                if (name.isEmpty) return;
+
+                // Duplicate check
+                if (existing == null) {
+                  final allRoasters = ref.read(userRoastersProvider);
+                  final duplicate = allRoasters.cast<UserRoasterDto?>().firstWhere(
+                    (r) =>
+                        r!.name.toLowerCase() == name.toLowerCase() &&
+                        (r.location?.toLowerCase() ?? '') ==
+                            location.toLowerCase(),
+                    orElse: () => null,
+                  );
+
+                  if (duplicate != null) {
+                    ToastService.showError(
+                      context,
+                      context.t('error_roaster_exists'),
+                    );
+                    widget.onSelected(duplicate);
+                    Navigator.pop(context); // Close dialog
+                    return;
+                  }
+                }
 
                 final roaster = UserRoasterDto(
                   id: existing?.id ?? const Uuid().v4(),
-                  name: nameController.text.trim(),
-                  location: locationController.text.trim(),
+                  name: name,
+                  location: location,
                   logoUrl: logoUrlController.text.trim().isNotEmpty
                       ? logoUrlController.text.trim()
                       : null,
@@ -439,6 +465,9 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                 );
 
                 ref.read(userRoastersProvider.notifier).saveRoaster(roaster);
+                if (existing == null) {
+                  widget.onSelected(roaster);
+                }
                 Navigator.pop(context);
               },
               child: Text(

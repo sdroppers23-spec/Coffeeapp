@@ -73,18 +73,20 @@ extension _RoasteryTabSection on _AddLotScreenState {
                 ),
               ),
             ),
-            _divider(),
-            _fieldRow(
-              label: '${context.t('name_field')} (${context.t('or_custom')})'
-                  .toUpperCase(),
-              controller: _roasteryController,
-              placeholder: context.t('or_enter_name_here'),
-            ),
-            _divider(),
-            _fieldRow(
-              label: context.t('country_field').toUpperCase(),
-              controller: _roasteryCountryController,
-            ),
+            if (_userRoasterId != null) ...[
+              _divider(),
+              _fieldRow(
+                label: context.t('name_field').toUpperCase(),
+                controller: _roasteryController,
+                readOnly: true,
+              ),
+              _divider(),
+              _fieldRow(
+                label: context.t('country_field').toUpperCase(),
+                controller: _roasteryCountryController,
+                readOnly: true,
+              ),
+            ],
           ],
         ),
 

@@ -712,6 +712,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     String? suffix,
     String? helperText,
     String? placeholder,
+    bool readOnly = false,
   }) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
@@ -732,6 +733,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             children: [
               Expanded(
                 child: TextField(
+                  readOnly: readOnly,
                   controller:
                       controller ?? TextEditingController(text: value ?? ''),
                   style: GoogleFonts.outfit(color: Colors.white, fontSize: 16),
@@ -744,6 +746,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                           ? const TextInputType.numberWithOptions(decimal: true)
                           : TextInputType.text),
                   enableInteractiveSelection:
+                      !readOnly &&
                       type != _FieldType.scaScore &&
                       type != _FieldType.lotNumber,
                   textCapitalization:

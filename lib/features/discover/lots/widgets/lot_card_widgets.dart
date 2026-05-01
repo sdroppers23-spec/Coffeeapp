@@ -289,6 +289,7 @@ class MyLotListCard extends ConsumerStatefulWidget {
   final Future<void> Function(CoffeeLotDto)? onRestoreSwipe;
   final Future<bool> Function(CoffeeLotDto)? onDeleteSwipe;
   final Function(bool)? onExpansionChanged;
+  final LotSwipeMode? forcedSwipeMode;
 
   const MyLotListCard({
     super.key,
@@ -302,6 +303,7 @@ class MyLotListCard extends ConsumerStatefulWidget {
     this.onRestoreSwipe,
     this.onDeleteSwipe,
     this.onExpansionChanged,
+    this.forcedSwipeMode,
   });
 
   @override
@@ -348,7 +350,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard>
     final theme = Theme.of(context);
     final isSelected = widget.isSelected;
     final isSelectionMode = widget.isSelectionMode;
-    final swipeMode = ref.watch(preferencesProvider).lotSwipeMode;
+    final swipeMode = widget.forcedSwipeMode ?? ref.watch(preferencesProvider).lotSwipeMode;
 
     // Normalize sensory data
     final mappedSensory = SensoryUtils.map4To6Axis(widget.lot.sensoryPoints);
@@ -710,6 +712,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard>
     final dismissibleCard = isSelectionMode
         ? contentCard
         : GlassSwipeWrapper(
+            key: ValueKey('glass_swipe_wrapper_${widget.lot.id}_${swipeMode == LotSwipeMode.grip}'),
             isSwipeEnabled: !_isExpanded && swipeMode != LotSwipeMode.disabled,
             isGripMode: swipeMode == LotSwipeMode.grip,
             dismissibleKey: Key('glass_swipe_${widget.lot.id}'),

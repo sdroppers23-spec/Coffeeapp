@@ -21,6 +21,7 @@ class DiscoveryActionBar extends ConsumerWidget {
   final bool showFavoritesButton;
   final bool showComparison;
   final bool showViewModeToggle;
+  final bool showSwipeModeToggle;
   final String? searchHint;
 
   const DiscoveryActionBar({
@@ -35,6 +36,7 @@ class DiscoveryActionBar extends ConsumerWidget {
     this.showFavoritesButton = true,
     this.showComparison = true,
     this.showViewModeToggle = true,
+    this.showSwipeModeToggle = true,
     this.searchHint,
   });
 
@@ -61,21 +63,26 @@ class DiscoveryActionBar extends ConsumerWidget {
               child: TextField(
                 onChanged: (v) =>
                     ref.read(filterProvider.notifier).updateSearch(v),
-                onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
-                onSubmitted: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+                onTapOutside: (_) =>
+                    FocusManager.instance.primaryFocus?.unfocus(),
+                onSubmitted: (_) =>
+                    FocusManager.instance.primaryFocus?.unfocus(),
                 style: GoogleFonts.outfit(color: Colors.white, fontSize: 14),
                 textAlignVertical: TextAlignVertical.center,
                 decoration: InputDecoration(
                   hintText: searchHint,
-                  hintStyle: GoogleFonts.outfit(color: Colors.white24, fontSize: 14),
+                  hintStyle: GoogleFonts.outfit(
+                    color: Colors.white24,
+                    fontSize: 14,
+                  ),
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
                   isDense: true,
-                  contentPadding: const EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 0),
+                  contentPadding: const EdgeInsets.only(left: 16, right: 16, top: 2, bottom: 0),
                   filled: false,
                   prefixIcon: const Padding(
-                    padding: EdgeInsets.only(left: 12, right: 8),
+                    padding: EdgeInsets.only(left: 12, right: 8, top: 11),
                     child: Icon(
                       Icons.search_rounded,
                       color: Color(0xFFC8A96E),
@@ -113,8 +120,10 @@ class DiscoveryActionBar extends ConsumerWidget {
               ],
               const Spacer(),
               if (showViewModeToggle) ...[
-                const _SwipeModeToggle(),
-                const SizedBox(width: 8),
+                if (showSwipeModeToggle) ...[
+                  const _SwipeModeToggle(),
+                  const SizedBox(width: 8),
+                ],
                 _ViewModeToggle(
                   isGrid: state.isGrid,
                   onTap: () {
@@ -361,13 +370,23 @@ class _SwipeModeToggle extends ConsumerWidget {
             value: LotSwipeMode.swipe,
             child: Row(
               children: [
-                Icon(Icons.swipe_rounded, color: mode == LotSwipeMode.swipe ? const Color(0xFFC8A96E) : Colors.white70, size: 20),
+                Icon(
+                  Icons.swipe_rounded,
+                  color: mode == LotSwipeMode.swipe
+                      ? const Color(0xFFC8A96E)
+                      : Colors.white70,
+                  size: 20,
+                ),
                 const SizedBox(width: 12),
                 Text(
                   context.t('swipe_mode_normal'),
                   style: GoogleFonts.outfit(
-                    color: mode == LotSwipeMode.swipe ? const Color(0xFFC8A96E) : Colors.white70,
-                    fontWeight: mode == LotSwipeMode.swipe ? FontWeight.bold : FontWeight.normal,
+                    color: mode == LotSwipeMode.swipe
+                        ? const Color(0xFFC8A96E)
+                        : Colors.white70,
+                    fontWeight: mode == LotSwipeMode.swipe
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                   ),
                 ),
               ],
@@ -377,13 +396,23 @@ class _SwipeModeToggle extends ConsumerWidget {
             value: LotSwipeMode.grip,
             child: Row(
               children: [
-                Icon(Icons.drag_indicator_rounded, color: mode == LotSwipeMode.grip ? const Color(0xFFC8A96E) : Colors.white70, size: 20),
+                Icon(
+                  Icons.drag_indicator_rounded,
+                  color: mode == LotSwipeMode.grip
+                      ? const Color(0xFFC8A96E)
+                      : Colors.white70,
+                  size: 20,
+                ),
                 const SizedBox(width: 12),
                 Text(
                   context.t('swipe_mode_grip'),
                   style: GoogleFonts.outfit(
-                    color: mode == LotSwipeMode.grip ? const Color(0xFFC8A96E) : Colors.white70,
-                    fontWeight: mode == LotSwipeMode.grip ? FontWeight.bold : FontWeight.normal,
+                    color: mode == LotSwipeMode.grip
+                        ? const Color(0xFFC8A96E)
+                        : Colors.white70,
+                    fontWeight: mode == LotSwipeMode.grip
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                   ),
                 ),
               ],
@@ -393,13 +422,23 @@ class _SwipeModeToggle extends ConsumerWidget {
             value: LotSwipeMode.disabled,
             child: Row(
               children: [
-                Icon(Icons.do_not_touch_rounded, color: mode == LotSwipeMode.disabled ? const Color(0xFFC8A96E) : Colors.white70, size: 20),
+                Icon(
+                  Icons.do_not_touch_rounded,
+                  color: mode == LotSwipeMode.disabled
+                      ? const Color(0xFFC8A96E)
+                      : Colors.white70,
+                  size: 20,
+                ),
                 const SizedBox(width: 12),
                 Text(
                   context.t('swipe_mode_disabled'),
                   style: GoogleFonts.outfit(
-                    color: mode == LotSwipeMode.disabled ? const Color(0xFFC8A96E) : Colors.white70,
-                    fontWeight: mode == LotSwipeMode.disabled ? FontWeight.bold : FontWeight.normal,
+                    color: mode == LotSwipeMode.disabled
+                        ? const Color(0xFFC8A96E)
+                        : Colors.white70,
+                    fontWeight: mode == LotSwipeMode.disabled
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                   ),
                 ),
               ],

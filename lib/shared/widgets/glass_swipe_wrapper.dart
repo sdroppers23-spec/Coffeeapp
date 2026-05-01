@@ -22,21 +22,26 @@ class GlassSwipeAction {
 /// A custom horizontal drag recognizer that allows configuring swipe thresholds
 /// and optional "grip zones" to prevent interference with TabBar scrolling.
 class _CustomHorizontalDragRecognizer extends HorizontalDragGestureRecognizer {
-  final bool isGripMode;
+  final double Function() getExtent;
   final BoxConstraints constraints;
+  final bool Function(Offset localPosition) isWithinHandle;
+  final bool isGripMode;
 
   _CustomHorizontalDragRecognizer({
-    required this.isGripMode,
+    required this.getExtent,
     required this.constraints,
-  });
+    required this.isWithinHandle,
+    required this.isGripMode,
+  }) : super(debugOwner: 'CustomHorizontalDragRecognizer');
 
   @override
   void addAllowedPointer(PointerDownEvent event) {
-    if (isGripMode) {
-      final dx = event.localPosition.dx;
-      // In grip mode, reject any touch outside the 60 logical pixel edge zones
-      if (dx > 60 && dx < constraints.maxWidth - 60) {
-        return; // Reject gesture immediately, allowing Scrollables to take it
+    // If we're already at an offset (e.g. card is open), don't enforce handle check
+    // This allows closing/moving the card from anywhere once it's already active.
+    // However, if we're at 'rest' (extent < 2.0), we MUST enforce the handle if grip mode is ON.
+    if (isGripMode && getExtent().abs() < 2.0) {
+      if (!isWithinHandle(event.localPosition)) {
+        return;
       }
     }
     super.addAllowedPointer(event);
@@ -173,11 +178,18 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
       }
     });
     
-    _controller.forward(from: 0.0);
+    _controller.forward(from: 0.0).then((_) {
+      if (mounted && !_isDragging) {
+        setState(() {
+          _dragExtent = 0.0;
+        });
+      }
+    });
   }
 
   Widget _buildBackground() {
-    if (_dragExtent == 0) return const SizedBox.shrink();
+    // Threshold to prevent "red line" slivers during tiny accidental drags (e.g. tab transitions)
+    if (_dragExtent.abs() < 1.5) return const SizedBox.shrink();
     
     final isLeft = _dragExtent > 0;
     final action = isLeft ? widget.leftAction : widget.rightAction;
@@ -229,39 +241,48 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        return Stack(
-          children: [
-            // Background Reveal
-            Positioned.fill(
-              child: _buildBackground(),
-            ),
-            
-            // Interactive Layer
-            RawGestureDetector(
-              behavior: HitTestBehavior.opaque,
-              gestures: {
-                _CustomHorizontalDragRecognizer: GestureRecognizerFactoryWithHandlers<_CustomHorizontalDragRecognizer>(
-                  () => _CustomHorizontalDragRecognizer(
-                    isGripMode: widget.isGripMode,
-                    constraints: constraints,
-                  ),
-                  (_CustomHorizontalDragRecognizer instance) {
-                    instance
-                      ..onStart = _handleDragStart
-                      ..onUpdate = _handleDragUpdate
-                      ..onEnd = _handleDragEnd
-                      ..onCancel = _handleDragCancel;
-                  },
-                ),
+        return RawGestureDetector(
+          key: ValueKey('swipe_detector_${widget.isGripMode}_${constraints.maxWidth}'),
+          behavior: HitTestBehavior.opaque,
+          gestures: {
+            _CustomHorizontalDragRecognizer: GestureRecognizerFactoryWithHandlers<_CustomHorizontalDragRecognizer>(
+              () => _CustomHorizontalDragRecognizer(
+                getExtent: () => _dragExtent,
+                constraints: constraints,
+                isGripMode: widget.isGripMode,
+                isWithinHandle: (localPosition) {
+                  final dx = localPosition.dx;
+                  final width = constraints.maxWidth;
+                  final handleWidth = math.min(60.0, width / 3);
+                  return dx < handleWidth || dx > width - handleWidth;
+                },
+              ),
+              (_CustomHorizontalDragRecognizer instance) {
+                instance
+                  ..onStart = _handleDragStart
+                  ..onUpdate = _handleDragUpdate
+                  ..onEnd = _handleDragEnd
+                  ..onCancel = _handleDragCancel;
               },
-              child: Transform.translate(
+            ),
+          },
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              // Background Layer
+              Positioned.fill(
+                child: _buildBackground(),
+              ),
+              
+              // Moving Child Layer
+              Transform.translate(
                 offset: Offset(_dragExtent, 0),
                 child: widget.child,
               ),
-            ),
-          ],
+            ],
+          ),
         );
-      }
+      },
     );
   }
 }

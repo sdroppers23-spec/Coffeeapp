@@ -27,12 +27,12 @@ import '../../../shared/widgets/sensory_radar_chart.dart';
 import '../../../shared/services/toast_service.dart';
 import '../../../core/providers/preferences_provider.dart';
 import '../../../shared/utils/coffee_input_formatters.dart';
+import 'widgets/add_lot/roaster_selector_sheet.dart';
 
 part 'widgets/add_lot/lot_roastery_tab.dart';
 part 'widgets/add_lot/lot_coffee_tab.dart';
 part 'widgets/add_lot/flavor_notes_selector.dart';
 part 'widgets/add_lot/processing_method_selector.dart';
-
 class AddLotScreen extends ConsumerStatefulWidget {
   final CoffeeLotDto? initialLot;
   final bool openAsAdd;
@@ -48,6 +48,7 @@ enum _FieldType { text, numeric, scaScore, weight, altitude, lotNumber }
 class _AddLotScreenState extends ConsumerState<AddLotScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
+  void updateState(VoidCallback fn) => setState(fn);
 
   // ─── Form State ───────────────────────────────────────────────────
   bool _isDecaf = false;
@@ -59,6 +60,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   bool _isGround = false;
   bool _isFavorite = false;
   bool _isArchived = false;
+  String? _userRoasterId;
 
   // New State for Images
   Uint8List? _imageBytes;
@@ -164,6 +166,8 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     });
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(() => setState(() {}));
+
+    _userRoasterId = widget.initialLot?.userRoasterId;
 
     _roasteryController = TextEditingController(
       text: widget.initialLot?.roasteryName ?? '',
@@ -442,6 +446,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           isFavorite: Value(_isFavorite),
           isArchived: Value(_isArchived),
           imageUrl: Value(finalImageUrl),
+          userRoasterId: Value(_userRoasterId),
           isSynced: const Value(false),
           createdAt: Value(widget.initialLot?.createdAt ?? DateTime.now()),
           updatedAt: Value(DateTime.now()),

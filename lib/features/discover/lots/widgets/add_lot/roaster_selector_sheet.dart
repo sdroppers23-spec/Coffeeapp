@@ -1,0 +1,323 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:uuid/uuid.dart';
+import '../../../../../core/database/dtos.dart';
+import '../../../../../core/l10n/app_localizations.dart';
+import '../../../../../shared/widgets/pressable_scale.dart';
+import '../../providers/roaster_providers.dart';
+
+class RoasterSelectorSheet extends ConsumerStatefulWidget {
+  final Function(UserRoasterDto) onSelected;
+
+  const RoasterSelectorSheet({super.key, required this.onSelected});
+
+  @override
+  ConsumerState<RoasterSelectorSheet> createState() => _RoasterSelectorSheetState();
+}
+
+class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
+  String _searchQuery = '';
+  final _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final roasters = ref.watch(userRoastersProvider);
+    final filteredRoasters = roasters.where((r) => 
+      r.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+      (r.country?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false)
+    ).toList();
+
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.8,
+      decoration: const BoxDecoration(
+        color: Color(0xFF0A0A0A),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      child: Column(
+        children: [
+          // Handle
+          Center(
+            child: Container(
+              margin: const EdgeInsets.only(top: 12, bottom: 8),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          
+          // Header
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  context.t('roasters').toUpperCase(),
+                  style: GoogleFonts.outfit(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFFC8A96E),
+                    letterSpacing: 1.5,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.close_rounded, color: Colors.white54),
+                ),
+              ],
+            ),
+          ),
+
+          // Search
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+              ),
+              child: TextField(
+                controller: _searchController,
+                onChanged: (v) => setState(() => _searchQuery = v),
+                style: GoogleFonts.outfit(color: Colors.white),
+                decoration: InputDecoration(
+                  hintText: context.t('search_recipes'), // Generic search hint
+                  hintStyle: GoogleFonts.outfit(color: Colors.white24),
+                  border: InputBorder.none,
+                  icon: const Icon(Icons.search_rounded, color: Color(0xFFC8A96E), size: 20),
+                ),
+              ),
+            ),
+          ),
+
+          // List
+          Expanded(
+            child: filteredRoasters.isEmpty && _searchQuery.isEmpty
+                ? _buildEmptyState()
+                : ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                    itemCount: filteredRoasters.length,
+                    itemBuilder: (context, index) {
+                      final roaster = filteredRoasters[index];
+                      return _buildRoasterItem(roaster);
+                    },
+                  ),
+          ),
+
+          // Add New Button
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: PressableScale(
+              onTap: () => _showAddEditRoasterDialog(),
+              child: Container(
+                height: 54,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      const Color(0xFFC8A96E),
+                      const Color(0xFFC8A96E).withValues(alpha: 0.8),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.add_rounded, color: Colors.black, size: 20),
+                      const SizedBox(width: 8),
+                      Text(
+                        context.t('add_roaster_uppercase'),
+                        style: GoogleFonts.outfit(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          letterSpacing: 1.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRoasterItem(UserRoasterDto roaster) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.03),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+      ),
+      child: ListTile(
+        onTap: () => widget.onSelected(roaster),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        title: Text(
+          roaster.name,
+          style: GoogleFonts.outfit(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+          ),
+        ),
+        subtitle: Text(
+          roaster.country ?? '',
+          style: GoogleFonts.outfit(
+            color: Colors.white38,
+            fontSize: 12,
+          ),
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.edit_outlined, size: 20, color: Colors.white24),
+              onPressed: () => _showAddEditRoasterDialog(roaster),
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete_outline_rounded, size: 20, color: Colors.redAccent),
+              onPressed: () => _confirmDelete(roaster),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.coffee_maker_outlined, size: 64, color: Colors.white.withValues(alpha: 0.1)),
+          const SizedBox(height: 16),
+          Text(
+            context.t('empty_roasters_title'),
+            style: GoogleFonts.outfit(color: Colors.white38, fontSize: 16),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            context.t('empty_roasters_desc'),
+            style: GoogleFonts.outfit(color: Colors.white12, fontSize: 12),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAddEditRoasterDialog([UserRoasterDto? existing]) {
+    final nameController = TextEditingController(text: existing?.name ?? '');
+    final countryController = TextEditingController(text: existing?.country ?? '');
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF121212),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          existing == null ? context.t('add_roaster_title') : context.t('edit_profile_dialog_title'),
+          style: GoogleFonts.outfit(color: const Color(0xFFC8A96E)),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              autofocus: true,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: context.t('roaster_name_label'),
+                labelStyle: const TextStyle(color: Colors.white38),
+                enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.white12)),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: countryController,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: context.t('city_country_label'),
+                labelStyle: const TextStyle(color: Colors.white38),
+                enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.white12)),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(context.t('cancel'), style: const TextStyle(color: Colors.white38)),
+          ),
+          TextButton(
+            onPressed: () {
+              if (nameController.text.trim().isEmpty) return;
+              
+              final roaster = UserRoasterDto(
+                id: existing?.id ?? const Uuid().v4(),
+                name: nameController.text.trim(),
+                country: countryController.text.trim(),
+                updatedAt: DateTime.now(),
+              );
+              
+              ref.read(userRoastersProvider.notifier).saveRoaster(roaster);
+              Navigator.pop(context);
+            },
+            child: Text(context.t('save'), style: const TextStyle(color: Color(0xFFC8A96E))),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _confirmDelete(UserRoasterDto roaster) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF121212),
+        title: Text(context.t('delete_roaster_title'), style: const TextStyle(color: Colors.white)),
+        content: Text(
+          context.t('delete_roaster_confirm', args: {'name': roaster.name}),
+          style: const TextStyle(color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(context.t('cancel'), style: const TextStyle(color: Colors.white38)),
+          ),
+          TextButton(
+            onPressed: () {
+              ref.read(userRoastersProvider.notifier).deleteRoaster(roaster.id);
+              Navigator.pop(context);
+            },
+            child: const Text('DELETE', style: TextStyle(color: Colors.redAccent)),
+          ),
+        ],
+      ),
+    );
+  }
+}

@@ -561,9 +561,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           style: GoogleFonts.outfit(
             color: isSelected
                 ? Colors.black
-                : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                : theme.colorScheme.onSurface.withValues(alpha: 0.85),
             fontSize: 13,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
           ),
         ),
       ),
@@ -627,11 +627,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     child: Text(
                       _currencySymbolOnly(c),
                       style: GoogleFonts.outfit(
-                        color: isSelected ? Colors.black : Colors.white38,
+                        color: isSelected ? Colors.black : Colors.white.withValues(alpha: 0.85),
                         fontSize: 12,
                         fontWeight: isSelected
                             ? FontWeight.bold
-                            : FontWeight.w400,
+                            : FontWeight.w600,
                       ),
                     ),
                   ),

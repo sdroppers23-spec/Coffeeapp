@@ -280,6 +280,7 @@ class CoffeeLots extends Table {
   // Roastery
   TextColumn get roasteryName => text().nullable()();
   TextColumn get roasteryCountry => text().nullable()();
+  TextColumn get userRoasterId => text().nullable()();
   IntColumn get brandId =>
       integer().nullable().references(LocalizedBrands, #id)();
 
@@ -527,3 +528,14 @@ class AlternativeBrewingTranslations extends Table {
 }
 
 // BeanScans removed as per user request
+
+// ─── UserRoasters (User's Private - Custom Roasters) ──────────────────────────
+class UserRoasters extends Table {
+  TextColumn get userId => text()();
+  TextColumn get dataJson => text().withDefault(const Constant('[]'))();
+  DateTimeColumn get updatedAt => dateTime().nullable()();
+  BoolColumn get isSynced => boolean().withDefault(const Constant(false))();
+
+  @override
+  Set<Column> get primaryKey => {userId};
+}

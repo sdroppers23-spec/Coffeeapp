@@ -56,7 +56,8 @@ class SyncService {
         'encyclopedia_recipes',
         'alternative_recipes',
         'coffee_lots',
-        'fermentation_logs'
+        'fermentation_logs',
+        'user_roasters'
       };
 
       final updatedTables = updates.map((u) => u.table).toSet();
@@ -158,6 +159,7 @@ class SyncService {
         // Push local changes (including deletions) BEFORE pulling
         // We pass internal = true to bypass the _isPushing guard
         await pushLocalUserContent(onProgress: onProgress, internal: true);
+        await syncUserRoasters();
         await pullUserContent(onProgress: onProgress);
       } catch (e) {
         debugPrint('SyncService: Error syncing user data: $e');
@@ -542,6 +544,34 @@ class SyncService {
     }
   }
 
+  /// Pulls user roasters from Supabase.
+  Future<void> syncUserRoasters() async {
+    if (supabase == null || supabase!.auth.currentUser == null) return;
+    final userId = supabase!.auth.currentUser!.id;
+
+    try {
+      final response = await supabase!
+          .from('user_roasters')
+          .select()
+          .eq('user_id', userId)
+          .maybeSingle();
+
+      if (response != null) {
+        final List<dynamic> data = response['data'] as List<dynamic>? ?? [];
+        final dataJson = jsonEncode(data);
+
+        await db.saveUserRoastersRecord(UserRoastersCompanion(
+          userId: Value(userId),
+          dataJson: Value(dataJson),
+          isSynced: const Value(true),
+        ));
+        debugPrint('SyncService: User roasters pulled from cloud');
+      }
+    } catch (e) {
+      debugPrint('SyncService: Error syncing user roasters: $e');
+    }
+  }
+
   /// Pushes local user data (recipes and lots) to Supabase, including deletions.
   Future<void> pushLocalUserContent({
     Function(String, double)? onProgress,
@@ -667,6 +697,7 @@ class SyncService {
               'is_archived': l.isArchived,
               'is_open': l.isOpen,
               'is_ground': l.isGround,
+              'user_roaster_id': l.userRoasterId,
               'sensory_json': _safeJsonDecode(l.sensoryJson),
               'price_json': _safeJsonDecode(l.priceJson),
               'image_url': l.imageUrl,
@@ -843,6 +874,31 @@ class SyncService {
           debugPrint('SyncService: Error syncing alternative recipe ${r.id}: $e');
         }
       }
+
+      // 6. Sync User Roasters (Consolidated JSON)
+      onProgress?.call('Pushing Roasters...', 0.96);
+      final roastersRecord = await db.getUserRoastersRecord(userId);
+      if (roastersRecord != null && !roastersRecord.isSynced) {
+        try {
+          final data = jsonDecode(roastersRecord.dataJson);
+          await supabase!
+              .from('user_roasters')
+              .upsert({
+                'user_id': userId,
+                'data': data,
+                'updated_at': DateTime.now().toIso8601String(),
+              })
+              .timeout(const Duration(seconds: 15));
+
+          await db.saveUserRoastersRecord(UserRoastersCompanion(
+            userId: Value(userId),
+            isSynced: const Value(true),
+          ));
+          debugPrint('SyncService: User roasters pushed to cloud');
+        } catch (e) {
+          debugPrint('SyncService: Error pushing user roasters: $e');
+        }
+      }
     } catch (e) {
       debugPrint('SyncService: Fatal error in pushLocalUserContent: $e');
       if (!internal) _lastSyncResultNotifier.value = SyncResult.error;
@@ -915,6 +971,7 @@ class SyncService {
             isArchived: Value(item['is_archived'] as bool? ?? false),
             isOpen: Value(item['is_open'] as bool? ?? false),
             isGround: Value(item['is_ground'] as bool? ?? false),
+            userRoasterId: Value(item['user_roaster_id'] as String?),
             sensoryJson: Value(
               item['sensory_json'] != null
                   ? jsonEncode(item['sensory_json'])
@@ -1094,6 +1151,32 @@ class SyncService {
           debugPrint('SyncService: Error processing item: $e');
         }
       }
+
+      // 5. User Roasters
+      onProgress?.call('Pulling Roasters...', 1.0);
+      try {
+        final roastersData = await supabase!
+            .from('user_roasters')
+            .select()
+            .eq('user_id', userId)
+            .maybeSingle()
+            .timeout(const Duration(seconds: 15));
+
+        if (roastersData != null) {
+          final localRoasters = await db.getUserRoastersRecord(userId);
+          if (localRoasters == null || localRoasters.isSynced) {
+            await db.saveUserRoastersRecord(UserRoastersCompanion(
+              userId: Value(userId),
+              dataJson: Value(jsonEncode(roastersData['data'])),
+              isSynced: const Value(true),
+            ));
+            debugPrint('SyncService: User roasters pulled from cloud');
+          }
+        }
+      } catch (e) {
+        debugPrint('SyncService: Error pulling user roasters: $e');
+      }
+
     } catch (e) {
       debugPrint('SyncService: General sync error: $e');
     }

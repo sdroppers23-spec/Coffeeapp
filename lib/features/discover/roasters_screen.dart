@@ -1,20 +1,16 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../core/database/database_provider.dart';
 import '../../shared/widgets/pressable_scale.dart';
 import '../../core/providers/settings_provider.dart';
-import '../../core/supabase/supabase_provider.dart';
-import 'brand_details_screen.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../shared/widgets/glass_swipe_wrapper.dart';
 import '../../shared/widgets/glass_container.dart';
 import '../../core/database/dtos.dart';
-import 'discovery_providers.dart';
+import 'lots/providers/roaster_providers.dart';
+import 'user_roaster_details_screen.dart';
 import '../../shared/services/toast_service.dart';
 
 class RoastersScreen extends StatelessWidget {
@@ -39,8 +35,7 @@ class RoastersBody extends ConsumerStatefulWidget {
 class _RoastersBodyState extends ConsumerState<RoastersBody>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final Set<int> _selectedIds = {};
-  final Set<int> _pendingDeleteIds = {};
+  final Set<String> _selectedIds = {};
   bool get _isSelectionMode => _selectedIds.isNotEmpty;
 
   @override
@@ -191,7 +186,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
     return result ?? false;
   }
 
-  void _toggleSelection(int id) {
+  void _toggleSelection(String id) {
     setState(() {
       if (_selectedIds.contains(id)) {
         _selectedIds.remove(id);
@@ -207,7 +202,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
 
   @override
   Widget build(BuildContext context) {
-    final brandsAsync = ref.watch(brandsProvider);
+    final roasters = ref.watch(userRoastersProvider);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -235,84 +230,69 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
         actions: [
           if (_isSelectionMode) ...[
             // Масовий архів
-            brandsAsync.whenData((brands) {
-                  return IconButton(
-                    onPressed: () async {
-                      final db = ref.read(databaseProvider);
-                      final l10n = AppLocalizations.of(context);
-                      final isArchiving = _tabController.index != 2;
+            IconButton(
+              onPressed: () async {
+                final notifier = ref.read(userRoastersProvider.notifier);
+                final isArchiving = _tabController.index != 2;
 
-                      for (final id in _selectedIds) {
-                        await db.toggleBrandArchive(id, isArchiving);
-                      }
+                final localContext = context;
+                final archivedMsg = localContext.t('toast_roasters_archived');
+                final restoredMsg = localContext.t('toast_roasters_restored');
 
-                      _clearSelection();
-                      ref.invalidate(brandsProvider);
+                for (final id in _selectedIds) {
+                  await notifier.toggleArchive(id, isArchiving);
+                }
 
-                      if (context.mounted) {
-                        ToastService.showSuccess(
-                          context,
-                          isArchiving
-                              ? l10n.translate('toast_roasters_archived')
-                              : l10n.translate('toast_roasters_restored'),
-                        );
-                      }
-                    },
-                    icon: Icon(
-                      _tabController.index == 2
-                          ? Icons.unarchive_outlined
-                          : Icons.archive_outlined,
-                      color: Colors.white70,
-                    ),
-                  );
-                }).value ??
-                const SizedBox(),
+                if (!localContext.mounted) return;
+                
+                ToastService.showSuccess(
+                  localContext,
+                  isArchiving ? archivedMsg : restoredMsg,
+                );
+                _clearSelection();
+              },
+              icon: Icon(
+                _tabController.index == 2
+                    ? Icons.unarchive_outlined
+                    : Icons.archive_outlined,
+                color: const Color(0xFFC8A96E),
+              ),
+            ),
             // Масове видалення
             IconButton(
               onPressed: () async {
-                final confirm = await _confirmDeleteDialog(
-                  context.t(
-                    'selection_roasters_5_plus',
-                    args: {'count': _selectedIds.length.toString()},
-                  ),
+                final confirmed = await _confirmDeleteDialog(
+                  _selectedIds.length.toString(),
                 );
-                if (confirm) {
-                  final db = ref.read(databaseProvider);
+                if (confirmed && mounted) {
+                  final notifier = ref.read(userRoastersProvider.notifier);
                   for (final id in _selectedIds) {
-                    await db.deleteBrand(id);
+                    await notifier.deleteRoaster(id);
                   }
                   _clearSelection();
-                  ref.invalidate(brandsProvider);
                 }
               },
-              icon: const Icon(
-                Icons.delete_outline_rounded,
-                color: Colors.orangeAccent,
-              ),
+              icon: const Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
             ),
-          ] else ...[
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: IconButton(
-                onPressed: () => _showAddRoasterDialog(context, ref),
-                icon: Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
-                    ),
+          ] else
+            IconButton(
+              onPressed: () => _showAddRoasterDialog(context, ref),
+              icon: Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
                   ),
-                  child: const Icon(
-                    Icons.add,
-                    size: 20,
-                    color: Color(0xFFC8A96E),
-                  ),
+                ),
+                child: const Icon(
+                  Icons.add,
+                  size: 20,
+                  color: Color(0xFFC8A96E),
                 ),
               ),
             ),
-          ],
         ],
       ),
       body: Stack(
@@ -377,21 +357,9 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
               ),
               // ── List ────────────────────────────────────────────────────────
               Expanded(
-                child: brandsAsync.when(
-                  loading: () => Center(
-                    child: _PremiumPulsingLoader(
-                      message: context.t('loading_roasters'),
-                    ),
-                  ),
-                  error: (e, _) => Center(
-                    child: Text(
-                      '${context.t('error')}: $e',
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                  ),
-                  data: (brands) {
-                    final filtered = brands.where((b) {
-                      if (_pendingDeleteIds.contains(b.id)) return false;
+                child: Builder(
+                  builder: (context) {
+                    final filtered = roasters.where((b) {
                       if (_tabController.index == 0) return !b.isArchived;
                       if (_tabController.index == 1) {
                         return b.isFavorite && !b.isArchived;
@@ -409,74 +377,68 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                             padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
                             itemCount: filtered.length,
                             itemBuilder: (context, index) {
-                              final brand = filtered[index];
-                              return _buildSwipeableBrandCard(brand);
+                              final roaster = filtered[index];
+                              return _buildSwipeableRoasterCard(roaster);
                             },
                           ),
-                        // FAB добавити обсмажчика - Shown only if list is empty
-                        brandsAsync.whenData((brands) {
-                              if (brands.isEmpty && !_isSelectionMode) {
-                                return Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                      bottom: 90,
-                                      right: 24,
+                        if (roasters.isEmpty && !_isSelectionMode)
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: 90,
+                                right: 24,
+                              ),
+                              child: GestureDetector(
+                                onTap: () =>
+                                    _showAddRoasterDialog(context, ref),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 28,
+                                    vertical: 16,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFC8A96E),
+                                    borderRadius: BorderRadius.circular(
+                                      50,
                                     ),
-                                    child: GestureDetector(
-                                      onTap: () =>
-                                          _showAddRoasterDialog(context, ref),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 28,
-                                          vertical: 16,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: const Color(
+                                          0xFFC8A96E,
+                                        ).withValues(alpha: 0.35),
+                                        blurRadius: 20,
+                                        spreadRadius: 2,
+                                        offset: const Offset(0, 6),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(
+                                        Icons.add_rounded,
+                                        color: Colors.black87,
+                                        size: 20,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        context.t(
+                                          'add_roaster_uppercase',
                                         ),
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFFC8A96E),
-                                          borderRadius: BorderRadius.circular(
-                                            50,
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: const Color(
-                                                0xFFC8A96E,
-                                              ).withValues(alpha: 0.35),
-                                              blurRadius: 20,
-                                              spreadRadius: 2,
-                                              offset: const Offset(0, 6),
-                                            ),
-                                          ],
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            const Icon(
-                                              Icons.add_rounded,
-                                              color: Colors.black87,
-                                              size: 20,
-                                            ),
-                                            const SizedBox(width: 8),
-                                            Text(
-                                              context.t(
-                                                'add_roaster_uppercase',
-                                              ),
-                                              style: GoogleFonts.outfit(
-                                                fontWeight: FontWeight.w800,
-                                                fontSize: 12,
-                                                letterSpacing: 1.5,
-                                                color: Colors.black87,
-                                              ),
-                                            ),
-                                          ],
+                                        style: GoogleFonts.outfit(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 12,
+                                          letterSpacing: 1.5,
+                                          color: Colors.black87,
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                );
-                              }
-                              return const SizedBox.shrink();
-                            }).value ??
-                            const SizedBox.shrink(),
+                                ),
+                              ),
+                            ),
+                          ),
                       ],
                     );
                   },
@@ -491,13 +453,13 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
 
   // ─── Swipeable Card ────────────────────────────────────────────────────────
 
-  Widget _buildSwipeableBrandCard(LocalizedBrandDto brand) {
+  Widget _buildSwipeableRoasterCard(UserRoasterDto roaster) {
     final isArchiveTab = _tabController.index == 2;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: GlassSwipeWrapper(
-        dismissibleKey: ValueKey('brand_swipe_${brand.id}'),
+        dismissibleKey: ValueKey('roaster_swipe_${roaster.id}'),
         leftAction: GlassSwipeAction(
           icon: isArchiveTab
               ? Icons.unarchive_outlined
@@ -505,9 +467,8 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
           label: isArchiveTab ? context.t('restore') : context.t('archive'),
           color: const Color(0xFF3A7BBF),
           onTap: () async {
-            final db = ref.read(databaseProvider);
-            await db.toggleBrandArchive(brand.id, !isArchiveTab);
-            ref.invalidate(brandsProvider);
+            final notifier = ref.read(userRoastersProvider.notifier);
+            await notifier.toggleArchive(roaster.id, !isArchiveTab);
             if (mounted) {
               ToastService.showSuccess(
                 context,
@@ -523,51 +484,46 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
           label: context.t('delete'),
           color: Colors.redAccent,
           onTap: () async {
-            final confirmed = await _confirmDeleteDialog(brand.name);
+            final confirmed = await _confirmDeleteDialog(roaster.name);
             if (confirmed && mounted) {
-              final db = ref.read(databaseProvider);
-              await db.deleteBrand(brand.id);
-              ref.invalidate(brandsProvider);
+              final notifier = ref.read(userRoastersProvider.notifier);
+              await notifier.deleteRoaster(roaster.id);
             }
           },
         ),
         child: GestureDetector(
-          onLongPress: () => _toggleSelection(brand.id),
+          onLongPress: () => _toggleSelection(roaster.id),
           child: _PremiumRoasterCard(
-            brand: brand,
-            isSelected: _selectedIds.contains(brand.id),
+            roaster: roaster,
+            isSelected: _selectedIds.contains(roaster.id),
             isSelectionMode: _isSelectionMode,
             onTap: () {
               if (_isSelectionMode) {
-                _toggleSelection(brand.id);
+                _toggleSelection(roaster.id);
               } else {
                 ref.read(settingsProvider.notifier).triggerHaptic();
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => BrandDetailsScreen(brand: brand),
+                    builder: (_) => UserRoasterDetailsScreen(roaster: roaster),
                   ),
                 );
               }
             },
             onFavoriteToggle: () async {
-              final db = ref.read(databaseProvider);
-              final currentlyFavorite = brand.isFavorite;
-              await db.toggleBrandFavorite(brand.id, !currentlyFavorite);
+              final localContext = context;
+              final msg = localContext.t('toast_removed_from_favorites');
+              final msgAdd = localContext.t('toast_added_to_favorites');
+              final isFav = roaster.isFavorite;
 
-              if (mounted) {
-                if (!currentlyFavorite) {
-                  ToastService.showSuccess(
-                    context,
-                    context.t('toast_added_to_favorites'),
-                  );
-                } else {
-                  ToastService.showInfo(
-                    context,
-                    context.t('toast_removed_from_favorites'),
-                  );
-                }
-              }
-              ref.invalidate(brandsProvider);
+              final notifier = ref.read(userRoastersProvider.notifier);
+              await notifier.toggleFavorite(roaster.id);
+
+              if (!localContext.mounted) return;
+              
+              ToastService.showSuccess(
+                localContext, 
+                isFav ? msg : msgAdd,
+              );
             },
           ),
         ),
@@ -678,7 +634,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
     BuildContext context,
     WidgetRef ref,
   ) async {
-    final db = ref.read(databaseProvider);
+    final notifier = ref.read(userRoastersProvider.notifier);
     final nameController = TextEditingController();
     final shortDescController = TextEditingController();
     final locationController = TextEditingController();
@@ -728,14 +684,14 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
           TextButton(
             onPressed: () async {
               if (nameController.text.isNotEmpty) {
-                final user = ref.read(currentUserProvider);
-                await db.addBrand(
-                  user?.id ?? '',
-                  nameController.text,
-                  locationController.text,
-                  shortDescController.text,
+                final roaster = UserRoasterDto(
+                  id: DateTime.now().millisecondsSinceEpoch.toString(),
+                  name: nameController.text,
+                  location: locationController.text,
+                  description: shortDescController.text,
+                  updatedAt: DateTime.now(),
                 );
-                ref.invalidate(brandsProvider);
+                await notifier.saveRoaster(roaster);
                 if (ctx.mounted) Navigator.pop(ctx);
               }
             },
@@ -778,14 +734,14 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
 // ─── Premium Card ─────────────────────────────────────────────────────────────
 
 class _PremiumRoasterCard extends StatelessWidget {
-  final LocalizedBrandDto brand;
+  final UserRoasterDto roaster;
   final bool isSelected;
   final bool isSelectionMode;
   final VoidCallback onTap;
   final VoidCallback onFavoriteToggle;
 
   const _PremiumRoasterCard({
-    required this.brand,
+    required this.roaster,
     required this.isSelected,
     required this.isSelectionMode,
     required this.onTap,
@@ -846,7 +802,7 @@ class _PremiumRoasterCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(color: Colors.white12),
                   ),
-                  child: _BrandLogo(url: brand.logoUrl),
+                  child: const Icon(Icons.business_rounded, color: Color(0xFFC8A96E), size: 28),
                 ),
               // Info
               Expanded(
@@ -854,14 +810,14 @@ class _PremiumRoasterCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      brand.name,
+                      roaster.name,
                       style: GoogleFonts.poppins(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: const Color(0xFFC8A96E),
                       ),
                     ),
-                    if (brand.location.isNotEmpty) ...[
+                    if (roaster.location != null && roaster.location!.isNotEmpty) ...[
                       const SizedBox(height: 2),
                       Row(
                         children: [
@@ -872,7 +828,7 @@ class _PremiumRoasterCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            brand.location,
+                            roaster.location!,
                             style: GoogleFonts.poppins(
                               fontSize: 12,
                               color: Colors.white38,
@@ -881,10 +837,10 @@ class _PremiumRoasterCard extends StatelessWidget {
                         ],
                       ),
                     ],
-                    if (brand.shortDesc.isNotEmpty) ...[
+                    if (roaster.description != null && roaster.description!.isNotEmpty) ...[
                       const SizedBox(height: 6),
                       Text(
-                        brand.shortDesc,
+                        roaster.description!,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.poppins(
@@ -905,10 +861,10 @@ class _PremiumRoasterCard extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: Icon(
-                      brand.isFavorite
+                      roaster.isFavorite
                           ? Icons.favorite_rounded
                           : Icons.favorite_border_rounded,
-                      color: brand.isFavorite
+                      color: roaster.isFavorite
                           ? Colors.redAccent
                           : Colors.white30,
                       size: 22,
@@ -923,32 +879,6 @@ class _PremiumRoasterCard extends StatelessWidget {
   }
 }
 
-// ─── Brand Logo ───────────────────────────────────────────────────────────────
-
-class _BrandLogo extends StatelessWidget {
-  final String url;
-  const _BrandLogo({required this.url});
-
-  @override
-  Widget build(BuildContext context) {
-    if (url.isEmpty) {
-      return const Icon(Icons.coffee_rounded, color: Colors.white24);
-    }
-    if (url.toLowerCase().endsWith('.svg')) {
-      return SvgPicture.network(
-        url,
-        placeholderBuilder: (_) =>
-            const Center(child: CircularProgressIndicator(strokeWidth: 1)),
-      );
-    }
-    return CachedNetworkImage(
-      imageUrl: url,
-      fit: BoxFit.contain,
-      errorWidget: (_, _, _) =>
-          const Icon(Icons.coffee_rounded, color: Colors.white24),
-    );
-  }
-}
 
 class _PremiumPulsingLoader extends StatefulWidget {
   final String message;

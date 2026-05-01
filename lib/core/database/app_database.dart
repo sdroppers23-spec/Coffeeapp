@@ -39,13 +39,14 @@ part 'app_database.g.dart';
     BrewingRecipesV2,
     AlternativeBrewing,
     AlternativeBrewingTranslations,
+    UserRoasters,
   ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? e]) : super(e ?? openConnection());
 
   @override
-  int get schemaVersion => 49;
+  int get schemaVersion => 51;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -226,6 +227,14 @@ class AppDatabase extends _$AppDatabase {
         await _safeAddColumn(m, encyclopediaRecipes, encyclopediaRecipes.customMethodName);
         await _safeAddColumn(m, alternativeRecipes, alternativeRecipes.customMethodName);
         debugPrint('AppDatabase: Migration to v49 completed');
+      }
+      if (from < 50) {
+        await m.createTable(userRoasters);
+        debugPrint('AppDatabase: Migration to v50 completed');
+      }
+      if (from < 51) {
+        await _safeAddColumn(m, coffeeLots, coffeeLots.userRoasterId);
+        debugPrint('AppDatabase: Migration to v51 completed');
       }
     },
     beforeOpen: (details) async {
@@ -1191,8 +1200,10 @@ class AppDatabase extends _$AppDatabase {
       pricing: _parseJson(r.priceJson),
       brandId: r.brandId,
       isDeletedLocal: r.isDeletedLocal,
+      updatedAt: r.updatedAt,
       isSynced: r.isSynced,
       imageUrl: r.imageUrl,
+      userRoasterId: r.userRoasterId,
     );
   }
 
@@ -1579,6 +1590,16 @@ class AppDatabase extends _$AppDatabase {
     });
   }
 
+  // ── User Roasters ──────────────────────────────────────────────────────────
+  Future<UserRoaster?> getUserRoastersRecord(String userId) {
+    return (select(userRoasters)..where((t) => t.userId.equals(userId)))
+        .getSingleOrNull();
+  }
+
+  Future<void> saveUserRoastersRecord(UserRoastersCompanion entry) {
+    return into(userRoasters).insertOnConflictUpdate(entry);
+  }
+
   // ── Helpers ──────────────────────────────────────────────────────────────────
   Map<String, dynamic> _parseJson(String jsonStr) {
     try {
@@ -1599,10 +1620,10 @@ class AppDatabase extends _$AppDatabase {
 
   /// Safely adds a column to a table, ignoring "duplicate column name" errors.
   /// This is essential for Windows/Emulators where migrations might be triggered redundantly.
-  Future<void> _safeAddColumn(
+  Future<void> _safeAddColumn<T extends Object>(
     Migrator m,
     TableInfo table,
-    GeneratedColumn column,
+    GeneratedColumn<T> column,
   ) async {
     try {
       await m.addColumn(table, column);
@@ -1614,6 +1635,14 @@ class AppDatabase extends _$AppDatabase {
       }
       rethrow;
     }
+  }
+
+  Future<List<CoffeeLotDto>> getLotsByUserRoaster(String userId, String roasterId) async {
+    final query = select(coffeeLots)
+      ..where((t) => t.userId.equals(userId) & t.userRoasterId.equals(roasterId))
+      ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]);
+    final rows = await query.get();
+    return rows.map((r) => _mapLotRow(r)).toList();
   }
 }
 

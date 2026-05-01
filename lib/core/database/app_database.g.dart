@@ -5698,6 +5698,17 @@ class $CoffeeLotsTable extends CoffeeLots
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _userRoasterIdMeta = const VerificationMeta(
+    'userRoasterId',
+  );
+  @override
+  late final GeneratedColumn<String> userRoasterId = GeneratedColumn<String>(
+    'user_roaster_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _brandIdMeta = const VerificationMeta(
     'brandId',
   );
@@ -6068,6 +6079,7 @@ class $CoffeeLotsTable extends CoffeeLots
     userId,
     roasteryName,
     roasteryCountry,
+    userRoasterId,
     brandId,
     coffeeName,
     originCountry,
@@ -6140,6 +6152,15 @@ class $CoffeeLotsTable extends CoffeeLots
         roasteryCountry.isAcceptableOrUnknown(
           data['roastery_country']!,
           _roasteryCountryMeta,
+        ),
+      );
+    }
+    if (data.containsKey('user_roaster_id')) {
+      context.handle(
+        _userRoasterIdMeta,
+        userRoasterId.isAcceptableOrUnknown(
+          data['user_roaster_id']!,
+          _userRoasterIdMeta,
         ),
       );
     }
@@ -6375,6 +6396,10 @@ class $CoffeeLotsTable extends CoffeeLots
         DriftSqlType.string,
         data['${effectivePrefix}roastery_country'],
       ),
+      userRoasterId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_roaster_id'],
+      ),
       brandId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}brand_id'],
@@ -6513,6 +6538,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
   final String userId;
   final String? roasteryName;
   final String? roasteryCountry;
+  final String? userRoasterId;
   final int? brandId;
   final String? coffeeName;
   final String? originCountry;
@@ -6549,6 +6575,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
     required this.userId,
     this.roasteryName,
     this.roasteryCountry,
+    this.userRoasterId,
     this.brandId,
     this.coffeeName,
     this.originCountry,
@@ -6591,6 +6618,9 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
     }
     if (!nullToAbsent || roasteryCountry != null) {
       map['roastery_country'] = Variable<String>(roasteryCountry);
+    }
+    if (!nullToAbsent || userRoasterId != null) {
+      map['user_roaster_id'] = Variable<String>(userRoasterId);
     }
     if (!nullToAbsent || brandId != null) {
       map['brand_id'] = Variable<int>(brandId);
@@ -6680,6 +6710,9 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
       roasteryCountry: roasteryCountry == null && nullToAbsent
           ? const Value.absent()
           : Value(roasteryCountry),
+      userRoasterId: userRoasterId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userRoasterId),
       brandId: brandId == null && nullToAbsent
           ? const Value.absent()
           : Value(brandId),
@@ -6766,6 +6799,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
       userId: serializer.fromJson<String>(json['userId']),
       roasteryName: serializer.fromJson<String?>(json['roasteryName']),
       roasteryCountry: serializer.fromJson<String?>(json['roasteryCountry']),
+      userRoasterId: serializer.fromJson<String?>(json['userRoasterId']),
       brandId: serializer.fromJson<int?>(json['brandId']),
       coffeeName: serializer.fromJson<String?>(json['coffeeName']),
       originCountry: serializer.fromJson<String?>(json['originCountry']),
@@ -6807,6 +6841,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
       'userId': serializer.toJson<String>(userId),
       'roasteryName': serializer.toJson<String?>(roasteryName),
       'roasteryCountry': serializer.toJson<String?>(roasteryCountry),
+      'userRoasterId': serializer.toJson<String?>(userRoasterId),
       'brandId': serializer.toJson<int?>(brandId),
       'coffeeName': serializer.toJson<String?>(coffeeName),
       'originCountry': serializer.toJson<String?>(originCountry),
@@ -6846,6 +6881,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
     String? userId,
     Value<String?> roasteryName = const Value.absent(),
     Value<String?> roasteryCountry = const Value.absent(),
+    Value<String?> userRoasterId = const Value.absent(),
     Value<int?> brandId = const Value.absent(),
     Value<String?> coffeeName = const Value.absent(),
     Value<String?> originCountry = const Value.absent(),
@@ -6884,6 +6920,9 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
     roasteryCountry: roasteryCountry.present
         ? roasteryCountry.value
         : this.roasteryCountry,
+    userRoasterId: userRoasterId.present
+        ? userRoasterId.value
+        : this.userRoasterId,
     brandId: brandId.present ? brandId.value : this.brandId,
     coffeeName: coffeeName.present ? coffeeName.value : this.coffeeName,
     originCountry: originCountry.present
@@ -6932,6 +6971,9 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
       roasteryCountry: data.roasteryCountry.present
           ? data.roasteryCountry.value
           : this.roasteryCountry,
+      userRoasterId: data.userRoasterId.present
+          ? data.userRoasterId.value
+          : this.userRoasterId,
       brandId: data.brandId.present ? data.brandId.value : this.brandId,
       coffeeName: data.coffeeName.present
           ? data.coffeeName.value
@@ -6995,6 +7037,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
           ..write('userId: $userId, ')
           ..write('roasteryName: $roasteryName, ')
           ..write('roasteryCountry: $roasteryCountry, ')
+          ..write('userRoasterId: $userRoasterId, ')
           ..write('brandId: $brandId, ')
           ..write('coffeeName: $coffeeName, ')
           ..write('originCountry: $originCountry, ')
@@ -7036,6 +7079,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
     userId,
     roasteryName,
     roasteryCountry,
+    userRoasterId,
     brandId,
     coffeeName,
     originCountry,
@@ -7076,6 +7120,7 @@ class CoffeeLot extends DataClass implements Insertable<CoffeeLot> {
           other.userId == this.userId &&
           other.roasteryName == this.roasteryName &&
           other.roasteryCountry == this.roasteryCountry &&
+          other.userRoasterId == this.userRoasterId &&
           other.brandId == this.brandId &&
           other.coffeeName == this.coffeeName &&
           other.originCountry == this.originCountry &&
@@ -7114,6 +7159,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
   final Value<String> userId;
   final Value<String?> roasteryName;
   final Value<String?> roasteryCountry;
+  final Value<String?> userRoasterId;
   final Value<int?> brandId;
   final Value<String?> coffeeName;
   final Value<String?> originCountry;
@@ -7151,6 +7197,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
     this.userId = const Value.absent(),
     this.roasteryName = const Value.absent(),
     this.roasteryCountry = const Value.absent(),
+    this.userRoasterId = const Value.absent(),
     this.brandId = const Value.absent(),
     this.coffeeName = const Value.absent(),
     this.originCountry = const Value.absent(),
@@ -7189,6 +7236,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
     required String userId,
     this.roasteryName = const Value.absent(),
     this.roasteryCountry = const Value.absent(),
+    this.userRoasterId = const Value.absent(),
     this.brandId = const Value.absent(),
     this.coffeeName = const Value.absent(),
     this.originCountry = const Value.absent(),
@@ -7228,6 +7276,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
     Expression<String>? userId,
     Expression<String>? roasteryName,
     Expression<String>? roasteryCountry,
+    Expression<String>? userRoasterId,
     Expression<int>? brandId,
     Expression<String>? coffeeName,
     Expression<String>? originCountry,
@@ -7266,6 +7315,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
       if (userId != null) 'user_id': userId,
       if (roasteryName != null) 'roastery_name': roasteryName,
       if (roasteryCountry != null) 'roastery_country': roasteryCountry,
+      if (userRoasterId != null) 'user_roaster_id': userRoasterId,
       if (brandId != null) 'brand_id': brandId,
       if (coffeeName != null) 'coffee_name': coffeeName,
       if (originCountry != null) 'origin_country': originCountry,
@@ -7306,6 +7356,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
     Value<String>? userId,
     Value<String?>? roasteryName,
     Value<String?>? roasteryCountry,
+    Value<String?>? userRoasterId,
     Value<int?>? brandId,
     Value<String?>? coffeeName,
     Value<String?>? originCountry,
@@ -7344,6 +7395,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
       userId: userId ?? this.userId,
       roasteryName: roasteryName ?? this.roasteryName,
       roasteryCountry: roasteryCountry ?? this.roasteryCountry,
+      userRoasterId: userRoasterId ?? this.userRoasterId,
       brandId: brandId ?? this.brandId,
       coffeeName: coffeeName ?? this.coffeeName,
       originCountry: originCountry ?? this.originCountry,
@@ -7393,6 +7445,9 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
     }
     if (roasteryCountry.present) {
       map['roastery_country'] = Variable<String>(roasteryCountry.value);
+    }
+    if (userRoasterId.present) {
+      map['user_roaster_id'] = Variable<String>(userRoasterId.value);
     }
     if (brandId.present) {
       map['brand_id'] = Variable<int>(brandId.value);
@@ -7500,6 +7555,7 @@ class CoffeeLotsCompanion extends UpdateCompanion<CoffeeLot> {
           ..write('userId: $userId, ')
           ..write('roasteryName: $roasteryName, ')
           ..write('roasteryCountry: $roasteryCountry, ')
+          ..write('userRoasterId: $userRoasterId, ')
           ..write('brandId: $brandId, ')
           ..write('coffeeName: $coffeeName, ')
           ..write('originCountry: $originCountry, ')
@@ -20946,6 +21002,319 @@ class AlternativeBrewingTranslationsCompanion
   }
 }
 
+class $UserRoastersTable extends UserRoasters
+    with TableInfo<$UserRoastersTable, UserRoaster> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UserRoastersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dataJsonMeta = const VerificationMeta(
+    'dataJson',
+  );
+  @override
+  late final GeneratedColumn<String> dataJson = GeneratedColumn<String>(
+    'data_json',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('[]'),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isSyncedMeta = const VerificationMeta(
+    'isSynced',
+  );
+  @override
+  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
+    'is_synced',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_synced" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [userId, dataJson, updatedAt, isSynced];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'user_roasters';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<UserRoaster> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('data_json')) {
+      context.handle(
+        _dataJsonMeta,
+        dataJson.isAcceptableOrUnknown(data['data_json']!, _dataJsonMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('is_synced')) {
+      context.handle(
+        _isSyncedMeta,
+        isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {userId};
+  @override
+  UserRoaster map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return UserRoaster(
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      dataJson: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}data_json'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      ),
+      isSynced: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_synced'],
+      )!,
+    );
+  }
+
+  @override
+  $UserRoastersTable createAlias(String alias) {
+    return $UserRoastersTable(attachedDatabase, alias);
+  }
+}
+
+class UserRoaster extends DataClass implements Insertable<UserRoaster> {
+  final String userId;
+  final String dataJson;
+  final DateTime? updatedAt;
+  final bool isSynced;
+  const UserRoaster({
+    required this.userId,
+    required this.dataJson,
+    this.updatedAt,
+    required this.isSynced,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['user_id'] = Variable<String>(userId);
+    map['data_json'] = Variable<String>(dataJson);
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
+    map['is_synced'] = Variable<bool>(isSynced);
+    return map;
+  }
+
+  UserRoastersCompanion toCompanion(bool nullToAbsent) {
+    return UserRoastersCompanion(
+      userId: Value(userId),
+      dataJson: Value(dataJson),
+      updatedAt: updatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedAt),
+      isSynced: Value(isSynced),
+    );
+  }
+
+  factory UserRoaster.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UserRoaster(
+      userId: serializer.fromJson<String>(json['userId']),
+      dataJson: serializer.fromJson<String>(json['dataJson']),
+      updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
+      isSynced: serializer.fromJson<bool>(json['isSynced']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'userId': serializer.toJson<String>(userId),
+      'dataJson': serializer.toJson<String>(dataJson),
+      'updatedAt': serializer.toJson<DateTime?>(updatedAt),
+      'isSynced': serializer.toJson<bool>(isSynced),
+    };
+  }
+
+  UserRoaster copyWith({
+    String? userId,
+    String? dataJson,
+    Value<DateTime?> updatedAt = const Value.absent(),
+    bool? isSynced,
+  }) => UserRoaster(
+    userId: userId ?? this.userId,
+    dataJson: dataJson ?? this.dataJson,
+    updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
+    isSynced: isSynced ?? this.isSynced,
+  );
+  UserRoaster copyWithCompanion(UserRoastersCompanion data) {
+    return UserRoaster(
+      userId: data.userId.present ? data.userId.value : this.userId,
+      dataJson: data.dataJson.present ? data.dataJson.value : this.dataJson,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UserRoaster(')
+          ..write('userId: $userId, ')
+          ..write('dataJson: $dataJson, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('isSynced: $isSynced')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(userId, dataJson, updatedAt, isSynced);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UserRoaster &&
+          other.userId == this.userId &&
+          other.dataJson == this.dataJson &&
+          other.updatedAt == this.updatedAt &&
+          other.isSynced == this.isSynced);
+}
+
+class UserRoastersCompanion extends UpdateCompanion<UserRoaster> {
+  final Value<String> userId;
+  final Value<String> dataJson;
+  final Value<DateTime?> updatedAt;
+  final Value<bool> isSynced;
+  final Value<int> rowid;
+  const UserRoastersCompanion({
+    this.userId = const Value.absent(),
+    this.dataJson = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  UserRoastersCompanion.insert({
+    required String userId,
+    this.dataJson = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : userId = Value(userId);
+  static Insertable<UserRoaster> custom({
+    Expression<String>? userId,
+    Expression<String>? dataJson,
+    Expression<DateTime>? updatedAt,
+    Expression<bool>? isSynced,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (userId != null) 'user_id': userId,
+      if (dataJson != null) 'data_json': dataJson,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (isSynced != null) 'is_synced': isSynced,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  UserRoastersCompanion copyWith({
+    Value<String>? userId,
+    Value<String>? dataJson,
+    Value<DateTime?>? updatedAt,
+    Value<bool>? isSynced,
+    Value<int>? rowid,
+  }) {
+    return UserRoastersCompanion(
+      userId: userId ?? this.userId,
+      dataJson: dataJson ?? this.dataJson,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isSynced: isSynced ?? this.isSynced,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (dataJson.present) {
+      map['data_json'] = Variable<String>(dataJson.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (isSynced.present) {
+      map['is_synced'] = Variable<bool>(isSynced.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UserRoastersCompanion(')
+          ..write('userId: $userId, ')
+          ..write('dataJson: $dataJson, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -21005,6 +21374,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $AlternativeBrewingTable(this);
   late final $AlternativeBrewingTranslationsTable
   alternativeBrewingTranslations = $AlternativeBrewingTranslationsTable(this);
+  late final $UserRoastersTable userRoasters = $UserRoastersTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -21038,6 +21408,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     brewingRecipeTranslationsV2,
     alternativeBrewing,
     alternativeBrewingTranslations,
+    userRoasters,
   ];
 }
 
@@ -25886,6 +26257,7 @@ typedef $$CoffeeLotsTableCreateCompanionBuilder =
       required String userId,
       Value<String?> roasteryName,
       Value<String?> roasteryCountry,
+      Value<String?> userRoasterId,
       Value<int?> brandId,
       Value<String?> coffeeName,
       Value<String?> originCountry,
@@ -25925,6 +26297,7 @@ typedef $$CoffeeLotsTableUpdateCompanionBuilder =
       Value<String> userId,
       Value<String?> roasteryName,
       Value<String?> roasteryCountry,
+      Value<String?> userRoasterId,
       Value<int?> brandId,
       Value<String?> coffeeName,
       Value<String?> originCountry,
@@ -26027,6 +26400,11 @@ class $$CoffeeLotsTableFilterComposer
 
   ColumnFilters<String> get roasteryCountry => $composableBuilder(
     column: $table.roasteryCountry,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userRoasterId => $composableBuilder(
+    column: $table.userRoasterId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -26258,6 +26636,11 @@ class $$CoffeeLotsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get userRoasterId => $composableBuilder(
+    column: $table.userRoasterId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get coffeeName => $composableBuilder(
     column: $table.coffeeName,
     builder: (column) => ColumnOrderings(column),
@@ -26457,6 +26840,11 @@ class $$CoffeeLotsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get userRoasterId => $composableBuilder(
+    column: $table.userRoasterId,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get coffeeName => $composableBuilder(
     column: $table.coffeeName,
     builder: (column) => column,
@@ -26650,6 +27038,7 @@ class $$CoffeeLotsTableTableManager
                 Value<String> userId = const Value.absent(),
                 Value<String?> roasteryName = const Value.absent(),
                 Value<String?> roasteryCountry = const Value.absent(),
+                Value<String?> userRoasterId = const Value.absent(),
                 Value<int?> brandId = const Value.absent(),
                 Value<String?> coffeeName = const Value.absent(),
                 Value<String?> originCountry = const Value.absent(),
@@ -26687,6 +27076,7 @@ class $$CoffeeLotsTableTableManager
                 userId: userId,
                 roasteryName: roasteryName,
                 roasteryCountry: roasteryCountry,
+                userRoasterId: userRoasterId,
                 brandId: brandId,
                 coffeeName: coffeeName,
                 originCountry: originCountry,
@@ -26726,6 +27116,7 @@ class $$CoffeeLotsTableTableManager
                 required String userId,
                 Value<String?> roasteryName = const Value.absent(),
                 Value<String?> roasteryCountry = const Value.absent(),
+                Value<String?> userRoasterId = const Value.absent(),
                 Value<int?> brandId = const Value.absent(),
                 Value<String?> coffeeName = const Value.absent(),
                 Value<String?> originCountry = const Value.absent(),
@@ -26763,6 +27154,7 @@ class $$CoffeeLotsTableTableManager
                 userId: userId,
                 roasteryName: roasteryName,
                 roasteryCountry: roasteryCountry,
+                userRoasterId: userRoasterId,
                 brandId: brandId,
                 coffeeName: coffeeName,
                 originCountry: originCountry,
@@ -35709,6 +36101,187 @@ typedef $$AlternativeBrewingTranslationsTableProcessedTableManager =
       AlternativeBrewingTranslation,
       PrefetchHooks Function({bool recipeKey})
     >;
+typedef $$UserRoastersTableCreateCompanionBuilder =
+    UserRoastersCompanion Function({
+      required String userId,
+      Value<String> dataJson,
+      Value<DateTime?> updatedAt,
+      Value<bool> isSynced,
+      Value<int> rowid,
+    });
+typedef $$UserRoastersTableUpdateCompanionBuilder =
+    UserRoastersCompanion Function({
+      Value<String> userId,
+      Value<String> dataJson,
+      Value<DateTime?> updatedAt,
+      Value<bool> isSynced,
+      Value<int> rowid,
+    });
+
+class $$UserRoastersTableFilterComposer
+    extends Composer<_$AppDatabase, $UserRoastersTable> {
+  $$UserRoastersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get dataJson => $composableBuilder(
+    column: $table.dataJson,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$UserRoastersTableOrderingComposer
+    extends Composer<_$AppDatabase, $UserRoastersTable> {
+  $$UserRoastersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get dataJson => $composableBuilder(
+    column: $table.dataJson,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isSynced => $composableBuilder(
+    column: $table.isSynced,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$UserRoastersTableAnnotationComposer
+    extends Composer<_$AppDatabase, $UserRoastersTable> {
+  $$UserRoastersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get dataJson =>
+      $composableBuilder(column: $table.dataJson, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSynced =>
+      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+}
+
+class $$UserRoastersTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $UserRoastersTable,
+          UserRoaster,
+          $$UserRoastersTableFilterComposer,
+          $$UserRoastersTableOrderingComposer,
+          $$UserRoastersTableAnnotationComposer,
+          $$UserRoastersTableCreateCompanionBuilder,
+          $$UserRoastersTableUpdateCompanionBuilder,
+          (
+            UserRoaster,
+            BaseReferences<_$AppDatabase, $UserRoastersTable, UserRoaster>,
+          ),
+          UserRoaster,
+          PrefetchHooks Function()
+        > {
+  $$UserRoastersTableTableManager(_$AppDatabase db, $UserRoastersTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$UserRoastersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$UserRoastersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$UserRoastersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> userId = const Value.absent(),
+                Value<String> dataJson = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => UserRoastersCompanion(
+                userId: userId,
+                dataJson: dataJson,
+                updatedAt: updatedAt,
+                isSynced: isSynced,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String userId,
+                Value<String> dataJson = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
+                Value<bool> isSynced = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => UserRoastersCompanion.insert(
+                userId: userId,
+                dataJson: dataJson,
+                updatedAt: updatedAt,
+                isSynced: isSynced,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$UserRoastersTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $UserRoastersTable,
+      UserRoaster,
+      $$UserRoastersTableFilterComposer,
+      $$UserRoastersTableOrderingComposer,
+      $$UserRoastersTableAnnotationComposer,
+      $$UserRoastersTableCreateCompanionBuilder,
+      $$UserRoastersTableUpdateCompanionBuilder,
+      (
+        UserRoaster,
+        BaseReferences<_$AppDatabase, $UserRoastersTable, UserRoaster>,
+      ),
+      UserRoaster,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -35810,4 +36383,6 @@ class $AppDatabaseManager {
         _db,
         _db.alternativeBrewingTranslations,
       );
+  $$UserRoastersTableTableManager get userRoasters =>
+      $$UserRoastersTableTableManager(_db, _db.userRoasters);
 }

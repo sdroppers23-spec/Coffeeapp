@@ -514,6 +514,7 @@ class CoffeeLotDto {
   final int? brandId;
   final bool isSynced;
   final String? imageUrl;
+  final String? userRoasterId;
 
   CoffeeLotDto({
     required this.id,
@@ -549,6 +550,7 @@ class CoffeeLotDto {
     this.isDeletedLocal = false,
     this.isSynced = false,
     this.imageUrl,
+    this.userRoasterId,
   });
 
   String get sensoryJson => jsonEncode(sensoryPoints);
@@ -596,6 +598,7 @@ class CoffeeLotDto {
     bool? isDeletedLocal,
     bool? isSynced,
     String? imageUrl,
+    String? userRoasterId,
   }) {
     return CoffeeLotDto(
       id: id ?? this.id,
@@ -631,6 +634,7 @@ class CoffeeLotDto {
       isDeletedLocal: isDeletedLocal ?? this.isDeletedLocal,
       isSynced: isSynced ?? this.isSynced,
       imageUrl: imageUrl ?? this.imageUrl,
+      userRoasterId: userRoasterId ?? this.userRoasterId,
     );
   }
 }
@@ -808,6 +812,7 @@ class CustomRecipeDto {
     );
   }
 
+
   String get pourScheduleJson => jsonEncode(pours);
 
   CustomRecipeDto copyWith({
@@ -865,11 +870,94 @@ class CustomRecipeDto {
       brewRatio: brewRatio ?? this.brewRatio,
       grinderName: grinderName ?? this.grinderName,
       sensoryJson: sensoryJson ?? this.sensoryJson,
-      extractionTimeSeconds:
-          extractionTimeSeconds ?? this.extractionTimeSeconds,
+      extractionTimeSeconds: extractionTimeSeconds ?? this.extractionTimeSeconds,
       difficulty: difficulty ?? this.difficulty,
       contentHtml: contentHtml ?? this.contentHtml,
       segment: segment ?? this.segment,
+    );
+  }
+}
+
+class UserRoasterDto {
+  final String id;
+  final String name;
+  final String? country;
+  final String? location;
+  final String? description;
+  final String? logoUrl;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final bool isFavorite;
+  final bool isArchived;
+
+  UserRoasterDto({
+    required this.id,
+    required this.name,
+    this.country,
+    this.location,
+    this.description,
+    this.logoUrl,
+    this.createdAt,
+    this.updatedAt,
+    this.isFavorite = false,
+    this.isArchived = false,
+  });
+
+  factory UserRoasterDto.fromJson(Map<String, dynamic> json) {
+    return UserRoasterDto(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      country: json['country'] as String?,
+      location: json['location'] as String?,
+      description: json['description'] as String?,
+      logoUrl: json['logo_url'] as String?,
+      createdAt: json['created_at'] != null
+          ? DateTime.tryParse(json['created_at'] as String)
+          : null,
+      updatedAt: json['updated_at'] != null
+          ? DateTime.tryParse(json['updated_at'] as String)
+          : null,
+      isFavorite: json['is_favorite'] as bool? ?? false,
+      isArchived: json['is_archived'] as bool? ?? false,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'country': country,
+      'location': location,
+      'description': description,
+      'logo_url': logoUrl,
+      'created_at': createdAt?.toIso8601String(),
+      'updated_at': updatedAt?.toIso8601String(),
+      'is_favorite': isFavorite,
+      'is_archived': isArchived,
+    };
+  }
+
+  UserRoasterDto copyWith({
+    String? name,
+    String? country,
+    String? location,
+    String? description,
+    String? logoUrl,
+    DateTime? updatedAt,
+    bool? isFavorite,
+    bool? isArchived,
+  }) {
+    return UserRoasterDto(
+      id: id,
+      name: name ?? this.name,
+      country: country ?? this.country,
+      location: location ?? this.location,
+      description: description ?? this.description,
+      logoUrl: logoUrl ?? this.logoUrl,
+      createdAt: createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isFavorite: isFavorite ?? this.isFavorite,
+      isArchived: isArchived ?? this.isArchived,
     );
   }
 }

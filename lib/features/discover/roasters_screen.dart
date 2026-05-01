@@ -317,7 +317,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
                       isDense: true,
-                      contentPadding: const EdgeInsets.only(left: 16, right: 16, bottom: 2),
+                      contentPadding: const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 0),
                       filled: false,
                       prefixIcon: const Padding(
                         padding: EdgeInsets.only(left: 12, right: 8),
@@ -526,6 +526,10 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
 
               ToastService.showSuccess(localContext, isFav ? msg : msgAdd);
             },
+            onEdit: () => UserRoasterDetailsScreen.showEditRoasterDialog(
+                context, ref, roaster),
+            onAddLot: () => UserRoasterDetailsScreen.showLinkLotDialog(
+                context, ref, roaster),
           ),
         ),
       ),
@@ -614,51 +618,44 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
   }
 
   Widget _buildHalfWidthAddButton() {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final width = MediaQuery.of(context).size.width;
-        final buttonWidth = (width - 48) / 2; // Half width with some padding
-
-        return PressableScale(
-          onTap: () => _showAddRoasterDialog(context, ref),
-          child: Container(
-            width: buttonWidth,
-            height: 54,
-            decoration: BoxDecoration(
-              color: const Color(0xFFC8A96E),
-              borderRadius: BorderRadius.circular(27),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFFC8A96E).withValues(alpha: 0.35),
-                  blurRadius: 20,
-                  spreadRadius: 2,
-                  offset: const Offset(0, 6),
-                ),
-              ],
+    return PressableScale(
+      onTap: () => _showAddRoasterDialog(context, ref),
+      child: Container(
+        height: 56,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        decoration: BoxDecoration(
+          color: const Color(0xFFC8A96E),
+          borderRadius: BorderRadius.circular(25),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFFC8A96E).withValues(alpha: 0.35),
+              blurRadius: 20,
+              spreadRadius: 2,
+              offset: const Offset(0, 6),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.add_rounded,
-                  color: Colors.black87,
-                  size: 20,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  context.t('add_roaster_uppercase'),
-                  style: GoogleFonts.outfit(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 12,
-                    letterSpacing: 1.5,
-                    color: Colors.black87,
-                  ),
-                ),
-              ],
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.add_rounded,
+              color: Colors.black87,
+              size: 20,
             ),
-          ),
-        );
-      },
+            const SizedBox(width: 8),
+            Text(
+              context.t('add_roaster_uppercase'),
+              style: GoogleFonts.outfit(
+                fontWeight: FontWeight.w800,
+                fontSize: 13,
+                letterSpacing: 1.2,
+                color: Colors.black87,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -700,6 +697,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
           ),
+          insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           title: Text(
             context.t('add_roaster_title'),
             style: GoogleFonts.poppins(
@@ -856,6 +854,8 @@ class _PremiumRoasterCard extends StatelessWidget {
   final bool isSelectionMode;
   final VoidCallback onTap;
   final VoidCallback onFavoriteToggle;
+  final VoidCallback onEdit;
+  final VoidCallback onAddLot;
 
   const _PremiumRoasterCard({
     required this.roaster,
@@ -863,6 +863,8 @@ class _PremiumRoasterCard extends StatelessWidget {
     required this.isSelectionMode,
     required this.onTap,
     required this.onFavoriteToggle,
+    required this.onEdit,
+    required this.onAddLot,
   });
 
   @override
@@ -976,7 +978,36 @@ class _PremiumRoasterCard extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               // Кнопка улюблене
-              if (!isSelectionMode)
+              if (!isSelectionMode) ...[
+                GestureDetector(
+                  onTap: onAddLot,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.add_rounded,
+                        color: Color(0xFFC8A96E),
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: onEdit,
+                  child: const Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Icon(
+                      Icons.edit_rounded,
+                      color: Colors.white30,
+                      size: 18,
+                    ),
+                  ),
+                ),
                 GestureDetector(
                   onTap: onFavoriteToggle,
                   child: Padding(
@@ -988,10 +1019,11 @@ class _PremiumRoasterCard extends StatelessWidget {
                       color: roaster.isFavorite
                           ? Colors.redAccent
                           : Colors.white30,
-                      size: 22,
+                      size: 20,
                     ),
                   ),
                 ),
+              ],
             ],
           ),
         ),

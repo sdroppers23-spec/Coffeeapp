@@ -387,7 +387,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 140),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 0.72,
+              childAspectRatio: 0.68,
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,
             ),

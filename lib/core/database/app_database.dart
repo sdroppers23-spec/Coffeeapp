@@ -1697,6 +1697,17 @@ class AppDatabase extends _$AppDatabase {
     final rows = await query.get();
     return rows.map((r) => _mapLotRow(r)).toList();
   }
+
+  Future<void> linkLotToRoaster(String lotId, String? roasterId) async {
+    await (update(coffeeLots)..where((t) => t.id.equals(lotId))).write(
+      CoffeeLotsCompanion(
+        userRoasterId: Value(roasterId),
+        isSynced: const Value(false),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
 }
+
 
 // Legacy extension removed. Logic moved to AppDatabase.getAllBrewingRecipes.

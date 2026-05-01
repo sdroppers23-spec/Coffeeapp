@@ -191,7 +191,7 @@ class MyLotGridCard extends ConsumerWidget {
                       ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
                 // Coffee Name
                 Text(
                   lot.coffeeName ?? 'Unnamed',
@@ -217,7 +217,7 @@ class MyLotGridCard extends ConsumerWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
                 // Sensory Bars
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -244,7 +244,7 @@ class MyLotGridCard extends ConsumerWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 6),
 
                 const Spacer(),
 
@@ -348,6 +348,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard>
     final theme = Theme.of(context);
     final isSelected = widget.isSelected;
     final isSelectionMode = widget.isSelectionMode;
+    final swipeMode = ref.watch(preferencesProvider).lotSwipeMode;
 
     // Normalize sensory data
     final mappedSensory = SensoryUtils.map4To6Axis(widget.lot.sensoryPoints);
@@ -665,10 +666,52 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard>
       ),
     );
 
+    Widget contentCard = card;
+    if (swipeMode == LotSwipeMode.grip && !_isExpanded && !isSelectionMode) {
+      contentCard = Stack(
+        children: [
+          card,
+          // Left Grip
+          Positioned(
+            left: 6,
+            top: 0,
+            bottom: 0,
+            child: Center(
+              child: Container(
+                width: 4,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+          ),
+          // Right Grip
+          Positioned(
+            right: 6,
+            top: 0,
+            bottom: 0,
+            child: Center(
+              child: Container(
+                width: 4,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
     final dismissibleCard = isSelectionMode
-        ? card
+        ? contentCard
         : GlassSwipeWrapper(
-            isSwipeEnabled: !_isExpanded,
+            isSwipeEnabled: !_isExpanded && swipeMode != LotSwipeMode.disabled,
+            isGripMode: swipeMode == LotSwipeMode.grip,
             dismissibleKey: Key('glass_swipe_${widget.lot.id}'),
             leftAction: widget.onRestoreSwipe != null
                 ? GlassSwipeAction(
@@ -693,7 +736,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard>
                     onTap: () => widget.onDeleteSwipe!(widget.lot),
                   )
                 : null,
-            child: card,
+            child: contentCard,
           );
 
     if (isSelectionMode) {

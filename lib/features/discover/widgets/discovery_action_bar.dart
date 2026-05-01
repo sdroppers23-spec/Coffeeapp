@@ -7,6 +7,7 @@ import '../../../shared/widgets/pressable_scale.dart';
 import '../../../core/l10n/app_localizations.dart';
 import '../../navigation/navigation_providers.dart';
 import '../../../core/providers/settings_provider.dart';
+import '../../../core/providers/preferences_provider.dart';
 
 class DiscoveryActionBar extends ConsumerWidget {
   final NotifierProvider<DiscoveryFilterNotifier, DiscoveryFilterState>
@@ -71,7 +72,7 @@ class DiscoveryActionBar extends ConsumerWidget {
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
                   isDense: true,
-                  contentPadding: const EdgeInsets.only(left: 16, right: 16, bottom: 2),
+                  contentPadding: const EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 0),
                   filled: false,
                   prefixIcon: const Padding(
                     padding: EdgeInsets.only(left: 12, right: 8),
@@ -111,7 +112,9 @@ class DiscoveryActionBar extends ConsumerWidget {
                 ),
               ],
               const Spacer(),
-              if (showViewModeToggle)
+              if (showViewModeToggle) ...[
+                const _SwipeModeToggle(),
+                const SizedBox(width: 8),
                 _ViewModeToggle(
                   isGrid: state.isGrid,
                   onTap: () {
@@ -119,6 +122,7 @@ class DiscoveryActionBar extends ConsumerWidget {
                     ref.read(filterProvider.notifier).toggleViewMode();
                   },
                 ),
+              ],
             ],
           ),
           const SizedBox(height: 16),
@@ -311,6 +315,109 @@ class _SubTabCapsule extends StatelessWidget {
               ),
             ],
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SwipeModeToggle extends ConsumerWidget {
+  const _SwipeModeToggle();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mode = ref.watch(preferencesProvider).lotSwipeMode;
+
+    IconData getIconForMode(LotSwipeMode mode) {
+      switch (mode) {
+        case LotSwipeMode.swipe:
+          return Icons.swipe_rounded;
+        case LotSwipeMode.grip:
+          return Icons.drag_indicator_rounded;
+        case LotSwipeMode.disabled:
+          return Icons.do_not_touch_rounded;
+      }
+    }
+
+    return Theme(
+      data: Theme.of(context).copyWith(
+        popupMenuTheme: PopupMenuThemeData(
+          color: const Color(0xFF1E1E1E),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+          ),
+        ),
+      ),
+      child: PopupMenuButton<LotSwipeMode>(
+        initialValue: mode,
+        onSelected: (newMode) {
+          ref.read(settingsProvider.notifier).triggerHaptic();
+          ref.read(preferencesProvider.notifier).setLotSwipeMode(newMode);
+        },
+        offset: const Offset(0, 40),
+        itemBuilder: (context) => [
+          PopupMenuItem(
+            value: LotSwipeMode.swipe,
+            child: Row(
+              children: [
+                Icon(Icons.swipe_rounded, color: mode == LotSwipeMode.swipe ? const Color(0xFFC8A96E) : Colors.white70, size: 20),
+                const SizedBox(width: 12),
+                Text(
+                  context.t('swipe_mode_normal'),
+                  style: GoogleFonts.outfit(
+                    color: mode == LotSwipeMode.swipe ? const Color(0xFFC8A96E) : Colors.white70,
+                    fontWeight: mode == LotSwipeMode.swipe ? FontWeight.bold : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            value: LotSwipeMode.grip,
+            child: Row(
+              children: [
+                Icon(Icons.drag_indicator_rounded, color: mode == LotSwipeMode.grip ? const Color(0xFFC8A96E) : Colors.white70, size: 20),
+                const SizedBox(width: 12),
+                Text(
+                  context.t('swipe_mode_grip'),
+                  style: GoogleFonts.outfit(
+                    color: mode == LotSwipeMode.grip ? const Color(0xFFC8A96E) : Colors.white70,
+                    fontWeight: mode == LotSwipeMode.grip ? FontWeight.bold : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            value: LotSwipeMode.disabled,
+            child: Row(
+              children: [
+                Icon(Icons.do_not_touch_rounded, color: mode == LotSwipeMode.disabled ? const Color(0xFFC8A96E) : Colors.white70, size: 20),
+                const SizedBox(width: 12),
+                Text(
+                  context.t('swipe_mode_disabled'),
+                  style: GoogleFonts.outfit(
+                    color: mode == LotSwipeMode.disabled ? const Color(0xFFC8A96E) : Colors.white70,
+                    fontWeight: mode == LotSwipeMode.disabled ? FontWeight.bold : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.white10),
+          ),
+          child: Icon(
+            getIconForMode(mode),
+            color: const Color(0xFFC8A96E),
+            size: 20,
+          ),
         ),
       ),
     );

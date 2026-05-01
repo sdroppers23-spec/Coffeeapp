@@ -307,6 +307,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                 return DiscoveryActionBar(
                   filterProvider: myLotsFilterProvider,
                   selectionProvider: myLotsSelectedIdsProvider,
+                  searchHint: context.t('search_lots'),
                   onCompareTap: () {
                     ref.read(settingsProvider.notifier).triggerHaptic();
                     context.push('/compare', extra: ComparisonSource.myLots);

@@ -209,13 +209,13 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       text: widget.initialLot?.flavorProfile ?? '',
     );
     _scaScoreController = TextEditingController(
-      text: widget.initialLot?.scaScore ?? '',
+      text: widget.openAsAdd ? '' : (widget.initialLot?.scaScore ?? ''),
     );
     _lotNumberController = TextEditingController(
       text: widget.initialLot?.lotNumber ?? '',
     );
     _weightController = TextEditingController(
-      text: widget.initialLot?.weight ?? '',
+      text: widget.openAsAdd ? '' : (widget.initialLot?.weight ?? ''),
     );
 
     // Initial controllers are set based on widget.initialLot in initState

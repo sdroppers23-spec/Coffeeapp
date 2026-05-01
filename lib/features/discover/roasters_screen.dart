@@ -41,6 +41,9 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
   final Set<String> _selectedIds = {};
   bool get _isSelectionMode => _selectedIds.isNotEmpty;
 
+  final _searchController = TextEditingController();
+  String _searchQuery = '';
+
   @override
   void initState() {
     super.initState();
@@ -51,6 +54,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
   @override
   void dispose() {
     _tabController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -280,31 +284,42 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                 color: Colors.redAccent,
               ),
             ),
-          ] else
-            IconButton(
-              onPressed: () => _showAddRoasterDialog(context, ref),
-              icon: Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
-                  ),
-                ),
-                child: const Icon(
-                  Icons.add,
-                  size: 20,
-                  color: Color(0xFFC8A96E),
-                ),
-              ),
-            ),
+          ],
         ],
       ),
       body: Stack(
         children: [
           Column(
             children: [
+              // ── Search Bar ──────────────────────────────────────────────────
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.05),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.1),
+                    ),
+                  ),
+                  child: TextField(
+                    controller: _searchController,
+                    onChanged: (v) => setState(() => _searchQuery = v),
+                    style: GoogleFonts.outfit(color: Colors.white),
+                    decoration: InputDecoration(
+                      hintText: context.t('search_roasters'),
+                      hintStyle: GoogleFonts.outfit(color: Colors.white24),
+                      border: InputBorder.none,
+                      icon: const Icon(
+                        Icons.search_rounded,
+                        color: Color(0xFFC8A96E),
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               // ── Sub-tabs ────────────────────────────────────────────────────
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -366,6 +381,17 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                 child: Builder(
                   builder: (context) {
                     final filtered = roasters.where((b) {
+                      final matchesSearch = _searchQuery.isEmpty ||
+                          b.name.toLowerCase().contains(
+                            _searchQuery.toLowerCase(),
+                          ) ||
+                          (b.location?.toLowerCase().contains(
+                                _searchQuery.toLowerCase(),
+                              ) ??
+                              false);
+
+                      if (!matchesSearch) return false;
+
                       if (_tabController.index == 0) return !b.isArchived;
                       if (_tabController.index == 1) {
                         return b.isFavorite && !b.isArchived;
@@ -390,58 +416,15 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                               );
                             },
                           ),
-                        if (roasters.isEmpty && !_isSelectionMode)
+                        if (!_isSelectionMode)
                           Align(
                             alignment: Alignment.bottomRight,
                             child: Padding(
                               padding: const EdgeInsets.only(
                                 bottom: 90,
-                                right: 24,
+                                right: 16,
                               ),
-                              child: GestureDetector(
-                                onTap: () =>
-                                    _showAddRoasterDialog(context, ref),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 28,
-                                    vertical: 16,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFC8A96E),
-                                    borderRadius: BorderRadius.circular(50),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: const Color(
-                                          0xFFC8A96E,
-                                        ).withValues(alpha: 0.35),
-                                        blurRadius: 20,
-                                        spreadRadius: 2,
-                                        offset: const Offset(0, 6),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const Icon(
-                                        Icons.add_rounded,
-                                        color: Colors.black87,
-                                        size: 20,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        context.t('add_roaster_uppercase'),
-                                        style: GoogleFonts.outfit(
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: 12,
-                                          letterSpacing: 1.5,
-                                          color: Colors.black87,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
+                              child: _buildHalfWidthAddButton(),
                             ),
                           ),
                       ],
@@ -612,6 +595,55 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildHalfWidthAddButton() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = MediaQuery.of(context).size.width;
+        final buttonWidth = (width - 48) / 2; // Half width with some padding
+
+        return PressableScale(
+          onTap: () => _showAddRoasterDialog(context, ref),
+          child: Container(
+            width: buttonWidth,
+            height: 54,
+            decoration: BoxDecoration(
+              color: const Color(0xFFC8A96E),
+              borderRadius: BorderRadius.circular(27),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFFC8A96E).withValues(alpha: 0.35),
+                  blurRadius: 20,
+                  spreadRadius: 2,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.add_rounded,
+                  color: Colors.black87,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  context.t('add_roaster_uppercase'),
+                  style: GoogleFonts.outfit(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 12,
+                    letterSpacing: 1.5,
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

@@ -20,6 +20,7 @@ class DiscoveryActionBar extends ConsumerWidget {
   final bool showFavoritesButton;
   final bool showComparison;
   final bool showViewModeToggle;
+  final String? searchHint;
 
   const DiscoveryActionBar({
     super.key,
@@ -33,6 +34,7 @@ class DiscoveryActionBar extends ConsumerWidget {
     this.showFavoritesButton = true,
     this.showComparison = true,
     this.showViewModeToggle = true,
+    this.searchHint,
   });
 
   @override
@@ -44,6 +46,33 @@ class DiscoveryActionBar extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
+          // ── Row 0: Search Bar ──────────────────────────────────────────────
+          if (searchHint != null) ...[
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+              ),
+              child: TextField(
+                onChanged: (v) =>
+                    ref.read(filterProvider.notifier).updateSearch(v),
+                style: GoogleFonts.outfit(color: Colors.white, fontSize: 14),
+                decoration: InputDecoration(
+                  hintText: searchHint,
+                  hintStyle: GoogleFonts.outfit(color: Colors.white24),
+                  border: InputBorder.none,
+                  icon: const Icon(
+                    Icons.search_rounded,
+                    color: Color(0xFFC8A96E),
+                    size: 20,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
           // ── Row 1: Filters & Comparison ────────────────────────────────────
           Row(
             children: [

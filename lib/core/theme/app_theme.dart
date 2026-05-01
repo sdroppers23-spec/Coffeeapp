@@ -34,7 +34,6 @@ class AppTheme {
   static ThemeData _buildTheme() {
     const brightness = Brightness.dark;
     const bg = darkBg;
-    const surface = darkSurface;
     const primary = darkAccent; // Gold as primary
     const accent = darkAccent;
     const textPrimary = Colors.white;
@@ -67,9 +66,11 @@ class AppTheme {
         outlineVariant: primary.withValues(alpha: 0.1),
       ),
       canvasColor: bg,
-      scaffoldBackgroundColor: bg,
       cardColor: bg,
-      dialogBackgroundColor: bg,
+      dialogTheme: const DialogThemeData(
+        backgroundColor: bg,
+        surfaceTintColor: Colors.transparent,
+      ),
       iconTheme: const IconThemeData(color: accent, size: 24),
       textTheme: GoogleFonts.outfitTextTheme(base.textTheme).copyWith(
         displayLarge: GoogleFonts.outfit(

@@ -9,7 +9,9 @@ import '../../core/l10n/app_localizations.dart';
 import '../../core/supabase/supabase_provider.dart';
 import 'lots/widgets/lot_card_widgets.dart';
 import 'lots/providers/roaster_providers.dart';
+import 'lots/lots_providers.dart';
 import 'package:go_router/go_router.dart';
+import '../../shared/services/roaster_image_service.dart';
 
 final userRoasterLotsProvider =
     FutureProvider.family<List<CoffeeLotDto>, String>((ref, roasterId) async {
@@ -68,6 +70,18 @@ class _UserRoasterDetailsScreenState extends ConsumerState<UserRoasterDetailsScr
           IconButton(
             icon: const Icon(Icons.edit_outlined, color: Colors.white),
             onPressed: () => _showEditRoasterDialog(context, ref, currentRoaster),
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
+            onPressed: () async {
+              final confirmed = await _confirmDeleteDialog(currentRoaster.name);
+              if (confirmed && mounted) {
+                await ref
+                    .read(userRoastersProvider.notifier)
+                    .deleteRoaster(currentRoaster.id);
+                if (context.mounted) Navigator.pop(context);
+              }
+            },
           ),
           IconButton(
             icon: Icon(
@@ -199,7 +213,7 @@ class _UserRoasterDetailsScreenState extends ConsumerState<UserRoasterDetailsScr
               child: Row(
                 children: [
                   Text(
-                    l10n.translate('roaster_lots_title'),
+                    l10n.translate('lots_by_roaster_title'),
                     style: GoogleFonts.poppins(
                       color: const Color(0xFFC8A96E),
                       fontWeight: FontWeight.bold,
@@ -249,8 +263,8 @@ class _UserRoasterDetailsScreenState extends ConsumerState<UserRoasterDetailsScr
                     final query = _searchQuery.toLowerCase();
                     if (query.isEmpty) return true;
                     return (l.coffeeName?.toLowerCase().contains(query) ?? false) ||
-                           (l.originCountry.toLowerCase().contains(query)) ||
-                           (l.region.toLowerCase().contains(query));
+                           (l.originCountry?.toLowerCase().contains(query) ?? false) ||
+                           (l.region?.toLowerCase().contains(query) ?? false);
                   }).toList();
 
                   if (filteredLots.isEmpty) {
@@ -285,9 +299,8 @@ class _UserRoasterDetailsScreenState extends ConsumerState<UserRoasterDetailsScr
                         isSelectionMode: false,
                         onLongPress: (_) {},
                         onFavoriteToggle: (lot) {
-                          // This would normally be handled by a dedicated lots notifier
-                          // For now, let's use the DB directly or a placeholder if needed
-                          // But we should probably have a way to toggle lot favorite
+                          ref.read(userLotsProvider.notifier).toggleFavorite(lot.id);
+                          ref.invalidate(userRoasterLotsProvider(currentRoaster.id));
                         },
                         onTap: (id) {
                           context.push('/lot_details', extra: {'lot': filteredLots[i]});
@@ -335,6 +348,150 @@ class _UserRoasterDetailsScreenState extends ConsumerState<UserRoasterDetailsScr
       Icons.business_rounded,
       color: Color(0xFFC8A96E),
       size: 40,
+    );
+  }
+
+  Future<bool> _confirmDeleteDialog(String name) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            backgroundColor: const Color(0xFF151515),
+            title: Text(
+              context.t('delete_roaster_confirm_title'),
+              style: const TextStyle(color: Color(0xFFC8A96E)),
+            ),
+            content: Text(
+              context.t('delete_roaster_confirm_msg', args: {'name': name}),
+              style: const TextStyle(color: Colors.white70),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: Text(context.t('cancel'), style: const TextStyle(color: Colors.white38)),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                child: Text(context.t('delete'), style: const TextStyle(color: Colors.redAccent)),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
+  static Future<void> _showEditRoasterDialog(
+    BuildContext context,
+    WidgetRef ref,
+    UserRoasterDto roaster,
+  ) async {
+    final notifier = ref.read(userRoastersProvider.notifier);
+    final nameController = TextEditingController(text: roaster.name);
+    final shortDescController = TextEditingController(text: roaster.description);
+    final locationController = TextEditingController(text: roaster.location);
+    final logoUrlController = TextEditingController(text: roaster.logoUrl);
+    String? localPath = roaster.localLogoPath;
+
+    await showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          backgroundColor: const Color(0xFF151515),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          title: Text(
+            context.t('edit_roaster_title'),
+            style: GoogleFonts.poppins(color: const Color(0xFFC8A96E), fontWeight: FontWeight.bold),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () async {
+                    final path = await RoasterImageService.pickAndSaveImage();
+                    if (path != null) {
+                      setDialogState(() => localPath = path);
+                    }
+                  },
+                  child: Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.05),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.white12),
+                      image: localPath != null
+                          ? DecorationImage(image: FileImage(File(localPath!)), fit: BoxFit.cover)
+                          : null,
+                    ),
+                    child: localPath == null
+                        ? const Icon(Icons.add_a_photo_rounded, color: Color(0xFFC8A96E), size: 30)
+                        : null,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                _buildDialogField(context, nameController, context.t('name_label'), Icons.business_rounded),
+                const SizedBox(height: 12),
+                _buildDialogField(context, locationController, context.t('location_label'), Icons.location_on_rounded),
+                const SizedBox(height: 12),
+                _buildDialogField(context, logoUrlController, 'Logo URL (optional)', Icons.link_rounded),
+                const SizedBox(height: 12),
+                _buildDialogField(context, shortDescController, context.t('description_label'), Icons.description_rounded, maxLines: 3),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(context.t('cancel'), style: GoogleFonts.outfit(color: Colors.white38)),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                if (nameController.text.isEmpty) return;
+                final updated = roaster.copyWith(
+                  name: nameController.text,
+                  location: locationController.text,
+                  description: shortDescController.text,
+                  logoUrl: logoUrlController.text,
+                  localLogoPath: localPath,
+                  updatedAt: DateTime.now(),
+                );
+                await notifier.saveRoaster(updated);
+                if (context.mounted) Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFC8A96E),
+                foregroundColor: Colors.black,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              child: Text(context.t('save'), style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static Widget _buildDialogField(
+    BuildContext context,
+    TextEditingController controller,
+    String label,
+    IconData icon, {
+    int maxLines = 1,
+  }) {
+    return TextField(
+      controller: controller,
+      maxLines: maxLines,
+      style: GoogleFonts.outfit(color: Colors.white, fontSize: 14),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: GoogleFonts.outfit(color: Colors.white38, fontSize: 12),
+        prefixIcon: Icon(icon, color: const Color(0xFFC8A96E), size: 18),
+        filled: true,
+        fillColor: Colors.white.withValues(alpha: 0.03),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFFC8A96E), width: 1)),
+      ),
     );
   }
 }

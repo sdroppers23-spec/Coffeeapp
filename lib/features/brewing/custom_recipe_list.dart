@@ -401,6 +401,7 @@ class _GlobalCustomRecipeListState
                 onCompareTap: () {},
                 showComparison: false,
                 showViewModeToggle: false,
+                searchHint: ref.t('search_recipes'),
               ),
               Expanded(
                 child: Center(
@@ -433,45 +434,6 @@ class _GlobalCustomRecipeListState
             const SizedBox(height: 170),
 
             // Internal Header: Search + Action Bar
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              color: Colors.transparent,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Search Bar
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.05),
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.1),
-                        ),
-                      ),
-                      child: TextField(
-                        onChanged: (val) => ref
-                            .read(brewingFilterProvider.notifier)
-                            .updateSearch(val),
-                        style: GoogleFonts.outfit(color: Colors.white),
-                        decoration: InputDecoration(
-                          hintText: ref.t('search_recipes'),
-                          hintStyle: GoogleFonts.outfit(color: Colors.white38),
-                          prefixIcon: const Icon(
-                            Icons.search_rounded,
-                            color: Color(0xFFC8A96E),
-                          ),
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(
-                            vertical: 12,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
                   DiscoveryActionBar(
                     filterProvider: brewingFilterProvider,
                     selectionProvider: brewingSelectedIdsProvider,
@@ -479,10 +441,8 @@ class _GlobalCustomRecipeListState
                     showViewModeToggle: false,
                     onSelectAll: () => _selectAll(filtered),
                     onCompareTap: () {},
+                    searchHint: ref.t('search_recipes'),
                   ),
-                ],
-              ),
-            ),
 
             // Main List Content
             Expanded(

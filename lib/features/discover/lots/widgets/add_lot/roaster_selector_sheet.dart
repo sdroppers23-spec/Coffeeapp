@@ -187,7 +187,6 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                   ),
           ),
 
-          ),
           const SizedBox(height: 10),
         ],
       ),

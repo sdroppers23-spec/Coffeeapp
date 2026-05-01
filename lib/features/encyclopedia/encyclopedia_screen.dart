@@ -50,6 +50,7 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
               DiscoveryActionBar(
                 filterProvider: encyclopediaFilterProvider,
                 selectionProvider: encyclopediaSelectedIdsProvider,
+                searchHint: context.t('search_coffee'),
                 onCompareTap: () {
                   final selectedCount = ref
                       .read(encyclopediaSelectedIdsProvider)

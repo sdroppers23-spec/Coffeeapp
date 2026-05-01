@@ -371,7 +371,7 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                 const SizedBox(height: 16),
                 SwitchListTile(
                   title: Text(
-                    context.t('favorite_label') ?? 'Favorite',
+                    context.t('favorite_label'),
                     style: GoogleFonts.outfit(
                       color: Colors.white,
                       fontSize: 14,

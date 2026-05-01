@@ -8,6 +8,7 @@ import '../../core/providers/settings_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../shared/widgets/glass_swipe_wrapper.dart';
 import '../../shared/widgets/glass_container.dart';
+import '../../shared/services/roaster_image_service.dart';
 import '../../core/database/dtos.dart';
 import 'lots/providers/roaster_providers.dart';
 import 'user_roaster_details_screen.dart';
@@ -721,7 +722,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                 const SizedBox(height: 16),
                 SwitchListTile(
                   title: Text(
-                    context.t('favorite_label') ?? 'Favorite',
+                    context.t('favorite_label'),
                     style: GoogleFonts.poppins(
                       color: Colors.white,
                       fontSize: 14,
@@ -745,22 +746,23 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
             ),
             TextButton(
               onPressed: () async {
-                if (nameController.text.isNotEmpty) {
-                  final roaster = UserRoasterDto(
-                    id: DateTime.now().millisecondsSinceEpoch.toString(),
-                    name: nameController.text,
-                    location: locationController.text,
-                    description: shortDescController.text,
-                    logoUrl: logoUrlController.text.isNotEmpty
-                        ? logoUrlController.text
-                        : null,
-                    localLogoPath: localPath,
-                    updatedAt: DateTime.now(),
-                    isFavorite: isFavorite,
-                  );
-                  await notifier.saveRoaster(roaster);
-                  if (ctx.mounted) Navigator.pop(ctx);
+                if (nameController.text.trim().isEmpty) {
+                  return;
                 }
+                final roaster = UserRoasterDto(
+                  id: DateTime.now().millisecondsSinceEpoch.toString(),
+                  name: nameController.text,
+                  location: locationController.text,
+                  description: shortDescController.text,
+                  logoUrl: logoUrlController.text.isNotEmpty
+                      ? logoUrlController.text
+                      : null,
+                  localLogoPath: localPath,
+                  updatedAt: DateTime.now(),
+                  isFavorite: isFavorite,
+                );
+                await notifier.saveRoaster(roaster);
+                if (ctx.mounted) Navigator.pop(ctx);
               },
               child: Text(
                 context.t('save'),

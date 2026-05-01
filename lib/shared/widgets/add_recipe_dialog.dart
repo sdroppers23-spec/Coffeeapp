@@ -446,8 +446,9 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
 
           dynamic safeJson(String source) {
             try {
-              if (source.isEmpty || source == '[]' || source == '{}')
+              if (source.isEmpty || source == '[]' || source == '{}') {
                 return source.startsWith('[') ? [] : {};
+              }
               return jsonDecode(source);
             } catch (_) {
               return source.startsWith('[') ? [] : {};
@@ -1113,9 +1114,13 @@ class _MaxIntFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    if (newValue.text.isEmpty) return newValue;
+    if (newValue.text.isEmpty) {
+      return newValue;
+    }
     final intValue = int.tryParse(newValue.text);
-    if (intValue == null) return oldValue;
+    if (intValue == null) {
+      return oldValue;
+    }
     if (intValue > max) {
       return TextEditingValue(
         text: max.toString(),

@@ -91,13 +91,13 @@ class DescriptionGlassModal extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             if (contentHtml != null && contentHtml!.isNotEmpty)
-                                Html(
-                                  data: CoffeeTextProcessor.process(contentHtml!),
-                                  style: CoffeeTextProcessor.getHtmlStyles(
-                                    baseFontSize: 16,
-                                    goldColor: gold,
-                                  ),
-                                )
+                              Html(
+                                data: CoffeeTextProcessor.process(contentHtml!),
+                                style: CoffeeTextProcessor.getHtmlStyles(
+                                  baseFontSize: 16,
+                                  goldColor: gold,
+                                ),
+                              )
                             else if (content != null && content!.isNotEmpty)
                               Text(
                                 content!,

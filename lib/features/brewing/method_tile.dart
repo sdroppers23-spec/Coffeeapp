@@ -44,13 +44,15 @@ class MethodTile extends ConsumerWidget {
         // Hide nav bar when entering detail view
         ref.read(navBarVisibleProvider.notifier).hide();
 
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => BrewingDetailScreen(recipe: _firstRecipe),
-          ),
-        ).then((_) {
-          ref.read(navBarVisibleProvider.notifier).show();
-        });
+        Navigator.of(context)
+            .push(
+              MaterialPageRoute(
+                builder: (_) => BrewingDetailScreen(recipe: _firstRecipe),
+              ),
+            )
+            .then((_) {
+              ref.read(navBarVisibleProvider.notifier).show();
+            });
       },
       child: GlassContainer(
         borderRadius: 24,
@@ -154,8 +156,9 @@ class MethodTile extends ConsumerWidget {
                   // Recipe count chip - only show if user has custom recipes
                   Builder(
                     builder: (context) {
-                      final customCount =
-                          methodRecipes.where((r) => !r.isGuide).length;
+                      final customCount = methodRecipes
+                          .where((r) => !r.isGuide)
+                          .length;
                       if (customCount == 0) return const SizedBox.shrink();
                       return _RecipeCountChip(count: customCount);
                     },

@@ -237,7 +237,6 @@ class _RecipesTab extends ConsumerStatefulWidget {
 class _RecipesTabState extends ConsumerState<_RecipesTab> {
   @override
   Widget build(BuildContext context) {
-
     final recipesAsync = ref.watch(userLotRecipesForLotProvider(widget.lot.id));
 
     return recipesAsync.when(

@@ -178,8 +178,10 @@ class _BrewingMethodsContent extends ConsumerWidget {
               for (var cr in customList) {
                 // HARD FILTER: Encyclopedia recipes MUST NOT appear here
                 if (cr.segment == RecipeSegment.encyclopedia) {
-                   debugPrint('BrewingMainScreen: Filtering out encyclopedia recipe: ${cr.name} (ID: ${cr.id})');
-                   continue;
+                  debugPrint(
+                    'BrewingMainScreen: Filtering out encyclopedia recipe: ${cr.name} (ID: ${cr.id})',
+                  );
+                  continue;
                 }
 
                 // Determine if this custom recipe belongs to an existing guide method or is a new one

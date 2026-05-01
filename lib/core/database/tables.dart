@@ -470,7 +470,8 @@ class UserLotRecipes extends Table with RecipeColumns {
 
 // ─── EncyclopediaRecipes (User's Private - Encyclopedia) ───────────────────────
 class EncyclopediaRecipes extends Table with RecipeColumns {
-  IntColumn get beanId => integer().nullable().references(LocalizedBeansV2, #id)();
+  IntColumn get beanId =>
+      integer().nullable().references(LocalizedBeansV2, #id)();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -480,7 +481,7 @@ class EncyclopediaRecipes extends Table with RecipeColumns {
 class AlternativeRecipes extends Table with RecipeColumns {
   // methodKey is already in RecipeColumns, but we can add a reference here if needed
   // references(AlternativeBrewing, #methodKey)
-  
+
   @override
   Set<Column> get primaryKey => {id};
 }

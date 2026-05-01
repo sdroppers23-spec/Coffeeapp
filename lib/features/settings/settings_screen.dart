@@ -281,33 +281,37 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 context,
                 child: Column(
                   children: [
-    _buildTogglePreference(
-      context,
-      icon: Icons.thermostat_rounded,
-      title: ref.t('temperature'),
-      value: prefs.tempUnit == TempUnit.fahrenheit,
-      offLabel: '°C',
-      onLabel: '°F',
-      onChanged: (val) {
-        ref.read(preferencesProvider.notifier).setTempUnit(
-              val ? TempUnit.fahrenheit : TempUnit.celsius,
-            );
-      },
-    ),
-    _buildDivider(theme),
-    _buildTogglePreference(
-      context,
-      icon: Icons.straighten_rounded,
-      title: ref.t('distance'),
-      value: prefs.lengthUnit == LengthUnit.feet,
-      offLabel: ref.t('meters_short'),
-      onLabel: ref.t('feet_short'),
-      onChanged: (val) {
-        ref.read(preferencesProvider.notifier).setLengthUnit(
-              val ? LengthUnit.feet : LengthUnit.meters,
-            );
-      },
-    ),
+                    _buildTogglePreference(
+                      context,
+                      icon: Icons.thermostat_rounded,
+                      title: ref.t('temperature'),
+                      value: prefs.tempUnit == TempUnit.fahrenheit,
+                      offLabel: '°C',
+                      onLabel: '°F',
+                      onChanged: (val) {
+                        ref
+                            .read(preferencesProvider.notifier)
+                            .setTempUnit(
+                              val ? TempUnit.fahrenheit : TempUnit.celsius,
+                            );
+                      },
+                    ),
+                    _buildDivider(theme),
+                    _buildTogglePreference(
+                      context,
+                      icon: Icons.straighten_rounded,
+                      title: ref.t('distance'),
+                      value: prefs.lengthUnit == LengthUnit.feet,
+                      offLabel: ref.t('meters_short'),
+                      onLabel: ref.t('feet_short'),
+                      onChanged: (val) {
+                        ref
+                            .read(preferencesProvider.notifier)
+                            .setLengthUnit(
+                              val ? LengthUnit.feet : LengthUnit.meters,
+                            );
+                      },
+                    ),
                     _buildDivider(theme),
                     _buildCurrencyPreference(context, ref, prefs),
                   ],
@@ -627,7 +631,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     child: Text(
                       _currencySymbolOnly(c),
                       style: GoogleFonts.outfit(
-                        color: isSelected ? Colors.black : Colors.white.withValues(alpha: 0.85),
+                        color: isSelected
+                            ? Colors.black
+                            : Colors.white.withValues(alpha: 0.85),
                         fontSize: 12,
                         fontWeight: isSelected
                             ? FontWeight.bold

@@ -107,9 +107,7 @@ class CoffeeTextProcessor {
         margin: Margins.only(bottom: 4),
         padding: HtmlPaddings.only(left: 20),
       ),
-      'li': Style(
-        margin: Margins.only(bottom: 4),
-      ),
+      'li': Style(margin: Margins.only(bottom: 4)),
       'hr': Style(
         margin: Margins.symmetric(vertical: 16),
         border: Border(
@@ -122,23 +120,13 @@ class CoffeeTextProcessor {
       'blockquote': Style(
         margin: Margins.only(bottom: 4, left: 0, right: 0),
         padding: HtmlPaddings.only(left: 12, top: 6, bottom: 6),
-        border: Border(
-          left: BorderSide(color: goldColor, width: 3),
-        ),
+        border: Border(left: BorderSide(color: goldColor, width: 3)),
         fontStyle: FontStyle.italic,
         backgroundColor: Colors.white.withValues(alpha: 0.03),
       ),
-      'strong,b': Style(
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
-      ),
-      '.coffee-gold': Style(
-        color: goldColor,
-        fontWeight: FontWeight.bold,
-      ),
-      '.coffee-accent': Style(
-        color: goldColor.withValues(alpha: 0.6),
-      ),
+      'strong,b': Style(color: Colors.white, fontWeight: FontWeight.bold),
+      '.coffee-gold': Style(color: goldColor, fontWeight: FontWeight.bold),
+      '.coffee-accent': Style(color: goldColor.withValues(alpha: 0.6)),
       '.coffee-accent-gold': Style(
         color: goldColor,
         fontWeight: FontWeight.bold,
@@ -146,9 +134,7 @@ class CoffeeTextProcessor {
       '.coffee-serif': Style(
         fontFamily: GoogleFonts.cormorantGaramond().fontFamily,
       ),
-      '.coffee-white': Style(
-        color: Colors.white,
-      ),
+      '.coffee-white': Style(color: Colors.white),
     };
   }
 

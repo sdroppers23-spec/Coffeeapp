@@ -313,95 +313,119 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
       // Local Database Upsert
       switch (widget.recipeSegment) {
         case RecipeSegment.userLot:
-          await db.upsertUserLotRecipe(UserLotRecipesCompanion(
-            id: Value(recipeId),
-            userId: Value(userId),
-            lotId: Value(widget.lotId.isEmpty ? null : widget.lotId),
-            methodKey: Value(_method),
-            name: Value(recipeName),
-            coffeeGrams: Value(coffeeGrams),
-            totalWaterMl: Value(waterGrams),
-            grindNumber: Value(grindNumber),
-            comandanteClicks: Value(grinderName == 'Comandante' ? grindNumber : 0),
-            ek43Division: Value(grinderName == 'EK43' ? grindNumber : 0),
-            totalPours: Value(_pourControllers.length),
-            isSynced: const Value(false),
-            recipeType: Value(_recipeType),
-            brewRatio: Value(double.tryParse(_ratioController.text.replaceAll('1:', ''))),
-            grinderName: Value(grinderName),
-            microns: Value(int.tryParse(_micronsController.text)),
-            extractionTimeSeconds: Value(_parseHMSToSeconds(_extractionTimeController.text)),
-            difficulty: Value(_difficulty),
-            customMethodName: Value(_customMethodNameController.text.trim()),
-            pourScheduleJson: Value(pourScheduleJson),
-            brewTempC: Value(brewTempC),
-            notes: Value(_notesController.text.trim()),
-            contentHtml: Value(widget.existingRecipe?.contentHtml),
-            rating: Value(_rating),
-            createdAt: Value(createdAt),
-            updatedAt: Value(updatedAt),
-          ));
+          await db.upsertUserLotRecipe(
+            UserLotRecipesCompanion(
+              id: Value(recipeId),
+              userId: Value(userId),
+              lotId: Value(widget.lotId.isEmpty ? null : widget.lotId),
+              methodKey: Value(_method),
+              name: Value(recipeName),
+              coffeeGrams: Value(coffeeGrams),
+              totalWaterMl: Value(waterGrams),
+              grindNumber: Value(grindNumber),
+              comandanteClicks: Value(
+                grinderName == 'Comandante' ? grindNumber : 0,
+              ),
+              ek43Division: Value(grinderName == 'EK43' ? grindNumber : 0),
+              totalPours: Value(_pourControllers.length),
+              isSynced: const Value(false),
+              recipeType: Value(_recipeType),
+              brewRatio: Value(
+                double.tryParse(_ratioController.text.replaceAll('1:', '')),
+              ),
+              grinderName: Value(grinderName),
+              microns: Value(int.tryParse(_micronsController.text)),
+              extractionTimeSeconds: Value(
+                _parseHMSToSeconds(_extractionTimeController.text),
+              ),
+              difficulty: Value(_difficulty),
+              customMethodName: Value(_customMethodNameController.text.trim()),
+              pourScheduleJson: Value(pourScheduleJson),
+              brewTempC: Value(brewTempC),
+              notes: Value(_notesController.text.trim()),
+              contentHtml: Value(widget.existingRecipe?.contentHtml),
+              rating: Value(_rating),
+              createdAt: Value(createdAt),
+              updatedAt: Value(updatedAt),
+            ),
+          );
           break;
 
         case RecipeSegment.encyclopedia:
-          await db.upsertEncyclopediaRecipe(EncyclopediaRecipesCompanion(
-            id: Value(recipeId),
-            userId: Value(userId),
-            beanId: Value(int.tryParse(widget.lotId)),
-            methodKey: Value(_method),
-            name: Value(recipeName),
-            coffeeGrams: Value(coffeeGrams),
-            totalWaterMl: Value(waterGrams),
-            grindNumber: Value(grindNumber),
-            comandanteClicks: Value(grinderName == 'Comandante' ? grindNumber : 0),
-            ek43Division: Value(grinderName == 'EK43' ? grindNumber : 0),
-            totalPours: Value(_pourControllers.length),
-            isSynced: const Value(false),
-            recipeType: Value(_recipeType),
-            brewRatio: Value(double.tryParse(_ratioController.text.replaceAll('1:', ''))),
-            grinderName: Value(grinderName),
-            microns: Value(int.tryParse(_micronsController.text)),
-            extractionTimeSeconds: Value(_parseHMSToSeconds(_extractionTimeController.text)),
-            difficulty: Value(_difficulty),
-            customMethodName: Value(_customMethodNameController.text.trim()),
-            pourScheduleJson: Value(pourScheduleJson),
-            brewTempC: Value(brewTempC),
-            notes: Value(_notesController.text.trim()),
-            contentHtml: Value(widget.existingRecipe?.contentHtml),
-            rating: Value(_rating),
-            createdAt: Value(createdAt),
-            updatedAt: Value(updatedAt),
-          ));
+          await db.upsertEncyclopediaRecipe(
+            EncyclopediaRecipesCompanion(
+              id: Value(recipeId),
+              userId: Value(userId),
+              beanId: Value(int.tryParse(widget.lotId)),
+              methodKey: Value(_method),
+              name: Value(recipeName),
+              coffeeGrams: Value(coffeeGrams),
+              totalWaterMl: Value(waterGrams),
+              grindNumber: Value(grindNumber),
+              comandanteClicks: Value(
+                grinderName == 'Comandante' ? grindNumber : 0,
+              ),
+              ek43Division: Value(grinderName == 'EK43' ? grindNumber : 0),
+              totalPours: Value(_pourControllers.length),
+              isSynced: const Value(false),
+              recipeType: Value(_recipeType),
+              brewRatio: Value(
+                double.tryParse(_ratioController.text.replaceAll('1:', '')),
+              ),
+              grinderName: Value(grinderName),
+              microns: Value(int.tryParse(_micronsController.text)),
+              extractionTimeSeconds: Value(
+                _parseHMSToSeconds(_extractionTimeController.text),
+              ),
+              difficulty: Value(_difficulty),
+              customMethodName: Value(_customMethodNameController.text.trim()),
+              pourScheduleJson: Value(pourScheduleJson),
+              brewTempC: Value(brewTempC),
+              notes: Value(_notesController.text.trim()),
+              contentHtml: Value(widget.existingRecipe?.contentHtml),
+              rating: Value(_rating),
+              createdAt: Value(createdAt),
+              updatedAt: Value(updatedAt),
+            ),
+          );
           break;
 
         case RecipeSegment.alternative:
-          await db.upsertAlternativeRecipe(AlternativeRecipesCompanion(
-            id: Value(recipeId),
-            userId: Value(userId),
-            methodKey: Value(_method),
-            name: Value(recipeName),
-            coffeeGrams: Value(coffeeGrams),
-            totalWaterMl: Value(waterGrams),
-            grindNumber: Value(grindNumber),
-            comandanteClicks: Value(grinderName == 'Comandante' ? grindNumber : 0),
-            ek43Division: Value(grinderName == 'EK43' ? grindNumber : 0),
-            totalPours: Value(_pourControllers.length),
-            isSynced: const Value(false),
-            recipeType: Value(_recipeType),
-            brewRatio: Value(double.tryParse(_ratioController.text.replaceAll('1:', ''))),
-            grinderName: Value(grinderName),
-            microns: Value(int.tryParse(_micronsController.text)),
-            extractionTimeSeconds: Value(_parseHMSToSeconds(_extractionTimeController.text)),
-            difficulty: Value(_difficulty),
-            customMethodName: Value(_customMethodNameController.text.trim()),
-            pourScheduleJson: Value(pourScheduleJson),
-            brewTempC: Value(brewTempC),
-            notes: Value(_notesController.text.trim()),
-            contentHtml: Value(widget.existingRecipe?.contentHtml),
-            rating: Value(_rating),
-            createdAt: Value(createdAt),
-            updatedAt: Value(updatedAt),
-          ));
+          await db.upsertAlternativeRecipe(
+            AlternativeRecipesCompanion(
+              id: Value(recipeId),
+              userId: Value(userId),
+              methodKey: Value(_method),
+              name: Value(recipeName),
+              coffeeGrams: Value(coffeeGrams),
+              totalWaterMl: Value(waterGrams),
+              grindNumber: Value(grindNumber),
+              comandanteClicks: Value(
+                grinderName == 'Comandante' ? grindNumber : 0,
+              ),
+              ek43Division: Value(grinderName == 'EK43' ? grindNumber : 0),
+              totalPours: Value(_pourControllers.length),
+              isSynced: const Value(false),
+              recipeType: Value(_recipeType),
+              brewRatio: Value(
+                double.tryParse(_ratioController.text.replaceAll('1:', '')),
+              ),
+              grinderName: Value(grinderName),
+              microns: Value(int.tryParse(_micronsController.text)),
+              extractionTimeSeconds: Value(
+                _parseHMSToSeconds(_extractionTimeController.text),
+              ),
+              difficulty: Value(_difficulty),
+              customMethodName: Value(_customMethodNameController.text.trim()),
+              pourScheduleJson: Value(pourScheduleJson),
+              brewTempC: Value(brewTempC),
+              notes: Value(_notesController.text.trim()),
+              contentHtml: Value(widget.existingRecipe?.contentHtml),
+              rating: Value(_rating),
+              createdAt: Value(createdAt),
+              updatedAt: Value(updatedAt),
+            ),
+          );
           break;
       }
 
@@ -422,7 +446,8 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
 
           dynamic safeJson(String source) {
             try {
-              if (source.isEmpty || source == '[]' || source == '{}') return source.startsWith('[') ? [] : {};
+              if (source.isEmpty || source == '[]' || source == '{}')
+                return source.startsWith('[') ? [] : {};
               return jsonDecode(source);
             } catch (_) {
               return source.startsWith('[') ? [] : {};
@@ -470,7 +495,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
               await db.markAlternativeRecipeSynced(recipeId);
               break;
           }
-          
+
           // Trigger global sync with progress UI
           unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
         } catch (e) {
@@ -636,8 +661,6 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                         const SizedBox(height: 16),
                         _buildDifficultySelector(ref),
                         const SizedBox(height: 32),
-
-
 
                         // SECTION: Notes
                         _buildSectionHeader(ref.t('notes_hint')),

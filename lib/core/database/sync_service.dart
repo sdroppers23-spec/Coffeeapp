@@ -19,7 +19,7 @@ class SyncService {
   // Stream to notify UI when a record was updated in real-time
   final _dataUpdateController = StreamController<void>.broadcast();
   Stream<void> get dataUpdateStream => _dataUpdateController.stream;
-  
+
   final _isSyncingNotifier = ValueNotifier<bool>(false);
   ValueListenable<bool> get isSyncing => _isSyncingNotifier;
 
@@ -27,7 +27,7 @@ class SyncService {
   ValueListenable<SyncResult?> get lastSyncResult => _lastSyncResultNotifier;
 
   StreamSubscription? _autoSyncSub;
-  
+
   bool get _isPushing => _isSyncingNotifier.value;
   set _isPushing(bool value) => _isSyncingNotifier.value = value;
 
@@ -37,7 +37,7 @@ class SyncService {
   static const String methodsBucket = '$baseUrl/Methods/';
   static const String flagsBucket = '$baseUrl/Flags/';
   static const String farmersBucket = '$baseUrl/Farmers/';
- 
+
   SyncService(this.db, [this.supabase]);
 
   void dispose() {
@@ -57,14 +57,18 @@ class SyncService {
         'alternative_recipes',
         'coffee_lots',
         'fermentation_logs',
-        'user_roasters'
+        'user_roasters',
       };
 
       final updatedTables = updates.map((u) => u.table).toSet();
-      final hasRelevantUpdate = updatedTables.any((t) => relevantTables.contains(t));
-      
+      final hasRelevantUpdate = updatedTables.any(
+        (t) => relevantTables.contains(t),
+      );
+
       if (hasRelevantUpdate) {
-        debugPrint('🔄 SyncService: Local changes detected in $updatedTables, scheduling push...');
+        debugPrint(
+          '🔄 SyncService: Local changes detected in $updatedTables, scheduling push...',
+        );
         _debounceSync();
       }
     });
@@ -180,8 +184,6 @@ class SyncService {
       _isPushing = false;
     }
   }
-
-
 
   /// Migrates local guest data to the authenticated user's account.
   Future<void> claimGuestData(String newUserId) async {
@@ -560,11 +562,13 @@ class SyncService {
         final List<dynamic> data = response['data'] as List<dynamic>? ?? [];
         final dataJson = jsonEncode(data);
 
-        await db.saveUserRoastersRecord(UserRoastersCompanion(
-          userId: Value(userId),
-          dataJson: Value(dataJson),
-          isSynced: const Value(true),
-        ));
+        await db.saveUserRoastersRecord(
+          UserRoastersCompanion(
+            userId: Value(userId),
+            dataJson: Value(dataJson),
+            isSynced: const Value(true),
+          ),
+        );
         debugPrint('SyncService: User roasters pulled from cloud');
       }
     } catch (e) {
@@ -585,7 +589,7 @@ class SyncService {
       debugPrint('SyncService: Push already in progress, skipping...');
       return;
     }
-    
+
     if (!internal) _isPushing = true;
     debugPrint('SyncService: Starting cloud push...');
 
@@ -608,8 +612,10 @@ class SyncService {
                 .eq('id', b.id)
                 .eq('user_id', userId)
                 .timeout(const Duration(seconds: 15));
-            
-            await (db.delete(db.localizedBrands)..where((t) => t.id.equals(b.id))).go();
+
+            await (db.delete(
+              db.localizedBrands,
+            )..where((t) => t.id.equals(b.id))).go();
             debugPrint('SyncService: Brand deleted permanently: ${b.id}');
           } else {
             await supabase!
@@ -624,9 +630,10 @@ class SyncService {
                 })
                 .timeout(const Duration(seconds: 15));
 
-            final translations = await (db.select(db.localizedBrandTranslations)
-              ..where((t) => t.brandId.equals(b.id))).get();
-            
+            final translations = await (db.select(
+              db.localizedBrandTranslations,
+            )..where((t) => t.brandId.equals(b.id))).get();
+
             for (final t in translations) {
               await supabase!
                   .from('user_brand_translations')
@@ -640,7 +647,8 @@ class SyncService {
                   .timeout(const Duration(seconds: 15));
             }
 
-            await (db.update(db.localizedBrands)..where((t) => t.id.equals(b.id)))
+            await (db.update(db.localizedBrands)
+                  ..where((t) => t.id.equals(b.id)))
                 .write(const LocalizedBrandsCompanion(isSynced: Value(true)));
             debugPrint('SyncService: Brand synced to cloud: ${b.id}');
           }
@@ -656,7 +664,9 @@ class SyncService {
       )..where((t) => t.isSynced.equals(false))).get();
       debugPrint('SyncService: Found ${lotsToSync.length} lots to sync.');
       for (final l in lotsToSync) {
-        debugPrint('SyncService: Processing lot ${l.id}, isDeletedLocal: ${l.isDeletedLocal}');
+        debugPrint(
+          'SyncService: Processing lot ${l.id}, isDeletedLocal: ${l.isDeletedLocal}',
+        );
         try {
           if (l.isDeletedLocal) {
             debugPrint('SyncService: Deleting lot from cloud: ${l.id}');
@@ -711,7 +721,9 @@ class SyncService {
                 .upsert(data)
                 .timeout(const Duration(seconds: 15));
             await db.markLotSynced(l.id);
-            debugPrint('SyncService: Lot synced to cloud successfully: ${l.id}');
+            debugPrint(
+              'SyncService: Lot synced to cloud successfully: ${l.id}',
+            );
           }
         } catch (e) {
           debugPrint('SyncService: CRITICAL Error syncing lot ${l.id}: $e');
@@ -786,7 +798,9 @@ class SyncService {
                 .eq('user_id', userId)
                 .timeout(const Duration(seconds: 15));
             await db.markEncyclopediaRecipeSynced(r.id);
-            debugPrint('SyncService: Deleted encyclopedia recipe ${r.id} from cloud');
+            debugPrint(
+              'SyncService: Deleted encyclopedia recipe ${r.id} from cloud',
+            );
           } else {
             final data = {
               'id': r.id,
@@ -820,7 +834,9 @@ class SyncService {
             debugPrint('SyncService: Pushed encyclopedia recipe ${r.id}');
           }
         } catch (e) {
-          debugPrint('SyncService: Error syncing encyclopedia recipe ${r.id}: $e');
+          debugPrint(
+            'SyncService: Error syncing encyclopedia recipe ${r.id}: $e',
+          );
         }
       }
 
@@ -838,7 +854,9 @@ class SyncService {
                 .eq('id', r.id)
                 .eq('user_id', userId);
             await db.markAlternativeRecipeSynced(r.id);
-            debugPrint('SyncService: Deleted alternative recipe ${r.id} from cloud');
+            debugPrint(
+              'SyncService: Deleted alternative recipe ${r.id} from cloud',
+            );
           } else {
             final data = {
               'id': r.id,
@@ -871,7 +889,9 @@ class SyncService {
             debugPrint('SyncService: Pushed alternative recipe ${r.id}');
           }
         } catch (e) {
-          debugPrint('SyncService: Error syncing alternative recipe ${r.id}: $e');
+          debugPrint(
+            'SyncService: Error syncing alternative recipe ${r.id}: $e',
+          );
         }
       }
 
@@ -890,10 +910,12 @@ class SyncService {
               })
               .timeout(const Duration(seconds: 15));
 
-          await db.saveUserRoastersRecord(UserRoastersCompanion(
-            userId: Value(userId),
-            isSynced: const Value(true),
-          ));
+          await db.saveUserRoastersRecord(
+            UserRoastersCompanion(
+              userId: Value(userId),
+              isSynced: const Value(true),
+            ),
+          );
           debugPrint('SyncService: User roasters pushed to cloud');
         } catch (e) {
           debugPrint('SyncService: Error pushing user roasters: $e');
@@ -1020,24 +1042,38 @@ class SyncService {
               lotId: Value(item['lot_id'] as String?),
               methodKey: Value(item['method_key'] as String? ?? 'v60'),
               name: Value(item['name'] as String? ?? 'Recipe'),
-              coffeeGrams: Value((item['coffee_grams'] as num?)?.toDouble() ?? 0.0),
-              totalWaterMl: Value((item['total_water_ml'] as num?)?.toDouble() ?? 0.0),
+              coffeeGrams: Value(
+                (item['coffee_grams'] as num?)?.toDouble() ?? 0.0,
+              ),
+              totalWaterMl: Value(
+                (item['total_water_ml'] as num?)?.toDouble() ?? 0.0,
+              ),
               grindNumber: Value((item['grind_number'] as num?)?.toInt() ?? 0),
-              comandanteClicks: Value((item['comandante_clicks'] as num?)?.toInt() ?? 0),
-              ek43Division: Value((item['ek43_division'] as num?)?.toInt() ?? 0),
+              comandanteClicks: Value(
+                (item['comandante_clicks'] as num?)?.toInt() ?? 0,
+              ),
+              ek43Division: Value(
+                (item['ek43_division'] as num?)?.toInt() ?? 0,
+              ),
               totalPours: Value((item['total_pours'] as num?)?.toInt() ?? 1),
               pourScheduleJson: Value(
                 item['pour_schedule_json'] != null
                     ? jsonEncode(item['pour_schedule_json'])
                     : '[]',
               ),
-              brewTempC: Value((item['brew_temp_c'] as num?)?.toDouble() ?? 93.0),
+              brewTempC: Value(
+                (item['brew_temp_c'] as num?)?.toDouble() ?? 93.0,
+              ),
               notes: Value(item['notes'] as String? ?? ''),
               rating: Value((item['rating'] as num?)?.toInt() ?? 0),
-              extractionTimeSeconds: Value((item['extraction_time_seconds'] as num?)?.toInt()),
+              extractionTimeSeconds: Value(
+                (item['extraction_time_seconds'] as num?)?.toInt(),
+              ),
               difficulty: Value(item['difficulty'] as String?),
               contentHtml: Value(item['content_html'] as String?),
-              customMethodName: Value(item['custom_method_name'] as String? ?? ''),
+              customMethodName: Value(
+                item['custom_method_name'] as String? ?? '',
+              ),
               updatedAt: Value(DateTime.now()),
               isSynced: const Value(true),
             ),
@@ -1073,24 +1109,38 @@ class SyncService {
               beanId: Value((item['lot_id'] as num?)?.toInt()),
               methodKey: Value(item['method_key'] as String? ?? 'v60'),
               name: Value(item['name'] as String? ?? 'Recipe'),
-              coffeeGrams: Value((item['coffee_grams'] as num?)?.toDouble() ?? 0.0),
-              totalWaterMl: Value((item['total_water_ml'] as num?)?.toDouble() ?? 0.0),
+              coffeeGrams: Value(
+                (item['coffee_grams'] as num?)?.toDouble() ?? 0.0,
+              ),
+              totalWaterMl: Value(
+                (item['total_water_ml'] as num?)?.toDouble() ?? 0.0,
+              ),
               grindNumber: Value((item['grind_number'] as num?)?.toInt() ?? 0),
-              comandanteClicks: Value((item['comandante_clicks'] as num?)?.toInt() ?? 0),
-              ek43Division: Value((item['ek43_division'] as num?)?.toInt() ?? 0),
+              comandanteClicks: Value(
+                (item['comandante_clicks'] as num?)?.toInt() ?? 0,
+              ),
+              ek43Division: Value(
+                (item['ek43_division'] as num?)?.toInt() ?? 0,
+              ),
               totalPours: Value((item['total_pours'] as num?)?.toInt() ?? 1),
               pourScheduleJson: Value(
                 item['pour_schedule_json'] != null
                     ? jsonEncode(item['pour_schedule_json'])
                     : '[]',
               ),
-              brewTempC: Value((item['brew_temp_c'] as num?)?.toDouble() ?? 93.0),
+              brewTempC: Value(
+                (item['brew_temp_c'] as num?)?.toDouble() ?? 93.0,
+              ),
               notes: Value(item['notes'] as String? ?? ''),
               rating: Value((item['rating'] as num?)?.toInt() ?? 0),
-              extractionTimeSeconds: Value((item['extraction_time_seconds'] as num?)?.toInt()),
+              extractionTimeSeconds: Value(
+                (item['extraction_time_seconds'] as num?)?.toInt(),
+              ),
               difficulty: Value(item['difficulty'] as String?),
               contentHtml: Value(item['content_html'] as String?),
-              customMethodName: Value(item['custom_method_name'] as String? ?? ''),
+              customMethodName: Value(
+                item['custom_method_name'] as String? ?? '',
+              ),
               updatedAt: Value(DateTime.now()),
               isSynced: const Value(true),
             ),
@@ -1125,24 +1175,38 @@ class SyncService {
               userId: Value(item['user_id'] as String),
               methodKey: Value(item['method_key'] as String? ?? 'v60'),
               name: Value(item['name'] as String? ?? 'Recipe'),
-              coffeeGrams: Value((item['coffee_grams'] as num?)?.toDouble() ?? 0.0),
-              totalWaterMl: Value((item['total_water_ml'] as num?)?.toDouble() ?? 0.0),
+              coffeeGrams: Value(
+                (item['coffee_grams'] as num?)?.toDouble() ?? 0.0,
+              ),
+              totalWaterMl: Value(
+                (item['total_water_ml'] as num?)?.toDouble() ?? 0.0,
+              ),
               grindNumber: Value((item['grind_number'] as num?)?.toInt() ?? 0),
-              comandanteClicks: Value((item['comandante_clicks'] as num?)?.toInt() ?? 0),
-              ek43Division: Value((item['ek43_division'] as num?)?.toInt() ?? 0),
+              comandanteClicks: Value(
+                (item['comandante_clicks'] as num?)?.toInt() ?? 0,
+              ),
+              ek43Division: Value(
+                (item['ek43_division'] as num?)?.toInt() ?? 0,
+              ),
               totalPours: Value((item['total_pours'] as num?)?.toInt() ?? 1),
               pourScheduleJson: Value(
                 item['pour_schedule_json'] != null
                     ? jsonEncode(item['pour_schedule_json'])
                     : '[]',
               ),
-              brewTempC: Value((item['brew_temp_c'] as num?)?.toDouble() ?? 93.0),
+              brewTempC: Value(
+                (item['brew_temp_c'] as num?)?.toDouble() ?? 93.0,
+              ),
               notes: Value(item['notes'] as String? ?? ''),
               rating: Value((item['rating'] as num?)?.toInt() ?? 0),
-              extractionTimeSeconds: Value((item['extraction_time_seconds'] as num?)?.toInt()),
+              extractionTimeSeconds: Value(
+                (item['extraction_time_seconds'] as num?)?.toInt(),
+              ),
               difficulty: Value(item['difficulty'] as String?),
               contentHtml: Value(item['content_html'] as String?),
-              customMethodName: Value(item['custom_method_name'] as String? ?? ''),
+              customMethodName: Value(
+                item['custom_method_name'] as String? ?? '',
+              ),
               updatedAt: Value(DateTime.now()),
               isSynced: const Value(true),
             ),
@@ -1165,18 +1229,19 @@ class SyncService {
         if (roastersData != null) {
           final localRoasters = await db.getUserRoastersRecord(userId);
           if (localRoasters == null || localRoasters.isSynced) {
-            await db.saveUserRoastersRecord(UserRoastersCompanion(
-              userId: Value(userId),
-              dataJson: Value(jsonEncode(roastersData['data'])),
-              isSynced: const Value(true),
-            ));
+            await db.saveUserRoastersRecord(
+              UserRoastersCompanion(
+                userId: Value(userId),
+                dataJson: Value(jsonEncode(roastersData['data'])),
+                isSynced: const Value(true),
+              ),
+            );
             debugPrint('SyncService: User roasters pulled from cloud');
           }
         }
       } catch (e) {
         debugPrint('SyncService: Error pulling user roasters: $e');
       }
-
     } catch (e) {
       debugPrint('SyncService: General sync error: $e');
     }
@@ -1749,7 +1814,10 @@ class SyncService {
     debugPrint('SyncService: Starting Encyclopedia sync...');
     try {
       // 1. Fetch main entries
-      final data = await supabase!.from('encyclopedia_entries').select().timeout(const Duration(seconds: 30));
+      final data = await supabase!
+          .from('encyclopedia_entries')
+          .select()
+          .timeout(const Duration(seconds: 30));
       debugPrint(
         'SyncService: Supabase returned ${data.length} encyclopedia entries',
       );

@@ -21,11 +21,7 @@ enum EncyclopediaSortOption {
   newestFirst,
 }
 
-enum RecipeSegment {
-  userLot,
-  encyclopedia,
-  alternative,
-}
+enum RecipeSegment { userLot, encyclopedia, alternative }
 
 class LocalizedBeanDto {
   final int id;
@@ -812,7 +808,6 @@ class CustomRecipeDto {
     );
   }
 
-
   String get pourScheduleJson => jsonEncode(pours);
 
   CustomRecipeDto copyWith({
@@ -870,7 +865,8 @@ class CustomRecipeDto {
       brewRatio: brewRatio ?? this.brewRatio,
       grinderName: grinderName ?? this.grinderName,
       sensoryJson: sensoryJson ?? this.sensoryJson,
-      extractionTimeSeconds: extractionTimeSeconds ?? this.extractionTimeSeconds,
+      extractionTimeSeconds:
+          extractionTimeSeconds ?? this.extractionTimeSeconds,
       difficulty: difficulty ?? this.difficulty,
       contentHtml: contentHtml ?? this.contentHtml,
       segment: segment ?? this.segment,
@@ -890,6 +886,8 @@ class UserRoasterDto {
   final bool isFavorite;
   final bool isArchived;
 
+  final String? localLogoPath;
+
   UserRoasterDto({
     required this.id,
     required this.name,
@@ -897,6 +895,7 @@ class UserRoasterDto {
     this.location,
     this.description,
     this.logoUrl,
+    this.localLogoPath,
     this.createdAt,
     this.updatedAt,
     this.isFavorite = false,
@@ -911,6 +910,7 @@ class UserRoasterDto {
       location: json['location'] as String?,
       description: json['description'] as String?,
       logoUrl: json['logo_url'] as String?,
+      localLogoPath: json['local_logo_path'] as String?,
       createdAt: json['created_at'] != null
           ? DateTime.tryParse(json['created_at'] as String)
           : null,
@@ -930,6 +930,7 @@ class UserRoasterDto {
       'location': location,
       'description': description,
       'logo_url': logoUrl,
+      'local_logo_path': localLogoPath,
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
       'is_favorite': isFavorite,
@@ -943,6 +944,7 @@ class UserRoasterDto {
     String? location,
     String? description,
     String? logoUrl,
+    String? localLogoPath,
     DateTime? updatedAt,
     bool? isFavorite,
     bool? isArchived,
@@ -954,6 +956,7 @@ class UserRoasterDto {
       location: location ?? this.location,
       description: description ?? this.description,
       logoUrl: logoUrl ?? this.logoUrl,
+      localLogoPath: localLogoPath ?? this.localLogoPath,
       createdAt: createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       isFavorite: isFavorite ?? this.isFavorite,

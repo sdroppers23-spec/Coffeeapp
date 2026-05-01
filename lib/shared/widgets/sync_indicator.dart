@@ -69,7 +69,7 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
     // 2. Listen to SyncService internal state for "FACTUAL" updates
     syncService.isSyncing.addListener(_onSyncingChanged);
     syncService.lastSyncResult.addListener(_onSyncResultChanged);
-    
+
     // Cleanup listeners when disposed
     ref.onDispose(() {
       syncService.isSyncing.removeListener(_onSyncingChanged);
@@ -114,16 +114,13 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
         lastMessage: 'OFFLINE MODE',
       );
     }
-    
+
     final lastSyncedMillis = prefs.getInt('last_synced_at_v2');
     final lastSyncedAt = lastSyncedMillis != null
         ? DateTime.fromMillisecondsSinceEpoch(lastSyncedMillis)
         : null;
 
-    return SyncStatusData(
-      state: SyncState.idle,
-      lastSyncedAt: lastSyncedAt,
-    );
+    return SyncStatusData(state: SyncState.idle, lastSyncedAt: lastSyncedAt);
   }
 
   void invalidateData() {
@@ -134,7 +131,7 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
     ref.invalidate(brandsProvider);
     ref.invalidate(articlesProvider);
     ref.invalidate(brewingRecipesProvider);
-    
+
     // Add missing user data providers
     ref.invalidate(userLotsStreamProvider);
     ref.invalidate(userLotsProvider);
@@ -168,10 +165,9 @@ class SyncStatusNotifier extends Notifier<SyncStatusData> {
       invalidateData();
 
       final now = DateTime.now();
-      await ref.read(sharedPreferencesProvider).setInt(
-        'last_synced_at_v2',
-        now.millisecondsSinceEpoch,
-      );
+      await ref
+          .read(sharedPreferencesProvider)
+          .setInt('last_synced_at_v2', now.millisecondsSinceEpoch);
 
       state = state.copyWith(
         state: SyncState.success,

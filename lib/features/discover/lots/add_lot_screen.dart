@@ -33,6 +33,7 @@ part 'widgets/add_lot/lot_roastery_tab.dart';
 part 'widgets/add_lot/lot_coffee_tab.dart';
 part 'widgets/add_lot/flavor_notes_selector.dart';
 part 'widgets/add_lot/processing_method_selector.dart';
+
 class AddLotScreen extends ConsumerStatefulWidget {
   final CoffeeLotDto? initialLot;
   final bool openAsAdd;
@@ -457,11 +458,11 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         // Pop loading dialog safely
         Navigator.of(context, rootNavigator: true).pop();
         if (!mounted) return;
-        
+
         ToastService.showSuccess(context, context.t('toast_changes_saved'));
 
         ref.invalidate(userLotsStreamProvider);
-        
+
         // 4. Trigger Sync
         unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
 

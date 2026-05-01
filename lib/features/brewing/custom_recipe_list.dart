@@ -47,10 +47,8 @@ class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
   bool _isSelectionMode = false;
   final Set<String> _selectedIds = {};
 
-
   @override
   void dispose() {
-
     // Ensure nav bar is shown when leaving, but only if we were hiding it
     if (_isSelectionMode) {
       Future.microtask(() {
@@ -118,8 +116,12 @@ class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
       },
       onDismiss: () async {
         final db = ref.read(databaseProvider);
-        final currentRecipes = ref.read(allCustomRecipesForMethodProvider(widget.methodKey)).value ?? [];
-        
+        final currentRecipes =
+            ref
+                .read(allCustomRecipesForMethodProvider(widget.methodKey))
+                .value ??
+            [];
+
         for (final id in idsToDelete) {
           final recipe = currentRecipes.where((r) => r.id == id).firstOrNull;
           if (recipe != null) {
@@ -134,8 +136,9 @@ class _CustomRecipeListTabState extends ConsumerState<CustomRecipeListTab> {
 
   @override
   Widget build(BuildContext context) {
-    final recipesAsync =
-        ref.watch(allCustomRecipesForMethodProvider(widget.methodKey));
+    final recipesAsync = ref.watch(
+      allCustomRecipesForMethodProvider(widget.methodKey),
+    );
 
     return recipesAsync.when(
       loading: () => const Center(
@@ -341,7 +344,7 @@ class _GlobalCustomRecipeListState
         // 0. Filter out Encyclopedia recipes (they belong to Encyclopedia module only)
         List<CustomRecipeDto> filtered = recipes.where((r) {
           if (r.segment == RecipeSegment.encyclopedia) return false;
-          
+
           if (filterState.showFavoritesOnly) return r.isFavorite;
           if (filterState.showArchivedOnly) return r.isArchived;
           return !r.isArchived; // "All" means everything not archived

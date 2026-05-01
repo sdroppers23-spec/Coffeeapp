@@ -12,6 +12,8 @@ import '../../core/database/dtos.dart';
 import 'lots/providers/roaster_providers.dart';
 import 'user_roaster_details_screen.dart';
 import '../../shared/services/toast_service.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:io';
 
 class RoastersScreen extends StatelessWidget {
   const RoastersScreen({super.key});
@@ -244,7 +246,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                 }
 
                 if (!localContext.mounted) return;
-                
+
                 ToastService.showSuccess(
                   localContext,
                   isArchiving ? archivedMsg : restoredMsg,
@@ -272,7 +274,10 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                   _clearSelection();
                 }
               },
-              icon: const Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
+              icon: const Icon(
+                Icons.delete_outline_rounded,
+                color: Colors.redAccent,
+              ),
             ),
           ] else
             IconButton(
@@ -378,7 +383,10 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                             itemCount: filtered.length,
                             itemBuilder: (context, index) {
                               final roaster = filtered[index];
-                              return _buildSwipeableRoasterCard(roaster);
+                              return _buildSwipeableRoasterCard(
+                                roaster,
+                                key: ValueKey(roaster.id),
+                              );
                             },
                           ),
                         if (roasters.isEmpty && !_isSelectionMode)
@@ -399,9 +407,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                                   ),
                                   decoration: BoxDecoration(
                                     color: const Color(0xFFC8A96E),
-                                    borderRadius: BorderRadius.circular(
-                                      50,
-                                    ),
+                                    borderRadius: BorderRadius.circular(50),
                                     boxShadow: [
                                       BoxShadow(
                                         color: const Color(
@@ -423,9 +429,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                                       ),
                                       const SizedBox(width: 8),
                                       Text(
-                                        context.t(
-                                          'add_roaster_uppercase',
-                                        ),
+                                        context.t('add_roaster_uppercase'),
                                         style: GoogleFonts.outfit(
                                           fontWeight: FontWeight.w800,
                                           fontSize: 12,
@@ -453,10 +457,11 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
 
   // ─── Swipeable Card ────────────────────────────────────────────────────────
 
-  Widget _buildSwipeableRoasterCard(UserRoasterDto roaster) {
+  Widget _buildSwipeableRoasterCard(UserRoasterDto roaster, {Key? key}) {
     final isArchiveTab = _tabController.index == 2;
 
     return Padding(
+      key: key,
       padding: const EdgeInsets.only(bottom: 16),
       child: GlassSwipeWrapper(
         dismissibleKey: ValueKey('roaster_swipe_${roaster.id}'),
@@ -519,11 +524,8 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
               await notifier.toggleFavorite(roaster.id);
 
               if (!localContext.mounted) return;
-              
-              ToastService.showSuccess(
-                localContext, 
-                isFav ? msg : msgAdd,
-              );
+
+              ToastService.showSuccess(localContext, isFav ? msg : msgAdd);
             },
           ),
         ),
@@ -638,72 +640,138 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
     final nameController = TextEditingController();
     final shortDescController = TextEditingController();
     final locationController = TextEditingController();
+    final logoUrlController = TextEditingController();
+    String? localPath;
+    bool isFavorite = false;
 
     await showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: const Color(0xFF151515),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        title: Text(
-          context.t('add_roaster_title'),
-          style: GoogleFonts.poppins(
-            color: const Color(0xFFC8A96E),
-            fontWeight: FontWeight.bold,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          backgroundColor: const Color(0xFF151515),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
           ),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildDialogField(
-              nameController,
-              context.t('roaster_name_label'),
-              Icons.business_rounded,
+          title: Text(
+            context.t('add_roaster_title'),
+            style: GoogleFonts.poppins(
+              color: const Color(0xFFC8A96E),
+              fontWeight: FontWeight.bold,
             ),
-            const SizedBox(height: 12),
-            _buildDialogField(
-              locationController,
-              context.t('city_country_label'),
-              Icons.location_on_rounded,
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Logo Picker
+                GestureDetector(
+                  onTap: () async {
+                    final path = await RoasterImageService.pickAndSaveImage();
+                    if (path != null) {
+                      setDialogState(() => localPath = path);
+                    }
+                  },
+                  child: Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.05),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.white12),
+                      image: localPath != null
+                          ? DecorationImage(
+                              image: FileImage(File(localPath!)),
+                              fit: BoxFit.cover,
+                            )
+                          : null,
+                    ),
+                    child: localPath == null
+                        ? const Icon(
+                            Icons.add_a_photo_rounded,
+                            color: Color(0xFFC8A96E),
+                            size: 30,
+                          )
+                        : null,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                _buildDialogField(
+                  nameController,
+                  context.t('roaster_name_label'),
+                  Icons.business_rounded,
+                ),
+                const SizedBox(height: 12),
+                _buildDialogField(
+                  locationController,
+                  context.t('city_country_label'),
+                  Icons.location_on_rounded,
+                ),
+                const SizedBox(height: 12),
+                _buildDialogField(
+                  shortDescController,
+                  context.t('short_desc_label'),
+                  Icons.description_rounded,
+                ),
+                const SizedBox(height: 12),
+                _buildDialogField(
+                  logoUrlController,
+                  context.t('roaster_logo_url_label'),
+                  Icons.link_rounded,
+                ),
+                const SizedBox(height: 16),
+                SwitchListTile(
+                  title: Text(
+                    context.t('favorite_label') ?? 'Favorite',
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                  value: isFavorite,
+                  activeThumbColor: const Color(0xFFC8A96E),
+                  contentPadding: EdgeInsets.zero,
+                  onChanged: (val) => setDialogState(() => isFavorite = val),
+                ),
+              ],
             ),
-            const SizedBox(height: 12),
-            _buildDialogField(
-              shortDescController,
-              context.t('short_desc_label'),
-              Icons.description_rounded,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(
+                context.t('cancel'),
+                style: GoogleFonts.poppins(color: Colors.white38),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                if (nameController.text.isNotEmpty) {
+                  final roaster = UserRoasterDto(
+                    id: DateTime.now().millisecondsSinceEpoch.toString(),
+                    name: nameController.text,
+                    location: locationController.text,
+                    description: shortDescController.text,
+                    logoUrl: logoUrlController.text.isNotEmpty
+                        ? logoUrlController.text
+                        : null,
+                    localLogoPath: localPath,
+                    updatedAt: DateTime.now(),
+                    isFavorite: isFavorite,
+                  );
+                  await notifier.saveRoaster(roaster);
+                  if (ctx.mounted) Navigator.pop(ctx);
+                }
+              },
+              child: Text(
+                context.t('save'),
+                style: GoogleFonts.poppins(
+                  color: const Color(0xFFC8A96E),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(
-              context.t('cancel'),
-              style: GoogleFonts.poppins(color: Colors.white38),
-            ),
-          ),
-          TextButton(
-            onPressed: () async {
-              if (nameController.text.isNotEmpty) {
-                final roaster = UserRoasterDto(
-                  id: DateTime.now().millisecondsSinceEpoch.toString(),
-                  name: nameController.text,
-                  location: locationController.text,
-                  description: shortDescController.text,
-                  updatedAt: DateTime.now(),
-                );
-                await notifier.saveRoaster(roaster);
-                if (ctx.mounted) Navigator.pop(ctx);
-              }
-            },
-            child: Text(
-              context.t('save'),
-              style: GoogleFonts.poppins(
-                color: const Color(0xFFC8A96E),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -796,13 +864,15 @@ class _PremiumRoasterCard extends StatelessWidget {
                   width: 56,
                   height: 56,
                   margin: const EdgeInsets.only(right: 14),
-                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.05),
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(color: Colors.white12),
                   ),
-                  child: const Icon(Icons.business_rounded, color: Color(0xFFC8A96E), size: 28),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(13),
+                    child: _buildLogo(roaster),
+                  ),
                 ),
               // Info
               Expanded(
@@ -817,7 +887,8 @@ class _PremiumRoasterCard extends StatelessWidget {
                         color: const Color(0xFFC8A96E),
                       ),
                     ),
-                    if (roaster.location != null && roaster.location!.isNotEmpty) ...[
+                    if (roaster.location != null &&
+                        roaster.location!.isNotEmpty) ...[
                       const SizedBox(height: 2),
                       Row(
                         children: [
@@ -837,7 +908,8 @@ class _PremiumRoasterCard extends StatelessWidget {
                         ],
                       ),
                     ],
-                    if (roaster.description != null && roaster.description!.isNotEmpty) ...[
+                    if (roaster.description != null &&
+                        roaster.description!.isNotEmpty) ...[
                       const SizedBox(height: 6),
                       Text(
                         roaster.description!,
@@ -877,8 +949,41 @@ class _PremiumRoasterCard extends StatelessWidget {
       ),
     );
   }
-}
 
+  Widget _buildLogo(UserRoasterDto roaster) {
+    if (roaster.localLogoPath != null && roaster.localLogoPath!.isNotEmpty) {
+      final file = File(roaster.localLogoPath!);
+      if (file.existsSync()) {
+        return Image.file(file, fit: BoxFit.cover);
+      }
+    }
+
+    if (roaster.logoUrl != null && roaster.logoUrl!.isNotEmpty) {
+      return CachedNetworkImage(
+        imageUrl: roaster.logoUrl!,
+        fit: BoxFit.cover,
+        placeholder: (context, url) => const Center(
+          child: SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+        ),
+        errorWidget: (context, url, error) => const Icon(
+          Icons.business_rounded,
+          color: Color(0xFFC8A96E),
+          size: 28,
+        ),
+      );
+    }
+
+    return const Icon(
+      Icons.business_rounded,
+      color: Color(0xFFC8A96E),
+      size: 28,
+    );
+  }
+}
 
 class _PremiumPulsingLoader extends StatefulWidget {
   final String message;

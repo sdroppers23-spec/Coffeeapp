@@ -500,22 +500,43 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                 final db = widget.ref.read(databaseProvider);
                 switch (widget.segment) {
                   case RecipeSegment.userLot:
-                    await db.toggleUserLotRecipeArchive(widget.recipe.id, false);
-                    widget.ref.invalidate(userLotRecipesForLotProvider(widget.recipe.lotId ?? ''));
+                    await db.toggleUserLotRecipeArchive(
+                      widget.recipe.id,
+                      false,
+                    );
+                    widget.ref.invalidate(
+                      userLotRecipesForLotProvider(widget.recipe.lotId ?? ''),
+                    );
                     break;
                   case RecipeSegment.encyclopedia:
-                    await db.toggleEncyclopediaRecipeArchive(widget.recipe.id, false);
-                    widget.ref.invalidate(encyclopediaRecipesForLotProvider(widget.recipe.lotId ?? ''));
+                    await db.toggleEncyclopediaRecipeArchive(
+                      widget.recipe.id,
+                      false,
+                    );
+                    widget.ref.invalidate(
+                      encyclopediaRecipesForLotProvider(
+                        widget.recipe.lotId ?? '',
+                      ),
+                    );
                     break;
                   case RecipeSegment.alternative:
-                    await db.toggleAlternativeRecipeArchive(widget.recipe.id, false);
+                    await db.toggleAlternativeRecipeArchive(
+                      widget.recipe.id,
+                      false,
+                    );
                     widget.ref.invalidate(alternativeRecipesProvider);
-                    widget.ref.invalidate(alternativeRecipesForMethodProvider(widget.methodKey));
+                    widget.ref.invalidate(
+                      alternativeRecipesForMethodProvider(widget.methodKey),
+                    );
                     break;
                 }
                 widget.ref.invalidate(globalCustomRecipesProvider);
-                widget.ref.invalidate(allCustomRecipesForMethodProvider(widget.methodKey));
-                unawaited(widget.ref.read(syncStatusProvider.notifier).syncEverything());
+                widget.ref.invalidate(
+                  allCustomRecipesForMethodProvider(widget.methodKey),
+                );
+                unawaited(
+                  widget.ref.read(syncStatusProvider.notifier).syncEverything(),
+                );
               },
             )
           : GlassSwipeAction(
@@ -527,21 +548,39 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                 switch (widget.segment) {
                   case RecipeSegment.userLot:
                     await db.toggleUserLotRecipeArchive(widget.recipe.id, true);
-                    widget.ref.invalidate(userLotRecipesForLotProvider(widget.recipe.lotId ?? ''));
+                    widget.ref.invalidate(
+                      userLotRecipesForLotProvider(widget.recipe.lotId ?? ''),
+                    );
                     break;
                   case RecipeSegment.encyclopedia:
-                    await db.toggleEncyclopediaRecipeArchive(widget.recipe.id, true);
-                    widget.ref.invalidate(encyclopediaRecipesForLotProvider(widget.recipe.lotId ?? ''));
+                    await db.toggleEncyclopediaRecipeArchive(
+                      widget.recipe.id,
+                      true,
+                    );
+                    widget.ref.invalidate(
+                      encyclopediaRecipesForLotProvider(
+                        widget.recipe.lotId ?? '',
+                      ),
+                    );
                     break;
                   case RecipeSegment.alternative:
-                    await db.toggleAlternativeRecipeArchive(widget.recipe.id, true);
+                    await db.toggleAlternativeRecipeArchive(
+                      widget.recipe.id,
+                      true,
+                    );
                     widget.ref.invalidate(alternativeRecipesProvider);
-                    widget.ref.invalidate(alternativeRecipesForMethodProvider(widget.methodKey));
+                    widget.ref.invalidate(
+                      alternativeRecipesForMethodProvider(widget.methodKey),
+                    );
                     break;
                 }
                 widget.ref.invalidate(globalCustomRecipesProvider);
-                widget.ref.invalidate(allCustomRecipesForMethodProvider(widget.methodKey));
-                unawaited(widget.ref.read(syncStatusProvider.notifier).syncEverything());
+                widget.ref.invalidate(
+                  allCustomRecipesForMethodProvider(widget.methodKey),
+                );
+                unawaited(
+                  widget.ref.read(syncStatusProvider.notifier).syncEverything(),
+                );
               },
             ),
       child: card,
@@ -579,22 +618,43 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                 final newVal = !widget.recipe.isFavorite;
                 switch (widget.segment) {
                   case RecipeSegment.userLot:
-                    await db.toggleUserLotRecipeFavorite(widget.recipe.id, newVal);
-                    widget.ref.invalidate(userLotRecipesForLotProvider(widget.recipe.lotId ?? ''));
+                    await db.toggleUserLotRecipeFavorite(
+                      widget.recipe.id,
+                      newVal,
+                    );
+                    widget.ref.invalidate(
+                      userLotRecipesForLotProvider(widget.recipe.lotId ?? ''),
+                    );
                     break;
                   case RecipeSegment.encyclopedia:
-                    await db.toggleEncyclopediaRecipeFavorite(widget.recipe.id, newVal);
-                    widget.ref.invalidate(encyclopediaRecipesForLotProvider(widget.recipe.lotId ?? ''));
+                    await db.toggleEncyclopediaRecipeFavorite(
+                      widget.recipe.id,
+                      newVal,
+                    );
+                    widget.ref.invalidate(
+                      encyclopediaRecipesForLotProvider(
+                        widget.recipe.lotId ?? '',
+                      ),
+                    );
                     break;
                   case RecipeSegment.alternative:
-                    await db.toggleAlternativeRecipeFavorite(widget.recipe.id, newVal);
+                    await db.toggleAlternativeRecipeFavorite(
+                      widget.recipe.id,
+                      newVal,
+                    );
                     widget.ref.invalidate(alternativeRecipesProvider);
-                    widget.ref.invalidate(alternativeRecipesForMethodProvider(widget.methodKey));
+                    widget.ref.invalidate(
+                      alternativeRecipesForMethodProvider(widget.methodKey),
+                    );
                     break;
                 }
                 widget.ref.invalidate(globalCustomRecipesProvider);
-                widget.ref.invalidate(allCustomRecipesForMethodProvider(widget.methodKey));
-                unawaited(widget.ref.read(syncStatusProvider.notifier).syncEverything());
+                widget.ref.invalidate(
+                  allCustomRecipesForMethodProvider(widget.methodKey),
+                );
+                unawaited(
+                  widget.ref.read(syncStatusProvider.notifier).syncEverything(),
+                );
               },
             ),
             ListTile(
@@ -616,22 +676,43 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
                 final newVal = !widget.recipe.isArchived;
                 switch (widget.segment) {
                   case RecipeSegment.userLot:
-                    await db.toggleUserLotRecipeArchive(widget.recipe.id, newVal);
-                    widget.ref.invalidate(userLotRecipesForLotProvider(widget.recipe.lotId ?? ''));
+                    await db.toggleUserLotRecipeArchive(
+                      widget.recipe.id,
+                      newVal,
+                    );
+                    widget.ref.invalidate(
+                      userLotRecipesForLotProvider(widget.recipe.lotId ?? ''),
+                    );
                     break;
                   case RecipeSegment.encyclopedia:
-                    await db.toggleEncyclopediaRecipeArchive(widget.recipe.id, newVal);
-                    widget.ref.invalidate(encyclopediaRecipesForLotProvider(widget.recipe.lotId ?? ''));
+                    await db.toggleEncyclopediaRecipeArchive(
+                      widget.recipe.id,
+                      newVal,
+                    );
+                    widget.ref.invalidate(
+                      encyclopediaRecipesForLotProvider(
+                        widget.recipe.lotId ?? '',
+                      ),
+                    );
                     break;
                   case RecipeSegment.alternative:
-                    await db.toggleAlternativeRecipeArchive(widget.recipe.id, newVal);
+                    await db.toggleAlternativeRecipeArchive(
+                      widget.recipe.id,
+                      newVal,
+                    );
                     widget.ref.invalidate(alternativeRecipesProvider);
-                    widget.ref.invalidate(alternativeRecipesForMethodProvider(widget.methodKey));
+                    widget.ref.invalidate(
+                      alternativeRecipesForMethodProvider(widget.methodKey),
+                    );
                     break;
                 }
                 widget.ref.invalidate(globalCustomRecipesProvider);
-                widget.ref.invalidate(allCustomRecipesForMethodProvider(widget.methodKey));
-                unawaited(widget.ref.read(syncStatusProvider.notifier).syncEverything());
+                widget.ref.invalidate(
+                  allCustomRecipesForMethodProvider(widget.methodKey),
+                );
+                unawaited(
+                  widget.ref.read(syncStatusProvider.notifier).syncEverything(),
+                );
               },
             ),
             ListTile(
@@ -679,20 +760,25 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
       switch (widget.segment) {
         case RecipeSegment.userLot:
           widget.ref.invalidate(
-              userLotRecipesForLotProvider(widget.recipe.lotId ?? ''));
+            userLotRecipesForLotProvider(widget.recipe.lotId ?? ''),
+          );
           break;
         case RecipeSegment.encyclopedia:
           widget.ref.invalidate(
-              encyclopediaRecipesForLotProvider(widget.recipe.lotId ?? ''));
+            encyclopediaRecipesForLotProvider(widget.recipe.lotId ?? ''),
+          );
           break;
         case RecipeSegment.alternative:
-          widget.ref
-              .invalidate(alternativeRecipesForMethodProvider(widget.methodKey));
+          widget.ref.invalidate(
+            alternativeRecipesForMethodProvider(widget.methodKey),
+          );
           widget.ref.invalidate(alternativeRecipesProvider);
           break;
       }
       widget.ref.invalidate(globalCustomRecipesProvider);
-      widget.ref.invalidate(allCustomRecipesForMethodProvider(widget.methodKey));
+      widget.ref.invalidate(
+        allCustomRecipesForMethodProvider(widget.methodKey),
+      );
     }
   }
 
@@ -709,23 +795,30 @@ class _CustomRecipeCardState extends State<CustomRecipeCard> {
           case RecipeSegment.userLot:
             await db.deleteUserLotRecipe(widget.recipe.id);
             widget.ref.invalidate(
-                userLotRecipesForLotProvider(widget.recipe.lotId ?? ''));
+              userLotRecipesForLotProvider(widget.recipe.lotId ?? ''),
+            );
             break;
           case RecipeSegment.encyclopedia:
             await db.deleteEncyclopediaRecipe(widget.recipe.id);
             widget.ref.invalidate(
-                encyclopediaRecipesForLotProvider(widget.recipe.lotId ?? ''));
+              encyclopediaRecipesForLotProvider(widget.recipe.lotId ?? ''),
+            );
             break;
           case RecipeSegment.alternative:
             await db.deleteAlternativeRecipe(widget.recipe.id);
             widget.ref.invalidate(alternativeRecipesProvider);
             widget.ref.invalidate(
-                alternativeRecipesForMethodProvider(widget.methodKey));
+              alternativeRecipesForMethodProvider(widget.methodKey),
+            );
             break;
         }
         widget.ref.invalidate(globalCustomRecipesProvider);
-        widget.ref.invalidate(allCustomRecipesForMethodProvider(widget.methodKey));
-        unawaited(widget.ref.read(syncStatusProvider.notifier).syncEverything());
+        widget.ref.invalidate(
+          allCustomRecipesForMethodProvider(widget.methodKey),
+        );
+        unawaited(
+          widget.ref.read(syncStatusProvider.notifier).syncEverything(),
+        );
       },
     );
   }

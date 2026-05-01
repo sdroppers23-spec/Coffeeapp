@@ -88,9 +88,9 @@ class _CustomRecipeTimerScreenState
       final min = p['min'] as num? ?? 0;
       final sec = p['sec'] as num? ?? 0;
       final atMin = p['atMinute'] as num?;
-      
-      final pourSec = atMin != null 
-          ? (atMin.toDouble() * 60).round() 
+
+      final pourSec = atMin != null
+          ? (atMin.toDouble() * 60).round()
           : (min * 60 + sec).toInt();
 
       if (_elapsedSec >= pourSec) {
@@ -291,16 +291,16 @@ class _CustomRecipeTimerScreenState
                 final pour = _pours[i];
                 final isPast = i < activeIndex;
                 final isActive = i == activeIndex;
-                
+
                 // Get time from min/sec or atMinute
                 final min = pour['min'] as num? ?? 0;
                 final sec = pour['sec'] as num? ?? 0;
                 final atMin = pour['atMinute'] as num?;
-                
-                final pourSec = atMin != null 
-                    ? (atMin.toDouble() * 60).round() 
+
+                final pourSec = atMin != null
+                    ? (atMin.toDouble() * 60).round()
                     : (min * 60 + sec).toInt();
-                    
+
                 final ml = pour['water'] ?? pour['waterMl'] ?? 0;
                 final n = pour['pourNumber'] ?? (i + 1);
                 final isBloom = i == 0;

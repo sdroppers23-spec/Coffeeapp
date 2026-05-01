@@ -48,9 +48,14 @@ final databaseInitializerProvider = FutureProvider<void>((ref) async {
   // Listen for auth changes to trigger sync (e.g. login)
   ref.listen(authStateProvider, (previous, next) {
     final event = next.value?.event;
-    if (event == AuthChangeEvent.signedIn || event == AuthChangeEvent.userUpdated) {
-      debugPrint('DatabaseProvider: Auth change detected ($event), triggering sync...');
-      unawaited(syncService.pushLocalUserContent().then((_) => syncService.syncAll()));
+    if (event == AuthChangeEvent.signedIn ||
+        event == AuthChangeEvent.userUpdated) {
+      debugPrint(
+        'DatabaseProvider: Auth change detected ($event), triggering sync...',
+      );
+      unawaited(
+        syncService.pushLocalUserContent().then((_) => syncService.syncAll()),
+      );
     }
   });
 });
@@ -73,67 +78,71 @@ final lotProvider = StreamProvider.family<CoffeeLotDto?, String>((ref, id) {
 
 final userLotRecipesForLotProvider =
     StreamProvider.family<List<CustomRecipeDto>, String>((ref, lotId) {
-  final db = ref.watch(databaseProvider);
-  return db.watchUserLotRecipesForLot(lotId);
-});
+      final db = ref.watch(databaseProvider);
+      return db.watchUserLotRecipesForLot(lotId);
+    });
 
 final encyclopediaRecipesForLotProvider =
     StreamProvider.family<List<CustomRecipeDto>, String>((ref, lotId) {
-  final db = ref.watch(databaseProvider);
-  final cleanId = lotId.replaceAll('encyclopedia_', '');
-  return db.watchEncyclopediaRecipesForLot(cleanId);
-});
+      final db = ref.watch(databaseProvider);
+      final cleanId = lotId.replaceAll('encyclopedia_', '');
+      return db.watchEncyclopediaRecipesForLot(cleanId);
+    });
 
 final userLotRecipesForMethodProvider =
     StreamProvider.family<List<CustomRecipeDto>, String>((ref, methodKey) {
-  final db = ref.watch(databaseProvider);
-  return db.watchUserLotRecipesForMethod(methodKey);
-});
+      final db = ref.watch(databaseProvider);
+      return db.watchUserLotRecipesForMethod(methodKey);
+    });
 
 final encyclopediaRecipesForMethodProvider =
     StreamProvider.family<List<CustomRecipeDto>, String>((ref, methodKey) {
-  final db = ref.watch(databaseProvider);
-  return db.watchEncyclopediaRecipesForMethod(methodKey);
-});
+      final db = ref.watch(databaseProvider);
+      return db.watchEncyclopediaRecipesForMethod(methodKey);
+    });
 
 final alternativeRecipesForMethodProvider =
     StreamProvider.family<List<CustomRecipeDto>, String>((ref, methodKey) {
-  final db = ref.watch(databaseProvider);
-  return db.watchAlternativeRecipes(methodKey);
-});
+      final db = ref.watch(databaseProvider);
+      return db.watchAlternativeRecipes(methodKey);
+    });
 
 final allCustomRecipesForMethodProvider =
-    Provider.family<AsyncValue<List<CustomRecipeDto>>, String>(
-        (ref, methodKey) {
-  final s1 = ref.watch(userLotRecipesForMethodProvider(methodKey));
-  // Removed s2 (encyclopedia recipes) to prevent duplication in Alternative Brewing list
-  final s3 = ref.watch(alternativeRecipesForMethodProvider(methodKey));
+    Provider.family<AsyncValue<List<CustomRecipeDto>>, String>((
+      ref,
+      methodKey,
+    ) {
+      final s1 = ref.watch(userLotRecipesForMethodProvider(methodKey));
+      // Removed s2 (encyclopedia recipes) to prevent duplication in Alternative Brewing list
+      final s3 = ref.watch(alternativeRecipesForMethodProvider(methodKey));
 
-  if (s1.isLoading || s3.isLoading) {
-    return const AsyncValue.loading();
-  }
-  if (s1.hasError) return AsyncValue.error(s1.error!, s1.stackTrace!);
-  if (s3.hasError) return AsyncValue.error(s3.error!, s3.stackTrace!);
+      if (s1.isLoading || s3.isLoading) {
+        return const AsyncValue.loading();
+      }
+      if (s1.hasError) return AsyncValue.error(s1.error!, s1.stackTrace!);
+      if (s3.hasError) return AsyncValue.error(s3.error!, s3.stackTrace!);
 
-  final List<CustomRecipeDto> all = [
-    ...(s1.value ?? []),
-    ...(s3.value ?? []),
-  ];
-  // Sort by date descending
-  all.sort((a, b) {
-    final dateA = a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
-    final dateB = b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
-    return dateB.compareTo(dateA);
-  });
-  return AsyncValue.data(all);
-});
+      final List<CustomRecipeDto> all = [
+        ...(s1.value ?? []),
+        ...(s3.value ?? []),
+      ];
+      // Sort by date descending
+      all.sort((a, b) {
+        final dateA = a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+        final dateB = b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+        return dateB.compareTo(dateA);
+      });
+      return AsyncValue.data(all);
+    });
 
 final userLotRecipesProvider = StreamProvider<List<CustomRecipeDto>>((ref) {
   final db = ref.watch(databaseProvider);
   return db.watchAllUserLotRecipes();
 });
 
-final encyclopediaRecipesProvider = StreamProvider<List<CustomRecipeDto>>((ref) {
+final encyclopediaRecipesProvider = StreamProvider<List<CustomRecipeDto>>((
+  ref,
+) {
   final db = ref.watch(databaseProvider);
   return db.watchAllEncyclopediaRecipes();
 });
@@ -143,28 +152,29 @@ final alternativeRecipesProvider = StreamProvider<List<CustomRecipeDto>>((ref) {
   return db.watchAlternativeRecipes();
 });
 
-final globalCustomRecipesProvider =
-    Provider<AsyncValue<List<CustomRecipeDto>>>((ref) {
-  final s1 = ref.watch(userLotRecipesProvider);
-  final s2 = ref.watch(encyclopediaRecipesProvider);
-  final s3 = ref.watch(alternativeRecipesProvider);
+final globalCustomRecipesProvider = Provider<AsyncValue<List<CustomRecipeDto>>>(
+  (ref) {
+    final s1 = ref.watch(userLotRecipesProvider);
+    final s2 = ref.watch(encyclopediaRecipesProvider);
+    final s3 = ref.watch(alternativeRecipesProvider);
 
-  if (s1.isLoading || s2.isLoading || s3.isLoading) {
-    return const AsyncValue.loading();
-  }
-  if (s1.hasError) return AsyncValue.error(s1.error!, s1.stackTrace!);
-  if (s2.hasError) return AsyncValue.error(s2.error!, s2.stackTrace!);
-  if (s3.hasError) return AsyncValue.error(s3.error!, s3.stackTrace!);
+    if (s1.isLoading || s2.isLoading || s3.isLoading) {
+      return const AsyncValue.loading();
+    }
+    if (s1.hasError) return AsyncValue.error(s1.error!, s1.stackTrace!);
+    if (s2.hasError) return AsyncValue.error(s2.error!, s2.stackTrace!);
+    if (s3.hasError) return AsyncValue.error(s3.error!, s3.stackTrace!);
 
-  final List<CustomRecipeDto> all = [
-    ...(s1.value ?? []),
-    ...(s2.value ?? []),
-    ...(s3.value ?? []),
-  ];
-  all.sort((a, b) {
-    final dateA = a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
-    final dateB = b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
-    return dateB.compareTo(dateA);
-  });
-  return AsyncValue.data(all);
-});
+    final List<CustomRecipeDto> all = [
+      ...(s1.value ?? []),
+      ...(s2.value ?? []),
+      ...(s3.value ?? []),
+    ];
+    all.sort((a, b) {
+      final dateA = a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+      final dateB = b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0);
+      return dateB.compareTo(dateA);
+    });
+    return AsyncValue.data(all);
+  },
+);

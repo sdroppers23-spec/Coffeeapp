@@ -7,27 +7,38 @@ import '../../../../core/database/app_database.dart';
 import '../../../../core/database/dtos.dart';
 import '../../../../shared/widgets/sync_indicator.dart';
 
-final userRoastersProvider = NotifierProvider<UserRoastersNotifier, List<UserRoasterDto>>(() {
-  return UserRoastersNotifier();
+/// Raw stream of the user roasters record from the database.
+final _userRoastersRecordStreamProvider = StreamProvider<UserRoaster?>((ref) {
+  final db = ref.watch(databaseProvider);
+  final userId = Supabase.instance.client.auth.currentUser?.id;
+  if (userId == null) return const Stream.empty();
+  return db.watchUserRoastersRecord(userId);
 });
+
+final userRoastersProvider =
+    NotifierProvider<UserRoastersNotifier, List<UserRoasterDto>>(() {
+      return UserRoastersNotifier();
+    });
 
 class UserRoastersNotifier extends Notifier<List<UserRoasterDto>> {
   @override
   List<UserRoasterDto> build() {
-    loadRoasters();
-    return [];
-  }
+    // Watch the stream and update state when it changes
+    final recordAsync = ref.watch(_userRoastersRecordStreamProvider);
 
-  Future<void> loadRoasters() async {
-    final db = ref.read(databaseProvider);
-    final userId = Supabase.instance.client.auth.currentUser?.id;
-    if (userId == null) return;
-
-    final record = await db.getUserRoastersRecord(userId);
-    if (record != null) {
-      final List<dynamic> data = jsonDecode(record.dataJson);
-      state = data.map((e) => UserRoasterDto.fromJson(e as Map<String, dynamic>)).toList();
-    }
+    return recordAsync.when(
+      data: (record) {
+        if (record != null) {
+          final List<dynamic> data = jsonDecode(record.dataJson);
+          return data
+              .map((e) => UserRoasterDto.fromJson(e as Map<String, dynamic>))
+              .toList();
+        }
+        return [];
+      },
+      loading: () => state, // Keep old state while loading
+      error: (_, _) => [],
+    );
   }
 
   Future<void> saveRoaster(UserRoasterDto roaster) async {
@@ -42,6 +53,8 @@ class UserRoastersNotifier extends Notifier<List<UserRoasterDto>> {
     } else {
       newList = [...state, roaster];
     }
+
+    // Optimistic update
     state = newList;
 
     await _saveLocal(userId, newList);
@@ -96,13 +109,15 @@ class UserRoastersNotifier extends Notifier<List<UserRoasterDto>> {
   Future<void> _saveLocal(String userId, List<UserRoasterDto> list) async {
     final db = ref.read(databaseProvider);
     final dataJson = jsonEncode(list.map((e) => e.toJson()).toList());
-    await db.saveUserRoastersRecord(UserRoastersCompanion(
-      userId: Value(userId),
-      dataJson: Value(dataJson),
-      isSynced: const Value(false),
-      updatedAt: Value(DateTime.now()),
-    ));
-    
+    await db.saveUserRoastersRecord(
+      UserRoastersCompanion(
+        userId: Value(userId),
+        dataJson: Value(dataJson),
+        isSynced: const Value(false),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
+
     // Trigger sync
     ref.read(syncStatusProvider.notifier).syncEverything();
   }

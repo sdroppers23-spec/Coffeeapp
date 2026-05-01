@@ -93,7 +93,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       );
 
       final googleUser = await googleSignIn.authenticate();
-      
+
       final googleAuth = googleUser.authentication;
       final idToken = googleAuth.idToken;
 

@@ -839,7 +839,9 @@ class _EditProfileDialogState extends ConsumerState<_EditProfileDialog> {
                 const SizedBox(height: 24),
 
                 if (!(widget.user.appMetadata['provider'] == 'google' ||
-                    (widget.user.identities?.any((i) => i.provider == 'google') ??
+                    (widget.user.identities?.any(
+                          (i) => i.provider == 'google',
+                        ) ??
                         false))) ...[
                   // Change Password Button
                   OutlinedButton.icon(

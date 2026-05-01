@@ -463,102 +463,102 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Row(
-              children: [
-                Expanded(
-                  child: _HeaderStat(
-                    icon: Icons.timer_outlined,
-                    value: _formattedTime(),
-                    label: t('stat_time'),
-                    color: const Color(0xFF00E5FF), // Neon Cyan
-                  ),
-                ),
-                Expanded(
-                  child: _HeaderStat(
-                    icon: Icons.thermostat_rounded,
-                    value: '${recipe.tempC?.toInt() ?? 0}°C',
-                    label: t('stat_temp'),
-                    color: const Color(0xFFFF5252), // Neon Red
-                  ),
-                ),
-                Expanded(
-                  child: _HeaderStat(
-                    icon: Icons.coffee_rounded,
-                    value:
-                        '${recipe.coffeeGrams != null ? (recipe.coffeeGrams! % 1 == 0 ? recipe.coffeeGrams!.toInt() : recipe.coffeeGrams) : 0}${t('grams')}',
-                    label: t('stat_coffee'),
-                    color: const Color(0xFFFFD740), // Neon Amber
-                  ),
-                ),
-                Expanded(
-                  child: _HeaderStat(
-                    icon: Icons.water_drop_rounded,
-                    value:
-                        '${recipe.weight != null ? (recipe.weight! % 1 == 0 ? recipe.weight!.toInt() : recipe.weight) : 0}${t('grams')}',
-                    label: t('stat_yield'),
-                    color: const Color(0xFF69F0AE), // Neon Green
-                  ),
-                ),
-                Expanded(
-                  child: _HeaderStat(
-                    icon: Icons.bolt_rounded,
-                    value: '',
-                    customValue: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(5, (index) {
-                            final stars = _getDifficultyStars(
-                              recipe.difficulty,
-                            );
-                            final color = _getDifficultyColor(
-                              recipe.difficulty,
-                            );
-                            return Icon(
-                              index < stars
-                                  ? Icons.star_rounded
-                                  : Icons.star_outline_rounded,
-                              size: 9,
-                              color: index < stars
-                                  ? color
-                                  : color.withValues(alpha: 0.2),
-                            );
-                          }),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          _getDifficultyLabel(recipe.difficulty, t),
-                          style: GoogleFonts.outfit(
-                            fontSize: 9,
-                            fontWeight: FontWeight.w700,
-                            color: _getDifficultyColor(recipe.difficulty),
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+                  children: [
+                    Expanded(
+                      child: _HeaderStat(
+                        icon: Icons.timer_outlined,
+                        value: _formattedTime(),
+                        label: t('stat_time'),
+                        color: const Color(0xFF00E5FF), // Neon Cyan
+                      ),
                     ),
-                    label: t('stat_difficulty'),
-                    color: _getDifficultyColor(recipe.difficulty),
-                  ),
+                    Expanded(
+                      child: _HeaderStat(
+                        icon: Icons.thermostat_rounded,
+                        value: '${recipe.tempC?.toInt() ?? 0}°C',
+                        label: t('stat_temp'),
+                        color: const Color(0xFFFF5252), // Neon Red
+                      ),
+                    ),
+                    Expanded(
+                      child: _HeaderStat(
+                        icon: Icons.coffee_rounded,
+                        value:
+                            '${recipe.coffeeGrams != null ? (recipe.coffeeGrams! % 1 == 0 ? recipe.coffeeGrams!.toInt() : recipe.coffeeGrams) : 0}${t('grams')}',
+                        label: t('stat_coffee'),
+                        color: const Color(0xFFFFD740), // Neon Amber
+                      ),
+                    ),
+                    Expanded(
+                      child: _HeaderStat(
+                        icon: Icons.water_drop_rounded,
+                        value:
+                            '${recipe.weight != null ? (recipe.weight! % 1 == 0 ? recipe.weight!.toInt() : recipe.weight) : 0}${t('grams')}',
+                        label: t('stat_yield'),
+                        color: const Color(0xFF69F0AE), // Neon Green
+                      ),
+                    ),
+                    Expanded(
+                      child: _HeaderStat(
+                        icon: Icons.bolt_rounded,
+                        value: '',
+                        customValue: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: List.generate(5, (index) {
+                                final stars = _getDifficultyStars(
+                                  recipe.difficulty,
+                                );
+                                final color = _getDifficultyColor(
+                                  recipe.difficulty,
+                                );
+                                return Icon(
+                                  index < stars
+                                      ? Icons.star_rounded
+                                      : Icons.star_outline_rounded,
+                                  size: 9,
+                                  color: index < stars
+                                      ? color
+                                      : color.withValues(alpha: 0.2),
+                                );
+                              }),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              _getDifficultyLabel(recipe.difficulty, t),
+                              style: GoogleFonts.outfit(
+                                fontSize: 9,
+                                fontWeight: FontWeight.w700,
+                                color: _getDifficultyColor(recipe.difficulty),
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                        label: t('stat_difficulty'),
+                        color: _getDifficultyColor(recipe.difficulty),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
-    ),
-  ),
-);
-}
+    );
+  }
 
-@override
-double get maxExtent => 130;
-@override
-double get minExtent => 130;
-@override
-bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
-    true;
+  @override
+  double get maxExtent => 130;
+  @override
+  double get minExtent => 130;
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      true;
 }
 
 class _HeaderStat extends StatelessWidget {

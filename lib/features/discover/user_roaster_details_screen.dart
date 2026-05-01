@@ -1,19 +1,23 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/supabase/supabase_provider.dart';
 import 'lots/widgets/lot_card_widgets.dart';
+import 'lots/providers/roaster_providers.dart';
 import 'package:go_router/go_router.dart';
 
-final userRoasterLotsProvider = FutureProvider.family<List<CoffeeLotDto>, String>((ref, roasterId) async {
-  final db = ref.watch(databaseProvider);
-  final userId = ref.watch(currentUserProvider)?.id;
-  if (userId == null) return [];
-  return db.getLotsByUserRoaster(userId, roasterId);
-});
+final userRoasterLotsProvider =
+    FutureProvider.family<List<CoffeeLotDto>, String>((ref, roasterId) async {
+      final db = ref.watch(databaseProvider);
+      final userId = ref.watch(currentUserProvider)?.id;
+      if (userId == null) return [];
+      return db.getLotsByUserRoaster(userId, roasterId);
+    });
 
 class UserRoasterDetailsScreen extends ConsumerWidget {
   final UserRoasterDto roaster;
@@ -22,81 +26,128 @@ class UserRoasterDetailsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final lotsAsync = ref.watch(userRoasterLotsProvider(roaster.id));
+    // Watch for updates to this specific roaster
+    final allRoasters = ref.watch(userRoastersProvider);
+    final currentRoaster = allRoasters.firstWhere(
+      (r) => r.id == roaster.id,
+      orElse: () => roaster,
+    );
+
+    final lotsAsync = ref.watch(userRoasterLotsProvider(currentRoaster.id));
     final l10n = AppLocalizations.of(context);
 
     return Scaffold(
+      backgroundColor: Colors.black,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(
-          roaster.name,
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.white,
+          ),
+          onPressed: () => Navigator.pop(context),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              currentRoaster.isFavorite
+                  ? Icons.favorite_rounded
+                  : Icons.favorite_border_rounded,
+              color: currentRoaster.isFavorite
+                  ? Colors.redAccent
+                  : Colors.white,
+            ),
+            onPressed: () {
+              ref
+                  .read(userRoastersProvider.notifier)
+                  .toggleFavorite(currentRoaster.id);
+            },
+          ),
+        ],
       ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF1A1A1A), Color(0xFF0D0D0D)],
-          ),
-        ),
+        color: Colors.black,
         child: Column(
           children: [
             const SizedBox(height: 100),
-            // Header
+            // Header (Logo)
             Center(
               child: Container(
-                width: 100,
-                height: 100,
+                width: 120,
+                height: 120,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFC8A96E).withAlpha(25),
-                  borderRadius: BorderRadius.circular(25),
+                  color: Colors.white.withValues(alpha: 0.05),
+                  borderRadius: BorderRadius.circular(30),
                   border: Border.all(
-                    color: const Color(0xFFC8A96E).withAlpha(76),
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
+                    width: 2,
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                      blurRadius: 30,
+                      spreadRadius: 5,
+                    ),
+                  ],
                 ),
-                child: const Icon(
-                  Icons.business_rounded,
-                  color: Color(0xFFC8A96E),
-                  size: 50,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(28),
+                  child: _buildLogo(currentRoaster),
                 ),
               ),
             ),
-            const SizedBox(height: 16),
-            if (roaster.location != null && roaster.location!.isNotEmpty)
+            const SizedBox(height: 20),
+            Text(
+              currentRoaster.name,
+              style: GoogleFonts.cormorantGaramond(
+                color: const Color(0xFFC8A96E),
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            if (currentRoaster.location != null &&
+                currentRoaster.location!.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.location_on_rounded, size: 14, color: Colors.white54),
+                    const Icon(
+                      Icons.location_on_rounded,
+                      size: 14,
+                      color: Colors.white38,
+                    ),
                     const SizedBox(width: 4),
                     Text(
-                      roaster.location!,
-                      style: GoogleFonts.outfit(color: Colors.white54, fontSize: 14),
+                      currentRoaster.location!,
+                      style: GoogleFonts.outfit(
+                        color: Colors.white38,
+                        fontSize: 14,
+                      ),
                     ),
                   ],
                 ),
               ),
-            if (roaster.description != null && roaster.description!.isNotEmpty)
+            if (currentRoaster.description != null &&
+                currentRoaster.description!.isNotEmpty)
               Padding(
-                padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+                padding: const EdgeInsets.fromLTRB(32, 16, 32, 0),
                 child: Text(
-                  roaster.description!,
+                  currentRoaster.description!,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.outfit(
-                    color: Colors.white70,
-                    fontSize: 14,
-                    height: 1.5,
+                    color: Colors.white60,
+                    fontSize: 15,
+                    height: 1.6,
                   ),
                 ),
               ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 32),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Row(
@@ -111,9 +162,23 @@ class UserRoasterDetailsScreen extends ConsumerWidget {
                   ),
                   const Spacer(),
                   lotsAsync.when(
-                    data: (lots) => Text(
-                      lots.length.toString(),
-                      style: const TextStyle(color: Colors.white38, fontSize: 14),
+                    data: (lots) => Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        lots.length.toString(),
+                        style: const TextStyle(
+                          color: Color(0xFFC8A96E),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      ),
                     ),
                     loading: () => const SizedBox(),
                     error: (error, _) => const SizedBox(),
@@ -121,10 +186,17 @@ class UserRoasterDetailsScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            const Divider(color: Colors.white10, height: 32, indent: 24, endIndent: 24),
+            const Divider(
+              color: Colors.white10,
+              height: 32,
+              indent: 24,
+              endIndent: 24,
+            ),
             Expanded(
               child: lotsAsync.when(
-                loading: () => const Center(child: CircularProgressIndicator(color: Color(0xFFC8A96E))),
+                loading: () => const Center(
+                  child: CircularProgressIndicator(color: Color(0xFFC8A96E)),
+                ),
                 error: (error, _) => Center(child: Text(error.toString())),
                 data: (lots) {
                   if (lots.isEmpty) {
@@ -132,7 +204,11 @@ class UserRoasterDetailsScreen extends ConsumerWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.coffee_rounded, color: Colors.white10, size: 64),
+                          const Icon(
+                            Icons.coffee_rounded,
+                            color: Colors.white10,
+                            size: 64,
+                          ),
                           const SizedBox(height: 16),
                           Text(
                             l10n.translate('no_lots_linked'),
@@ -142,29 +218,63 @@ class UserRoasterDetailsScreen extends ConsumerWidget {
                       ),
                     );
                   }
-                    return ListView.builder(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
-                      itemCount: lots.length,
-                      itemBuilder: (context, i) => Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: MyLotListCard(
-                          lot: lots[i],
-                          isSelected: false,
-                          isSelectionMode: false,
-                          onLongPress: (_) {},
-                          onFavoriteToggle: (_) {},
-                          onTap: (id) {
-                            context.push('/lot_details', extra: {'lot': lots[i]});
-                          },
-                        ),
+                  return ListView.builder(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
+                    itemCount: lots.length,
+                    itemBuilder: (context, i) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: MyLotListCard(
+                        lot: lots[i],
+                        isSelected: false,
+                        isSelectionMode: false,
+                        onLongPress: (_) {},
+                        onFavoriteToggle: (_) {},
+                        onTap: (id) {
+                          context.push('/lot_details', extra: {'lot': lots[i]});
+                        },
                       ),
-                    );
+                    ),
+                  );
                 },
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildLogo(UserRoasterDto roaster) {
+    if (roaster.localLogoPath != null && roaster.localLogoPath!.isNotEmpty) {
+      final file = File(roaster.localLogoPath!);
+      if (file.existsSync()) {
+        return Image.file(file, fit: BoxFit.cover);
+      }
+    }
+
+    if (roaster.logoUrl != null && roaster.logoUrl!.isNotEmpty) {
+      return CachedNetworkImage(
+        imageUrl: roaster.logoUrl!,
+        fit: BoxFit.cover,
+        placeholder: (context, url) => const Center(
+          child: SizedBox(
+            width: 24,
+            height: 24,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+        ),
+        errorWidget: (context, url, error) => const Icon(
+          Icons.business_rounded,
+          color: Color(0xFFC8A96E),
+          size: 40,
+        ),
+      );
+    }
+
+    return const Icon(
+      Icons.business_rounded,
+      color: Color(0xFFC8A96E),
+      size: 40,
     );
   }
 }

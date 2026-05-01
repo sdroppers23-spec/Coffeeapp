@@ -422,7 +422,9 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                   }
 
                   ref.invalidate(userLotsStreamProvider);
-                  unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
+                  unawaited(
+                    ref.read(syncStatusProvider.notifier).syncEverything(),
+                  );
                 },
               );
             },
@@ -467,7 +469,9 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                 }
 
                 ref.invalidate(userLotsStreamProvider);
-                unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
+                unawaited(
+                  ref.read(syncStatusProvider.notifier).syncEverything(),
+                );
               },
               onEditSwipe: filter.showArchivedOnly
                   ? null
@@ -479,7 +483,9 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                       final db = ref.read(databaseProvider);
                       await db.toggleLotArchive(lot.id, false);
                       ref.invalidate(userLotsStreamProvider);
-                      unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
+                      unawaited(
+                        ref.read(syncStatusProvider.notifier).syncEverything(),
+                      );
 
                       if (!context.mounted) return;
                       ToastService.showSuccess(
@@ -677,7 +683,9 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                       ref.read(myLotsSelectedIdsProvider.notifier).remove(id);
                     }
                     ref.invalidate(userLotsStreamProvider);
-                    unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
+                    unawaited(
+                      ref.read(syncStatusProvider.notifier).syncEverything(),
+                    );
                   },
                 ),
                 const SizedBox(width: 16),
@@ -707,7 +715,9 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
                     }
                     setState(() {});
                     ref.invalidate(userLotsStreamProvider);
-                    unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
+                    unawaited(
+                      ref.read(syncStatusProvider.notifier).syncEverything(),
+                    );
                   },
                 ),
                 const SizedBox(width: 16),

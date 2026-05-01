@@ -238,7 +238,8 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                                 widget.entry?.lotNumber,
                           ),
                           _RecipesTab(
-                            lotId: liveLot?.id ??
+                            lotId:
+                                liveLot?.id ??
                                 widget.lot?.id ??
                                 widget.entry?.lotNumber ??
                                 '',

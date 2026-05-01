@@ -51,65 +51,65 @@ class _BrewingGuideScreenState extends ConsumerState<BrewingGuideScreen> {
         }
       },
       child: Scaffold(
-      backgroundColor: const Color(0xFF0F0F0F),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Text(
-          context.t('brewing_methods'),
-          style: GoogleFonts.cormorantGaramond(
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
+        backgroundColor: const Color(0xFF0F0F0F),
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: Text(
+            context.t('brewing_methods'),
+            style: GoogleFonts.cormorantGaramond(
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
         ),
-      ),
-      body: recipesAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
-        data: (recipes) {
-          if (recipes.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const CircularProgressIndicator(color: Color(0xFFD4A574)),
-                  const SizedBox(height: 16),
-                  Text(
-                    context.t('setting_up_equipment'),
-                    style: const TextStyle(color: Colors.white54),
-                  ),
-                ],
+        body: recipesAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(child: Text('Error: $e')),
+          data: (recipes) {
+            if (recipes.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CircularProgressIndicator(color: Color(0xFFD4A574)),
+                    const SizedBox(height: 16),
+                    Text(
+                      context.t('setting_up_equipment'),
+                      style: const TextStyle(color: Colors.white54),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            // Group recipes by method
+            final grouped = <String, List<BrewingRecipeDto>>{};
+            for (var r in recipes) {
+              grouped.putIfAbsent(r.methodKey, () => []).add(r);
+            }
+
+            final methods = grouped.keys.toList();
+
+            return GridView.builder(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                childAspectRatio: 0.85,
               ),
+              itemCount: methods.length,
+              itemBuilder: (context, i) {
+                final methodKey = methods[i];
+                final methodRecipes = grouped[methodKey]!;
+                return MethodTile(methodRecipes: methodRecipes);
+              },
             );
-          }
-
-          // Group recipes by method
-          final grouped = <String, List<BrewingRecipeDto>>{};
-          for (var r in recipes) {
-            grouped.putIfAbsent(r.methodKey, () => []).add(r);
-          }
-
-          final methods = grouped.keys.toList();
-
-          return GridView.builder(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 16,
-              crossAxisSpacing: 16,
-              childAspectRatio: 0.85,
-            ),
-            itemCount: methods.length,
-            itemBuilder: (context, i) {
-              final methodKey = methods[i];
-              final methodRecipes = grouped[methodKey]!;
-              return MethodTile(methodRecipes: methodRecipes);
-            },
-          );
-        },
+          },
+        ),
       ),
-    ),
-  );
+    );
   }
 }

@@ -94,7 +94,8 @@ class _CoffeeLotDetailScreenState extends ConsumerState<CoffeeLotDetailScreen>
                           .read(databaseProvider)
                           .toggleFavorite(entry.id, !isFavorite);
                       unawaited(
-                          ref.read(syncStatusProvider.notifier).syncEverything());
+                        ref.read(syncStatusProvider.notifier).syncEverything(),
+                      );
                       if (context.mounted) {
                         if (isFavorite) {
                           ToastService.showInfo(
@@ -946,7 +947,11 @@ class _CustomRecipeCardWrapper extends ConsumerWidget {
                         await ref
                             .read(databaseProvider)
                             .deleteEncyclopediaRecipe(recipe.id);
-                        unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
+                        unawaited(
+                          ref
+                              .read(syncStatusProvider.notifier)
+                              .syncEverything(),
+                        );
                         ref.invalidate(
                           encyclopediaRecipesForLotProvider(recipe.lotId ?? ''),
                         );

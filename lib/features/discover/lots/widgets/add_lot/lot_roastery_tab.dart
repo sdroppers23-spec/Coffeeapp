@@ -23,7 +23,8 @@ extension _RoasteryTabSection on _AddLotScreenState {
                         updateState(() {
                           _userRoasterId = roaster.id;
                           _roasteryController.text = roaster.name;
-                          _roasteryCountryController.text = roaster.country ?? '';
+                          _roasteryCountryController.text =
+                              roaster.country ?? '';
                         });
                         Navigator.pop(context);
                       },
@@ -31,39 +32,54 @@ extension _RoasteryTabSection on _AddLotScreenState {
                   );
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.05),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.1),
+                    ),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.business_rounded, color: Color(0xFFC8A96E), size: 18),
+                      const Icon(
+                        Icons.business_rounded,
+                        color: Color(0xFFC8A96E),
+                        size: 18,
+                      ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                        _roasteryController.text.isEmpty 
-                            ? context.t('select_roaster') 
-                            : _roasteryController.text,
-                        style: GoogleFonts.outfit(
-                          color: _roasteryController.text.isEmpty ? Colors.white38 : Colors.white,
-                          fontSize: 14,
+                          _roasteryController.text.isEmpty
+                              ? context.t('select_roaster')
+                              : _roasteryController.text,
+                          style: GoogleFonts.outfit(
+                            color: _roasteryController.text.isEmpty
+                                ? Colors.white38
+                                : Colors.white,
+                            fontSize: 14,
+                          ),
                         ),
                       ),
-                    ),
-                    const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.white38),
-                  ],
+                      const Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        color: Colors.white38,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          _divider(),
-          _fieldRow(
-            label: '${context.t('name_field')} (${context.t('or_custom')})'.toUpperCase(),
-            controller: _roasteryController,
-            placeholder: context.t('or_enter_name_here'),
-          ),
+            _divider(),
+            _fieldRow(
+              label: '${context.t('name_field')} (${context.t('or_custom')})'
+                  .toUpperCase(),
+              controller: _roasteryController,
+              placeholder: context.t('or_enter_name_here'),
+            ),
             _divider(),
             _fieldRow(
               label: context.t('country_field').toUpperCase(),

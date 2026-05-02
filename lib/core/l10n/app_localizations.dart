@@ -98,8 +98,7 @@ class AppLocalizations {
     'en': {
       'discover': 'Discover',
       'no_lots_linked': 'No lots linked',
-      'no_lots_linked_desc':
-          'Link coffee lots from your list to this roaster to see them here.',
+      'no_lots_linked_desc': 'Link coffee lots from your list to this roaster to see them here.',
       'link_lot_title': 'Link Lot',
       'unlink_lot_confirm_title': 'Unlink Lot',
       'unlink_lot_confirm_desc': 'Are you sure you want to unlink',
@@ -615,13 +614,9 @@ class AppLocalizations {
       'toast_photo_saved_locally': 'Photo saved locally',
       'error_saving_photo': 'Error saving photo',
 
+      'save_lot_confirmation_title': 'Save Changes?',
       'save_lot_confirmation_desc':
           'Do you want to save all your changes to this coffee lot?',
-
-      'discard_changes_title': 'Discard Changes?',
-      'discard_changes_msg': 'Are you sure you want to discard all changes?',
-      'keep_editing': 'Keep Editing',
-      'discard': 'Discard',
 
       'toast_lot_restored': 'Lot restored',
       'toast_lots_deleted': 'Lots deleted',
@@ -690,8 +685,7 @@ class AppLocalizations {
       'search_coffee': 'Search coffee...',
       'edit_roaster_title': 'Edit Roaster',
       'delete_roaster_confirm_title': 'Confirm Deletion',
-      'delete_roaster_confirm_msg':
-          'Are you sure you want to delete roaster {name}?',
+      'delete_roaster_confirm_msg': 'Are you sure you want to delete roaster {name}?',
       'lots_by_roaster_title': 'Lots by this roaster',
       'roast_light_medium': 'Light - Medium',
 
@@ -813,8 +807,7 @@ class AppLocalizations {
     'uk': {
       'discover': 'Дослідити',
       'no_lots_linked': 'Лоти не прив’язані',
-      'no_lots_linked_desc':
-          'Прив’яжіть кавові лоти зі свого списку до цього обсмажчика, щоб бачити їх тут.',
+      'no_lots_linked_desc': 'Прив’яжіть кавові лоти зі свого списку до цього обсмажчика, щоб бачити їх тут.',
       'link_lot_title': 'Прив’язати лот',
       'unlink_lot_confirm_title': 'Відв’язати лот',
       'unlink_lot_confirm_desc': 'Ви впевнені, що хочете відв’язати',
@@ -1335,13 +1328,9 @@ class AppLocalizations {
       'toast_photo_saved_locally': 'Фото збережено локально',
       'error_saving_photo': 'Помилка збереження фото',
 
+      'save_lot_confirmation_title': 'Зберегти зміни?',
       'save_lot_confirmation_desc':
           'Бажаєте зберегти всі зміни цього кавового лоту?',
-
-      'discard_changes_title': 'Скасувати зміни?',
-      'discard_changes_msg': 'Ви впевнені, що хочете скасувати всі зміни?',
-      'keep_editing': 'Продовжити',
-      'discard': 'Скасувати',
 
       'toast_lot_restored': 'Лот відновлено',
       'toast_lots_deleted': 'Лоти видалено',
@@ -1417,8 +1406,7 @@ class AppLocalizations {
       'search_coffee': 'Пошук кави...',
       'edit_roaster_title': 'Редагувати обсмажчика',
       'delete_roaster_confirm_title': 'Підтвердіть видалення',
-      'delete_roaster_confirm_msg':
-          'Ви впевнені, що хочете видалити обсмажчика {name}?',
+      'delete_roaster_confirm_msg': 'Ви впевнені, що хочете видалити обсмажчика {name}?',
       'lots_by_roaster_title': 'Лоти від цього обсмажчика',
       'roast_light_medium': 'Світло-середнє',
       'profile_balanced': 'Збалансований',

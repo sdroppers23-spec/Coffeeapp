@@ -359,329 +359,317 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard>
       (key, value) => MapEntry(key, value / 5.0),
     );
 
-    final card = PressableScale(
-      onLongPress: () => widget.onLongPress(widget.lot.id),
-      onTap: () {
-        if (isSelectionMode) {
-          widget.onLongPress(widget.lot.id);
-        } else {
-          widget.onTap(widget.lot.id);
-        }
-      },
-      child: RepaintBoundary(
-        child: GlassContainer(
-          padding: const EdgeInsets.all(16),
-          opacity: 0.15,
-          blur: 30, // Increased blur for better readability on busy backgrounds
-          borderRadius: 20,
-          color: isSelected ? const Color(0xFFC8A96E) : Colors.white,
-          borderColor: isSelected
-              ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
-              : Colors.white.withValues(alpha: 0.12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header: Title, Subtitle, Heart + NEW: Expand Arrow
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.lot.coffeeName ?? 'Unnamed',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.outfit(
-                            color: const Color(0xFFC8A96E),
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        if (widget.lot.roasteryName != null &&
-                            widget.lot.roasteryName!.isNotEmpty)
-                          Text(
-                            widget.lot.roasteryName!,
-                            style: GoogleFonts.outfit(
-                              color: const Color(
-                                0xFFC8A96E,
-                              ).withValues(alpha: 0.38),
-                              fontSize: 12,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  if (!isSelectionMode)
-                    PressableScale(
-                      onTap: () {
-                        if (!kIsWeb && !Platform.isWindows) {
-                          Vibration.vibrate(duration: 40, amplitude: 100);
-                        }
-                        widget.onFavoriteToggle(widget.lot);
-                      },
-                      child: Icon(
-                        widget.lot.isFavorite
-                            ? Icons.favorite_rounded
-                            : Icons.favorite_border_rounded,
-                        size: 20,
-                        color: widget.lot.isFavorite
-                            ? Colors.redAccent
-                            : Colors.white24,
-                      ),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              // Body: Score + Traits/Tags
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Stack(
+    final cardContent = RepaintBoundary(
+      child: GlassContainer(
+        padding: const EdgeInsets.all(16),
+        opacity: 0.15,
+        blur: 30, // Increased blur for better readability on busy backgrounds
+        borderRadius: 20,
+        color: isSelected ? const Color(0xFFC8A96E) : Colors.white,
+        borderColor: isSelected
+            ? const Color(0xFFC8A96E).withValues(alpha: 0.8)
+            : Colors.white.withValues(alpha: 0.12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header: Title, Subtitle, Heart + NEW: Expand Arrow
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (widget.lot.imageUrl != null &&
-                          widget.lot.imageUrl!.isNotEmpty)
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(
-                            24,
-                          ), // Circular-ish but consistent
-                          child: widget.lot.imageUrl!.startsWith('http')
-                              ? Image.network(
-                                  widget.lot.imageUrl!,
-                                  width: 54,
-                                  height: 54,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Container(
-                                        width: 54,
-                                        height: 54,
-                                        color: const Color(
-                                          0xFFC8A96E,
-                                        ).withValues(alpha: 0.1),
-                                        child: const Icon(
-                                          Icons.coffee_rounded,
-                                          color: Color(0xFFC8A96E),
-                                          size: 18,
-                                        ),
-                                      ),
-                                )
-                              : Image.file(
-                                  File(widget.lot.imageUrl!),
-                                  width: 54,
-                                  height: 54,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Container(
-                                        width: 54,
-                                        height: 54,
-                                        color: const Color(
-                                          0xFFC8A96E,
-                                        ).withValues(alpha: 0.1),
-                                        child: const Icon(
-                                          Icons.coffee_rounded,
-                                          color: Color(0xFFC8A96E),
-                                          size: 18,
-                                        ),
-                                      ),
-                                ),
-                        )
-                      else
-                        Container(
-                          width: 54,
-                          height: 54,
-                          decoration: BoxDecoration(
+                      Text(
+                        widget.lot.coffeeName ?? 'Unnamed',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.outfit(
+                          color: const Color(0xFFC8A96E),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      if (widget.lot.roasteryName != null &&
+                          widget.lot.roasteryName!.isNotEmpty)
+                        Text(
+                          widget.lot.roasteryName!,
+                          style: GoogleFonts.outfit(
                             color: const Color(
                               0xFFC8A96E,
-                            ).withValues(alpha: 0.05),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                            child: Text(
-                              widget.lot.scaScore ?? '85',
-                              style: GoogleFonts.outfit(
-                                color: theme.colorScheme.primary,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                      // Small floating score if image is present
-                      if (widget.lot.imageUrl != null &&
-                          widget.lot.imageUrl!.isNotEmpty)
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF121212),
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: const Color(
-                                  0xFFC8A96E,
-                                ).withValues(alpha: 0.4),
-                                width: 1,
-                              ),
-                            ),
-                            child: Text(
-                              widget.lot.scaScore ?? '85',
-                              style: GoogleFonts.outfit(
-                                color: theme.colorScheme.primary,
-                                fontSize: 8,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            ).withValues(alpha: 0.38),
+                            fontSize: 12,
                           ),
                         ),
                     ],
                   ),
-                  const SizedBox(width: 16),
-                  // Traits and Tags
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            CompactSensoryBar(
-                              label: ref.t('bitterness').toUpperCase(),
-                              value: (mappedSensory['bitterness'] ?? 3)
-                                  .toDouble(),
-                              theme: theme,
-                            ),
-                            const SizedBox(width: 8),
-                            CompactSensoryBar(
-                              label: ref.t('acidity').toUpperCase(),
-                              value: (mappedSensory['acidity'] ?? 3).toDouble(),
-                              theme: theme,
-                            ),
-                            const SizedBox(width: 8),
-                            CompactSensoryBar(
-                              label: ref.t('sweetness').toUpperCase(),
-                              value: (mappedSensory['sweetness'] ?? 3)
-                                  .toDouble(),
-                              theme: theme,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        // Tags Row
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              if (widget.lot.roastLevel != null &&
-                                  widget.lot.roastLevel!.isNotEmpty)
-                                _TagChip(
-                                  icon: Icons.local_fire_department_rounded,
-                                  text: widget.lot.roastLevel!.toUpperCase(),
-                                  theme: theme,
-                                  color: theme.colorScheme.primary.withValues(
-                                    alpha: 0.2,
-                                  ),
-                                ),
-                              const SizedBox(width: 8),
-                              _TagChip(
-                                icon: Icons.location_on_outlined,
-                                text: widget.lot.originCountry,
-                                theme: theme,
+                ),
+                const SizedBox(width: 8),
+                if (!isSelectionMode)
+                  PressableScale(
+                    onTap: () {
+                      if (!kIsWeb && !Platform.isWindows) {
+                        Vibration.vibrate(duration: 40, amplitude: 100);
+                      }
+                      widget.onFavoriteToggle(widget.lot);
+                    },
+                    child: Icon(
+                      widget.lot.isFavorite
+                          ? Icons.favorite_rounded
+                          : Icons.favorite_border_rounded,
+                      size: 20,
+                      color: widget.lot.isFavorite
+                          ? Colors.redAccent
+                          : Colors.white24,
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            // Body: Score + Traits/Tags
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Stack(
+                  children: [
+                    if (widget.lot.imageUrl != null &&
+                        widget.lot.imageUrl!.isNotEmpty)
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          24,
+                        ), // Circular-ish but consistent
+                        child: widget.lot.imageUrl!.startsWith('http')
+                            ? Image.network(
+                                widget.lot.imageUrl!,
+                                width: 54,
+                                height: 54,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Container(
+                                      width: 54,
+                                      height: 54,
+                                      color: const Color(
+                                        0xFFC8A96E,
+                                      ).withValues(alpha: 0.1),
+                                      child: const Icon(
+                                        Icons.coffee_rounded,
+                                        color: Color(0xFFC8A96E),
+                                        size: 18,
+                                      ),
+                                    ),
+                              )
+                            : Image.file(
+                                File(widget.lot.imageUrl!),
+                                width: 54,
+                                height: 54,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Container(
+                                      width: 54,
+                                      height: 54,
+                                      color: const Color(
+                                        0xFFC8A96E,
+                                      ).withValues(alpha: 0.1),
+                                      child: const Icon(
+                                        Icons.coffee_rounded,
+                                        color: Color(0xFFC8A96E),
+                                        size: 18,
+                                      ),
+                                    ),
                               ),
-                              const SizedBox(width: 8),
-                              if (widget.lot.process != null &&
-                                  widget.lot.process!.isNotEmpty)
-                                _TagChip(
-                                  icon: Icons.water_drop_outlined,
-                                  text: widget.lot.process,
-                                  theme: theme,
-                                ),
-                            ],
+                      )
+                    else
+                      Container(
+                        width: 54,
+                        height: 54,
+                        decoration: BoxDecoration(
+                          color: const Color(
+                            0xFFC8A96E,
+                          ).withValues(alpha: 0.05),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Text(
+                            widget.lot.scaScore ?? '85',
+                            style: GoogleFonts.outfit(
+                              color: theme.colorScheme.primary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
                           ),
                         ),
-                      ],
+                      ),
+
+                    // Small floating score if image is present
+                    if (widget.lot.imageUrl != null &&
+                        widget.lot.imageUrl!.isNotEmpty)
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF121212),
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: const Color(
+                                0xFFC8A96E,
+                              ).withValues(alpha: 0.4),
+                              width: 1,
+                            ),
+                          ),
+                          child: Text(
+                            widget.lot.scaScore ?? '85',
+                            style: GoogleFonts.outfit(
+                              color: theme.colorScheme.primary,
+                              fontSize: 8,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(width: 16),
+                // Traits and Tags
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CompactSensoryBar(
+                            label: ref.t('bitterness').toUpperCase(),
+                            value: (mappedSensory['bitterness'] ?? 3)
+                                .toDouble(),
+                            theme: theme,
+                          ),
+                          const SizedBox(width: 8),
+                          CompactSensoryBar(
+                            label: ref.t('acidity').toUpperCase(),
+                            value: (mappedSensory['acidity'] ?? 3).toDouble(),
+                            theme: theme,
+                          ),
+                          const SizedBox(width: 8),
+                          CompactSensoryBar(
+                            label: ref.t('sweetness').toUpperCase(),
+                            value: (mappedSensory['sweetness'] ?? 3)
+                                .toDouble(),
+                            theme: theme,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      // Tags Row
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            if (widget.lot.roastLevel != null &&
+                                widget.lot.roastLevel!.isNotEmpty)
+                              _TagChip(
+                                icon: Icons.local_fire_department_rounded,
+                                text: widget.lot.roastLevel!.toUpperCase(),
+                                theme: theme,
+                                color: theme.colorScheme.primary.withValues(
+                                  alpha: 0.2,
+                                ),
+                              ),
+                            const SizedBox(width: 8),
+                            _TagChip(
+                              icon: Icons.location_on_outlined,
+                              text: widget.lot.originCountry,
+                              theme: theme,
+                            ),
+                            const SizedBox(width: 8),
+                            if (widget.lot.process != null &&
+                                widget.lot.process!.isNotEmpty)
+                              _TagChip(
+                                icon: Icons.water_drop_outlined,
+                                text: widget.lot.process,
+                                theme: theme,
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+
+            // EXPANDABLE AREA
+            AnimatedCrossFade(
+              duration: const Duration(milliseconds: 300),
+              crossFadeState: _isExpanded
+                  ? CrossFadeState.showSecond
+                  : CrossFadeState.showFirst,
+              firstChild: const SizedBox(width: double.infinity),
+              secondChild: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  const Divider(color: Colors.white10),
+                  const SizedBox(height: 16),
+                  _LotPropertyGrid(lot: widget.lot),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    height: 200,
+                    child: SensoryRadarChart(
+                      interactive: false,
+                      height: 200,
+                      staticValues: radarValues,
                     ),
                   ),
                 ],
               ),
+            ),
 
-              // EXPANDABLE AREA
-              AnimatedCrossFade(
-                duration: const Duration(milliseconds: 300),
-                crossFadeState: _isExpanded
-                    ? CrossFadeState.showSecond
-                    : CrossFadeState.showFirst,
-                firstChild: const SizedBox(width: double.infinity),
-                secondChild: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    const Divider(color: Colors.white10),
-                    const SizedBox(height: 16),
-                    _LotPropertyGrid(lot: widget.lot),
-                    const SizedBox(height: 24),
-                    SizedBox(
-                      height: 200,
-                      child: SensoryRadarChart(
-                        interactive: false,
-                        height: 200,
-                        staticValues: radarValues,
+            const SizedBox(height: 3),
+            // Freshness Bar + Expand Arrow below
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                _FreshnessProgressBar(lot: widget.lot, theme: theme),
+                if (!isSelectionMode)
+                  GestureDetector(
+                    onTap: _toggleExpanded,
+                    behavior: HitTestBehavior.opaque,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
                       ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 3),
-              // Freshness Bar + Expand Arrow below
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  _FreshnessProgressBar(lot: widget.lot, theme: theme),
-                  if (!isSelectionMode)
-                    GestureDetector(
-                      onTap: _toggleExpanded,
-                      behavior: HitTestBehavior.opaque,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
-                        ),
-                        child: AnimatedRotation(
-                          duration: const Duration(milliseconds: 300),
-                          turns: _isExpanded ? 0.5 : 0,
-                          child: Icon(
-                            Icons.keyboard_arrow_down_rounded,
-                            size: 24,
-                            color: theme.colorScheme.primary,
-                          ),
+                      child: AnimatedRotation(
+                        duration: const Duration(milliseconds: 300),
+                        turns: _isExpanded ? 0.5 : 0,
+                        child: Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          size: 24,
+                          color: theme.colorScheme.primary,
                         ),
                       ),
                     ),
-                ],
-              ),
-            ],
-          ),
+                  ),
+              ],
+            ),
+          ],
         ),
       ),
     );
 
-    Widget contentCard = card;
+    Widget stack;
     if (swipeMode == LotSwipeMode.grip && !_isExpanded && !isSelectionMode) {
-      contentCard = Stack(
+      stack = Stack(
         children: [
-          card,
-          // Left Grip
+          cardContent,
           const Positioned(
             left: 0,
             top: 0,
             bottom: 0,
             child: GripDots(),
           ),
-          // Right Grip
           const Positioned(
             right: 0,
             top: 0,
@@ -690,7 +678,21 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard>
           ),
         ],
       );
+    } else {
+      stack = cardContent;
     }
+
+    final contentCard = PressableScale(
+      onLongPress: () => widget.onLongPress(widget.lot.id),
+      onTap: () {
+        if (isSelectionMode) {
+          widget.onLongPress(widget.lot.id);
+        } else {
+          widget.onTap(widget.lot.id);
+        }
+      },
+      child: stack,
+    );
 
     final dismissibleCard = isSelectionMode
         ? contentCard

@@ -289,14 +289,16 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
                 instance.isWithinHandle = (localPosition) {
                   final dx = localPosition.dx;
                   final dy = localPosition.dy;
-                  final width = constraints.maxWidth;
-                  final height = constraints.maxHeight;
+                  final renderBox = context.findRenderObject() as RenderBox?;
+                  final size = renderBox?.size;
+                  
+                  if (size == null) return false;
                   
                   const handleWidth = 80.0; 
                   const handleHeight = 100.0;
                   
-                  final horizontalOk = dx < handleWidth || dx > width - handleWidth;
-                  final verticalOk = (dy - height / 2).abs() < (handleHeight / 2);
+                  final horizontalOk = dx < handleWidth || dx > size.width - handleWidth;
+                  final verticalOk = (dy - size.height / 2).abs() < (handleHeight / 2);
                   
                   return horizontalOk && verticalOk;
                 };

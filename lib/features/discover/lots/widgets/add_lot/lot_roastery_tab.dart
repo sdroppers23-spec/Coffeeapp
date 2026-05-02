@@ -10,117 +10,104 @@ extension _RoasteryTabSection on _AddLotScreenState {
         _sectionLabel(context.t('section_roaster')),
         _darkCard(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-              child: PressableScale(
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
-                    builder: (context) => RoasterSelectorSheet(
-                      onSelected: (roaster) {
-                        updateState(() {
-                          if (roaster == null) {
-                            _userRoasterId = null;
-                            _roasteryController.clear();
-                            _roasteryCountryController.clear();
-                            _roasteryLocationController.clear();
-                          } else {
-                            _userRoasterId = roaster.id;
-                            _roasteryController.text = roaster.name;
-                            _roasteryCountryController.text =
-                                roaster.country ?? '';
-                            _roasteryLocationController.text =
-                                roaster.location ?? '';
-                          }
-                        });
-                        Navigator.pop(context);
-                      },
-                    ),
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.05),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.1),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.business_rounded,
-                        color: Color(0xFFC8A96E),
-                        size: 18,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          _roasteryController.text.isEmpty
-                              ? context.t('select_roaster')
-                              : _roasteryController.text,
-                          style: GoogleFonts.outfit(
-                            color: _roasteryController.text.isEmpty
-                                ? Colors.white38
-                                : Colors.white,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                      if (_userRoasterId != null)
-                        GestureDetector(
-                          onTap: () {
+            Column(
+              children: [
+                _fieldRow(
+                  label: context.t('name_field').toUpperCase(),
+                  controller: _roasteryController,
+                  focusNode: _roasterNameFocusNode,
+                  onChanged: (val) {
+                    if (_userRoasterId != null) {
+                      updateState(() {
+                        _userRoasterId = null;
+                        _roasteryCountryController.clear();
+                        _roasteryLocationController.clear();
+                      });
+                    }
+                    _updateRoasterSuggestions(val);
+                  },
+                  suffix: _userRoasterId != null ||
+                          _roasteryController.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.close_rounded,
+                              color: Colors.white38, size: 20),
+                          onPressed: () {
                             updateState(() {
                               _userRoasterId = null;
                               _roasteryController.clear();
                               _roasteryCountryController.clear();
                               _roasteryLocationController.clear();
+                              _roasterSuggestions = [];
+                              _showRoasterSuggestions = false;
                             });
                           },
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8),
-                            child: Icon(
-                              Icons.close_rounded,
-                              color: Colors.white38,
-                              size: 20,
+                        )
+                      : null,
+                ),
+                if (_showRoasterSuggestions)
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    constraints: const BoxConstraints(maxHeight: 200),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.05),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      itemCount: _roasterSuggestions.length,
+                      separatorBuilder: (context, index) => _divider(),
+                      itemBuilder: (context, index) {
+                        final roaster = _roasterSuggestions[index];
+                        return ListTile(
+                          dense: true,
+                          title: Text(
+                            roaster.name,
+                            style: GoogleFonts.outfit(
+                              color: Colors.white,
+                              fontSize: 14,
                             ),
                           ),
-                        ),
-                      const Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        color: Colors.white38,
-                      ),
-                    ],
+                          subtitle: roaster.location != null
+                              ? Text(
+                                  roaster.location!,
+                                  style: GoogleFonts.outfit(
+                                    color: Colors.white38,
+                                    fontSize: 12,
+                                  ),
+                                )
+                              : null,
+                          onTap: () {
+                            updateState(() {
+                              _userRoasterId = roaster.id;
+                              _roasteryController.text = roaster.name;
+                              _roasteryCountryController.text =
+                                  roaster.country ?? '';
+                              _roasteryLocationController.text =
+                                  roaster.location ?? '';
+                              _showRoasterSuggestions = false;
+                              _roasterSuggestions = [];
+                            });
+                            _roasterNameFocusNode.unfocus();
+                          },
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ),
+              ],
             ),
-            if (_userRoasterId != null) ...[
-              _divider(),
-              _fieldRow(
-                label: context.t('name_field').toUpperCase(),
-                controller: _roasteryController,
-                readOnly: true,
-              ),
-              _divider(),
-              _fieldRow(
-                label: context.t('country_field').toUpperCase(),
-                controller: _roasteryCountryController,
-                readOnly: true,
-              ),
-              _divider(),
-              _fieldRow(
-                label: context.t('location_field').toUpperCase(),
-                controller: _roasteryLocationController,
-                readOnly: true,
-              ),
-            ],
+            _divider(),
+            _fieldRow(
+              label: context.t('country_label').toUpperCase(),
+              controller: _roasteryCountryController,
+              readOnly: _userRoasterId != null,
+            ),
+            _divider(),
+            _fieldRow(
+              label: context.t('city_label').toUpperCase(),
+              controller: _roasteryLocationController,
+              readOnly: _userRoasterId != null,
+            ),
           ],
         ),
 

@@ -416,6 +416,19 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                       return !b.isArchived;
                     }).toList();
 
+                    // IMPROVEMENT: Sort by match relevance if searching
+                    if (_searchQuery.isNotEmpty) {
+                      final query = _searchQuery.toLowerCase();
+                      filtered.sort((a, b) {
+                        final aStarts = a.name.toLowerCase().startsWith(query);
+                        final bStarts = b.name.toLowerCase().startsWith(query);
+                        if (aStarts && !bStarts) return -1;
+                        if (!aStarts && bStarts) return 1;
+                        // Secondary sort by name
+                        return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+                      });
+                    }
+
                     return Stack(
                       children: [
                         if (filtered.isEmpty)

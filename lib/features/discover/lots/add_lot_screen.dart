@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:drift/drift.dart' hide Column;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -22,6 +23,7 @@ import '../../../core/database/dtos.dart';
 import '../../../core/l10n/app_localizations.dart';
 import '../../../core/utils/local_file_manager.dart';
 import 'lots_providers.dart';
+import 'providers/roaster_providers.dart';
 import '../../../shared/models/processing_methods_repository.dart';
 import '../../../shared/widgets/sensory_radar_chart.dart';
 import '../../../shared/services/toast_service.dart';
@@ -116,8 +118,13 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   bool _isOtherDecaf = false;
   bool _isSensoryLocked = true; // Default to locked if using presets
 
+  List<UserRoasterDto> _roasterSuggestions = [];
+  bool _showRoasterSuggestions = false;
+  final FocusNode _roasterNameFocusNode = FocusNode();
+
   @override
   void dispose() {
+    _roasterNameFocusNode.dispose();
     _tabController.dispose();
     _roasteryController.dispose();
     _roasteryCountryController.dispose();
@@ -364,6 +371,37 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   bool get _canSave =>
       _originCountryController.text.trim().isNotEmpty;
 
+  void _updateRoasterSuggestions(String query) {
+    if (query.isEmpty) {
+      updateState(() {
+        _roasterSuggestions = [];
+        _showRoasterSuggestions = false;
+      });
+      return;
+    }
+
+    final roasters = ref.read(userRoastersProvider);
+    final filtered = roasters.where((r) {
+      return r.name.toLowerCase().contains(query.toLowerCase()) ||
+          (r.location?.toLowerCase().contains(query.toLowerCase()) ?? false);
+    }).toList();
+
+    // Sort by relevance
+    final q = query.toLowerCase();
+    filtered.sort((a, b) {
+      final aStarts = a.name.toLowerCase().startsWith(q);
+      final bStarts = b.name.toLowerCase().startsWith(q);
+      if (aStarts && !bStarts) return -1;
+      if (!aStarts && bStarts) return 1;
+      return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+    });
+
+    updateState(() {
+      _roasterSuggestions = filtered;
+      _showRoasterSuggestions = filtered.isNotEmpty;
+    });
+  }
+
   Future<void> _saveLot() async {
     if (!_canSave) return;
 
@@ -443,6 +481,32 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           ? (_openedAt ?? _roastDate)
           : null;
 
+      // 2.5 Auto-create roaster if name entered but no ID selected
+      String? effectiveRoasterId = _userRoasterId;
+      if (effectiveRoasterId == null &&
+          _roasteryController.text.trim().isNotEmpty) {
+        final roasterName = _roasteryController.text.trim();
+        final existing = ref.read(userRoastersProvider).firstWhereOrNull(
+          (r) => r.name.toLowerCase() == roasterName.toLowerCase(),
+        );
+
+        if (existing != null) {
+          effectiveRoasterId = existing.id;
+        } else {
+          // Create new roaster
+          final newRoaster = UserRoasterDto(
+            id: const Uuid().v4(),
+            name: roasterName,
+            country: _roasteryCountryController.text.trim(),
+            location: _roasteryLocationController.text.trim(),
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          );
+          await ref.read(userRoastersProvider.notifier).saveRoaster(newRoaster);
+          effectiveRoasterId = newRoaster.id;
+        }
+      }
+
       // 3. Save to Local DB
       await db.upsertUserLot(
         CoffeeLotsCompanion(
@@ -451,7 +515,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           roasteryName: Value(_roasteryController.text),
           roasteryCountry: Value(_roasteryCountryController.text),
           roasteryCity: Value(_roasteryLocationController.text),
-          coffeeName: Value(_originCountryController.text), // Fallback or clear
+          coffeeName: Value(_originCountryController.text),
           originCountry: Value(_originCountryController.text),
           region: Value(_regionController.text),
           altitude: Value(() {
@@ -483,7 +547,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           isFavorite: Value(_isFavorite),
           isArchived: Value(_isArchived),
           imageUrl: Value(finalImageUrl),
-          userRoasterId: Value(_userRoasterId),
+          userRoasterId: Value(effectiveRoasterId),
           isSynced: const Value(false),
           createdAt: Value(widget.initialLot?.createdAt ?? DateTime.now()),
           updatedAt: Value(DateTime.now()),
@@ -579,21 +643,29 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       child: Scaffold(
         backgroundColor: Colors.black,
         body: SafeArea(
-          child: Column(
-            children: [
-              _buildHeader(),
-              _buildTabBar(),
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    _buildRoasteryTab(),
-                    _buildCoffeeTab(),
-                    _buildSensoryTab(),
-                  ],
+          child: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+              updateState(() {
+                _showRoasterSuggestions = false;
+              });
+            },
+            child: Column(
+              children: [
+                _buildHeader(),
+                _buildTabBar(),
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _buildRoasteryTab(),
+                      _buildCoffeeTab(),
+                      _buildSensoryTab(),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -841,10 +913,11 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     Function(String)? onChanged,
     TextInputType? keyboardType,
     List<TextInputFormatter>? inputFormatters,
-    String? suffix,
+    dynamic suffix, // String or Widget
     String? helperText,
     String? placeholder,
     bool readOnly = false,
+    FocusNode? focusNode,
   }) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
@@ -866,6 +939,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               Expanded(
                 child: TextField(
                   readOnly: readOnly,
+                  focusNode: focusNode,
                   controller:
                       controller ?? TextEditingController(text: value ?? ''),
                   style: GoogleFonts.outfit(color: Colors.white, fontSize: 16),
@@ -924,14 +998,16 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 ),
               ),
               if (suffix != null)
-                Text(
-                  suffix,
-                  style: GoogleFonts.outfit(
-                    color: const Color(0xFFC8A96E),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13,
-                  ),
-                ),
+                suffix is String
+                    ? Text(
+                        suffix,
+                        style: GoogleFonts.outfit(
+                          color: const Color(0xFFC8A96E),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                        ),
+                      )
+                    : suffix as Widget,
             ],
           ),
           if (helperText != null) ...[

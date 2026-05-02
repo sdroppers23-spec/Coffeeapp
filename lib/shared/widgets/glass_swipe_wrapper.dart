@@ -37,10 +37,11 @@ class _CustomHorizontalDragRecognizer extends HorizontalDragGestureRecognizer {
     }
 
     // If we're starting a new gesture and Grip Mode is ON, we enforce the handle check
-    // unless the card is already significantly open (to allow easy closing).
-    final bool isOpened = getExtent!().abs() > 30.0;
+    // if the card is mostly closed. We use a 20px threshold to allow for minor jitter
+    // while still strictly enforcing the handle for new swipes.
+    final bool isMostlyClosed = getExtent!().abs() < 20.0;
     
-    if (isGripMode && !isOpened) {
+    if (isGripMode && isMostlyClosed) {
       if (!isWithinHandle!(event.localPosition)) {
         return; // Do not allow this pointer to start the gesture
       }
@@ -115,6 +116,10 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
   void _handleDragStart(DragStartDetails details) {
     _isDragging = true;
     _controller.stop();
+    // Safety: if we were very close to zero, just snap to zero to prevent jitter
+    if (_dragExtent.abs() < 5.0) {
+      setState(() => _dragExtent = 0.0);
+    }
   }
 
   void _handleDragUpdate(DragUpdateDetails details) {
@@ -255,7 +260,7 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
                 instance.isWithinHandle = (localPosition) {
                   final dx = localPosition.dx;
                   final width = constraints.maxWidth;
-                  const handleWidth = 50.0;
+                  const handleWidth = 80.0; // Very wide handle for maximum reliability
                   return dx < handleWidth || dx > width - handleWidth;
                 };
                 instance.dragStartBehavior = DragStartBehavior.down;

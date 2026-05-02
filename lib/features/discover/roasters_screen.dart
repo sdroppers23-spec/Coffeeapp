@@ -320,7 +320,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                       contentPadding: const EdgeInsets.only(left: 16, right: 16, top: 2, bottom: 0),
                       filled: false,
                       prefixIcon: const Padding(
-                        padding: EdgeInsets.only(left: 12, right: 8, top: 11),
+                        padding: EdgeInsets.only(left: 12, right: 8, top: 9),
                         child: Icon(
                           Icons.search_rounded,
                           color: Color(0xFFC8A96E),
@@ -463,7 +463,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
       key: key,
       padding: const EdgeInsets.only(bottom: 16),
       child: GlassSwipeWrapper(
-        isGripMode: false,
+        isGripMode: true,
         isSwipeEnabled: true,
         dismissibleKey: ValueKey('roaster_swipe_${roaster.id}'),
         leftAction: GlassSwipeAction(
@@ -686,6 +686,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
     final notifier = ref.read(userRoastersProvider.notifier);
     final nameController = TextEditingController();
     final shortDescController = TextEditingController();
+    final countryController = TextEditingController();
     final locationController = TextEditingController();
     final logoUrlController = TextEditingController();
     String? localPath;
@@ -751,8 +752,14 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                 const SizedBox(height: 12),
                 _buildDialogField(
                   locationController,
-                  context.t('city_country_label'),
+                  context.t('city_label'), // Changed from city_country_label
                   Icons.location_on_rounded,
+                ),
+                const SizedBox(height: 12),
+                _buildDialogField(
+                  countryController,
+                  context.t('country_label'),
+                  Icons.public_rounded,
                 ),
                 const SizedBox(height: 12),
                 _buildDialogField(
@@ -799,6 +806,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                 final roaster = UserRoasterDto(
                   id: DateTime.now().millisecondsSinceEpoch.toString(),
                   name: nameController.text,
+                  country: countryController.text,
                   location: locationController.text,
                   description: shortDescController.text,
                   logoUrl: logoUrlController.text.isNotEmpty
@@ -940,8 +948,8 @@ class _PremiumRoasterCard extends StatelessWidget {
                         color: const Color(0xFFC8A96E),
                       ),
                     ),
-                    if (roaster.location != null &&
-                        roaster.location!.isNotEmpty) ...[
+                    if ((roaster.location?.isNotEmpty ?? false) ||
+                        (roaster.country?.isNotEmpty ?? false)) ...[
                       const SizedBox(height: 2),
                       Row(
                         children: [
@@ -951,11 +959,17 @@ class _PremiumRoasterCard extends StatelessWidget {
                             color: Colors.white38,
                           ),
                           const SizedBox(width: 4),
-                          Text(
-                            roaster.location!,
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              color: Colors.white38,
+                          Expanded(
+                            child: Text(
+                              [roaster.location, roaster.country]
+                                  .where((s) => s != null && s.isNotEmpty)
+                                  .join(', '),
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                color: Colors.white38,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
@@ -1018,10 +1032,28 @@ class _PremiumRoasterCard extends StatelessWidget {
                       roaster.isFavorite
                           ? Icons.favorite_rounded
                           : Icons.favorite_border_rounded,
-                      color: roaster.isFavorite
-                          ? Colors.redAccent
-                          : Colors.white30,
+                      color:
+                          roaster.isFavorite ? Colors.redAccent : Colors.white30,
                       size: 20,
+                    ),
+                  ),
+                ),
+                // Grip Handle for Swiping
+                Padding(
+                  padding: const EdgeInsets.only(left: 4, right: 8),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      3,
+                      (_) => Container(
+                        width: 3,
+                        height: 3,
+                        margin: const EdgeInsets.symmetric(vertical: 1.5),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
                     ),
                   ),
                 ),

@@ -50,7 +50,7 @@ class PreferencesNotifier extends Notifier<UserPreferences> {
     final tempIndex = prefs.getInt(_tempKey) ?? 0;
     final lengthIndex = prefs.getInt(_lengthKey) ?? 0;
     final currencyStr = prefs.getString(_currencyKey) ?? 'UAH';
-    final swipeIndex = prefs.getInt(_swipeModeKey) ?? 0;
+    final swipeIndex = prefs.getInt(_swipeModeKey) ?? 1; // Default to grip mode
 
     return UserPreferences(
       tempUnit: TempUnit.values[tempIndex],

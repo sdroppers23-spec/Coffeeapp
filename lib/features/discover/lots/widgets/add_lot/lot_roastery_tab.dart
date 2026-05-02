@@ -21,12 +21,19 @@ extension _RoasteryTabSection on _AddLotScreenState {
                     builder: (context) => RoasterSelectorSheet(
                       onSelected: (roaster) {
                         updateState(() {
-                          _userRoasterId = roaster.id;
-                          _roasteryController.text = roaster.name;
-                          _roasteryCountryController.text =
-                              roaster.country ?? '';
-                          _roasteryLocationController.text =
-                              roaster.location ?? '';
+                          if (roaster == null) {
+                            _userRoasterId = null;
+                            _roasteryController.clear();
+                            _roasteryCountryController.clear();
+                            _roasteryLocationController.clear();
+                          } else {
+                            _userRoasterId = roaster.id;
+                            _roasteryController.text = roaster.name;
+                            _roasteryCountryController.text =
+                                roaster.country ?? '';
+                            _roasteryLocationController.text =
+                                roaster.location ?? '';
+                          }
                         });
                         Navigator.pop(context);
                       },

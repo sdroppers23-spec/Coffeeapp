@@ -38,6 +38,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
     final shortDescController = TextEditingController(
       text: roaster.description,
     );
+    final countryController = TextEditingController(text: roaster.country);
     final locationController = TextEditingController(text: roaster.location);
     final logoUrlController = TextEditingController(text: roaster.logoUrl);
     String? localPath = roaster.localLogoPath;
@@ -106,8 +107,15 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                 buildDialogField(
                   context,
                   locationController,
-                  context.t('location_label'),
+                  context.t('city_label'),
                   Icons.location_on_rounded,
+                ),
+                const SizedBox(height: 12),
+                buildDialogField(
+                  context,
+                  countryController,
+                  context.t('country_label'),
+                  Icons.public_rounded,
                 ),
                 const SizedBox(height: 12),
                 buildDialogField(
@@ -140,6 +148,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                 if (nameController.text.isEmpty) return;
                 final updated = roaster.copyWith(
                   name: nameController.text,
+                  country: countryController.text,
                   location: locationController.text,
                   description: shortDescController.text,
                   logoUrl: logoUrlController.text,
@@ -563,7 +572,7 @@ class _UserRoasterDetailsScreenState
           SliverToBoxAdapter(
             child: Column(
               children: [
-                const SizedBox(height: 100),
+                const SizedBox(height: 40), // Reduced from 60 to fix "накладка"
                 // Header (Logo)
                 Center(
                   child: Container(
@@ -600,8 +609,8 @@ class _UserRoasterDetailsScreenState
                   ),
                 ),
                 const SizedBox(height: 8),
-                if (currentRoaster.location != null &&
-                    currentRoaster.location!.isNotEmpty)
+                if ((currentRoaster.location?.isNotEmpty ?? false) ||
+                    (currentRoaster.country?.isNotEmpty ?? false))
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Row(
@@ -614,7 +623,9 @@ class _UserRoasterDetailsScreenState
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          currentRoaster.location!,
+                          [currentRoaster.location, currentRoaster.country]
+                              .where((s) => s != null && s.isNotEmpty)
+                              .join(', '),
                           style: GoogleFonts.outfit(
                             color: Colors.white38,
                             fontSize: 14,

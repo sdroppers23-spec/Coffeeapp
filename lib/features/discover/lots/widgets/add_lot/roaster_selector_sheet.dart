@@ -12,7 +12,7 @@ import '../../../../../shared/services/toast_service.dart';
 import 'dart:io';
 
 class RoasterSelectorSheet extends ConsumerStatefulWidget {
-  final Function(UserRoasterDto) onSelected;
+  final void Function(UserRoasterDto?) onSelected;
 
   const RoasterSelectorSheet({super.key, required this.onSelected});
 
@@ -119,7 +119,7 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                   contentPadding: const EdgeInsets.only(left: 16, right: 16, bottom: 2),
                   filled: false,
                   prefixIcon: const Padding(
-                    padding: EdgeInsets.only(left: 12, right: 8),
+                    padding: EdgeInsets.only(left: 12, right: 8, top: 9),
                     child: Icon(
                       Icons.search_rounded,
                       color: Color(0xFFC8A96E),
@@ -200,9 +200,10 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                       horizontal: 20,
                       vertical: 8,
                     ),
-                    itemCount: filteredRoasters.length,
+                    itemCount: filteredRoasters.length + 1,
                     itemBuilder: (context, index) {
-                      final roaster = filteredRoasters[index];
+                      if (index == 0) return _buildClearItem();
+                      final roaster = filteredRoasters[index - 1];
                       return _buildRoasterItem(roaster);
                     },
                   ),
@@ -248,7 +249,10 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
         ),
         subtitle: Text(
           roaster.country ?? '',
-          style: GoogleFonts.outfit(color: Colors.white38, fontSize: 12),
+          style: GoogleFonts.outfit(
+            color: Colors.white38,
+            fontSize: 12,
+          ),
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -270,6 +274,40 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
               onPressed: () => _confirmDelete(roaster),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildClearItem() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.03),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+      ),
+      child: ListTile(
+        onTap: () => widget.onSelected(null),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        leading: Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: Colors.redAccent.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.redAccent.withValues(alpha: 0.2)),
+          ),
+          child:
+              const Icon(Icons.close_rounded, color: Colors.redAccent, size: 20),
+        ),
+        title: Text(
+          context.t('none_clear_selection'),
+          style: GoogleFonts.outfit(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+          ),
         ),
       ),
     );

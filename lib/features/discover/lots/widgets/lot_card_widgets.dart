@@ -674,36 +674,18 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard>
         children: [
           card,
           // Left Grip
-          Positioned(
-            left: 6,
+          const Positioned(
+            left: 0,
             top: 0,
             bottom: 0,
-            child: Center(
-              child: Container(
-                width: 4,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ),
+            child: _GripDots(),
           ),
           // Right Grip
-          Positioned(
-            right: 6,
+          const Positioned(
+            right: 0,
             top: 0,
             bottom: 0,
-            child: Center(
-              child: Container(
-                width: 4,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ),
+            child: _GripDots(),
           ),
         ],
       );
@@ -1117,6 +1099,41 @@ class _InfoItem extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _GripDots extends StatelessWidget {
+  const _GripDots();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          3,
+          (_) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 1),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: List.generate(
+                2,
+                (_) => Container(
+                  width: 3,
+                  height: 3,
+                  margin: const EdgeInsets.symmetric(horizontal: 1),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withValues(alpha: 0.15),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -612,6 +612,10 @@ class AppLocalizations {
       'toast_photo_saved_locally': 'Photo saved locally',
       'error_saving_photo': 'Error saving photo',
 
+      'save_lot_confirmation_title': 'Save Changes?',
+      'save_lot_confirmation_desc':
+          'Do you want to save all your changes to this coffee lot?',
+
       'toast_lot_restored': 'Lot restored',
       'toast_lots_deleted': 'Lots deleted',
       'toast_lots_archived': 'Lots archived',
@@ -1319,7 +1323,11 @@ class AppLocalizations {
       'toast_lot_added': 'Лот додано',
       'toast_photo_saved_locally': 'Фото збережено локально',
       'error_saving_photo': 'Помилка збереження фото',
-      'error_saving_lot': 'Помилка збереження лоту',
+
+      'save_lot_confirmation_title': 'Зберегти зміни?',
+      'save_lot_confirmation_desc':
+          'Бажаєте зберегти всі зміни цього кавового лоту?',
+
       'toast_lot_restored': 'Лот відновлено',
       'toast_lots_deleted': 'Лоти видалено',
       'toast_lots_archived': 'Лоти архівовано',

@@ -49,9 +49,19 @@ enum _FieldType { text, numeric, scaScore, weight, altitude, lotNumber }
 class _AddLotScreenState extends ConsumerState<AddLotScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
-  void updateState(VoidCallback fn) => setState(fn);
+  void updateState(VoidCallback fn) {
+    setState(() {
+      fn();
+      _isDirty = true;
+    });
+  }
 
   // ─── Form State ───────────────────────────────────────────────────
+  bool _isDirty = false;
+  void _markDirty() {
+    if (!_isDirty) setState(() => _isDirty = true);
+  }
+
   bool _isDecaf = false;
   String _decafProcess = 'Sugar Cane';
   String _roastLevel = 'Medium';
@@ -243,6 +253,25 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       _currentImageUrl = widget.initialLot!.imageUrl;
       _populateFields(widget.initialLot!);
     }
+
+    _roasteryController.addListener(_markDirty);
+    _roasteryCountryController.addListener(_markDirty);
+    _roasteryLocationController.addListener(_markDirty);
+    _originCountryController.addListener(_markDirty);
+    _regionController.addListener(_markDirty);
+    _altitudeController.addListener(_markDirty);
+    _varietiesController.addListener(_markDirty);
+    _farmerController.addListener(_markDirty);
+    _washStationController.addListener(_markDirty);
+    _processController.addListener(_markDirty);
+    _flavorProfileController.addListener(_markDirty);
+    _scaScoreController.addListener(_markDirty);
+    _lotNumberController.addListener(_markDirty);
+    _weightController.addListener(_markDirty);
+    _priceController.addListener(_markDirty);
+    _retailPrice1kController.addListener(_markDirty);
+    _wholesalePrice250Controller.addListener(_markDirty);
+    _wholesalePrice1kController.addListener(_markDirty);
   }
 
   void _populateFields(CoffeeLotDto lot) {
@@ -321,7 +350,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           return;
         }
 
-        setState(() {
+        updateState(() {
           _imageBytes = bytes;
           _imageExtension = image.name.split('.').last.toLowerCase();
           _currentImageUrl = null; // New image replaces old one
@@ -333,11 +362,12 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   }
 
   bool get _canSave =>
-      _roasteryController.text.trim().isNotEmpty &&
       _originCountryController.text.trim().isNotEmpty;
 
   Future<void> _saveLot() async {
     if (!_canSave) return;
+
+    _isDirty = false; // Prevents discard dialog on success
 
     final user = Supabase.instance.client.auth.currentUser;
     final userId = user?.id ?? 'guest';
@@ -485,13 +515,65 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     }
   }
 
+  Future<bool> _showDiscardChangesDialog() async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            backgroundColor: const Color(0xFF151515),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+            ),
+            title: Text(
+              context.t('discard_changes_title'),
+              style: GoogleFonts.poppins(
+                color: const Color(0xFFC8A96E),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            content: Text(
+              context.t('discard_changes_msg'),
+              style: GoogleFonts.outfit(color: Colors.white70),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: Text(
+                  context.t('cancel'),
+                  style: GoogleFonts.outfit(color: Colors.white38),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.redAccent,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: Text(
+                  context.t('discard'),
+                  style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
   // ─── Build ────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) {
+      canPop: !_isDirty,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+
+        final confirmed = await _showDiscardChangesDialog();
+        if (confirmed && mounted && context.mounted) {
           ref.read(navBarVisibleProvider.notifier).show();
+          context.pop();
         }
       },
       child: Scaffold(
@@ -527,9 +609,13 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       child: Row(
         children: [
           GestureDetector(
-            onTap: () {
+            onTap: () async {
+              if (_isDirty) {
+                final confirmed = await _showDiscardChangesDialog();
+                if (!confirmed) return;
+              }
               ref.read(navBarVisibleProvider.notifier).show();
-              context.pop();
+              if (mounted) context.pop();
             },
             child: Container(
               width: 36,
@@ -561,7 +647,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           if (widget.initialLot != null) ...[
             GestureDetector(
               onTap: () {
-                setState(() => _isArchived = !_isArchived);
+                updateState(() => _isArchived = !_isArchived);
               },
               child: Icon(
                 _isArchived ? Icons.unarchive_rounded : Icons.archive_outlined,
@@ -573,7 +659,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           ],
           GestureDetector(
             onTap: () {
-              setState(() => _isFavorite = !_isFavorite);
+              updateState(() => _isFavorite = !_isFavorite);
             },
             child: Icon(
               _isFavorite
@@ -833,7 +919,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                   ),
                   onChanged: (v) {
                     onChanged?.call(v);
-                    setState(() {}); // Trigger _canSave update
+                    updateState(() {}); // Trigger _canSave update
                   },
                 ),
               ),
@@ -1008,7 +1094,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   }
 
   void _updateState(VoidCallback fn) {
-    setState(fn);
+    updateState(fn);
   }
 
   Widget _sensorySlider(

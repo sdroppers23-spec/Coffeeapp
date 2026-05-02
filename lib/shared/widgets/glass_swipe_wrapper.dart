@@ -40,7 +40,7 @@ class _CustomHorizontalDragRecognizer extends HorizontalDragGestureRecognizer {
     // and Grip Mode is ON, we MUST enforce the handle check.
     // If the card is already swiped open, we allow interaction from anywhere 
     // to facilitate closing or further swiping.
-    final bool isAtRest = getExtent().abs() < 1.0;
+    final bool isAtRest = getExtent().abs() < 5.0;
     
     if (isGripMode && isAtRest) {
       if (!isWithinHandle(event.localPosition)) {
@@ -192,7 +192,9 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
 
   Widget _buildBackground() {
     // Threshold to prevent "red line" slivers during tiny accidental drags (e.g. tab transitions)
-    if (_dragExtent.abs() < 1.5) return const SizedBox.shrink();
+    // Threshold to ignore small accidental drags during sensitive list/tab scrolls
+    // High threshold to eliminate "red line" artifacts during rapid scrolling or tab switching
+    if (_dragExtent.abs() < 40.0) return const SizedBox.shrink();
     
     final isLeft = _dragExtent > 0;
     final action = isLeft ? widget.leftAction : widget.rightAction;

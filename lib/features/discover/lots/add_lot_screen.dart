@@ -637,10 +637,11 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                         const SizedBox(height: 20),
                         Text(
                           context.t('discard_changes_title'),
-                          style: GoogleFonts.outfit(
+                          style: GoogleFonts.poppins(
                             color: Colors.white,
-                            fontSize: 20,
+                            fontSize: 22,
                             fontWeight: FontWeight.bold,
+                            letterSpacing: -0.5,
                           ),
                         ),
                         const SizedBox(height: 12),
@@ -648,8 +649,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                           context.t('discard_changes_msg'),
                           textAlign: TextAlign.center,
                           style: GoogleFonts.outfit(
-                            color: Colors.white60,
-                            fontSize: 15,
+                            color: Colors.white.withValues(alpha: 0.6),
+                            fontSize: 16,
+                            height: 1.4,
                           ),
                         ),
                         const SizedBox(height: 32),
@@ -663,37 +665,52 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                                     vertical: 16,
                                   ),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(16),
                                   ),
                                 ),
                                 child: Text(
                                   context.t('keep_editing'),
-                                  style: GoogleFonts.outfit(
-                                    color: Colors.white,
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.white.withValues(alpha: 0.7),
                                     fontWeight: FontWeight.w600,
+                                    fontSize: 14,
                                   ),
                                 ),
                               ),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
-                              child: ElevatedButton(
-                                onPressed: () => Navigator.pop(context, true),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFFC8A96E),
-                                  foregroundColor: Colors.black,
-                                  elevation: 0,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 16,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color(0xFFC8A96E)
+                                          .withValues(alpha: 0.3),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
                                 ),
-                                child: Text(
-                                  context.t('discard'),
-                                  style: GoogleFonts.outfit(
-                                    fontWeight: FontWeight.bold,
+                                child: ElevatedButton(
+                                  onPressed: () => Navigator.pop(context, true),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFC8A96E),
+                                    foregroundColor: Colors.black,
+                                    elevation: 0,
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    context.t('discard'),
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -941,10 +958,11 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                           const SizedBox(height: 20),
                           Text(
                             context.t('save_lot_confirmation_title'),
-                            style: GoogleFonts.outfit(
+                            style: GoogleFonts.poppins(
                               color: Colors.white,
-                              fontSize: 20,
+                              fontSize: 22,
                               fontWeight: FontWeight.bold,
+                              letterSpacing: -0.5,
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -952,8 +970,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                             context.t('save_lot_confirmation_desc'),
                             textAlign: TextAlign.center,
                             style: GoogleFonts.outfit(
-                              color: Colors.white60,
-                              fontSize: 15,
+                              color: Colors.white.withValues(alpha: 0.6),
+                              fontSize: 16,
+                              height: 1.4,
                             ),
                           ),
                           const SizedBox(height: 32),
@@ -969,41 +988,54 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                                     ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(16),
-                                      side: BorderSide(
-                                        color: Colors.white.withValues(
-                                          alpha: 0.1,
-                                        ),
-                                      ),
                                     ),
                                   ),
                                   child: Text(
                                     context.t('cancel'),
-                                    style: GoogleFonts.outfit(
-                                      color: Colors.white,
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.7,
+                                      ),
                                       fontWeight: FontWeight.w600,
+                                      fontSize: 14,
                                     ),
                                   ),
                                 ),
                               ),
                               const SizedBox(width: 12),
                               Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () => Navigator.pop(context, true),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFFC8A96E),
-                                    foregroundColor: Colors.black,
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 16,
-                                    ),
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: const Color(0xFFC8A96E)
+                                            .withValues(alpha: 0.3),
+                                        blurRadius: 12,
+                                        offset: const Offset(0, 4),
+                                      ),
+                                    ],
                                   ),
-                                  child: Text(
-                                    context.t('save'),
-                                    style: GoogleFonts.outfit(
-                                      fontWeight: FontWeight.bold,
+                                  child: ElevatedButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, true),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFFC8A96E),
+                                      foregroundColor: Colors.black,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 16,
+                                      ),
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      context.t('save'),
+                                      style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -1112,31 +1144,28 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     FocusNode? focusNode,
   }) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: GoogleFonts.outfit(
-              fontSize: 10,
-              color: const Color(0xFFC8A96E),
-              fontWeight: FontWeight.w900,
-              letterSpacing: 1.2,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: const Color(0xFFC8A96E).withValues(alpha: 0.25),
-                width: 1,
+          Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: 8),
+            child: Text(
+              label,
+              style: GoogleFonts.poppins(
+                color: Colors.white.withValues(alpha: 0.5),
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 0.5,
               ),
             ),
-            child: Row(
+          ),
+          GlassContainer(
+            opacity: 0.05,
+            borderRadius: 16,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Row(
               children: [
                 Expanded(
                   child: TextField(
@@ -1214,6 +1243,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               ],
             ),
           ),
+        ),
           if (helperText != null) ...[
             const SizedBox(height: 4),
             Text(
@@ -1239,43 +1269,54 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     final display = date != null
         ? '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}'
         : (placeholder ?? '—');
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: GoogleFonts.outfit(
-                    fontSize: 10,
-                    color: const Color(0xFFC8A96E),
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  display,
-                  style: GoogleFonts.outfit(
-                    color: const Color(0xFFC8A96E),
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: 8),
+            child: Text(
+              label,
+              style: GoogleFonts.poppins(
+                color: Colors.white.withValues(alpha: 0.5),
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 0.5,
+              ),
             ),
-            const Icon(
-              Icons.calendar_today_rounded,
-              color: Color(0xFFC8A96E),
-              size: 16,
+          ),
+          InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(16),
+            child: GlassContainer(
+              opacity: 0.05,
+              borderRadius: 16,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      display,
+                      style: GoogleFonts.outfit(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const Icon(
+                      Icons.calendar_today_rounded,
+                      color: Color(0xFFC8A96E),
+                      size: 20,
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -1325,53 +1366,59 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     String? localizationPrefix,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: Row(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 80,
+          Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: 8),
             child: Text(
               label,
-              style: GoogleFonts.outfit(
-                fontSize: 10,
-                fontWeight: FontWeight.w900,
-                color: const Color(0xFFC8A96E),
-                letterSpacing: 1.2,
+              style: GoogleFonts.poppins(
+                color: Colors.white.withValues(alpha: 0.5),
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 0.5,
               ),
             ),
           ),
-          Expanded(
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                value: value,
-                isExpanded: true,
-                dropdownColor: const Color(0xFF121212),
-                icon: const Icon(
-                  Icons.keyboard_arrow_down_rounded,
-                  color: Color(0xFFC8A96E),
-                  size: 18,
+          GlassContainer(
+            opacity: 0.05,
+            borderRadius: 16,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  value: value,
+                  isExpanded: true,
+                  dropdownColor: const Color(0xFF121212),
+                  icon: const Icon(
+                    Icons.keyboard_arrow_down_rounded,
+                    color: Color(0xFFC8A96E),
+                    size: 18,
+                  ),
+                  style: GoogleFonts.outfit(
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  items: items.map((e) {
+                    final text = localizationPrefix != null
+                        ? context.t(
+                            '$localizationPrefix${e.toLowerCase().replaceAll(' ', '_')}',
+                          )
+                        : e;
+                    return DropdownMenuItem(value: e, child: Text(text));
+                  }).toList(),
+                  onChanged: onChanged,
                 ),
-                style: GoogleFonts.outfit(
-                  color: Colors.white,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                ),
-                items: items.map((e) {
-                  final text = localizationPrefix != null
-                      ? context.t(
-                          '$localizationPrefix${e.toLowerCase().replaceAll(' ', '_')}',
-                        )
-                      : e;
-                  return DropdownMenuItem(value: e, child: Text(text));
-                }).toList(),
-                onChanged: onChanged,
               ),
             ),
           ),
         ],
       ),
     );
-  }
+}
 
   void _updateState(VoidCallback fn) {
     updateState(fn);
@@ -1398,11 +1445,11 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 children: [
                   Text(
                     label,
-                    style: GoogleFonts.outfit(
-                      fontSize: 10,
-                      color: const Color(0xFFC8A96E),
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 1.2,
+                    style: GoogleFonts.poppins(
+                      color: Colors.white.withValues(alpha: 0.5),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.5,
                     ),
                   ),
                   Text(

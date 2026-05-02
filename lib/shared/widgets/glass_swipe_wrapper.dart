@@ -127,10 +127,16 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
     // Double-check grip mode constraints in onStart (second line of defense)
     if (widget.isGripMode && _dragExtent.abs() < 15.0) {
       final dx = details.localPosition.dx;
-      const handleWidth = 85.0; // Slightly wider for the second-line check
-      final isOnHandle = dx < handleWidth || dx > (context.size?.width ?? 0) - handleWidth;
+      final dy = details.localPosition.dy;
+      final size = context.size;
       
-      if (!isOnHandle) {
+      const handleWidth = 60.0; // Precise width
+      const handleHeight = 60.0; // Precise height zone
+      
+      final isOnHandleX = dx < handleWidth || dx > (size?.width ?? 0) - handleWidth;
+      final isOnHandleY = (dy - (size?.height ?? 0) / 2).abs() < (handleHeight / 2);
+      
+      if (!isOnHandleX || !isOnHandleY) {
         _ignoreCurrentDrag = true;
         return;
       }
@@ -282,9 +288,17 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
                 instance.isGripMode = widget.isGripMode;
                 instance.isWithinHandle = (localPosition) {
                   final dx = localPosition.dx;
+                  final dy = localPosition.dy;
                   final width = constraints.maxWidth;
-                  const handleWidth = 80.0; // Very wide handle for maximum reliability
-                  return dx < handleWidth || dx > width - handleWidth;
+                  final height = constraints.maxHeight;
+                  
+                  const handleWidth = 60.0; 
+                  const handleHeight = 60.0;
+                  
+                  final horizontalOk = dx < handleWidth || dx > width - handleWidth;
+                  final verticalOk = (dy - height / 2).abs() < (handleHeight / 2);
+                  
+                  return horizontalOk && verticalOk;
                 };
                 instance.dragStartBehavior = DragStartBehavior.down;
                 instance.onStart = _handleDragStart;

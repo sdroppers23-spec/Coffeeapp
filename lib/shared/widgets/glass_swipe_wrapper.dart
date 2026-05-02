@@ -22,28 +22,26 @@ class GlassSwipeAction {
 /// A custom horizontal drag recognizer that allows configuring swipe thresholds
 /// and optional "grip zones" to prevent interference with TabBar scrolling.
 class _CustomHorizontalDragRecognizer extends HorizontalDragGestureRecognizer {
-  final double Function() getExtent;
-  final BoxConstraints constraints;
-  final bool Function(Offset localPosition) isWithinHandle;
-  final bool isGripMode;
+  double Function()? getExtent;
+  BoxConstraints? constraints;
+  bool Function(Offset localPosition)? isWithinHandle;
+  bool isGripMode = false;
 
-  _CustomHorizontalDragRecognizer({
-    required this.getExtent,
-    required this.constraints,
-    required this.isWithinHandle,
-    required this.isGripMode,
-  }) : super(debugOwner: 'CustomHorizontalDragRecognizer');
+  _CustomHorizontalDragRecognizer() : super(debugOwner: 'CustomHorizontalDragRecognizer');
 
   @override
   void addAllowedPointer(PointerDownEvent event) {
-    // If we're starting a new gesture from a 'closed' state (extent near zero),
-    // and Grip Mode is ON, we MUST enforce the handle check.
-    // If the card is already swiped open, we allow interaction from anywhere 
-    // to facilitate closing or further swiping.
-    final bool isAtRest = getExtent().abs() < 5.0;
+    if (getExtent == null || isWithinHandle == null) {
+      super.addAllowedPointer(event);
+      return;
+    }
+
+    // If we're starting a new gesture and Grip Mode is ON, we enforce the handle check
+    // unless the card is already significantly open (to allow easy closing).
+    final bool isOpened = getExtent!().abs() > 30.0;
     
-    if (isGripMode && isAtRest) {
-      if (!isWithinHandle(event.localPosition)) {
+    if (isGripMode && !isOpened) {
+      if (!isWithinHandle!(event.localPosition)) {
         return; // Do not allow this pointer to start the gesture
       }
     }
@@ -249,19 +247,19 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
           behavior: HitTestBehavior.opaque,
           gestures: {
             _CustomHorizontalDragRecognizer: GestureRecognizerFactoryWithHandlers<_CustomHorizontalDragRecognizer>(
-              () => _CustomHorizontalDragRecognizer(
-                getExtent: () => _dragExtent,
-                constraints: constraints,
-                isGripMode: widget.isGripMode,
-                isWithinHandle: (localPosition) {
-                  final dx = localPosition.dx;
-                  final width = constraints.maxWidth;
-                  const handleWidth = 40.0; // Slightly tighter handle for precision
-                  return dx < handleWidth || dx > width - handleWidth;
-                },
-              ),
+              () => _CustomHorizontalDragRecognizer(),
               (_CustomHorizontalDragRecognizer instance) {
                 instance
+                  ..getExtent = () => _dragExtent
+                  ..constraints = constraints
+                  ..isGripMode = widget.isGripMode
+                  ..isWithinHandle = (localPosition) {
+                    final dx = localPosition.dx;
+                    final width = constraints.maxWidth;
+                    const handleWidth = 50.0;
+                    return dx < handleWidth || dx > width - handleWidth;
+                  }
+                  ..dragStartBehavior = DragStartBehavior.down
                   ..onStart = _handleDragStart
                   ..onUpdate = _handleDragUpdate
                   ..onEnd = _handleDragEnd

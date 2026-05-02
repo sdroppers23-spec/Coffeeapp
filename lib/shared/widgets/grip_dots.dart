@@ -23,7 +23,7 @@ class GripDots extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(horizontal: 1),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withValues(alpha: 0.15),
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.25),
                   ),
                 ),
               ),

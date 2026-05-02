@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/database/dtos.dart';
 import '../../../../core/l10n/app_localizations.dart';
-import '../../../../shared/widgets/grip_dots.dart';
+
 import '../../../../shared/widgets/glass_container.dart';
 import '../../../../shared/widgets/pressable_scale.dart';
 import '../../../../shared/widgets/sensory_radar_chart.dart';
@@ -666,18 +666,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard>
       ),
     );
 
-    Widget stack;
-    if (swipeMode == LotSwipeMode.grip && !_isExpanded && !isSelectionMode) {
-      stack = Stack(
-        children: [
-          cardContent,
-          const Positioned(left: 0, top: 0, bottom: 0, child: GripDots()),
-          const Positioned(right: 0, top: 0, bottom: 0, child: GripDots()),
-        ],
-      );
-    } else {
-      stack = cardContent;
-    }
+    final stack = cardContent;
 
     final contentCard = PressableScale(
       onLongPress: () => widget.onLongPress(widget.lot.id),

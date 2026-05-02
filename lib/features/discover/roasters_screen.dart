@@ -7,6 +7,7 @@ import '../../shared/widgets/pressable_scale.dart';
 import '../../core/providers/settings_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../shared/widgets/glass_swipe_wrapper.dart';
+
 import '../../shared/widgets/glass_container.dart';
 import '../../shared/services/roaster_image_service.dart';
 import '../../core/database/dtos.dart';
@@ -961,6 +962,7 @@ class _PremiumRoasterCard extends StatelessWidget {
                       : null,
                 )
               else ...[
+
                 const SizedBox(width: 16),
                 Container(
                   width: 56,
@@ -1079,6 +1081,7 @@ class _PremiumRoasterCard extends StatelessWidget {
                     ),
                   ),
                 ),
+
               ],
             ],
           ),

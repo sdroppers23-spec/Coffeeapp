@@ -286,49 +286,43 @@ class SyncIndicator extends ConsumerWidget {
 
     return Tooltip(
       message: syncData.lastError ?? label,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 160),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: color.withValues(alpha: 0.3)),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (syncData.state == SyncState.syncing)
-                SizedBox(
-                  width: 12,
-                  height: 12,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: const Color(0xFFC8A96E),
-                    value: syncData.currentProgress > 0.05
-                        ? syncData.currentProgress
-                        : null,
-                    backgroundColor: const Color(
-                      0xFFC8A96E,
-                    ).withValues(alpha: 0.2),
-                  ),
-                )
-              else
-                Icon(icon, size: 14, color: color),
-              const SizedBox(width: 6),
-              Flexible(
-                child: Text(
-                  label,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: color,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                  ),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (syncData.state == SyncState.syncing)
+              SizedBox(
+                width: 12,
+                height: 12,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: const Color(0xFFC8A96E),
+                  value: syncData.currentProgress > 0.05
+                      ? syncData.currentProgress
+                      : null,
+                  backgroundColor: const Color(
+                    0xFFC8A96E,
+                  ).withValues(alpha: 0.2),
                 ),
+              )
+            else
+              Icon(icon, size: 14, color: color),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: TextStyle(
+                color: color,
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

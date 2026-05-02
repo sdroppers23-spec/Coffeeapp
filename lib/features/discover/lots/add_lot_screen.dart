@@ -30,6 +30,8 @@ import '../../../shared/widgets/sensory_radar_chart.dart';
 import '../../../shared/services/toast_service.dart';
 import '../../../core/providers/preferences_provider.dart';
 import '../../../shared/utils/coffee_input_formatters.dart';
+import '../../../shared/widgets/glass_container.dart';
+import '../../../shared/widgets/premium_background.dart';
 
 part 'widgets/add_lot/lot_roastery_tab.dart';
 part 'widgets/add_lot/lot_coffee_tab.dart';
@@ -116,11 +118,10 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   String? _selectedProcess;
   bool _isOtherProcess = false;
   bool _isOtherDecaf = false;
+  bool _isSensoryLocked = true; // Default to locked if using presets
 
   List<UserRoasterDto> _roasterSuggestions = [];
-  bool _isAddingNewRoaster = false;
-  bool _isSearchingRoaster = false;
-  bool _isSensoryLocked = true;
+  bool _showRoasterSuggestions = false;
   final FocusNode _roasterNameFocusNode = FocusNode();
 
   @override
@@ -382,6 +383,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     if (query.isEmpty) {
       updateState(() {
         _roasterSuggestions = [];
+        _showRoasterSuggestions = false;
       });
       return;
     }
@@ -404,6 +406,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
 
     updateState(() {
       _roasterSuggestions = filtered;
+      _showRoasterSuggestions = filtered.isNotEmpty;
     });
   }
 
@@ -491,9 +494,11 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       if (effectiveRoasterId == null &&
           _roasteryController.text.trim().isNotEmpty) {
         final roasterName = _roasteryController.text.trim();
-        final existing = ref.read(userRoastersProvider).firstWhereOrNull(
-          (r) => r.name.toLowerCase() == roasterName.toLowerCase(),
-        );
+        final existing = ref
+            .read(userRoastersProvider)
+            .firstWhereOrNull(
+              (r) => r.name.toLowerCase() == roasterName.toLowerCase(),
+            );
 
         if (existing != null) {
           effectiveRoasterId = existing.id;
@@ -618,7 +623,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                            color: const Color(
+                              0xFFC8A96E,
+                            ).withValues(alpha: 0.1),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
@@ -634,7 +641,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                             color: Colors.white,
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.none,
                           ),
                         ),
                         const SizedBox(height: 12),
@@ -644,7 +650,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                           style: GoogleFonts.outfit(
                             color: Colors.white60,
                             fontSize: 15,
-                            decoration: TextDecoration.none,
                           ),
                         ),
                         const SizedBox(height: 32),
@@ -654,7 +659,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                               child: TextButton(
                                 onPressed: () => Navigator.pop(context, false),
                                 style: TextButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
@@ -664,7 +671,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                                   style: GoogleFonts.outfit(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600,
-                                    decoration: TextDecoration.none,
                                   ),
                                 ),
                               ),
@@ -677,7 +683,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                                   backgroundColor: const Color(0xFFC8A96E),
                                   foregroundColor: Colors.black,
                                   elevation: 0,
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
@@ -703,10 +711,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             return FadeTransition(
               opacity: anim1,
               child: ScaleTransition(
-                scale: Tween<double>(begin: 0.9, end: 1.0).animate(CurvedAnimation(
-                  parent: anim1,
-                  curve: Curves.easeOutCubic,
-                )),
+                scale: Tween<double>(begin: 0.9, end: 1.0).animate(
+                  CurvedAnimation(parent: anim1, curve: Curves.easeOutCubic),
+                ),
                 child: child,
               ),
             );
@@ -729,15 +736,16 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           context.pop();
         }
       },
-      child: Scaffold(
-        backgroundColor: const Color(0xFF1A1A1A),
+      child: PremiumBackground(
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
         body: SafeArea(
           child: GestureDetector(
             onTap: () {
               FocusScope.of(context).unfocus();
-              if (_isSearchingRoaster) {
-                updateState(() => _isSearchingRoaster = false);
-              }
+              updateState(() {
+                _showRoasterSuggestions = false;
+              });
             },
             child: Column(
               children: [
@@ -759,6 +767,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: _buildSaveFab(),
+        ),
       ),
     );
   }
@@ -841,12 +850,8 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       margin: const EdgeInsets.fromLTRB(16, 0, 16, 8),
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: const Color(0xFF2C2318),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: const Color(0xFFC8A96E).withValues(alpha: 0.15),
-          width: 1,
-        ),
+        color: const Color(0xFFC8A96E).withValues(alpha: 0.04),
+        borderRadius: BorderRadius.circular(50),
       ),
       child: TabBar(
         controller: _tabController,
@@ -898,7 +903,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 decoration: BoxDecoration(
                   color: const Color(0xFF1A1A1A),
                   borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.1),
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.5),
@@ -919,7 +926,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                           Container(
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                              color: const Color(
+                                0xFFC8A96E,
+                              ).withValues(alpha: 0.1),
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(
@@ -951,13 +960,18 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                             children: [
                               Expanded(
                                 child: TextButton(
-                                  onPressed: () => Navigator.pop(context, false),
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
                                   style: TextButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(16),
                                       side: BorderSide(
-                                        color: Colors.white.withValues(alpha: 0.1),
+                                        color: Colors.white.withValues(
+                                          alpha: 0.1,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -977,7 +991,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFFC8A96E),
                                     foregroundColor: Colors.black,
-                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
                                     elevation: 0,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(16),
@@ -1051,36 +1067,33 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   // ─── Shared Widgets ───────────────────────────────────────────────
 
   Widget _sectionLabel(String text) => Padding(
-    padding: const EdgeInsets.fromLTRB(4, 20, 4, 10),
+    padding: const EdgeInsets.fromLTRB(4, 24, 4, 8),
     child: Text(
-      text,
+      text.toUpperCase(),
       style: GoogleFonts.outfit(
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
+        fontSize: 11,
+        fontWeight: FontWeight.w900,
+        color: const Color(0xFFC8A96E),
+        letterSpacing: 1.5,
       ),
     ),
   );
 
-  Widget _darkCard({required List<Widget> children}) => Container(
-    decoration: BoxDecoration(
-      color: const Color(0xFF221C14),
-      borderRadius: BorderRadius.circular(20),
-      border: Border.all(
-        color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
-        width: 1,
+  Widget _darkCard({required List<Widget> children}) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: GlassContainer(
+      borderRadius: 24,
+      borderColor: Colors.white.withValues(alpha: 0.08),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: children,
       ),
-    ),
-    clipBehavior: Clip.hardEdge,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: children,
     ),
   );
 
   Widget _divider() => Divider(
     height: 1,
-    color: const Color(0xFFC8A96E).withValues(alpha: 0.06),
+    color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
   );
 
   Widget _fieldRow({
@@ -1096,25 +1109,18 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     String? placeholder,
     bool readOnly = false,
     FocusNode? focusNode,
-    bool autoFocus = false,
   }) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
-      child: Container(
-        decoration: BoxDecoration(
-          color: const Color(0xFF2A2218),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label,
+      padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
             style: GoogleFonts.outfit(
               fontSize: 10,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+              color: const Color(0xFFC8A96E),
+              fontWeight: FontWeight.w900,
               letterSpacing: 1.2,
             ),
           ),
@@ -1125,7 +1131,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 child: TextField(
                   readOnly: readOnly,
                   focusNode: focusNode,
-                  autofocus: autoFocus,
                   controller:
                       controller ?? TextEditingController(text: value ?? ''),
                   style: GoogleFonts.outfit(color: Colors.white, fontSize: 16),
@@ -1208,7 +1213,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             ),
           ],
         ],
-        ),
       ),
     );
   }
@@ -1236,8 +1240,8 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                   label,
                   style: GoogleFonts.outfit(
                     fontSize: 10,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFFC8A96E),
+                    fontWeight: FontWeight.w900,
                     letterSpacing: 1.2,
                   ),
                 ),
@@ -1316,10 +1320,10 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             child: Text(
               label,
               style: GoogleFonts.outfit(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFFC8A96E).withValues(alpha: 0.6),
-                letterSpacing: 1.0,
+                fontSize: 10,
+                fontWeight: FontWeight.w900,
+                color: const Color(0xFFC8A96E),
+                letterSpacing: 1.2,
               ),
             ),
           ),
@@ -1383,9 +1387,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                     label,
                     style: GoogleFonts.outfit(
                       fontSize: 10,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.0,
+                      color: const Color(0xFFC8A96E),
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 1.2,
                     ),
                   ),
                   Text(

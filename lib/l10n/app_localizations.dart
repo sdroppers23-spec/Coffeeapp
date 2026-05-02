@@ -1355,6 +1355,234 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save'**
   String get save;
+
+  /// No description provided for @discard_changes_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard Changes?'**
+  String get discard_changes_title;
+
+  /// No description provided for @discard_changes_msg.
+  ///
+  /// In en, this message translates to:
+  /// **'You have unsaved changes. Are you sure you want to discard them?'**
+  String get discard_changes_msg;
+
+  /// No description provided for @discard.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get discard;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @edit_lot.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Lot'**
+  String get edit_lot;
+
+  /// No description provided for @add_lot.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Lot'**
+  String get add_lot;
+
+  /// No description provided for @select_roaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Roaster'**
+  String get select_roaster;
+
+  /// No description provided for @section_roaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Roaster'**
+  String get section_roaster;
+
+  /// No description provided for @name_field.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name_field;
+
+  /// No description provided for @coffee_name_field.
+  ///
+  /// In en, this message translates to:
+  /// **'Coffee Name'**
+  String get coffee_name_field;
+
+  /// No description provided for @roaster_name_field.
+  ///
+  /// In en, this message translates to:
+  /// **'Roaster Name'**
+  String get roaster_name_field;
+
+  /// No description provided for @country_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get country_label;
+
+  /// No description provided for @city_label.
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get city_label;
+
+  /// No description provided for @section_coffee_lot.
+  ///
+  /// In en, this message translates to:
+  /// **'Coffee Lot'**
+  String get section_coffee_lot;
+
+  /// No description provided for @farmer_field.
+  ///
+  /// In en, this message translates to:
+  /// **'Farmer'**
+  String get farmer_field;
+
+  /// No description provided for @wash_station_field.
+  ///
+  /// In en, this message translates to:
+  /// **'Wash Station'**
+  String get wash_station_field;
+
+  /// No description provided for @lot_number_field.
+  ///
+  /// In en, this message translates to:
+  /// **'Lot Number'**
+  String get lot_number_field;
+
+  /// No description provided for @sca_score_field.
+  ///
+  /// In en, this message translates to:
+  /// **'SCA Score'**
+  String get sca_score_field;
+
+  /// No description provided for @sca_score_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'Score between 80 and 100'**
+  String get sca_score_helper;
+
+  /// No description provided for @weight_field.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get weight_field;
+
+  /// No description provided for @section_origin.
+  ///
+  /// In en, this message translates to:
+  /// **'Origin'**
+  String get section_origin;
+
+  /// No description provided for @country_field.
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get country_field;
+
+  /// No description provided for @region_field.
+  ///
+  /// In en, this message translates to:
+  /// **'Region'**
+  String get region_field;
+
+  /// No description provided for @altitude_field.
+  ///
+  /// In en, this message translates to:
+  /// **'Altitude'**
+  String get altitude_field;
+
+  /// No description provided for @varietals_field.
+  ///
+  /// In en, this message translates to:
+  /// **'Varietals'**
+  String get varietals_field;
+
+  /// No description provided for @section_processing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing'**
+  String get section_processing;
+
+  /// No description provided for @section_flavor_notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Flavor Notes'**
+  String get section_flavor_notes;
+
+  /// No description provided for @flavor_notes_field.
+  ///
+  /// In en, this message translates to:
+  /// **'Flavor Profile'**
+  String get flavor_notes_field;
+
+  /// No description provided for @section_pricing.
+  ///
+  /// In en, this message translates to:
+  /// **'Pricing'**
+  String get section_pricing;
+
+  /// No description provided for @retail_250g.
+  ///
+  /// In en, this message translates to:
+  /// **'Retail 250g'**
+  String get retail_250g;
+
+  /// No description provided for @retail_1kg.
+  ///
+  /// In en, this message translates to:
+  /// **'Retail 1kg'**
+  String get retail_1kg;
+
+  /// No description provided for @wholesale_250g.
+  ///
+  /// In en, this message translates to:
+  /// **'Wholesale 250g'**
+  String get wholesale_250g;
+
+  /// No description provided for @wholesale_1kg.
+  ///
+  /// In en, this message translates to:
+  /// **'Wholesale 1kg'**
+  String get wholesale_1kg;
+
+  /// No description provided for @save_lot.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Lot'**
+  String get save_lot;
+
+  /// No description provided for @save_lot_confirmation_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Lot?'**
+  String get save_lot_confirmation_title;
+
+  /// No description provided for @save_lot_confirmation_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to save this coffee lot?'**
+  String get save_lot_confirmation_desc;
+
+  /// No description provided for @keep_editing.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Editing'**
+  String get keep_editing;
+
+  /// No description provided for @roaster_city.
+  ///
+  /// In en, this message translates to:
+  /// **'Roaster City'**
+  String get roaster_city;
 }
 
 class _AppLocalizationsDelegate

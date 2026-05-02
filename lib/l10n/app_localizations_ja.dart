@@ -641,4 +641,120 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get save => 'Save';
+
+  @override
+  String get discard_changes_title => 'Discard Changes?';
+
+  @override
+  String get discard_changes_msg =>
+      'You have unsaved changes. Are you sure you want to discard them?';
+
+  @override
+  String get discard => 'Discard';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get edit_lot => 'Edit Lot';
+
+  @override
+  String get add_lot => 'Add Lot';
+
+  @override
+  String get select_roaster => 'Select Roaster';
+
+  @override
+  String get section_roaster => 'Roaster';
+
+  @override
+  String get name_field => 'Name';
+
+  @override
+  String get coffee_name_field => 'Coffee Name';
+
+  @override
+  String get roaster_name_field => 'Roaster Name';
+
+  @override
+  String get country_label => 'Country';
+
+  @override
+  String get city_label => 'City';
+
+  @override
+  String get section_coffee_lot => 'Coffee Lot';
+
+  @override
+  String get farmer_field => 'Farmer';
+
+  @override
+  String get wash_station_field => 'Wash Station';
+
+  @override
+  String get lot_number_field => 'Lot Number';
+
+  @override
+  String get sca_score_field => 'SCA Score';
+
+  @override
+  String get sca_score_helper => 'Score between 80 and 100';
+
+  @override
+  String get weight_field => 'Weight';
+
+  @override
+  String get section_origin => 'Origin';
+
+  @override
+  String get country_field => 'Country';
+
+  @override
+  String get region_field => 'Region';
+
+  @override
+  String get altitude_field => 'Altitude';
+
+  @override
+  String get varietals_field => 'Varietals';
+
+  @override
+  String get section_processing => 'Processing';
+
+  @override
+  String get section_flavor_notes => 'Flavor Notes';
+
+  @override
+  String get flavor_notes_field => 'Flavor Profile';
+
+  @override
+  String get section_pricing => 'Pricing';
+
+  @override
+  String get retail_250g => 'Retail 250g';
+
+  @override
+  String get retail_1kg => 'Retail 1kg';
+
+  @override
+  String get wholesale_250g => 'Wholesale 250g';
+
+  @override
+  String get wholesale_1kg => 'Wholesale 1kg';
+
+  @override
+  String get save_lot => 'Save Lot';
+
+  @override
+  String get save_lot_confirmation_title => 'Save Lot?';
+
+  @override
+  String get save_lot_confirmation_desc =>
+      'Are you sure you want to save this coffee lot?';
+
+  @override
+  String get keep_editing => 'Keep Editing';
+
+  @override
+  String get roaster_city => 'Roaster City';
 }

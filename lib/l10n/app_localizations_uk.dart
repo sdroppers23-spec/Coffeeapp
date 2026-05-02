@@ -211,7 +211,7 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get process_lactic_desc =>
-      '### Молочнокисла ферментація\nФокус на розвитку молочнокислих бактерій (Lactobacillus).\n### Результат\nСтворюється висока концентрація молочної кислоти. У чашці це дає неймовірно шовковисте, вершкове тіло та ноти йогурту.';
+      '### Молочнокисла ферментація\nФокус на розвитку молочнокиблих бактерій (Lactobacillus).\n### Результат\nСтворюється висока концентрація молочної кислоти. У чашці це дає неймовірно шовковисте, вершкове тіло та ноти йогурту.';
 
   @override
   String get process_thermal_desc =>
@@ -318,11 +318,11 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get lot_desc_col_46_filter =>
-      'Складна кислотність, довгий ожиновий післясмак. Світле обсмаження для фільтр-заварювання.';
+      'Складна кислотність, довгий післясмак ожини. Світле обсмажування для фільтра.';
 
   @override
   String get lot_desc_col_31_filter =>
-      'Тривала яблучна кислотність. Лот оброблений методом термального шоку.';
+      'Довга яблучна кислотність. Термічний шок, різновид Чиросо.';
 
   @override
   String get lot_desc_kenya_20_filter =>
@@ -330,27 +330,27 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get lot_desc_eth_37_filter =>
-      'Чистий та елегантний чайний профіль. Ноти жасмину та лимону.';
+      'Чистий та елегантний чайний профіль. Ноти жасмину та лимона.';
 
   @override
   String get lot_desc_col_46_espresso =>
-      'Щільне тіло, ідеально для молочних напоїв. Ноти груші та марципану.';
+      'Щільне тіло, ідеально для напоїв з молоком. Ноти груші та марципану.';
 
   @override
   String get lot_desc_tanzania_utengule =>
-      'Солодкий та збалансований лот з Танзанії. Оброблений методом Honey, що додає медової солодкості.';
+      'Солодкий та збалансований лот з Танзанії. Хані обробка додає медової солодкості.';
 
   @override
   String get lot_desc_col_alto_osos =>
-      'Витримана натуральна обробка з перевагами анаеробного смаку. Висока солодкість, нотки тропічних фруктів та рому.';
+      'Натуральна обробка з анаеробною солодкістю. Тропічні фрукти та ром.';
 
   @override
   String get lot_desc_indonesia_manis =>
-      'Індонезія без землі. Тільки фрукти, ром та шоколадна насолода.';
+      'Індонезія без землистості. Лише фрукти, ром та шоколадна насолода.';
 
   @override
   String get lot_desc_kenya_gichathaini =>
-      'Яскрава та соковита Кенія з характерною смородиною кислотністю та тривалим післясмаком.';
+      'Яскрава та соковита Кенія з характерною смородиновою кислотністю.';
 
   @override
   String get region_central_america => 'Центральна Америка';
@@ -362,7 +362,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get region_asia_pacific => 'Азійсько-Тихоокеанський регіон';
 
   @override
-  String get flavor_map_title => 'Мапа смаків';
+  String get flavor_map_title => 'Карта смаків';
 
   @override
   String get tab_profile => 'Профіль';
@@ -371,7 +371,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get tab_sphere => 'Сфера';
 
   @override
-  String get tab_wheel => 'Коло смаків';
+  String get tab_wheel => 'Колесо смаків';
 
   @override
   String get tab_steps => 'Кроки';
@@ -380,7 +380,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get tab_custom => 'Мої версії';
 
   @override
-  String get tab_recommended => 'Рекомендовано';
+  String get tab_recommended => 'Рекомендовані';
 
   @override
   String get tap_wheel_to_explore =>
@@ -390,40 +390,40 @@ class AppLocalizationsUk extends AppLocalizations {
   String get process_details => 'Деталі обробки';
 
   @override
-  String get view_details => 'Детальніше';
+  String get view_details => 'Переглянути деталі';
 
   @override
-  String get region_east_africa => 'Східна Африка';
+  String get region_east_africa => 'Східна Африка (Ефіопія/Кенія)';
 
   @override
   String get region_west_africa => 'Західна Африка';
 
   @override
-  String get region_se_asia => 'Південно-Східна Азія';
+  String get region_se_asia => 'Південно-Східна Азія та Індонезія';
 
   @override
-  String get region_india => 'Індія та Пд. Азія';
+  String get region_india => 'Індія та Південна Азія';
 
   @override
   String get region_brazil => 'Бразилія (Terra Roxa)';
 
   @override
-  String get flavor_floral => 'Квіткові';
+  String get flavor_floral => 'Квітковий';
 
   @override
-  String get flavor_fruity => 'Фруктові';
+  String get flavor_fruity => 'Фруктовий';
 
   @override
-  String get flavor_sweet => 'Солодкі / Карамель';
+  String get flavor_sweet => 'Солодкий / Карамельний';
 
   @override
-  String get flavor_nutty => 'Горіхові / Какао';
+  String get flavor_nutty => 'Горіховий / Какао';
 
   @override
-  String get flavor_spicy => 'Пряні';
+  String get flavor_spicy => 'Пряний';
 
   @override
-  String get flavor_earthy => 'Землисті / Трав\'яні';
+  String get flavor_earthy => 'Землистий / Трав\'яний';
 
   @override
   String get note_jasmine => 'Жасмин';
@@ -456,7 +456,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get note_tobacco => 'Тютюн';
 
   @override
-  String get note_winey => 'Винні';
+  String get note_winey => 'Винний';
 
   @override
   String get desc_east_africa =>
@@ -464,19 +464,19 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get desc_central_america =>
-      'Чиста, яскрава та часто горіхова. Відома збалансованими профілями та шоколадними відтінками завдяки високогір\'ю.';
+      'Чиста, яскрава і часто горіхова. Відома збалансованими профілями та шоколадними відтінками.';
 
   @override
   String get desc_se_asia =>
-      'Щільне тіло та землистість. Унікальна обробка часто дає нотки спецій, тютюну та темного шоколаду.';
+      'Глибока, важка і землиста. Унікальна обробка часто дає ноти спецій, тютюну та темного шоколаду.';
 
   @override
   String get desc_south_america =>
-      'Стабільна солодкість та середнє тіло. Класичні профілі карамелі, какао та горіхова гармонія.';
+      'Надійна солодкість і середнє тіло. Класичні профілі карамелі, какао та горіховий баланс.';
 
   @override
   String get desc_india =>
-      'Унікальна обробка \"Monsooned\" створює низьку кислотність, важке тіло та інтенсивний пряний чи деревний характер.';
+      'Унікальна обробка \"Мунсунінг\" створює низьку кислотність, важке тіло та інтенсивний пряний характер.';
 
   @override
   String get desc_sensory_terroir_title => 'СЕНСОРНИЙ ПРОФІЛЬ ТЕРРУАРУ:';
@@ -515,7 +515,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get note_lemon => 'Лимон';
 
   @override
-  String get note_tropical => 'Тропічні фрукти';
+  String get note_tropical => 'Тропічний';
 
   @override
   String get note_mango => 'Манго';
@@ -527,13 +527,13 @@ class AppLocalizationsUk extends AppLocalizations {
   String get note_cocoa => 'Какао';
 
   @override
-  String get note_berry => 'Ягоди';
+  String get note_berry => 'Ягода';
 
   @override
   String get sync_pushing => 'Вивантаження у хмару...';
 
   @override
-  String get sync_connecting => 'Підключення до хмари...';
+  String get sync_connecting => 'Підключення до синхронізації...';
 
   @override
   String get sync_failed => 'Дія не вдалася';
@@ -548,16 +548,16 @@ class AppLocalizationsUk extends AppLocalizations {
   String get coffee_origins_cap => 'ПОХОДЖЕННЯ КАВИ';
 
   @override
-  String get explore_terroirs => 'Досліджуйте теруари та унікальні смаки';
+  String get explore_terroirs => 'Досліджуйте терруари та унікальні смаки';
 
   @override
-  String get nav_latte_art => 'Latte Art';
+  String get nav_latte_art => 'Лате-арт';
 
   @override
-  String get process_washed_label => 'Митий';
+  String get process_washed_label => 'Мита';
 
   @override
-  String get process_natural_label => 'Натуральний';
+  String get process_natural_label => 'Натуральна';
 
   @override
   String get process_honey_label => 'Хані';
@@ -572,10 +572,10 @@ class AppLocalizationsUk extends AppLocalizations {
   String get anaerobic_template => 'Анаеробна';
 
   @override
-  String get no_regions => 'Регіони не знайдені.';
+  String get no_regions => 'Немає доступних регіонів.';
 
   @override
-  String get browse_lots => 'Дивіться лоти';
+  String get browse_lots => 'Переглянути лоти';
 
   @override
   String get tilt => 'Нахил';
@@ -587,20 +587,20 @@ class AppLocalizationsUk extends AppLocalizations {
   String get auto_rotation => 'Авто-обертання';
 
   @override
-  String get on => 'ВКЛ';
+  String get on => 'УВІМК';
 
   @override
-  String get off => 'ВИКЛ';
+  String get off => 'ВИМК';
 
   @override
-  String get calibrate => 'Калібрувати';
+  String get calibrate => 'Скинути позицію';
 
   @override
   String get search_placeholder => 'Пошук сортів та регіонів...';
 
   @override
   String get wheel_category_desc =>
-      'Основна смакова група на колесі. Натисніть середнє кільце для підгруп або зовнішнє — для конкретних нот.';
+      'Основна родина смаків на колесі. Натисніть на середнє кільце для підгруп або зовнішнє для конкретних нот.';
 
   @override
   String get encyclopedia_title => 'Енциклопедія кави';
@@ -624,7 +624,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get rate_app => 'Оцінити додаток';
 
   @override
-  String get logout => 'Вийти з акаунта';
+  String get logout => 'Вийти';
 
   @override
   String get vibration => 'Вібрація';
@@ -633,7 +633,7 @@ class AppLocalizationsUk extends AppLocalizations {
   String get enable_vibration => 'Тактильний відгук';
 
   @override
-  String get haptic_desc => 'Легка вібрація при натисканні та утриманні';
+  String get haptic_desc => 'Легка вібрація при натисканні';
 
   @override
   String get my_lots => 'Мої лоти';
@@ -642,14 +642,130 @@ class AppLocalizationsUk extends AppLocalizations {
   String get add_recipe => 'Додати рецепт';
 
   @override
-  String get recipe_limit_reached => 'Досягнуто ліміт 10 рецептів на лот';
+  String get recipe_limit_reached => 'Максимум 10 рецептів на лот';
 
   @override
   String get selection_mode => 'Режим вибору';
 
   @override
-  String get delete_selected => 'Видалити обране';
+  String get delete_selected => 'Видалити обрані';
 
   @override
   String get save => 'Зберегти';
+
+  @override
+  String get discard_changes_title => 'Скасувати зміни?';
+
+  @override
+  String get discard_changes_msg =>
+      'У вас є незбережені зміни. Ви впевнені, що хочете їх скасувати?';
+
+  @override
+  String get discard => 'Скасувати';
+
+  @override
+  String get cancel => 'Відмінити';
+
+  @override
+  String get edit_lot => 'Редагувати лот';
+
+  @override
+  String get add_lot => 'Додати лот';
+
+  @override
+  String get select_roaster => 'Оберіть обсмажчика';
+
+  @override
+  String get section_roaster => 'Обсмажчик';
+
+  @override
+  String get name_field => 'Назва';
+
+  @override
+  String get coffee_name_field => 'Назва кави';
+
+  @override
+  String get roaster_name_field => 'Назва обсмажчика';
+
+  @override
+  String get country_label => 'Країна';
+
+  @override
+  String get city_label => 'Місто';
+
+  @override
+  String get section_coffee_lot => 'Лот кави';
+
+  @override
+  String get farmer_field => 'Фермер';
+
+  @override
+  String get wash_station_field => 'Станція обробки';
+
+  @override
+  String get lot_number_field => 'Номер лоту';
+
+  @override
+  String get sca_score_field => 'Оцінка SCA';
+
+  @override
+  String get sca_score_helper => 'Оцінка від 80 до 100';
+
+  @override
+  String get weight_field => 'Вага';
+
+  @override
+  String get section_origin => 'Походження';
+
+  @override
+  String get country_field => 'Країна';
+
+  @override
+  String get region_field => 'Регіон';
+
+  @override
+  String get altitude_field => 'Висота';
+
+  @override
+  String get varietals_field => 'Різновиди';
+
+  @override
+  String get section_processing => 'Обробка';
+
+  @override
+  String get section_flavor_notes => 'Смакові ноти';
+
+  @override
+  String get flavor_notes_field => 'Смаковий профіль';
+
+  @override
+  String get section_pricing => 'Ціноутворення';
+
+  @override
+  String get retail_250g => 'Роздріб 250г';
+
+  @override
+  String get retail_1kg => 'Роздріб 1кг';
+
+  @override
+  String get wholesale_250g => 'Опт 250г';
+
+  @override
+  String get wholesale_1kg => 'Опт 1кг';
+
+  @override
+  String get save_lot => 'Зберегти лот';
+
+  @override
+  String get save_lot_confirmation_title => 'Зберегти лот?';
+
+  @override
+  String get save_lot_confirmation_desc =>
+      'Ви впевнені, що хочете зберегти цей лот кави?';
+
+  @override
+  String get keep_editing => 'Продовжити редагування';
+
+  @override
+  String get roaster_city => 'Місто обсмажчика';
 }

@@ -7,203 +7,114 @@ extension _RoasteryTabSection on _AddLotScreenState {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
       children: [
-        _sectionLabel(
-          (_userRoasterId == null && !_isAddingNewRoaster)
-              ? context.t('select_roaster')
-              : context.t('section_roaster'),
-        ),
+        _sectionLabel((_userRoasterId == null &&
+                _roasteryController.text.trim().isEmpty &&
+                _roasteryCountryController.text.trim().isEmpty)
+            ? context.t('select_roaster')
+            : context.t('section_roaster')),
         _darkCard(
           children: [
-            if (_userRoasterId == null &&
-                !_isAddingNewRoaster &&
-                !_isSearchingRoaster)
-              // 1. Initial State: Placeholder
-              InkWell(
-                onTap: () => updateState(() => _isSearchingRoaster = true),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  child: Row(
-                    children: [
-                      Text(
-                        context.t('select_roaster'),
-                        style: GoogleFonts.outfit(
-                          color: Colors.white.withValues(alpha: 0.38),
-                          fontSize: 15,
-                        ),
-                      ),
-                      const Spacer(),
-                      const Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        color: Colors.white38,
-                        size: 20,
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            else if (_isSearchingRoaster &&
-                _userRoasterId == null &&
-                !_isAddingNewRoaster)
-              // 2. Search Mode
-              Column(
-                children: [
-                  _fieldRow(
-                    label: context.t('search_roaster').toUpperCase(),
-                    controller: _roasteryController,
-                    focusNode: _roasterNameFocusNode,
-                    placeholder: context.t('name_field'),
-                    autoFocus: true,
-                    onChanged: (val) {
-                      _updateRoasterSuggestions(val);
-                    },
-                    suffix: IconButton(
-                      icon: const Icon(Icons.close_rounded,
-                          color: Colors.white38, size: 20),
-                      onPressed: () {
-                        updateState(() {
-                          _isSearchingRoaster = false;
-                          _roasteryController.clear();
-                          _roasterSuggestions = [];
-                        });
-                      },
-                    ),
-                  ),
-                  // Add New Button
-                  InkWell(
-                    onTap: () {
+            Column(
+              children: [
+                _fieldRow(
+                  label: context.t('roaster_name_field').toUpperCase(),
+                  controller: _roasteryController,
+                  focusNode: _roasterNameFocusNode,
+                  placeholder: context.t('name_field'),
+                  onChanged: (val) {
+                    if (_userRoasterId != null) {
                       updateState(() {
-                        _isAddingNewRoaster = true;
-                        _isSearchingRoaster = false;
-                        _roasteryController.clear();
-                        _roasterSuggestions = [];
+                        _userRoasterId = null;
+                        _roasteryCountryController.clear();
+                        _roasteryLocationController.clear();
                       });
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                        border: Border(
-                          top: BorderSide(
-                            color: const Color(0xFFC8A96E)
-                                .withValues(alpha: 0.1),
-                          ),
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.add_rounded,
-                              color: Color(0xFFC8A96E), size: 20),
-                          const SizedBox(width: 8),
-                          Text(
-                            context.t('add_new_roaster'),
+                    }
+                    _updateRoasterSuggestions(val);
+                  },
+                  suffix: _userRoasterId != null ||
+                          _roasteryController.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.close_rounded,
+                              color: Colors.white38, size: 20),
+                          onPressed: () {
+                            updateState(() {
+                              _userRoasterId = null;
+                              _roasteryController.clear();
+                              _roasteryCountryController.clear();
+                              _roasteryLocationController.clear();
+                              _roasterSuggestions = [];
+                              _showRoasterSuggestions = false;
+                            });
+                          },
+                        )
+                      : null,
+                ),
+                if (_showRoasterSuggestions)
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    constraints: const BoxConstraints(maxHeight: 200),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.05),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      itemCount: _roasterSuggestions.length,
+                      separatorBuilder: (context, index) => _divider(),
+                      itemBuilder: (context, index) {
+                        final roaster = _roasterSuggestions[index];
+                        return ListTile(
+                          dense: true,
+                          title: Text(
+                            roaster.name,
                             style: GoogleFonts.outfit(
-                              color: const Color(0xFFC8A96E),
-                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                               fontSize: 14,
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  // Suggestions List
-                  if (_roasterSuggestions.isNotEmpty)
-                    Container(
-                      constraints: const BoxConstraints(maxHeight: 250),
-                      decoration: BoxDecoration(
-                        border: Border(
-                          top: BorderSide(
-                            color: Colors.white.withValues(alpha: 0.05),
-                          ),
-                        ),
-                      ),
-                      child: ListView.separated(
-                        shrinkWrap: true,
-                        padding: EdgeInsets.zero,
-                        itemCount: _roasterSuggestions.length,
-                        separatorBuilder: (context, index) => _divider(),
-                        itemBuilder: (context, index) {
-                          final roaster = _roasterSuggestions[index];
-                          return ListTile(
-                            dense: true,
-                            title: Text(
-                              roaster.name,
-                              style: GoogleFonts.outfit(
-                                color: Colors.white,
-                                fontSize: 14,
-                              ),
-                            ),
-                            subtitle: roaster.location != null
-                                ? Text(
-                                    roaster.location!,
-                                    style: GoogleFonts.outfit(
-                                      color: Colors.white38,
-                                      fontSize: 12,
-                                    ),
-                                  )
-                                : null,
-                            onTap: () {
-                              updateState(() {
-                                _userRoasterId = roaster.id;
-                                _roasteryController.text = roaster.name;
-                                _roasteryCountryController.text =
-                                    roaster.country ?? '';
-                                _roasteryLocationController.text =
-                                    roaster.location ?? '';
-                                _isSearchingRoaster = false;
-                                _roasterSuggestions = [];
-                              });
-                              _roasterNameFocusNode.unfocus();
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                ],
-              )
-            else
-              // 3. Active Fields (Selected or Adding New)
-              Column(
-                children: [
-                  _fieldRow(
-                    label: context.t('roaster_name_field').toUpperCase(),
-                    controller: _roasteryController,
-                    readOnly: _userRoasterId != null,
-                    suffix: IconButton(
-                      icon: const Icon(Icons.close_rounded,
-                          color: Colors.white38, size: 20),
-                      onPressed: () {
-                        updateState(() {
-                          _userRoasterId = null;
-                          _isAddingNewRoaster = false;
-                          _isSearchingRoaster = false;
-                          _roasteryController.clear();
-                          _roasteryCountryController.clear();
-                          _roasteryLocationController.clear();
-                          _roasterSuggestions = [];
-                        });
+                          subtitle: roaster.location != null
+                              ? Text(
+                                  roaster.location!,
+                                  style: GoogleFonts.outfit(
+                                    color: Colors.white38,
+                                    fontSize: 12,
+                                  ),
+                                )
+                              : null,
+                          onTap: () {
+                            updateState(() {
+                              _userRoasterId = roaster.id;
+                              _roasteryController.text = roaster.name;
+                              _roasteryCountryController.text =
+                                  roaster.country ?? '';
+                              _roasteryLocationController.text =
+                                  roaster.location ?? '';
+                              _showRoasterSuggestions = false;
+                              _roasterSuggestions = [];
+                            });
+                            _roasterNameFocusNode.unfocus();
+                          },
+                        );
                       },
                     ),
                   ),
-                  _divider(),
-                  _fieldRow(
-                    label: context.t('location_label').toUpperCase(),
-                    controller: _roasteryCountryController,
-                    placeholder: context.t('location_label'),
-                    readOnly: _userRoasterId != null,
-                  ),
-                  _divider(),
-                  _fieldRow(
-                    label: context.t('roaster_city').toUpperCase(),
-                    controller: _roasteryLocationController,
-                    placeholder: context.t('roaster_city'),
-                    readOnly: _userRoasterId != null,
-                  ),
-                ],
-              ),
+              ],
+            ),
+            _divider(),
+            _fieldRow(
+              label: context.t('country_label').toUpperCase(),
+              controller: _roasteryCountryController,
+              placeholder: context.t('country_label'),
+              readOnly: _userRoasterId != null,
+            ),
+            _divider(),
+            _fieldRow(
+              label: context.t('city_label').toUpperCase(),
+              controller: _roasteryLocationController,
+              placeholder: context.t('city_label'),
+              readOnly: _userRoasterId != null,
+            ),
           ],
         ),
 

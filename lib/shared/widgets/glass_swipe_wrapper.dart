@@ -249,21 +249,20 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
             _CustomHorizontalDragRecognizer: GestureRecognizerFactoryWithHandlers<_CustomHorizontalDragRecognizer>(
               () => _CustomHorizontalDragRecognizer(),
               (_CustomHorizontalDragRecognizer instance) {
-                instance
-                  ..getExtent = () => _dragExtent
-                  ..constraints = constraints
-                  ..isGripMode = widget.isGripMode
-                  ..isWithinHandle = (localPosition) {
-                    final dx = localPosition.dx;
-                    final width = constraints.maxWidth;
-                    const handleWidth = 50.0;
-                    return dx < handleWidth || dx > width - handleWidth;
-                  }
-                  ..dragStartBehavior = DragStartBehavior.down
-                  ..onStart = _handleDragStart
-                  ..onUpdate = _handleDragUpdate
-                  ..onEnd = _handleDragEnd
-                  ..onCancel = _handleDragCancel;
+                instance.getExtent = () => _dragExtent;
+                instance.constraints = constraints;
+                instance.isGripMode = widget.isGripMode;
+                instance.isWithinHandle = (localPosition) {
+                  final dx = localPosition.dx;
+                  final width = constraints.maxWidth;
+                  const handleWidth = 50.0;
+                  return dx < handleWidth || dx > width - handleWidth;
+                };
+                instance.dragStartBehavior = DragStartBehavior.down;
+                instance.onStart = _handleDragStart;
+                instance.onUpdate = _handleDragUpdate;
+                instance.onEnd = _handleDragEnd;
+                instance.onCancel = _handleDragCancel;
               },
             ),
           },

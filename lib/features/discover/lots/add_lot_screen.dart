@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -115,10 +116,11 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   String? _selectedProcess;
   bool _isOtherProcess = false;
   bool _isOtherDecaf = false;
-  bool _isSensoryLocked = true; // Default to locked if using presets
 
   List<UserRoasterDto> _roasterSuggestions = [];
-  bool _showRoasterSuggestions = false;
+  bool _isAddingNewRoaster = false;
+  bool _isSearchingRoaster = false;
+  bool _isSensoryLocked = true;
   final FocusNode _roasterNameFocusNode = FocusNode();
 
   @override
@@ -152,6 +154,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   late final TextEditingController _roasteryController;
   late final TextEditingController _roasteryCountryController;
   late final TextEditingController _roasteryLocationController;
+  late final TextEditingController _coffeeNameController;
   late final TextEditingController _originCountryController;
   late final TextEditingController _regionController;
   late final TextEditingController _altitudeController;
@@ -196,6 +199,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     );
     _roasteryLocationController = TextEditingController(
       text: widget.initialLot?.roasteryCity ?? '',
+    );
+    _coffeeNameController = TextEditingController(
+      text: widget.initialLot?.coffeeName ?? '',
     );
     _originCountryController = TextEditingController(
       text: widget.initialLot?.originCountry ?? '',
@@ -263,6 +269,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     _roasteryController.addListener(_markDirty);
     _roasteryCountryController.addListener(_markDirty);
     _roasteryLocationController.addListener(_markDirty);
+    _coffeeNameController.addListener(_markDirty);
     _originCountryController.addListener(_markDirty);
     _regionController.addListener(_markDirty);
     _altitudeController.addListener(_markDirty);
@@ -368,13 +375,13 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   }
 
   bool get _canSave =>
+      _coffeeNameController.text.trim().isNotEmpty &&
       _originCountryController.text.trim().isNotEmpty;
 
   void _updateRoasterSuggestions(String query) {
     if (query.isEmpty) {
       updateState(() {
         _roasterSuggestions = [];
-        _showRoasterSuggestions = false;
       });
       return;
     }
@@ -397,7 +404,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
 
     updateState(() {
       _roasterSuggestions = filtered;
-      _showRoasterSuggestions = filtered.isNotEmpty;
     });
   }
 
@@ -514,7 +520,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           roasteryName: Value(_roasteryController.text),
           roasteryCountry: Value(_roasteryCountryController.text),
           roasteryCity: Value(_roasteryLocationController.text),
-          coffeeName: Value(_originCountryController.text),
+          coffeeName: Value(_coffeeNameController.text),
           originCountry: Value(_originCountryController.text),
           region: Value(_regionController.text),
           altitude: Value(() {
@@ -579,48 +585,132 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   }
 
   Future<bool> _showDiscardChangesDialog() async {
-    return await showDialog<bool>(
+    return await showGeneralDialog<bool>(
           context: context,
-          builder: (ctx) => AlertDialog(
-            backgroundColor: const Color(0xFF151515),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
-            ),
-            title: Text(
-              context.t('discard_changes_title'),
-              style: GoogleFonts.poppins(
-                color: const Color(0xFFC8A96E),
-                fontWeight: FontWeight.bold,
+          barrierDismissible: true,
+          barrierLabel: '',
+          barrierColor: Colors.black.withValues(alpha: 0.8),
+          transitionDuration: const Duration(milliseconds: 300),
+          pageBuilder: (context, anim1, anim2) => Center(
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 40),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1A1A1A),
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.5),
+                    blurRadius: 40,
+                    offset: const Offset(0, 20),
+                  ),
+                ],
               ),
-            ),
-            content: Text(
-              context.t('discard_changes_msg'),
-              style: GoogleFonts.outfit(color: Colors.white70),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(ctx, false),
-                child: Text(
-                  context.t('cancel'),
-                  style: GoogleFonts.outfit(color: Colors.white38),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () => Navigator.pop(ctx, true),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.redAccent,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(24),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.warning_amber_rounded,
+                            color: Color(0xFFC8A96E),
+                            size: 32,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          context.t('discard_changes_title'),
+                          style: GoogleFonts.outfit(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          context.t('discard_changes_msg'),
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.outfit(
+                            color: Colors.white60,
+                            fontSize: 15,
+                            decoration: TextDecoration.none,
+                          ),
+                        ),
+                        const SizedBox(height: 32),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                style: TextButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: Text(
+                                  context.t('keep_editing'),
+                                  style: GoogleFonts.outfit(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    decoration: TextDecoration.none,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () => Navigator.pop(context, true),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFFC8A96E),
+                                  foregroundColor: Colors.black,
+                                  elevation: 0,
+                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: Text(
+                                  context.t('discard'),
+                                  style: GoogleFonts.outfit(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                child: Text(
-                  context.t('discard'),
-                  style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
-                ),
               ),
-            ],
+            ),
           ),
+          transitionBuilder: (context, anim1, anim2, child) {
+            return FadeTransition(
+              opacity: anim1,
+              child: ScaleTransition(
+                scale: Tween<double>(begin: 0.9, end: 1.0).animate(CurvedAnimation(
+                  parent: anim1,
+                  curve: Curves.easeOutCubic,
+                )),
+                child: child,
+              ),
+            );
+          },
         ) ??
         false;
   }
@@ -640,14 +730,14 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: const Color(0xFF1A1A1A),
         body: SafeArea(
           child: GestureDetector(
             onTap: () {
               FocusScope.of(context).unfocus();
-              updateState(() {
-                _showRoasterSuggestions = false;
-              });
+              if (_isSearchingRoaster) {
+                updateState(() => _isSearchingRoaster = false);
+              }
             },
             child: Column(
               children: [
@@ -751,8 +841,12 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       margin: const EdgeInsets.fromLTRB(16, 0, 16, 8),
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: const Color(0xFFC8A96E).withValues(alpha: 0.04),
-        borderRadius: BorderRadius.circular(50),
+        color: const Color(0xFF2C2318),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: const Color(0xFFC8A96E).withValues(alpha: 0.15),
+          width: 1,
+        ),
       ),
       child: TabBar(
         controller: _tabController,
@@ -792,38 +886,119 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       child: PressableScale(
         onTap: () async {
           if (!_canSave) return;
-          final bool? shouldSave = await showDialog<bool>(
+          final bool? shouldSave = await showGeneralDialog<bool>(
             context: context,
-            builder: (context) => AlertDialog(
-              backgroundColor: const Color(0xFF1A1A1A),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-                side: BorderSide(color: const Color(0xFFC8A96E).withValues(alpha: 0.2)),
-              ),
-              title: Text(
-                context.t('save_lot_confirmation_title'),
-                style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-              content: Text(
-                context.t('save_lot_confirmation_desc'),
-                style: GoogleFonts.outfit(color: Colors.white70),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context, false),
-                  child: Text(
-                    context.t('cancel'),
-                    style: GoogleFonts.outfit(color: Colors.white38),
+            barrierDismissible: true,
+            barrierLabel: '',
+            barrierColor: Colors.black.withValues(alpha: 0.8),
+            transitionDuration: const Duration(milliseconds: 300),
+            pageBuilder: (context, anim1, anim2) => Center(
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 40),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1A1A1A),
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.5),
+                      blurRadius: 40,
+                      offset: const Offset(0, 20),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.save_rounded,
+                              color: Color(0xFFC8A96E),
+                              size: 32,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            context.t('save_lot_confirmation_title'),
+                            style: GoogleFonts.outfit(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            context.t('save_lot_confirmation_desc'),
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.outfit(
+                              color: Colors.white60,
+                              fontSize: 15,
+                            ),
+                          ),
+                          const SizedBox(height: 32),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextButton(
+                                  onPressed: () => Navigator.pop(context, false),
+                                  style: TextButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      side: BorderSide(
+                                        color: Colors.white.withValues(alpha: 0.1),
+                                      ),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    context.t('cancel'),
+                                    style: GoogleFonts.outfit(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: ElevatedButton(
+                                  onPressed: () => Navigator.pop(context, true),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFC8A96E),
+                                    foregroundColor: Colors.black,
+                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    context.t('save'),
+                                    style: GoogleFonts.outfit(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-                TextButton(
-                  onPressed: () => Navigator.pop(context, true),
-                  child: Text(
-                    context.t('save'),
-                    style: GoogleFonts.outfit(color: const Color(0xFFC8A96E), fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
+              ),
             ),
           );
 
@@ -889,8 +1064,12 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
 
   Widget _darkCard({required List<Widget> children}) => Container(
     decoration: BoxDecoration(
-      color: const Color(0xFFC8A96E).withValues(alpha: 0.04),
+      color: const Color(0xFF221C14),
       borderRadius: BorderRadius.circular(20),
+      border: Border.all(
+        color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+        width: 1,
+      ),
     ),
     clipBehavior: Clip.hardEdge,
     child: Column(
@@ -917,14 +1096,21 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     String? placeholder,
     bool readOnly = false,
     FocusNode? focusNode,
+    bool autoFocus = false,
   }) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
+      padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFF2A2218),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
             style: GoogleFonts.outfit(
               fontSize: 10,
               color: Colors.white,
@@ -939,6 +1125,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 child: TextField(
                   readOnly: readOnly,
                   focusNode: focusNode,
+                  autofocus: autoFocus,
                   controller:
                       controller ?? TextEditingController(text: value ?? ''),
                   style: GoogleFonts.outfit(color: Colors.white, fontSize: 16),
@@ -1021,6 +1208,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             ),
           ],
         ],
+        ),
       ),
     );
   }

@@ -79,7 +79,12 @@ class DiscoveryActionBar extends ConsumerWidget {
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
                   isDense: true,
-                  contentPadding: const EdgeInsets.only(left: 16, right: 16, top: 2, bottom: 0),
+                  contentPadding: const EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                    top: 2,
+                    bottom: 0,
+                  ),
                   filled: false,
                   prefixIcon: const Padding(
                     padding: EdgeInsets.only(left: 9, right: 8, top: 9),

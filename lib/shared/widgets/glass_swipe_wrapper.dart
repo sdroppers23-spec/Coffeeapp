@@ -27,7 +27,8 @@ class _CustomHorizontalDragRecognizer extends HorizontalDragGestureRecognizer {
   bool Function(Offset localPosition)? isWithinHandle;
   bool isGripMode = false;
 
-  _CustomHorizontalDragRecognizer() : super(debugOwner: 'CustomHorizontalDragRecognizer');
+  _CustomHorizontalDragRecognizer()
+    : super(debugOwner: 'CustomHorizontalDragRecognizer');
 
   @override
   void addAllowedPointer(PointerDownEvent event) {
@@ -40,7 +41,7 @@ class _CustomHorizontalDragRecognizer extends HorizontalDragGestureRecognizer {
     // if the card is mostly closed. We use a 20px threshold to allow for minor jitter
     // while still strictly enforcing the handle for new swipes.
     final bool isMostlyClosed = getExtent!().abs() < 20.0;
-    
+
     if (isGripMode && isMostlyClosed) {
       if (!isWithinHandle!(event.localPosition)) {
         return; // Do not allow this pointer to start the gesture
@@ -50,7 +51,10 @@ class _CustomHorizontalDragRecognizer extends HorizontalDragGestureRecognizer {
   }
 
   @override
-  bool hasSufficientGlobalDistanceToAccept(PointerDeviceKind pointerDeviceKind, double? deviceTouchSlop) {
+  bool hasSufficientGlobalDistanceToAccept(
+    PointerDeviceKind pointerDeviceKind,
+    double? deviceTouchSlop,
+  ) {
     // Using standard touch slop (usually 8.0) instead of the previous 18.0 for better responsiveness
     final double slop = (deviceTouchSlop ?? 8.0);
     return globalDistanceMoved.abs() > slop;
@@ -59,7 +63,7 @@ class _CustomHorizontalDragRecognizer extends HorizontalDragGestureRecognizer {
 
 /// A premium swipe-reveal wrapper with "Ultimate Glass" architecture.
 ///
-/// Fully custom gesture handling allows setting drag handles and strict 
+/// Fully custom gesture handling allows setting drag handles and strict
 /// swipe thresholds to resolve interaction conflicts with TabBars.
 class GlassSwipeWrapper extends StatefulWidget {
   final Widget child;
@@ -85,19 +89,23 @@ class GlassSwipeWrapper extends StatefulWidget {
   State<GlassSwipeWrapper> createState() => _GlassSwipeWrapperState();
 }
 
-class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTickerProviderStateMixin {
+class _GlassSwipeWrapperState extends State<GlassSwipeWrapper>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   double _dragExtent = 0.0;
   bool _isDragging = false;
-  
+
   static const double _maxReveal = 80.0;
 
   bool _ignoreCurrentDrag = false;
-  
+
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
   }
 
   @override
@@ -118,7 +126,7 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
   void _handleDragStart(DragStartDetails details) {
     _isDragging = true;
     _controller.stop();
-    
+
     // Safety: if we were very close to zero, just snap to zero to prevent jitter
     if (_dragExtent.abs() < 5.0) {
       setState(() => _dragExtent = 0.0);
@@ -129,27 +137,29 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
       final dx = details.localPosition.dx;
       final dy = details.localPosition.dy;
       final size = context.size;
-      
+
       const handleWidth = 80.0; // Larger width for reliability
       const handleHeight = 100.0; // Larger height zone
-      
-      final isOnHandleX = dx < handleWidth || dx > (size?.width ?? 0) - handleWidth;
-      final isOnHandleY = (dy - (size?.height ?? 0) / 2).abs() < (handleHeight / 2);
-      
+
+      final isOnHandleX =
+          dx < handleWidth || dx > (size?.width ?? 0) - handleWidth;
+      final isOnHandleY =
+          (dy - (size?.height ?? 0) / 2).abs() < (handleHeight / 2);
+
       if (!isOnHandleX || !isOnHandleY) {
         _ignoreCurrentDrag = true;
         return;
       }
     }
-    
+
     _ignoreCurrentDrag = false;
   }
 
   void _handleDragUpdate(DragUpdateDetails details) {
     if (!widget.isSwipeEnabled || _ignoreCurrentDrag) return;
-    
+
     double newExtent = _dragExtent + details.primaryDelta!;
-    
+
     // Restrict direction based on available actions
     if (newExtent > 0 && widget.leftAction == null) newExtent = 0;
     if (newExtent < 0 && widget.rightAction == null) newExtent = 0;
@@ -175,8 +185,9 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
     }
     _ignoreCurrentDrag = false;
 
-    final isTriggered = _dragExtent.abs() > _maxReveal * 0.7 || 
-                        (details.primaryVelocity?.abs() ?? 0) > 500;
+    final isTriggered =
+        _dragExtent.abs() > _maxReveal * 0.7 ||
+        (details.primaryVelocity?.abs() ?? 0) > 500;
 
     if (isTriggered) {
       if (_dragExtent > 0 && widget.leftAction != null) {
@@ -188,7 +199,7 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
 
     _snapBack();
   }
-  
+
   void _handleDragCancel() {
     _isDragging = false;
     _ignoreCurrentDrag = false;
@@ -197,14 +208,15 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
 
   void _snapBack() {
     if (!mounted) return;
-    
+
     final startExtent = _dragExtent;
     _controller.value = 0.0;
-    
-    final Animation<double> anim = Tween<double>(begin: startExtent, end: 0.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic)
-    );
-    
+
+    final Animation<double> anim = Tween<double>(
+      begin: startExtent,
+      end: 0.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+
     anim.addListener(() {
       if (mounted && !_isDragging) {
         setState(() {
@@ -212,7 +224,7 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
         });
       }
     });
-    
+
     _controller.forward(from: 0.0).then((_) {
       if (mounted && !_isDragging) {
         setState(() {
@@ -225,7 +237,7 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
   Widget _buildBackground() {
     // Low threshold to provide immediate visual feedback while avoiding noise during scrolling
     if (_dragExtent.abs() < 15.0) return const SizedBox.shrink();
-    
+
     final isLeft = _dragExtent > 0;
     final action = isLeft ? widget.leftAction : widget.rightAction;
     if (action == null) return const SizedBox.shrink();
@@ -270,54 +282,59 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.isSwipeEnabled || (widget.leftAction == null && widget.rightAction == null)) {
+    if (!widget.isSwipeEnabled ||
+        (widget.leftAction == null && widget.rightAction == null)) {
       return widget.child;
     }
 
     return LayoutBuilder(
       builder: (context, constraints) {
         return RawGestureDetector(
-          key: ValueKey('swipe_detector_${widget.isGripMode}_${constraints.maxWidth}'),
+          key: ValueKey(
+            'swipe_detector_${widget.isGripMode}_${constraints.maxWidth}',
+          ),
           behavior: HitTestBehavior.opaque,
           gestures: {
-            _CustomHorizontalDragRecognizer: GestureRecognizerFactoryWithHandlers<_CustomHorizontalDragRecognizer>(
-              () => _CustomHorizontalDragRecognizer(),
-              (_CustomHorizontalDragRecognizer instance) {
-                instance.getExtent = () => _dragExtent;
-                instance.constraints = constraints;
-                instance.isGripMode = widget.isGripMode;
-                instance.isWithinHandle = (localPosition) {
-                  final dx = localPosition.dx;
-                  final dy = localPosition.dy;
-                  final renderBox = context.findRenderObject() as RenderBox?;
-                  final size = renderBox?.size;
-                  
-                  if (size == null) return false;
-                  
-                  const handleWidth = 80.0; 
-                  const handleHeight = 100.0;
-                  
-                  final horizontalOk = dx < handleWidth || dx > size.width - handleWidth;
-                  final verticalOk = (dy - size.height / 2).abs() < (handleHeight / 2);
-                  
-                  return horizontalOk && verticalOk;
-                };
-                instance.dragStartBehavior = DragStartBehavior.down;
-                instance.onStart = _handleDragStart;
-                instance.onUpdate = _handleDragUpdate;
-                instance.onEnd = _handleDragEnd;
-                instance.onCancel = _handleDragCancel;
-              },
-            ),
+            _CustomHorizontalDragRecognizer:
+                GestureRecognizerFactoryWithHandlers<
+                  _CustomHorizontalDragRecognizer
+                >(() => _CustomHorizontalDragRecognizer(), (
+                  _CustomHorizontalDragRecognizer instance,
+                ) {
+                  instance.getExtent = () => _dragExtent;
+                  instance.constraints = constraints;
+                  instance.isGripMode = widget.isGripMode;
+                  instance.isWithinHandle = (localPosition) {
+                    final dx = localPosition.dx;
+                    final dy = localPosition.dy;
+                    final renderBox = context.findRenderObject() as RenderBox?;
+                    final size = renderBox?.size;
+
+                    if (size == null) return false;
+
+                    const handleWidth = 80.0;
+                    const handleHeight = 100.0;
+
+                    final horizontalOk =
+                        dx < handleWidth || dx > size.width - handleWidth;
+                    final verticalOk =
+                        (dy - size.height / 2).abs() < (handleHeight / 2);
+
+                    return horizontalOk && verticalOk;
+                  };
+                  instance.dragStartBehavior = DragStartBehavior.down;
+                  instance.onStart = _handleDragStart;
+                  instance.onUpdate = _handleDragUpdate;
+                  instance.onEnd = _handleDragEnd;
+                  instance.onCancel = _handleDragCancel;
+                }),
           },
           child: Stack(
             clipBehavior: Clip.none,
             children: [
               // Background Layer
-              Positioned.fill(
-                child: _buildBackground(),
-              ),
-              
+              Positioned.fill(child: _buildBackground()),
+
               // Moving Child Layer
               Transform.translate(
                 offset: Offset(_dragExtent, 0),

@@ -18,11 +18,21 @@ final farmersProvider = FutureProvider<List<LocalizedFarmerDto>>((ref) async {
   return db.getAllFarmers(locale);
 });
 
-class FarmersBody extends ConsumerWidget {
+class FarmersBody extends ConsumerStatefulWidget {
   const FarmersBody({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<FarmersBody> createState() => _FarmersBodyState();
+}
+
+class _FarmersBodyState extends ConsumerState<FarmersBody>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
     final asyncFarms = ref.watch(farmersProvider);
 
     return asyncFarms.when(

@@ -117,16 +117,18 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text(
-                          ref.t('discover'),
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
-                            color: const Color(0xFFC8A96E),
+                        Flexible(
+                          child: Text(
+                            ref.t('discover'),
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22,
+                              color: const Color(0xFFC8A96E),
+                            ),
                           ),
                         ),
                         const SizedBox(width: 12),
-                        const SyncIndicator(),
+                        const Flexible(child: SyncIndicator()),
                       ],
                     ),
                   ),
@@ -144,6 +146,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
                 ).copyWith(canvasColor: Colors.transparent),
                 child: ReorderableListView.builder(
                   scrollController: _reorderController,
+                  physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   buildDefaultDragHandles: false,
@@ -203,6 +206,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
             Expanded(
               child: PageView.builder(
                 controller: _pageController,
+                physics: const BouncingScrollPhysics(),
                 onPageChanged: (index) {
                   if (index >= 0 && index < tabOrder.length) {
                     final newTabId = tabOrder[index].name;
@@ -230,25 +234,32 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
   }
 
   Widget _buildTabContent(String tabId) {
+    Widget child;
     switch (tabId) {
       case 'myLots':
-        return const MyLotsContent();
+        child = const MyLotsContent();
+        break;
       case 'encyclopedia':
-        return const EncyclopediaBody();
+        child = const EncyclopediaBody();
+        break;
       case 'farmers':
-        return const FarmersBody();
+        child = const FarmersBody();
+        break;
       case 'roasters':
-        return const RoastersBody();
+        child = const RoastersBody();
+        break;
       case 'history':
-        return const SpecialtyEducationScreen();
+        child = const SpecialtyEducationScreen();
+        break;
       default:
-        return Center(
+        child = Center(
           child: Text(
             ref.t('section_content_placeholder', args: {'tabId': tabId}),
             style: GoogleFonts.poppins(color: Colors.white24),
           ),
         );
     }
+    return RepaintBoundary(child: child);
   }
 }
 

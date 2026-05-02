@@ -22,7 +22,8 @@ class EncyclopediaBody extends ConsumerStatefulWidget {
   ConsumerState<EncyclopediaBody> createState() => _EncyclopediaBodyState();
 }
 
-class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
+class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody>
+    with AutomaticKeepAliveClientMixin {
   late final ScrollController _scrollController;
 
   @override
@@ -38,7 +39,11 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     final originsAsync = ref.watch(encyclopediaDataProvider);
 
     return PremiumBackground(

@@ -37,7 +37,7 @@ class RoastersBody extends ConsumerStatefulWidget {
 }
 
 class _RoastersBodyState extends ConsumerState<RoastersBody>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   late TabController _tabController;
   final Set<String> _selectedIds = {};
   bool get _isSelectionMode => _selectedIds.isNotEmpty;
@@ -209,7 +209,11 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
   // ─── Build ─────────────────────────────────────────────────────────────────
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     final roasters = ref.watch(userRoastersProvider);
 
     return Scaffold(
@@ -307,18 +311,31 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                   child: TextField(
                     controller: _searchController,
                     onChanged: (v) => setState(() => _searchQuery = v),
-                    onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
-                    onSubmitted: (_) => FocusManager.instance.primaryFocus?.unfocus(),
-                    style: GoogleFonts.outfit(color: Colors.white, fontSize: 14),
+                    onTapOutside: (_) =>
+                        FocusManager.instance.primaryFocus?.unfocus(),
+                    onSubmitted: (_) =>
+                        FocusManager.instance.primaryFocus?.unfocus(),
+                    style: GoogleFonts.outfit(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
                     textAlignVertical: TextAlignVertical.center,
                     decoration: InputDecoration(
                       hintText: context.t('search_roasters'),
-                      hintStyle: GoogleFonts.outfit(color: Colors.white24, fontSize: 14),
+                      hintStyle: GoogleFonts.outfit(
+                        color: Colors.white24,
+                        fontSize: 14,
+                      ),
                       border: InputBorder.none,
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
                       isDense: true,
-                      contentPadding: const EdgeInsets.only(left: 16, right: 16, top: 2, bottom: 0),
+                      contentPadding: const EdgeInsets.only(
+                        left: 16,
+                        right: 16,
+                        top: 2,
+                        bottom: 0,
+                      ),
                       filled: false,
                       prefixIcon: const Padding(
                         padding: EdgeInsets.only(left: 12, right: 8, top: 9),
@@ -397,7 +414,8 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                 child: Builder(
                   builder: (context) {
                     final filtered = roasters.where((b) {
-                      final matchesSearch = _searchQuery.isEmpty ||
+                      final matchesSearch =
+                          _searchQuery.isEmpty ||
                           b.name.toLowerCase().contains(
                             _searchQuery.toLowerCase(),
                           ) ||
@@ -425,7 +443,9 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                         if (aStarts && !bStarts) return -1;
                         if (!aStarts && bStarts) return 1;
                         // Secondary sort by name
-                        return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+                        return a.name.toLowerCase().compareTo(
+                          b.name.toLowerCase(),
+                        );
                       });
                     }
 
@@ -543,9 +563,15 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
               ToastService.showSuccess(localContext, isFav ? msg : msgAdd);
             },
             onEdit: () => UserRoasterDetailsScreen.showEditRoasterDialog(
-                context, ref, roaster),
+              context,
+              ref,
+              roaster,
+            ),
             onAddLot: () => UserRoasterDetailsScreen.showLinkLotDialog(
-                context, ref, roaster),
+              context,
+              ref,
+              roaster,
+            ),
           ),
         ),
       ),
@@ -657,11 +683,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
-              Icons.add_rounded,
-              color: Colors.black87,
-              size: 20,
-            ),
+            const Icon(Icons.add_rounded, color: Colors.black87, size: 20),
             const SizedBox(width: 8),
             Text(
               context.t('add_roaster_uppercase'),
@@ -717,7 +739,10 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
           ),
-          insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 20,
+          ),
           title: Text(
             context.t('add_roaster_title'),
             style: GoogleFonts.poppins(
@@ -1049,8 +1074,9 @@ class _PremiumRoasterCard extends StatelessWidget {
                       roaster.isFavorite
                           ? Icons.favorite_rounded
                           : Icons.favorite_border_rounded,
-                      color:
-                          roaster.isFavorite ? Colors.redAccent : Colors.white30,
+                      color: roaster.isFavorite
+                          ? Colors.redAccent
+                          : Colors.white30,
                       size: 20,
                     ),
                   ),

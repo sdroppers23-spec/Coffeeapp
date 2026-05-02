@@ -7,11 +7,23 @@ import '../../shared/widgets/skeleton_loader.dart';
 import 'specialty_encyclopedia_body_v2.dart';
 import 'specialty_encyclopedia_provider.dart';
 
-class SpecialtyEducationScreen extends ConsumerWidget {
+class SpecialtyEducationScreen extends ConsumerStatefulWidget {
   const SpecialtyEducationScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SpecialtyEducationScreen> createState() =>
+      _SpecialtyEducationScreenState();
+}
+
+class _SpecialtyEducationScreenState
+    extends ConsumerState<SpecialtyEducationScreen>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
     final asyncArticles = ref.watch(specialtyArticlesProvider);
 
     return SafeArea(

@@ -25,7 +25,8 @@ class MyLotsContent extends ConsumerStatefulWidget {
   ConsumerState<MyLotsContent> createState() => _MyLotsContentState();
 }
 
-class _MyLotsContentState extends ConsumerState<MyLotsContent> {
+class _MyLotsContentState extends ConsumerState<MyLotsContent>
+    with AutomaticKeepAliveClientMixin {
   final Set<String> _pendingDeleteIds = {};
   bool _isUndoVisible = false;
 
@@ -268,60 +269,57 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     final filter = ref.watch(myLotsFilterProvider);
     final lotsAsync = ref.watch(userLotsStreamProvider);
+
+    final userLots = lotsAsync.value ?? [];
+    final countries = userLots
+        .map((l) => l.originCountry ?? '')
+        .where((c) => c.isNotEmpty)
+        .toSet()
+        .toList()
+      ..sort();
+
+    final flavors = userLots
+        .map((l) => l.flavorProfile ?? '')
+        .expand((f) => f.split(',').map((s) => s.trim()))
+        .where((f) => f.isNotEmpty)
+        .toSet()
+        .toList()
+      ..sort();
+
+    final processes = userLots
+        .map((l) => l.process ?? '')
+        .where((p) => p.isNotEmpty)
+        .toSet()
+        .toList()
+      ..sort();
 
     return Stack(
       children: [
         Column(
           children: [
-            lotsAsync.when(
-              data: (userLots) {
-                // Extract unique values for filter dialog
-                final countries =
-                    userLots
-                        .map((l) => l.originCountry ?? '')
-                        .where((c) => c.isNotEmpty)
-                        .toSet()
-                        .toList()
-                      ..sort();
-
-                final flavors =
-                    userLots
-                        .map((l) => l.flavorProfile ?? '')
-                        .expand((f) => f.split(',').map((s) => s.trim()))
-                        .where((f) => f.isNotEmpty)
-                        .toSet()
-                        .toList()
-                      ..sort();
-
-                final processes =
-                    userLots
-                        .map((l) => l.process ?? '')
-                        .where((p) => p.isNotEmpty)
-                        .toSet()
-                        .toList()
-                      ..sort();
-
-                return DiscoveryActionBar(
-                  filterProvider: myLotsFilterProvider,
-                  selectionProvider: myLotsSelectedIdsProvider,
-                  searchHint: context.t('search_lots'),
-                  onCompareTap: () {
-                    ref.read(settingsProvider.notifier).triggerHaptic();
-                    context.push('/compare', extra: ComparisonSource.myLots);
-                  },
-                  onSelectAll: () => _selectAll(userLots),
-                  availableCountries: countries,
-                  availableFlavors: flavors,
-                  availableProcesses: processes,
-                  showFavoritesButton: false,
-                );
+            DiscoveryActionBar(
+              filterProvider: myLotsFilterProvider,
+              selectionProvider: myLotsSelectedIdsProvider,
+              searchHint: context.t('search_lots'),
+              onCompareTap: () {
+                ref.read(settingsProvider.notifier).triggerHaptic();
+                context.push('/compare', extra: ComparisonSource.myLots);
               },
-              loading: () => const SizedBox.shrink(),
-              error: (error, stack) => const SizedBox.shrink(),
+              onSelectAll: () => _selectAll(userLots),
+              availableCountries: countries,
+              availableFlavors: flavors,
+              availableProcesses: processes,
+              showFavoritesButton: true,
+              showSwipeModeToggle: true,
             ),
+            const SizedBox(height: 8),
             Expanded(child: _buildListView(lotsAsync, filter)),
           ],
         ),

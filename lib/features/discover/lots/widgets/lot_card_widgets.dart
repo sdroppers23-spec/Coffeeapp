@@ -351,7 +351,8 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard>
     final theme = Theme.of(context);
     final isSelected = widget.isSelected;
     final isSelectionMode = widget.isSelectionMode;
-    final swipeMode = widget.forcedSwipeMode ?? ref.watch(preferencesProvider).lotSwipeMode;
+    final swipeMode =
+        widget.forcedSwipeMode ?? ref.watch(preferencesProvider).lotSwipeMode;
 
     // Normalize sensory data
     final mappedSensory = SensoryUtils.map4To6Axis(widget.lot.sensoryPoints);
@@ -540,24 +541,30 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard>
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          CompactSensoryBar(
-                            label: ref.t('bitterness').toUpperCase(),
-                            value: (mappedSensory['bitterness'] ?? 3)
-                                .toDouble(),
-                            theme: theme,
+                          Flexible(
+                            child: CompactSensoryBar(
+                              label: ref.t('bitterness').toUpperCase(),
+                              value: (mappedSensory['bitterness'] ?? 3)
+                                  .toDouble(),
+                              theme: theme,
+                            ),
                           ),
                           const SizedBox(width: 8),
-                          CompactSensoryBar(
-                            label: ref.t('acidity').toUpperCase(),
-                            value: (mappedSensory['acidity'] ?? 3).toDouble(),
-                            theme: theme,
+                          Flexible(
+                            child: CompactSensoryBar(
+                              label: ref.t('acidity').toUpperCase(),
+                              value: (mappedSensory['acidity'] ?? 3).toDouble(),
+                              theme: theme,
+                            ),
                           ),
                           const SizedBox(width: 8),
-                          CompactSensoryBar(
-                            label: ref.t('sweetness').toUpperCase(),
-                            value: (mappedSensory['sweetness'] ?? 3)
-                                .toDouble(),
-                            theme: theme,
+                          Flexible(
+                            child: CompactSensoryBar(
+                              label: ref.t('sweetness').toUpperCase(),
+                              value:
+                                  (mappedSensory['sweetness'] ?? 3).toDouble(),
+                              theme: theme,
+                            ),
                           ),
                         ],
                       ),
@@ -664,18 +671,8 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard>
       stack = Stack(
         children: [
           cardContent,
-          const Positioned(
-            left: 0,
-            top: 0,
-            bottom: 0,
-            child: GripDots(),
-          ),
-          const Positioned(
-            right: 0,
-            top: 0,
-            bottom: 0,
-            child: GripDots(),
-          ),
+          const Positioned(left: 0, top: 0, bottom: 0, child: GripDots()),
+          const Positioned(right: 0, top: 0, bottom: 0, child: GripDots()),
         ],
       );
     } else {
@@ -697,7 +694,9 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard>
     final dismissibleCard = isSelectionMode
         ? contentCard
         : GlassSwipeWrapper(
-            key: ValueKey('glass_swipe_wrapper_${widget.lot.id}_${swipeMode == LotSwipeMode.grip}'),
+            key: ValueKey(
+              'glass_swipe_wrapper_${widget.lot.id}_${swipeMode == LotSwipeMode.grip}',
+            ),
             isSwipeEnabled: !_isExpanded && swipeMode != LotSwipeMode.disabled,
             isGripMode: swipeMode == LotSwipeMode.grip,
             dismissibleKey: Key('glass_swipe_${widget.lot.id}'),
@@ -1105,4 +1104,3 @@ class _InfoItem extends StatelessWidget {
     );
   }
 }
-

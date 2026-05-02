@@ -29,7 +29,6 @@ import '../../../shared/widgets/sensory_radar_chart.dart';
 import '../../../shared/services/toast_service.dart';
 import '../../../core/providers/preferences_provider.dart';
 import '../../../shared/utils/coffee_input_formatters.dart';
-import 'widgets/add_lot/roaster_selector_sheet.dart';
 
 part 'widgets/add_lot/lot_roastery_tab.dart';
 part 'widgets/add_lot/lot_coffee_tab.dart';

@@ -120,13 +120,8 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   bool _isOtherDecaf = false;
   bool _isSensoryLocked = true; // Default to locked if using presets
 
-  List<UserRoasterDto> _roasterSuggestions = [];
-  bool _showRoasterSuggestions = false;
-  final FocusNode _roasterNameFocusNode = FocusNode();
-
   @override
   void dispose() {
-    _roasterNameFocusNode.dispose();
     _tabController.dispose();
     _roasteryController.dispose();
     _roasteryCountryController.dispose();
@@ -379,36 +374,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       _coffeeNameController.text.trim().isNotEmpty &&
       _originCountryController.text.trim().isNotEmpty;
 
-  void _updateRoasterSuggestions(String query) {
-    if (query.isEmpty) {
-      updateState(() {
-        _roasterSuggestions = [];
-        _showRoasterSuggestions = false;
-      });
-      return;
-    }
-
-    final roasters = ref.read(userRoastersProvider);
-    final filtered = roasters.where((r) {
-      return r.name.toLowerCase().contains(query.toLowerCase()) ||
-          (r.location?.toLowerCase().contains(query.toLowerCase()) ?? false);
-    }).toList();
-
-    // Sort by relevance
-    final q = query.toLowerCase();
-    filtered.sort((a, b) {
-      final aStarts = a.name.toLowerCase().startsWith(q);
-      final bStarts = b.name.toLowerCase().startsWith(q);
-      if (aStarts && !bStarts) return -1;
-      if (!aStarts && bStarts) return 1;
-      return a.name.toLowerCase().compareTo(b.name.toLowerCase());
-    });
-
-    updateState(() {
-      _roasterSuggestions = filtered;
-      _showRoasterSuggestions = filtered.isNotEmpty;
-    });
-  }
 
   void _showRoasterPicker() {
     showModalBottomSheet(
@@ -422,9 +387,11 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               _userRoasterId = roaster.id;
               _roasteryController.text = roaster.name;
               _roasteryCountryController.text = roaster.country ?? '';
-              _roasteryLocationController.text = roaster.location ?? '';
-              _showRoasterSuggestions = false;
-              _roasterSuggestions = [];
+              final city = roaster.location ?? '';
+              final country = roaster.country ?? '';
+              _roasteryLocationController.text = [city, country]
+                  .where((s) => s.isNotEmpty)
+                  .join(', ');
             });
           } else {
             // "Clear" selection
@@ -433,10 +400,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               _roasteryController.clear();
               _roasteryCountryController.clear();
               _roasteryLocationController.clear();
-              _showRoasterSuggestions = false;
-              _roasterSuggestions = [];
             });
           }
+          Navigator.pop(context);
         },
       ),
     );
@@ -627,104 +593,107 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           barrierColor: Colors.black.withValues(alpha: 0.8),
           transitionDuration: const Duration(milliseconds: 300),
           pageBuilder: (context, anim1, anim2) => Center(
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 40),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1A1A1A),
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.5),
-                    blurRadius: 40,
-                    offset: const Offset(0, 20),
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(24),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                            shape: BoxShape.circle,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 40),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1A1A1A),
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.5),
+                      blurRadius: 40,
+                      offset: const Offset(0, 20),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.warning_amber_rounded,
+                              color: Color(0xFFC8A96E),
+                              size: 32,
+                            ),
                           ),
-                          child: const Icon(
-                            Icons.warning_amber_rounded,
-                            color: Color(0xFFC8A96E),
-                            size: 32,
+                          const SizedBox(height: 20),
+                          Text(
+                            context.t('discard_changes_title'),
+                            style: GoogleFonts.outfit(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          context.t('discard_changes_title'),
-                          style: GoogleFonts.outfit(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                          const SizedBox(height: 12),
+                          Text(
+                            context.t('discard_changes_msg'),
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.outfit(
+                              color: Colors.white60,
+                              fontSize: 15,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          context.t('discard_changes_msg'),
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.outfit(
-                            color: Colors.white60,
-                            fontSize: 15,
-                          ),
-                        ),
-                        const SizedBox(height: 32),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextButton(
-                                onPressed: () => Navigator.pop(context, false),
-                                style: TextButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                          const SizedBox(height: 32),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextButton(
+                                  onPressed: () => Navigator.pop(context, false),
+                                  style: TextButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
                                   ),
-                                ),
-                                child: Text(
-                                  context.t('keep_editing'),
-                                  style: GoogleFonts.outfit(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
+                                  child: Text(
+                                    context.t('keep_editing'),
+                                    style: GoogleFonts.outfit(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () => Navigator.pop(context, true),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFFC8A96E),
-                                  foregroundColor: Colors.black,
-                                  elevation: 0,
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: ElevatedButton(
+                                  onPressed: () => Navigator.pop(context, true),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFC8A96E),
+                                    foregroundColor: Colors.black,
+                                    elevation: 0,
+                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
                                   ),
-                                ),
-                                child: Text(
-                                  context.t('discard'),
-                                  style: GoogleFonts.outfit(
-                                    fontWeight: FontWeight.bold,
+                                  child: Text(
+                                    context.t('discard'),
+                                    style: GoogleFonts.outfit(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -767,9 +736,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           child: GestureDetector(
             onTap: () {
               FocusScope.of(context).unfocus();
-              updateState(() {
-                _showRoasterSuggestions = false;
-              });
             },
             child: Column(
               children: [
@@ -921,107 +887,110 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             barrierColor: Colors.black.withValues(alpha: 0.8),
             transitionDuration: const Duration(milliseconds: 300),
             pageBuilder: (context, anim1, anim2) => Center(
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 40),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1A1A1A),
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.5),
-                      blurRadius: 40,
-                      offset: const Offset(0, 20),
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: Padding(
-                      padding: const EdgeInsets.all(24),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                              shape: BoxShape.circle,
+              child: Material(
+                color: Colors.transparent,
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 40),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1A1A1A),
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.5),
+                        blurRadius: 40,
+                        offset: const Offset(0, 20),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.save_rounded,
+                                color: Color(0xFFC8A96E),
+                                size: 32,
+                              ),
                             ),
-                            child: const Icon(
-                              Icons.save_rounded,
-                              color: Color(0xFFC8A96E),
-                              size: 32,
+                            const SizedBox(height: 20),
+                            Text(
+                              context.t('save_lot_confirmation_title'),
+                              style: GoogleFonts.outfit(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 20),
-                          Text(
-                            context.t('save_lot_confirmation_title'),
-                            style: GoogleFonts.outfit(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                            const SizedBox(height: 12),
+                            Text(
+                              context.t('save_lot_confirmation_desc'),
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.outfit(
+                                color: Colors.white60,
+                                fontSize: 15,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 12),
-                          Text(
-                            context.t('save_lot_confirmation_desc'),
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.outfit(
-                              color: Colors.white60,
-                              fontSize: 15,
-                            ),
-                          ),
-                          const SizedBox(height: 32),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextButton(
-                                  onPressed: () => Navigator.pop(context, false),
-                                  style: TextButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(vertical: 16),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                      side: BorderSide(
-                                        color: Colors.white.withValues(alpha: 0.1),
+                            const SizedBox(height: 32),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: TextButton(
+                                    onPressed: () => Navigator.pop(context, false),
+                                    style: TextButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(vertical: 16),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                        side: BorderSide(
+                                          color: Colors.white.withValues(alpha: 0.1),
+                                        ),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      context.t('cancel'),
+                                      style: GoogleFonts.outfit(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                   ),
-                                  child: Text(
-                                    context.t('cancel'),
-                                    style: GoogleFonts.outfit(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () => Navigator.pop(context, true),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFFC8A96E),
+                                      foregroundColor: Colors.black,
+                                      padding: const EdgeInsets.symmetric(vertical: 16),
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      context.t('save'),
+                                      style: GoogleFonts.outfit(
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () => Navigator.pop(context, true),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFFC8A96E),
-                                    foregroundColor: Colors.black,
-                                    padding: const EdgeInsets.symmetric(vertical: 16),
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    context.t('save'),
-                                    style: GoogleFonts.outfit(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -1271,6 +1240,58 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               Icons.calendar_today_rounded,
               color: Color(0xFFC8A96E),
               size: 16,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _selectorRow({
+    String? label,
+    required String? value,
+    required String placeholder,
+    required VoidCallback onTap,
+    Widget? suffix,
+  }) {
+    final hasValue = value != null && value.trim().isNotEmpty;
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12.0),
+        child: Row(
+          children: [
+            if (label != null && label.isNotEmpty)
+              SizedBox(
+                width: 100,
+                child: Text(
+                  label,
+                  style: GoogleFonts.outfit(
+                    fontSize: 10,
+                    color: Colors.white.withValues(alpha: 0.6),
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+              ),
+            Expanded(
+              child: Text(
+                hasValue ? value : placeholder,
+                style: GoogleFonts.outfit(
+                  color: hasValue
+                      ? Colors.white
+                      : Colors.white.withValues(alpha: 0.2),
+                  fontSize: 14,
+                  fontWeight: hasValue ? FontWeight.w500 : FontWeight.w400,
+                ),
+              ),
+            ),
+            // ignore: use_null_aware_elements
+            if (suffix != null) suffix,
+            const Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: Color(0xFFC8A96E),
+              size: 20,
             ),
           ],
         ),

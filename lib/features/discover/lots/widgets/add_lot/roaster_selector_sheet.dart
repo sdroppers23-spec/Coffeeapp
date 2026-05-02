@@ -563,9 +563,9 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
               ref.read(userRoastersProvider.notifier).deleteRoaster(roaster.id);
               Navigator.pop(context);
             },
-            child: const Text(
-              'DELETE',
-              style: TextStyle(color: Colors.redAccent),
+            child: Text(
+              context.t('delete_uppercase'),
+              style: const TextStyle(color: Colors.redAccent),
             ),
           ),
         ],

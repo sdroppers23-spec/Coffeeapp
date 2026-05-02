@@ -92,6 +92,8 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
   
   static const double _maxReveal = 80.0;
 
+  bool _ignoreCurrentDrag = false;
+  
   @override
   void initState() {
     super.initState();
@@ -116,14 +118,29 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
   void _handleDragStart(DragStartDetails details) {
     _isDragging = true;
     _controller.stop();
+    
     // Safety: if we were very close to zero, just snap to zero to prevent jitter
     if (_dragExtent.abs() < 5.0) {
       setState(() => _dragExtent = 0.0);
     }
+
+    // Double-check grip mode constraints in onStart (second line of defense)
+    if (widget.isGripMode && _dragExtent.abs() < 15.0) {
+      final dx = details.localPosition.dx;
+      const handleWidth = 85.0; // Slightly wider for the second-line check
+      final isOnHandle = dx < handleWidth || dx > (context.size?.width ?? 0) - handleWidth;
+      
+      if (!isOnHandle) {
+        _ignoreCurrentDrag = true;
+        return;
+      }
+    }
+    
+    _ignoreCurrentDrag = false;
   }
 
   void _handleDragUpdate(DragUpdateDetails details) {
-    if (!widget.isSwipeEnabled) return;
+    if (!widget.isSwipeEnabled || _ignoreCurrentDrag) return;
     
     double newExtent = _dragExtent + details.primaryDelta!;
     
@@ -145,7 +162,12 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
 
   void _handleDragEnd(DragEndDetails details) {
     _isDragging = false;
-    if (!widget.isSwipeEnabled) return;
+    if (!widget.isSwipeEnabled || _ignoreCurrentDrag) {
+      _ignoreCurrentDrag = false;
+      if (_dragExtent != 0.0) _snapBack();
+      return;
+    }
+    _ignoreCurrentDrag = false;
 
     final isTriggered = _dragExtent.abs() > _maxReveal * 0.7 || 
                         (details.primaryVelocity?.abs() ?? 0) > 500;
@@ -163,6 +185,7 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
   
   void _handleDragCancel() {
     _isDragging = false;
+    _ignoreCurrentDrag = false;
     _snapBack();
   }
 

@@ -962,8 +962,7 @@ class _PremiumRoasterCard extends StatelessWidget {
                       : null,
                 )
               else ...[
-
-                const SizedBox(width: 16),
+                const SizedBox(width: 4),
                 Container(
                   width: 56,
                   height: 56,

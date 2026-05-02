@@ -725,6 +725,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   // ─── Build ────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
+    ref.watch(userRoastersProvider); // Ensure roasters are loaded for search suggestions
     return PopScope(
       canPop: !_isDirty,
       onPopInvokedWithResult: (didPop, result) async {
@@ -1124,82 +1125,94 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               letterSpacing: 1.2,
             ),
           ),
-          const SizedBox(height: 2),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  readOnly: readOnly,
-                  focusNode: focusNode,
-                  controller:
-                      controller ?? TextEditingController(text: value ?? ''),
-                  style: GoogleFonts.outfit(color: Colors.white, fontSize: 16),
-                  keyboardType:
-                      keyboardType ??
-                      (type == _FieldType.numeric ||
-                              type == _FieldType.scaScore ||
-                              type == _FieldType.weight ||
-                              type == _FieldType.altitude
-                          ? const TextInputType.numberWithOptions(decimal: true)
-                          : TextInputType.text),
-                  enableInteractiveSelection:
-                      !readOnly &&
-                      type != _FieldType.scaScore &&
-                      type != _FieldType.lotNumber,
-                  textCapitalization:
-                      (type == _FieldType.scaScore ||
-                          type == _FieldType.lotNumber)
-                      ? TextCapitalization.none
-                      : TextCapitalization.sentences,
-                  autocorrect:
-                      (type == _FieldType.scaScore ||
-                          type == _FieldType.lotNumber)
-                      ? false
-                      : true,
-                  inputFormatters:
-                      inputFormatters ??
-                      (type == _FieldType.scaScore
-                          ? [ScaScoreInputFormatter()]
-                          : type == _FieldType.lotNumber
-                          ? [LotNumberInputFormatter()]
-                          : type == _FieldType.altitude
-                          ? [AltitudeInputFormatter()]
-                          : (type == _FieldType.numeric ||
-                                type == _FieldType.weight)
-                          ? [
-                              FilteringTextInputFormatter.allow(
-                                RegExp(r'[0-9\.,]'),
-                              ),
-                            ]
-                          : [GlobalCoffeeInputFormatter()]),
-                  decoration: InputDecoration(
-                    hintText:
-                        placeholder ??
-                        (type == _FieldType.scaScore ? '80-100' : null),
-                    hintStyle: GoogleFonts.outfit(
-                      color: Colors.white.withValues(alpha: 0.2),
-                    ),
-                    border: InputBorder.none,
-                    isDense: true,
-                  ),
-                  onChanged: (v) {
-                    onChanged?.call(v);
-                    updateState(() {}); // Trigger _canSave update
-                  },
-                ),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: const Color(0xFFC8A96E).withValues(alpha: 0.25),
+                width: 1,
               ),
-              if (suffix != null)
-                suffix is String
-                    ? Text(
-                        suffix,
-                        style: GoogleFonts.outfit(
-                          color: const Color(0xFFC8A96E),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                        ),
-                      )
-                    : suffix as Widget,
-            ],
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    readOnly: readOnly,
+                    focusNode: focusNode,
+                    controller:
+                        controller ?? TextEditingController(text: value ?? ''),
+                    style: GoogleFonts.outfit(color: Colors.white, fontSize: 15),
+                    keyboardType:
+                        keyboardType ??
+                        (type == _FieldType.numeric ||
+                                type == _FieldType.scaScore ||
+                                type == _FieldType.weight ||
+                                type == _FieldType.altitude
+                            ? const TextInputType.numberWithOptions(decimal: true)
+                            : TextInputType.text),
+                    enableInteractiveSelection:
+                        !readOnly &&
+                        type != _FieldType.scaScore &&
+                        type != _FieldType.lotNumber,
+                    textCapitalization:
+                        (type == _FieldType.scaScore ||
+                            type == _FieldType.lotNumber)
+                        ? TextCapitalization.none
+                        : TextCapitalization.sentences,
+                    autocorrect:
+                        (type == _FieldType.scaScore ||
+                            type == _FieldType.lotNumber)
+                        ? false
+                        : true,
+                    inputFormatters:
+                        inputFormatters ??
+                        (type == _FieldType.scaScore
+                            ? [ScaScoreInputFormatter()]
+                            : type == _FieldType.lotNumber
+                            ? [LotNumberInputFormatter()]
+                            : type == _FieldType.altitude
+                            ? [AltitudeInputFormatter()]
+                            : (type == _FieldType.numeric ||
+                                  type == _FieldType.weight)
+                            ? [
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r'[0-9\.,]'),
+                                ),
+                              ]
+                            : [GlobalCoffeeInputFormatter()]),
+                    decoration: InputDecoration(
+                      hintText:
+                          placeholder ??
+                          (type == _FieldType.scaScore ? '80-100' : null),
+                      hintStyle: GoogleFonts.outfit(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        fontSize: 14,
+                      ),
+                      border: InputBorder.none,
+                      isDense: true,
+                    ),
+                    onChanged: (v) {
+                      onChanged?.call(v);
+                      updateState(() {}); // Trigger _canSave update
+                    },
+                  ),
+                ),
+                if (suffix != null)
+                  suffix is String
+                      ? Text(
+                          suffix,
+                          style: GoogleFonts.outfit(
+                            color: const Color(0xFFC8A96E),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
+                        )
+                      : suffix as Widget,
+              ],
+            ),
           ),
           if (helperText != null) ...[
             const SizedBox(height: 4),

@@ -4,17 +4,17 @@ extension _RoasteryTabSection on _AddLotScreenState {
   Widget _buildRoasteryTab() {
     final pref = ref.watch(preferencesProvider);
     final currencySymbol = _getCurrencySymbol(pref.currency);
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+    return Stack(
       children: [
-        _sectionLabel((_userRoasterId == null &&
-                _roasteryController.text.trim().isEmpty &&
-                _roasteryCountryController.text.trim().isEmpty)
-            ? context.t('select_roaster')
-            : context.t('section_roaster')),
-        _darkCard(
+        ListView(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
           children: [
-            Column(
+            _sectionLabel((_userRoasterId == null &&
+                    _roasteryController.text.trim().isEmpty &&
+                    _roasteryCountryController.text.trim().isEmpty)
+                ? context.t('select_roaster')
+                : context.t('section_roaster')),
+            _darkCard(
               children: [
                 _fieldRow(
                   label: context.t('roaster_name_field').toUpperCase(),
@@ -49,74 +49,23 @@ extension _RoasteryTabSection on _AddLotScreenState {
                         )
                       : null,
                 ),
-                if (_showRoasterSuggestions)
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
-                    constraints: const BoxConstraints(maxHeight: 200),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.05),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: ListView.separated(
-                      shrinkWrap: true,
-                      padding: EdgeInsets.zero,
-                      itemCount: _roasterSuggestions.length,
-                      separatorBuilder: (context, index) => _divider(),
-                      itemBuilder: (context, index) {
-                        final roaster = _roasterSuggestions[index];
-                        return ListTile(
-                          dense: true,
-                          title: Text(
-                            roaster.name,
-                            style: GoogleFonts.outfit(
-                              color: Colors.white,
-                              fontSize: 14,
-                            ),
-                          ),
-                          subtitle: roaster.location != null
-                              ? Text(
-                                  roaster.location!,
-                                  style: GoogleFonts.outfit(
-                                    color: Colors.white38,
-                                    fontSize: 12,
-                                  ),
-                                )
-                              : null,
-                          onTap: () {
-                            updateState(() {
-                              _userRoasterId = roaster.id;
-                              _roasteryController.text = roaster.name;
-                              _roasteryCountryController.text =
-                                  roaster.country ?? '';
-                              _roasteryLocationController.text =
-                                  roaster.location ?? '';
-                              _showRoasterSuggestions = false;
-                              _roasterSuggestions = [];
-                            });
-                            _roasterNameFocusNode.unfocus();
-                          },
-                        );
-                      },
-                    ),
-                  ),
+                _divider(),
+                _fieldRow(
+                  label: context.t('country_label').toUpperCase(),
+                  controller: _roasteryCountryController,
+                  placeholder: context.t('country_label'),
+                  readOnly: _userRoasterId != null,
+                ),
+                _divider(),
+                _fieldRow(
+                  label: context.t('city_label').toUpperCase(),
+                  controller: _roasteryLocationController,
+                  placeholder: context.t('city_label'),
+                  readOnly: _userRoasterId != null,
+                ),
               ],
             ),
-            _divider(),
-            _fieldRow(
-              label: context.t('country_label').toUpperCase(),
-              controller: _roasteryCountryController,
-              placeholder: context.t('country_label'),
-              readOnly: _userRoasterId != null,
-            ),
-            _divider(),
-            _fieldRow(
-              label: context.t('city_label').toUpperCase(),
-              controller: _roasteryLocationController,
-              placeholder: context.t('city_label'),
-              readOnly: _userRoasterId != null,
-            ),
-          ],
-        ),
+            // ... rest of the ListView children will be updated below
 
         _sectionLabel(context.t('section_coffee_lot')),
         _darkCard(
@@ -234,7 +183,86 @@ extension _RoasteryTabSection on _AddLotScreenState {
               suffix: currencySymbol,
             ),
           ],
+            ),
+          ],
         ),
+
+        // Floating Suggestions Overlay
+        if (_showRoasterSuggestions && _roasterSuggestions.isNotEmpty)
+          Positioned(
+            top: 155, // Adjust based on field location
+            left: 32,
+            right: 32,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1A1A1A),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
+                    width: 1,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.5),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                ),
+                constraints: const BoxConstraints(maxHeight: 250),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.zero,
+                    itemCount: _roasterSuggestions.length,
+                    separatorBuilder: (context, index) => Divider(
+                      height: 1,
+                      color: Colors.white.withValues(alpha: 0.05),
+                    ),
+                    itemBuilder: (context, index) {
+                      final roaster = _roasterSuggestions[index];
+                      return ListTile(
+                        dense: true,
+                        title: Text(
+                          roaster.name,
+                          style: GoogleFonts.outfit(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        subtitle: roaster.location != null
+                            ? Text(
+                                roaster.location!,
+                                style: GoogleFonts.outfit(
+                                  color: Colors.white38,
+                                  fontSize: 12,
+                                ),
+                              )
+                            : null,
+                        onTap: () {
+                          updateState(() {
+                            _userRoasterId = roaster.id;
+                            _roasteryController.text = roaster.name;
+                            _roasteryCountryController.text =
+                                roaster.country ?? '';
+                            _roasteryLocationController.text =
+                                roaster.location ?? '';
+                            _showRoasterSuggestions = false;
+                            _roasterSuggestions = [];
+                          });
+                          _roasterNameFocusNode.unfocus();
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }

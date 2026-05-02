@@ -130,8 +130,8 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
       final dy = details.localPosition.dy;
       final size = context.size;
       
-      const handleWidth = 60.0; // Precise width
-      const handleHeight = 60.0; // Precise height zone
+      const handleWidth = 80.0; // Larger width for reliability
+      const handleHeight = 100.0; // Larger height zone
       
       final isOnHandleX = dx < handleWidth || dx > (size?.width ?? 0) - handleWidth;
       final isOnHandleY = (dy - (size?.height ?? 0) / 2).abs() < (handleHeight / 2);
@@ -292,8 +292,8 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
                   final width = constraints.maxWidth;
                   final height = constraints.maxHeight;
                   
-                  const handleWidth = 60.0; 
-                  const handleHeight = 60.0;
+                  const handleWidth = 80.0; 
+                  const handleHeight = 100.0;
                   
                   final horizontalOk = dx < handleWidth || dx > width - handleWidth;
                   final verticalOk = (dy - height / 2).abs() < (handleHeight / 2);

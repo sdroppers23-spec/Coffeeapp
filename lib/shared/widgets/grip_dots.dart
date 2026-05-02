@@ -12,15 +12,15 @@ class GripDots extends StatelessWidget {
         children: List.generate(
           3,
           (_) => Padding(
-            padding: const EdgeInsets.symmetric(vertical: 1),
+            padding: const EdgeInsets.symmetric(vertical: 2),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: List.generate(
                 2,
                 (_) => Container(
-                  width: 3,
-                  height: 3,
-                  margin: const EdgeInsets.symmetric(horizontal: 1),
+                  width: 4,
+                  height: 4,
+                  margin: const EdgeInsets.symmetric(horizontal: 2),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: const Color(0xFFC8A96E).withValues(alpha: 0.95),

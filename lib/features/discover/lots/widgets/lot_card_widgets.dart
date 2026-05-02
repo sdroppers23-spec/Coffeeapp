@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/database/dtos.dart';
 import '../../../../core/l10n/app_localizations.dart';
+import '../../../../shared/widgets/grip_dots.dart';
 import '../../../../shared/widgets/glass_container.dart';
 import '../../../../shared/widgets/pressable_scale.dart';
 import '../../../../shared/widgets/sensory_radar_chart.dart';
@@ -678,14 +679,14 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard>
             left: 0,
             top: 0,
             bottom: 0,
-            child: _GripDots(),
+            child: GripDots(),
           ),
           // Right Grip
           const Positioned(
             right: 0,
             top: 0,
             bottom: 0,
-            child: _GripDots(),
+            child: GripDots(),
           ),
         ],
       );
@@ -1103,37 +1104,3 @@ class _InfoItem extends StatelessWidget {
   }
 }
 
-class _GripDots extends StatelessWidget {
-  const _GripDots();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(
-          3,
-          (_) => Padding(
-            padding: const EdgeInsets.symmetric(vertical: 1),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: List.generate(
-                2,
-                (_) => Container(
-                  width: 3,
-                  height: 3,
-                  margin: const EdgeInsets.symmetric(horizontal: 1),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white.withValues(alpha: 0.15),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}

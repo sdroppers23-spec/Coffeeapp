@@ -191,10 +191,8 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
   }
 
   Widget _buildBackground() {
-    // Threshold to prevent "red line" slivers during tiny accidental drags (e.g. tab transitions)
-    // Threshold to ignore small accidental drags during sensitive list/tab scrolls
-    // High threshold to eliminate "red line" artifacts during rapid scrolling or tab switching
-    if (_dragExtent.abs() < 40.0) return const SizedBox.shrink();
+    // Low threshold to provide immediate visual feedback while avoiding noise during scrolling
+    if (_dragExtent.abs() < 15.0) return const SizedBox.shrink();
     
     final isLeft = _dragExtent > 0;
     final action = isLeft ? widget.leftAction : widget.rightAction;
@@ -258,8 +256,7 @@ class _GlassSwipeWrapperState extends State<GlassSwipeWrapper> with SingleTicker
                 isWithinHandle: (localPosition) {
                   final dx = localPosition.dx;
                   final width = constraints.maxWidth;
-                  // Handle width is 50px from either side
-                  const handleWidth = 50.0;
+                  const handleWidth = 40.0; // Slightly tighter handle for precision
                   return dx < handleWidth || dx > width - handleWidth;
                 },
               ),

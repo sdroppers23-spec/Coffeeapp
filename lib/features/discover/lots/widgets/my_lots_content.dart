@@ -384,7 +384,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
         if (filter.isGrid) {
           return GridView.builder(
             controller: _scrollController,
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 140),
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 180),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 0.68,
@@ -434,7 +434,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent> {
         return ListView.builder(
           controller: _scrollController,
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 140),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 180),
           itemCount: filteredLots.length,
           itemBuilder: (context, index) {
             final lot = filteredLots[index];

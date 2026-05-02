@@ -7,6 +7,7 @@ import '../../shared/widgets/pressable_scale.dart';
 import '../../core/providers/settings_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../shared/widgets/glass_swipe_wrapper.dart';
+import '../../shared/widgets/grip_dots.dart';
 import '../../shared/widgets/glass_container.dart';
 import '../../shared/services/roaster_image_service.dart';
 import '../../core/database/dtos.dart';
@@ -421,7 +422,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                           _buildEmptyState()
                         else
                           ListView.builder(
-                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
+                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 200),
                             itemCount: filtered.length,
                             itemBuilder: (context, index) {
                               final roaster = filtered[index];
@@ -463,7 +464,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
       key: key,
       padding: const EdgeInsets.only(bottom: 16),
       child: GlassSwipeWrapper(
-        isGripMode: true,
+        isGripMode: false,
         isSwipeEnabled: true,
         dismissibleKey: ValueKey('roaster_swipe_${roaster.id}'),
         leftAction: GlassSwipeAction(
@@ -563,57 +564,60 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
         : Icons.store_rounded;
 
     return Center(
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 40),
-            // Decorative Icon with Glow
-            Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
-                border: Border.all(
-                  color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                  width: 2,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
-                    blurRadius: 30,
-                    spreadRadius: 5,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 100),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 40),
+              // Decorative Icon with Glow
+              Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
+                  border: Border.all(
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                    width: 2,
                   ),
-                ],
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
+                      blurRadius: 30,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: Icon(icon, color: const Color(0xFFC8A96E), size: 54),
               ),
-              child: Icon(icon, color: const Color(0xFFC8A96E), size: 54),
-            ),
-            const SizedBox(height: 32),
-            Text(
-              title,
-              style: GoogleFonts.cormorantGaramond(
-                color: const Color(0xFFC8A96E),
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 0.5,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 48),
-              child: Text(
-                description,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.outfit(
-                  color: Colors.white38,
-                  fontSize: 15,
-                  height: 1.5,
+              const SizedBox(height: 32),
+              Text(
+                title,
+                style: GoogleFonts.cormorantGaramond(
+                  color: const Color(0xFFC8A96E),
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
                 ),
               ),
-            ),
-            const SizedBox(height: 60),
-          ],
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 48),
+                child: Text(
+                  description,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.outfit(
+                    color: Colors.white38,
+                    fontSize: 15,
+                    height: 1.5,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 60),
+            ],
+          ),
         ),
       ),
     );
@@ -893,7 +897,6 @@ class _PremiumRoasterCard extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              // Checkbox або Лого
               if (isSelectionMode)
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
@@ -920,7 +923,9 @@ class _PremiumRoasterCard extends StatelessWidget {
                         )
                       : null,
                 )
-              else
+              else ...[
+                const GripDots(),
+                const SizedBox(width: 16),
                 Container(
                   width: 56,
                   height: 56,
@@ -935,7 +940,7 @@ class _PremiumRoasterCard extends StatelessWidget {
                     child: _buildLogo(roaster),
                   ),
                 ),
-              // Info
+              ],
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -993,7 +998,6 @@ class _PremiumRoasterCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              // Кнопка улюблене
               if (!isSelectionMode) ...[
                 GestureDetector(
                   onTap: onAddLot,
@@ -1038,25 +1042,7 @@ class _PremiumRoasterCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Grip Handle for Swiping
-                Padding(
-                  padding: const EdgeInsets.only(left: 4, right: 8),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      3,
-                      (_) => Container(
-                        width: 3,
-                        height: 3,
-                        margin: const EdgeInsets.symmetric(vertical: 1.5),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                const GripDots(),
               ],
             ],
           ),

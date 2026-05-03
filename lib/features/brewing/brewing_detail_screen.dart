@@ -188,7 +188,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
               ),
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+                  padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -210,13 +210,35 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                               letterSpacing: 1.2,
                             ),
                           ),
+                          const Spacer(),
+                          if (widget.recipe.description.length > 100 ||
+                              (widget.recipe.contentHtml?.isNotEmpty ?? false))
+                            GestureDetector(
+                              onTap: () => _showFullDescription(context),
+                              child: Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(
+                                    alpha: 0.05,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: Colors.white.withValues(
+                                      alpha: 0.1,
+                                    ),
+                                  ),
+                                ),
+                                child: const Icon(
+                                  Icons.open_in_full_rounded,
+                                  color: Color(0xFFC8A96E),
+                                  size: 14,
+                                ),
+                              ),
+                            ),
                         ],
                       ),
-
+                      const SizedBox(height: 8),
                       // Description or Content HTML
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
                           if (widget.recipe.contentHtml?.isNotEmpty ?? false)
                             Html(
                               data: CoffeeTextProcessor.process(
@@ -255,47 +277,17 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                                 height: 1.6,
                               ),
                             ),
-                          // Expand Trigger - Now moved up closer to text
-                          if (widget.recipe.description.length > 100 ||
-                              (widget.recipe.contentHtml?.isNotEmpty ?? false))
-                            Transform.translate(
-                              offset: const Offset(0, -60),
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: GestureDetector(
-                                  onTap: () => _showFullDescription(context),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withValues(
-                                        alpha: 0.05,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
-                                      border: Border.all(
-                                        color: Colors.white.withValues(
-                                          alpha: 0.1,
-                                        ),
-                                      ),
-                                    ),
-                                    child: const Icon(
-                                      Icons.open_in_full_rounded,
-                                      color: Color(0xFFC8A96E),
-                                      size: 14,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
                     ],
                   ),
                 ),
               ),
             ],
-            body: CustomRecipeListTab(
-              methodKey: widget.recipe.methodKey,
-              showFab: false,
+            body: Transform.translate(
+              offset: const Offset(0, -25),
+              child: CustomRecipeListTab(
+                methodKey: widget.recipe.methodKey,
+                showFab: false,
+              ),
             ),
           ),
         ),

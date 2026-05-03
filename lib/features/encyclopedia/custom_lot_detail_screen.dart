@@ -243,7 +243,10 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, stack) => Center(child: Text('Error: $err')),
       data: (recipes) {
-        final limitReached = recipes.length >= 10;
+        final filterCount = recipes.where((r) => r.recipeType == 'filter').length;
+        final espressoCount = recipes.where((r) => r.recipeType == 'espresso').length;
+        // Actually, the card-specific limit is 10. Let's stick to 10 for each.
+        final overallLimitReached = filterCount >= 10 && espressoCount >= 10;
 
         return Column(
           children: [
@@ -268,7 +271,7 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
               padding: const EdgeInsets.all(24.0),
               child: Column(
                 children: [
-                  if (limitReached)
+                  if (overallLimitReached)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 12),
                       child: Text(
@@ -284,7 +287,7 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
                     width: double.infinity,
                     height: 56,
                     child: PressableScale(
-                      onTap: limitReached
+                      onTap: overallLimitReached
                           ? null
                           : () async {
                               showModalBottomSheet(
@@ -292,6 +295,8 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
                                 backgroundColor: Colors.transparent,
                                 builder: (ctx) => RecipeTypeBottomSheet(
                                   title: ref.t('choose_brewing_type'),
+                                  filterCount: filterCount,
+                                  espressoCount: espressoCount,
                                   onTypeSelected: (type) async {
                                     Navigator.pop(ctx);
                                     final result = await showDialog<bool>(
@@ -317,7 +322,7 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
                             },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: limitReached
+                          color: overallLimitReached
                               ? Colors.white10
                               : const Color(0xFFC8A96E),
                           borderRadius: BorderRadius.circular(16),
@@ -326,7 +331,7 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
                           child: Text(
                             ref.t('add_recipe').toUpperCase(),
                             style: GoogleFonts.outfit(
-                              color: limitReached
+                              color: overallLimitReached
                                   ? Colors.white24
                                   : Colors.black,
                               fontWeight: FontWeight.bold,

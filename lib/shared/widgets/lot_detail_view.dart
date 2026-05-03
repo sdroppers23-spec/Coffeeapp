@@ -19,6 +19,7 @@ import '../../shared/models/processing_methods_repository.dart';
 import '../../features/navigation/navigation_providers.dart';
 import '../services/toast_service.dart';
 import 'add_recipe_dialog.dart';
+import 'recipe_type_bottom_sheet.dart';
 
 class LotDetailView extends ConsumerStatefulWidget {
   final CoffeeLotDto? lot;
@@ -308,153 +309,25 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (ctx) => GlassContainer(
-        padding: const EdgeInsets.all(24),
-        borderRadius: 32,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.white24,
-                borderRadius: BorderRadius.circular(2),
-              ),
+      builder: (ctx) => RecipeTypeBottomSheet(
+        title: ref.t('select_recipe_type'),
+        filterCount: filterCount,
+        espressoCount: espressoCount,
+        onTypeSelected: (type) async {
+          Navigator.pop(ctx);
+          await showDialog(
+            context: context,
+            builder: (context) => AddRecipeDialog(
+              lotId: lotId,
+              initialMethod: type == 'espresso' ? 'espresso' : 'v60',
             ),
-            const SizedBox(height: 24),
-            Text(
-              ref.t('select_recipe_type'),
-              style: GoogleFonts.outfit(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFFC8A96E),
-                letterSpacing: 2,
-              ),
-            ),
-            const SizedBox(height: 24),
-            Row(
-              children: [
-                Expanded(
-                  child: _RecipeTypeCard(
-                    title: ref.t('filter'),
-                    icon: Icons.coffee_rounded,
-                    count: filterCount,
-                    isLimitReached: filterCount >= 10,
-                    onTap: () async {
-                      Navigator.pop(ctx);
-                      await showDialog(
-                        context: context,
-                        builder: (context) =>
-                            AddRecipeDialog(lotId: lotId, initialMethod: 'v60'),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _RecipeTypeCard(
-                    title: ref.t('espresso'),
-                    icon: Icons.coffee_maker_rounded,
-                    count: espressoCount,
-                    isLimitReached: espressoCount >= 10,
-                    onTap: () async {
-                      Navigator.pop(ctx);
-                      await showDialog(
-                        context: context,
-                        builder: (context) => AddRecipeDialog(
-                          lotId: lotId,
-                          initialMethod: 'espresso',
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 32),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 }
 
-class _RecipeTypeCard extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final int count;
-  final bool isLimitReached;
-  final VoidCallback onTap;
-
-  const _RecipeTypeCard({
-    required this.title,
-    required this.icon,
-    required this.count,
-    required this.isLimitReached,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return GestureDetector(
-      onTap: isLimitReached ? null : onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 24),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.05),
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: isLimitReached
-                ? Colors.red.withValues(alpha: 0.3)
-                : theme.colorScheme.primary.withValues(alpha: 0.2),
-          ),
-        ),
-        child: Column(
-          children: [
-            Icon(
-              icon,
-              color: isLimitReached
-                  ? Colors.red.withValues(alpha: 0.5)
-                  : theme.colorScheme.primary,
-              size: 32,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              title,
-              style: GoogleFonts.outfit(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: isLimitReached ? Colors.white24 : Colors.white,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              '$count / 10',
-              style: GoogleFonts.outfit(
-                fontSize: 11,
-                color: isLimitReached ? Colors.redAccent : Colors.white38,
-              ),
-            ),
-            if (isLimitReached) ...[
-              const SizedBox(height: 8),
-              Text(
-                context.t('limit'),
-                style: GoogleFonts.outfit(
-                  fontSize: 10,
-                  color: Colors.redAccent,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class _DetailHeader extends StatelessWidget {
   final String coffeeName;

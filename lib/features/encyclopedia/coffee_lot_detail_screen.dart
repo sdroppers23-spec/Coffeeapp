@@ -18,10 +18,12 @@ import '../../shared/widgets/glass_container.dart';
 import '../../shared/utils/sensory_utils.dart';
 import '../navigation/navigation_providers.dart';
 import '../encyclopedia/encyclopedia_providers.dart';
-import '../brewing/custom_recipe_timer_screen.dart';
 import '../../shared/services/toast_service.dart';
 import '../../core/providers/preferences_provider.dart';
+import '../../core/providers/settings_provider.dart';
 import '../../shared/widgets/sync_indicator.dart';
+import '../../shared/widgets/modern_undo_timer.dart';
+import '../brewing/widgets/custom_recipe_card.dart';
 
 class CoffeeLotDetailScreen extends ConsumerStatefulWidget {
   final LocalizedBeanDto entry;
@@ -696,104 +698,251 @@ class _ProfileTab extends ConsumerWidget {
   }
 }
 
-class _RecipesTab extends ConsumerWidget {
+class _RecipesTab extends ConsumerStatefulWidget {
   final LocalizedBeanDto entry;
   const _RecipesTab({required this.entry});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_RecipesTab> createState() => _RecipesTabState();
+}
+
+class _RecipesTabState extends ConsumerState<_RecipesTab> {
+  final Set<String> _selectedIds = {};
+  bool _isSelectionMode = false;
+  final Set<String> _pendingDeleteIds = {};
+
+  void _toggleSelection(String id) {
+    setState(() {
+      if (_selectedIds.contains(id)) {
+        _selectedIds.remove(id);
+        if (_selectedIds.isEmpty) {
+          _isSelectionMode = false;
+          ref.read(navBarVisibleProvider.notifier).show();
+        }
+      } else {
+        if (!_isSelectionMode) {
+          ref.read(navBarVisibleProvider.notifier).hide();
+        }
+        _selectedIds.add(id);
+        _isSelectionMode = true;
+      }
+    });
+    ref.read(settingsProvider.notifier).triggerSelectionVibrate();
+  }
+
+  void _selectAll(List<CustomRecipeDto> recipes) {
+    setState(() {
+      if (_selectedIds.length == recipes.length) {
+        _selectedIds.clear();
+        _isSelectionMode = false;
+        ref.read(navBarVisibleProvider.notifier).show();
+      } else {
+        if (!_isSelectionMode) {
+          ref.read(navBarVisibleProvider.notifier).hide();
+        }
+        _selectedIds.addAll(recipes.map((r) => r.id));
+        _isSelectionMode = true;
+      }
+    });
+    ref.read(settingsProvider.notifier).triggerSelectionVibrate();
+  }
+
+  void _showModernUndo(List<CustomRecipeDto> recipes) {
+    final ids = recipes.map((r) => r.id).toList();
+    setState(() {
+      _pendingDeleteIds.addAll(ids);
+      _selectedIds.clear();
+      _isSelectionMode = false;
+    });
+    ref.read(navBarVisibleProvider.notifier).show();
+
+    final db = ref.read(databaseProvider);
+    final lotId = widget.entry.id.toString();
+
+    ModernUndoTimer.show(
+      context,
+      message: recipes.length == 1
+          ? context.t('toast_recipe_deleted')
+          : '${recipes.length} ${context.t('tab_recipes').toLowerCase()} ${context.t('toast_deleted')}',
+      onUndo: () {
+        setState(() {
+          _pendingDeleteIds.removeAll(ids);
+        });
+      },
+      onDismiss: () async {
+        for (final id in ids) {
+          await db.deleteEncyclopediaRecipe(id);
+        }
+        if (mounted) {
+          setState(() {
+            _pendingDeleteIds.removeAll(ids);
+          });
+          ref.invalidate(encyclopediaRecipesForLotProvider(lotId));
+          unawaited(ref.read(syncStatusProvider.notifier).syncEverything());
+        }
+      },
+    );
+  }
+
+  Future<void> _showAddRecipeFlow() async {
+    final db = ref.read(databaseProvider);
+    final lotId = widget.entry.id.toString();
+    final recipes = await db.getCustomRecipesForLot(lotId);
+
+    final espressoCount =
+        recipes.where((r) => r.recipeType == 'espresso').length;
+    final filterCount = recipes.where((r) => r.recipeType == 'filter').length;
+
+    if (!mounted) return;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => RecipeTypeBottomSheet(
+        title: ref.t('choose_brewing_type'),
+        filterCount: filterCount,
+        espressoCount: espressoCount,
+        onTypeSelected: (type) async {
+          final count = type == 'espresso' ? espressoCount : filterCount;
+          if (count >= 10) {
+            Navigator.pop(ctx);
+            ToastService.showError(
+              context,
+              '${ref.t('limit_reached')}: 10',
+            );
+            return;
+          }
+
+          Navigator.pop(ctx);
+          final result = await showDialog<bool>(
+            context: context,
+            builder: (context) => AddRecipeDialog(
+              lotId: lotId,
+              recipeSegment: RecipeSegment.encyclopedia,
+              initialMethod: type == 'espresso' ? 'espresso' : 'v60',
+            ),
+          );
+          if (result == true) {
+            ref.invalidate(encyclopediaRecipesForLotProvider(lotId));
+          }
+        },
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final recommendedAsync = ref.watch(
-      recommendedRecipesForLotProvider(entry.id),
+      recommendedRecipesForLotProvider(widget.entry.id),
     );
     final customRecipesAsync = ref.watch(
-      encyclopediaRecipesForLotProvider(entry.id.toString()),
+      encyclopediaRecipesForLotProvider(widget.entry.id.toString()),
     );
     final navHeight = ref.watch(navBarHeightProvider);
 
-    return ListView(
-      padding: EdgeInsets.fromLTRB(20, 20, 20, navHeight + 40),
+    return Stack(
       children: [
-        // Recommended Recipes Section
-        recommendedAsync.when(
-          data: (recipes) {
-            if (recipes.isEmpty) return const SizedBox.shrink();
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _SectionHeader(ref.t('recommended_recipes')),
-                const SizedBox(height: 12),
-                ...recipes.map((r) => _RecommendedCard(recipe: r)),
-                const SizedBox(height: 24),
-              ],
-            );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Text('Error: $e'),
-        ),
-
-        // Custom User Recipes Section
         customRecipesAsync.when(
-          data: (recipes) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          data: (allRecipes) {
+            final recipes = allRecipes
+                .where((r) => !_pendingDeleteIds.contains(r.id))
+                .toList();
+
+            return ListView(
+              padding: EdgeInsets.fromLTRB(20, 20, 20, navHeight + 100),
               children: [
+                // Recommended Recipes Section
+                recommendedAsync.when(
+                  data: (recRecipes) {
+                    if (recRecipes.isEmpty || _isSelectionMode) {
+                      return const SizedBox.shrink();
+                    }
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _SectionHeader(ref.t('recommended_recipes')),
+                        const SizedBox(height: 12),
+                        ...recRecipes.map((r) => _RecommendedCard(recipe: r)),
+                        const SizedBox(height: 24),
+                      ],
+                    );
+                  },
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (e, _) => Text('Error: $e'),
+                ),
+
+                // Custom User Recipes Section
                 if (recipes.isNotEmpty) ...[
-                  _SectionHeader(ref.t('my_recipes')),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _SectionHeader(ref.t('my_recipes')),
+                      if (_isSelectionMode)
+                        TextButton(
+                          onPressed: () => _selectAll(recipes),
+                          child: Text(
+                            _selectedIds.length == recipes.length
+                                ? ref.t('deselect_all')
+                                : ref.t('select_all'),
+                            style: GoogleFonts.outfit(
+                              fontSize: 12,
+                              color: const Color(0xFFC8A96E),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                   const SizedBox(height: 12),
-                  ...recipes.map((r) => _CustomRecipeCardWrapper(recipe: r)),
+                  ...recipes.map((r) {
+                    final isSelected = _selectedIds.contains(r.id);
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: CustomRecipeCard(
+                        recipe: r,
+                        segment: RecipeSegment.encyclopedia,
+                        methodKey: r.methodKey,
+                        ref: ref,
+                        isSelectionMode: _isSelectionMode,
+                        isSelected: isSelected,
+                        onTap: () {
+                          if (_isSelectionMode) {
+                            _toggleSelection(r.id);
+                          }
+                        },
+                        onLongPress: () => _toggleSelection(r.id),
+                      ),
+                    );
+                  }),
                   const SizedBox(height: 24),
                 ],
 
-                // Add Recipe Button
-                SizedBox(
-                  width: double.infinity,
-                  height: 56,
-                  child: PressableScale(
-                    onTap: () async {
-                      showModalBottomSheet(
-                        context: context,
-                        backgroundColor: Colors.transparent,
-                        builder: (ctx) => RecipeTypeBottomSheet(
-                          title: ref.t('choose_brewing_type'),
-                          onTypeSelected: (type) async {
-                            Navigator.pop(ctx);
-                            final result = await showDialog<bool>(
-                              context: context,
-                              builder: (context) => AddRecipeDialog(
-                                lotId: entry.id.toString(),
-                                recipeSegment: RecipeSegment.encyclopedia,
-                                initialMethod: type,
-                              ),
-                            );
-                            if (result == true) {
-                              ref.invalidate(
-                                encyclopediaRecipesForLotProvider(
-                                  entry.id.toString(),
-                                ),
-                              );
-                            }
-                          },
+                // Add Recipe Button (only if not in selection mode)
+                if (!_isSelectionMode)
+                  SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: PressableScale(
+                      onTap: _showAddRecipeFlow,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFC8A96E),
+                          borderRadius: BorderRadius.circular(16),
                         ),
-                      );
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFC8A96E),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Center(
-                        child: Text(
-                          ref.t('add_recipe').toUpperCase(),
-                          style: GoogleFonts.outfit(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 2,
+                        child: Center(
+                          child: Text(
+                            ref.t('add_recipe').toUpperCase(),
+                            style: GoogleFonts.outfit(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 2,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
+
                 if (recipes.isEmpty &&
                     (recommendedAsync.value?.isEmpty ?? true))
                   Padding(
@@ -811,10 +960,75 @@ class _RecipesTab extends ConsumerWidget {
               ],
             );
           },
-          loading: () => const SizedBox.shrink(),
+          loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, _) => Text('Error: $e'),
         ),
+
+        // Floating Selection Bar
+        if (_isSelectionMode)
+          Positioned(
+            bottom: navHeight + 20,
+            left: 20,
+            right: 20,
+            child: _buildSelectionBar(),
+          ),
       ],
+    );
+  }
+
+  Widget _buildSelectionBar() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A1A1A),
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.5),
+            blurRadius: 20,
+            spreadRadius: 5,
+          ),
+        ],
+        border: Border.all(color: Colors.white10),
+      ),
+      child: Row(
+        children: [
+          Text(
+            '${_selectedIds.length} ${ref.t('selected')}',
+            style: GoogleFonts.outfit(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const Spacer(),
+          IconButton(
+            icon: const Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
+            onPressed: () {
+              final customRecipesAsync = ref.read(
+                encyclopediaRecipesForLotProvider(widget.entry.id.toString()),
+              );
+              customRecipesAsync.whenData((allRecipes) {
+                final toDelete = allRecipes
+                    .where((r) => _selectedIds.contains(r.id))
+                    .toList();
+                if (toDelete.isNotEmpty) {
+                  _showModernUndo(toDelete);
+                }
+              });
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.close_rounded, color: Colors.white70),
+            onPressed: () {
+              setState(() {
+                _selectedIds.clear();
+                _isSelectionMode = false;
+              });
+              ref.read(navBarVisibleProvider.notifier).show();
+            },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -837,184 +1051,7 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
-class _CustomRecipeCardWrapper extends ConsumerWidget {
-  final CustomRecipeDto recipe;
-  const _CustomRecipeCardWrapper({required this.recipe});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final isUk = LocaleService.currentLocale == 'uk';
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: GlassContainer(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  recipe.methodKey.toUpperCase(),
-                  style: GoogleFonts.outfit(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.primary,
-                    letterSpacing: 1,
-                  ),
-                ),
-                Row(
-                  children: List.generate(
-                    5,
-                    (i) => Icon(
-                      i < recipe.rating ? Icons.star : Icons.star_border,
-                      color: Colors.amber,
-                      size: 14,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                _Stat(isUk ? 'КАВА' : 'COFFEE', '${recipe.coffeeGrams}g'),
-                const SizedBox(width: 24),
-                _Stat(
-                  recipe.recipeType == 'espresso'
-                      ? (isUk ? 'ВИХІД' : 'YIELD')
-                      : (isUk ? 'ВОДА' : 'WATER'),
-                  '${recipe.totalWaterMl}ml',
-                ),
-                const SizedBox(width: 24),
-                _Stat('TEMP', _formatTemp(ref, recipe.brewTempC)),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(
-                    Icons.play_arrow_rounded,
-                    color: Color(0xFFC8A96E),
-                  ),
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => CustomRecipeTimerScreen(recipe: recipe),
-                    ),
-                  ),
-                ),
-                PopupMenuButton<String>(
-                  icon: const Icon(
-                    Icons.more_vert_rounded,
-                    color: Colors.white54,
-                    size: 20,
-                  ),
-                  color: const Color(0xFF1E1E1E),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  onSelected: (val) async {
-                    if (val == 'delete') {
-                      final confirmed = await showDialog<bool>(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          backgroundColor: const Color(0xFF1E1E1E),
-                          title: Text(
-                            isUk ? 'Видалити рецепт?' : 'Delete Recipe?',
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                          content: Text(
-                            isUk
-                                ? 'Цю дію неможливо скасувати.'
-                                : 'This action cannot be undone.',
-                            style: const TextStyle(color: Colors.white70),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, false),
-                              child: Text(isUk ? 'СКАСУВАТИ' : 'CANCEL'),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, true),
-                              child: Text(
-                                isUk ? 'ВИДАЛИТИ' : 'DELETE',
-                                style: const TextStyle(color: Colors.redAccent),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                      if (confirmed == true) {
-                        await ref
-                            .read(databaseProvider)
-                            .deleteEncyclopediaRecipe(recipe.id);
-                        unawaited(
-                          ref
-                              .read(syncStatusProvider.notifier)
-                              .syncEverything(),
-                        );
-                        ref.invalidate(
-                          encyclopediaRecipesForLotProvider(recipe.lotId ?? ''),
-                        );
-                      }
-                    } else if (val == 'edit') {
-                      await showDialog(
-                        context: context,
-                        builder: (context) => AddRecipeDialog(
-                          lotId: recipe.lotId ?? '',
-                          existingRecipe: recipe,
-                          recipeSegment: RecipeSegment.encyclopedia,
-                        ),
-                      );
-                      ref.invalidate(
-                        encyclopediaRecipesForLotProvider(recipe.lotId ?? ''),
-                      );
-                    }
-                  },
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      value: 'edit',
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.edit_rounded,
-                            size: 18,
-                            color: Colors.white70,
-                          ),
-                          const SizedBox(width: 12),
-                          Text(
-                            isUk ? 'Редагувати' : 'Edit',
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: 'delete',
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.delete_outline_rounded,
-                            size: 18,
-                            color: Colors.redAccent,
-                          ),
-                          const SizedBox(width: 12),
-                          Text(
-                            isUk ? 'Видалити' : 'Delete',
-                            style: const TextStyle(color: Colors.redAccent),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+// _CustomRecipeCardWrapper removed in favor of unified CustomRecipeCard
 
 final recommendedRecipesForLotProvider =
     FutureProvider.family<List<RecommendedRecipeDto>, int>((ref, lotId) async {
@@ -1131,14 +1168,7 @@ class _RecommendedCard extends ConsumerWidget {
   }
 }
 
-String _formatTemp(WidgetRef ref, double celsius) {
-  final pref = ref.watch(preferencesProvider);
-  if (pref.tempUnit == TempUnit.fahrenheit) {
-    final f = (celsius * 9 / 5) + 32;
-    return '${f.toStringAsFixed(0)}°F';
-  }
-  return '${celsius.toStringAsFixed(0)}°C';
-}
+// _formatTemp removed as it's no longer used
 
 class _Stat extends StatelessWidget {
   final String label;

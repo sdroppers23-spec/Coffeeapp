@@ -39,15 +39,33 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    _tabController.addListener(() {
-      if (mounted) {
-        setState(() {}); // Rebuild for FAB visibility
+    _tabController.addListener(_handleTabChange);
+    
+    // Initial check
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && _tabController.index == 1) {
+        ref.read(navBarVisibleProvider.notifier).hide();
       }
     });
   }
 
+  void _handleTabChange() {
+    if (!mounted) return;
+    if (_tabController.index == 1) {
+      ref.read(navBarVisibleProvider.notifier).hide();
+    } else {
+      ref.read(navBarVisibleProvider.notifier).show();
+    }
+    setState(() {}); // Rebuild for FAB visibility
+  }
+
   @override
   void dispose() {
+    // Force show nav bar when leaving the screen
+    Future.microtask(() {
+      ref.read(navBarVisibleProvider.notifier).show();
+    });
+    _tabController.removeListener(_handleTabChange);
     _tabController.dispose();
     super.dispose();
   }
@@ -134,9 +152,24 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
               )
             : const SizedBox.shrink(),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: const [_BrewingMethodsContent(), GlobalCustomRecipeList()],
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/Alternative wall.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          Positioned.fill(
+            child: Container(
+              color: Colors.black.withValues(alpha: 0.6),
+            ),
+          ),
+          TabBarView(
+            controller: _tabController,
+            children: const [_BrewingMethodsContent(), GlobalCustomRecipeList()],
+          ),
+        ],
       ),
     );
   }

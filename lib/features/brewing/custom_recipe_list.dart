@@ -402,6 +402,7 @@ class _GlobalCustomRecipeListState
                 showComparison: false,
                 showViewModeToggle: false,
                 searchHint: ref.t('search_recipes'),
+                isMatte: true,
               ),
               Expanded(
                 child: Center(
@@ -431,7 +432,7 @@ class _GlobalCustomRecipeListState
         return Column(
           children: [
             // Spacer for BrewingMainScreen's PremiumAppBar + TabBar
-            const SizedBox(height: 170),
+            const SizedBox(height: 140),
 
             // Internal Header: Search + Action Bar
                   DiscoveryActionBar(
@@ -442,6 +443,7 @@ class _GlobalCustomRecipeListState
                     onSelectAll: () => _selectAll(filtered),
                     onCompareTap: () {},
                     searchHint: ref.t('search_recipes'),
+                    isMatte: true,
                   ),
 
             // Main List Content

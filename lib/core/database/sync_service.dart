@@ -58,6 +58,7 @@ class SyncService {
         'coffee_lots',
         'fermentation_logs',
         'user_roasters',
+        'localized_brands',
       };
 
       final updatedTables = updates.map((u) => u.table).toSet();

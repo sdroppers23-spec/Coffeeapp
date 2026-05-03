@@ -375,7 +375,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       _coffeeNameController.text.trim().isNotEmpty &&
       _originCountryController.text.trim().isNotEmpty;
 
-
   void _showRoasterPicker() {
     showModalBottomSheet(
       context: context,
@@ -390,9 +389,10 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               _roasteryCountryController.text = roaster.country ?? '';
               final city = roaster.location ?? '';
               final country = roaster.country ?? '';
-              _roasteryLocationController.text = [city, country]
-                  .where((s) => s.isNotEmpty)
-                  .join(', ');
+              _roasteryLocationController.text = [
+                city,
+                country,
+              ].where((s) => s.isNotEmpty).join(', ');
             });
           } else {
             // "Clear" selection
@@ -493,9 +493,11 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       if (effectiveRoasterId == null &&
           _roasteryController.text.trim().isNotEmpty) {
         final roasterName = _roasteryController.text.trim();
-        final existing = ref.read(userRoastersProvider).firstWhereOrNull(
-          (r) => r.name.toLowerCase() == roasterName.toLowerCase(),
-        );
+        final existing = ref
+            .read(userRoastersProvider)
+            .firstWhereOrNull(
+              (r) => r.name.toLowerCase() == roasterName.toLowerCase(),
+            );
 
         if (existing != null) {
           effectiveRoasterId = existing.id;
@@ -601,7 +603,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 decoration: BoxDecoration(
                   color: const Color(0xFF1A1A1A),
                   borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.1),
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.5),
@@ -622,7 +626,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                           Container(
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                              color: const Color(
+                                0xFFC8A96E,
+                              ).withValues(alpha: 0.1),
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(
@@ -654,9 +660,12 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                             children: [
                               Expanded(
                                 child: TextButton(
-                                  onPressed: () => Navigator.pop(context, false),
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
                                   style: TextButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -678,7 +687,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                                     backgroundColor: const Color(0xFFC8A96E),
                                     foregroundColor: Colors.black,
                                     elevation: 0,
-                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -705,10 +716,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             return FadeTransition(
               opacity: anim1,
               child: ScaleTransition(
-                scale: Tween<double>(begin: 0.9, end: 1.0).animate(CurvedAnimation(
-                  parent: anim1,
-                  curve: Curves.easeOutCubic,
-                )),
+                scale: Tween<double>(begin: 0.9, end: 1.0).animate(
+                  CurvedAnimation(parent: anim1, curve: Curves.easeOutCubic),
+                ),
                 child: child,
               ),
             );
@@ -736,21 +746,10 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         body: Stack(
           children: [
             Positioned.fill(
-              child: Image.asset(
-                'Img/images/Whall1.png',
-                fit: BoxFit.cover,
-              ),
+              child: Image.asset('Img/images/Whall1.png', fit: BoxFit.cover),
             ),
             Positioned.fill(
-              child: Container(
-                color: Colors.black.withValues(alpha: 0.5),
-              ),
-            ),
-            Positioned.fill(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: Container(color: Colors.transparent),
-              ),
+              child: Container(color: Colors.black.withValues(alpha: 0.4)),
             ),
             SafeArea(
               child: GestureDetector(
@@ -759,24 +758,24 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 },
                 child: Column(
                   children: [
-                _buildHeader(),
-                _buildTabBar(),
-                Expanded(
-                  child: TabBarView(
-                    controller: _tabController,
-                    children: [
-                      _buildRoasteryTab(),
-                      _buildCoffeeTab(),
-                      _buildSensoryTab(),
-                    ],
-                  ),
+                    _buildHeader(),
+                    _buildTabBar(),
+                    Expanded(
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          _buildRoasteryTab(),
+                          _buildCoffeeTab(),
+                          _buildSensoryTab(),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
-      ],
-    ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: _buildSaveFab(),
       ),
@@ -891,9 +890,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           fontSize: 11,
         ),
         tabs: [
-          Tab(text: context.t('roasters').toUpperCase()),
-          Tab(text: context.t('coffee').toUpperCase()),
-          Tab(text: context.t('flavor').toUpperCase()),
+          Tab(text: context.t('roasters')),
+          Tab(text: context.t('coffee')),
+          Tab(text: context.t('flavor')),
         ],
       ),
     );
@@ -901,157 +900,198 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
 
   // ─── Save FAB ─────────────────────────────────────────────────────
   Widget _buildSaveFab() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: PressableScale(
-        onTap: () async {
-          if (!_canSave) return;
-          final bool? shouldSave = await showGeneralDialog<bool>(
-            context: context,
-            barrierDismissible: true,
-            barrierLabel: '',
-            barrierColor: Colors.black.withValues(alpha: 0.8),
-            transitionDuration: const Duration(milliseconds: 300),
-            pageBuilder: (context, anim1, anim2) => Center(
-              child: Material(
-                color: Colors.transparent,
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 40),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1A1A1A),
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.5),
-                        blurRadius: 40,
-                        offset: const Offset(0, 20),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(24),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                      child: Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.save_rounded,
-                                color: Color(0xFFC8A96E),
-                                size: 32,
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Text(
-                              context.t('save_lot_confirmation_title'),
-                              style: GoogleFonts.outfit(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              context.t('save_lot_confirmation_desc'),
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.outfit(
-                                color: Colors.white60,
-                                fontSize: 15,
-                              ),
-                            ),
-                            const SizedBox(height: 32),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: TextButton(
-                                    onPressed: () => Navigator.pop(context, false),
-                                    style: TextButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(vertical: 16),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                        side: BorderSide(
-                                          color: Colors.white.withValues(alpha: 0.1),
-                                        ),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      context.t('cancel'),
-                                      style: GoogleFonts.outfit(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () => Navigator.pop(context, true),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFFC8A96E),
-                                      foregroundColor: Colors.black,
-                                      padding: const EdgeInsets.symmetric(vertical: 16),
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      context.t('save'),
-                                      style: GoogleFonts.outfit(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 300),
+      opacity: _canSave ? 1.0 : 0.6,
+      child: Container(
+        width: 200,
+        height: 54,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(27),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.3),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        child: GlassContainer(
+          borderRadius: 27,
+          blur: 15,
+          opacity: 0.15,
+          color: Colors.white,
+          borderColor: _canSave
+              ? const Color(0xFFC8A96E).withValues(alpha: 0.5)
+              : Colors.white.withValues(alpha: 0.1),
+          child: Material(
+            color: Colors.transparent,
+            child: PressableScale(
+              onTap: () async {
+                if (!_canSave) return;
+                final bool? shouldSave = await showGeneralDialog<bool>(
+                  context: context,
+                  barrierDismissible: true,
+                  barrierLabel: '',
+                  barrierColor: Colors.black.withValues(alpha: 0.8),
+                  transitionDuration: const Duration(milliseconds: 300),
+                  pageBuilder: (context, anim1, anim2) => Center(
+                    child: Material(
+                      color: Colors.transparent,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 40),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF1A1A1A),
+                          borderRadius: BorderRadius.circular(24),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.1),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.5),
+                              blurRadius: 40,
+                              offset: const Offset(0, 20),
                             ),
                           ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(24),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                            child: Padding(
+                              padding: const EdgeInsets.all(24),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(16),
+                                    decoration: BoxDecoration(
+                                      color: const Color(
+                                        0xFFC8A96E,
+                                      ).withValues(alpha: 0.1),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.save_rounded,
+                                      color: Color(0xFFC8A96E),
+                                      size: 32,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Text(
+                                    context.t('save_lot_confirmation_title'),
+                                    style: GoogleFonts.outfit(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Text(
+                                    context.t('save_lot_confirmation_desc'),
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.outfit(
+                                      color: Colors.white60,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 32),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, false),
+                                          style: TextButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 16,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                              side: BorderSide(
+                                                color: Colors.white.withValues(
+                                                  alpha: 0.1,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            context.t('cancel'),
+                                            style: GoogleFonts.outfit(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: ElevatedButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, true),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: const Color(
+                                              0xFFC8A96E,
+                                            ),
+                                            foregroundColor: Colors.black,
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 16,
+                                            ),
+                                            elevation: 0,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            context.t('save'),
+                                            style: GoogleFonts.outfit(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ),
-            ),
-          );
+                  transitionBuilder: (context, anim1, anim2, child) {
+                    return FadeTransition(
+                      opacity: anim1,
+                      child: ScaleTransition(
+                        scale: CurvedAnimation(
+                          parent: anim1,
+                          curve: Curves.easeOutBack,
+                        ).drive(Tween<double>(begin: 0.8, end: 1.0)),
+                        child: child,
+                      ),
+                    );
+                  },
+                );
 
-          if (shouldSave == true) {
-            _saveLot();
-          }
-        },
-        child: Container(
-          height: 54,
-          decoration: BoxDecoration(
-            color: _canSave
-                ? Colors.white.withValues(alpha: 0.15)
-                : Colors.white.withValues(alpha: 0.08),
-            borderRadius: BorderRadius.circular(27),
-            border: Border.all(
-              color: _canSave
-                  ? const Color(0xFFC8A96E).withValues(alpha: 0.4)
-                  : const Color(0xFFC8A96E).withValues(alpha: 0.1),
-            ),
-          ),
-          child: Center(
-            child: Text(
-              context.t('save_lot'),
-              style: GoogleFonts.outfit(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: _canSave
-                    ? const Color(0xFFC8A96E)
-                    : const Color(0xFFC8A96E).withValues(alpha: 0.3),
-                letterSpacing: 1.2,
+                if (shouldSave == true) {
+                  _saveLot();
+                }
+              },
+              child: Center(
+                child: Text(
+                  context.t('save_lot'),
+                  style: GoogleFonts.outfit(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: _canSave
+                        ? const Color(0xFFC8A96E)
+                        : const Color(0xFFC8A96E).withValues(alpha: 0.3),
+                    letterSpacing: 1.2,
+                  ),
+                ),
               ),
             ),
           ),
@@ -1086,15 +1126,15 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   );
 
   Widget _darkCard({required List<Widget> children}) => GlassContainer(
-        margin: const EdgeInsets.only(bottom: 16),
-        borderRadius: 24,
-        opacity: 0.08,
-        enableBlur: false,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: children,
-        ),
-      );
+    margin: const EdgeInsets.only(bottom: 16),
+    borderRadius: 27,
+    opacity: 0.08,
+    enableBlur: false,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
+    ),
+  );
 
   Widget _divider() => Divider(
     height: 1,
@@ -1133,14 +1173,8 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             ),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.05),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.08),
-              ),
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+            decoration: const BoxDecoration(color: Colors.transparent),
             child: Row(
               children: [
                 Expanded(
@@ -1160,7 +1194,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                                 type == _FieldType.scaScore ||
                                 type == _FieldType.weight ||
                                 type == _FieldType.altitude
-                            ? const TextInputType.numberWithOptions(decimal: true)
+                            ? const TextInputType.numberWithOptions(
+                                decimal: true,
+                              )
                             : TextInputType.text),
                     enableInteractiveSelection:
                         !readOnly &&
@@ -1281,9 +1317,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.08),
-                ),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1344,9 +1378,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.08),
-                ),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
               ),
               child: Row(
                 children: [
@@ -1358,7 +1390,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                             ? Colors.white
                             : Colors.white.withValues(alpha: 0.2),
                         fontSize: 14,
-                        fontWeight: hasValue ? FontWeight.w500 : FontWeight.w400,
+                        fontWeight: hasValue
+                            ? FontWeight.w500
+                            : FontWeight.w400,
                       ),
                     ),
                   ),

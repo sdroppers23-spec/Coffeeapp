@@ -22,6 +22,7 @@ class GlassContainer extends ConsumerWidget {
   final bool enableShadow;
   final bool enableRepaintBoundary;
   final bool useOuterClip;
+  final double borderWidth;
 
   const GlassContainer({
     super.key,
@@ -43,6 +44,7 @@ class GlassContainer extends ConsumerWidget {
     this.enableShadow = true,
     this.enableRepaintBoundary = false,
     this.useOuterClip = true,
+    this.borderWidth = 1.0,
     // debugKey removed as it is no longer used
   });
 
@@ -97,7 +99,10 @@ class GlassContainer extends ConsumerWidget {
                   ? effectiveTintColor.withValues(alpha: effectiveOpacity)
                   : null,
               borderRadius: BorderRadius.circular(effectiveBorderRadius),
-              border: Border.all(color: effectiveBorderColor, width: 1.0),
+              border: Border.all(
+                color: effectiveBorderColor,
+                width: borderWidth,
+              ),
               image: imageUrl != null
                   ? DecorationImage(
                       image: imageUrl!.startsWith('http')

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../discovery_filter_provider.dart';
 import 'filter_sort_sheet.dart';
 import '../../../shared/widgets/pressable_scale.dart';
+import '../../../shared/widgets/glass_container.dart';
 import '../../../core/l10n/app_localizations.dart';
 import '../../navigation/navigation_providers.dart';
 import '../../../core/providers/settings_provider.dart';
@@ -23,6 +24,7 @@ class DiscoveryActionBar extends ConsumerWidget {
   final bool showViewModeToggle;
   final bool showSwipeModeToggle;
   final String? searchHint;
+  final bool isMatte;
 
   const DiscoveryActionBar({
     super.key,
@@ -38,6 +40,7 @@ class DiscoveryActionBar extends ConsumerWidget {
     this.showViewModeToggle = true,
     this.showSwipeModeToggle = true,
     this.searchHint,
+    this.isMatte = false,
   });
 
   @override
@@ -51,56 +54,29 @@ class DiscoveryActionBar extends ConsumerWidget {
         children: [
           // ── Row 0: Search Bar ──────────────────────────────────────────────
           if (searchHint != null) ...[
-            Container(
-              height: 48,
-              decoration: BoxDecoration(
-                color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(
-                  color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
-                ),
-              ),
-              child: TextField(
-                onChanged: (v) =>
-                    ref.read(filterProvider.notifier).updateSearch(v),
-                onTapOutside: (_) =>
-                    FocusManager.instance.primaryFocus?.unfocus(),
-                onSubmitted: (_) =>
-                    FocusManager.instance.primaryFocus?.unfocus(),
-                style: GoogleFonts.outfit(color: Colors.white, fontSize: 14),
-                textAlignVertical: TextAlignVertical.center,
-                decoration: InputDecoration(
-                  hintText: searchHint,
-                  hintStyle: GoogleFonts.outfit(
-                    color: Colors.white24,
-                    fontSize: 14,
-                  ),
-                  border: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  isDense: true,
-                  contentPadding: const EdgeInsets.only(
-                    left: 16,
-                    right: 16,
-                    top: 2,
-                    bottom: 0,
-                  ),
-                  filled: false,
-                  prefixIcon: const Padding(
-                    padding: EdgeInsets.only(left: 9, right: 8, top: 9),
-                    child: Icon(
-                      Icons.search_rounded,
-                      color: Color(0xFFC8A96E),
-                      size: 20,
+            isMatte
+                ? GlassContainer(
+                    height: 48,
+                    borderRadius: 24,
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    opacity: 0.12,
+                    blur: 15,
+                    borderWidth: 1.5,
+                    borderColor: const Color(0xFFC8A96E).withValues(alpha: 0.5),
+                    child: _buildSearchField(ref),
+                  )
+                : Container(
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(
+                        color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
+                        width: 1.5,
+                      ),
                     ),
+                    child: _buildSearchField(ref),
                   ),
-                  prefixIconConstraints: const BoxConstraints(
-                    minWidth: 40,
-                    minHeight: 40,
-                  ),
-                ),
-              ),
-            ),
             const SizedBox(height: 16),
           ],
           // ── Row 1: Filters & Comparison ────────────────────────────────────
@@ -111,6 +87,7 @@ class DiscoveryActionBar extends ConsumerWidget {
                 label: context.t('filters'),
                 isActive: state.hasActiveFilters,
                 onTap: () => _showSortSheet(context, ref),
+                isMatte: isMatte,
               ),
               if (showComparison) ...[
                 const SizedBox(width: 8),
@@ -121,6 +98,7 @@ class DiscoveryActionBar extends ConsumerWidget {
                       : '${context.t('compare')} (${selectedLots.length})',
                   isActive: selectedLots.isNotEmpty,
                   onTap: onCompareTap,
+                  isMatte: isMatte,
                 ),
               ],
               const Spacer(),
@@ -141,49 +119,94 @@ class DiscoveryActionBar extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           // ── Row 2: Sub-Tabs (Capsule Container) ────────────────────────────
-          Container(
-            height: 48,
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.03),
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: _SubTabCapsule(
-                    label: context.t('all'),
-                    isSelected:
-                        !state.showFavoritesOnly && !state.showArchivedOnly,
-                    onTap: () => ref.read(filterProvider.notifier).showAll(),
+          isMatte
+              ? GlassContainer(
+                  height: 48,
+                  borderRadius: 24,
+                  padding: const EdgeInsets.all(4),
+                  opacity: 0.05,
+                  blur: 10,
+                  borderColor: Colors.white.withValues(alpha: 0.2),
+                  child: _buildSubTabs(context, ref, state),
+                )
+              : Container(
+                  height: 48,
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.03),
+                    borderRadius: BorderRadius.circular(24),
+                    border:
+                        Border.all(color: Colors.white.withValues(alpha: 0.05)),
                   ),
+                  child: _buildSubTabs(context, ref, state),
                 ),
-                const SizedBox(width: 4),
-                Expanded(
-                  child: _SubTabCapsule(
-                    label: context.t('favorites'),
-                    isSelected: state.showFavoritesOnly,
-                    onTap: () =>
-                        ref.read(filterProvider.notifier).showFavorites(),
-                    icon: Icons.favorite_rounded,
-                  ),
-                ),
-                const SizedBox(width: 4),
-                Expanded(
-                  child: _SubTabCapsule(
-                    label: context.t('archive'),
-                    isSelected: state.showArchivedOnly,
-                    onTap: () =>
-                        ref.read(filterProvider.notifier).showArchived(),
-                    icon: Icons.archive_rounded,
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
+    );
+  }
+
+  Widget _buildSearchField(WidgetRef ref) {
+    return TextField(
+      onChanged: (v) => ref.read(filterProvider.notifier).updateSearch(v),
+      onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+      onSubmitted: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+      style: GoogleFonts.outfit(color: Colors.white, fontSize: 14),
+      textAlignVertical: TextAlignVertical.center,
+      decoration: InputDecoration(
+        hintText: searchHint,
+        hintStyle: GoogleFonts.outfit(
+          color: Colors.white24,
+          fontSize: 14,
+        ),
+        border: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        isDense: true,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+        filled: false,
+        prefixIcon: const Icon(
+          Icons.search_rounded,
+          color: Color(0xFFC8A96E),
+          size: 20,
+        ),
+        prefixIconConstraints: const BoxConstraints(
+          minWidth: 44,
+          minHeight: 48,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSubTabs(
+      BuildContext context, WidgetRef ref, DiscoveryFilterState state) {
+    return Row(
+      children: [
+        Expanded(
+          child: _SubTabCapsule(
+            label: context.t('all'),
+            isSelected: !state.showFavoritesOnly && !state.showArchivedOnly,
+            onTap: () => ref.read(filterProvider.notifier).showAll(),
+          ),
+        ),
+        const SizedBox(width: 4),
+        Expanded(
+          child: _SubTabCapsule(
+            label: context.t('favorites'),
+            isSelected: state.showFavoritesOnly,
+            onTap: () => ref.read(filterProvider.notifier).showFavorites(),
+            icon: Icons.favorite_rounded,
+          ),
+        ),
+        const SizedBox(width: 4),
+        Expanded(
+          child: _SubTabCapsule(
+            label: context.t('archive'),
+            isSelected: state.showArchivedOnly,
+            onTap: () => ref.read(filterProvider.notifier).showArchived(),
+            icon: Icons.archive_rounded,
+          ),
+        ),
+      ],
     );
   }
 
@@ -210,49 +233,63 @@ class _ControlChip extends StatelessWidget {
   final VoidCallback onTap;
   final bool isActive;
 
+  final bool isMatte;
+
   const _ControlChip({
     required this.icon,
     required this.label,
     required this.onTap,
     this.isActive = false,
+    this.isMatte = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    final chipContent = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          icon,
+          size: 18,
+          color: isActive ? Colors.black : const Color(0xFFC8A96E),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          label,
+          style: GoogleFonts.outfit(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: isActive ? Colors.black : Colors.white70,
+          ),
+        ),
+      ],
+    );
+
     return PressableScale(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: isActive
-              ? const Color(0xFFC8A96E)
-              : Colors.white.withValues(alpha: 0.05),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isActive ? Colors.transparent : Colors.white10,
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              size: 18,
-              color: isActive ? Colors.black : const Color(0xFFC8A96E),
-            ),
-            const SizedBox(width: 6),
-            Text(
-              label,
-              style: GoogleFonts.outfit(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: isActive ? Colors.black : Colors.white70,
+      child: isMatte && !isActive
+          ? GlassContainer(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              borderRadius: 12,
+              opacity: 0.1,
+              blur: 10,
+              borderColor: Colors.white.withValues(alpha: 0.1),
+              child: chipContent,
+            )
+          : Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: isActive
+                    ? const Color(0xFFC8A96E)
+                    : Colors.white.withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: isActive ? Colors.transparent : Colors.white10,
+                ),
               ),
+              child: chipContent,
             ),
-          ],
-        ),
-      ),
     );
   }
 }

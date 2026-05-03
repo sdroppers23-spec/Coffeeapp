@@ -1544,6 +1544,8 @@ class AppDatabase extends _$AppDatabase {
       await delete(alternativeRecipes).go();
       await delete(coffeeLots).go();
       await delete(fermentationLogs).go();
+      await delete(userRoasters).go();
+      await (delete(localizedBrands)..where((t) => t.userId.isNotNull())).go();
     });
   }
 
@@ -1632,6 +1634,67 @@ class AppDatabase extends _$AppDatabase {
               isSynced: const Value(false),
             ),
           );
+
+      // Update Localized Brands
+      await (update(localizedBrands)..where(
+            (t) => t.userId.equals('guest') | t.userId.equals('local_user'),
+          ))
+          .write(
+            LocalizedBrandsCompanion(
+              userId: Value(newUserId),
+              isSynced: const Value(false),
+            ),
+          );
+
+      // Migrate User Roasters
+      final guestRoasters = await (select(userRoasters)
+            ..where((t) => t.userId.equals('guest') | t.userId.equals('local_user')))
+          .getSingleOrNull();
+
+      if (guestRoasters != null) {
+        // We move guest roasters to the new user. 
+        // If the new user already has a record (shouldn't happen on fresh sign-up), 
+        // we could merge, but for now, we'll just replace or ignore if exists.
+        // Actually, let's merge if the new user already has data.
+        final existing = await (select(userRoasters)
+              ..where((t) => t.userId.equals(newUserId)))
+            .getSingleOrNull();
+
+        if (existing == null) {
+          await into(userRoasters).insert(
+            UserRoastersCompanion(
+              userId: Value(newUserId),
+              dataJson: Value(guestRoasters.dataJson),
+              isSynced: const Value(false),
+              updatedAt: Value(DateTime.now()),
+            ),
+          );
+        } else {
+          // Merge logic: combine lists and remove duplicates by ID
+          final guestList = _parseList<Map<String, dynamic>>(guestRoasters.dataJson);
+          final existingList = _parseList<Map<String, dynamic>>(existing.dataJson);
+          
+          final merged = [...existingList];
+          for (final gr in guestList) {
+            if (!merged.any((e) => e['id'] == gr['id'])) {
+              merged.add(gr);
+            }
+          }
+
+          await (update(userRoasters)..where((t) => t.userId.equals(newUserId))).write(
+            UserRoastersCompanion(
+              dataJson: Value(jsonEncode(merged)),
+              isSynced: const Value(false),
+              updatedAt: Value(DateTime.now()),
+            ),
+          );
+        }
+
+        // Delete guest record
+        await (delete(userRoasters)
+              ..where((t) => t.userId.equals('guest') | t.userId.equals('local_user')))
+            .go();
+      }
     });
   }
 

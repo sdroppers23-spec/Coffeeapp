@@ -733,13 +733,26 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       },
       child: Scaffold(
         backgroundColor: const Color(0xFF0A0A0A),
-        body: SafeArea(
-          child: GestureDetector(
-            onTap: () {
-              FocusScope.of(context).unfocus();
-            },
-            child: Column(
-              children: [
+        body: Stack(
+          children: [
+            Positioned.fill(
+              child: Image.asset(
+                'Img/images/Whall1.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+            Positioned.fill(
+              child: Container(
+                color: Colors.black.withValues(alpha: 0.5),
+              ),
+            ),
+            SafeArea(
+              child: GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).unfocus();
+                },
+                child: Column(
+                  children: [
                 _buildHeader(),
                 _buildTabBar(),
                 Expanded(
@@ -756,6 +769,8 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
             ),
           ),
         ),
+      ],
+    ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: _buildSaveFab(),
       ),
@@ -850,7 +865,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       child: TabBar(
         controller: _tabController,
         indicator: BoxDecoration(
-          color: const Color(0xFF121212),
+          color: Colors.white.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(50),
           border: Border.all(
             color: const Color(0xFFC8A96E).withValues(alpha: 0.4),
@@ -1012,8 +1027,8 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           height: 54,
           decoration: BoxDecoration(
             color: _canSave
-                ? const Color(0xFF121212)
-                : const Color(0xFF121212).withValues(alpha: 0.5),
+                ? Colors.white.withValues(alpha: 0.1)
+                : Colors.white.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(27),
             border: Border.all(
               color: _canSave
@@ -1182,7 +1197,8 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                       border: InputBorder.none,
                       isDense: true,
                       contentPadding: EdgeInsets.zero,
-                      filled: false,
+                      filled: true,
+                      fillColor: Colors.transparent,
                     ),
                     onChanged: (v) {
                       onChanged?.call(v);
@@ -1420,7 +1436,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               child: DropdownButton<String>(
                 value: value,
                 isExpanded: true,
-                dropdownColor: const Color(0xFF121212),
+                dropdownColor: Colors.black.withValues(alpha: 0.9),
                 icon: const Icon(
                   Icons.keyboard_arrow_down_rounded,
                   color: Color(0xFFC8A96E),

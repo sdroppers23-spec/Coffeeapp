@@ -1,16 +1,17 @@
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:drift/drift.dart';
 import '../../../../core/database/database_provider.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/database/dtos.dart';
 import '../../../../shared/widgets/sync_indicator.dart';
+import '../../../../core/supabase/supabase_provider.dart';
 
 /// Raw stream of the user roasters record from the database.
 final _userRoastersRecordStreamProvider = StreamProvider<UserRoaster?>((ref) {
   final db = ref.watch(databaseProvider);
-  final userId = Supabase.instance.client.auth.currentUser?.id;
+  final user = ref.watch(currentUserProvider);
+  final userId = user?.id;
   if (userId == null) return const Stream.empty();
   return db.watchUserRoastersRecord(userId);
 });
@@ -36,13 +37,13 @@ class UserRoastersNotifier extends Notifier<List<UserRoasterDto>> {
         }
         return [];
       },
-      loading: () => state, // Keep old state while loading
+      loading: () => [], // Clear state while loading to prevent seeing previous user's data
       error: (_, _) => [],
     );
   }
 
   Future<void> saveRoaster(UserRoasterDto roaster) async {
-    final userId = Supabase.instance.client.auth.currentUser?.id;
+    final userId = ref.read(currentUserProvider)?.id;
     if (userId == null) return;
 
     final index = state.indexWhere((e) => e.id == roaster.id);
@@ -61,7 +62,7 @@ class UserRoastersNotifier extends Notifier<List<UserRoasterDto>> {
   }
 
   Future<void> deleteRoaster(String roasterId) async {
-    final userId = Supabase.instance.client.auth.currentUser?.id;
+    final userId = ref.read(currentUserProvider)?.id;
     if (userId == null) return;
 
     final newList = state.where((e) => e.id != roasterId).toList();
@@ -71,7 +72,7 @@ class UserRoastersNotifier extends Notifier<List<UserRoasterDto>> {
   }
 
   Future<void> toggleFavorite(String roasterId) async {
-    final userId = Supabase.instance.client.auth.currentUser?.id;
+    final userId = ref.read(currentUserProvider)?.id;
     if (userId == null) return;
 
     final index = state.indexWhere((e) => e.id == roasterId);
@@ -89,7 +90,7 @@ class UserRoastersNotifier extends Notifier<List<UserRoasterDto>> {
   }
 
   Future<void> toggleArchive(String roasterId, bool archive) async {
-    final userId = Supabase.instance.client.auth.currentUser?.id;
+    final userId = ref.read(currentUserProvider)?.id;
     if (userId == null) return;
 
     final index = state.indexWhere((e) => e.id == roasterId);

@@ -56,23 +56,21 @@ class DiscoveryActionBar extends ConsumerWidget {
           if (searchHint != null) ...[
             isMatte
                 ? GlassContainer(
-                    height: 48,
                     borderRadius: 24,
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    padding: EdgeInsets.zero,
                     opacity: 0.12,
                     blur: 15,
-                    borderWidth: 1.5,
-                    borderColor: const Color(0xFFC8A96E).withValues(alpha: 0.5),
+                    borderWidth: 1.0,
+                    borderColor: const Color(0xFFC8A96E).withValues(alpha: 0.4),
                     child: _buildSearchField(ref),
                   )
                 : Container(
-                    height: 48,
                     decoration: BoxDecoration(
                       color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(24),
                       border: Border.all(
-                        color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
-                        width: 1.5,
+                        color: const Color(0xFFC8A96E).withValues(alpha: 0.4),
+                        width: 1.0,
                       ),
                     ),
                     child: _buildSearchField(ref),

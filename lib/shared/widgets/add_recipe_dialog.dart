@@ -555,7 +555,9 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                       onPressed: () => Navigator.pop(context),
                     ),
                     Text(
-                      ref.t('new_recipe'),
+                      widget.existingRecipe != null
+                          ? ref.t('edit_recipe')
+                          : ref.t('new_recipe'),
                       style: GoogleFonts.outfit(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,

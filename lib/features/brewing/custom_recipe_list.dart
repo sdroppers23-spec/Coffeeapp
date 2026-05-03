@@ -394,7 +394,7 @@ class _GlobalCustomRecipeListState
         if (filtered.isEmpty) {
           return Column(
             children: [
-              const SizedBox(height: 140),
+              const SizedBox(height: 155),
               DiscoveryActionBar(
                 filterProvider: brewingFilterProvider,
                 selectionProvider: brewingSelectedIdsProvider,
@@ -432,7 +432,7 @@ class _GlobalCustomRecipeListState
         return Column(
           children: [
             // Spacer for BrewingMainScreen's PremiumAppBar + TabBar
-            const SizedBox(height: 140),
+            const SizedBox(height: 155),
 
             // Internal Header: Search + Action Bar
                   DiscoveryActionBar(

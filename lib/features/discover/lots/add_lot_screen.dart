@@ -813,9 +813,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           ),
           const Spacer(),
           Text(
-            widget.initialLot != null
-                ? context.t('edit_lot')
-                : context.t('add_lot'),
+            widget.openAsAdd ? context.t('add_lot') : context.t('edit_lot'),
             style: GoogleFonts.outfit(
               fontSize: 13,
               fontWeight: FontWeight.bold,

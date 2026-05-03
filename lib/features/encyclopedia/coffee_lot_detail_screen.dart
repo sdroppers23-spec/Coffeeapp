@@ -42,11 +42,17 @@ class _CoffeeLotDetailScreenState extends ConsumerState<CoffeeLotDetailScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    // Hide navbar when entering detail screen
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(navBarVisibleProvider.notifier).hide();
+    });
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    // Show navbar when leaving detail screen
+    ref.read(navBarVisibleProvider.notifier).show();
     super.dispose();
   }
 
@@ -917,31 +923,6 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
                   const SizedBox(height: 24),
                 ],
 
-                // Add Recipe Button (only if not in selection mode)
-                if (!_isSelectionMode)
-                  SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: PressableScale(
-                      onTap: _showAddRecipeFlow,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFC8A96E),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Center(
-                          child: Text(
-                            ref.t('add_recipe').toUpperCase(),
-                            style: GoogleFonts.outfit(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 2,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
 
                 if (recipes.isEmpty &&
                     (recommendedAsync.value?.isEmpty ?? true))
@@ -971,6 +952,45 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
             left: 20,
             right: 20,
             child: _buildSelectionBar(),
+          ),
+
+        // Floating Add Button (Snapshot 3 Style)
+        if (!_isSelectionMode)
+          Positioned(
+            bottom: 90,
+            right: 20,
+            child: PressableScale(
+              onTap: _showAddRecipeFlow,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFC8A96E),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.3),
+                      blurRadius: 15,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.add_rounded, color: Colors.black, size: 24),
+                    const SizedBox(width: 12),
+                    Text(
+                      ref.t('add_recipe'),
+                      style: GoogleFonts.outfit(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
       ],
     );

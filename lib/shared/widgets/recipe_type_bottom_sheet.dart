@@ -1,7 +1,7 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/l10n/app_localizations.dart';
+import 'glass_container.dart';
 
 class RecipeTypeBottomSheet extends StatelessWidget {
   final Function(String type) onTypeSelected;
@@ -21,61 +21,53 @@ class RecipeTypeBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-      child: Container(
-        decoration: BoxDecoration(
-          color: const Color(0xFF121212).withValues(alpha: 0.9),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.1),
-            width: 0.5,
+    return GlassContainer(
+      borderRadius: 0, // Fill the bottom sheet area
+      opacity: 0.1,
+      blur: 20,
+      padding: const EdgeInsets.fromLTRB(24, 12, 24, 48),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: Colors.white24,
+              borderRadius: BorderRadius.circular(2),
+            ),
           ),
-        ),
-        padding: const EdgeInsets.fromLTRB(24, 32, 24, 48),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.white24,
-                borderRadius: BorderRadius.circular(2),
+          const SizedBox(height: 24),
+          Text(
+            title.toUpperCase(),
+            style: GoogleFonts.outfit(
+              color: const Color(0xFFC8A96E),
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+              letterSpacing: 2,
+            ),
+          ),
+          const SizedBox(height: 32),
+          Row(
+            children: [
+              _RecipeTypeCard(
+                title: context.t('filter'),
+                icon: Icons.coffee_rounded,
+                count: filterCount,
+                limit: limit,
+                onTap: () => onTypeSelected('filter'),
               ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              title.toUpperCase(),
-              style: GoogleFonts.outfit(
-                color: const Color(0xFFC8A96E),
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-                letterSpacing: 2,
+              const SizedBox(width: 16),
+              _RecipeTypeCard(
+                title: context.t('espresso'),
+                icon: Icons.coffee_maker_rounded,
+                count: espressoCount,
+                limit: limit,
+                onTap: () => onTypeSelected('espresso'),
               ),
-            ),
-            const SizedBox(height: 32),
-            Row(
-              children: [
-                _RecipeTypeCard(
-                  title: context.t('filter'),
-                  icon: Icons.water_drop_rounded,
-                  count: filterCount,
-                  limit: limit,
-                  onTap: () => onTypeSelected('filter'),
-                ),
-                const SizedBox(width: 16),
-                _RecipeTypeCard(
-                  title: context.t('espresso'),
-                  icon: Icons.coffee_maker_rounded,
-                  count: espressoCount,
-                  limit: limit,
-                  onTap: () => onTypeSelected('espresso'),
-                ),
-              ],
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }

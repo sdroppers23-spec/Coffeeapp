@@ -235,6 +235,41 @@ class _RecipesTab extends ConsumerStatefulWidget {
 }
 
 class _RecipesTabState extends ConsumerState<_RecipesTab> {
+  Future<void> _showAddRecipeFlow({
+    required int filterCount,
+    required int espressoCount,
+  }) async {
+    final lotId = widget.lot.id;
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => RecipeTypeBottomSheet(
+        title: ref.t('choose_brewing_type'),
+        filterCount: filterCount,
+        espressoCount: espressoCount,
+        onTypeSelected: (type) async {
+          final count = type == 'espresso' ? espressoCount : filterCount;
+          if (count >= 10) {
+            Navigator.pop(ctx);
+            return;
+          }
+          Navigator.pop(ctx);
+          final result = await showDialog<bool>(
+            context: context,
+            builder: (context) => AddRecipeDialog(
+              lotId: lotId,
+              recipeSegment: RecipeSegment.userLot,
+              initialMethod: type == 'espresso' ? 'espresso' : 'v60',
+            ),
+          );
+          if (result == true) {
+            ref.invalidate(userLotRecipesForLotProvider(lotId));
+          }
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final recipesAsync = ref.watch(userLotRecipesForLotProvider(widget.lot.id));
@@ -248,103 +283,94 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
         // Actually, the card-specific limit is 10. Let's stick to 10 for each.
         final overallLimitReached = filterCount >= 10 && espressoCount >= 10;
 
-        return Column(
+        return Stack(
           children: [
-            Expanded(
-              child: recipes.isEmpty
-                  ? Center(
-                      child: Text(
-                        ref.t('no_recipes_for_lot'),
-                        style: GoogleFonts.outfit(color: Colors.white38),
-                      ),
-                    )
-                  : ListView.builder(
-                      padding: const EdgeInsets.all(20),
-                      itemCount: recipes.length,
-                      itemBuilder: (context, index) {
-                        final recipe = recipes[index];
-                        return _buildRecipeCard(recipe);
-                      },
-                    ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                children: [
-                  if (overallLimitReached)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: Text(
-                        ref.t('recipe_limit_reached'),
-                        style: GoogleFonts.outfit(
-                          color: Colors.redAccent.withValues(alpha: 0.8),
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: PressableScale(
-                      onTap: overallLimitReached
-                          ? null
-                          : () async {
-                              showModalBottomSheet(
-                                context: context,
-                                backgroundColor: Colors.transparent,
-                                builder: (ctx) => RecipeTypeBottomSheet(
-                                  title: ref.t('choose_brewing_type'),
-                                  filterCount: filterCount,
-                                  espressoCount: espressoCount,
-                                  onTypeSelected: (type) async {
-                                    Navigator.pop(ctx);
-                                    final result = await showDialog<bool>(
-                                      context: context,
-                                      builder: (context) => AddRecipeDialog(
-                                        lotId: widget.lot.id,
-                                        recipeSegment: RecipeSegment.userLot,
-                                        initialMethod: type == 'espresso'
-                                            ? 'espresso'
-                                            : 'v60',
-                                      ),
-                                    );
-                                    if (result == true) {
-                                      ref.invalidate(
-                                        userLotRecipesForLotProvider(
-                                          widget.lot.id,
-                                        ),
-                                      );
-                                    }
-                                  },
-                                ),
-                              );
-                            },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: overallLimitReached
-                              ? Colors.white10
-                              : const Color(0xFFC8A96E),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Center(
+            Column(
+              children: [
+                Expanded(
+                  child: recipes.isEmpty
+                      ? Center(
                           child: Text(
-                            ref.t('add_recipe').toUpperCase(),
-                            style: GoogleFonts.outfit(
-                              color: overallLimitReached
-                                  ? Colors.white24
-                                  : Colors.black,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 2,
-                            ),
+                            ref.t('no_recipes_for_lot'),
+                            style: GoogleFonts.outfit(color: Colors.white38),
                           ),
+                        )
+                      : ListView.builder(
+                          padding: const EdgeInsets.all(20),
+                          itemCount: recipes.length,
+                          itemBuilder: (context, index) {
+                            final recipe = recipes[index];
+                            return _buildRecipeCard(recipe);
+                          },
                         ),
+                ),
+              ],
+            ),
+            if (overallLimitReached)
+              Positioned(
+                bottom: 100,
+                left: 20,
+                right: 20,
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.redAccent.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      ref.t('recipe_limit_reached'),
+                      style: GoogleFonts.outfit(
+                        color: Colors.redAccent,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                ],
+                ),
               ),
-            ),
+
+            // Floating Add Button (Snapshot 3 Style)
+            if (!overallLimitReached)
+              Positioned(
+                bottom: 90,
+                right: 20,
+                child: PressableScale(
+                  onTap: () => _showAddRecipeFlow(
+                    filterCount: filterCount,
+                    espressoCount: espressoCount,
+                  ),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFC8A96E),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.3),
+                          blurRadius: 15,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.add_rounded, color: Colors.black, size: 24),
+                        const SizedBox(width: 12),
+                        Text(
+                          ref.t('add_recipe'),
+                          style: GoogleFonts.outfit(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
           ],
         );
       },

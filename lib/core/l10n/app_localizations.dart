@@ -830,6 +830,11 @@ class AppLocalizations {
       'roaster_city': 'City',
       'location_field': 'Location',
       'coffee_name_field': 'Coffee Name',
+      'choose_brewing_type': 'Choose Method',
+      'recipe_limit_reached': 'Recipe limit reached (10 max per type)',
+      'limit_reached': 'Limit reached',
+      'deselect_all': 'Deselect All',
+      'toast_deleted': 'deleted',
     },
     'uk': {
       'discover': 'Дослідити',
@@ -1570,6 +1575,11 @@ class AppLocalizations {
       'roaster_city': 'Місто',
       'location_field': 'Розташування',
       'coffee_name_field': 'Назва кави',
+      'choose_brewing_type': 'Оберіть метод',
+      'recipe_limit_reached': 'Ліміт рецептів досягнуто (максимум 10 на тип)',
+      'limit_reached': 'Ліміт досягнуто',
+      'deselect_all': 'Зняти вибір',
+      'toast_deleted': 'видалено',
     },
   };
 }

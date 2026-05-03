@@ -30,6 +30,7 @@ import '../../../shared/widgets/sensory_radar_chart.dart';
 import '../../../shared/services/toast_service.dart';
 import '../../../core/providers/preferences_provider.dart';
 import '../../../shared/utils/coffee_input_formatters.dart';
+import '../../../shared/widgets/glass_container.dart';
 
 import 'widgets/add_lot/roaster_selector_sheet.dart';
 
@@ -1063,16 +1064,11 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     ),
   );
 
-  Widget _darkCard({required List<Widget> children}) => Container(
+  Widget _darkCard({required List<Widget> children}) => GlassContainer(
         margin: const EdgeInsets.only(bottom: 16),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.03),
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.05),
-            width: 1,
-          ),
-        ),
+        borderRadius: 24,
+        opacity: 0.05,
+        blur: 15,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: children,
@@ -1099,104 +1095,127 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     FocusNode? focusNode,
   }) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: GoogleFonts.outfit(
-              fontSize: 10,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.2,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  readOnly: readOnly,
-                  focusNode: focusNode,
-                  controller:
-                      controller ?? TextEditingController(text: value ?? ''),
-                  style: GoogleFonts.outfit(color: Colors.white, fontSize: 16),
-                  keyboardType:
-                      keyboardType ??
-                      (type == _FieldType.numeric ||
-                              type == _FieldType.scaScore ||
-                              type == _FieldType.weight ||
-                              type == _FieldType.altitude
-                          ? const TextInputType.numberWithOptions(decimal: true)
-                          : TextInputType.text),
-                  enableInteractiveSelection:
-                      !readOnly &&
-                      type != _FieldType.scaScore &&
-                      type != _FieldType.lotNumber,
-                  textCapitalization:
-                      (type == _FieldType.scaScore ||
-                          type == _FieldType.lotNumber)
-                      ? TextCapitalization.none
-                      : TextCapitalization.sentences,
-                  autocorrect:
-                      (type == _FieldType.scaScore ||
-                          type == _FieldType.lotNumber)
-                      ? false
-                      : true,
-                  inputFormatters:
-                      inputFormatters ??
-                      (type == _FieldType.scaScore
-                          ? [ScaScoreInputFormatter()]
-                          : type == _FieldType.lotNumber
-                          ? [LotNumberInputFormatter()]
-                          : type == _FieldType.altitude
-                          ? [AltitudeInputFormatter()]
-                          : (type == _FieldType.numeric ||
-                                type == _FieldType.weight)
-                          ? [
-                              FilteringTextInputFormatter.allow(
-                                RegExp(r'[0-9\.,]'),
-                              ),
-                            ]
-                          : [GlobalCoffeeInputFormatter()]),
-                  decoration: InputDecoration(
-                    hintText:
-                        placeholder ??
-                        (type == _FieldType.scaScore ? '80-100' : null),
-                    hintStyle: GoogleFonts.outfit(
-                      color: Colors.white.withValues(alpha: 0.2),
-                    ),
-                    border: InputBorder.none,
-                    isDense: true,
-                  ),
-                  onChanged: (v) {
-                    onChanged?.call(v);
-                    updateState(() {}); // Trigger _canSave update
-                  },
-                ),
-              ),
-              if (suffix != null)
-                suffix is String
-                    ? Text(
-                        suffix,
-                        style: GoogleFonts.outfit(
-                          color: const Color(0xFFC8A96E),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                        ),
-                      )
-                    : suffix as Widget,
-            ],
-          ),
-          if (helperText != null) ...[
-            const SizedBox(height: 4),
-            Text(
-              helperText,
+          Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: 6),
+            child: Text(
+              label,
               style: GoogleFonts.outfit(
                 fontSize: 10,
-                color: Colors.white.withValues(alpha: 0.38),
-                fontWeight: FontWeight.w400,
+                color: Colors.white.withValues(alpha: 0.5),
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.2,
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.03),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.05),
+              ),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    readOnly: readOnly,
+                    focusNode: focusNode,
+                    controller:
+                        controller ?? TextEditingController(text: value ?? ''),
+                    style: GoogleFonts.outfit(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    keyboardType:
+                        keyboardType ??
+                        (type == _FieldType.numeric ||
+                                type == _FieldType.scaScore ||
+                                type == _FieldType.weight ||
+                                type == _FieldType.altitude
+                            ? const TextInputType.numberWithOptions(decimal: true)
+                            : TextInputType.text),
+                    enableInteractiveSelection:
+                        !readOnly &&
+                        type != _FieldType.scaScore &&
+                        type != _FieldType.lotNumber,
+                    textCapitalization:
+                        (type == _FieldType.scaScore ||
+                            type == _FieldType.lotNumber)
+                        ? TextCapitalization.none
+                        : TextCapitalization.sentences,
+                    autocorrect:
+                        (type == _FieldType.scaScore ||
+                            type == _FieldType.lotNumber)
+                        ? false
+                        : true,
+                    inputFormatters:
+                        inputFormatters ??
+                        (type == _FieldType.scaScore
+                            ? [ScaScoreInputFormatter()]
+                            : type == _FieldType.lotNumber
+                            ? [LotNumberInputFormatter()]
+                            : type == _FieldType.altitude
+                            ? [AltitudeInputFormatter()]
+                            : (type == _FieldType.numeric ||
+                                  type == _FieldType.weight)
+                            ? [
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r'[0-9\.,]'),
+                                ),
+                              ]
+                            : [GlobalCoffeeInputFormatter()]),
+                    decoration: InputDecoration(
+                      hintText:
+                          placeholder ??
+                          (type == _FieldType.scaScore ? '80-100' : null),
+                      hintStyle: GoogleFonts.outfit(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        fontSize: 15,
+                      ),
+                      border: InputBorder.none,
+                      isDense: true,
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    onChanged: (v) {
+                      onChanged?.call(v);
+                      updateState(() {}); // Trigger _canSave update
+                    },
+                  ),
+                ),
+                if (suffix != null) ...[
+                  const SizedBox(width: 8),
+                  suffix is String
+                      ? Text(
+                          suffix,
+                          style: GoogleFonts.outfit(
+                            color: const Color(0xFFC8A96E),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
+                        )
+                      : suffix as Widget,
+                ],
+              ],
+            ),
+          ),
+          if (helperText != null) ...[
+            const SizedBox(height: 6),
+            Padding(
+              padding: const EdgeInsets.only(left: 4),
+              child: Text(
+                helperText,
+                style: GoogleFonts.outfit(
+                  fontSize: 10,
+                  color: Colors.white.withValues(alpha: 0.3),
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
           ],
@@ -1214,43 +1233,56 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     final display = date != null
         ? '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}'
         : (placeholder ?? '—');
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: GoogleFonts.outfit(
-                    fontSize: 10,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  display,
-                  style: GoogleFonts.outfit(
-                    color: const Color(0xFFC8A96E),
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: 6),
+            child: Text(
+              label,
+              style: GoogleFonts.outfit(
+                fontSize: 10,
+                color: Colors.white.withValues(alpha: 0.5),
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.2,
+              ),
             ),
-            const Icon(
-              Icons.calendar_today_rounded,
-              color: Color(0xFFC8A96E),
-              size: 16,
+          ),
+          InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.03),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.05),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    display,
+                    style: GoogleFonts.outfit(
+                      color: const Color(0xFFC8A96E),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const Icon(
+                    Icons.calendar_today_rounded,
+                    color: Color(0xFFC8A96E),
+                    size: 16,
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -1263,46 +1295,61 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     Widget? suffix,
   }) {
     final hasValue = value != null && value.trim().isNotEmpty;
-    return InkWell(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12.0),
-        child: Row(
-          children: [
-            if (label != null && label.isNotEmpty)
-              SizedBox(
-                width: 100,
-                child: Text(
-                  label,
-                  style: GoogleFonts.outfit(
-                    fontSize: 10,
-                    color: Colors.white.withValues(alpha: 0.6),
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-              ),
-            Expanded(
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (label != null && label.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(left: 4, bottom: 6),
               child: Text(
-                hasValue ? value : placeholder,
+                label,
                 style: GoogleFonts.outfit(
-                  color: hasValue
-                      ? Colors.white
-                      : Colors.white.withValues(alpha: 0.2),
-                  fontSize: 14,
-                  fontWeight: hasValue ? FontWeight.w500 : FontWeight.w400,
+                  fontSize: 10,
+                  color: Colors.white.withValues(alpha: 0.5),
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.2,
                 ),
               ),
             ),
-            // ignore: use_null_aware_elements
-            if (suffix != null) suffix,
-            const Icon(
-              Icons.keyboard_arrow_down_rounded,
-              color: Color(0xFFC8A96E),
-              size: 20,
+          InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.03),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.05),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      hasValue ? value : placeholder,
+                      style: GoogleFonts.outfit(
+                        color: hasValue
+                            ? Colors.white
+                            : Colors.white.withValues(alpha: 0.2),
+                        fontSize: 14,
+                        fontWeight: hasValue ? FontWeight.w500 : FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                  ?suffix,
+                  const Icon(
+                    Icons.keyboard_arrow_down_rounded,
+                    color: Color(0xFFC8A96E),
+                    size: 20,
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

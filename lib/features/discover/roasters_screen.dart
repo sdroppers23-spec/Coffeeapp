@@ -15,6 +15,7 @@ import 'user_roaster_details_screen.dart';
 import '../../shared/services/toast_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:io';
+import '../../shared/utils/url_helper.dart';
 
 class RoastersScreen extends StatelessWidget {
   const RoastersScreen({super.key});
@@ -469,7 +470,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                             alignment: Alignment.bottomRight,
                             child: Padding(
                               padding: const EdgeInsets.only(
-                                bottom: 90,
+                                bottom: 150, // Lifted from 120
                                 right: 16,
                               ),
                               child: _buildHalfWidthAddButton(),
@@ -603,32 +604,34 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
 
     return Center(
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 100),
+        padding: const EdgeInsets.only(bottom: 140), // Lifted from 100
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 40),
-              // Decorative Icon with Glow
-              Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
-                  border: Border.all(
-                    color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                    width: 2,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
-                      blurRadius: 30,
-                      spreadRadius: 5,
+              Transform.translate(
+                offset: const Offset(0, -20),
+                child: Container(
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
+                    border: Border.all(
+                      color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                      width: 2,
                     ),
-                  ],
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFFC8A96E).withValues(alpha: 0.05),
+                        blurRadius: 30,
+                        spreadRadius: 5,
+                      ),
+                    ],
+                  ),
+                  child: Icon(icon, color: const Color(0xFFC8A96E), size: 54),
                 ),
-                child: Icon(icon, color: const Color(0xFFC8A96E), size: 54),
               ),
               const SizedBox(height: 32),
               Text(
@@ -841,6 +844,19 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
             ),
             TextButton(
               onPressed: () async {
+                final rawUrl = logoUrlController.text.trim();
+                final isValid = rawUrl.isEmpty || UrlHelper.isValidUrl(rawUrl);
+
+                if (!isValid) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(context.t('invalid_url_format')),
+                        backgroundColor: Colors.redAccent,
+                      ),
+                    );
+                    return;
+                  }
+
                 if (nameController.text.trim().isEmpty) {
                   return;
                 }
@@ -850,9 +866,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                   country: countryController.text,
                   location: locationController.text,
                   description: shortDescController.text,
-                  logoUrl: logoUrlController.text.isNotEmpty
-                      ? logoUrlController.text
-                      : null,
+                  logoUrl: rawUrl.isNotEmpty ? rawUrl : null,
                   localLogoPath: localPath,
                   updatedAt: DateTime.now(),
                   isFavorite: isFavorite,

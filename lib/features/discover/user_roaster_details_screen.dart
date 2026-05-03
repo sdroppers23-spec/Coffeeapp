@@ -15,6 +15,7 @@ import '../../core/providers/preferences_provider.dart';
 import '../../shared/services/roaster_image_service.dart';
 import '../../shared/widgets/pressable_scale.dart';
 import '../navigation/navigation_providers.dart';
+import '../../shared/utils/url_helper.dart';
 
 
 final userRoasterLotsProvider =
@@ -150,19 +151,9 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                   onPressed: () async {
                     if (nameController.text.isEmpty) return;
 
-                    String url = logoUrlController.text.trim();
-                    if (url.isNotEmpty) {
-                      // Basic URL validation & auto-prefix
-                      if (!url.startsWith('http://') &&
-                          !url.startsWith('https://')) {
-                        url = 'https://$url';
-                      }
-
-                      final urlRegExp = RegExp(
-                        r'^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$',
-                      );
-
-                      if (!urlRegExp.hasMatch(url)) {
+                    final rawUrl = logoUrlController.text.trim();
+                    if (rawUrl.isNotEmpty) {
+                      if (!UrlHelper.isValidUrl(rawUrl)) {
                         setDialogState(() {
                           urlError = context.t('invalid_url_format');
                         });
@@ -175,7 +166,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                       country: countryController.text,
                       location: locationController.text,
                       description: shortDescController.text,
-                      logoUrl: url,
+                      logoUrl: rawUrl,
                       localLogoPath: localPath,
                       updatedAt: DateTime.now(),
                     );
@@ -185,7 +176,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFC8A96E),
                     foregroundColor: Colors.black,
-                    minimumSize: const Offset(double.infinity, 54),
+                    minimumSize: const Size(double.infinity, 54),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -205,7 +196,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                 TextButton(
                   onPressed: () => Navigator.pop(context),
                   style: TextButton.styleFrom(
-                    minimumSize: const Offset(double.infinity, 44),
+                    minimumSize: const Size(double.infinity, 44),
                   ),
                   child: Text(
                     context.t('cancel'),
@@ -220,7 +211,8 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
           ],
         ),
       ),
-    );
+      );
+    }
   }
 
   static Future<void> showLinkLotDialog(
@@ -558,7 +550,6 @@ class _UserRoasterDetailsScreenState
     );
 
     final lotsAsync = ref.watch(userRoasterLotsProvider(currentRoaster.id));
-    final l10n = AppLocalizations.of(context);
 
     return PopScope(
       canPop: true,
@@ -639,7 +630,7 @@ class _UserRoasterDetailsScreenState
           SliverToBoxAdapter(
             child: Column(
               children: [
-                const SizedBox(height: 80), // Increased from 40 to fix "накладка"
+                const SizedBox(height: 100), // Increased from 80 to lift more
                 // Header (Logo)
                 Center(
                   child: Container(
@@ -1014,7 +1005,7 @@ class _UserRoasterDetailsScreenState
               ),
             ),
           ],
-          const SizedBox(height: 120), // Added bottom space to lift everything up
+          const SizedBox(height: 160), // Increased from 120 to lift everything up
         ],
       ),
     );

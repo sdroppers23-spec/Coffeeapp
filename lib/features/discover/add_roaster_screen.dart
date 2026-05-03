@@ -148,6 +148,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
           barrierDismissible: false,
           builder: (_) => ConflictDialog(lotName: lot.coffeeName ?? ''),
         );
+        if (!mounted) continue;
 
         switch (result) {
           case ConflictResult.replace:

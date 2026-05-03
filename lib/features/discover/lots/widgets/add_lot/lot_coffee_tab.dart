@@ -3,7 +3,7 @@ part of '../../add_lot_screen.dart';
 extension _CoffeeTabSection on _AddLotScreenState {
   Widget _buildCoffeeTab() {
     return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
       children: [
         _sectionLabel(context.t('section_photo')),
         _buildImagePicker(),

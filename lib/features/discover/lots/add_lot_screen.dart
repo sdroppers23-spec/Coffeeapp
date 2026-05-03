@@ -746,6 +746,12 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 color: Colors.black.withValues(alpha: 0.5),
               ),
             ),
+            Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: Container(color: Colors.transparent),
+              ),
+            ),
             SafeArea(
               child: GestureDetector(
                 onTap: () {
@@ -1027,8 +1033,8 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           height: 54,
           decoration: BoxDecoration(
             color: _canSave
-                ? Colors.white.withValues(alpha: 0.1)
-                : Colors.white.withValues(alpha: 0.05),
+                ? Colors.white.withValues(alpha: 0.15)
+                : Colors.white.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(27),
             border: Border.all(
               color: _canSave
@@ -1082,8 +1088,8 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   Widget _darkCard({required List<Widget> children}) => GlassContainer(
         margin: const EdgeInsets.only(bottom: 16),
         borderRadius: 24,
-        opacity: 0.05,
-        blur: 15,
+        opacity: 0.08,
+        enableBlur: false,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: children,

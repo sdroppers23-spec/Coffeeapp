@@ -4,7 +4,7 @@ extension _SensoryTabSection on _AddLotScreenState {
   Widget _buildSensoryTab() {
     final theme = Theme.of(context);
     return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
       children: [
         _sectionLabel(context.t('sensory_profile_1_5')),
         _darkCard(

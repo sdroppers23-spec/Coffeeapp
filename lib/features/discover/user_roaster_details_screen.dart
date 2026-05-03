@@ -14,6 +14,8 @@ import 'package:go_router/go_router.dart';
 import '../../core/providers/preferences_provider.dart';
 import '../../shared/services/roaster_image_service.dart';
 import '../../shared/widgets/pressable_scale.dart';
+import '../navigation/navigation_providers.dart';
+
 
 final userRoasterLotsProvider =
     FutureProvider.family<List<CoffeeLotDto>, String>((ref, roasterId) async {
@@ -482,8 +484,19 @@ class _UserRoasterDetailsScreenState
   String _searchQuery = '';
 
   @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(navBarVisibleProvider.notifier).hide();
+    });
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
+    Future.microtask(() {
+      ref.read(navBarVisibleProvider.notifier).show();
+    });
     super.dispose();
   }
 
@@ -499,7 +512,13 @@ class _UserRoasterDetailsScreenState
     final lotsAsync = ref.watch(userRoasterLotsProvider(currentRoaster.id));
     final l10n = AppLocalizations.of(context);
 
-    return Scaffold(
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) return;
+        ref.read(navBarVisibleProvider.notifier).show();
+      },
+      child: Scaffold(
       backgroundColor: Colors.black,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -572,7 +591,7 @@ class _UserRoasterDetailsScreenState
           SliverToBoxAdapter(
             child: Column(
               children: [
-                const SizedBox(height: 40), // Reduced from 60 to fix "накладка"
+                const SizedBox(height: 80), // Increased from 40 to fix "накладка"
                 // Header (Logo)
                 Center(
                   child: Container(
@@ -840,8 +859,9 @@ class _UserRoasterDetailsScreenState
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildEmptyState({bool isSearch = false}) {
     return Center(

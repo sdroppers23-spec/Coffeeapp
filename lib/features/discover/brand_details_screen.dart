@@ -9,6 +9,7 @@ import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import '../../shared/widgets/glass_container.dart';
 import '../encyclopedia/coffee_lot_detail_screen.dart';
+import '../navigation/navigation_providers.dart';
 
 final brandLotsProvider = FutureProvider.family<List<LocalizedBeanDto>, int>((
   ref,
@@ -18,102 +19,132 @@ final brandLotsProvider = FutureProvider.family<List<LocalizedBeanDto>, int>((
   return ref.watch(databaseProvider).getBeansByBrand(brandId, lang);
 });
 
-class BrandDetailsScreen extends ConsumerWidget {
+class BrandDetailsScreen extends ConsumerStatefulWidget {
   final Brand brand;
 
   const BrandDetailsScreen({super.key, required this.brand});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final lotsAsync = ref.watch(brandLotsProvider(brand.id));
+  ConsumerState<BrandDetailsScreen> createState() => _BrandDetailsScreenState();
+}
 
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Text(
-          brand.name,
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+class _BrandDetailsScreenState extends ConsumerState<BrandDetailsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(navBarVisibleProvider.notifier).hide();
+    });
+  }
+
+  @override
+  void dispose() {
+    Future.microtask(() {
+      ref.read(navBarVisibleProvider.notifier).show();
+    });
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final lotsAsync = ref.watch(brandLotsProvider(widget.brand.id));
+
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) return;
+        ref.read(navBarVisibleProvider.notifier).show();
+      },
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: Text(
+            widget.brand.name,
+            style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+          ),
         ),
-      ),
-      body: Container(
-        decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface),
-        child: Column(
-          children: [
-            const SizedBox(height: 100),
-            // Brand header / Logo
-            if (brand.logoUrl.isNotEmpty)
-              Center(
-                child: Hero(
-                  tag: 'brand_logo_${brand.id}',
-                  child: Container(
-                    width: 120,
-                    height: 120,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.surfaceContainerHighest,
-                      borderRadius: BorderRadius.circular(32),
-                      border: Border.all(
-                        color: Theme.of(context).colorScheme.outlineVariant,
-                      ),
-                    ),
-                    child: _BrandLogo(url: brand.logoUrl, height: 80),
-                  ),
-                ),
-              ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Text(
-                brand.fullDesc,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withValues(alpha: 0.7),
-                  fontSize: 13,
-                  height: 1.6,
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            const Divider(color: Colors.white10),
-            Expanded(
-              child: lotsAsync.when(
-                loading: () => const Center(
-                  child: CircularProgressIndicator(color: Color(0xFFC8A96E)),
-                ),
-                error: (e, _) => Center(
-                  child: Text(
-                    ref.t('error_loading_lots', args: {'error': e.toString()}),
-                  ),
-                ),
-                data: (lots) {
-                  if (lots.isEmpty) {
-                    return Center(
-                      child: Text(
-                        ref.t('no_lots_found'),
-                        style: TextStyle(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withValues(alpha: 0.54),
+        body: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+          ),
+          child: Column(
+            children: [
+              const SizedBox(height: 100),
+              // Brand header / Logo
+              if (widget.brand.logoUrl.isNotEmpty)
+                Center(
+                  child: Hero(
+                    tag: 'brand_logo_${widget.brand.id}',
+                    child: Container(
+                      width: 120,
+                      height: 120,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(32),
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.outlineVariant,
                         ),
                       ),
-                    );
-                  }
-                  return ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: lots.length,
-                    itemBuilder: (context, i) =>
-                        _BrandProductCard(entry: lots[i]),
-                  );
-                },
+                      child: _BrandLogo(url: widget.brand.logoUrl, height: 80),
+                    ),
+                  ),
+                ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Text(
+                  widget.brand.fullDesc,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.7),
+                    fontSize: 13,
+                    height: 1.6,
+                  ),
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 24),
+              const Divider(color: Colors.white10),
+              Expanded(
+                child: lotsAsync.when(
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(color: Color(0xFFC8A96E)),
+                  ),
+                  error: (e, _) => Center(
+                    child: Text(
+                      ref.t('error_loading_lots', args: {'error': e.toString()}),
+                    ),
+                  ),
+                  data: (lots) {
+                    if (lots.isEmpty) {
+                      return Center(
+                        child: Text(
+                          ref.t('no_lots_found'),
+                          style: TextStyle(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: 0.54),
+                          ),
+                        ),
+                      );
+                    }
+                    return ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: lots.length,
+                      itemBuilder: (context, i) =>
+                          _BrandProductCard(entry: lots[i]),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

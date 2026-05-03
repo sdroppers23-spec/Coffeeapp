@@ -868,7 +868,7 @@ class _UserRoasterDetailsScreenState
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(height: 48),
+          const SizedBox(height: 24), // Reduced from 48
           // Decorative Icon with Glow (matching RoastersScreen style)
           Container(
             width: 110,
@@ -966,6 +966,7 @@ class _UserRoasterDetailsScreenState
               ),
             ),
           ],
+          const SizedBox(height: 120), // Added bottom space to lift everything up
         ],
       ),
     );

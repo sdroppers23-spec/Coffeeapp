@@ -30,6 +30,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
   final _logoUrlController = TextEditingController();
 
   File? _logoFile;
+  String? _urlError;
   List<CoffeeLotDto> _allUserLots = [];
   final Set<String> _selectedLotIds = {};
   bool _isLoading = true;
@@ -75,7 +76,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                AppLocalizations.of(context).translate('invalid_file_format'),
+                context.t('invalid_file_format'),
               ),
             ),
           );
@@ -88,7 +89,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                AppLocalizations.of(context).translate('file_too_large'),
+                context.t('file_too_large'),
               ),
             ),
           );
@@ -164,7 +165,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
             // Add suffix and create new
             lotToProcess = lot.copyWith(
               id: const Uuid().v4(),
-              coffeeName: '${lot.coffeeName} (Copy)',
+              coffeeName: context.t('copy_name_template', args: {'name': lot.coffeeName ?? ''}),
               brandId: roasterId,
               roasteryName: _nameController.text,
               createdAt: DateTime.now(),
@@ -223,12 +224,12 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
         SnackBar(
           content: Text(
             isCopy
-                ? AppLocalizations.of(context).translate('lot_copied')
-                : AppLocalizations.of(context).translate('lot_moved'),
+                ? context.t('lot_copied')
+                : context.t('lot_moved'),
           ),
           duration: const Duration(seconds: 5),
           action: SnackBarAction(
-            label: AppLocalizations.of(context).translate('waiter_undo'),
+            label: context.t('waiter_undo'),
             onPressed: () async {
               // Undo logic
               for (var lot in affectedLots) {
@@ -345,7 +346,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
               ),
               isDense: true,
             ),
-            validator: (v) => v == null || v.isEmpty ? 'Required' : null,
+            validator: (v) => v == null || v.isEmpty ? context.t('required_error') : null,
           ),
         ),
       ],
@@ -385,13 +386,13 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
         _buildLabel(context.t('general_info')),
         const SizedBox(height: 16),
         _buildSection(
-          context.t('roastery_name'),
+          context.t('roaster_name_label'),
           _nameController,
           Icons.business_rounded,
         ),
         const SizedBox(height: 16),
         _buildSection(
-          context.t('location'),
+          context.t('city_label'),
           _locationController,
           Icons.location_on_rounded,
         ),
@@ -406,13 +407,13 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
         _buildLabel(context.t('description')),
         const SizedBox(height: 16),
         _buildSection(
-          context.t('short_description'),
+          context.t('short_desc_label'),
           _shortDescController,
           Icons.short_text_rounded,
         ),
         const SizedBox(height: 16),
         _buildSection(
-          context.t('full_description'),
+          context.t('full_desc_label'),
           _fullDescController,
           Icons.notes_rounded,
           maxLines: 4,
@@ -433,15 +434,51 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
               child: GlassContainer(
                 opacity: 0.05,
                 borderRadius: 16,
-                child: TextFormField(
-                  controller: _logoUrlController,
-                  style: GoogleFonts.outfit(color: Colors.white, fontSize: 14),
-                  decoration: InputDecoration(
-                    hintText: context.t('roastery_logo_hint'),
-                    hintStyle: const TextStyle(color: Colors.white24),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                  ),
+                child: StatefulBuilder(
+                  builder: (context, setFieldState) {
+                    return TextFormField(
+                      controller: _logoUrlController,
+                      style: GoogleFonts.outfit(color: Colors.white, fontSize: 14),
+                      onChanged: (value) {
+                        if (value.isNotEmpty) {
+                          String url = value.trim();
+                          if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                            url = 'https://$url';
+                            _logoUrlController.value = TextEditingValue(
+                              text: url,
+                              selection: TextSelection.collapsed(offset: url.length),
+                            );
+                          }
+                          
+                          final urlRegExp = RegExp(
+                            r'^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$',
+                          );
+                          
+                          if (!urlRegExp.hasMatch(url)) {
+                            setFieldState(() {
+                              _urlError = context.t('invalid_url_format');
+                            });
+                          } else {
+                            setFieldState(() {
+                              _urlError = null;
+                            });
+                          }
+                        } else {
+                          setFieldState(() {
+                            _urlError = null;
+                          });
+                        }
+                      },
+                      decoration: InputDecoration(
+                        hintText: context.t('roastery_logo_hint'),
+                        hintStyle: const TextStyle(color: Colors.white24),
+                        errorText: _urlError,
+                        errorStyle: GoogleFonts.outfit(color: Colors.redAccent, fontSize: 11),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                      ),
+                    );
+                  }
                 ),
               ),
             ),
@@ -610,7 +647,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      lot.coffeeName ?? 'Unknown Lot',
+                      lot.coffeeName ?? context.t('unknown_lot'),
                       style: GoogleFonts.outfit(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
@@ -618,7 +655,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
                       ),
                     ),
                     Text(
-                      lot.originCountry ?? 'Origin Unknown',
+                      lot.originCountry ?? context.t('origin_unknown'),
                       style: GoogleFonts.outfit(
                         color: Colors.white38,
                         fontSize: 12,

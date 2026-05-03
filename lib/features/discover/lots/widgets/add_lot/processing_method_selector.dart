@@ -7,7 +7,7 @@ extension _ProcessingMethodSection on _AddLotScreenState {
         _darkCard(
           children: [
             _dropdownRow(
-              label: context.t('section_processing').toUpperCase(),
+              label: context.t('section_processing'),
               value: _selectedProcess,
               items: _processingMethods,
               onChanged: (val) {
@@ -48,7 +48,7 @@ extension _ProcessingMethodSection on _AddLotScreenState {
               child: Row(
                 children: [
                   Text(
-                    context.t('decaf').toUpperCase(),
+                    context.t('decaf'),
                     style: GoogleFonts.outfit(
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
@@ -72,7 +72,7 @@ extension _ProcessingMethodSection on _AddLotScreenState {
               _divider(),
               _dropdownRow(
                 label:
-                    "${context.t('section_processing').toUpperCase()} ${context.t('decaf').toUpperCase()}",
+                    "${context.t('section_processing')} ${context.t('decaf')}",
                 value: _decafMethods.contains(_decafProcess)
                     ? _decafProcess
                     : 'Other',

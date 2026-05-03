@@ -13,7 +13,7 @@ extension _CoffeeTabSection on _AddLotScreenState {
         _darkCard(
           children: [
             _dateRow(
-              label: context.t('roast_date_field').toUpperCase(),
+              label: context.t('roast_date_field'),
               date: _roastDate,
               onTap: () async {
                 final picked = await showDatePicker(
@@ -35,7 +35,7 @@ extension _CoffeeTabSection on _AddLotScreenState {
             ),
             _divider(),
             _dateRow(
-              label: context.t('opened_at_field').toUpperCase(),
+              label: context.t('opened_at_field'),
               date: _openedAt,
               placeholder: context.t('not_opened'),
               onTap: () async {
@@ -149,7 +149,7 @@ extension _CoffeeTabSection on _AddLotScreenState {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    context.t('roast_level_field').toUpperCase(),
+                    context.t('roast_level_field'),
                     style: GoogleFonts.outfit(
                       fontSize: 10,
                       color: Colors.white,
@@ -177,11 +177,9 @@ extension _CoffeeTabSection on _AddLotScreenState {
                         return DropdownMenuItem<String>(
                           value: level,
                           child: Text(
-                            context
-                                .t(
-                                  'roast_${level.toLowerCase().replaceAll('-', '_')}',
-                                )
-                                .toUpperCase(),
+                            context.t(
+                              'roast_${level.toLowerCase().replaceAll('-', '_')}',
+                            ),
                             style: GoogleFonts.outfit(color: Colors.white),
                           ),
                         );
@@ -197,6 +195,19 @@ extension _CoffeeTabSection on _AddLotScreenState {
                   ),
                 ],
               ),
+            ),
+          ],
+        ),
+
+        _sectionLabel(context.t('section_processing')),
+        _buildProcessSection(),
+
+        _sectionLabel(context.t('section_flavor_notes')),
+        _darkCard(
+          children: [
+            _fieldRow(
+              label: context.t('flavor_notes_field'),
+              controller: _flavorProfileController,
             ),
           ],
         ),

@@ -71,7 +71,7 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  context.t('roasters').toUpperCase(),
+                  context.t('roasters'),
                   style: GoogleFonts.outfit(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

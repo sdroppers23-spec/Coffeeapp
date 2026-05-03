@@ -36,7 +36,7 @@ extension _RoasteryTabSection on _AddLotScreenState {
             if (_roasteryController.text.isNotEmpty) ...[
               _divider(),
               _fieldRow(
-                label: context.t('location_field').toUpperCase(),
+                label: context.t('location_field'),
                 controller: _roasteryLocationController,
                 placeholder: context.t('location_field'),
                 readOnly: _userRoasterId != null,
@@ -49,36 +49,36 @@ extension _RoasteryTabSection on _AddLotScreenState {
         _darkCard(
           children: [
             _fieldRow(
-              label: context.t('coffee_name_field').toUpperCase(),
+              label: context.t('coffee_name_field'),
               controller: _coffeeNameController,
               placeholder: context.t('coffee_name_field'),
             ),
             _divider(),
             _fieldRow(
-              label: context.t('farmer_field').toUpperCase(),
+              label: context.t('farmer_field'),
               controller: _farmerController,
             ),
             _divider(),
             _fieldRow(
-              label: context.t('wash_station_field').toUpperCase(),
+              label: context.t('wash_station_field'),
               controller: _washStationController,
             ),
             _divider(),
             _fieldRow(
-              label: context.t('lot_number_field').toUpperCase(),
+              label: context.t('lot_number_field'),
               controller: _lotNumberController,
               type: _FieldType.lotNumber,
             ),
             _divider(),
             _fieldRow(
-              label: context.t('sca_score_field').toUpperCase(),
+              label: context.t('sca_score_field'),
               controller: _scaScoreController,
               type: _FieldType.scaScore,
               helperText: context.t('sca_score_helper'),
             ),
             _divider(),
             _fieldRow(
-              label: context.t('weight_field').toUpperCase(),
+              label: context.t('weight_field'),
               controller: _weightController,
               suffix: 'g',
               type: _FieldType.weight,
@@ -94,38 +94,25 @@ extension _RoasteryTabSection on _AddLotScreenState {
         _darkCard(
           children: [
             _fieldRow(
-              label: context.t('country_field').toUpperCase(),
+              label: context.t('country_field'),
               controller: _originCountryController,
             ),
             _divider(),
             _fieldRow(
-              label: context.t('region_field').toUpperCase(),
+              label: context.t('region_field'),
               controller: _regionController,
             ),
             _divider(),
             _fieldRow(
-              label: context.t('altitude_field').toUpperCase(),
+              label: context.t('altitude_field'),
               controller: _altitudeController,
               type: _FieldType.altitude,
               suffix: pref.lengthUnit == LengthUnit.meters ? 'm' : 'ft',
             ),
             _divider(),
             _fieldRow(
-              label: context.t('varietals_field').toUpperCase(),
+              label: context.t('varietals_field'),
               controller: _varietiesController,
-            ),
-          ],
-        ),
-
-        _sectionLabel(context.t('section_processing')),
-        _buildProcessSection(),
-
-        _sectionLabel(context.t('section_flavor_notes')),
-        _darkCard(
-          children: [
-            _fieldRow(
-              label: context.t('flavor_notes_field').toUpperCase(),
-              controller: _flavorProfileController,
             ),
           ],
         ),
@@ -134,28 +121,28 @@ extension _RoasteryTabSection on _AddLotScreenState {
         _darkCard(
           children: [
             _fieldRow(
-              label: context.t('retail_250g').toUpperCase(),
+              label: context.t('retail_250g'),
               controller: _priceController,
               type: _FieldType.numeric,
               suffix: currencySymbol,
             ),
             _divider(),
             _fieldRow(
-              label: context.t('retail_1kg').toUpperCase(),
+              label: context.t('retail_1kg'),
               controller: _retailPrice1kController,
               type: _FieldType.numeric,
               suffix: currencySymbol,
             ),
             _divider(),
             _fieldRow(
-              label: context.t('wholesale_250g').toUpperCase(),
+              label: context.t('wholesale_250g'),
               controller: _wholesalePrice250Controller,
               type: _FieldType.numeric,
               suffix: currencySymbol,
             ),
             _divider(),
             _fieldRow(
-              label: context.t('wholesale_1kg').toUpperCase(),
+              label: context.t('wholesale_1kg'),
               controller: _wholesalePrice1kController,
               type: _FieldType.numeric,
               suffix: currencySymbol,

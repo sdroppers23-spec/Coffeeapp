@@ -10,7 +10,7 @@ extension _SensoryTabSection on _AddLotScreenState {
         _darkCard(
           children: [
             _sensorySlider(
-              context.t('bitterness').toUpperCase(),
+              context.t('bitterness'),
               _bitterness,
               (v) => _updateState(() => _bitterness = v),
               theme: theme,
@@ -18,7 +18,7 @@ extension _SensoryTabSection on _AddLotScreenState {
             ),
             _divider(),
             _sensorySlider(
-              context.t('acidity').toUpperCase(),
+              context.t('acidity'),
               _acidity,
               (v) => _updateState(() => _acidity = v),
               theme: theme,
@@ -26,7 +26,7 @@ extension _SensoryTabSection on _AddLotScreenState {
             ),
             _divider(),
             _sensorySlider(
-              context.t('sweetness').toUpperCase(),
+              context.t('sweetness'),
               _sweetness,
               (v) => _updateState(() => _sweetness = v),
               theme: theme,
@@ -34,7 +34,7 @@ extension _SensoryTabSection on _AddLotScreenState {
             ),
             _divider(),
             _sensorySlider(
-              context.t('body').toUpperCase(),
+              context.t('body'),
               _body,
               (v) => _updateState(() => _body = v),
               theme: theme,
@@ -42,7 +42,7 @@ extension _SensoryTabSection on _AddLotScreenState {
             ),
             _divider(),
             _sensorySlider(
-              context.t('intensity').toUpperCase(),
+              context.t('intensity'),
               _intensity,
               (v) => _updateState(() => _intensity = v),
               theme: theme,
@@ -50,7 +50,7 @@ extension _SensoryTabSection on _AddLotScreenState {
             ),
             _divider(),
             _sensorySlider(
-              context.t('aftertaste').toUpperCase(),
+              context.t('aftertaste'),
               _aftertaste,
               (v) => _updateState(() => _aftertaste = v),
               theme: theme,

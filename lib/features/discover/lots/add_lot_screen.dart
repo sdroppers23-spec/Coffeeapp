@@ -731,7 +731,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         }
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFF1A1A1A),
+        backgroundColor: const Color(0xFF0A0A0A),
         body: SafeArea(
           child: GestureDetector(
             onTap: () {
@@ -793,8 +793,8 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           const Spacer(),
           Text(
             widget.initialLot != null
-                ? context.t('edit_lot').toUpperCase()
-                : context.t('add_lot').toUpperCase(),
+                ? context.t('edit_lot')
+                : context.t('add_lot'),
             style: GoogleFonts.outfit(
               fontSize: 13,
               fontWeight: FontWeight.bold,
@@ -839,8 +839,12 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       margin: const EdgeInsets.fromLTRB(16, 0, 16, 8),
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: const Color(0xFFC8A96E).withValues(alpha: 0.04),
+        color: Colors.white.withValues(alpha: 0.03),
         borderRadius: BorderRadius.circular(50),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.05),
+          width: 1,
+        ),
       ),
       child: TabBar(
         controller: _tabController,
@@ -1018,7 +1022,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           ),
           child: Center(
             child: Text(
-              context.t('save_lot').toUpperCase(),
+              context.t('save_lot'),
               style: GoogleFonts.outfit(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
@@ -1060,16 +1064,20 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   );
 
   Widget _darkCard({required List<Widget> children}) => Container(
-    decoration: BoxDecoration(
-      color: const Color(0xFFC8A96E).withValues(alpha: 0.04),
-      borderRadius: BorderRadius.circular(20),
-    ),
-    clipBehavior: Clip.hardEdge,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: children,
-    ),
-  );
+        margin: const EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.03),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.05),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: children,
+        ),
+      );
 
   Widget _divider() => Divider(
     height: 1,

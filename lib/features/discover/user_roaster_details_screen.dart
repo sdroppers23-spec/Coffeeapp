@@ -44,11 +44,13 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
     final locationController = TextEditingController(text: roaster.location);
     final logoUrlController = TextEditingController(text: roaster.logoUrl);
     String? localPath = roaster.localLogoPath;
+    String? urlError;
 
-    await showDialog(
-      context: context,
-      builder: (ctx) => StatefulBuilder(
-        builder: (context, setDialogState) => AlertDialog(
+    if (context.mounted) {
+      showDialog(
+        context: context,
+        builder: (ctx) => StatefulBuilder(
+          builder: (context, setDialogState) => AlertDialog(
           backgroundColor: const Color(0xFF151515),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
@@ -102,7 +104,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                 buildDialogField(
                   context,
                   nameController,
-                  context.t('name_label'),
+                  context.t('roaster_name_label'),
                   Icons.business_rounded,
                 ),
                 const SizedBox(height: 12),
@@ -123,54 +125,97 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                 buildDialogField(
                   context,
                   logoUrlController,
-                  'Logo URL (optional)',
+                  context.t('roaster_logo_url_label'),
                   Icons.link_rounded,
+                  errorText: urlError,
                 ),
                 const SizedBox(height: 12),
                 buildDialogField(
                   context,
                   shortDescController,
-                  context.t('description_label'),
+                  context.t('short_desc_label'),
                   Icons.description_rounded,
                   maxLines: 3,
                 ),
               ],
             ),
           ),
+          actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(
-                context.t('cancel'),
-                style: GoogleFonts.outfit(color: Colors.white38),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                if (nameController.text.isEmpty) return;
-                final updated = roaster.copyWith(
-                  name: nameController.text,
-                  country: countryController.text,
-                  location: locationController.text,
-                  description: shortDescController.text,
-                  logoUrl: logoUrlController.text,
-                  localLogoPath: localPath,
-                  updatedAt: DateTime.now(),
-                );
-                await notifier.saveRoaster(updated);
-                if (context.mounted) Navigator.pop(context);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFC8A96E),
-                foregroundColor: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    if (nameController.text.isEmpty) return;
+
+                    String url = logoUrlController.text.trim();
+                    if (url.isNotEmpty) {
+                      // Basic URL validation & auto-prefix
+                      if (!url.startsWith('http://') &&
+                          !url.startsWith('https://')) {
+                        url = 'https://$url';
+                      }
+
+                      final urlRegExp = RegExp(
+                        r'^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$',
+                      );
+
+                      if (!urlRegExp.hasMatch(url)) {
+                        setDialogState(() {
+                          urlError = context.t('invalid_url_format');
+                        });
+                        return;
+                      }
+                    }
+
+                    final updated = roaster.copyWith(
+                      name: nameController.text,
+                      country: countryController.text,
+                      location: locationController.text,
+                      description: shortDescController.text,
+                      logoUrl: url,
+                      localLogoPath: localPath,
+                      updatedAt: DateTime.now(),
+                    );
+                    await notifier.saveRoaster(updated);
+                    if (context.mounted) Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFC8A96E),
+                    foregroundColor: Colors.black,
+                    minimumSize: const Offset(double.infinity, 54),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 8,
+                    shadowColor: const Color(0xFFC8A96E).withValues(alpha: 0.3),
+                  ),
+                  child: Text(
+                    context.t('save'),
+                    style: GoogleFonts.outfit(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 16,
+                      letterSpacing: 1,
+                    ),
+                  ),
                 ),
-              ),
-              child: Text(
-                context.t('save'),
-                style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
-              ),
+                const SizedBox(height: 12),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: TextButton.styleFrom(
+                    minimumSize: const Offset(double.infinity, 44),
+                  ),
+                  child: Text(
+                    context.t('cancel'),
+                    style: GoogleFonts.outfit(
+                      color: Colors.white38,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -253,7 +298,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                       ),
                     ),
                     title: Text(
-                      lot.coffeeName ?? 'Unknown',
+                      lot.coffeeName ?? context.t('unknown_lot'),
                       style: GoogleFonts.outfit(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
@@ -373,7 +418,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      '${context.t('unlink_lot_confirm_desc')} "$lotName"?',
+                      context.t('unlink_lot_confirm_desc_template', args: {'name': lotName}),
                       textAlign: TextAlign.center,
                       style: GoogleFonts.outfit(
                         color: Colors.white60,
@@ -446,6 +491,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
     String label,
     IconData icon, {
     int maxLines = 1,
+    String? errorText,
   }) {
     return TextField(
       controller: controller,
@@ -454,6 +500,8 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
       decoration: InputDecoration(
         labelText: label,
         labelStyle: GoogleFonts.outfit(color: Colors.white38, fontSize: 12),
+        errorText: errorText,
+        errorStyle: GoogleFonts.outfit(color: Colors.redAccent, fontSize: 11),
         prefixIcon: Icon(icon, color: const Color(0xFFC8A96E), size: 18),
         filled: true,
         fillColor: Colors.white.withValues(alpha: 0.03),
@@ -735,7 +783,7 @@ class _UserRoasterDetailsScreenState
                   child: Row(
                     children: [
                       Text(
-                        l10n.translate('lots_by_roaster_title'),
+                        context.t('lots_by_roaster_title'),
                         style: GoogleFonts.poppins(
                           color: const Color(0xFFC8A96E),
                           fontWeight: FontWeight.bold,

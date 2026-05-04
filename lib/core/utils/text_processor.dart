@@ -8,7 +8,10 @@ class CoffeeTextProcessor {
   static String process(String input) {
     if (input.isEmpty) return '';
 
-    String output = input;
+    String output = input
+        .replaceAll('\r', '')
+        .replaceAll('\\r', '')
+        .replaceAll('\\n', '\n');
 
     // 1. Handle Headers (# Header -> <h1>, ## Header -> <h2>, etc)
     output = output.replaceAllMapped(

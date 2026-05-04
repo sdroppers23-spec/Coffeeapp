@@ -326,13 +326,12 @@ class AppDatabase extends _$AppDatabase {
     });
   }
 
-  Future<List<SpecialtyArticleDto>> getAllArticlesV2(String lang) async {
     final query = select(specialtyArticlesV2).join([
-      leftOuterJoin(
+      innerJoin(
         specialtyArticleTranslationsV2,
         specialtyArticleTranslationsV2.articleId.equalsExp(
-              specialtyArticlesV2.id,
-            ) &
+          specialtyArticlesV2.id,
+        ) &
             specialtyArticleTranslationsV2.languageCode.equals(lang),
       ),
     ]);
@@ -369,7 +368,7 @@ class AppDatabase extends _$AppDatabase {
 
   Future<List<LocalizedBeanDto>> getEncyclopediaV2(String lang) async {
     final query = select(localizedBeansV2).join([
-      leftOuterJoin(
+      innerJoin(
         localizedBeanTranslationsV2,
         localizedBeanTranslationsV2.beanId.equalsExp(localizedBeansV2.id) &
             localizedBeanTranslationsV2.languageCode.equals(lang),

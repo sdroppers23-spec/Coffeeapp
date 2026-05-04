@@ -5,8 +5,11 @@ import '../../shared/widgets/glass_container.dart';
 import '../../core/database/dtos.dart';
 import '../../core/utils/content_utils.dart';
 import 'specialty_article_detail_screen.dart';
+import '../../core/l10n/app_localizations.dart';
 
-class SpecialtyArticleCard extends StatelessWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class SpecialtyArticleCard extends ConsumerWidget {
   final SpecialtyArticleDto article;
   final String moduleName;
   final int index;
@@ -19,7 +22,7 @@ class SpecialtyArticleCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final title = article.title;
     final content = article.contentHtml;
     final imageUrl = article.effectiveImageUrl;
@@ -79,7 +82,7 @@ class SpecialtyArticleCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '$readTime хв',
+                      ref.t('read_time_short', args: {'time': readTime.toString()}),
                       style: GoogleFonts.poppins(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
@@ -124,7 +127,7 @@ class SpecialtyArticleCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      'Читати далі',
+                      ref.t('read_more'),
                       style: GoogleFonts.cormorantGaramond(
                         fontSize: 19,
                         fontWeight: FontWeight.w600,

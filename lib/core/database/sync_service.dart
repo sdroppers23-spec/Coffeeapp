@@ -2096,31 +2096,50 @@ class SyncService {
 
       // Add 'uk' fallback for V2 if missing
       if (!translationsV2.any((t) => t.languageCode.value == 'uk')) {
-        translationsV2.add(
-          SpecialtyArticleTranslationsV2Companion(
-            articleId: Value(id),
-            languageCode: const Value('uk'),
-            title: Value(
-              ContentUtils.cleanCoffeeContent(
-                item['title_uk'] as String? ??
-                    item['title_en'] as String? ??
-                    '',
+        final titleUk = item['title_uk'] as String?;
+        final contentUk = (item['content_html_uk'] ?? item['content_uk']) as String?;
+
+        if (titleUk != null || contentUk != null) {
+          translationsV2.add(
+            SpecialtyArticleTranslationsV2Companion(
+              articleId: Value(id),
+              languageCode: const Value('uk'),
+              title: Value(
+                ContentUtils.cleanCoffeeContent(titleUk ?? ''),
+              ),
+              subtitle: Value(
+                ContentUtils.cleanCoffeeContent(item['subtitle_uk'] as String? ?? ''),
+              ),
+              contentHtml: Value(
+                ContentUtils.cleanCoffeeContent(contentUk ?? ''),
               ),
             ),
-            subtitle: Value(
-              ContentUtils.cleanCoffeeContent(
-                item['subtitle_uk'] as String? ?? '',
+          );
+        }
+      }
+
+      // Add 'en' fallback for V2 if missing
+      if (!translationsV2.any((t) => t.languageCode.value == 'en')) {
+        final titleEn = item['title_en'] as String?;
+        final contentEn = (item['content_html_en'] ?? item['content_en']) as String?;
+
+        if (titleEn != null || contentEn != null) {
+          translationsV2.add(
+            SpecialtyArticleTranslationsV2Companion(
+              articleId: Value(id),
+              languageCode: const Value('en'),
+              title: Value(
+                ContentUtils.cleanCoffeeContent(titleEn ?? ''),
+              ),
+              subtitle: Value(
+                ContentUtils.cleanCoffeeContent(item['subtitle_en'] as String? ?? ''),
+              ),
+              contentHtml: Value(
+                ContentUtils.cleanCoffeeContent(contentEn ?? ''),
               ),
             ),
-            contentHtml: Value(
-              ContentUtils.cleanCoffeeContent(
-                item['content_html_uk'] as String? ??
-                    item['content_uk'] as String? ??
-                    '',
-              ),
-            ),
-          ),
-        );
+          );
+        }
       }
 
       await db.smartUpsertArticleV2(articleV2, translationsV2);

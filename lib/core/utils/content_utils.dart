@@ -17,8 +17,14 @@ class ContentUtils {
 
     String cleaned = raw;
 
-    // 1. Handle common escaping issues from DB strings
-    cleaned = cleaned.replaceAll('\\"', '"').replaceAll('\\n', '\n');
+    // 1. Handle common escaping issues and carriage returns from DB strings
+    cleaned = cleaned
+        .replaceAll('\\"', '"')
+        .replaceAll('\\n', '\n')
+        .replaceAll('\\r', '')
+        .replaceAll('\r', '')
+        .replaceAll(' \r ', ' ')
+        .replaceAll(RegExp(r'\s+\\r\s+'), ' ');
 
     // 2. Map specific keys to Markdown equivalents BEFORE stripping all keys
     // Handle opening keys

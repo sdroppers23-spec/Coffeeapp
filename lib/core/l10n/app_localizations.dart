@@ -47,6 +47,14 @@ extension AppLocalizationsRef on WidgetRef {
   }
 }
 
+extension AppLocalizationsRefBase on Ref {
+  String t(String key, {Map<String, String>? args}) {
+    final languageCode = watch(localeProvider);
+    LocaleService.currentLocale = languageCode;
+    return AppLocalizations.get(key, languageCode, args: args);
+  }
+}
+
 class AppLocalizations {
   final Locale? locale;
   AppLocalizations([this.locale]);
@@ -98,6 +106,9 @@ class AppLocalizations {
     'en': {
       'discover': 'Discover',
       'no_lots_linked': 'No lots linked',
+      'education': 'Education',
+      'specialty_articles': 'Specialty Articles',
+      'origin_guides': 'Origin Guides',
       'no_lots_linked_desc': 'Link coffee lots from your list to this roaster to see them here.',
       'link_lot_title': 'Link Lot',
       'unlink_lot_confirm_title': 'Unlink Lot',
@@ -445,6 +456,8 @@ class AppLocalizations {
       'cloud_sync': 'Download from Cloud',
       'push_local': 'Upload to Cloud',
       'read_more': 'Read more',
+      'read_time': '{min} min read',
+      'read_time_short': '{time} min',
       'about_farm_region': 'About Farm & Region',
       'recipes_processing': 'Processing Methods',
       'harvest': 'Harvest',
@@ -1179,7 +1192,12 @@ class AppLocalizations {
       'sync_choice_desc': 'Оберіть режим:',
       'cloud_sync': 'Завантажити з хмари',
       'push_local': 'Вивантажити в хмару',
+      'education': 'Освіта',
+      'specialty_articles': 'Статті про каву',
+      'origin_guides': 'Гіди по регіонах',
       'read_more': 'Детальніше',
+      'read_time': '{min} хв читання',
+      'read_time_short': '{time} хв',
       'about_farm_region': 'Про ферму та регіон',
       'recipes_processing': 'Методи обробки',
       'harvest': 'Врожай',

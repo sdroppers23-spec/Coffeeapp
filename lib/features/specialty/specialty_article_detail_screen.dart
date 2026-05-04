@@ -9,6 +9,7 @@ import '../navigation/navigation_providers.dart';
 import '../../core/database/dtos.dart';
 import '../../shared/widgets/scroll_to_top_button.dart';
 import '../../core/utils/text_processor.dart';
+import '../../core/l10n/app_localizations.dart';
 
 class SpecialtyArticleDetailScreen extends ConsumerStatefulWidget {
   final SpecialtyArticleDto article;
@@ -185,7 +186,7 @@ class _SpecialtyArticleDetailScreenState
                             ),
                             const SizedBox(width: 6),
                             Text(
-                              '${widget.article.readTimeMin} хв читання',
+                              ref.t('read_time', args: {'min': widget.article.readTimeMin.toString()}),
                               style: GoogleFonts.outfit(
                                 fontSize: 14,
                                 color: Colors.white.withValues(alpha: 0.6),

@@ -212,7 +212,7 @@ class _ModernUndoTimerState extends ConsumerState<ModernUndoTimer>
                           ),
                         ),
                         child: Text(
-                          context.t('undo'),
+                          ref.t('undo'),
                           style: GoogleFonts.outfit(
                             color: Colors.black,
                             fontSize: 12,

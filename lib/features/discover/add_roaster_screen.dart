@@ -68,15 +68,16 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
     );
 
     if (result != null && result.files.single.path != null) {
+      final localContext = context;
       final file = File(result.files.single.path!);
       final size = await file.length();
 
       if (!file.path.toLowerCase().endsWith('.png')) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
+        if (localContext.mounted) {
+          ScaffoldMessenger.of(localContext).showSnackBar(
             SnackBar(
               content: Text(
-                context.t('invalid_file_format'),
+                ref.t('invalid_file_format'),
               ),
             ),
           );
@@ -85,11 +86,11 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
       }
 
       if (size > 5 * 1024 * 1024) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
+        if (localContext.mounted) {
+          ScaffoldMessenger.of(localContext).showSnackBar(
             SnackBar(
               content: Text(
-                context.t('file_too_large'),
+                ref.t('file_too_large'),
               ),
             ),
           );
@@ -107,6 +108,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
   Future<void> _handleSave(bool isCopy) async {
     if (!_formKey.currentState!.validate()) return;
 
+    final localContext = context;
     final db = ref.read(databaseProvider);
 
     // 1. Create Roaster
@@ -142,13 +144,13 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
       bool skip = false;
 
       if (conflict != null) {
-        if (!mounted) continue;
+        if (!localContext.mounted) continue;
         final result = await showDialog<ConflictResult>(
-          context: context,
+          context: localContext,
           barrierDismissible: false,
           builder: (_) => ConflictDialog(lotName: lot.coffeeName ?? ''),
         );
-        if (!mounted) continue;
+        if (!localContext.mounted) continue;
 
         switch (result) {
           case ConflictResult.replace:
@@ -166,7 +168,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
             // Add suffix and create new
             lotToProcess = lot.copyWith(
               id: const Uuid().v4(),
-              coffeeName: context.t('copy_name_template', args: {'name': lot.coffeeName ?? ''}),
+              coffeeName: ref.t('copy_name_template', args: {'name': lot.coffeeName ?? ''}),
               brandId: roasterId,
               roasteryName: _nameController.text,
               createdAt: DateTime.now(),
@@ -220,17 +222,17 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
       }
     }
 
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
+    if (localContext.mounted) {
+      ScaffoldMessenger.of(localContext).showSnackBar(
         SnackBar(
           content: Text(
             isCopy
-                ? context.t('lot_copied')
-                : context.t('lot_moved'),
+                ? ref.t('lot_copied')
+                : ref.t('lot_moved'),
           ),
           duration: const Duration(seconds: 5),
           action: SnackBarAction(
-            label: context.t('waiter_undo'),
+            label: ref.t('waiter_undo'),
             onPressed: () async {
               // Undo logic
               for (var lot in affectedLots) {
@@ -259,7 +261,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
           ),
         ),
       );
-      Navigator.pop(context);
+      Navigator.pop(localContext);
     }
   }
 
@@ -347,7 +349,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
               ),
               isDense: true,
             ),
-            validator: (v) => v == null || v.isEmpty ? context.t('required_error') : null,
+            validator: (v) => v == null || v.isEmpty ? ref.t('required_error') : null,
           ),
         ),
       ],
@@ -361,7 +363,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
       backgroundColor: const Color(0xFF0F172A),
       flexibleSpace: FlexibleSpaceBar(
         title: Text(
-          context.t('add_roaster'),
+          ref.t('add_roaster'),
           style: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 18),
         ),
         background: Container(
@@ -384,16 +386,16 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildLabel(context.t('general_info')),
+        _buildLabel(ref.t('general_info')),
         const SizedBox(height: 16),
         _buildSection(
-          context.t('roaster_name_label'),
+          ref.t('roaster_name_label'),
           _nameController,
           Icons.business_rounded,
         ),
         const SizedBox(height: 16),
         _buildSection(
-          context.t('city_label'),
+          ref.t('city_label'),
           _locationController,
           Icons.location_on_rounded,
         ),
@@ -405,16 +407,16 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildLabel(context.t('description')),
+        _buildLabel(ref.t('description')),
         const SizedBox(height: 16),
         _buildSection(
-          context.t('short_desc_label'),
+          ref.t('short_desc_label'),
           _shortDescController,
           Icons.short_text_rounded,
         ),
         const SizedBox(height: 16),
         _buildSection(
-          context.t('full_desc_label'),
+          ref.t('full_desc_label'),
           _fullDescController,
           Icons.notes_rounded,
           maxLines: 4,
@@ -427,7 +429,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildLabel(context.t('roastery_logo')),
+        _buildLabel(ref.t('roastery_logo')),
         const SizedBox(height: 16),
         Row(
           children: [
@@ -457,7 +459,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
                           
                           if (!urlRegExp.hasMatch(url)) {
                             setFieldState(() {
-                              _urlError = context.t('invalid_url_format');
+                              _urlError = ref.t('invalid_url_format');
                             });
                           } else {
                             setFieldState(() {
@@ -471,7 +473,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
                         }
                       },
                       decoration: InputDecoration(
-                        hintText: context.t('roastery_logo_hint'),
+                        hintText: ref.t('roastery_logo_hint'),
                         hintStyle: const TextStyle(color: Colors.white24),
                         errorText: _urlError,
                         errorStyle: GoogleFonts.outfit(color: Colors.redAccent, fontSize: 11),
@@ -495,7 +497,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildLabel(context.t('select_lots')),
+        _buildLabel(ref.t('select_lots')),
         const SizedBox(height: 16),
         ..._allUserLots.map((lot) => _buildLotItem(lot)),
       ],
@@ -519,7 +521,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
             ),
             onPressed: () => _handleSave(false),
             child: Text(
-              context.t('migrate_lots'),
+              ref.t('migrate_lots'),
               style: GoogleFonts.poppins(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
@@ -541,7 +543,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
             ),
             onPressed: () => _handleSave(true),
             child: Text(
-              context.t('copy_lots'),
+              ref.t('copy_lots'),
               style: GoogleFonts.poppins(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
@@ -648,7 +650,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      lot.coffeeName ?? context.t('unknown_lot'),
+                      lot.coffeeName ?? ref.t('unknown_lot'),
                       style: GoogleFonts.outfit(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
@@ -656,7 +658,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
                       ),
                     ),
                     Text(
-                      lot.originCountry ?? context.t('origin_unknown'),
+                      lot.originCountry ?? ref.t('origin_unknown'),
                       style: GoogleFonts.outfit(
                         color: Colors.white38,
                         fontSize: 12,

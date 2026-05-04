@@ -71,7 +71,7 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  context.t('roasters'),
+                  ref.t('roasters'),
                   style: GoogleFonts.outfit(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -109,7 +109,7 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                 style: GoogleFonts.outfit(color: Colors.white, fontSize: 14),
                 textAlignVertical: TextAlignVertical.center,
                 decoration: InputDecoration(
-                  hintText: context.t('search_roasters'),
+                  hintText: ref.t('search_roasters'),
                   hintStyle:
                       GoogleFonts.outfit(color: Colors.white24, fontSize: 14),
                   border: InputBorder.none,
@@ -173,7 +173,7 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              context.t('add_roaster_uppercase'),
+                              ref.t('add_roaster_uppercase'),
                               style: GoogleFonts.outfit(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
@@ -302,7 +302,7 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
               const Icon(Icons.close_rounded, color: Colors.redAccent, size: 20),
         ),
         title: Text(
-          context.t('none_clear_selection'),
+          ref.t('none_clear_selection'),
           style: GoogleFonts.outfit(
             color: Colors.white,
             fontWeight: FontWeight.w600,
@@ -325,12 +325,12 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
           ),
           const SizedBox(height: 16),
           Text(
-            context.t('empty_roasters_title'),
+            ref.t('empty_roasters_title'),
             style: GoogleFonts.outfit(color: Colors.white38, fontSize: 16),
           ),
           const SizedBox(height: 4),
           Text(
-            context.t('empty_roasters_desc'),
+            ref.t('empty_roasters_desc'),
             style: GoogleFonts.outfit(color: Colors.white12, fontSize: 12),
           ),
         ],
@@ -362,8 +362,8 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
           ),
           title: Text(
             existing == null
-                ? context.t('add_roaster_title')
-                : context.t('edit_profile_dialog_title'),
+                ? ref.t('add_roaster_title')
+                : ref.t('edit_profile_dialog_title'),
             style: GoogleFonts.outfit(color: const Color(0xFFC8A96E)),
           ),
           content: SingleChildScrollView(
@@ -407,7 +407,7 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                   autofocus: true,
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                    labelText: context.t('roaster_name_label'),
+                    labelText: ref.t('roaster_name_label'),
                     labelStyle: const TextStyle(color: Colors.white38),
                     enabledBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white12),
@@ -419,7 +419,7 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                   controller: locationController,
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                    labelText: context.t('location_label'),
+                    labelText: ref.t('location_label'),
                     labelStyle: const TextStyle(color: Colors.white38),
                     enabledBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white12),
@@ -431,7 +431,7 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                   controller: countryController,
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                    labelText: context.t('country_field'),
+                    labelText: ref.t('country_field'),
                     labelStyle: const TextStyle(color: Colors.white38),
                     enabledBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white12),
@@ -443,7 +443,7 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                   controller: logoUrlController,
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                    labelText: context.t('roaster_logo_url_label'),
+                    labelText: ref.t('roaster_logo_url_label'),
                     labelStyle: const TextStyle(color: Colors.white38),
                     enabledBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white12),
@@ -453,7 +453,7 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                 const SizedBox(height: 16),
                 SwitchListTile(
                   title: Text(
-                    context.t('favorite_label'),
+                    ref.t('favorite_label'),
                     style: GoogleFonts.outfit(
                       color: Colors.white,
                       fontSize: 14,
@@ -471,7 +471,7 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: Text(
-                context.t('cancel'),
+                ref.t('cancel'),
                 style: const TextStyle(color: Colors.white38),
               ),
             ),
@@ -498,7 +498,7 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                   if (duplicate != null) {
                     ToastService.showError(
                       context,
-                      context.t('error_roaster_exists'),
+                      ref.t('error_roaster_exists'),
                     );
                     widget.onSelected(duplicate);
                     Navigator.pop(context); // Close dialog
@@ -527,7 +527,7 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                 Navigator.pop(context);
               },
               child: Text(
-                context.t('save'),
+                ref.t('save'),
                 style: const TextStyle(color: Color(0xFFC8A96E)),
               ),
             ),
@@ -543,18 +543,18 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF121212),
         title: Text(
-          context.t('delete_roaster_title'),
+          ref.t('delete_roaster_title'),
           style: const TextStyle(color: Colors.white),
         ),
         content: Text(
-          context.t('delete_roaster_confirm', args: {'name': roaster.name}),
+          ref.t('delete_roaster_confirm', args: {'name': roaster.name}),
           style: const TextStyle(color: Colors.white70),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              context.t('cancel'),
+              ref.t('cancel'),
               style: const TextStyle(color: Colors.white38),
             ),
           ),
@@ -564,7 +564,7 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
               Navigator.pop(context);
             },
             child: Text(
-              context.t('delete_uppercase'),
+              ref.t('delete_uppercase'),
               style: const TextStyle(color: Colors.redAccent),
             ),
           ),

@@ -1,16 +1,17 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/l10n/app_localizations.dart';
 
 enum ConflictResult { replace, copyRestart, cancel }
 
-class ConflictDialog extends StatelessWidget {
+class ConflictDialog extends ConsumerWidget {
   final String lotName;
 
   const ConflictDialog({super.key, required this.lotName});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
       child: AlertDialog(
@@ -29,7 +30,7 @@ class ConflictDialog extends StatelessWidget {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                context.t('conflict_detected'),
+                ref.t('conflict_detected'),
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -44,7 +45,7 @@ class ConflictDialog extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              context.t('conflict_desc'),
+              ref.t('conflict_desc'),
               style: const TextStyle(color: Colors.white70, fontSize: 14),
             ),
             const SizedBox(height: 16),
@@ -89,7 +90,7 @@ class ConflictDialog extends StatelessWidget {
                   onPressed: () =>
                       Navigator.pop(context, ConflictResult.cancel),
                   child: Text(
-                    context.t('cancel_action'),
+                    ref.t('cancel_action'),
                     style: const TextStyle(color: Colors.white38),
                   ),
                 ),
@@ -112,7 +113,7 @@ class ConflictDialog extends StatelessWidget {
                   ),
                   onPressed: () =>
                       Navigator.pop(context, ConflictResult.copyRestart),
-                  label: Text(context.t('copy_with_suffix')),
+                  label: Text(ref.t('copy_with_suffix')),
                 ),
               ),
               const SizedBox(width: 12),
@@ -132,7 +133,7 @@ class ConflictDialog extends StatelessWidget {
                   onPressed: () =>
                       Navigator.pop(context, ConflictResult.replace),
                   label: Text(
-                    context.t('replace_data'),
+                    ref.t('replace_data'),
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),

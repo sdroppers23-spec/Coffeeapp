@@ -190,7 +190,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                                   children: [
                                     _NavBarItem(
                                       icon: Icons.track_changes_rounded,
-                                      label: context.t('nav_specialty'),
+                                      label: ref.t('nav_specialty'),
                                       isSelected:
                                           widget.navigationShell.currentIndex ==
                                           0,
@@ -199,7 +199,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                                     const SizedBox(width: 24),
                                     _NavBarItem(
                                       icon: Icons.explore_outlined,
-                                      label: context.t('nav_discovery'),
+                                      label: ref.t('nav_discovery'),
                                       isSelected:
                                           widget.navigationShell.currentIndex ==
                                           1,
@@ -208,7 +208,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                                     const SizedBox(width: 24),
                                     _NavBarItem(
                                       icon: Icons.local_cafe_outlined,
-                                      label: context.t('nav_alternative'),
+                                      label: ref.t('nav_alternative'),
                                       isSelected:
                                           widget.navigationShell.currentIndex ==
                                           2,
@@ -272,7 +272,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
 
     entry = OverlayEntry(
       builder: (context) => _FrostedCapsuleToast(
-        message: context.t('exit_confirm'),
+        message: ref.t('exit_confirm'),
         onFinished: () => entry.remove(),
       ),
     );

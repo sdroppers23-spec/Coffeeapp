@@ -108,7 +108,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    context.t('password_reset'),
+                    ref.t('password_reset'),
                     style: GoogleFonts.poppins(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -117,7 +117,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    context.t('password_reset_instruction'),
+                    ref.t('password_reset_instruction'),
                     textAlign: TextAlign.center,
                     style: GoogleFonts.outfit(color: Colors.white70),
                   ),
@@ -128,7 +128,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         child: ElevatedButton(
                           onPressed: () async {
                             final messenger = ScaffoldMessenger.of(context);
-                            final successMessage = context.t(
+                            final successMessage = ref.t(
                               'instruction_email_sent',
                             );
                             Navigator.of(context).pop();
@@ -160,7 +160,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: Text(context.t('ok')),
+                          child: Text(ref.t('ok')),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -173,7 +173,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: Text(context.t('cancel')),
+                          child: Text(ref.t('cancel')),
                         ),
                       ),
                     ],
@@ -207,7 +207,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    context.t('profile_guest_title'),
+                    ref.t('profile_guest_title'),
                     textAlign: TextAlign.center,
                     style: GoogleFonts.outfit(
                       fontSize: 22,
@@ -217,7 +217,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    context.t('profile_guest_message'),
+                    ref.t('profile_guest_message'),
                     textAlign: TextAlign.center,
                     style: GoogleFonts.outfit(
                       fontSize: 16,
@@ -242,7 +242,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       ),
                     ),
                     child: Text(
-                      context.t('go_to_auth'),
+                      ref.t('go_to_auth'),
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),

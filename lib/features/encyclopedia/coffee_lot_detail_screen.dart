@@ -108,12 +108,12 @@ class _CoffeeLotDetailScreenState extends ConsumerState<CoffeeLotDetailScreen>
                         if (isFavorite) {
                           ToastService.showInfo(
                             context,
-                            context.t('toast_removed_from_favorites'),
+                            ref.t('toast_removed_from_favorites'),
                           );
                         } else {
                           ToastService.showSuccess(
                             context,
-                            context.t('toast_added_to_favorites'),
+                            ref.t('toast_added_to_favorites'),
                           );
                         }
                       }
@@ -768,8 +768,8 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
     ModernUndoTimer.show(
       context,
       message: recipes.length == 1
-          ? context.t('toast_recipe_deleted')
-          : '${recipes.length} ${context.t('tab_recipes').toLowerCase()} ${context.t('toast_deleted')}',
+          ? ref.t('toast_recipe_deleted')
+          : '${recipes.length} ${ref.t('tab_recipes').toLowerCase()} ${ref.t('toast_deleted')}',
       onUndo: () {
         setState(() {
           _pendingDeleteIds.removeAll(ids);

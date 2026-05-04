@@ -453,12 +453,12 @@ class _FavoriteIcon extends ConsumerWidget {
           if (bean.isFavorite) {
             ToastService.showInfo(
               context,
-              context.t('toast_removed_from_favorites'),
+              ref.t('toast_removed_from_favorites'),
             );
           } else {
             ToastService.showSuccess(
               context,
-              context.t('toast_added_to_favorites'),
+              ref.t('toast_added_to_favorites'),
             );
           }
         }

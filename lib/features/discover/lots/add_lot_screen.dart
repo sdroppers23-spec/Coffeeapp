@@ -354,7 +354,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         if (bytes.length > 5 * 1024 * 1024) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(context.t('error_image_too_large'))),
+              SnackBar(content: Text(ref.t('error_image_too_large'))),
             );
           }
           return;
@@ -445,14 +445,14 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           if (mounted) {
             ToastService.showSuccess(
               context,
-              context.t('toast_photo_saved_locally'),
+              ref.t('toast_photo_saved_locally'),
             );
           }
         } catch (e) {
           if (mounted) {
             ToastService.showError(
               context,
-              '${context.t('error_saving_photo')}: $e',
+              '${ref.t('error_saving_photo')}: $e',
             );
           }
         }
@@ -568,7 +568,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
         Navigator.of(context, rootNavigator: true).pop();
         if (!mounted) return;
 
-        ToastService.showSuccess(context, context.t('toast_changes_saved'));
+        ToastService.showSuccess(context, ref.t('toast_changes_saved'));
 
         ref.invalidate(userLotsStreamProvider);
 
@@ -583,7 +583,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       if (mounted) {
         // Pop loading safely
         Navigator.of(context, rootNavigator: true).pop();
-        ToastService.showError(context, '${context.t('error_saving_lot')}: $e');
+        ToastService.showError(context, '${ref.t('error_saving_lot')}: $e');
       }
     }
   }
@@ -639,7 +639,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                           ),
                           const SizedBox(height: 20),
                           Text(
-                            context.t('discard_changes_title'),
+                            ref.t('discard_changes_title'),
                             style: GoogleFonts.outfit(
                               color: Colors.white,
                               fontSize: 20,
@@ -648,7 +648,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            context.t('discard_changes_msg'),
+                            ref.t('discard_changes_msg'),
                             textAlign: TextAlign.center,
                             style: GoogleFonts.outfit(
                               color: Colors.white60,
@@ -671,7 +671,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                                     ),
                                   ),
                                   child: Text(
-                                    context.t('keep_editing'),
+                                    ref.t('keep_editing'),
                                     style: GoogleFonts.outfit(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600,
@@ -695,7 +695,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                                     ),
                                   ),
                                   child: Text(
-                                    context.t('discard'),
+                                    ref.t('discard'),
                                     style: GoogleFonts.outfit(
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -813,7 +813,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           ),
           const Spacer(),
           Text(
-            widget.openAsAdd ? context.t('add_lot') : context.t('edit_lot'),
+            widget.openAsAdd ? ref.t('add_lot') : ref.t('edit_lot'),
             style: GoogleFonts.outfit(
               fontSize: 13,
               fontWeight: FontWeight.bold,
@@ -888,9 +888,9 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           fontSize: 11,
         ),
         tabs: [
-          Tab(text: context.t('roasters')),
-          Tab(text: context.t('coffee')),
-          Tab(text: context.t('flavor')),
+          Tab(text: ref.t('roasters')),
+          Tab(text: ref.t('coffee')),
+          Tab(text: ref.t('flavor')),
         ],
       ),
     );
@@ -977,7 +977,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                                   ),
                                   const SizedBox(height: 20),
                                   Text(
-                                    context.t('save_lot_confirmation_title'),
+                                    ref.t('save_lot_confirmation_title'),
                                     style: GoogleFonts.outfit(
                                       color: Colors.white,
                                       fontSize: 20,
@@ -986,7 +986,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                                   ),
                                   const SizedBox(height: 12),
                                   Text(
-                                    context.t('save_lot_confirmation_desc'),
+                                    ref.t('save_lot_confirmation_desc'),
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.outfit(
                                       color: Colors.white60,
@@ -1015,7 +1015,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                                             ),
                                           ),
                                           child: Text(
-                                            context.t('cancel'),
+                                            ref.t('cancel'),
                                             style: GoogleFonts.outfit(
                                               color: Colors.white,
                                               fontWeight: FontWeight.w600,
@@ -1043,7 +1043,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                                             ),
                                           ),
                                           child: Text(
-                                            context.t('save'),
+                                            ref.t('save'),
                                             style: GoogleFonts.outfit(
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -1080,7 +1080,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               },
               child: Center(
                 child: Text(
-                  context.t('save_lot'),
+                  ref.t('save_lot'),
                   style: GoogleFonts.outfit(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -1487,7 +1487,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 ),
                 items: items.map((e) {
                   final text = localizationPrefix != null
-                      ? context.t(
+                      ? ref.t(
                           '$localizationPrefix${e.toLowerCase().replaceAll(' ', '_')}',
                         )
                       : e;

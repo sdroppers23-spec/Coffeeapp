@@ -43,7 +43,7 @@ class _FarmersBodyState extends ConsumerState<FarmersBody>
             const CircularProgressIndicator(color: Color(0xFFC8A96E)),
             const SizedBox(height: 16),
             Text(
-              context.t('loading_farmers'),
+              ref.t('loading_farmers'),
               style: GoogleFonts.outfit(color: Colors.white38, fontSize: 14),
             ),
           ],
@@ -51,7 +51,7 @@ class _FarmersBodyState extends ConsumerState<FarmersBody>
       ),
       error: (e, _) => Center(
         child: Text(
-          '${context.t('error')}: $e',
+          '${ref.t('error')}: $e',
           style: const TextStyle(color: Colors.red),
         ),
       ),
@@ -59,7 +59,7 @@ class _FarmersBodyState extends ConsumerState<FarmersBody>
         if (farmers.isEmpty) {
           return Center(
             child: Text(
-              context.t('no_farmers_found'),
+              ref.t('no_farmers_found'),
               style: GoogleFonts.poppins(color: Colors.white38),
             ),
           );
@@ -227,7 +227,7 @@ class _PremiumFarmerCard extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    context.t('details'),
+                    ref.t('details'),
                     style: GoogleFonts.poppins(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,

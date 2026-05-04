@@ -703,14 +703,14 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard>
             leftAction: widget.onRestoreSwipe != null
                 ? GlassSwipeAction(
                     icon: Icons.unarchive_outlined,
-                    label: context.t('restore'),
+                    label: ref.t('restore'),
                     color: const Color(0xFF3A7BBF),
                     onTap: () => widget.onRestoreSwipe!(widget.lot),
                   )
                 : widget.onEditSwipe != null
                 ? GlassSwipeAction(
                     icon: Icons.edit_outlined,
-                    label: context.t('edit'),
+                    label: ref.t('edit'),
                     color: const Color(0xFF39FF14),
                     onTap: () => widget.onEditSwipe!(widget.lot),
                   )
@@ -718,7 +718,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard>
             rightAction: widget.onDeleteSwipe != null
                 ? GlassSwipeAction(
                     icon: Icons.delete_outline_rounded,
-                    label: context.t('delete'),
+                    label: ref.t('delete'),
                     color: Colors.redAccent,
                     onTap: () => widget.onDeleteSwipe!(widget.lot),
                   )
@@ -812,14 +812,14 @@ class _TagChip extends StatelessWidget {
   }
 }
 
-class _FreshnessProgressBar extends StatelessWidget {
+class _FreshnessProgressBar extends ConsumerWidget {
   final CoffeeLotDto lot;
   final ThemeData theme;
 
   const _FreshnessProgressBar({required this.lot, required this.theme});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // 1. Determine Limit
     final int limit;
     if (lot.isGround) {
@@ -874,7 +874,7 @@ class _FreshnessProgressBar extends StatelessWidget {
     final Color statusColor = getSmoothColor(factor);
     final String labelText;
     if (isExpired) {
-      labelText = context.t('expired');
+      labelText = ref.t('expired');
     } else {
       final int daysLeft = (limit - ageDays).clamp(0, limit);
       final key = daysLeft == 1
@@ -882,7 +882,7 @@ class _FreshnessProgressBar extends StatelessWidget {
           : (daysLeft >= 2 && daysLeft <= 4
                 ? 'days_left_2_4'
                 : 'days_left_5_plus');
-      labelText = context.t(key, args: {'count': daysLeft.toString()});
+      labelText = ref.t(key, args: {'count': daysLeft.toString()});
     }
 
     return Column(
@@ -892,7 +892,7 @@ class _FreshnessProgressBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              context.t('freshness'),
+              ref.t('freshness'),
               style: GoogleFonts.outfit(
                 fontSize: 10,
                 color: const Color(0xFFC8A96E).withValues(alpha: 0.38),

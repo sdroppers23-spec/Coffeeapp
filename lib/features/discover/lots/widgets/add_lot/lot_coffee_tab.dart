@@ -5,15 +5,15 @@ extension _CoffeeTabSection on _AddLotScreenState {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
       children: [
-        _sectionLabel(context.t('section_photo')),
+        _sectionLabel(ref.t('section_photo')),
         _buildImagePicker(),
         const SizedBox(height: 16),
 
-        _sectionLabel(context.t('section_roast_date')),
+        _sectionLabel(ref.t('section_roast_date')),
         _darkCard(
           children: [
             _dateRow(
-              label: context.t('roast_date_field'),
+              label: ref.t('roast_date_field'),
               date: _roastDate,
               onTap: () async {
                 final picked = await showDatePicker(
@@ -35,9 +35,9 @@ extension _CoffeeTabSection on _AddLotScreenState {
             ),
             _divider(),
             _dateRow(
-              label: context.t('opened_at_field'),
+              label: ref.t('opened_at_field'),
               date: _openedAt,
-              placeholder: context.t('not_opened'),
+              placeholder: ref.t('not_opened'),
               onTap: () async {
                 final initial = (_openedAt != null && _openedAt!.isAfter(_roastDate ?? DateTime(2020)))
                     ? _openedAt!
@@ -62,12 +62,12 @@ extension _CoffeeTabSection on _AddLotScreenState {
           ],
         ),
 
-        _sectionLabel(context.t('section_bag_state')),
+        _sectionLabel(ref.t('section_bag_state')),
         Row(
           children: [
             Expanded(
               child: _toggleButton(
-                label: context.t('bag_closed'),
+                label: ref.t('bag_closed'),
                 active: !_isOpen,
                 onTap: () => _updateState(() => _isOpen = false),
               ),
@@ -75,7 +75,7 @@ extension _CoffeeTabSection on _AddLotScreenState {
             const SizedBox(width: 8),
             Expanded(
               child: _toggleButton(
-                label: context.t('bag_opened'),
+                label: ref.t('bag_opened'),
                 active: _isOpen,
                 onTap: () {
                   _updateState(() {
@@ -89,7 +89,7 @@ extension _CoffeeTabSection on _AddLotScreenState {
         ),
 
         if (_isOpen) ...[
-          _sectionLabel(context.t('section_grind_type')),
+          _sectionLabel(ref.t('section_grind_type')),
           _darkCard(
             children: [
               Padding(
@@ -115,14 +115,14 @@ extension _CoffeeTabSection on _AddLotScreenState {
                       DropdownMenuItem(
                         value: false,
                         child: Text(
-                          context.t('whole_bean'),
+                          ref.t('whole_bean'),
                           style: GoogleFonts.outfit(color: Colors.white),
                         ),
                       ),
                       DropdownMenuItem(
                         value: true,
                         child: Text(
-                          context.t('ground_coffee'),
+                          ref.t('ground_coffee'),
                           style: GoogleFonts.outfit(color: Colors.white),
                         ),
                       ),
@@ -140,7 +140,7 @@ extension _CoffeeTabSection on _AddLotScreenState {
           ),
         ],
 
-        _sectionLabel(context.t('section_roast')),
+        _sectionLabel(ref.t('section_roast')),
         _darkCard(
           children: [
             Padding(
@@ -149,7 +149,7 @@ extension _CoffeeTabSection on _AddLotScreenState {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    context.t('roast_level_field'),
+                    ref.t('roast_level_field'),
                     style: GoogleFonts.outfit(
                       fontSize: 10,
                       color: Colors.white,
@@ -177,7 +177,7 @@ extension _CoffeeTabSection on _AddLotScreenState {
                         return DropdownMenuItem<String>(
                           value: level,
                           child: Text(
-                            context.t(
+                            ref.t(
                               'roast_${level.toLowerCase().replaceAll('-', '_')}',
                             ),
                             style: GoogleFonts.outfit(color: Colors.white),
@@ -199,14 +199,14 @@ extension _CoffeeTabSection on _AddLotScreenState {
           ],
         ),
 
-        _sectionLabel(context.t('section_processing')),
+        _sectionLabel(ref.t('section_processing')),
         _buildProcessSection(),
 
-        _sectionLabel(context.t('section_flavor_notes')),
+        _sectionLabel(ref.t('section_flavor_notes')),
         _darkCard(
           children: [
             _fieldRow(
-              label: context.t('flavor_notes_field'),
+              label: ref.t('flavor_notes_field'),
               controller: _flavorProfileController,
             ),
           ],
@@ -257,7 +257,7 @@ extension _CoffeeTabSection on _AddLotScreenState {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      context.t('add_photo_label'),
+                      ref.t('add_photo_label'),
                       style: GoogleFonts.outfit(
                         color: const Color(0xFFC8A96E).withValues(alpha: 0.5),
                         fontSize: 12,

@@ -7,7 +7,7 @@ extension _ProcessingMethodSection on _AddLotScreenState {
         _darkCard(
           children: [
             _dropdownRow(
-              label: context.t('section_processing'),
+              label: ref.t('section_processing'),
               value: _selectedProcess,
               items: _processingMethods,
               onChanged: (val) {
@@ -37,9 +37,9 @@ extension _ProcessingMethodSection on _AddLotScreenState {
             if (_isOtherProcess) ...[
               _divider(),
               _fieldRow(
-                label: context.t('custom_method_label'),
+                label: ref.t('custom_method_label'),
                 controller: _processController,
-                placeholder: context.t('enter_name_placeholder'),
+                placeholder: ref.t('enter_name_placeholder'),
               ),
             ],
             _divider(),
@@ -48,7 +48,7 @@ extension _ProcessingMethodSection on _AddLotScreenState {
               child: Row(
                 children: [
                   Text(
-                    context.t('decaf'),
+                    ref.t('decaf'),
                     style: GoogleFonts.outfit(
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
@@ -72,7 +72,7 @@ extension _ProcessingMethodSection on _AddLotScreenState {
               _divider(),
               _dropdownRow(
                 label:
-                    "${context.t('section_processing')} ${context.t('decaf')}",
+                    "${ref.t('section_processing')} ${ref.t('decaf')}",
                 value: _decafMethods.contains(_decafProcess)
                     ? _decafProcess
                     : 'Other',
@@ -88,12 +88,12 @@ extension _ProcessingMethodSection on _AddLotScreenState {
               if (_isOtherDecaf) ...[
                 _divider(),
                 _fieldRow(
-                  label: context.t('custom_decaf_method_label'),
+                  label: ref.t('custom_decaf_method_label'),
                   controller: TextEditingController(
                     text: _decafProcess == 'Other' ? '' : _decafProcess,
                   ),
                   onChanged: (v) => _decafProcess = v,
-                  placeholder: context.t('enter_name_placeholder'),
+                  placeholder: ref.t('enter_name_placeholder'),
                 ),
               ],
             ],

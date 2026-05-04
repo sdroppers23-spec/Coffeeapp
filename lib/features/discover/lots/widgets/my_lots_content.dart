@@ -91,7 +91,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
                         ),
                         const SizedBox(height: 20),
                         Text(
-                          context.t('delete_confirm_title'),
+                          ref.t('delete_confirm_title'),
                           style: GoogleFonts.outfit(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -100,7 +100,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          context.t('delete_confirm_message'),
+                          ref.t('delete_confirm_message'),
                           textAlign: TextAlign.center,
                           style: GoogleFonts.outfit(
                             color: Colors.white70,
@@ -127,7 +127,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
                                   ),
                                   alignment: Alignment.center,
                                   child: Text(
-                                    context.t('cancel').toUpperCase(),
+                                    ref.t('cancel').toUpperCase(),
                                     style: GoogleFonts.outfit(
                                       color: Colors.white70,
                                       fontWeight: FontWeight.bold,
@@ -155,7 +155,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
                                   ),
                                   alignment: Alignment.center,
                                   child: Text(
-                                    context.t('delete').toUpperCase(),
+                                    ref.t('delete').toUpperCase(),
                                     style: GoogleFonts.outfit(
                                       color: Colors
                                           .white, // White text on red background
@@ -199,15 +199,15 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
 
     if (isArchive) {
       if (lots.length == 1) {
-        message = context.t('toast_lot_archived');
+        message = ref.t('toast_lot_archived');
       } else {
-        message = context.t('toast_lots_archived');
+        message = ref.t('toast_lots_archived');
       }
     } else {
       if (lots.length == 1) {
-        message = context.t('toast_lot_deleted');
+        message = ref.t('toast_lot_deleted');
       } else {
-        message = context.t('toast_lots_deleted');
+        message = ref.t('toast_lots_deleted');
       }
     }
 
@@ -307,7 +307,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
             DiscoveryActionBar(
               filterProvider: myLotsFilterProvider,
               selectionProvider: myLotsSelectedIdsProvider,
-              searchHint: context.t('search_lots'),
+              searchHint: ref.t('search_lots'),
               onCompareTap: () {
                 ref.read(settingsProvider.notifier).triggerHaptic();
                 context.push('/compare', extra: ComparisonSource.myLots);
@@ -371,10 +371,31 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
         final filteredLots = _applyFilters(filteredByTab, filter);
 
         if (filteredLots.isEmpty) {
-          return const Center(
-            child: Text(
-              'Поки порожньо',
-              style: TextStyle(color: Colors.white24),
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  ref.t('empty_lots_title'),
+                  style: GoogleFonts.outfit(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: Text(
+                    ref.t('empty_lots_desc'),
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.outfit(
+                      color: Colors.white38,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ],
             ),
           );
         }
@@ -415,8 +436,8 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
 
                   if (context.mounted) {
                     final msg = newState
-                        ? context.t('toast_added_to_favorites')
-                        : context.t('toast_removed_from_favorites');
+                        ? ref.t('toast_added_to_favorites')
+                        : ref.t('toast_removed_from_favorites');
                     ToastService.showSuccess(context, msg);
                   }
 
@@ -462,8 +483,8 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
 
                 if (context.mounted) {
                   final msg = newState
-                      ? context.t('toast_added_to_favorites')
-                      : context.t('toast_removed_from_favorites');
+                      ? ref.t('toast_added_to_favorites')
+                      : ref.t('toast_removed_from_favorites');
                   ToastService.showSuccess(context, msg);
                 }
 
@@ -489,7 +510,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
                       if (!context.mounted) return;
                       ToastService.showSuccess(
                         context,
-                        context.t('toast_lot_restored'),
+                        ref.t('toast_lot_restored'),
                       );
                     }
                   : null,
@@ -622,7 +643,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
             const Icon(Icons.add_rounded, color: Colors.black87, size: 20),
             const SizedBox(width: 8),
             Text(
-              context.t('add_new_lot').toUpperCase(),
+              ref.t('add_new_lot').toUpperCase(),
               style: GoogleFonts.outfit(
                 fontWeight: FontWeight.w800,
                 fontSize: 12,
@@ -709,7 +730,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
                     if (mounted) {
                       ToastService.showSuccess(
                         context,
-                        context.t('toast_changes_saved'),
+                        ref.t('toast_changes_saved'),
                       );
                     }
                     setState(() {});
@@ -779,7 +800,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
                                         ),
                                         const SizedBox(height: 20),
                                         Text(
-                                          context.t(
+                                          ref.t(
                                             'delete_confirm_batch_title',
                                           ),
                                           style: GoogleFonts.outfit(
@@ -790,7 +811,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
                                         ),
                                         const SizedBox(height: 12),
                                         Text(
-                                          context.t(
+                                          ref.t(
                                             'delete_confirm_batch_message',
                                             args: {
                                               'count': ref
@@ -835,7 +856,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
                                                   ),
                                                   alignment: Alignment.center,
                                                   child: Text(
-                                                    context
+                                                    ref
                                                         .t('cancel')
                                                         .toUpperCase(),
                                                     style: GoogleFonts.outfit(
@@ -871,7 +892,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
                                                   ),
                                                   alignment: Alignment.center,
                                                   child: Text(
-                                                    context
+                                                    ref
                                                         .t('delete')
                                                         .toUpperCase(),
                                                     style: GoogleFonts.outfit(
@@ -945,14 +966,13 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
 
   String get _selectionCountText {
     final count = ref.watch(myLotsSelectedIdsProvider).length;
-    // Simple declension for "Обрано X лотів/лоти/лот"
     if (count % 10 == 1 && count % 100 != 11) {
-      return 'Обрано $count лот';
+      return ref.t('selection_lots_1', args: {'count': count.toString()});
     } else if ([2, 3, 4].contains(count % 10) &&
         ![12, 13, 14].contains(count % 100)) {
-      return 'Обрано $count лоти';
+      return ref.t('selection_lots_2_4', args: {'count': count.toString()});
     } else {
-      return 'Обрано $count лотів';
+      return ref.t('selection_lots_5_plus', args: {'count': count.toString()});
     }
   }
 }

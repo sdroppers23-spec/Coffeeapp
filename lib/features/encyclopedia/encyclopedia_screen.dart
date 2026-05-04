@@ -55,7 +55,7 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody>
               DiscoveryActionBar(
                 filterProvider: encyclopediaFilterProvider,
                 selectionProvider: encyclopediaSelectedIdsProvider,
-                searchHint: context.t('search_coffee'),
+                searchHint: ref.t('search_coffee'),
                 onCompareTap: () {
                   final selectedCount = ref
                       .read(encyclopediaSelectedIdsProvider)
@@ -72,7 +72,7 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody>
                   } else if (selectedCount == 1) {
                     ToastService.showInfo(
                       context,
-                      context.t('toast_select_second_lot'),
+                      ref.t('toast_select_second_lot'),
                     );
                   } else {
                     Navigator.push(
@@ -136,7 +136,7 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody>
             ),
             const SizedBox(height: 16),
             Text(
-              context.t('loading_lots'),
+              ref.t('loading_lots'),
               style: const TextStyle(
                 color: Colors.white70,
                 fontSize: 14,
@@ -152,13 +152,13 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody>
       data: (filtered) {
         if (filtered.isEmpty) {
           final search = filterState.search;
-          String emptyMessage = context.t('no_results');
+          String emptyMessage = ref.t('no_results');
           if (showFavoritesOnly && search.isEmpty) {
-            emptyMessage = context.t('no_favorites');
+            emptyMessage = ref.t('no_favorites');
           } else if (showArchivedOnly && search.isEmpty) {
-            emptyMessage = context.t('no_archived');
+            emptyMessage = ref.t('no_archived');
           } else if (search.isNotEmpty) {
-            emptyMessage = '${context.t('no_results')} "$search"';
+            emptyMessage = '${ref.t('no_results')} "$search"';
           }
 
           return _EmptyState(message: emptyMessage);

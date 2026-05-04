@@ -179,12 +179,12 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                           if (!currentlyFavorite) {
                             ToastService.showSuccess(
                               context,
-                              context.t('toast_added_to_favorites'),
+                              ref.t('toast_added_to_favorites'),
                             );
                           } else {
                             ToastService.showInfo(
                               context,
-                              context.t('toast_removed_from_favorites'),
+                              ref.t('toast_removed_from_favorites'),
                             );
                           }
                         }
@@ -890,7 +890,7 @@ class _SensoryTab extends ConsumerWidget {
             }(),
           ),
           const SizedBox(height: 32),
-          _SectionTitle(title: context.t('sensory_grid').toUpperCase()),
+          _SectionTitle(title: ref.t('sensory_grid').toUpperCase()),
           const SizedBox(height: 16),
           SensoryIndicator(
             label: ref.t('bitterness'),

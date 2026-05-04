@@ -82,7 +82,7 @@ class DiscoveryActionBar extends ConsumerWidget {
             children: [
               _ControlChip(
                 icon: Icons.tune_rounded,
-                label: context.t('filters'),
+                label: ref.t('filters'),
                 isActive: state.hasActiveFilters,
                 onTap: () => _showSortSheet(context, ref),
                 isMatte: isMatte,
@@ -92,8 +92,8 @@ class DiscoveryActionBar extends ConsumerWidget {
                 _ControlChip(
                   icon: Icons.compare_arrows_rounded,
                   label: selectedLots.isEmpty
-                      ? context.t('compare')
-                      : '${context.t('compare')} (${selectedLots.length})',
+                      ? ref.t('compare')
+                      : '${ref.t('compare')} (${selectedLots.length})',
                   isActive: selectedLots.isNotEmpty,
                   onTap: onCompareTap,
                   isMatte: isMatte,
@@ -181,7 +181,7 @@ class DiscoveryActionBar extends ConsumerWidget {
       children: [
         Expanded(
           child: _SubTabCapsule(
-            label: context.t('all'),
+            label: ref.t('tab_all'),
             isSelected: !state.showFavoritesOnly && !state.showArchivedOnly,
             onTap: () => ref.read(filterProvider.notifier).showAll(),
           ),
@@ -189,7 +189,7 @@ class DiscoveryActionBar extends ConsumerWidget {
         const SizedBox(width: 4),
         Expanded(
           child: _SubTabCapsule(
-            label: context.t('favorites'),
+            label: ref.t('tab_favorites'),
             isSelected: state.showFavoritesOnly,
             onTap: () => ref.read(filterProvider.notifier).showFavorites(),
             icon: Icons.favorite_rounded,
@@ -198,7 +198,7 @@ class DiscoveryActionBar extends ConsumerWidget {
         const SizedBox(width: 4),
         Expanded(
           child: _SubTabCapsule(
-            label: context.t('archive'),
+            label: ref.t('tab_archive'),
             isSelected: state.showArchivedOnly,
             onTap: () => ref.read(filterProvider.notifier).showArchived(),
             icon: Icons.archive_rounded,
@@ -419,7 +419,7 @@ class _SwipeModeToggle extends ConsumerWidget {
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  context.t('swipe_mode_normal'),
+                  ref.t('swipe_mode_normal'),
                   style: GoogleFonts.outfit(
                     color: mode == LotSwipeMode.swipe
                         ? const Color(0xFFC8A96E)
@@ -445,7 +445,7 @@ class _SwipeModeToggle extends ConsumerWidget {
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  context.t('swipe_mode_grip'),
+                  ref.t('swipe_mode_grip'),
                   style: GoogleFonts.outfit(
                     color: mode == LotSwipeMode.grip
                         ? const Color(0xFFC8A96E)
@@ -471,7 +471,7 @@ class _SwipeModeToggle extends ConsumerWidget {
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  context.t('swipe_mode_disabled'),
+                  ref.t('swipe_mode_disabled'),
                   style: GoogleFonts.outfit(
                     color: mode == LotSwipeMode.disabled
                         ? const Color(0xFFC8A96E)

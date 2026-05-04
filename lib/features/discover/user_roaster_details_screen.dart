@@ -61,7 +61,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
             vertical: 20,
           ),
           title: Text(
-            context.t('edit_roaster_title'),
+            ref.t('edit_roaster_title'),
             style: GoogleFonts.poppins(
               color: const Color(0xFFC8A96E),
               fontWeight: FontWeight.bold,
@@ -105,28 +105,28 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                 buildDialogField(
                   context,
                   nameController,
-                  context.t('roaster_name_label'),
+                  ref.t('roaster_name_label'),
                   Icons.business_rounded,
                 ),
                 const SizedBox(height: 12),
                 buildDialogField(
                   context,
                   locationController,
-                  context.t('city_label'),
+                  ref.t('city_label'),
                   Icons.location_on_rounded,
                 ),
                 const SizedBox(height: 12),
                 buildDialogField(
                   context,
                   countryController,
-                  context.t('country_label'),
+                  ref.t('country_label'),
                   Icons.public_rounded,
                 ),
                 const SizedBox(height: 12),
                 buildDialogField(
                   context,
                   logoUrlController,
-                  context.t('roaster_logo_url_label'),
+                  ref.t('roaster_logo_url_label'),
                   Icons.link_rounded,
                   errorText: urlError,
                 ),
@@ -134,7 +134,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                 buildDialogField(
                   context,
                   shortDescController,
-                  context.t('short_desc_label'),
+                  ref.t('short_desc_label'),
                   Icons.description_rounded,
                   maxLines: 3,
                 ),
@@ -155,7 +155,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                     if (rawUrl.isNotEmpty) {
                       if (!UrlHelper.isValidUrl(rawUrl)) {
                         setDialogState(() {
-                          urlError = context.t('invalid_url_format');
+                          urlError = ref.t('invalid_url_format');
                         });
                         return;
                       }
@@ -184,7 +184,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                     shadowColor: const Color(0xFFC8A96E).withValues(alpha: 0.3),
                   ),
                   child: Text(
-                    context.t('save'),
+                    ref.t('save'),
                     style: GoogleFonts.outfit(
                       fontWeight: FontWeight.w800,
                       fontSize: 16,
@@ -199,7 +199,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                     minimumSize: const Size(double.infinity, 44),
                   ),
                   child: Text(
-                    context.t('cancel'),
+                    ref.t('cancel'),
                     style: GoogleFonts.outfit(
                       color: Colors.white38,
                       fontWeight: FontWeight.w600,
@@ -234,7 +234,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
           SnackBar(
             backgroundColor: const Color(0xFF151515),
             content: Text(
-              context.t('no_lots_available_to_link'),
+              ref.t('no_lots_available_to_link'),
               style: const TextStyle(color: Color(0xFFC8A96E)),
             ),
           ),
@@ -250,7 +250,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         title: Text(
-          context.t('link_lot_title'),
+          ref.t('link_lot_title'),
           style: GoogleFonts.poppins(
             color: const Color(0xFFC8A96E),
             fontWeight: FontWeight.bold,
@@ -290,7 +290,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                       ),
                     ),
                     title: Text(
-                      lot.coffeeName ?? context.t('unknown_lot'),
+                      lot.coffeeName ?? ref.t('unknown_lot'),
                       style: GoogleFonts.outfit(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
@@ -324,7 +324,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child: Text(
-              context.t('cancel'),
+              ref.t('cancel'),
               style: GoogleFonts.outfit(color: Colors.white38),
             ),
           ),
@@ -335,6 +335,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
 
   static Future<bool> confirmDeleteDialog(
     BuildContext context,
+    WidgetRef ref,
     String name,
   ) async {
     return await showDialog<bool>(
@@ -342,25 +343,25 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
           builder: (ctx) => AlertDialog(
             backgroundColor: const Color(0xFF151515),
             title: Text(
-              context.t('delete_roaster_confirm_title'),
+              ref.t('delete_roaster_confirm_title'),
               style: const TextStyle(color: Color(0xFFC8A96E)),
             ),
             content: Text(
-              context.t('delete_roaster_confirm_msg', args: {'name': name}),
+              ref.t('delete_roaster_confirm_msg', args: {'name': name}),
               style: const TextStyle(color: Colors.white70),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(ctx, false),
                 child: Text(
-                  context.t('cancel'),
+                  ref.t('cancel'),
                   style: const TextStyle(color: Colors.white38),
                 ),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(ctx, true),
                 child: Text(
-                  context.t('delete'),
+                  ref.t('delete'),
                   style: const TextStyle(color: Colors.redAccent),
                 ),
               ),
@@ -372,6 +373,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
 
   static Future<bool> confirmUnlinkDialog(
     BuildContext context,
+    WidgetRef ref,
     String lotName,
   ) async {
     return await showGeneralDialog<bool>(
@@ -401,7 +403,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      context.t('unlink_lot_confirm_title'),
+                      ref.t('unlink_lot_confirm_title'),
                       style: GoogleFonts.poppins(
                         color: Colors.white,
                         fontSize: 20,
@@ -410,7 +412,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      context.t('unlink_lot_confirm_desc_template', args: {'name': lotName}),
+                      ref.t('unlink_lot_confirm_desc_template', args: {'name': lotName}),
                       textAlign: TextAlign.center,
                       style: GoogleFonts.outfit(
                         color: Colors.white60,
@@ -432,7 +434,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                               ),
                               alignment: Alignment.center,
                               child: Text(
-                                context.t('cancel').toUpperCase(),
+                                ref.t('cancel').toUpperCase(),
                                 style: GoogleFonts.outfit(
                                   color: Colors.white38,
                                   fontWeight: FontWeight.bold,
@@ -455,7 +457,7 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                               ),
                               alignment: Alignment.center,
                               child: Text(
-                                context.t('unlink_uppercase'),
+                                ref.t('unlink_uppercase'),
                                 style: GoogleFonts.outfit(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -573,7 +575,7 @@ class _UserRoasterDetailsScreenState
         actions: [
           IconButton(
             icon: const Icon(Icons.add_link_rounded, color: Color(0xFFC8A96E)),
-            tooltip: context.t('link_lot_title'),
+            tooltip: ref.t('link_lot_title'),
             onPressed: () => UserRoasterDetailsScreen.showLinkLotDialog(
               context,
               ref,
@@ -597,9 +599,10 @@ class _UserRoasterDetailsScreenState
               final confirmed =
                   await UserRoasterDetailsScreen.confirmDeleteDialog(
                     context,
+                    ref,
                     currentRoaster.name,
                   );
-              if (confirmed && mounted) {
+              if (confirmed && context.mounted) {
                 await ref
                     .read(userRoastersProvider.notifier)
                     .deleteRoaster(currentRoaster.id);
@@ -736,7 +739,7 @@ class _UserRoasterDetailsScreenState
                       ),
                       textAlignVertical: TextAlignVertical.center,
                       decoration: InputDecoration(
-                        hintText: context.t('search_lots'),
+                        hintText: ref.t('search_lots'),
                         hintStyle: GoogleFonts.outfit(
                           color: Colors.white24,
                           fontSize: 14,
@@ -774,7 +777,7 @@ class _UserRoasterDetailsScreenState
                   child: Row(
                     children: [
                       Text(
-                        context.t('lots_by_roaster_title'),
+                        ref.t('lots_by_roaster_title'),
                         style: GoogleFonts.poppins(
                           color: const Color(0xFFC8A96E),
                           fontWeight: FontWeight.bold,
@@ -875,6 +878,7 @@ class _UserRoasterDetailsScreenState
                           final confirmed =
                               await UserRoasterDetailsScreen.confirmUnlinkDialog(
                                 context,
+                                ref,
                                 lot.coffeeName ?? '',
                               );
                           if (confirmed) {
@@ -936,8 +940,8 @@ class _UserRoasterDetailsScreenState
           const SizedBox(height: 32),
           Text(
             isSearch
-                ? context.t('empty_search_title')
-                : context.t('no_lots_linked'),
+                ? ref.t('empty_search_title')
+                : ref.t('no_lots_linked'),
             textAlign: TextAlign.center,
             style: GoogleFonts.cormorantGaramond(
               color: const Color(0xFFC8A96E),
@@ -951,7 +955,7 @@ class _UserRoasterDetailsScreenState
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 48),
               child: Text(
-                context.t('no_lots_linked_desc'),
+                ref.t('no_lots_linked_desc'),
                 textAlign: TextAlign.center,
                 style: GoogleFonts.outfit(
                   color: Colors.white38,
@@ -992,7 +996,7 @@ class _UserRoasterDetailsScreenState
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      context.t('link_lot_title').toUpperCase(),
+                      ref.t('link_lot_title').toUpperCase(),
                       style: GoogleFonts.outfit(
                         fontWeight: FontWeight.w800,
                         fontSize: 12,

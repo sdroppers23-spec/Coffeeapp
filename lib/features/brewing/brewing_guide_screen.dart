@@ -56,7 +56,7 @@ class _BrewingGuideScreenState extends ConsumerState<BrewingGuideScreen> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           title: Text(
-            context.t('brewing_methods'),
+            ref.t('brewing_methods'),
             style: GoogleFonts.cormorantGaramond(
               fontSize: 28,
               fontWeight: FontWeight.bold,
@@ -76,7 +76,7 @@ class _BrewingGuideScreenState extends ConsumerState<BrewingGuideScreen> {
                     const CircularProgressIndicator(color: Color(0xFFD4A574)),
                     const SizedBox(height: 16),
                     Text(
-                      context.t('setting_up_equipment'),
+                      ref.t('setting_up_equipment'),
                       style: const TextStyle(color: Colors.white54),
                     ),
                   ],

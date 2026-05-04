@@ -104,7 +104,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        context.t('delete_roaster_title'),
+                        ref.t('delete_roaster_title'),
                         style: GoogleFonts.outfit(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -113,7 +113,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        context.t(
+                        ref.t(
                           'delete_roaster_confirm',
                           args: {'name': name},
                         ),
@@ -141,7 +141,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                                 ),
                                 alignment: Alignment.center,
                                 child: Text(
-                                  context.t('cancel_uppercase'),
+                                  ref.t('cancel_uppercase'),
                                   style: GoogleFonts.outfit(
                                     color: Colors.white70,
                                     fontWeight: FontWeight.bold,
@@ -169,7 +169,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                                 ),
                                 alignment: Alignment.center,
                                 child: Text(
-                                  context.t('delete_uppercase'),
+                                  ref.t('delete_uppercase'),
                                   style: GoogleFonts.outfit(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -231,8 +231,8 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
             : null,
         title: Text(
           _isSelectionMode
-              ? _getSelectionCountText(context)
-              : context.t('tab_roasters'),
+              ? _getSelectionCountText()
+              : ref.t('tab_roasters'),
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.bold,
             color: const Color(0xFFC8A96E),
@@ -247,18 +247,17 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                 final notifier = ref.read(userRoastersProvider.notifier);
                 final isArchiving = _tabController.index != 2;
 
-                final localContext = context;
-                final archivedMsg = localContext.t('toast_roasters_archived');
-                final restoredMsg = localContext.t('toast_roasters_restored');
+                final archivedMsg = ref.t('toast_roasters_archived');
+                final restoredMsg = ref.t('toast_roasters_restored');
 
                 for (final id in _selectedIds) {
                   await notifier.toggleArchive(id, isArchiving);
                 }
 
-                if (!localContext.mounted) return;
+                if (!context.mounted) return;
 
                 ToastService.showSuccess(
-                  localContext,
+                  context,
                   isArchiving ? archivedMsg : restoredMsg,
                 );
                 _clearSelection();
@@ -321,7 +320,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                     ),
                     textAlignVertical: TextAlignVertical.center,
                     decoration: InputDecoration(
-                      hintText: context.t('search_roasters'),
+                      hintText: ref.t('search_roasters'),
                       hintStyle: GoogleFonts.outfit(
                         color: Colors.white24,
                         fontSize: 14,
@@ -384,14 +383,14 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                       fontWeight: FontWeight.bold,
                     ),
                     tabs: [
-                      Tab(text: context.t('tab_all')),
+                      Tab(text: ref.t('tab_all')),
                       Tab(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Icon(Icons.favorite_rounded, size: 14),
                             const SizedBox(width: 4),
-                            Text(context.t('tab_favorites')),
+                            Text(ref.t('tab_favorites')),
                           ],
                         ),
                       ),
@@ -401,7 +400,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                           children: [
                             const Icon(Icons.archive_outlined, size: 14),
                             const SizedBox(width: 4),
-                            Text(context.t('tab_archive')),
+                            Text(ref.t('tab_archive')),
                           ],
                         ),
                       ),
@@ -504,24 +503,25 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
           icon: isArchiveTab
               ? Icons.unarchive_outlined
               : Icons.archive_outlined,
-          label: isArchiveTab ? context.t('restore') : context.t('archive'),
+          label: isArchiveTab ? ref.t('restore') : ref.t('archive'),
           color: const Color(0xFF3A7BBF),
           onTap: () async {
+            final localContext = context;
             final notifier = ref.read(userRoastersProvider.notifier);
             await notifier.toggleArchive(roaster.id, !isArchiveTab);
-            if (mounted) {
+            if (localContext.mounted) {
               ToastService.showSuccess(
-                context,
+                localContext,
                 isArchiveTab
-                    ? context.t('toast_roaster_restored')
-                    : context.t('toast_roaster_archived'),
+                    ? ref.t('toast_roaster_restored')
+                    : ref.t('toast_roaster_archived'),
               );
             }
           },
         ),
         rightAction: GlassSwipeAction(
           icon: Icons.delete_outline_rounded,
-          label: context.t('delete'),
+          label: ref.t('delete'),
           color: Colors.redAccent,
           onTap: () async {
             final confirmed = await _confirmDeleteDialog(roaster.name);
@@ -550,17 +550,16 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
               }
             },
             onFavoriteToggle: () async {
-              final localContext = context;
-              final msg = localContext.t('toast_removed_from_favorites');
-              final msgAdd = localContext.t('toast_added_to_favorites');
+              final msg = ref.t('toast_removed_from_favorites');
+              final msgAdd = ref.t('toast_added_to_favorites');
               final isFav = roaster.isFavorite;
 
               final notifier = ref.read(userRoastersProvider.notifier);
               await notifier.toggleFavorite(roaster.id);
 
-              if (!localContext.mounted) return;
+              if (!mounted) return;
 
-              ToastService.showSuccess(localContext, isFav ? msg : msgAdd);
+              ToastService.showSuccess(context, isFav ? msg : msgAdd);
             },
             onEdit: () => UserRoasterDetailsScreen.showEditRoasterDialog(
               context,
@@ -585,16 +584,16 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
     final isFavoritesTab = _tabController.index == 1;
 
     final String title = isArchiveTab
-        ? context.t('empty_archive_title')
+        ? ref.t('empty_archive_title')
         : isFavoritesTab
-        ? context.t('empty_favorites_title')
-        : context.t('empty_roasters_title');
+        ? ref.t('empty_favorites_title')
+        : ref.t('empty_roasters_title');
 
     final String description = isArchiveTab
-        ? context.t('empty_archive_desc')
+        ? ref.t('empty_archive_desc')
         : isFavoritesTab
-        ? context.t('empty_favorites_desc')
-        : context.t('empty_roasters_desc');
+        ? ref.t('empty_favorites_desc')
+        : ref.t('empty_roasters_desc');
 
     final IconData icon = isArchiveTab
         ? Icons.archive_outlined
@@ -688,7 +687,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
             const Icon(Icons.add_rounded, color: Colors.black87, size: 20),
             const SizedBox(width: 8),
             Text(
-              context.t('add_roaster_uppercase'),
+              ref.t('add_roaster_uppercase'),
               style: GoogleFonts.outfit(
                 fontWeight: FontWeight.w800,
                 fontSize: 13,
@@ -704,7 +703,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
 
   // ─── Selection helpers ─────────────────────────────────────────────────────
 
-  String _getSelectionCountText(BuildContext context) {
+  String _getSelectionCountText() {
     final count = _selectedIds.length;
     final String key;
     if (count % 10 == 1 && count % 100 != 11) {
@@ -715,7 +714,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
     } else {
       key = 'selection_roasters_5_plus';
     }
-    return context.t(key, args: {'count': count.toString()});
+    return ref.t(key, args: {'count': count.toString()});
   }
 
   // ─── Add Dialog ───────────────────────────────────────────────────────────
@@ -746,7 +745,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
             vertical: 20,
           ),
           title: Text(
-            context.t('add_roaster_title'),
+            ref.t('add_roaster_title'),
             style: GoogleFonts.poppins(
               color: const Color(0xFFC8A96E),
               fontWeight: FontWeight.bold,
@@ -790,37 +789,37 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                 const SizedBox(height: 20),
                 _buildDialogField(
                   nameController,
-                  context.t('roaster_name_label'),
+                  ref.t('roaster_name_label'),
                   Icons.business_rounded,
                 ),
                 const SizedBox(height: 12),
                 _buildDialogField(
                   locationController,
-                  context.t('city_label'), // Changed from city_country_label
+                  ref.t('city_label'), // Changed from city_country_label
                   Icons.location_on_rounded,
                 ),
                 const SizedBox(height: 12),
                 _buildDialogField(
                   countryController,
-                  context.t('country_label'),
+                  ref.t('country_label'),
                   Icons.public_rounded,
                 ),
                 const SizedBox(height: 12),
                 _buildDialogField(
                   shortDescController,
-                  context.t('short_desc_label'),
+                  ref.t('short_desc_label'),
                   Icons.description_rounded,
                 ),
                 const SizedBox(height: 12),
                 _buildDialogField(
                   logoUrlController,
-                  context.t('roaster_logo_url_label'),
+                  ref.t('roaster_logo_url_label'),
                   Icons.link_rounded,
                 ),
                 const SizedBox(height: 16),
                 SwitchListTile(
                   title: Text(
-                    context.t('favorite_label'),
+                    ref.t('favorite_label'),
                     style: GoogleFonts.poppins(
                       color: Colors.white,
                       fontSize: 14,
@@ -838,7 +837,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
             TextButton(
               onPressed: () => Navigator.pop(ctx),
               child: Text(
-                context.t('cancel'),
+                ref.t('cancel'),
                 style: GoogleFonts.poppins(color: Colors.white38),
               ),
             ),
@@ -850,7 +849,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                 if (!isValid) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text(context.t('invalid_url_format')),
+                        content: Text(ref.t('invalid_url_format')),
                         backgroundColor: Colors.redAccent,
                       ),
                     );
@@ -875,7 +874,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                 if (ctx.mounted) Navigator.pop(ctx);
               },
               child: Text(
-                context.t('save'),
+                ref.t('save'),
                 style: GoogleFonts.poppins(
                   color: const Color(0xFFC8A96E),
                   fontWeight: FontWeight.bold,

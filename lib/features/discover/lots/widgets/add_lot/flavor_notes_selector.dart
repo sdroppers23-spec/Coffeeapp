@@ -6,11 +6,11 @@ extension _SensoryTabSection on _AddLotScreenState {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
       children: [
-        _sectionLabel(context.t('sensory_profile_1_5')),
+        _sectionLabel(ref.t('sensory_profile_1_5')),
         _darkCard(
           children: [
             _sensorySlider(
-              context.t('bitterness'),
+              ref.t('bitterness'),
               _bitterness,
               (v) => _updateState(() => _bitterness = v),
               theme: theme,
@@ -18,7 +18,7 @@ extension _SensoryTabSection on _AddLotScreenState {
             ),
             _divider(),
             _sensorySlider(
-              context.t('acidity'),
+              ref.t('acidity'),
               _acidity,
               (v) => _updateState(() => _acidity = v),
               theme: theme,
@@ -26,7 +26,7 @@ extension _SensoryTabSection on _AddLotScreenState {
             ),
             _divider(),
             _sensorySlider(
-              context.t('sweetness'),
+              ref.t('sweetness'),
               _sweetness,
               (v) => _updateState(() => _sweetness = v),
               theme: theme,
@@ -34,7 +34,7 @@ extension _SensoryTabSection on _AddLotScreenState {
             ),
             _divider(),
             _sensorySlider(
-              context.t('body'),
+              ref.t('body'),
               _body,
               (v) => _updateState(() => _body = v),
               theme: theme,
@@ -42,7 +42,7 @@ extension _SensoryTabSection on _AddLotScreenState {
             ),
             _divider(),
             _sensorySlider(
-              context.t('intensity'),
+              ref.t('intensity'),
               _intensity,
               (v) => _updateState(() => _intensity = v),
               theme: theme,
@@ -50,7 +50,7 @@ extension _SensoryTabSection on _AddLotScreenState {
             ),
             _divider(),
             _sensorySlider(
-              context.t('aftertaste'),
+              ref.t('aftertaste'),
               _aftertaste,
               (v) => _updateState(() => _aftertaste = v),
               theme: theme,
@@ -59,7 +59,7 @@ extension _SensoryTabSection on _AddLotScreenState {
           ],
         ),
         const SizedBox(height: 16),
-        _sectionLabel(context.t('visualize_profile')),
+        _sectionLabel(ref.t('visualize_profile')),
         Container(
           height: 300,
           padding: const EdgeInsets.all(16),
@@ -83,8 +83,8 @@ extension _SensoryTabSection on _AddLotScreenState {
         const SizedBox(height: 12),
         _toggleButton(
           label: _isSensoryLocked
-              ? context.t('unlock_sensory')
-              : context.t('lock_sensory'),
+              ? ref.t('unlock_sensory')
+              : ref.t('lock_sensory'),
           active: !_isSensoryLocked,
           onTap: () => _updateState(() => _isSensoryLocked = !_isSensoryLocked),
         ),

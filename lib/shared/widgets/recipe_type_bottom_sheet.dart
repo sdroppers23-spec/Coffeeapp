@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/l10n/app_localizations.dart';
 import 'glass_container.dart';
 
-class RecipeTypeBottomSheet extends StatelessWidget {
+class RecipeTypeBottomSheet extends ConsumerWidget {
   final Function(String type) onTypeSelected;
   final String title;
   final int filterCount;
@@ -20,7 +21,7 @@ class RecipeTypeBottomSheet extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GlassContainer(
       borderRadius: 0, // Fill the bottom sheet area
       opacity: 0.1,
@@ -51,7 +52,7 @@ class RecipeTypeBottomSheet extends StatelessWidget {
           Row(
             children: [
               _RecipeTypeCard(
-                title: context.t('filter'),
+                title: ref.t('filter'),
                 icon: Icons.coffee_rounded,
                 count: filterCount,
                 limit: limit,
@@ -59,7 +60,7 @@ class RecipeTypeBottomSheet extends StatelessWidget {
               ),
               const SizedBox(width: 16),
               _RecipeTypeCard(
-                title: context.t('espresso'),
+                title: ref.t('espresso'),
                 icon: Icons.coffee_maker_rounded,
                 count: espressoCount,
                 limit: limit,
@@ -73,7 +74,7 @@ class RecipeTypeBottomSheet extends StatelessWidget {
   }
 }
 
-class _RecipeTypeCard extends StatelessWidget {
+class _RecipeTypeCard extends ConsumerWidget {
   final String title;
   final IconData icon;
   final int count;
@@ -89,7 +90,7 @@ class _RecipeTypeCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isLimitReached = count >= limit;
     
     return Expanded(
@@ -136,7 +137,7 @@ class _RecipeTypeCard extends StatelessWidget {
               if (isLimitReached) ...[
                 const SizedBox(height: 8),
                 Text(
-                  context.t('limit'),
+                  ref.t('limit'),
                   style: GoogleFonts.outfit(
                     fontSize: 10,
                     color: Colors.redAccent,

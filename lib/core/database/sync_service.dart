@@ -2118,28 +2118,29 @@ class SyncService {
         }
       }
 
-      // Add 'en' fallback for V2 if missing
+      // Add 'en' fallback for V2 if missing to ensure innerJoin works
       if (!translationsV2.any((t) => t.languageCode.value == 'en')) {
         final titleEn = item['title_en'] as String?;
         final contentEn = (item['content_html_en'] ?? item['content_en']) as String?;
+        final subtitleEn = item['subtitle_en'] as String?;
 
-        if (titleEn != null || contentEn != null) {
-          translationsV2.add(
-            SpecialtyArticleTranslationsV2Companion(
-              articleId: Value(id),
-              languageCode: const Value('en'),
-              title: Value(
-                ContentUtils.cleanCoffeeContent(titleEn ?? ''),
-              ),
-              subtitle: Value(
-                ContentUtils.cleanCoffeeContent(item['subtitle_en'] as String? ?? ''),
-              ),
-              contentHtml: Value(
-                ContentUtils.cleanCoffeeContent(contentEn ?? ''),
-              ),
+        // Even if En fields are missing, we create a record to avoid disappearing articles in En mode
+        // But we prefer English fields if they exist in the main entry
+        translationsV2.add(
+          SpecialtyArticleTranslationsV2Companion(
+            articleId: Value(id),
+            languageCode: const Value('en'),
+            title: Value(
+              ContentUtils.cleanCoffeeContent(titleEn ?? item['title'] as String? ?? 'Untitled'),
             ),
-          );
-        }
+            subtitle: Value(
+              ContentUtils.cleanCoffeeContent(subtitleEn ?? item['subtitle'] as String? ?? ''),
+            ),
+            contentHtml: Value(
+              ContentUtils.cleanCoffeeContent(contentEn ?? item['content_html'] as String? ?? ''),
+            ),
+          ),
+        );
       }
 
       await db.smartUpsertArticleV2(articleV2, translationsV2);

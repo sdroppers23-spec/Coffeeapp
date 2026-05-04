@@ -22,7 +22,7 @@ final specialtyEncyclopediaProvider = FutureProvider<SpecialtyEncyclopediaRoot>(
 
       // Group into modules for UI compatibility
       final articleModule = SpecialtyModule(
-        metadata: const SpecialtyModuleMetadata(
+        metadata: SpecialtyModuleMetadata(
           moduleId: 'articles',
           moduleName: ref.t('specialty_articles'),
           totalPartsEstimate: 3,
@@ -43,7 +43,7 @@ final specialtyEncyclopediaProvider = FutureProvider<SpecialtyEncyclopediaRoot>(
       );
 
       final beanModule = SpecialtyModule(
-        metadata: const SpecialtyModuleMetadata(
+        metadata: SpecialtyModuleMetadata(
           moduleId: 'origin_guides',
           moduleName: ref.t('origin_guides'),
           totalPartsEstimate: 2,

@@ -326,6 +326,7 @@ class AppDatabase extends _$AppDatabase {
     });
   }
 
+  Future<List<SpecialtyArticleDto>> getAllArticlesV2(String lang) async {
     final query = select(specialtyArticlesV2).join([
       innerJoin(
         specialtyArticleTranslationsV2,

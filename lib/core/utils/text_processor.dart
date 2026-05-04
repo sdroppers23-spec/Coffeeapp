@@ -8,26 +8,28 @@ class CoffeeTextProcessor {
   static String process(String input) {
     if (input.isEmpty) return '';
 
+    // 0. Aggressive cleaning of database artifacts
     String output = input
-        .replaceAll('\r', '')
-        .replaceAll('\\r', '')
-        .replaceAll('\\n', '\n');
+        .replaceAll('\r\n', '\n') // Standardize line endings
+        .replaceAll('\r', '')     // Remove stray CR
+        .replaceAll('\\r', '')    // Remove literal \r
+        .replaceAll('\\n', '\n')  // Convert literal \n to real newline
+        .trim();
 
     // 1. Handle Headers (# Header -> <h1>, ## Header -> <h2>, etc)
+    // We do this before paragraphs to identify header blocks
     output = output.replaceAllMapped(
       RegExp(r'^(#+)\s+(.+)$', multiLine: true),
       (match) {
         final level = match.group(1)!.length;
-        final text = match.group(2)!;
+        final text = match.group(2)!.trim();
         return '<h$level>$text</h$level>';
       },
     );
 
     // 2. Handle Custom Tags ({tag} -> <span class="coffee-tag">, {/tag} -> </span>)
-    // Supports: gold, serif, accent, accent-gold, white, etc.
     output = output.replaceAllMapped(RegExp(r'\{([a-zA-Z0-9\-]+)\}'), (match) {
       final tagName = match.group(1);
-      // Special case for closing tags if they weren't caught by the general closer
       if (tagName != null && tagName.startsWith('/')) {
         return '</span>';
       }
@@ -41,42 +43,44 @@ class CoffeeTextProcessor {
       (match) => '<blockquote>${match.group(1)}</blockquote>',
     );
 
-    // 3. Handle Paragraphs (double newline -> <p>)
-    // If the input already looks like HTML (contains many < tags), we should be careful
-    final hasHtmlTags = RegExp(r'<[a-z1-6]+[^>]*>').hasMatch(output);
+    // 3. Handle Paragraphs
+    // If the input already looks like rich HTML, we treat it carefully
+    final hasComplexHtml = RegExp(r'<(div|table|section|p)[^>]*>').hasMatch(output);
 
-    if (hasHtmlTags) {
-      // If it has HTML tags, we only want to ensure it doesn't have excessive newlines
-      // that flutter_html might interpret as extra space.
+    if (hasComplexHtml) {
       return output.trim();
     }
 
-    // Process blocks for plain text input
+    // Process blocks for plain text/mixed input
+    // Split by double newlines or more
     final blocks = output.split(RegExp(r'\n\s*\n'));
     final processedBlocks = blocks
         .map((block) {
           final trimmed = block.trim();
           if (trimmed.isEmpty) return '';
 
-          // If it already starts with an HTML block tag, don't wrap in <p>
-          if (trimmed.startsWith('<h') ||
+          // If it's already an HTML block element, don't wrap in <p>
+          final isBlockElement = trimmed.startsWith('<h') ||
               trimmed.startsWith('<div') ||
               trimmed.startsWith('<p') ||
               trimmed.startsWith('<ul') ||
               trimmed.startsWith('<li') ||
               trimmed.startsWith('<blockquote') ||
-              trimmed.startsWith('<hr')) {
+              trimmed.startsWith('<hr');
+
+          if (isBlockElement) {
             return trimmed;
           }
 
-          // Convert single newlines within a paragraph to <br>
+          // Convert single newlines within a paragraph to <br/>
+          // But only if there aren't many - we don't want to create massive <p> blocks
           final withLineBreaks = trimmed.replaceAll('\n', '<br/>');
           return '<p>$withLineBreaks</p>';
         })
         .where((b) => b.isNotEmpty)
         .toList();
 
-    return processedBlocks.join('');
+    return processedBlocks.join('\n');
   }
 
   /// Helper to generate the Style map for Html widget

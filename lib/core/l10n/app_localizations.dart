@@ -1195,7 +1195,7 @@ class AppLocalizations {
       'education': 'Освіта',
       'specialty_articles': 'Статті про каву',
       'origin_guides': 'Гіди по регіонах',
-      'read_more': 'Детальніше',
+      'read_more': 'Читати далі',
       'read_time': '{min} хв читання',
       'read_time_short': '{time} хв',
       'about_farm_region': 'Про ферму та регіон',

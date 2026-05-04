@@ -449,23 +449,29 @@ class SyncService {
               }
 
               if (!translations.any((t) => t.languageCode.value == 'en')) {
+                final nameEn = item['name_en'] as String?;
+                final descEn = (item['description_html_en'] ?? item['description_en']) as String?;
+                final storyEn = (item['story_en'] ?? item['story']) as String?;
+                final regionEn = item['region_en'] as String?;
+                final countryEn = item['country_en'] as String?;
+
                 translations.add(
                   LocalizedFarmerTranslationsV2Companion(
                     farmerId: Value(id),
                     languageCode: const Value('en'),
-                    name: Value(item['name_uk'] as String? ?? ''),
+                    name: Value(nameEn ?? item['name_uk'] as String? ?? 'Unknown Farmer'),
                     descriptionHtml: Value(
                       ContentUtils.cleanCoffeeContent(
-                        item['description_html_uk'] as String? ?? '',
+                        descEn ?? item['description_html_uk'] as String? ?? '',
                       ),
                     ),
                     story: Value(
                       ContentUtils.cleanCoffeeContent(
-                        item['story_uk'] as String? ?? '',
+                        storyEn ?? item['story_uk'] as String? ?? '',
                       ),
                     ),
-                    region: Value(item['region_uk'] as String? ?? ''),
-                    country: Value(item['country_uk'] as String? ?? ''),
+                    region: Value(regionEn ?? item['region_uk'] as String? ?? ''),
+                    country: Value(countryEn ?? item['country_uk'] as String? ?? ''),
                   ),
                 );
               }

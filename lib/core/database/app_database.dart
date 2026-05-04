@@ -290,7 +290,7 @@ class AppDatabase extends _$AppDatabase {
             ) &
             localizedFarmerTranslationsV2.languageCode.equals(lang),
       ),
-    ]);
+    ])..orderBy([OrderingTerm.asc(localizedFarmersV2.id)]);
 
     final rows = await query.get();
     return rows.map((row) {

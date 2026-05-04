@@ -335,7 +335,7 @@ class AppDatabase extends _$AppDatabase {
         ) &
             specialtyArticleTranslationsV2.languageCode.equals(lang),
       ),
-    ]);
+    ])..orderBy([OrderingTerm.asc(specialtyArticlesV2.id)]);
 
     final rows = await query.get();
     return rows.map((row) {
@@ -374,7 +374,7 @@ class AppDatabase extends _$AppDatabase {
         localizedBeanTranslationsV2.beanId.equalsExp(localizedBeansV2.id) &
             localizedBeanTranslationsV2.languageCode.equals(lang),
       ),
-    ]);
+    ])..orderBy([OrderingTerm.asc(localizedBeansV2.id)]);
 
     final rows = await query.get();
     return rows.map((row) => _mapBeanV2Row(row, lang)).toList();

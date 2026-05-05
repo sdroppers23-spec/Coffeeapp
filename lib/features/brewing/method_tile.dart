@@ -7,6 +7,7 @@ import '../../shared/widgets/glass_container.dart';
 import '../../core/l10n/app_localizations.dart';
 import 'brewing_detail_screen.dart';
 import '../navigation/navigation_providers.dart';
+import '../../core/utils/responsive_utils.dart';
 
 // ─── Method metadata ─────────────────────────────────────────────────────────
 // ─── MethodTile ───────────────────────────────────────────────────────────────
@@ -56,7 +57,7 @@ class MethodTile extends ConsumerWidget {
       },
       child: GlassContainer(
         borderRadius: 24,
-        height: 190,
+        height: context.isTablet ? 240 : 190,
         child: Stack(
           fit: StackFit.expand,
           children: [

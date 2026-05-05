@@ -76,9 +76,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
         widget.recipe;
 
     final screenWidth = MediaQuery.sizeOf(context).width;
-    final expandedHeight = screenWidth > 600
-        ? math.min(screenWidth * 0.45, 450.0)
-        : 280.0;
+    final double expandedHeight = math.min(screenWidth * 1.0, 950.0);
 
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0A),
@@ -323,6 +321,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
     return Image.network(
       url,
       fit: BoxFit.cover,
+      alignment: Alignment.topCenter,
       errorBuilder: (context, error, stackTrace) => Container(
         color: Colors.black,
         child: const Icon(

@@ -23,29 +23,26 @@ class ProfileButton extends ConsumerWidget {
     final theme = Theme.of(context);
     final locale = ref.watch(localeProvider);
 
-    final avatarUrl =
-        user?.userMetadata?['avatar_url'] as String? ??
-        'https://api.dicebear.com/7.x/adventurer/png?seed=${user?.id ?? 'guest'}';
+    final String? metadataUrl = user?.userMetadata?['avatar_url'] as String?;
+    final String avatarUrl = (metadataUrl != null && metadataUrl.startsWith('http')) 
+        ? metadataUrl 
+        : 'https://api.dicebear.com/7.x/adventurer/png?seed=${user?.id ?? 'guest'}';
+
+    final bool hasValidUrl = avatarUrl.startsWith('http');
+    const double radius = 18;
 
     return Padding(
       padding: const EdgeInsets.only(right: 8),
       child: GestureDetector(
         onTap: () => _showProfileMenu(context, ref, theme, locale, avatarUrl),
-        child: Hero(
-          tag: 'profile_avatar',
-          child: CircleAvatar(
-            radius: 18,
-            backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.2),
-            backgroundImage: user != null ? NetworkImage(avatarUrl) : null,
-            onBackgroundImageError: (exception, stackTrace) {},
-            child: user == null
-                ? Icon(
-                    Icons.person_outline,
-                    size: 18,
-                    color: theme.colorScheme.primary,
-                  )
-                : null,
-          ),
+        child: CircleAvatar(
+          radius: radius,
+          backgroundColor: Colors.white10,
+          backgroundImage: hasValidUrl ? NetworkImage(avatarUrl) : null,
+          onBackgroundImageError: (_, _) {},
+          child: !hasValidUrl
+              ? const Icon(Icons.person, color: Colors.white54, size: 18 * 0.8)
+              : null,
         ),
       ),
     );
@@ -108,6 +105,14 @@ class _ProfileSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef innerRef) {
+    final meta = user?.userMetadata;
+    String avatarUrlFromMeta(Map<String, dynamic>? meta, String? userId) {
+      final url = meta?['avatar_url'] as String?;
+      return (url != null && url.startsWith('http')) 
+          ? url 
+          : 'https://api.dicebear.com/7.x/adventurer/png?seed=${userId ?? 'guest'}';
+    }
+
     return Container(
       margin: EdgeInsets.fromLTRB(16, 0, 16, 32 + bottomPad),
       padding: const EdgeInsets.all(24),
@@ -134,18 +139,15 @@ class _ProfileSheet extends ConsumerWidget {
           Row(
             children: [
               CircleAvatar(
-                radius: 28,
-                backgroundColor: theme.colorScheme.primary.withValues(
-                  alpha: 0.2,
-                ),
-                backgroundImage: user != null ? NetworkImage(avatarUrl) : null,
-                onBackgroundImageError: (exception, stackTrace) {},
-                child: user == null
-                    ? Icon(
-                        Icons.person,
-                        size: 28,
-                        color: theme.colorScheme.primary,
-                      )
+                radius: 30,
+                backgroundColor: Colors.white12,
+                backgroundImage:
+                    avatarUrlFromMeta(meta, user?.id).startsWith('http')
+                    ? NetworkImage(avatarUrlFromMeta(meta, user?.id))
+                    : null,
+                onBackgroundImageError: (_, _) {},
+                child: !avatarUrlFromMeta(meta, user?.id).startsWith('http')
+                    ? const Icon(Icons.person, color: Colors.white54, size: 24)
                     : null,
               ),
               const SizedBox(width: 16),
@@ -160,6 +162,7 @@ class _ProfileSheet extends ConsumerWidget {
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       user?.email ?? '',

@@ -109,10 +109,12 @@ class AppLocalizations {
       'education': 'Education',
       'specialty_articles': 'Specialty Articles',
       'origin_guides': 'Origin Guides',
-      'no_lots_linked_desc': 'Link coffee lots from your list to this roaster to see them here.',
+      'no_lots_linked_desc':
+          'Link coffee lots from your list to this roaster to see them here.',
       'link_lot_title': 'Link Lot',
       'unlink_lot_confirm_title': 'Unlink Lot',
-      'unlink_lot_confirm_desc_template': 'Are you sure you want to unlink "{name}"?',
+      'unlink_lot_confirm_desc_template':
+          'Are you sure you want to unlink "{name}"?',
       'unlink_uppercase': 'Unlink',
       'no_lots_available_to_link': 'No available lots to link',
       'timer': 'Timer',
@@ -145,7 +147,8 @@ class AppLocalizations {
       'empty_archive_title': 'Archive is Empty',
       'empty_archive_desc': 'Archived roasters will appear here.',
       'empty_lots_title': "It's empty here",
-      'empty_lots_desc': 'Add your first coffee lot to start your specialty journey.',
+      'empty_lots_desc':
+          'Add your first coffee lot to start your specialty journey.',
       'add_roaster_title': 'Add Roaster',
       'add_roaster': 'Add Roaster',
       'add_roaster_uppercase': 'Add roaster',
@@ -723,7 +726,8 @@ class AppLocalizations {
       'search_coffee': 'Search coffee...',
       'edit_roaster_title': 'Edit Roaster',
       'delete_roaster_confirm_title': 'Confirm Deletion',
-      'delete_roaster_confirm_msg': 'Are you sure you want to delete roaster {name}?',
+      'delete_roaster_confirm_msg':
+          'Are you sure you want to delete roaster {name}?',
       'lots_by_roaster_title': 'Lots by this roaster',
       'roast_light_medium': 'Light - Medium',
 
@@ -866,7 +870,8 @@ class AppLocalizations {
       'keep_editing': 'Keep Editing',
       'discard': 'Discard',
       'discard_changes_title': 'Discard Changes?',
-      'discard_changes_msg': 'You have unsaved changes. Are you sure you want to exit?',
+      'discard_changes_msg':
+          'You have unsaved changes. Are you sure you want to exit?',
       'roaster_name_field': 'Roaster Name',
       'roaster_city': 'City',
       'location_field': 'Location',
@@ -881,10 +886,12 @@ class AppLocalizations {
     'uk': {
       'discover': 'Дослідити',
       'no_lots_linked': 'Лоти не прив’язані',
-      'no_lots_linked_desc': 'Прив’яжіть кавові лоти зі свого списку до цього обсмажчика, щоб бачити їх тут.',
+      'no_lots_linked_desc':
+          'Прив’яжіть кавові лоти зі свого списку до цього обсмажчика, щоб бачити їх тут.',
       'link_lot_title': 'Прив’язати лот',
       'unlink_lot_confirm_title': 'Відв’язати лот',
-      'unlink_lot_confirm_desc_template': 'Ви впевнені, що хочете відв’язати "{name}"?',
+      'unlink_lot_confirm_desc_template':
+          'Ви впевнені, що хочете відв’язати "{name}"?',
       'unlink_uppercase': 'Відв\'язати',
       'no_lots_available_to_link': 'Немає доступних лотів для прив’язки',
       'timer': 'Таймер',
@@ -919,7 +926,8 @@ class AppLocalizations {
       'empty_archive_title': 'Архів порожній',
       'empty_archive_desc': 'Архівовані обсмажчики з\'являться тут.',
       'empty_lots_title': 'Поки порожньо',
-      'empty_lots_desc': 'Додайте свій перший кавовий лот, щоб почати свою спешелті подорож.',
+      'empty_lots_desc':
+          'Додайте свій перший кавовий лот, щоб почати свою спешелті подорож.',
       'add_roaster_title': 'Додати обсмажчика',
       'add_roaster': 'Додати обсмажчика',
       'add_roaster_uppercase': 'Додати обсмажчика',
@@ -1530,7 +1538,8 @@ class AppLocalizations {
       'search_coffee': 'Пошук кави...',
       'edit_roaster_title': 'Редагувати обсмажчика',
       'delete_roaster_confirm_title': 'Підтвердіть видалення',
-      'delete_roaster_confirm_msg': 'Ви впевнені, що хочете видалити обсмажчика {name}?',
+      'delete_roaster_confirm_msg':
+          'Ви впевнені, що хочете видалити обсмажчика {name}?',
       'lots_by_roaster_title': 'Лоти від цього обсмажчика',
       'roast_light_medium': 'Світло-середнє',
       'profile_balanced': 'Збалансований',
@@ -1645,7 +1654,8 @@ class AppLocalizations {
       'keep_editing': 'Продовжити редагування',
       'discard': 'Відкинути',
       'discard_changes_title': 'Відмінити зміни?',
-      'discard_changes_msg': 'У вас є незбережені зміни. Ви впевнені, що хочете вийти?',
+      'discard_changes_msg':
+          'У вас є незбережені зміни. Ви впевнені, що хочете вийти?',
       'roaster_name_field': 'Назва обсмажчика',
       'roaster_city': 'Місто',
       'location_field': 'Розташування',

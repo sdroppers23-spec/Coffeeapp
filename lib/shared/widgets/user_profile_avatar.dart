@@ -21,17 +21,16 @@ class UserProfileAvatar extends ConsumerWidget {
         meta['avatar_url'] as String? ??
         'https://api.dicebear.com/7.x/adventurer/png?seed=${user?.id ?? 'default'}';
 
+    final bool hasValidUrl = avatarUrl.startsWith('http');
+
     return GestureDetector(
       onTap: () => _showProfileMenu(context, ref),
       child: CircleAvatar(
         radius: radius,
         backgroundColor: Colors.white12,
-        backgroundImage: avatarUrl.startsWith('http')
-            ? NetworkImage(avatarUrl)
-            : const AssetImage('assets/images/placeholder_avatar.jpg')
-                  as ImageProvider,
+        backgroundImage: hasValidUrl ? NetworkImage(avatarUrl) : null,
         onBackgroundImageError: (_, _) {},
-        child: (avatarUrl.isEmpty)
+        child: !hasValidUrl
             ? Icon(Icons.person, color: Colors.white54, size: radius * 0.8)
             : null,
       ),
@@ -78,10 +77,11 @@ class UserProfileAvatar extends ConsumerWidget {
                       backgroundImage:
                           avatarUrlFromMeta(meta, user?.id).startsWith('http')
                           ? NetworkImage(avatarUrlFromMeta(meta, user?.id))
-                          : const AssetImage(
-                                  'assets/images/placeholder_avatar.jpg',
-                                )
-                                as ImageProvider,
+                          : null,
+                      onBackgroundImageError: (_, _) {},
+                      child: !avatarUrlFromMeta(meta, user?.id).startsWith('http')
+                          ? const Icon(Icons.person, color: Colors.white54, size: 24)
+                          : null,
                     ),
                     const SizedBox(width: 16),
                     Column(

@@ -1081,8 +1081,8 @@ class _PremiumRoasterCard extends StatelessWidget {
               else ...[
                 const SizedBox(width: 16),
                 Container(
-                  width: 56,
-                  height: 56,
+                  width: context.isTablet ? 72 : 56,
+                  height: context.isTablet ? 72 : 56,
                   margin: const EdgeInsets.only(right: 14),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.05),

@@ -16,6 +16,7 @@ import '../../shared/services/roaster_image_service.dart';
 import '../../shared/widgets/pressable_scale.dart';
 import '../navigation/navigation_providers.dart';
 import '../../shared/utils/url_helper.dart';
+import '../../core/utils/responsive_utils.dart';
 
 
 final userRoasterLotsProvider =
@@ -637,8 +638,8 @@ class _UserRoasterDetailsScreenState
                 // Header (Logo)
                 Center(
                   child: Container(
-                    width: 120,
-                    height: 120,
+                    width: context.isTablet ? 160 : 120,
+                    height: context.isTablet ? 160 : 120,
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.05),
                       borderRadius: BorderRadius.circular(30),

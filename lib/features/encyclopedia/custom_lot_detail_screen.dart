@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,6 +56,7 @@ class _CustomLotDetailScreenState extends ConsumerState<CustomLotDetailScreen>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final lot = widget.lot;
+    final screenWidth = MediaQuery.sizeOf(context).width;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -95,7 +97,7 @@ class _CustomLotDetailScreenState extends ConsumerState<CustomLotDetailScreen>
                 Hero(
                   tag: 'lot_image_${lot.id}',
                   child: Container(
-                    height: 320,
+                    height: math.min(screenWidth * 1.0, 950.0),
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: Colors.black,
@@ -104,10 +106,12 @@ class _CustomLotDetailScreenState extends ConsumerState<CustomLotDetailScreen>
                                 ? DecorationImage(
                                     image: NetworkImage(lot.imageUrl!),
                                     fit: BoxFit.cover,
+                                    alignment: Alignment.topCenter,
                                   )
                                 : DecorationImage(
                                     image: FileImage(File(lot.imageUrl!)),
                                     fit: BoxFit.cover,
+                                    alignment: Alignment.topCenter,
                                   ))
                           : null,
                     ),

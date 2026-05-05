@@ -58,9 +58,7 @@ class _SpecialtyArticleDetailScreenState
     const bg = Colors.black;
 
     final screenWidth = MediaQuery.sizeOf(context).width;
-    final expandedHeight = screenWidth > 600
-        ? math.min(screenWidth * 0.55, 500.0)
-        : 400.0;
+    final double expandedHeight = math.min(screenWidth * 1.0, 950.0);
 
     return PopScope(
       canPop: false,
@@ -307,11 +305,12 @@ class _SpecialtyArticleDetailScreenState
 
   Widget _buildHeroImage(String url) {
     if (url.startsWith('assets/')) {
-      return Image.asset(url, fit: BoxFit.cover);
+      return Image.asset(url, fit: BoxFit.cover, alignment: Alignment.topCenter);
     }
     return CachedNetworkImage(
       imageUrl: url,
       fit: BoxFit.cover,
+      alignment: Alignment.topCenter,
       placeholder: (context, url) => Container(
         color: Colors.black,
         child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),

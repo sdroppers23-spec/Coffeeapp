@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -61,6 +62,7 @@ class _CoffeeLotDetailScreenState extends ConsumerState<CoffeeLotDetailScreen>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final entry = widget.entry;
+    final screenWidth = MediaQuery.sizeOf(context).width;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -144,7 +146,7 @@ class _CoffeeLotDetailScreenState extends ConsumerState<CoffeeLotDetailScreen>
                 Hero(
                   tag: 'lot_image_${entry.id}',
                   child: Container(
-                    height: 320,
+                    height: math.min(screenWidth * 1.0, 950.0),
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: Colors.black,
@@ -152,10 +154,12 @@ class _CoffeeLotDetailScreenState extends ConsumerState<CoffeeLotDetailScreen>
                           ? DecorationImage(
                               image: NetworkImage(entry.imageUrl),
                               fit: BoxFit.cover,
+                              alignment: Alignment.topCenter,
                             )
                           : DecorationImage(
                               image: NetworkImage(entry.effectiveFlagUrl),
                               fit: BoxFit.cover,
+                              alignment: Alignment.topCenter,
                             ),
                     ),
                     child:

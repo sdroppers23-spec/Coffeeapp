@@ -51,9 +51,7 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
     final bio = _buildBio(widget.farmer.description, widget.farmer.story);
 
     final screenWidth = MediaQuery.sizeOf(context).width;
-    final expandedHeight = screenWidth > 600
-        ? math.min(screenWidth * 0.6, 550.0)
-        : 420.0;
+    final double expandedHeight = math.min(screenWidth * 1.0, 950.0);
 
     return PopScope(
       canPop: false,
@@ -101,6 +99,7 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
                           _LocalOrNetworkImage(
                             url: widget.farmer.effectiveImageUrl,
                             fit: BoxFit.cover,
+                            alignment: Alignment.topCenter,
                           )
                         else
                           Container(
@@ -336,8 +335,13 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
 class _LocalOrNetworkImage extends StatelessWidget {
   final String url;
   final BoxFit fit;
+  final Alignment alignment;
 
-  const _LocalOrNetworkImage({required this.url, this.fit = BoxFit.cover});
+  const _LocalOrNetworkImage({
+    required this.url,
+    this.fit = BoxFit.cover,
+    this.alignment = Alignment.center,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -349,6 +353,7 @@ class _LocalOrNetworkImage extends StatelessWidget {
       return Image.file(
         File(path),
         fit: fit,
+        alignment: alignment,
         errorBuilder: (context, error, stackTrace) =>
             Container(color: Colors.grey[900]),
       );
@@ -358,6 +363,7 @@ class _LocalOrNetworkImage extends StatelessWidget {
       return Image.asset(
         url,
         fit: fit,
+        alignment: alignment,
         errorBuilder: (context, error, stackTrace) =>
             Container(color: Colors.grey[900]),
       );
@@ -366,6 +372,7 @@ class _LocalOrNetworkImage extends StatelessWidget {
     return CachedNetworkImage(
       imageUrl: url,
       fit: fit,
+      alignment: alignment,
       placeholder: (context, url) => Container(
         color: Colors.black,
         child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),

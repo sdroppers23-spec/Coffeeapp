@@ -19,6 +19,7 @@ class SettingsScreen extends ConsumerStatefulWidget {
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   bool _isLoading = false;
+  final GlobalKey<PopupMenuButtonState> _languageMenuKey = GlobalKey();
 
   @override
   void initState() {
@@ -139,54 +140,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         ),
                       ),
                     ),
-                  // МОВА
                   _buildSectionTitle(context, ref.t('language').toUpperCase()),
                   _buildCard(
                     context,
-                    child: PopupMenuButton<String>(
-                      onSelected: (code) {
-                        ref.read(localeProvider.notifier).setLocale(code);
-                        setState(() {});
-                      },
-                      offset: const Offset(0, 50),
-                      color: theme.cardColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                          value: 'en',
-                          child: Row(
-                            children: [
-                              const Text('🇺🇸 English'),
-                              if (ref.read(localeProvider) == 'en') ...[
-                                const Spacer(),
-                                Icon(
-                                  Icons.check,
-                                  color: theme.colorScheme.primary,
-                                  size: 18,
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                        PopupMenuItem(
-                          value: 'uk',
-                          child: Row(
-                            children: [
-                              const Text('🇺🇦 Українська'),
-                              if (ref.read(localeProvider) == 'uk') ...[
-                                const Spacer(),
-                                Icon(
-                                  Icons.check,
-                                  color: theme.colorScheme.primary,
-                                  size: 18,
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                      ],
+                    child: InkWell(
+                      onTap: () => _languageMenuKey.currentState?.showButtonMenu(),
+                      borderRadius: BorderRadius.circular(16),
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: Row(
@@ -205,20 +164,58 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               ),
                             ),
                             const Spacer(),
-                            Text(
-                              ref.watch(localeProvider) == 'uk'
-                                  ? ref.t('ukrainian')
-                                  : ref.t('english'),
-                              style: GoogleFonts.outfit(
-                                fontSize: 14,
-                                color: Colors.white38,
+                            PopupMenuButton<String>(
+                              key: _languageMenuKey,
+                              onSelected: (code) {
+                                ref.read(localeProvider.notifier).setLocale(code);
+                                setState(() {});
+                              },
+                              position: PopupMenuPosition.under,
+                              offset: const Offset(0, 8),
+                              color: isDark ? const Color(0xFF1A1A1A) : Colors.white,
+                              elevation: 8,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                side: BorderSide(
+                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                            const Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              color: Colors.white24,
-                              size: 14,
+                              itemBuilder: (context) => [
+                                _buildLanguageItem(
+                                  context,
+                                  code: 'en',
+                                  label: 'English',
+                                  flag: '🇺🇸',
+                                  isSelected: ref.read(localeProvider) == 'en',
+                                ),
+                                _buildLanguageItem(
+                                  context,
+                                  code: 'uk',
+                                  label: 'Українська',
+                                  flag: '🇺🇦',
+                                  isSelected: ref.read(localeProvider) == 'uk',
+                                ),
+                              ],
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    ref.watch(localeProvider) == 'uk'
+                                        ? ref.t('ukrainian')
+                                        : ref.t('english'),
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 14,
+                                      color: Colors.white38,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  const Icon(
+                                    Icons.expand_more_rounded,
+                                    color: Colors.white24,
+                                    size: 18,
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -672,6 +669,43 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       height: 1,
       indent: 16,
       endIndent: 16,
+    );
+  }
+
+  PopupMenuItem<String> _buildLanguageItem(
+    BuildContext context, {
+    required String code,
+    required String label,
+    required String flag,
+    required bool isSelected,
+  }) {
+    final theme = Theme.of(context);
+    return PopupMenuItem<String>(
+      value: code,
+      height: 44,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        children: [
+          Text(
+            '$flag  $label',
+            style: GoogleFonts.outfit(
+              fontSize: 14,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+              color: isSelected
+                  ? theme.colorScheme.onSurface
+                  : theme.colorScheme.onSurface.withValues(alpha: 0.8),
+            ),
+          ),
+          if (isSelected) ...[
+            const SizedBox(width: 12),
+            Icon(
+              Icons.check_rounded,
+              color: theme.colorScheme.primary,
+              size: 16,
+            ),
+          ],
+        ],
+      ),
     );
   }
 }

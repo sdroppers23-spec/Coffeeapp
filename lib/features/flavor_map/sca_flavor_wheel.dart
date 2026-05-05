@@ -139,8 +139,8 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Set size to fit screen width exactly
-        final currentSize = constraints.maxWidth;
+        // Set size to fit available space while maintaining circular shape
+        final currentSize = math.min(constraints.maxWidth, constraints.maxHeight);
 
         return Align(
           alignment: Alignment.center,

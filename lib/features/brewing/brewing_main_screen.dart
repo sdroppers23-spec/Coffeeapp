@@ -100,26 +100,19 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
           ),
           const ProfileButton(),
         ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(44),
-          child: SizedBox(
-            height: 44,
-            child: TabBar(
-              controller: _tabController,
-              isScrollable: true,
-              tabAlignment: TabAlignment.start,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              indicator: BoxDecoration(
-                borderRadius: BorderRadius.circular(24),
-                color: accentColor,
-              ),
-              // Most styles now come from global tabBarTheme in AppTheme
-              tabs: [
-                Tab(text: ref.t('brewing_methods')),
-                Tab(text: ref.t('my_recipes')),
-              ],
-            ),
+        bottom: TabBar(
+          controller: _tabController,
+          isScrollable: false,
+          dividerColor: Colors.transparent,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          indicator: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            color: accentColor,
           ),
+          tabs: [
+            Tab(text: ref.t('brewing_methods')),
+            Tab(text: ref.t('my_recipes')),
+          ],
         ),
       ),
       floatingActionButton: ListenableBuilder(

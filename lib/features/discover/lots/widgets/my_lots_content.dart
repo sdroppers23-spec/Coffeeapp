@@ -18,6 +18,7 @@ import '../../../../core/l10n/app_localizations.dart';
 import '../../../../shared/services/toast_service.dart';
 import '../../../../shared/widgets/sync_indicator.dart';
 import '../../../../core/utils/responsive_utils.dart';
+import '../../../navigation/navigation_providers.dart';
 
 class MyLotsContent extends ConsumerStatefulWidget {
   const MyLotsContent({super.key});
@@ -277,6 +278,9 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
     super.build(context);
     final filter = ref.watch(myLotsFilterProvider);
     final lotsAsync = ref.watch(userLotsStreamProvider);
+    final navHeight = ref.watch(navBarHeightProvider);
+    final isNavVisible = ref.watch(navBarVisibleProvider);
+    final effectiveNavHeight = isNavVisible ? navHeight : 0.0;
 
     final userLots = lotsAsync.value ?? [];
     final countries = userLots
@@ -324,13 +328,13 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
                   showSwipeModeToggle: true,
                 ),
                 const SizedBox(height: 8),
-                Expanded(child: _buildListView(lotsAsync, filter)),
+                 Expanded(child: _buildListView(lotsAsync, filter, effectiveNavHeight)),
               ],
             ),
 
             // Floating Action Button OR Selection Bar
-            Positioned(
-              bottom: 90,
+             Positioned(
+              bottom: effectiveNavHeight + 8,
               left: 16,
               right: 16,
               child: AnimatedSwitcher(
@@ -358,6 +362,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
   Widget _buildListView(
     AsyncValue<List<CoffeeLotDto>> lotsAsync,
     DiscoveryFilterState filter,
+    double navHeight,
   ) {
     return lotsAsync.when(
       data: (userLots) {
@@ -409,7 +414,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
         if (filter.isGrid) {
           return GridView.builder(
             controller: _scrollController,
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 180),
+            padding: EdgeInsets.fromLTRB(20, 16, 20, navHeight + 80),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: context.gridColumnCount,
               childAspectRatio: 0.68,
@@ -459,7 +464,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
         return ListView.builder(
           controller: _scrollController,
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 180),
+          padding: EdgeInsets.fromLTRB(20, 16, 20, navHeight + 80),
           itemCount: filteredLots.length,
           itemBuilder: (context, index) {
             final lot = filteredLots[index];

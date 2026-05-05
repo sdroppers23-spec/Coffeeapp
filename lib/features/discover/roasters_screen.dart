@@ -16,6 +16,7 @@ import '../../shared/services/toast_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:io';
 import '../../shared/utils/url_helper.dart';
+import '../navigation/navigation_providers.dart';
 
 class RoastersScreen extends StatelessWidget {
   const RoastersScreen({super.key});
@@ -215,6 +216,9 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
   Widget build(BuildContext context) {
     super.build(context);
     final roasters = ref.watch(userRoastersProvider);
+    final navHeight = ref.watch(navBarHeightProvider);
+    final isNavVisible = ref.watch(navBarVisibleProvider);
+    final effectiveNavHeight = isNavVisible ? navHeight : 0.0;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -457,7 +461,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                           _buildEmptyState()
                         else
                           ListView.builder(
-                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 200),
+                            padding: EdgeInsets.fromLTRB(16, 8, 16, effectiveNavHeight + 80),
                             itemCount: filtered.length,
                             itemBuilder: (context, index) {
                               final roaster = filtered[index];
@@ -466,17 +470,6 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                                 key: ValueKey(roaster.id),
                               );
                             },
-                          ),
-                        if (!_isSelectionMode)
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                bottom: 90, // Match Add Lot button level
-                                right: 16,
-                              ),
-                              child: _buildHalfWidthAddButton(),
-                            ),
                           ),
                       ],
                     );
@@ -489,7 +482,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
               // ── Floating Action Bar (Selection Mode) ────────────────────────
               if (_isSelectionMode)
                 Positioned(
-                  bottom: 90,
+                  bottom: effectiveNavHeight + 12,
                   left: 16,
                   right: 16,
                   child: FadeTransition(
@@ -501,7 +494,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
               // ── Floating Add Button ─────────────────────────────────────────
               if (!_isSelectionMode && _tabController.index == 0)
                 Positioned(
-                  bottom: 90,
+                  bottom: effectiveNavHeight + 8,
                   right: 16,
                   child: FadeTransition(
                     opacity: const AlwaysStoppedAnimation(1.0),

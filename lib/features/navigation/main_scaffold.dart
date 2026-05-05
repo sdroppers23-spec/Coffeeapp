@@ -44,6 +44,15 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
     _setupNavListener();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Re-measure when safe area changes (e.g. keyboard or orientation)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _updateNavBarHeight();
+    });
+  }
+
   void _setupNavListener() {
     // We can't directly listen to StatefulNavigationShell, but we can check if it changed
     // In GoRouter, a branch switch is a rebuild of this widget.
@@ -56,8 +65,12 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
     final box = ctx.findRenderObject() as RenderBox?;
     if (box == null) return;
     final height = box.size.height;
-    // We use a fixed offset now, so we just report the actual height plus some margin
-    ref.read(navBarHeightProvider.notifier).update(height + 36);
+    
+    final bottomPadding = MediaQuery.paddingOf(context).bottom;
+    final bottomOffset = bottomPadding + (context.isTablet ? 16.0 : 12.0);
+    final totalHeight = height + bottomOffset;
+    
+    ref.read(navBarHeightProvider.notifier).update(totalHeight);
   }
 
   @override
@@ -156,7 +169,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
               Positioned(
                 left: 0,
                 right: 0,
-                bottom: context.isTablet ? 60 : 50, // Raised on tablets
+                bottom: MediaQuery.paddingOf(context).bottom + (context.isTablet ? 16 : 12),
                 child: AnimatedSlide(
                   duration: const Duration(milliseconds: 400),
                   curve: Curves.fastOutSlowIn,

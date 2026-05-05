@@ -81,7 +81,6 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
       extendBodyBehindAppBar: true,
       appBar: PremiumAppBar(
         title: ref.t('alternative'),
-        toolbarHeight: 48,
         actions: [
           ListenableBuilder(
             listenable: _tabController,
@@ -125,33 +124,42 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
       ),
       floatingActionButton: ListenableBuilder(
         listenable: _tabController,
-        builder: (context, _) => _tabController.index == 1
-            ? FloatingActionButton.extended(
-                onPressed: () async {
-                  final result = await showDialog<bool>(
-                    context: context,
-                    builder: (context) => const AddRecipeDialog(
-                      recipeSegment: RecipeSegment.alternative,
+        builder: (context, _) {
+          final isNavVisible = ref.watch(navBarVisibleProvider);
+          final navHeight = ref.watch(navBarHeightProvider);
+          return _tabController.index == 1
+              ? Padding(
+                  padding: EdgeInsets.only(
+                    bottom: isNavVisible ? navHeight + 8 : 16,
+                  ),
+                  child: FloatingActionButton.extended(
+                    onPressed: () async {
+                      final result = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => const AddRecipeDialog(
+                          recipeSegment: RecipeSegment.alternative,
+                        ),
+                      );
+                      if (result == true) {
+                        ref.invalidate(alternativeRecipesProvider);
+                        ref.invalidate(globalCustomRecipesProvider);
+                      }
+                    },
+                    icon: const Icon(Icons.add_rounded),
+                    label: Text(
+                      ref.t('add_recipe'),
+                      style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
                     ),
-                  );
-                  if (result == true) {
-                    ref.invalidate(alternativeRecipesProvider);
-                    ref.invalidate(globalCustomRecipesProvider);
-                  }
-                },
-                icon: const Icon(Icons.add_rounded),
-                label: Text(
-                  ref.t('add_recipe'),
-                  style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
-                ),
-                backgroundColor: const Color(0xFFC8A96E),
-                foregroundColor: Colors.black,
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              )
-            : const SizedBox.shrink(),
+                    backgroundColor: const Color(0xFFC8A96E),
+                    foregroundColor: Colors.black,
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                )
+              : const SizedBox.shrink();
+        },
       ),
       body: Stack(
         children: [

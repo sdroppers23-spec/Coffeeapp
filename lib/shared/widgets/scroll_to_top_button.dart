@@ -1,7 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../features/navigation/navigation_providers.dart';
 
-class ScrollToTopButton extends StatefulWidget {
+class ScrollToTopButton extends ConsumerStatefulWidget {
   final ScrollController scrollController;
   final double threshold;
 
@@ -12,10 +14,10 @@ class ScrollToTopButton extends StatefulWidget {
   });
 
   @override
-  State<ScrollToTopButton> createState() => _ScrollToTopButtonState();
+  ConsumerState<ScrollToTopButton> createState() => _ScrollToTopButtonState();
 }
 
-class _ScrollToTopButtonState extends State<ScrollToTopButton> {
+class _ScrollToTopButtonState extends ConsumerState<ScrollToTopButton> {
   bool _isVisible = false;
 
   @override
@@ -51,10 +53,19 @@ class _ScrollToTopButtonState extends State<ScrollToTopButton> {
 
   @override
   Widget build(BuildContext context) {
+    final navHeight = ref.watch(navBarHeightProvider);
+    final isNavVisible = ref.watch(navBarVisibleProvider);
+    final effectiveNavHeight = isNavVisible ? navHeight : 0.0;
+
+    // Position above the navigation bar or main FAB
+    // If main FAB is at effectiveNavHeight + 8, and its height is 56, its top is at effectiveNavHeight + 64.
+    // So we put this one at effectiveNavHeight + 72 (or higher).
+    final targetBottom = effectiveNavHeight + 84.0;
+
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
-      bottom: _isVisible ? 100.0 : -80.0, // Hidden below screen
+      bottom: _isVisible ? targetBottom : -80.0, 
       right: 24.0,
       child: AnimatedOpacity(
         duration: const Duration(milliseconds: 300),

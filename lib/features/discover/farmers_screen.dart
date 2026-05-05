@@ -11,6 +11,7 @@ import '../../shared/widgets/pressable_scale.dart';
 import '../../core/providers/settings_provider.dart';
 import '../../core/utils/content_utils.dart';
 import 'farmer_detail_screen.dart';
+import '../navigation/navigation_providers.dart';
 
 final farmersProvider = FutureProvider<List<LocalizedFarmerDto>>((ref) async {
   final db = ref.watch(databaseProvider);
@@ -34,6 +35,9 @@ class _FarmersBodyState extends ConsumerState<FarmersBody>
   Widget build(BuildContext context) {
     super.build(context);
     final asyncFarms = ref.watch(farmersProvider);
+    final navHeight = ref.watch(navBarHeightProvider);
+    final isNavVisible = ref.watch(navBarVisibleProvider);
+    final effectiveNavHeight = isNavVisible ? navHeight : 0.0;
 
     return asyncFarms.when(
       loading: () => Center(
@@ -69,7 +73,7 @@ class _FarmersBodyState extends ConsumerState<FarmersBody>
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 800),
             child: ListView.builder(
-              padding: const EdgeInsets.fromLTRB(16, 20, 16, 220),
+              padding: EdgeInsets.fromLTRB(16, 20, 16, effectiveNavHeight + 80),
               physics: const BouncingScrollPhysics(),
               itemCount: farmers.length,
               itemBuilder: (context, index) {

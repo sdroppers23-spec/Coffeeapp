@@ -254,6 +254,12 @@ class _ScaWheelPainter extends CustomPainter {
     final r3 = fullRadius * 0.94; // Notes ring (was 0.96)
 
     final currentLocale = locale;
+    final double baseScaleSize = fullRadius;
+
+    // Розрахунок адаптивних розмірів шрифтів
+    final catFontSize = _calculateBaseFontSize(baseScaleSize, 11.5);
+    final subFontSize = _calculateBaseFontSize(baseScaleSize, 8.0);
+    final noteFontSize = _calculateBaseFontSize(baseScaleSize, 9.0);
 
     double currentAngle = -math.pi / 2; // Start from top
 
@@ -302,7 +308,7 @@ class _ScaWheelPainter extends CustomPainter {
         r0,
         r1,
         Colors.white,
-        11.0,
+        catFontSize,
         true,
         isOtherSection: cat.key == 'wheel_cat_others',
       );
@@ -345,7 +351,7 @@ class _ScaWheelPainter extends CustomPainter {
             r1,
             r2,
             Colors.white,
-            7.5,
+            subFontSize,
             true,
             isOtherSection: cat.key == 'wheel_cat_others',
           );
@@ -391,7 +397,7 @@ class _ScaWheelPainter extends CustomPainter {
                 r2,
                 r3,
                 Colors.white.withValues(alpha: 0.9 * labelOpacity),
-                8.5,
+                noteFontSize,
                 false,
                 isOtherSection: cat.key == 'wheel_cat_others',
                 noteKey: noteKey,
@@ -417,6 +423,16 @@ class _ScaWheelPainter extends CustomPainter {
     canvas.drawCircle(center, r1, gridPaint);
     canvas.drawCircle(center, r2, gridPaint);
     canvas.drawCircle(center, r3, gridPaint);
+  }
+
+  double _calculateBaseFontSize(double radius, double baseSize) {
+    // radius тут — це fullRadius (половина ширини колеса)
+    // baseSize — ідеальний розмір для мобільних пристроїв
+    if (radius < 180) {
+      return (radius / 180.0) * baseSize;
+    }
+    // На великих екранах (планшетах) додаємо невеликий коефіцієнт зростання
+    return baseSize + (radius - 180) * 0.035 * (baseSize / 11.5);
   }
 
   void _drawFlatArc(
@@ -465,9 +481,6 @@ class _ScaWheelPainter extends CustomPainter {
 
     final actualFontWeight = bold ? FontWeight.w500 : FontWeight.w400;
     const actualFontFamily = 'Outfit';
-
-    // Calculate max allowed width (roughly the width of the arc at middleRadius)
-    final maxAllowedWidth = (middleRadius * sweepAngle) * 0.85;
 
     // Handle multi-line wrapping for long names or specific delimiters
     List<String> lines = [text];
@@ -520,14 +533,14 @@ class _ScaWheelPainter extends CustomPainter {
       canvas.rotate(math.pi);
     }
 
-    // Calculate scaling factor based on the widest line, with a clamp for uniformity
-    final double maxWidth = painters.fold<double>(
-      0,
-      (max, p) => math.max(max, p.width),
-    );
+    // Розрахунок максимально допустимої ширини тексту на дузі (з невеликим відступом 10%)
+    final double maxAllowedWidth = sweepAngle * middleRadius * 0.9;
+
+    // Масштабуємо шрифт вниз, якщо текст занадто широкий для дуги
+    final double maxWidth = painters.fold<double>(0, (max, p) => math.max(max, p.width));
     double scale = 1.0;
     if (maxWidth > maxAllowedWidth) {
-      scale = (maxAllowedWidth / maxWidth).clamp(0.8, 1.0);
+      scale = (maxAllowedWidth / maxWidth).clamp(0.6, 1.0);
     }
 
     if (scale < 1.0) {

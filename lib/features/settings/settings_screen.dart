@@ -685,5 +685,4 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       endIndent: 16,
     );
   }
-  }
 }

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -49,6 +50,11 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
     // Build unified Bio from description + story
     final bio = _buildBio(widget.farmer.description, widget.farmer.story);
 
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final expandedHeight = screenWidth > 600
+        ? math.min(screenWidth * 0.6, 550.0)
+        : 420.0;
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -66,7 +72,7 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
               slivers: [
                 // ── Hero Portrait ─────────────────────────────────────────────────
                 SliverAppBar(
-                  expandedHeight: 420,
+                  expandedHeight: expandedHeight,
                   backgroundColor: Colors.black,
                   surfaceTintColor: Colors.transparent, // Fix white sheet
                   systemOverlayStyle:

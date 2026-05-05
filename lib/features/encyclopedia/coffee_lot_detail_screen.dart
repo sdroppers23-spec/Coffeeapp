@@ -23,6 +23,7 @@ import '../../core/providers/preferences_provider.dart';
 import '../../core/providers/settings_provider.dart';
 import '../../shared/widgets/sync_indicator.dart';
 import '../../shared/widgets/modern_undo_timer.dart';
+import '../../core/utils/responsive_utils.dart';
 import '../brewing/widgets/custom_recipe_card.dart';
 
 class CoffeeLotDetailScreen extends ConsumerStatefulWidget {
@@ -192,46 +193,48 @@ class _CoffeeLotDetailScreenState extends ConsumerState<CoffeeLotDetailScreen>
                 // Lot Info Overlay
                 Positioned(
                   bottom: 20,
-                  left: 20,
-                  right: 20,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        entry.country.toUpperCase(),
-                        style: GoogleFonts.outfit(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 2,
-                          color: theme.colorScheme.primary,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        entry.region.toUpperCase(),
-                        style: GoogleFonts.outfit(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white,
-                          height: 1.1,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          LotBadge(
-                            label: '${entry.scaScore} SCA',
-                            theme: theme,
+                  left: context.isTablet ? 40 : 20,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 800),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          entry.country.toUpperCase(),
+                          style: GoogleFonts.outfit(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 2,
+                            color: theme.colorScheme.primary,
                           ),
-                          const SizedBox(width: 8),
-                          LotBadge(
-                            label: entry.roastLevel.toUpperCase(),
-                            theme: theme,
-                            isPrimary: true,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          entry.region.toUpperCase(),
+                          style: GoogleFonts.outfit(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
+                            height: 1.1,
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            LotBadge(
+                              label: '${entry.scaScore} SCA',
+                              theme: theme,
+                            ),
+                            const SizedBox(width: 8),
+                            LotBadge(
+                              label: entry.roastLevel.toUpperCase(),
+                              theme: theme,
+                              isPrimary: true,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

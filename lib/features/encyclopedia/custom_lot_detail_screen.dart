@@ -16,6 +16,7 @@ import '../../shared/widgets/pressable_scale.dart';
 import '../../shared/widgets/lot_detail_widgets.dart';
 import '../../core/providers/settings_provider.dart';
 import '../../core/providers/preferences_provider.dart';
+import '../../core/utils/responsive_utils.dart';
 
 class CustomLotDetailScreen extends ConsumerStatefulWidget {
   final CoffeeLotDto lot;
@@ -143,50 +144,52 @@ class _CustomLotDetailScreenState extends ConsumerState<CustomLotDetailScreen>
                 // Lot Info Overlay
                 Positioned(
                   bottom: 20,
-                  left: 20,
-                  right: 20,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (lot.roasteryName != null)
+                  left: context.isTablet ? 40 : 20,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 800),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (lot.roasteryName != null)
+                          Text(
+                            lot.roasteryName!.toUpperCase(),
+                            style: GoogleFonts.outfit(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 2,
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
+                        const SizedBox(height: 8),
                         Text(
-                          lot.roasteryName!.toUpperCase(),
+                          (lot.coffeeName ?? lot.id).toUpperCase(),
                           style: GoogleFonts.outfit(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 2,
-                            color: theme.colorScheme.primary,
+                            fontSize: 28,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
+                            height: 1.1,
                           ),
                         ),
-                      const SizedBox(height: 8),
-                      Text(
-                        (lot.coffeeName ?? lot.id).toUpperCase(),
-                        style: GoogleFonts.outfit(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white,
-                          height: 1.1,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          if (lot.scaScore != null)
-                            LotBadge(
-                              label: '${lot.scaScore} SCA',
-                              theme: theme,
-                            ),
-                          if (lot.roastLevel != null) ...[
-                            const SizedBox(width: 8),
-                            LotBadge(
-                              label: lot.roastLevel!.toUpperCase(),
-                              theme: theme,
-                              isPrimary: true,
-                            ),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            if (lot.scaScore != null)
+                              LotBadge(
+                                label: '${lot.scaScore} SCA',
+                                theme: theme,
+                              ),
+                            if (lot.roastLevel != null) ...[
+                              const SizedBox(width: 8),
+                              LotBadge(
+                                label: lot.roastLevel!.toUpperCase(),
+                                theme: theme,
+                                isPrimary: true,
+                              ),
+                            ],
                           ],
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

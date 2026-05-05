@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -56,6 +57,11 @@ class _SpecialtyArticleDetailScreenState
     const gold = Color(0xFFC8A96E);
     const bg = Colors.black;
 
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final expandedHeight = screenWidth > 600
+        ? math.min(screenWidth * 0.55, 500.0)
+        : 400.0;
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -73,7 +79,7 @@ class _SpecialtyArticleDetailScreenState
               slivers: [
                 // ── Hero Image AppBar ──────────────────────────────────────────────
                 SliverAppBar(
-                  expandedHeight: 400,
+                  expandedHeight: expandedHeight,
                   backgroundColor: Colors.black,
                   surfaceTintColor: Colors.transparent, // Fix white sheet
                   systemOverlayStyle:

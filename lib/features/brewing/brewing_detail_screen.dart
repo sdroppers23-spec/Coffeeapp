@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,6 +13,7 @@ import '../../core/utils/text_processor.dart';
 import '../../shared/widgets/modals/description_glass_modal.dart';
 import 'brewing_guide_screen.dart';
 import '../navigation/navigation_providers.dart';
+import '../../core/utils/responsive_utils.dart';
 
 
 class BrewingDetailScreen extends ConsumerStatefulWidget {
@@ -73,6 +75,11 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
         ) ??
         widget.recipe;
 
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final expandedHeight = screenWidth > 600
+        ? math.min(screenWidth * 0.45, 450.0)
+        : 280.0;
+
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0A),
       body: Container(
@@ -88,7 +95,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
           child: NestedScrollView(
             headerSliverBuilder: (context, innerBoxIsScrolled) => [
               SliverAppBar(
-                expandedHeight: 280,
+                expandedHeight: expandedHeight,
                 pinned: true,
                 stretch: true,
                 backgroundColor: Colors.black,
@@ -112,41 +119,43 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                       ),
                       Positioned(
                         bottom: 25,
-                        left: 20,
-                        right: 20,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Golden Tablet Header
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 14,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFC8A96E),
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color(
-                                      0xFFC8A96E,
-                                    ).withValues(alpha: 0.3),
-                                    blurRadius: 12,
-                                    offset: const Offset(0, 4),
+                        left: context.isTablet ? 40 : 20,
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 800),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Golden Tablet Header
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 14,
+                                  vertical: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFC8A96E),
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color(
+                                        0xFFC8A96E,
+                                      ).withValues(alpha: 0.3),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: Text(
+                                  currentRecipe.name,
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.black,
+                                    letterSpacing: 0.8,
                                   ),
-                                ],
-                              ),
-                              child: Text(
-                                currentRecipe.name,
-                                style: GoogleFonts.outfit(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.black,
-                                  letterSpacing: 0.8,
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],

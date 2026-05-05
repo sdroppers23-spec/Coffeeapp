@@ -391,16 +391,16 @@ class _DetailHeader extends StatelessWidget {
             decoration: BoxDecoration(
               image: hasImage
                   ? (effectiveImageUrl.startsWith('http')
-                        ? DecorationImage(
-                            image: CachedNetworkImageProvider(
-                              effectiveImageUrl,
-                            ),
-                            fit: BoxFit.cover,
-                          )
-                        : DecorationImage(
-                            image: FileImage(File(effectiveImageUrl)),
-                            fit: BoxFit.cover,
-                          ))
+                      ? DecorationImage(
+                          image: CachedNetworkImageProvider(
+                            effectiveImageUrl,
+                          ),
+                          fit: BoxFit.cover,
+                        )
+                      : DecorationImage(
+                          image: FileImage(File(effectiveImageUrl)),
+                          fit: BoxFit.cover,
+                        ))
                   : null,
               color: Colors.black12,
             ),
@@ -492,38 +492,32 @@ class _DetailHeader extends StatelessWidget {
           ),
         Positioned(
           bottom: 20,
-          left: 0,
-          right: 0,
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 800),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      roasteryName.toUpperCase(),
-                      style: GoogleFonts.outfit(
-                        color: theme.colorScheme.primary.withValues(alpha: 0.6),
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 2,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      coffeeName,
-                      style: GoogleFonts.cormorantGaramond(
-                        color: Colors.white,
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                        height: 1.1,
-                      ),
-                    ),
-                  ],
+          left: context.isTablet ? 40 : 20,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  roasteryName.toUpperCase(),
+                  style: GoogleFonts.outfit(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.6),
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
+                  ),
                 ),
-              ),
+                const SizedBox(height: 8),
+                Text(
+                  coffeeName,
+                  style: GoogleFonts.cormorantGaramond(
+                    color: Colors.white,
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
+                    height: 1.1,
+                  ),
+                ),
+              ],
             ),
           ),
         ),

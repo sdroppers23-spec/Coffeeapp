@@ -8,6 +8,7 @@ import '../../core/providers/settings_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/providers/preferences_provider.dart';
 import '../../shared/widgets/premium_background.dart';
+import '../../shared/widgets/glass_container.dart';
 import '../../core/database/database_provider.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -35,6 +36,103 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   void dispose() {
     ref.read(navBarVisibleProvider.notifier).show();
     super.dispose();
+  }
+
+  void _showLanguagePicker(BuildContext context) {
+    final RenderBox? renderBox =
+        _languageMenuKey.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox == null) return;
+    final Offset offset = renderBox.localToGlobal(Offset.zero);
+
+    final List<Map<String, String>> languages = [
+      {'code': 'en', 'name': 'English', 'flag': '🇺🇸'},
+      {'code': 'uk', 'name': 'Українська', 'flag': '🇺🇦'},
+      {'code': 'de', 'name': 'Deutsch', 'flag': '🇩🇪'},
+      {'code': 'fr', 'name': 'Français', 'flag': '🇫🇷'},
+      {'code': 'es', 'name': 'Español', 'flag': '🇪🇸'},
+      {'code': 'it', 'name': 'Italiano', 'flag': '🇮🇹'},
+      {'code': 'pt', 'name': 'Português', 'flag': '🇵🇹'},
+    ];
+
+    final String currentLocale = ref.read(localeProvider);
+    final int initialIndex = languages.indexWhere(
+      (l) => l['code'] == currentLocale,
+    );
+
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'Language',
+      barrierColor: Colors.black26,
+      transitionDuration: const Duration(milliseconds: 250),
+      transitionBuilder: (context, anim1, anim2, child) {
+        return FadeTransition(
+          opacity: anim1,
+          child: ScaleTransition(
+            scale: Tween<double>(begin: 0.95, end: 1.0).animate(
+              CurvedAnimation(parent: anim1, curve: Curves.easeOutCubic),
+            ),
+            child: child,
+          ),
+        );
+      },
+      pageBuilder: (context, anim1, anim2) {
+        return Stack(
+          children: [
+            Positioned(
+              left: offset.dx - 120 + renderBox.size.width,
+              top: offset.dy + renderBox.size.height + 8,
+              child: Material(
+                color: Colors.transparent,
+                child: GlassContainer(
+                  width: 200,
+                  height: 180,
+                  borderRadius: 24,
+                  padding: EdgeInsets.zero,
+                  child: ListWheelScrollView.useDelegate(
+                    itemExtent: 42,
+                    physics: const FixedExtentScrollPhysics(),
+                    perspective: 0.005,
+                    diameterRatio: 1.2,
+                    onSelectedItemChanged: (index) {
+                      final code = languages[index]['code']!;
+                      ref.read(localeProvider.notifier).setLocale(code);
+                      setState(() {});
+                    },
+                    controller: FixedExtentScrollController(
+                      initialItem: initialIndex == -1 ? 0 : initialIndex,
+                    ),
+                    childDelegate: ListWheelChildBuilderDelegate(
+                      childCount: languages.length,
+                      builder: (context, index) {
+                        final lang = languages[index];
+                        return Center(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(lang['flag']!, style: const TextStyle(fontSize: 18)),
+                              const SizedBox(width: 12),
+                              Text(
+                                lang['name']!,
+                                style: GoogleFonts.outfit(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _signOut() async {
@@ -145,7 +243,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   _buildCard(
                     context,
                     child: InkWell(
-                      onTap: () => _languageMenuKey.currentState?.showButtonMenu(),
+                      onTap: () => _showLanguagePicker(context),
                       borderRadius: BorderRadius.circular(16),
                       child: Padding(
                         padding: const EdgeInsets.all(16),
@@ -165,38 +263,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               ),
                             ),
                             const Spacer(),
-                            PopupMenuButton<String>(
+                            GestureDetector(
                               key: _languageMenuKey,
-                              onSelected: (code) {
-                                ref.read(localeProvider.notifier).setLocale(code);
-                                setState(() {});
-                              },
-                              position: PopupMenuPosition.under,
-                              offset: const Offset(0, 8),
-                              color: isDark ? const Color(0xFF1A1A1A) : Colors.white,
-                              elevation: 8,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                side: BorderSide(
-                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
-                                ),
-                              ),
-                              itemBuilder: (context) => [
-                                _buildLanguageItem(
-                                  context,
-                                  code: 'en',
-                                  label: 'English',
-                                  flag: '🇺🇸',
-                                  isSelected: ref.read(localeProvider) == 'en',
-                                ),
-                                _buildLanguageItem(
-                                  context,
-                                  code: 'uk',
-                                  label: 'Українська',
-                                  flag: '🇺🇦',
-                                  isSelected: ref.read(localeProvider) == 'uk',
-                                ),
-                              ],
+                              onTap: () => _showLanguagePicker(context),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -211,7 +280,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                   ),
                                   const SizedBox(width: 8),
                                   const Icon(
-                                    Icons.expand_more_rounded,
+                                    Icons.unfold_more_rounded,
                                     color: Colors.white24,
                                     size: 18,
                                   ),

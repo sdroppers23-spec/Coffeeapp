@@ -11,9 +11,9 @@ class CoffeeTextProcessor {
     // 0. Aggressive cleaning of database artifacts
     String output = input
         .replaceAll('\r\n', '\n') // Standardize line endings
-        .replaceAll('\r', '')     // Remove stray CR
-        .replaceAll('\\r', '')    // Remove literal \r
-        .replaceAll('\\n', '\n')  // Convert literal \n to real newline
+        .replaceAll('\r', '') // Remove stray CR
+        .replaceAll('\\r', '') // Remove literal \r
+        .replaceAll('\\n', '\n') // Convert literal \n to real newline
         .trim();
 
     // 1. Handle Headers (# Header -> <h1>, ## Header -> <h2>, etc)
@@ -45,7 +45,9 @@ class CoffeeTextProcessor {
 
     // 3. Handle Paragraphs
     // If the input already looks like rich HTML, we treat it carefully
-    final hasComplexHtml = RegExp(r'<(div|table|section|p)[^>]*>').hasMatch(output);
+    final hasComplexHtml = RegExp(
+      r'<(div|table|section|p)[^>]*>',
+    ).hasMatch(output);
 
     if (hasComplexHtml) {
       return output.trim();
@@ -60,7 +62,8 @@ class CoffeeTextProcessor {
           if (trimmed.isEmpty) return '';
 
           // If it's already an HTML block element, don't wrap in <p>
-          final isBlockElement = trimmed.startsWith('<h') ||
+          final isBlockElement =
+              trimmed.startsWith('<h') ||
               trimmed.startsWith('<div') ||
               trimmed.startsWith('<p') ||
               trimmed.startsWith('<ul') ||

@@ -60,24 +60,27 @@ extension _SensoryTabSection on _AddLotScreenState {
         ),
         const SizedBox(height: 16),
         _sectionLabel(ref.t('visualize_profile')),
-        Container(
+        GlassContainer(
           height: 300,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: const Color(0xFFC8A96E).withValues(alpha: 0.04),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: SensoryRadarChart(
-            interactive: false,
-            height: 260,
-            staticValues: {
-              'bitterness': _bitterness,
-              'acidity': _acidity,
-              'sweetness': _sweetness,
-              'body': _body,
-              'intensity': _intensity,
-              'aftertaste': _aftertaste,
-            },
+          borderRadius: 20,
+          blur: 15,
+          opacity: 0.1,
+          enableRepaintBoundary: true,
+          borderColor: Colors.white.withValues(alpha: 0.05),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: SensoryRadarChart(
+              interactive: false,
+              height: 260,
+              staticValues: {
+                'bitterness': _bitterness,
+                'acidity': _acidity,
+                'sweetness': _sweetness,
+                'body': _body,
+                'intensity': _intensity,
+                'aftertaste': _aftertaste,
+              },
+            ),
           ),
         ),
         const SizedBox(height: 12),

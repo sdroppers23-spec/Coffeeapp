@@ -140,7 +140,10 @@ class _ScaFlavorWheelState extends ConsumerState<ScaFlavorWheel>
     return LayoutBuilder(
       builder: (context, constraints) {
         // Set size to fit available space while maintaining circular shape
-        final currentSize = math.min(constraints.maxWidth, constraints.maxHeight);
+        final currentSize = math.min(
+          constraints.maxWidth,
+          constraints.maxHeight,
+        );
 
         return Align(
           alignment: Alignment.center,
@@ -537,7 +540,10 @@ class _ScaWheelPainter extends CustomPainter {
     final double maxAllowedWidth = sweepAngle * middleRadius * 0.9;
 
     // Масштабуємо шрифт вниз, якщо текст занадто широкий для дуги
-    final double maxWidth = painters.fold<double>(0, (max, p) => math.max(max, p.width));
+    final double maxWidth = painters.fold<double>(
+      0,
+      (max, p) => math.max(max, p.width),
+    );
     double scale = 1.0;
     if (maxWidth > maxAllowedWidth) {
       scale = (maxAllowedWidth / maxWidth).clamp(0.6, 1.0);

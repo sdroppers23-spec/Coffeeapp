@@ -561,8 +561,8 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard>
                           Flexible(
                             child: CompactSensoryBar(
                               label: ref.t('sweetness').toUpperCase(),
-                              value:
-                                  (mappedSensory['sweetness'] ?? 3).toDouble(),
+                              value: (mappedSensory['sweetness'] ?? 3)
+                                  .toDouble(),
                               theme: theme,
                             ),
                           ),

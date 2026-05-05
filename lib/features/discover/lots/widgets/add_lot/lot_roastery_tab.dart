@@ -14,7 +14,8 @@ extension _RoasteryTabSection on _AddLotScreenState {
               value: _roasteryController.text,
               placeholder: ref.t('select_roaster'),
               onTap: _showRoasterPicker,
-              suffix: (_userRoasterId != null ||
+              suffix:
+                  (_userRoasterId != null ||
                       _roasteryController.text.isNotEmpty)
                   ? GestureDetector(
                       onTap: () {
@@ -27,8 +28,11 @@ extension _RoasteryTabSection on _AddLotScreenState {
                       },
                       child: const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Icon(Icons.close_rounded,
-                            color: Colors.white38, size: 20),
+                        child: Icon(
+                          Icons.close_rounded,
+                          color: Colors.white38,
+                          size: 20,
+                        ),
                       ),
                     )
                   : null,
@@ -51,35 +55,40 @@ extension _RoasteryTabSection on _AddLotScreenState {
             _fieldRow(
               label: ref.t('coffee_name_field'),
               controller: _coffeeNameController,
-              placeholder: ref.t('coffee_name_field'),
+              placeholder: 'Ethiopia Yirgacheffe',
             ),
             _divider(),
             _fieldRow(
               label: ref.t('farmer_field'),
               controller: _farmerController,
+              placeholder: 'Desta Geda',
             ),
             _divider(),
             _fieldRow(
               label: ref.t('wash_station_field'),
               controller: _washStationController,
+              placeholder: 'Konga Station',
             ),
             _divider(),
             _fieldRow(
               label: ref.t('lot_number_field'),
               controller: _lotNumberController,
               type: _FieldType.lotNumber,
+              placeholder: '24/001',
             ),
             _divider(),
             _fieldRow(
               label: ref.t('sca_score_field'),
               controller: _scaScoreController,
               type: _FieldType.scaScore,
+              placeholder: '86.5',
               helperText: ref.t('sca_score_helper'),
             ),
             _divider(),
             _fieldRow(
               label: ref.t('weight_field'),
               controller: _weightController,
+              placeholder: '250',
               suffix: 'g',
               type: _FieldType.weight,
               inputFormatters: [
@@ -96,23 +105,27 @@ extension _RoasteryTabSection on _AddLotScreenState {
             _fieldRow(
               label: ref.t('country_field'),
               controller: _originCountryController,
+              placeholder: 'Ethiopia',
             ),
             _divider(),
             _fieldRow(
               label: ref.t('region_field'),
               controller: _regionController,
+              placeholder: 'Yirgacheffe',
             ),
             _divider(),
             _fieldRow(
               label: ref.t('altitude_field'),
               controller: _altitudeController,
               type: _FieldType.altitude,
+              placeholder: '1950',
               suffix: pref.lengthUnit == LengthUnit.meters ? 'm' : 'ft',
             ),
             _divider(),
             _fieldRow(
               label: ref.t('varietals_field'),
               controller: _varietiesController,
+              placeholder: 'Heirloom',
             ),
           ],
         ),
@@ -124,6 +137,7 @@ extension _RoasteryTabSection on _AddLotScreenState {
               label: ref.t('retail_250g'),
               controller: _priceController,
               type: _FieldType.numeric,
+              placeholder: '450',
               suffix: currencySymbol,
             ),
             _divider(),
@@ -131,6 +145,7 @@ extension _RoasteryTabSection on _AddLotScreenState {
               label: ref.t('retail_1kg'),
               controller: _retailPrice1kController,
               type: _FieldType.numeric,
+              placeholder: '1600',
               suffix: currencySymbol,
             ),
             _divider(),
@@ -138,6 +153,7 @@ extension _RoasteryTabSection on _AddLotScreenState {
               label: ref.t('wholesale_250g'),
               controller: _wholesalePrice250Controller,
               type: _FieldType.numeric,
+              placeholder: '350',
               suffix: currencySymbol,
             ),
             _divider(),
@@ -145,6 +161,7 @@ extension _RoasteryTabSection on _AddLotScreenState {
               label: ref.t('wholesale_1kg'),
               controller: _wholesalePrice1kController,
               type: _FieldType.numeric,
+              placeholder: '1300',
               suffix: currencySymbol,
             ),
           ],

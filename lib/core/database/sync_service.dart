@@ -205,8 +205,12 @@ class SyncService {
           callback: (payload) async {
             if (payload.eventType == PostgresChangeEvent.delete) {
               final id = (payload.oldRecord['id'] as num).toInt();
-              await (db.delete(db.specialtyArticles)..where((t) => t.id.equals(id))).go();
-              await (db.delete(db.specialtyArticlesV2)..where((t) => t.id.equals(id))).go();
+              await (db.delete(
+                db.specialtyArticles,
+              )..where((t) => t.id.equals(id))).go();
+              await (db.delete(
+                db.specialtyArticlesV2,
+              )..where((t) => t.id.equals(id))).go();
             } else {
               final id = (payload.newRecord['id'] as num).toInt();
               await syncSingleArticle(id);
@@ -225,8 +229,12 @@ class SyncService {
           callback: (payload) async {
             if (payload.eventType == PostgresChangeEvent.delete) {
               final id = (payload.oldRecord['id'] as num).toInt();
-              await (db.delete(db.localizedFarmers)..where((t) => t.id.equals(id))).go();
-              await (db.delete(db.localizedFarmersV2)..where((t) => t.id.equals(id))).go();
+              await (db.delete(
+                db.localizedFarmers,
+              )..where((t) => t.id.equals(id))).go();
+              await (db.delete(
+                db.localizedFarmersV2,
+              )..where((t) => t.id.equals(id))).go();
             } else {
               final id = (payload.newRecord['id'] as num).toInt();
               await syncSingleFarmer(id);
@@ -245,7 +253,9 @@ class SyncService {
           callback: (payload) async {
             if (payload.eventType == PostgresChangeEvent.delete) {
               final id = (payload.oldRecord['id'] as num).toInt();
-              await (db.delete(db.localizedBeansV2)..where((t) => t.id.equals(id))).go();
+              await (db.delete(
+                db.localizedBeansV2,
+              )..where((t) => t.id.equals(id))).go();
             } else {
               final id = (payload.newRecord['id'] as num).toInt();
               await syncSingleEncyclopediaEntryV2(id);
@@ -264,8 +274,12 @@ class SyncService {
           callback: (payload) async {
             if (payload.eventType == PostgresChangeEvent.delete) {
               final key = payload.oldRecord['method_key'] as String;
-              await (db.delete(db.brewingRecipes)..where((t) => t.methodKey.equals(key))).go();
-              await (db.delete(db.brewingRecipesV2)..where((t) => t.methodKey.equals(key))).go();
+              await (db.delete(
+                db.brewingRecipes,
+              )..where((t) => t.methodKey.equals(key))).go();
+              await (db.delete(
+                db.brewingRecipesV2,
+              )..where((t) => t.methodKey.equals(key))).go();
             } else {
               final key = payload.newRecord['method_key'] as String;
               await syncSingleBrewingRecipe(key);
@@ -281,7 +295,10 @@ class SyncService {
           schema: 'public',
           table: 'brewing_recipe_translations',
           callback: (payload) async {
-            final key = (payload.newRecord['recipe_key'] ?? payload.oldRecord['recipe_key']) as String;
+            final key =
+                (payload.newRecord['recipe_key'] ??
+                        payload.oldRecord['recipe_key'])
+                    as String;
             await syncSingleBrewingRecipe(key);
           },
         )
@@ -297,7 +314,9 @@ class SyncService {
           callback: (payload) async {
             if (payload.eventType == PostgresChangeEvent.delete) {
               final id = (payload.oldRecord['id'] as num).toInt();
-              await (db.delete(db.localizedBrands)..where((t) => t.id.equals(id))).go();
+              await (db.delete(
+                db.localizedBrands,
+              )..where((t) => t.id.equals(id))).go();
             } else {
               final id = (payload.newRecord['id'] as num).toInt();
               await syncSingleBrand(id);
@@ -313,7 +332,11 @@ class SyncService {
           schema: 'public',
           table: 'localized_brand_translations',
           callback: (payload) async {
-            final id = (payload.newRecord['brand_id'] ?? payload.oldRecord['brand_id'] ?? 0) as int;
+            final id =
+                (payload.newRecord['brand_id'] ??
+                        payload.oldRecord['brand_id'] ??
+                        0)
+                    as int;
             if (id > 0) await syncSingleBrand(id);
           },
         )
@@ -360,127 +383,133 @@ class SyncService {
           .map((item) => (item['id'] as num).toInt())
           .toList();
 
-          // 2. Fetch translations
-          final allTranslationsData = await supabase!
-              .from('localized_farmer_translations')
-              .select()
-              .inFilter('farmer_id', remoteIds);
+      // 2. Fetch translations
+      final allTranslationsData = await supabase!
+          .from('localized_farmer_translations')
+          .select()
+          .inFilter('farmer_id', remoteIds);
 
-          // Group translations by farmer_id
-          final Map<int, List<Map<String, dynamic>>> translationMap = {};
-          for (final t in allTranslationsData) {
-            final fId = (t['farmer_id'] as num).toInt();
-            translationMap.putIfAbsent(fId, () => []).add(t);
+      // Group translations by farmer_id
+      final Map<int, List<Map<String, dynamic>>> translationMap = {};
+      for (final t in allTranslationsData) {
+        final fId = (t['farmer_id'] as num).toInt();
+        translationMap.putIfAbsent(fId, () => []).add(t);
+      }
+
+      for (final item in data) {
+        try {
+          final id = (item['id'] as num).toInt();
+
+          String imageUrl = item['image_url'] as String? ?? '';
+          if (imageUrl.isNotEmpty &&
+              !imageUrl.startsWith('http') &&
+              !imageUrl.startsWith('assets/')) {
+            imageUrl = '$farmersBucket${imageUrl.split('/').last}';
           }
 
-          for (final item in data) {
-            try {
-              final id = (item['id'] as num).toInt();
+          final farmer = LocalizedFarmersV2Companion(
+            id: Value(id),
+            imageUrl: Value(imageUrl),
+            flagUrl: Value(
+              (item['flag_url'] ?? item['country_emoji'] ?? '').toString(),
+            ),
+            latitude: Value((item['latitude'] as num?)?.toDouble()),
+            longitude: Value((item['longitude'] as num?)?.toDouble()),
+            createdAt: Value(
+              item['created_at'] != null
+                  ? DateTime.tryParse(item['created_at'] as String)
+                  : null,
+            ),
+          );
 
-              String imageUrl = item['image_url'] as String? ?? '';
-              if (imageUrl.isNotEmpty &&
-                  !imageUrl.startsWith('http') &&
-                  !imageUrl.startsWith('assets/')) {
-                imageUrl = '$farmersBucket${imageUrl.split('/').last}';
-              }
+          final List<LocalizedFarmerTranslationsV2Companion> translations = [];
+          final transData = translationMap[id] ?? [];
 
-              final farmer = LocalizedFarmersV2Companion(
-                id: Value(id),
-                imageUrl: Value(imageUrl),
-                flagUrl: Value(
-                  (item['flag_url'] ?? item['country_emoji'] ?? '').toString(),
+          for (final t in transData) {
+            translations.add(
+              LocalizedFarmerTranslationsV2Companion(
+                farmerId: Value(id),
+                languageCode: Value(t['language_code'] as String),
+                name: Value(t['name'] as String?),
+                descriptionHtml: Value(
+                  ContentUtils.cleanCoffeeContent(
+                    (t['description_html'] ?? t['description'] ?? '')
+                        .toString(),
+                  ),
                 ),
-                latitude: Value((item['latitude'] as num?)?.toDouble()),
-                longitude: Value((item['longitude'] as num?)?.toDouble()),
-                createdAt: Value(
-                  item['created_at'] != null
-                      ? DateTime.tryParse(item['created_at'] as String)
-                      : null,
+                story: Value(
+                  ContentUtils.cleanCoffeeContent(
+                    (t['story'] ?? '').toString(),
+                  ),
                 ),
-              );
-
-              final List<LocalizedFarmerTranslationsV2Companion> translations = [];
-              final transData = translationMap[id] ?? [];
-
-              for (final t in transData) {
-                translations.add(
-                  LocalizedFarmerTranslationsV2Companion(
-                    farmerId: Value(id),
-                    languageCode: Value(t['language_code'] as String),
-                    name: Value(t['name'] as String?),
-                    descriptionHtml: Value(
-                      ContentUtils.cleanCoffeeContent(
-                        (t['description_html'] ?? t['description'] ?? '')
-                            .toString(),
-                      ),
-                    ),
-                    story: Value(
-                      ContentUtils.cleanCoffeeContent(
-                        (t['story'] ?? '').toString(),
-                      ),
-                    ),
-                    region: Value((t['region'] ?? '').toString()),
-                    country: Value((t['country'] ?? '').toString()),
-                  ),
-                );
-              }
-
-              // Fallback to main table fields for 'uk' and 'en' if missing
-              if (!translations.any((t) => t.languageCode.value == 'uk')) {
-                translations.add(
-                  LocalizedFarmerTranslationsV2Companion(
-                    farmerId: Value(id),
-                    languageCode: const Value('uk'),
-                    name: Value(item['name_uk'] as String? ?? ''),
-                    descriptionHtml: Value(
-                      ContentUtils.cleanCoffeeContent(
-                        item['description_html_uk'] as String? ?? '',
-                      ),
-                    ),
-                    story: Value(
-                      ContentUtils.cleanCoffeeContent(
-                        item['story_uk'] as String? ?? '',
-                      ),
-                    ),
-                    region: Value(item['region_uk'] as String? ?? ''),
-                    country: Value(item['country_uk'] as String? ?? ''),
-                  ),
-                );
-              }
-
-              if (!translations.any((t) => t.languageCode.value == 'en')) {
-                final nameEn = item['name_en'] as String?;
-                final descEn = (item['description_html_en'] ?? item['description_en']) as String?;
-                final storyEn = (item['story_en'] ?? item['story']) as String?;
-                final regionEn = item['region_en'] as String?;
-                final countryEn = item['country_en'] as String?;
-
-                translations.add(
-                  LocalizedFarmerTranslationsV2Companion(
-                    farmerId: Value(id),
-                    languageCode: const Value('en'),
-                    name: Value(nameEn ?? item['name_uk'] as String? ?? 'Unknown Farmer'),
-                    descriptionHtml: Value(
-                      ContentUtils.cleanCoffeeContent(
-                        descEn ?? item['description_html_uk'] as String? ?? '',
-                      ),
-                    ),
-                    story: Value(
-                      ContentUtils.cleanCoffeeContent(
-                        storyEn ?? item['story_uk'] as String? ?? '',
-                      ),
-                    ),
-                    region: Value(regionEn ?? item['region_uk'] as String? ?? ''),
-                    country: Value(countryEn ?? item['country_uk'] as String? ?? ''),
-                  ),
-                );
-              }
-
-              await db.smartUpsertFarmerV2(farmer, translations);
-            } catch (e) {
-              debugPrint('SyncService: Error processing item: $e');
-            }
+                region: Value((t['region'] ?? '').toString()),
+                country: Value((t['country'] ?? '').toString()),
+              ),
+            );
           }
+
+          // Fallback to main table fields for 'uk' and 'en' if missing
+          if (!translations.any((t) => t.languageCode.value == 'uk')) {
+            translations.add(
+              LocalizedFarmerTranslationsV2Companion(
+                farmerId: Value(id),
+                languageCode: const Value('uk'),
+                name: Value(item['name_uk'] as String? ?? ''),
+                descriptionHtml: Value(
+                  ContentUtils.cleanCoffeeContent(
+                    item['description_html_uk'] as String? ?? '',
+                  ),
+                ),
+                story: Value(
+                  ContentUtils.cleanCoffeeContent(
+                    item['story_uk'] as String? ?? '',
+                  ),
+                ),
+                region: Value(item['region_uk'] as String? ?? ''),
+                country: Value(item['country_uk'] as String? ?? ''),
+              ),
+            );
+          }
+
+          if (!translations.any((t) => t.languageCode.value == 'en')) {
+            final nameEn = item['name_en'] as String?;
+            final descEn =
+                (item['description_html_en'] ?? item['description_en'])
+                    as String?;
+            final storyEn = (item['story_en'] ?? item['story']) as String?;
+            final regionEn = item['region_en'] as String?;
+            final countryEn = item['country_en'] as String?;
+
+            translations.add(
+              LocalizedFarmerTranslationsV2Companion(
+                farmerId: Value(id),
+                languageCode: const Value('en'),
+                name: Value(
+                  nameEn ?? item['name_uk'] as String? ?? 'Unknown Farmer',
+                ),
+                descriptionHtml: Value(
+                  ContentUtils.cleanCoffeeContent(
+                    descEn ?? item['description_html_uk'] as String? ?? '',
+                  ),
+                ),
+                story: Value(
+                  ContentUtils.cleanCoffeeContent(
+                    storyEn ?? item['story_uk'] as String? ?? '',
+                  ),
+                ),
+                region: Value(regionEn ?? item['region_uk'] as String? ?? ''),
+                country: Value(
+                  countryEn ?? item['country_uk'] as String? ?? '',
+                ),
+              ),
+            );
+          }
+
+          await db.smartUpsertFarmerV2(farmer, translations);
+        } catch (e) {
+          debugPrint('SyncService: Error processing item: $e');
+        }
+      }
 
       if (remoteIds.isNotEmpty) {
         await db.transaction(() async {
@@ -1396,7 +1425,9 @@ class SyncService {
           .select()
           .timeout(const Duration(seconds: 30));
 
-      final remoteKeys = data.map((item) => item['method_key'] as String).toList();
+      final remoteKeys = data
+          .map((item) => item['method_key'] as String)
+          .toList();
 
       // Group translations by recipe_key
       final Map<String, List<Map<String, dynamic>>> translationMap = {};
@@ -1419,28 +1450,44 @@ class SyncService {
           final recipeV1 = BrewingRecipesCompanion(
             methodKey: Value(key),
             imageUrl: Value(methodImageUrl),
-            ratioGramsPerMl: Value((item['ratio_grams_per_ml'] as num?)?.toDouble() ?? 0.066),
+            ratioGramsPerMl: Value(
+              (item['ratio_grams_per_ml'] as num?)?.toDouble() ?? 0.066,
+            ),
             tempC: Value((item['temp_c'] as num?)?.toDouble() ?? 93.0),
-            totalTimeSec: Value((item['total_time_sec'] as num?)?.toInt() ?? 180),
+            totalTimeSec: Value(
+              (item['total_time_sec'] as num?)?.toInt() ?? 180,
+            ),
             difficulty: Value(item['difficulty'] as String? ?? 'Intermediate'),
-            flavorProfile: Value(item['flavor_profile'] as String? ?? 'Balanced'),
+            flavorProfile: Value(
+              item['flavor_profile'] as String? ?? 'Balanced',
+            ),
             iconName: Value(item['icon_name'] as String?),
             stepsJson: Value(
-              item['steps_json'] is List ? jsonEncode(item['steps_json']) : (item['steps_json']?.toString() ?? '[]'),
+              item['steps_json'] is List
+                  ? jsonEncode(item['steps_json'])
+                  : (item['steps_json']?.toString() ?? '[]'),
             ),
           );
 
           final recipeV2 = BrewingRecipesV2Companion(
             methodKey: Value(key),
             imageUrl: Value(methodImageUrl),
-            ratioGramsPerMl: Value((item['ratio_grams_per_ml'] as num?)?.toDouble() ?? 0.066),
+            ratioGramsPerMl: Value(
+              (item['ratio_grams_per_ml'] as num?)?.toDouble() ?? 0.066,
+            ),
             tempC: Value((item['temp_c'] as num?)?.toDouble() ?? 93.0),
-            totalTimeSec: Value((item['total_time_sec'] as num?)?.toInt() ?? 180),
+            totalTimeSec: Value(
+              (item['total_time_sec'] as num?)?.toInt() ?? 180,
+            ),
             difficulty: Value(item['difficulty'] as String? ?? 'Intermediate'),
-            flavorProfile: Value(item['flavor_profile'] as String? ?? 'Balanced'),
+            flavorProfile: Value(
+              item['flavor_profile'] as String? ?? 'Balanced',
+            ),
             iconName: Value(item['icon_name'] as String?),
             stepsJson: Value(
-              item['steps_json'] is List ? jsonEncode(item['steps_json']) : (item['steps_json']?.toString() ?? '[]'),
+              item['steps_json'] is List
+                  ? jsonEncode(item['steps_json'])
+                  : (item['steps_json']?.toString() ?? '[]'),
             ),
           );
 
@@ -1451,40 +1498,55 @@ class SyncService {
           for (final t in transData) {
             final lang = t['language_code'] as String;
             final name = t['name'] as String?;
-            final desc = ContentUtils.cleanCoffeeContent(t['description'] as String? ?? '');
+            final desc = ContentUtils.cleanCoffeeContent(
+              t['description'] as String? ?? '',
+            );
 
-            translationsV1.add(BrewingRecipeTranslationsCompanion(
-              recipeKey: Value(key),
-              languageCode: Value(lang),
-              name: Value(name),
-              description: Value(desc),
-            ));
+            translationsV1.add(
+              BrewingRecipeTranslationsCompanion(
+                recipeKey: Value(key),
+                languageCode: Value(lang),
+                name: Value(name),
+                description: Value(desc),
+              ),
+            );
 
-            translationsV2.add(BrewingRecipeTranslationsV2Companion(
-              recipeKey: Value(key),
-              languageCode: Value(lang),
-              name: Value(name),
-              description: Value(desc),
-            ));
+            translationsV2.add(
+              BrewingRecipeTranslationsV2Companion(
+                recipeKey: Value(key),
+                languageCode: Value(lang),
+                name: Value(name),
+                description: Value(desc),
+              ),
+            );
           }
 
           // Add 'uk' fallback if missing
           if (!translationsV1.any((t) => t.languageCode.value == 'uk')) {
-            final name = item['name_uk'] as String? ?? item['name'] as String? ?? key;
-            final desc = ContentUtils.cleanCoffeeContent(item['description_uk'] as String? ?? item['description'] as String? ?? '');
+            final name =
+                item['name_uk'] as String? ?? item['name'] as String? ?? key;
+            final desc = ContentUtils.cleanCoffeeContent(
+              item['description_uk'] as String? ??
+                  item['description'] as String? ??
+                  '',
+            );
 
-            translationsV1.add(BrewingRecipeTranslationsCompanion(
-              recipeKey: Value(key),
-              languageCode: const Value('uk'),
-              name: Value(name),
-              description: Value(desc),
-            ));
-            translationsV2.add(BrewingRecipeTranslationsV2Companion(
-              recipeKey: Value(key),
-              languageCode: const Value('uk'),
-              name: Value(name),
-              description: Value(desc),
-            ));
+            translationsV1.add(
+              BrewingRecipeTranslationsCompanion(
+                recipeKey: Value(key),
+                languageCode: const Value('uk'),
+                name: Value(name),
+                description: Value(desc),
+              ),
+            );
+            translationsV2.add(
+              BrewingRecipeTranslationsV2Companion(
+                recipeKey: Value(key),
+                languageCode: const Value('uk'),
+                name: Value(name),
+                description: Value(desc),
+              ),
+            );
           }
 
           await db.smartUpsertBrewingRecipe(recipeV1, translationsV1);
@@ -1496,10 +1558,18 @@ class SyncService {
 
       if (remoteKeys.isNotEmpty) {
         await db.transaction(() async {
-          await (db.delete(db.brewingRecipeTranslationsV2)..where((t) => t.recipeKey.isIn(remoteKeys).not())).go();
-          await (db.delete(db.brewingRecipesV2)..where((t) => t.methodKey.isIn(remoteKeys).not())).go();
-          await (db.delete(db.brewingRecipeTranslations)..where((t) => t.recipeKey.isIn(remoteKeys).not())).go();
-          await (db.delete(db.brewingRecipes)..where((t) => t.methodKey.isIn(remoteKeys).not())).go();
+          await (db.delete(
+            db.brewingRecipeTranslationsV2,
+          )..where((t) => t.recipeKey.isIn(remoteKeys).not())).go();
+          await (db.delete(
+            db.brewingRecipesV2,
+          )..where((t) => t.methodKey.isIn(remoteKeys).not())).go();
+          await (db.delete(
+            db.brewingRecipeTranslations,
+          )..where((t) => t.recipeKey.isIn(remoteKeys).not())).go();
+          await (db.delete(
+            db.brewingRecipes,
+          )..where((t) => t.methodKey.isIn(remoteKeys).not())).go();
         });
       }
     } catch (e) {
@@ -1592,9 +1662,17 @@ class SyncService {
               AlternativeBrewingTranslationsCompanion(
                 recipeKey: Value(key),
                 languageCode: const Value('uk'),
-                name: Value(item['name_uk'] as String? ?? item['name'] as String?),
-                description: Value(item['description_uk'] as String? ?? item['description'] as String?),
-                contentHtml: Value(item['content_html_uk'] as String? ?? item['content_html'] as String?),
+                name: Value(
+                  item['name_uk'] as String? ?? item['name'] as String?,
+                ),
+                description: Value(
+                  item['description_uk'] as String? ??
+                      item['description'] as String?,
+                ),
+                contentHtml: Value(
+                  item['content_html_uk'] as String? ??
+                      item['content_html'] as String?,
+                ),
               ),
             );
           }
@@ -1846,27 +1924,26 @@ class SyncService {
         longitude: Value((item['longitude'] as num?)?.toDouble() ?? 0.0),
       );
 
-      final List<LocalizedFarmerTranslationsCompanion> translationsV1 =
-          translationsData
-              .map(
-                (t) => LocalizedFarmerTranslationsCompanion(
-                  farmerId: Value(id),
-                  languageCode: Value(t['language_code'] as String),
-                  name: Value(t['name'] as String?),
-                  descriptionHtml: Value(
-                    ContentUtils.cleanCoffeeContent(
-                      (t['description_html'] ?? t['description'] ?? '')
-                          .toString(),
-                    ),
-                  ),
-                  region: Value(t['region'] as String?),
-                  country: Value(t['country'] as String?),
-                  story: Value(
-                    ContentUtils.cleanCoffeeContent(t['story'] as String? ?? ''),
-                  ),
+      final List<LocalizedFarmerTranslationsCompanion>
+      translationsV1 = translationsData
+          .map(
+            (t) => LocalizedFarmerTranslationsCompanion(
+              farmerId: Value(id),
+              languageCode: Value(t['language_code'] as String),
+              name: Value(t['name'] as String?),
+              descriptionHtml: Value(
+                ContentUtils.cleanCoffeeContent(
+                  (t['description_html'] ?? t['description'] ?? '').toString(),
                 ),
-              )
-              .toList();
+              ),
+              region: Value(t['region'] as String?),
+              country: Value(t['country'] as String?),
+              story: Value(
+                ContentUtils.cleanCoffeeContent(t['story'] as String? ?? ''),
+              ),
+            ),
+          )
+          .toList();
 
       // Add 'uk' fallback for V1 if missing
       if (!translationsV1.any((t) => t.languageCode.value == 'uk')) {
@@ -1917,27 +1994,26 @@ class SyncService {
         ),
       );
 
-      final List<LocalizedFarmerTranslationsV2Companion> translationsV2 =
-          translationsData
-              .map(
-                (t) => LocalizedFarmerTranslationsV2Companion(
-                  farmerId: Value(id),
-                  languageCode: Value(t['language_code'] as String),
-                  name: Value(t['name'] as String?),
-                  descriptionHtml: Value(
-                    ContentUtils.cleanCoffeeContent(
-                      (t['description_html'] ?? t['description'] ?? '')
-                          .toString(),
-                    ),
-                  ),
-                  region: Value(t['region'] as String?),
-                  country: Value(t['country'] as String?),
-                  story: Value(
-                    ContentUtils.cleanCoffeeContent(t['story'] as String? ?? ''),
-                  ),
+      final List<LocalizedFarmerTranslationsV2Companion>
+      translationsV2 = translationsData
+          .map(
+            (t) => LocalizedFarmerTranslationsV2Companion(
+              farmerId: Value(id),
+              languageCode: Value(t['language_code'] as String),
+              name: Value(t['name'] as String?),
+              descriptionHtml: Value(
+                ContentUtils.cleanCoffeeContent(
+                  (t['description_html'] ?? t['description'] ?? '').toString(),
                 ),
-              )
-              .toList();
+              ),
+              region: Value(t['region'] as String?),
+              country: Value(t['country'] as String?),
+              story: Value(
+                ContentUtils.cleanCoffeeContent(t['story'] as String? ?? ''),
+              ),
+            ),
+          )
+          .toList();
 
       // Add 'uk' fallback for V2 if missing
       if (!translationsV2.any((t) => t.languageCode.value == 'uk')) {
@@ -2010,28 +2086,26 @@ class SyncService {
         readTimeMin: Value((item['read_time_min'] as num?)?.toInt() ?? 5),
       );
 
-      final List<SpecialtyArticleTranslationsCompanion> translationsV1 =
-          translationsData
-              .map(
-                (t) => SpecialtyArticleTranslationsCompanion(
-                  articleId: Value(id),
-                  languageCode: Value(t['language_code'] as String),
-                  title: Value(
-                    ContentUtils.cleanCoffeeContent(t['title'] as String? ?? ''),
-                  ),
-                  subtitle: Value(
-                    ContentUtils.cleanCoffeeContent(
-                      t['subtitle'] as String? ?? '',
-                    ),
-                  ),
-                  contentHtml: Value(
-                    ContentUtils.cleanCoffeeContent(
-                      t['content_html'] as String? ?? '',
-                    ),
-                  ),
+      final List<SpecialtyArticleTranslationsCompanion>
+      translationsV1 = translationsData
+          .map(
+            (t) => SpecialtyArticleTranslationsCompanion(
+              articleId: Value(id),
+              languageCode: Value(t['language_code'] as String),
+              title: Value(
+                ContentUtils.cleanCoffeeContent(t['title'] as String? ?? ''),
+              ),
+              subtitle: Value(
+                ContentUtils.cleanCoffeeContent(t['subtitle'] as String? ?? ''),
+              ),
+              contentHtml: Value(
+                ContentUtils.cleanCoffeeContent(
+                  t['content_html'] as String? ?? '',
                 ),
-              )
-              .toList();
+              ),
+            ),
+          )
+          .toList();
 
       // Add 'uk' fallback for V1 if missing
       if (!translationsV1.any((t) => t.languageCode.value == 'uk')) {
@@ -2077,44 +2151,43 @@ class SyncService {
         ),
       );
 
-      final List<SpecialtyArticleTranslationsV2Companion> translationsV2 =
-          translationsData
-              .map(
-                (t) => SpecialtyArticleTranslationsV2Companion(
-                  articleId: Value(id),
-                  languageCode: Value(t['language_code'] as String),
-                  title: Value(
-                    ContentUtils.cleanCoffeeContent(t['title'] as String? ?? ''),
-                  ),
-                  subtitle: Value(
-                    ContentUtils.cleanCoffeeContent(
-                      t['subtitle'] as String? ?? '',
-                    ),
-                  ),
-                  contentHtml: Value(
-                    ContentUtils.cleanCoffeeContent(
-                      t['content_html'] as String? ?? '',
-                    ),
-                  ),
+      final List<SpecialtyArticleTranslationsV2Companion>
+      translationsV2 = translationsData
+          .map(
+            (t) => SpecialtyArticleTranslationsV2Companion(
+              articleId: Value(id),
+              languageCode: Value(t['language_code'] as String),
+              title: Value(
+                ContentUtils.cleanCoffeeContent(t['title'] as String? ?? ''),
+              ),
+              subtitle: Value(
+                ContentUtils.cleanCoffeeContent(t['subtitle'] as String? ?? ''),
+              ),
+              contentHtml: Value(
+                ContentUtils.cleanCoffeeContent(
+                  t['content_html'] as String? ?? '',
                 ),
-              )
-              .toList();
+              ),
+            ),
+          )
+          .toList();
 
       // Add 'uk' fallback for V2 if missing
       if (!translationsV2.any((t) => t.languageCode.value == 'uk')) {
         final titleUk = item['title_uk'] as String?;
-        final contentUk = (item['content_html_uk'] ?? item['content_uk']) as String?;
+        final contentUk =
+            (item['content_html_uk'] ?? item['content_uk']) as String?;
 
         if (titleUk != null || contentUk != null) {
           translationsV2.add(
             SpecialtyArticleTranslationsV2Companion(
               articleId: Value(id),
               languageCode: const Value('uk'),
-              title: Value(
-                ContentUtils.cleanCoffeeContent(titleUk ?? ''),
-              ),
+              title: Value(ContentUtils.cleanCoffeeContent(titleUk ?? '')),
               subtitle: Value(
-                ContentUtils.cleanCoffeeContent(item['subtitle_uk'] as String? ?? ''),
+                ContentUtils.cleanCoffeeContent(
+                  item['subtitle_uk'] as String? ?? '',
+                ),
               ),
               contentHtml: Value(
                 ContentUtils.cleanCoffeeContent(contentUk ?? ''),
@@ -2127,7 +2200,8 @@ class SyncService {
       // Add 'en' fallback for V2 if missing to ensure innerJoin works
       if (!translationsV2.any((t) => t.languageCode.value == 'en')) {
         final titleEn = item['title_en'] as String?;
-        final contentEn = (item['content_html_en'] ?? item['content_en']) as String?;
+        final contentEn =
+            (item['content_html_en'] ?? item['content_en']) as String?;
         final subtitleEn = item['subtitle_en'] as String?;
 
         // Even if En fields are missing, we create a record to avoid disappearing articles in En mode
@@ -2137,13 +2211,19 @@ class SyncService {
             articleId: Value(id),
             languageCode: const Value('en'),
             title: Value(
-              ContentUtils.cleanCoffeeContent(titleEn ?? item['title'] as String? ?? 'Untitled'),
+              ContentUtils.cleanCoffeeContent(
+                titleEn ?? item['title'] as String? ?? 'Untitled',
+              ),
             ),
             subtitle: Value(
-              ContentUtils.cleanCoffeeContent(subtitleEn ?? item['subtitle'] as String? ?? ''),
+              ContentUtils.cleanCoffeeContent(
+                subtitleEn ?? item['subtitle'] as String? ?? '',
+              ),
             ),
             contentHtml: Value(
-              ContentUtils.cleanCoffeeContent(contentEn ?? item['content_html'] as String? ?? ''),
+              ContentUtils.cleanCoffeeContent(
+                contentEn ?? item['content_html'] as String? ?? '',
+              ),
             ),
           ),
         );
@@ -2746,28 +2826,36 @@ class SyncService {
       final recipeV1 = BrewingRecipesCompanion(
         methodKey: Value(key),
         imageUrl: Value(methodImageUrl),
-        ratioGramsPerMl: Value((item['ratio_grams_per_ml'] as num?)?.toDouble() ?? 0.066),
+        ratioGramsPerMl: Value(
+          (item['ratio_grams_per_ml'] as num?)?.toDouble() ?? 0.066,
+        ),
         tempC: Value((item['temp_c'] as num?)?.toDouble() ?? 93.0),
         totalTimeSec: Value((item['total_time_sec'] as num?)?.toInt() ?? 180),
         difficulty: Value(item['difficulty'] as String? ?? 'Intermediate'),
         flavorProfile: Value(item['flavor_profile'] as String? ?? 'Balanced'),
         iconName: Value(item['icon_name'] as String?),
         stepsJson: Value(
-          item['steps_json'] is List ? jsonEncode(item['steps_json']) : (item['steps_json']?.toString() ?? '[]'),
+          item['steps_json'] is List
+              ? jsonEncode(item['steps_json'])
+              : (item['steps_json']?.toString() ?? '[]'),
         ),
       );
 
       final recipeV2 = BrewingRecipesV2Companion(
         methodKey: Value(key),
         imageUrl: Value(methodImageUrl),
-        ratioGramsPerMl: Value((item['ratio_grams_per_ml'] as num?)?.toDouble() ?? 0.066),
+        ratioGramsPerMl: Value(
+          (item['ratio_grams_per_ml'] as num?)?.toDouble() ?? 0.066,
+        ),
         tempC: Value((item['temp_c'] as num?)?.toDouble() ?? 93.0),
         totalTimeSec: Value((item['total_time_sec'] as num?)?.toInt() ?? 180),
         difficulty: Value(item['difficulty'] as String? ?? 'Intermediate'),
         flavorProfile: Value(item['flavor_profile'] as String? ?? 'Balanced'),
         iconName: Value(item['icon_name'] as String?),
         stepsJson: Value(
-          item['steps_json'] is List ? jsonEncode(item['steps_json']) : (item['steps_json']?.toString() ?? '[]'),
+          item['steps_json'] is List
+              ? jsonEncode(item['steps_json'])
+              : (item['steps_json']?.toString() ?? '[]'),
         ),
       );
 
@@ -2782,40 +2870,55 @@ class SyncService {
       for (final t in transData) {
         final lang = t['language_code'] as String;
         final name = t['name'] as String?;
-        final desc = ContentUtils.cleanCoffeeContent(t['description'] as String? ?? '');
+        final desc = ContentUtils.cleanCoffeeContent(
+          t['description'] as String? ?? '',
+        );
 
-        translationsV1.add(BrewingRecipeTranslationsCompanion(
-          recipeKey: Value(key),
-          languageCode: Value(lang),
-          name: Value(name),
-          description: Value(desc),
-        ));
+        translationsV1.add(
+          BrewingRecipeTranslationsCompanion(
+            recipeKey: Value(key),
+            languageCode: Value(lang),
+            name: Value(name),
+            description: Value(desc),
+          ),
+        );
 
-        translationsV2.add(BrewingRecipeTranslationsV2Companion(
-          recipeKey: Value(key),
-          languageCode: Value(lang),
-          name: Value(name),
-          description: Value(desc),
-        ));
+        translationsV2.add(
+          BrewingRecipeTranslationsV2Companion(
+            recipeKey: Value(key),
+            languageCode: Value(lang),
+            name: Value(name),
+            description: Value(desc),
+          ),
+        );
       }
 
       // Add 'uk' if missing
       if (!translationsV1.any((t) => t.languageCode.value == 'uk')) {
-        final name = item['name_uk'] as String? ?? item['name'] as String? ?? key;
-        final desc = ContentUtils.cleanCoffeeContent(item['description_uk'] as String? ?? item['description'] as String? ?? '');
+        final name =
+            item['name_uk'] as String? ?? item['name'] as String? ?? key;
+        final desc = ContentUtils.cleanCoffeeContent(
+          item['description_uk'] as String? ??
+              item['description'] as String? ??
+              '',
+        );
 
-        translationsV1.add(BrewingRecipeTranslationsCompanion(
-          recipeKey: Value(key),
-          languageCode: const Value('uk'),
-          name: Value(name),
-          description: Value(desc),
-        ));
-        translationsV2.add(BrewingRecipeTranslationsV2Companion(
-          recipeKey: Value(key),
-          languageCode: const Value('uk'),
-          name: Value(name),
-          description: Value(desc),
-        ));
+        translationsV1.add(
+          BrewingRecipeTranslationsCompanion(
+            recipeKey: Value(key),
+            languageCode: const Value('uk'),
+            name: Value(name),
+            description: Value(desc),
+          ),
+        );
+        translationsV2.add(
+          BrewingRecipeTranslationsV2Companion(
+            recipeKey: Value(key),
+            languageCode: const Value('uk'),
+            name: Value(name),
+            description: Value(desc),
+          ),
+        );
       }
 
       await db.smartUpsertBrewingRecipe(recipeV1, translationsV1);
@@ -2854,25 +2957,48 @@ class SyncService {
         siteUrl: Value(item['site_url'] as String?),
       );
 
-      final List<LocalizedBrandTranslationsCompanion> translations = translationsData
-          .map((t) => LocalizedBrandTranslationsCompanion(
-                brandId: Value(id),
-                languageCode: Value(t['language_code'] as String),
-                shortDesc: Value(t['short_desc'] as String?),
-                fullDesc: Value(t['full_desc'] as String?),
-                location: Value(t['location'] as String?),
-              ))
-          .toList();
+      final List<LocalizedBrandTranslationsCompanion> translations =
+          translationsData
+              .map(
+                (t) => LocalizedBrandTranslationsCompanion(
+                  brandId: Value(id),
+                  languageCode: Value(t['language_code'] as String),
+                  shortDesc: Value(t['short_desc'] as String?),
+                  fullDesc: Value(t['full_desc'] as String?),
+                  location: Value(t['location'] as String?),
+                ),
+              )
+              .toList();
 
       // Add 'uk' fallback if missing
       if (!translations.any((t) => t.languageCode.value == 'uk')) {
-        translations.add(LocalizedBrandTranslationsCompanion(
-          brandId: Value(id),
-          languageCode: const Value('uk'),
-          shortDesc: Value(ContentUtils.cleanCoffeeContent(item['short_desc_uk'] as String? ?? item['short_desc'] as String? ?? '')),
-          fullDesc: Value(ContentUtils.cleanCoffeeContent(item['full_desc_uk'] as String? ?? item['full_desc'] as String? ?? '')),
-          location: Value(ContentUtils.cleanCoffeeContent(item['location_uk'] as String? ?? item['location'] as String? ?? '')),
-        ));
+        translations.add(
+          LocalizedBrandTranslationsCompanion(
+            brandId: Value(id),
+            languageCode: const Value('uk'),
+            shortDesc: Value(
+              ContentUtils.cleanCoffeeContent(
+                item['short_desc_uk'] as String? ??
+                    item['short_desc'] as String? ??
+                    '',
+              ),
+            ),
+            fullDesc: Value(
+              ContentUtils.cleanCoffeeContent(
+                item['full_desc_uk'] as String? ??
+                    item['full_desc'] as String? ??
+                    '',
+              ),
+            ),
+            location: Value(
+              ContentUtils.cleanCoffeeContent(
+                item['location_uk'] as String? ??
+                    item['location'] as String? ??
+                    '',
+              ),
+            ),
+          ),
+        );
       }
 
       await db.smartUpsertBrand(companion, translations);

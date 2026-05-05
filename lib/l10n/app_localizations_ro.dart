@@ -767,4 +767,97 @@ class AppLocalizationsRo extends AppLocalizations {
 
   @override
   String get roaster_city => 'Roaster City';
+
+  @override
+  String get section_photo => 'Photo';
+
+  @override
+  String get add_photo_label => 'ADD PHOTO';
+
+  @override
+  String get section_roast_date => 'Dates';
+
+  @override
+  String get roast_date_field => 'Roast Date';
+
+  @override
+  String get opened_at_field => 'Opened At';
+
+  @override
+  String get not_opened => 'Not Opened Yet';
+
+  @override
+  String get section_bag_state => 'Bag State';
+
+  @override
+  String get bag_closed => 'CLOSED';
+
+  @override
+  String get bag_opened => 'OPENED';
+
+  @override
+  String get section_grind_type => 'Grind Type';
+
+  @override
+  String get whole_bean => 'Whole Bean';
+
+  @override
+  String get ground_coffee => 'Ground';
+
+  @override
+  String get section_roast => 'Roast';
+
+  @override
+  String get roast_level_field => 'Roast Level';
+
+  @override
+  String get roast_medium_light => 'MEDIUM LIGHT';
+
+  @override
+  String get roast_medium_dark => 'MEDIUM DARK';
+
+  @override
+  String get roast_filter => 'FILTER';
+
+  @override
+  String get roast_omni => 'OMNI';
+
+  @override
+  String get roast_espresso => 'ESPRESSO';
+
+  @override
+  String get custom_method_label => 'Custom Name';
+
+  @override
+  String get enter_name_placeholder => 'Enter name...';
+
+  @override
+  String get decaf_sugar_cane => 'Sugar Cane';
+
+  @override
+  String get decaf_swiss_water => 'Swiss Water';
+
+  @override
+  String get decaf_co2 => 'CO2';
+
+  @override
+  String get decaf_mountain_water => 'Mountain Water';
+
+  @override
+  String get decaf_other => 'Other';
+
+  @override
+  String get sensory_profile_1_5 => 'Sensory Profile (1-5)';
+
+  @override
+  String get visualize_profile => 'Visualize Profile';
+
+  @override
+  String get lock_sensory => 'LOCK';
+
+  @override
+  String get unlock_sensory => 'UNLOCK';
+
+  @override
+  String get location_field => 'Location';
 }

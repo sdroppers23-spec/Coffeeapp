@@ -4,9 +4,11 @@ import '../../../core/database/dtos.dart';
 
 import '../../../core/supabase/supabase_provider.dart';
 
-final userLotsProvider = NotifierProvider<UserLotsNotifier, List<CoffeeLotDto>>(() {
-  return UserLotsNotifier();
-});
+final userLotsProvider = NotifierProvider<UserLotsNotifier, List<CoffeeLotDto>>(
+  () {
+    return UserLotsNotifier();
+  },
+);
 
 class UserLotsNotifier extends Notifier<List<CoffeeLotDto>> {
   @override

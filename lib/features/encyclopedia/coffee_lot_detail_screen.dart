@@ -802,8 +802,9 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
     final lotId = widget.entry.id.toString();
     final recipes = await db.getCustomRecipesForLot(lotId);
 
-    final espressoCount =
-        recipes.where((r) => r.recipeType == 'espresso').length;
+    final espressoCount = recipes
+        .where((r) => r.recipeType == 'espresso')
+        .length;
     final filterCount = recipes.where((r) => r.recipeType == 'filter').length;
 
     if (!mounted) return;
@@ -819,10 +820,7 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
           final count = type == 'espresso' ? espressoCount : filterCount;
           if (count >= 10) {
             Navigator.pop(ctx);
-            ToastService.showError(
-              context,
-              '${ref.t('limit_reached')}: 10',
-            );
+            ToastService.showError(context, '${ref.t('limit_reached')}: 10');
             return;
           }
 
@@ -930,7 +928,6 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
                   const SizedBox(height: 24),
                 ],
 
-
                 if (recipes.isEmpty &&
                     (recommendedAsync.value?.isEmpty ?? true))
                   Padding(
@@ -969,7 +966,10 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
             child: PressableScale(
               onTap: _showAddRecipeFlow,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 16,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFFC8A96E),
                   borderRadius: BorderRadius.circular(20),
@@ -984,7 +984,11 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.add_rounded, color: Colors.black, size: 24),
+                    const Icon(
+                      Icons.add_rounded,
+                      color: Colors.black,
+                      size: 24,
+                    ),
                     const SizedBox(width: 12),
                     Text(
                       ref.t('add_recipe'),
@@ -1029,7 +1033,10 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
           ),
           const Spacer(),
           IconButton(
-            icon: const Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
+            icon: const Icon(
+              Icons.delete_outline_rounded,
+              color: Colors.redAccent,
+            ),
             onPressed: () {
               final customRecipesAsync = ref.read(
                 encyclopediaRecipesForLotProvider(widget.entry.id.toString()),

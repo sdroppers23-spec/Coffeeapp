@@ -110,13 +110,19 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                 textAlignVertical: TextAlignVertical.center,
                 decoration: InputDecoration(
                   hintText: ref.t('search_roasters'),
-                  hintStyle:
-                      GoogleFonts.outfit(color: Colors.white24, fontSize: 14),
+                  hintStyle: GoogleFonts.outfit(
+                    color: Colors.white24,
+                    fontSize: 14,
+                  ),
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
                   isDense: true,
-                  contentPadding: const EdgeInsets.only(left: 16, right: 16, bottom: 2),
+                  contentPadding: const EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                    bottom: 2,
+                  ),
                   filled: false,
                   prefixIcon: const Padding(
                     padding: EdgeInsets.only(left: 12, right: 8, top: 9),
@@ -156,7 +162,9 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
+                            color: const Color(
+                              0xFFC8A96E,
+                            ).withValues(alpha: 0.2),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           ),
@@ -249,10 +257,7 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
         ),
         subtitle: Text(
           roaster.country ?? '',
-          style: GoogleFonts.outfit(
-            color: Colors.white38,
-            fontSize: 12,
-          ),
+          style: GoogleFonts.outfit(color: Colors.white38, fontSize: 12),
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -298,8 +303,11 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
             borderRadius: BorderRadius.circular(10),
             border: Border.all(color: Colors.redAccent.withValues(alpha: 0.2)),
           ),
-          child:
-              const Icon(Icons.close_rounded, color: Colors.redAccent, size: 20),
+          child: const Icon(
+            Icons.close_rounded,
+            color: Colors.redAccent,
+            size: 20,
+          ),
         ),
         title: Text(
           ref.t('none_clear_selection'),
@@ -485,15 +493,17 @@ class _RoasterSelectorSheetState extends ConsumerState<RoasterSelectorSheet> {
                 // Duplicate check
                 if (existing == null) {
                   final allRoasters = ref.read(userRoastersProvider);
-                  final duplicate = allRoasters.cast<UserRoasterDto?>().firstWhere(
-                    (r) =>
-                        r!.name.toLowerCase() == name.toLowerCase() &&
-                        (r.location?.toLowerCase() ?? '') ==
-                            location.toLowerCase() &&
-                        (r.country?.toLowerCase() ?? '') ==
-                            countryController.text.trim().toLowerCase(),
-                    orElse: () => null,
-                  );
+                  final duplicate = allRoasters
+                      .cast<UserRoasterDto?>()
+                      .firstWhere(
+                        (r) =>
+                            r!.name.toLowerCase() == name.toLowerCase() &&
+                            (r.location?.toLowerCase() ?? '') ==
+                                location.toLowerCase() &&
+                            (r.country?.toLowerCase() ?? '') ==
+                                countryController.text.trim().toLowerCase(),
+                        orElse: () => null,
+                      );
 
                   if (duplicate != null) {
                     ToastService.showError(

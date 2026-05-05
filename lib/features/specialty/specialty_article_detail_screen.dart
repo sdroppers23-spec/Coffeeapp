@@ -190,7 +190,12 @@ class _SpecialtyArticleDetailScreenState
                             ),
                             const SizedBox(width: 6),
                             Text(
-                              ref.t('read_time', args: {'min': widget.article.readTimeMin.toString()}),
+                              ref.t(
+                                'read_time',
+                                args: {
+                                  'min': widget.article.readTimeMin.toString(),
+                                },
+                              ),
                               style: GoogleFonts.outfit(
                                 fontSize: 14,
                                 color: Colors.white.withValues(alpha: 0.6),
@@ -305,7 +310,11 @@ class _SpecialtyArticleDetailScreenState
 
   Widget _buildHeroImage(String url) {
     if (url.startsWith('assets/')) {
-      return Image.asset(url, fit: BoxFit.cover, alignment: Alignment.topCenter);
+      return Image.asset(
+        url,
+        fit: BoxFit.cover,
+        alignment: Alignment.topCenter,
+      );
     }
     return CachedNetworkImage(
       imageUrl: url,

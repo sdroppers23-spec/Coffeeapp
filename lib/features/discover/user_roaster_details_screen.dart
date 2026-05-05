@@ -18,7 +18,6 @@ import '../navigation/navigation_providers.dart';
 import '../../shared/utils/url_helper.dart';
 import '../../core/utils/responsive_utils.dart';
 
-
 final userRoasterLotsProvider =
     FutureProvider.family<List<CoffeeLotDto>, String>((ref, roasterId) async {
       final db = ref.watch(databaseProvider);
@@ -53,165 +52,167 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
         context: context,
         builder: (ctx) => StatefulBuilder(
           builder: (context, setDialogState) => AlertDialog(
-          backgroundColor: const Color(0xFF151515),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          insetPadding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 20,
-          ),
-          title: Text(
-            ref.t('edit_roaster_title'),
-            style: GoogleFonts.poppins(
-              color: const Color(0xFFC8A96E),
-              fontWeight: FontWeight.bold,
+            backgroundColor: const Color(0xFF151515),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
             ),
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                GestureDetector(
-                  onTap: () async {
-                    final path = await RoasterImageService.pickAndSaveImage();
-                    if (path != null) {
-                      setDialogState(() => localPath = path);
-                    }
-                  },
-                  child: Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.05),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.white12),
-                      image: localPath != null
-                          ? DecorationImage(
-                              image: FileImage(File(localPath!)),
-                              fit: BoxFit.cover,
+            insetPadding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 20,
+            ),
+            title: Text(
+              ref.t('edit_roaster_title'),
+              style: GoogleFonts.poppins(
+                color: const Color(0xFFC8A96E),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      final path = await RoasterImageService.pickAndSaveImage();
+                      if (path != null) {
+                        setDialogState(() => localPath = path);
+                      }
+                    },
+                    child: Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.white12),
+                        image: localPath != null
+                            ? DecorationImage(
+                                image: FileImage(File(localPath!)),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
+                      ),
+                      child: localPath == null
+                          ? const Icon(
+                              Icons.add_a_photo_rounded,
+                              color: Color(0xFFC8A96E),
+                              size: 30,
                             )
                           : null,
                     ),
-                    child: localPath == null
-                        ? const Icon(
-                            Icons.add_a_photo_rounded,
-                            color: Color(0xFFC8A96E),
-                            size: 30,
-                          )
-                        : null,
                   ),
-                ),
-                const SizedBox(height: 20),
-                buildDialogField(
-                  context,
-                  nameController,
-                  ref.t('roaster_name_label'),
-                  Icons.business_rounded,
-                ),
-                const SizedBox(height: 12),
-                buildDialogField(
-                  context,
-                  locationController,
-                  ref.t('city_label'),
-                  Icons.location_on_rounded,
-                ),
-                const SizedBox(height: 12),
-                buildDialogField(
-                  context,
-                  countryController,
-                  ref.t('country_label'),
-                  Icons.public_rounded,
-                ),
-                const SizedBox(height: 12),
-                buildDialogField(
-                  context,
-                  logoUrlController,
-                  ref.t('roaster_logo_url_label'),
-                  Icons.link_rounded,
-                  errorText: urlError,
-                ),
-                const SizedBox(height: 12),
-                buildDialogField(
-                  context,
-                  shortDescController,
-                  ref.t('short_desc_label'),
-                  Icons.description_rounded,
-                  maxLines: 3,
-                ),
-              ],
+                  const SizedBox(height: 20),
+                  buildDialogField(
+                    context,
+                    nameController,
+                    ref.t('roaster_name_label'),
+                    Icons.business_rounded,
+                  ),
+                  const SizedBox(height: 12),
+                  buildDialogField(
+                    context,
+                    locationController,
+                    ref.t('city_label'),
+                    Icons.location_on_rounded,
+                  ),
+                  const SizedBox(height: 12),
+                  buildDialogField(
+                    context,
+                    countryController,
+                    ref.t('country_label'),
+                    Icons.public_rounded,
+                  ),
+                  const SizedBox(height: 12),
+                  buildDialogField(
+                    context,
+                    logoUrlController,
+                    ref.t('roaster_logo_url_label'),
+                    Icons.link_rounded,
+                    errorText: urlError,
+                  ),
+                  const SizedBox(height: 12),
+                  buildDialogField(
+                    context,
+                    shortDescController,
+                    ref.t('short_desc_label'),
+                    Icons.description_rounded,
+                    maxLines: 3,
+                  ),
+                ],
+              ),
             ),
-          ),
-          actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-          actions: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    if (nameController.text.isEmpty) return;
+            actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+            actions: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (nameController.text.isEmpty) return;
 
-                    final rawUrl = logoUrlController.text.trim();
-                    if (rawUrl.isNotEmpty) {
-                      if (!UrlHelper.isValidUrl(rawUrl)) {
-                        setDialogState(() {
-                          urlError = ref.t('invalid_url_format');
-                        });
-                        return;
+                      final rawUrl = logoUrlController.text.trim();
+                      if (rawUrl.isNotEmpty) {
+                        if (!UrlHelper.isValidUrl(rawUrl)) {
+                          setDialogState(() {
+                            urlError = ref.t('invalid_url_format');
+                          });
+                          return;
+                        }
                       }
-                    }
 
-                    final updated = roaster.copyWith(
-                      name: nameController.text,
-                      country: countryController.text,
-                      location: locationController.text,
-                      description: shortDescController.text,
-                      logoUrl: rawUrl,
-                      localLogoPath: localPath,
-                      updatedAt: DateTime.now(),
-                    );
-                    await notifier.saveRoaster(updated);
-                    if (context.mounted) Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFC8A96E),
-                    foregroundColor: Colors.black,
-                    minimumSize: const Size(double.infinity, 54),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      final updated = roaster.copyWith(
+                        name: nameController.text,
+                        country: countryController.text,
+                        location: locationController.text,
+                        description: shortDescController.text,
+                        logoUrl: rawUrl,
+                        localLogoPath: localPath,
+                        updatedAt: DateTime.now(),
+                      );
+                      await notifier.saveRoaster(updated);
+                      if (context.mounted) Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFC8A96E),
+                      foregroundColor: Colors.black,
+                      minimumSize: const Size(double.infinity, 54),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      elevation: 8,
+                      shadowColor: const Color(
+                        0xFFC8A96E,
+                      ).withValues(alpha: 0.3),
                     ),
-                    elevation: 8,
-                    shadowColor: const Color(0xFFC8A96E).withValues(alpha: 0.3),
-                  ),
-                  child: Text(
-                    ref.t('save'),
-                    style: GoogleFonts.outfit(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 16,
-                      letterSpacing: 1,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  style: TextButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 44),
-                  ),
-                  child: Text(
-                    ref.t('cancel'),
-                    style: GoogleFonts.outfit(
-                      color: Colors.white38,
-                      fontWeight: FontWeight.w600,
+                    child: Text(
+                      ref.t('save'),
+                      style: GoogleFonts.outfit(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 16,
+                        letterSpacing: 1,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  const SizedBox(height: 12),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: TextButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 44),
+                    ),
+                    child: Text(
+                      ref.t('cancel'),
+                      style: GoogleFonts.outfit(
+                        color: Colors.white38,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-      ),
       );
     }
   }
@@ -413,7 +414,10 @@ class UserRoasterDetailsScreen extends ConsumerStatefulWidget {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      ref.t('unlink_lot_confirm_desc_template', args: {'name': lotName}),
+                      ref.t(
+                        'unlink_lot_confirm_desc_template',
+                        args: {'name': lotName},
+                      ),
                       textAlign: TextAlign.center,
                       style: GoogleFonts.outfit(
                         color: Colors.white60,
@@ -561,351 +565,362 @@ class _UserRoasterDetailsScreenState
         ref.read(navBarVisibleProvider.notifier).show();
       },
       child: Scaffold(
-      backgroundColor: Colors.black,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: Colors.white,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add_link_rounded, color: Color(0xFFC8A96E)),
-            tooltip: ref.t('link_lot_title'),
-            onPressed: () => UserRoasterDetailsScreen.showLinkLotDialog(
-              context,
-              ref,
-              currentRoaster,
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.edit_rounded, color: Colors.white70),
-            onPressed: () => UserRoasterDetailsScreen.showEditRoasterDialog(
-              context,
-              ref,
-              currentRoaster,
-            ),
-          ),
-          IconButton(
+        backgroundColor: Colors.black,
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
             icon: const Icon(
-              Icons.delete_outline_rounded,
-              color: Colors.redAccent,
+              Icons.arrow_back_ios_new_rounded,
+              color: Colors.white,
             ),
-            onPressed: () async {
-              final confirmed =
-                  await UserRoasterDetailsScreen.confirmDeleteDialog(
-                    context,
-                    ref,
-                    currentRoaster.name,
-                  );
-              if (confirmed && context.mounted) {
-                await ref
+            onPressed: () => Navigator.pop(context),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(
+                Icons.add_link_rounded,
+                color: Color(0xFFC8A96E),
+              ),
+              tooltip: ref.t('link_lot_title'),
+              onPressed: () => UserRoasterDetailsScreen.showLinkLotDialog(
+                context,
+                ref,
+                currentRoaster,
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.edit_rounded, color: Colors.white70),
+              onPressed: () => UserRoasterDetailsScreen.showEditRoasterDialog(
+                context,
+                ref,
+                currentRoaster,
+              ),
+            ),
+            IconButton(
+              icon: const Icon(
+                Icons.delete_outline_rounded,
+                color: Colors.redAccent,
+              ),
+              onPressed: () async {
+                final confirmed =
+                    await UserRoasterDetailsScreen.confirmDeleteDialog(
+                      context,
+                      ref,
+                      currentRoaster.name,
+                    );
+                if (confirmed && context.mounted) {
+                  await ref
+                      .read(userRoastersProvider.notifier)
+                      .deleteRoaster(currentRoaster.id);
+                  if (context.mounted) Navigator.pop(context);
+                }
+              },
+            ),
+            IconButton(
+              icon: Icon(
+                currentRoaster.isFavorite
+                    ? Icons.favorite_rounded
+                    : Icons.favorite_border_rounded,
+                color: currentRoaster.isFavorite
+                    ? Colors.redAccent
+                    : Colors.white,
+              ),
+              onPressed: () {
+                ref
                     .read(userRoastersProvider.notifier)
-                    .deleteRoaster(currentRoaster.id);
-                if (context.mounted) Navigator.pop(context);
-              }
-            },
-          ),
-          IconButton(
-            icon: Icon(
-              currentRoaster.isFavorite
-                  ? Icons.favorite_rounded
-                  : Icons.favorite_border_rounded,
-              color: currentRoaster.isFavorite
-                  ? Colors.redAccent
-                  : Colors.white,
+                    .toggleFavorite(currentRoaster.id);
+              },
             ),
-            onPressed: () {
-              ref
-                  .read(userRoastersProvider.notifier)
-                  .toggleFavorite(currentRoaster.id);
-            },
-          ),
-        ],
-      ),
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                const SizedBox(height: 100), // Increased from 80 to lift more
-                // Header (Logo)
-                Center(
-                  child: Container(
-                    width: context.isTablet ? 160 : 120,
-                    height: context.isTablet ? 160 : 120,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.05),
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(
-                        color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
-                        width: 2,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                          blurRadius: 30,
-                          spreadRadius: 5,
+          ],
+        ),
+        body: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  const SizedBox(height: 100), // Increased from 80 to lift more
+                  // Header (Logo)
+                  Center(
+                    child: Container(
+                      width: context.isTablet ? 160 : 120,
+                      height: context.isTablet ? 160 : 120,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(
+                          color: const Color(0xFFC8A96E).withValues(alpha: 0.3),
+                          width: 2,
                         ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(28),
-                      child: _buildLogo(currentRoaster),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  currentRoaster.name,
-                  style: GoogleFonts.cormorantGaramond(
-                    color: const Color(0xFFC8A96E),
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                if ((currentRoaster.location?.isNotEmpty ?? false) ||
-                    (currentRoaster.country?.isNotEmpty ?? false))
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.location_on_rounded,
-                          size: 14,
-                          color: Colors.white38,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          [currentRoaster.location, currentRoaster.country]
-                              .where((s) => s != null && s.isNotEmpty)
-                              .join(', '),
-                          style: GoogleFonts.outfit(
-                            color: Colors.white38,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                if (currentRoaster.description != null &&
-                    currentRoaster.description!.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(32, 16, 32, 0),
-                    child: Text(
-                      currentRoaster.description!,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.outfit(
-                        color: Colors.white60,
-                        fontSize: 15,
-                        height: 1.6,
-                      ),
-                    ),
-                  ),
-                const SizedBox(height: 32),
-
-                // Search Bar
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 8,
-                  ),
-                  child: Container(
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(24),
-                      border: Border.all(
-                        color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
-                      ),
-                    ),
-                    child: TextField(
-                      controller: _searchController,
-                      onChanged: (v) => setState(() => _searchQuery = v),
-                      onTapOutside: (_) =>
-                          FocusManager.instance.primaryFocus?.unfocus(),
-                      onSubmitted: (_) =>
-                          FocusManager.instance.primaryFocus?.unfocus(),
-                      style: GoogleFonts.outfit(
-                        color: Colors.white,
-                        fontSize: 14,
-                      ),
-                      textAlignVertical: TextAlignVertical.center,
-                      decoration: InputDecoration(
-                        hintText: ref.t('search_lots'),
-                        hintStyle: GoogleFonts.outfit(
-                          color: Colors.white24,
-                          fontSize: 14,
-                        ),
-                        border: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        isDense: true,
-                        contentPadding: const EdgeInsets.only(
-                          left: 16,
-                          right: 16,
-                          top: 10,
-                          bottom: 0,
-                        ),
-                        filled: false,
-                        prefixIcon: const Padding(
-                          padding: EdgeInsets.only(left: 12, right: 8, top: 9),
-                          child: Icon(
-                            Icons.search_rounded,
-                            color: Color(0xFFC8A96E),
-                            size: 20,
-                          ),
-                        ),
-                        prefixIconConstraints: const BoxConstraints(
-                          minWidth: 40,
-                          minHeight: 40,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Row(
-                    children: [
-                      Text(
-                        ref.t('lots_by_roaster_title'),
-                        style: GoogleFonts.poppins(
-                          color: const Color(0xFFC8A96E),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      const Spacer(),
-                      lotsAsync.when(
-                        data: (lots) => Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
                             color: const Color(
                               0xFFC8A96E,
                             ).withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(10),
+                            blurRadius: 30,
+                            spreadRadius: 5,
                           ),
-                          child: Text(
-                            lots.length.toString(),
-                            style: const TextStyle(
-                              color: Color(0xFFC8A96E),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(28),
+                        child: _buildLogo(currentRoaster),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    currentRoaster.name,
+                    style: GoogleFonts.cormorantGaramond(
+                      color: const Color(0xFFC8A96E),
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  if ((currentRoaster.location?.isNotEmpty ?? false) ||
+                      (currentRoaster.country?.isNotEmpty ?? false))
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.location_on_rounded,
+                            size: 14,
+                            color: Colors.white38,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            [currentRoaster.location, currentRoaster.country]
+                                .where((s) => s != null && s.isNotEmpty)
+                                .join(', '),
+                            style: GoogleFonts.outfit(
+                              color: Colors.white38,
+                              fontSize: 14,
                             ),
                           ),
-                        ),
-                        loading: () => const SizedBox(),
-                        error: (error, _) => const SizedBox(),
+                        ],
                       ),
-                    ],
+                    ),
+                  if (currentRoaster.description != null &&
+                      currentRoaster.description!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(32, 16, 32, 0),
+                      child: Text(
+                        currentRoaster.description!,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.outfit(
+                          color: Colors.white60,
+                          fontSize: 15,
+                          height: 1.6,
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: 32),
+
+                  // Search Bar
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 8,
+                    ),
+                    child: Container(
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                          color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
+                        ),
+                      ),
+                      child: TextField(
+                        controller: _searchController,
+                        onChanged: (v) => setState(() => _searchQuery = v),
+                        onTapOutside: (_) =>
+                            FocusManager.instance.primaryFocus?.unfocus(),
+                        onSubmitted: (_) =>
+                            FocusManager.instance.primaryFocus?.unfocus(),
+                        style: GoogleFonts.outfit(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                        textAlignVertical: TextAlignVertical.center,
+                        decoration: InputDecoration(
+                          hintText: ref.t('search_lots'),
+                          hintStyle: GoogleFonts.outfit(
+                            color: Colors.white24,
+                            fontSize: 14,
+                          ),
+                          border: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          isDense: true,
+                          contentPadding: const EdgeInsets.only(
+                            left: 16,
+                            right: 16,
+                            top: 10,
+                            bottom: 0,
+                          ),
+                          filled: false,
+                          prefixIcon: const Padding(
+                            padding: EdgeInsets.only(
+                              left: 12,
+                              right: 8,
+                              top: 9,
+                            ),
+                            child: Icon(
+                              Icons.search_rounded,
+                              color: Color(0xFFC8A96E),
+                              size: 20,
+                            ),
+                          ),
+                          prefixIconConstraints: const BoxConstraints(
+                            minWidth: 40,
+                            minHeight: 40,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-                const Divider(
-                  color: Colors.white10,
-                  height: 32,
-                  indent: 24,
-                  endIndent: 24,
-                ),
-              ],
-            ),
-          ),
-          lotsAsync.when(
-            loading: () => const SliverFillRemaining(
-              child: Center(
-                child: CircularProgressIndicator(color: Color(0xFFC8A96E)),
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Row(
+                      children: [
+                        Text(
+                          ref.t('lots_by_roaster_title'),
+                          style: GoogleFonts.poppins(
+                            color: const Color(0xFFC8A96E),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        const Spacer(),
+                        lotsAsync.when(
+                          data: (lots) => Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(
+                                0xFFC8A96E,
+                              ).withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              lots.length.toString(),
+                              style: const TextStyle(
+                                color: Color(0xFFC8A96E),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                          loading: () => const SizedBox(),
+                          error: (error, _) => const SizedBox(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(
+                    color: Colors.white10,
+                    height: 32,
+                    indent: 24,
+                    endIndent: 24,
+                  ),
+                ],
               ),
             ),
-            error: (error, _) => SliverFillRemaining(
-              child: Center(child: Text(error.toString())),
-            ),
-            data: (lots) {
-              final filteredLots = lots.where((l) {
-                final query = _searchQuery.toLowerCase();
-                if (query.isEmpty) return true;
-                return (l.coffeeName?.toLowerCase().contains(query) ?? false) ||
-                    (l.originCountry?.toLowerCase().contains(query) ?? false) ||
-                    (l.region?.toLowerCase().contains(query) ?? false);
-              }).toList();
+            lotsAsync.when(
+              loading: () => const SliverFillRemaining(
+                child: Center(
+                  child: CircularProgressIndicator(color: Color(0xFFC8A96E)),
+                ),
+              ),
+              error: (error, _) => SliverFillRemaining(
+                child: Center(child: Text(error.toString())),
+              ),
+              data: (lots) {
+                final filteredLots = lots.where((l) {
+                  final query = _searchQuery.toLowerCase();
+                  if (query.isEmpty) return true;
+                  return (l.coffeeName?.toLowerCase().contains(query) ??
+                          false) ||
+                      (l.originCountry?.toLowerCase().contains(query) ??
+                          false) ||
+                      (l.region?.toLowerCase().contains(query) ?? false);
+                }).toList();
 
-              if (filteredLots.isEmpty) {
-                return SliverToBoxAdapter(
-                  child: _buildEmptyState(isSearch: _searchQuery.isNotEmpty),
-                );
-              }
+                if (filteredLots.isEmpty) {
+                  return SliverToBoxAdapter(
+                    child: _buildEmptyState(isSearch: _searchQuery.isNotEmpty),
+                  );
+                }
 
-              return SliverPadding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, i) => Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: MyLotListCard(
-                        forcedSwipeMode: LotSwipeMode.swipe,
-                        lot: filteredLots[i],
-                        isSelected: false,
-                        isSelectionMode: false,
-                        onLongPress: (_) {},
-                        onFavoriteToggle: (lot) {
-                          ref
-                              .read(databaseProvider)
-                              .toggleLotFavorite(lot.id, !lot.isFavorite);
-                          ref.invalidate(
-                            userRoasterLotsProvider(currentRoaster.id),
-                          );
-                        },
-                        onTap: (id) {
-                          context.push(
-                            '/lot_details',
-                            extra: {'lot': filteredLots[i]},
-                          );
-                        },
-                        onEditSwipe: (lot) {
-                          context.push('/edit_lot', extra: lot);
-                        },
-                        onDeleteSwipe: (lot) async {
-                          final confirmed =
-                              await UserRoasterDetailsScreen.confirmUnlinkDialog(
-                                context,
-                                ref,
-                                lot.coffeeName ?? '',
-                              );
-                          if (confirmed) {
-                            await ref
+                return SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
+                  sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, i) => Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: MyLotListCard(
+                          forcedSwipeMode: LotSwipeMode.swipe,
+                          lot: filteredLots[i],
+                          isSelected: false,
+                          isSelectionMode: false,
+                          onLongPress: (_) {},
+                          onFavoriteToggle: (lot) {
+                            ref
                                 .read(databaseProvider)
-                                .linkLotToRoaster(lot.id, null);
+                                .toggleLotFavorite(lot.id, !lot.isFavorite);
                             ref.invalidate(
                               userRoasterLotsProvider(currentRoaster.id),
                             );
-                            return true;
-                          }
-                          return false;
-                        },
+                          },
+                          onTap: (id) {
+                            context.push(
+                              '/lot_details',
+                              extra: {'lot': filteredLots[i]},
+                            );
+                          },
+                          onEditSwipe: (lot) {
+                            context.push('/edit_lot', extra: lot);
+                          },
+                          onDeleteSwipe: (lot) async {
+                            final confirmed =
+                                await UserRoasterDetailsScreen.confirmUnlinkDialog(
+                                  context,
+                                  ref,
+                                  lot.coffeeName ?? '',
+                                );
+                            if (confirmed) {
+                              await ref
+                                  .read(databaseProvider)
+                                  .linkLotToRoaster(lot.id, null);
+                              ref.invalidate(
+                                userRoasterLotsProvider(currentRoaster.id),
+                              );
+                              return true;
+                            }
+                            return false;
+                          },
+                        ),
                       ),
+                      childCount: filteredLots.length,
                     ),
-                    childCount: filteredLots.length,
                   ),
-                ),
-              );
-            },
-          ),
-        ],
+                );
+              },
+            ),
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildEmptyState({bool isSearch = false}) {
     return Center(
@@ -940,9 +955,7 @@ class _UserRoasterDetailsScreenState
           ),
           const SizedBox(height: 32),
           Text(
-            isSearch
-                ? ref.t('empty_search_title')
-                : ref.t('no_lots_linked'),
+            isSearch ? ref.t('empty_search_title') : ref.t('no_lots_linked'),
             textAlign: TextAlign.center,
             style: GoogleFonts.cormorantGaramond(
               color: const Color(0xFFC8A96E),
@@ -1010,7 +1023,9 @@ class _UserRoasterDetailsScreenState
               ),
             ),
           ],
-          const SizedBox(height: 160), // Increased from 120 to lift everything up
+          const SizedBox(
+            height: 160,
+          ), // Increased from 120 to lift everything up
         ],
       ),
     );

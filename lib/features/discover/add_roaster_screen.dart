@@ -74,26 +74,18 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
 
       if (!file.path.toLowerCase().endsWith('.png')) {
         if (localContext.mounted) {
-          ScaffoldMessenger.of(localContext).showSnackBar(
-            SnackBar(
-              content: Text(
-                ref.t('invalid_file_format'),
-              ),
-            ),
-          );
+          ScaffoldMessenger.of(
+            localContext,
+          ).showSnackBar(SnackBar(content: Text(ref.t('invalid_file_format'))));
         }
         return;
       }
 
       if (size > 5 * 1024 * 1024) {
         if (localContext.mounted) {
-          ScaffoldMessenger.of(localContext).showSnackBar(
-            SnackBar(
-              content: Text(
-                ref.t('file_too_large'),
-              ),
-            ),
-          );
+          ScaffoldMessenger.of(
+            localContext,
+          ).showSnackBar(SnackBar(content: Text(ref.t('file_too_large'))));
         }
         return;
       }
@@ -168,7 +160,10 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
             // Add suffix and create new
             lotToProcess = lot.copyWith(
               id: const Uuid().v4(),
-              coffeeName: ref.t('copy_name_template', args: {'name': lot.coffeeName ?? ''}),
+              coffeeName: ref.t(
+                'copy_name_template',
+                args: {'name': lot.coffeeName ?? ''},
+              ),
               brandId: roasterId,
               roasteryName: _nameController.text,
               createdAt: DateTime.now(),
@@ -225,11 +220,7 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
     if (localContext.mounted) {
       ScaffoldMessenger.of(localContext).showSnackBar(
         SnackBar(
-          content: Text(
-            isCopy
-                ? ref.t('lot_copied')
-                : ref.t('lot_moved'),
-          ),
+          content: Text(isCopy ? ref.t('lot_copied') : ref.t('lot_moved')),
           duration: const Duration(seconds: 5),
           action: SnackBarAction(
             label: ref.t('waiter_undo'),
@@ -354,7 +345,8 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
               ),
               isDense: true,
             ),
-            validator: (v) => v == null || v.isEmpty ? ref.t('required_error') : null,
+            validator: (v) =>
+                v == null || v.isEmpty ? ref.t('required_error') : null,
           ),
         ),
       ],
@@ -446,22 +438,28 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
                   builder: (context, setFieldState) {
                     return TextFormField(
                       controller: _logoUrlController,
-                      style: GoogleFonts.outfit(color: Colors.white, fontSize: 14),
+                      style: GoogleFonts.outfit(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
                       onChanged: (value) {
                         if (value.isNotEmpty) {
                           String url = value.trim();
-                          if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                          if (!url.startsWith('http://') &&
+                              !url.startsWith('https://')) {
                             url = 'https://$url';
                             _logoUrlController.value = TextEditingValue(
                               text: url,
-                              selection: TextSelection.collapsed(offset: url.length),
+                              selection: TextSelection.collapsed(
+                                offset: url.length,
+                              ),
                             );
                           }
-                          
+
                           final urlRegExp = RegExp(
                             r'^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$',
                           );
-                          
+
                           if (!urlRegExp.hasMatch(url)) {
                             setFieldState(() {
                               _urlError = ref.t('invalid_url_format');
@@ -481,12 +479,17 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
                         hintText: ref.t('roastery_logo_hint'),
                         hintStyle: const TextStyle(color: Colors.white24),
                         errorText: _urlError,
-                        errorStyle: GoogleFonts.outfit(color: Colors.redAccent, fontSize: 11),
+                        errorStyle: GoogleFonts.outfit(
+                          color: Colors.redAccent,
+                          fontSize: 11,
+                        ),
                         border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                        ),
                       ),
                     );
-                  }
+                  },
                 ),
               ),
             ),

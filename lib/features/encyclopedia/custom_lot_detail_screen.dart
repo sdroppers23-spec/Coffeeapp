@@ -285,8 +285,12 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, stack) => Center(child: Text('Error: $err')),
       data: (recipes) {
-        final filterCount = recipes.where((r) => r.recipeType == 'filter').length;
-        final espressoCount = recipes.where((r) => r.recipeType == 'espresso').length;
+        final filterCount = recipes
+            .where((r) => r.recipeType == 'filter')
+            .length;
+        final espressoCount = recipes
+            .where((r) => r.recipeType == 'espresso')
+            .length;
         // Actually, the card-specific limit is 10. Let's stick to 10 for each.
         final overallLimitReached = filterCount >= 10 && espressoCount >= 10;
 
@@ -320,7 +324,10 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
                 right: 20,
                 child: Center(
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.redAccent.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
@@ -348,7 +355,10 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
                     espressoCount: espressoCount,
                   ),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 16,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFFC8A96E),
                       borderRadius: BorderRadius.circular(20),
@@ -363,7 +373,11 @@ class _RecipesTabState extends ConsumerState<_RecipesTab> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.add_rounded, color: Colors.black, size: 24),
+                        const Icon(
+                          Icons.add_rounded,
+                          color: Colors.black,
+                          size: 24,
+                        ),
                         const SizedBox(width: 12),
                         Text(
                           ref.t('add_recipe'),

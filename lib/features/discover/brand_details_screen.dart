@@ -118,7 +118,10 @@ class _BrandDetailsScreenState extends ConsumerState<BrandDetailsScreen> {
                   ),
                   error: (e, _) => Center(
                     child: Text(
-                      ref.t('error_loading_lots', args: {'error': e.toString()}),
+                      ref.t(
+                        'error_loading_lots',
+                        args: {'error': e.toString()},
+                      ),
                     ),
                   ),
                   data: (lots) {

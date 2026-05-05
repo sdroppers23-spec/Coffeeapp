@@ -768,4 +768,97 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get roaster_city => 'Місто обсмажчика';
+
+  @override
+  String get section_photo => 'Фото';
+
+  @override
+  String get add_photo_label => 'ДОДАТИ ФОТО';
+
+  @override
+  String get section_roast_date => 'Дати';
+
+  @override
+  String get roast_date_field => 'Дата обсмажки';
+
+  @override
+  String get opened_at_field => 'Відкрито';
+
+  @override
+  String get not_opened => 'Ще не відкрито';
+
+  @override
+  String get section_bag_state => 'Стан пачки';
+
+  @override
+  String get bag_closed => 'ЗАКРИТА';
+
+  @override
+  String get bag_opened => 'ВІДКРИТА';
+
+  @override
+  String get section_grind_type => 'Тип помелу';
+
+  @override
+  String get whole_bean => 'Зерно';
+
+  @override
+  String get ground_coffee => 'Мелена';
+
+  @override
+  String get section_roast => 'Обсмажка';
+
+  @override
+  String get roast_level_field => 'Рівень обсмажки';
+
+  @override
+  String get roast_medium_light => 'СЕРЕДНЬО-СВІТЛИЙ';
+
+  @override
+  String get roast_medium_dark => 'СЕРЕДНЬО-ТЕМНИЙ';
+
+  @override
+  String get roast_filter => 'ФІЛЬТР';
+
+  @override
+  String get roast_omni => 'ОМНІ';
+
+  @override
+  String get roast_espresso => 'ЕСПРЕСО';
+
+  @override
+  String get custom_method_label => 'Власна назва';
+
+  @override
+  String get enter_name_placeholder => 'Введіть назву...';
+
+  @override
+  String get decaf_sugar_cane => 'Sugar Cane';
+
+  @override
+  String get decaf_swiss_water => 'Swiss Water';
+
+  @override
+  String get decaf_co2 => 'CO2';
+
+  @override
+  String get decaf_mountain_water => 'Mountain Water';
+
+  @override
+  String get decaf_other => 'Інший';
+
+  @override
+  String get sensory_profile_1_5 => 'Сенсорний профіль (1-5)';
+
+  @override
+  String get visualize_profile => 'Візуалізація профілю';
+
+  @override
+  String get lock_sensory => 'ЗАБЛОКУВАТИ';
+
+  @override
+  String get unlock_sensory => 'РОЗБЛОКУВАТИ';
+
+  @override
+  String get location_field => 'Локація';
 }

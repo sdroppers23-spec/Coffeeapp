@@ -139,6 +139,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     _retailPrice1kController.dispose();
     _wholesalePrice250Controller.dispose();
     _wholesalePrice1kController.dispose();
+    _decafProcessController.dispose();
 
     // Ensure navbar is visible when leaving this screen
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -167,6 +168,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   late final TextEditingController _retailPrice1kController;
   late final TextEditingController _wholesalePrice250Controller;
   late final TextEditingController _wholesalePrice1kController;
+  late final TextEditingController _decafProcessController;
 
   // ─── Sensory (1-5) ────────────────────────────────────────────────
   double _bitterness = 3;
@@ -257,6 +259,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     _wholesalePrice1kController = TextEditingController(
       text: pricing['wholesale_1k']?.toString() ?? '',
     );
+    _decafProcessController = TextEditingController();
 
     if (widget.initialLot != null) {
       _currentImageUrl = widget.initialLot!.imageUrl;
@@ -282,6 +285,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     _retailPrice1kController.addListener(_markDirty);
     _wholesalePrice250Controller.addListener(_markDirty);
     _wholesalePrice1kController.addListener(_markDirty);
+    _decafProcessController.addListener(_markDirty);
   }
 
   void _populateFields(CoffeeLotDto lot) {
@@ -319,6 +323,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       final parts = process.split('(');
       process = parts[0].trim();
       _decafProcess = parts[1].replaceAll(')', '').trim();
+      _decafProcessController.text = _decafProcess;
     }
 
     if (_processingMethods.contains(process)) {
@@ -333,9 +338,14 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       _isOtherProcess = false;
     }
 
-    if (!_decafMethods.contains(_decafProcess) && _isDecaf) {
-      _isOtherDecaf = true;
-      // We can use a separate controller if needed, but for now we use _decafProcess as is
+    if (_isDecaf) {
+      if (!_decafMethods.contains(_decafProcess)) {
+        _isOtherDecaf = true;
+        _decafProcessController.text = _decafProcess;
+      } else {
+        _isOtherDecaf = _decafProcess == 'Other';
+        if (_isOtherDecaf) _decafProcessController.text = '';
+      }
     }
   }
 
@@ -927,6 +937,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
           borderColor: _canSave
               ? const Color(0xFFC8A96E).withValues(alpha: 0.5)
               : Colors.white.withValues(alpha: 0.1),
+          enableRepaintBoundary: true,
           child: Material(
             color: Colors.transparent,
             child: PressableScale(
@@ -1123,7 +1134,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       style: GoogleFonts.outfit(
         fontSize: 16,
         fontWeight: FontWeight.bold,
-        color: Colors.white,
+        color: const Color(0xFFC8A96E),
       ),
     ),
   );
@@ -1131,8 +1142,10 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   Widget _darkCard({required List<Widget> children}) => GlassContainer(
     margin: const EdgeInsets.only(bottom: 16),
     borderRadius: 27,
-    opacity: 0.08,
-    enableBlur: false,
+    opacity: 0.12,
+    blur: 10,
+    enableBlur: true,
+    enableRepaintBoundary: true,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: children,
@@ -1169,7 +1182,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               label,
               style: GoogleFonts.outfit(
                 fontSize: 10,
-                color: Colors.white.withValues(alpha: 0.5),
+                color: Colors.white,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.2,
               ),
@@ -1236,10 +1249,14 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                           placeholder ??
                           (type == _FieldType.scaScore ? '80-100' : null),
                       hintStyle: GoogleFonts.outfit(
-                        color: Colors.white.withValues(alpha: 0.2),
+                        color: Colors.white.withValues(alpha: 0.35),
                         fontSize: 15,
                       ),
                       border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
                       isDense: true,
                       contentPadding: EdgeInsets.zero,
                       filled: true,
@@ -1306,7 +1323,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               label,
               style: GoogleFonts.outfit(
                 fontSize: 10,
-                color: Colors.white.withValues(alpha: 0.5),
+                color: Colors.white,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.2,
               ),
@@ -1367,7 +1384,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 label,
                 style: GoogleFonts.outfit(
                   fontSize: 10,
-                  color: Colors.white.withValues(alpha: 0.5),
+                  color: Colors.white,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.2,
                 ),
@@ -1421,30 +1438,27 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
   }) {
     return GestureDetector(
       onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: 14),
-        decoration: BoxDecoration(
-          color: active
-              ? const Color(0xFFC8A96E).withValues(alpha: 0.06)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(50),
-          border: Border.all(
-            color: active
-                ? const Color(0xFFC8A96E)
-                : const Color(0xFFC8A96E).withValues(alpha: 0.1),
-          ),
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          label,
-          style: GoogleFonts.outfit(
-            color: active
-                ? const Color(0xFFC8A96E)
-                : const Color(0xFFC8A96E).withValues(alpha: 0.38),
-            fontSize: 11,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.0,
+      child: GlassContainer(
+        borderRadius: 50,
+        blur: active ? 12 : 0,
+        opacity: active ? 0.15 : 0.03,
+        borderColor: active
+            ? const Color(0xFFC8A96E).withValues(alpha: 0.6)
+            : Colors.white.withValues(alpha: 0.05),
+        enableRepaintBoundary: true,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          alignment: Alignment.center,
+          child: Text(
+            label,
+            style: GoogleFonts.outfit(
+              color: active
+                  ? const Color(0xFFC8A96E)
+                  : Colors.white.withValues(alpha: 0.4),
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.0,
+            ),
           ),
         ),
       ),
@@ -1469,7 +1483,7 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
               style: GoogleFonts.outfit(
                 fontSize: 11,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFFC8A96E).withValues(alpha: 0.6),
+                color: Colors.white,
                 letterSpacing: 1.0,
               ),
             ),

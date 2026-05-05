@@ -92,7 +92,7 @@ class _RecipeTypeCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLimitReached = count >= limit;
-    
+
     return Expanded(
       child: GestureDetector(
         onTap: isLimitReached ? null : onTap,

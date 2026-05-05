@@ -39,7 +39,9 @@ extension _CoffeeTabSection on _AddLotScreenState {
               date: _openedAt,
               placeholder: ref.t('not_opened'),
               onTap: () async {
-                final initial = (_openedAt != null && _openedAt!.isAfter(_roastDate ?? DateTime(2020)))
+                final initial =
+                    (_openedAt != null &&
+                        _openedAt!.isAfter(_roastDate ?? DateTime(2020)))
                     ? _openedAt!
                     : (_roastDate ?? DateTime.now());
                 final picked = await showDatePicker(
@@ -208,6 +210,7 @@ extension _CoffeeTabSection on _AddLotScreenState {
             _fieldRow(
               label: ref.t('flavor_notes_field'),
               controller: _flavorProfileController,
+              placeholder: 'Jasmine, Peach, Bergamot',
             ),
           ],
         ),

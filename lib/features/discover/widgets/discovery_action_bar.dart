@@ -133,8 +133,9 @@ class DiscoveryActionBar extends ConsumerWidget {
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.03),
                     borderRadius: BorderRadius.circular(24),
-                    border:
-                        Border.all(color: Colors.white.withValues(alpha: 0.05)),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.05),
+                    ),
                   ),
                   child: _buildSubTabs(context, ref, state),
                 ),
@@ -152,10 +153,7 @@ class DiscoveryActionBar extends ConsumerWidget {
       textAlignVertical: TextAlignVertical.center,
       decoration: InputDecoration(
         hintText: searchHint,
-        hintStyle: GoogleFonts.outfit(
-          color: Colors.white24,
-          fontSize: 14,
-        ),
+        hintStyle: GoogleFonts.outfit(color: Colors.white24, fontSize: 14),
         border: InputBorder.none,
         enabledBorder: InputBorder.none,
         focusedBorder: InputBorder.none,
@@ -176,7 +174,10 @@ class DiscoveryActionBar extends ConsumerWidget {
   }
 
   Widget _buildSubTabs(
-      BuildContext context, WidgetRef ref, DiscoveryFilterState state) {
+    BuildContext context,
+    WidgetRef ref,
+    DiscoveryFilterState state,
+  ) {
     return Row(
       children: [
         Expanded(

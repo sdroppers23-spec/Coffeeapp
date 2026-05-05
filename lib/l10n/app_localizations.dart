@@ -1583,6 +1583,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Roaster City'**
   String get roaster_city;
+
+  /// No description provided for @section_photo.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo'**
+  String get section_photo;
+
+  /// No description provided for @add_photo_label.
+  ///
+  /// In en, this message translates to:
+  /// **'ADD PHOTO'**
+  String get add_photo_label;
+
+  /// No description provided for @section_roast_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Dates'**
+  String get section_roast_date;
+
+  /// No description provided for @roast_date_field.
+  ///
+  /// In en, this message translates to:
+  /// **'Roast Date'**
+  String get roast_date_field;
+
+  /// No description provided for @opened_at_field.
+  ///
+  /// In en, this message translates to:
+  /// **'Opened At'**
+  String get opened_at_field;
+
+  /// No description provided for @not_opened.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Opened Yet'**
+  String get not_opened;
+
+  /// No description provided for @section_bag_state.
+  ///
+  /// In en, this message translates to:
+  /// **'Bag State'**
+  String get section_bag_state;
+
+  /// No description provided for @bag_closed.
+  ///
+  /// In en, this message translates to:
+  /// **'CLOSED'**
+  String get bag_closed;
+
+  /// No description provided for @bag_opened.
+  ///
+  /// In en, this message translates to:
+  /// **'OPENED'**
+  String get bag_opened;
+
+  /// No description provided for @section_grind_type.
+  ///
+  /// In en, this message translates to:
+  /// **'Grind Type'**
+  String get section_grind_type;
+
+  /// No description provided for @whole_bean.
+  ///
+  /// In en, this message translates to:
+  /// **'Whole Bean'**
+  String get whole_bean;
+
+  /// No description provided for @ground_coffee.
+  ///
+  /// In en, this message translates to:
+  /// **'Ground'**
+  String get ground_coffee;
+
+  /// No description provided for @section_roast.
+  ///
+  /// In en, this message translates to:
+  /// **'Roast'**
+  String get section_roast;
+
+  /// No description provided for @roast_level_field.
+  ///
+  /// In en, this message translates to:
+  /// **'Roast Level'**
+  String get roast_level_field;
+
+  /// No description provided for @roast_medium_light.
+  ///
+  /// In en, this message translates to:
+  /// **'MEDIUM LIGHT'**
+  String get roast_medium_light;
+
+  /// No description provided for @roast_medium_dark.
+  ///
+  /// In en, this message translates to:
+  /// **'MEDIUM DARK'**
+  String get roast_medium_dark;
+
+  /// No description provided for @roast_filter.
+  ///
+  /// In en, this message translates to:
+  /// **'FILTER'**
+  String get roast_filter;
+
+  /// No description provided for @roast_omni.
+  ///
+  /// In en, this message translates to:
+  /// **'OMNI'**
+  String get roast_omni;
+
+  /// No description provided for @roast_espresso.
+  ///
+  /// In en, this message translates to:
+  /// **'ESPRESSO'**
+  String get roast_espresso;
+
+  /// No description provided for @custom_method_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Name'**
+  String get custom_method_label;
+
+  /// No description provided for @enter_name_placeholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter name...'**
+  String get enter_name_placeholder;
+
+  /// No description provided for @decaf_sugar_cane.
+  ///
+  /// In en, this message translates to:
+  /// **'Sugar Cane'**
+  String get decaf_sugar_cane;
+
+  /// No description provided for @decaf_swiss_water.
+  ///
+  /// In en, this message translates to:
+  /// **'Swiss Water'**
+  String get decaf_swiss_water;
+
+  /// No description provided for @decaf_co2.
+  ///
+  /// In en, this message translates to:
+  /// **'CO2'**
+  String get decaf_co2;
+
+  /// No description provided for @decaf_mountain_water.
+  ///
+  /// In en, this message translates to:
+  /// **'Mountain Water'**
+  String get decaf_mountain_water;
+
+  /// No description provided for @decaf_other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get decaf_other;
+
+  /// No description provided for @sensory_profile_1_5.
+  ///
+  /// In en, this message translates to:
+  /// **'Sensory Profile (1-5)'**
+  String get sensory_profile_1_5;
+
+  /// No description provided for @visualize_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Visualize Profile'**
+  String get visualize_profile;
+
+  /// No description provided for @lock_sensory.
+  ///
+  /// In en, this message translates to:
+  /// **'LOCK'**
+  String get lock_sensory;
+
+  /// No description provided for @unlock_sensory.
+  ///
+  /// In en, this message translates to:
+  /// **'UNLOCK'**
+  String get unlock_sensory;
+
+  /// No description provided for @location_field.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get location_field;
 }
 
 class _AppLocalizationsDelegate

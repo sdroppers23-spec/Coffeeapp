@@ -185,9 +185,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               onSelectedItemChanged: (index) {
                                 final code = _languages[index]['code']!;
                                 if (ref.read(localeProvider) != code) {
-                                  ref.read(localeProvider.notifier).setLocale(
-                                    code,
-                                  );
+                                  ref
+                                      .read(localeProvider.notifier)
+                                      .setLocale(code);
                                   ref
                                       .read(settingsProvider.notifier)
                                       .triggerSelectionVibrate();
@@ -236,7 +236,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       ),
                     ),
                   ),
-    
+
                   // ВІБРАЦІЯ
                   _buildSectionTitle(context, ref.t('vibration')),
                   _buildCard(
@@ -261,9 +261,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                 Text(
                                   ref.t('haptic_desc'),
                                   style: GoogleFonts.outfit(
-                                    color: theme.colorScheme.onSurface.withValues(
-                                      alpha: 0.5,
-                                    ),
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.5),
                                     fontSize: 13,
                                     height: 1.2,
                                   ),
@@ -331,7 +330,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       ],
                     ),
                   ),
-    
+
                   // ЮРИДИЧНА ІНФОРМАЦІЯ
                   _buildSectionTitle(context, ref.t('legal')),
                   _buildCard(
@@ -354,9 +353,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       ],
                     ),
                   ),
-    
+
                   const SizedBox(height: 32),
-    
+
                   // ПІДТРИМКА
                   _buildSectionTitle(context, ref.t('support')),
                   _buildCard(
@@ -372,9 +371,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       ],
                     ),
                   ),
-    
+
                   const SizedBox(height: 48),
-    
+
                   // Bottom button
                   Center(
                     child: GestureDetector(

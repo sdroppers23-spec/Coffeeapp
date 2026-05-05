@@ -71,8 +71,7 @@ extension _ProcessingMethodSection on _AddLotScreenState {
             if (_isDecaf) ...[
               _divider(),
               _dropdownRow(
-                label:
-                    "${ref.t('section_processing')} ${ref.t('decaf')}",
+                label: "${ref.t('section_processing')} ${ref.t('decaf')}",
                 value: _decafMethods.contains(_decafProcess)
                     ? _decafProcess
                     : 'Other',
@@ -81,6 +80,7 @@ extension _ProcessingMethodSection on _AddLotScreenState {
                   _updateState(() {
                     _decafProcess = val!;
                     _isOtherDecaf = val == 'Other';
+                    if (!_isOtherDecaf) _decafProcessController.clear();
                   });
                 },
                 localizationPrefix: 'decaf_',
@@ -89,9 +89,7 @@ extension _ProcessingMethodSection on _AddLotScreenState {
                 _divider(),
                 _fieldRow(
                   label: ref.t('custom_decaf_method_label'),
-                  controller: TextEditingController(
-                    text: _decafProcess == 'Other' ? '' : _decafProcess,
-                  ),
+                  controller: _decafProcessController,
                   onChanged: (v) => _decafProcess = v,
                   placeholder: ref.t('enter_name_placeholder'),
                 ),

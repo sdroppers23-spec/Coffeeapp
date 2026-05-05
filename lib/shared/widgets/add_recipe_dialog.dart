@@ -537,211 +537,208 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
               gradient: const LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [
-                  Colors.black,
-                  Color(0xFF121212),
-                ],
+                colors: [Colors.black, Color(0xFF121212)],
               ),
               border: context.isTablet
                   ? Border.all(color: Colors.white10)
                   : null,
             ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // HEADER
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back_rounded,
-                        color: Colors.white,
-                      ),
-                      onPressed: () => Navigator.pop(context),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  // HEADER
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
                     ),
-                    Text(
-                      widget.existingRecipe != null
-                          ? ref.t('edit_recipe')
-                          : ref.t('new_recipe'),
-                      style: GoogleFonts.outfit(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: _save,
-                      child: Text(
-                        ref.t('save'),
-                        style: GoogleFonts.outfit(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: gold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // SECTION: Загальне
-                        _buildSectionHeader(ref.t('general')),
-                        const SizedBox(height: 20),
-                        _buildTextField(
-                          controller: _nameController,
-                          hint: ref.t('recipe_name'),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back_rounded,
+                            color: Colors.white,
+                          ),
+                          onPressed: () => Navigator.pop(context),
                         ),
-                        const SizedBox(height: 20),
-                        _buildTextField(
-                          controller: _customMethodNameController,
-                          hint: 'Назва способу (напр. Hario Switch)',
+                        Text(
+                          widget.existingRecipe != null
+                              ? ref.t('edit_recipe')
+                              : ref.t('new_recipe'),
+                          style: GoogleFonts.outfit(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
-                        const SizedBox(height: 20),
-                        Row(
-                          children: [
-                            Text(
-                              ref.t('rating_label'),
-                              style: GoogleFonts.outfit(
-                                color: Colors.white70,
-                                fontSize: 16,
-                              ),
+                        TextButton(
+                          onPressed: _save,
+                          child: Text(
+                            ref.t('save'),
+                            style: GoogleFonts.outfit(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: gold,
                             ),
-                            Row(
-                              children: List.generate(5, (index) {
-                                return GestureDetector(
-                                  onTap: () =>
-                                      setState(() => _rating = index + 1),
-                                  child: Icon(
-                                    index < _rating
-                                        ? Icons.star_rounded
-                                        : Icons.star_border_rounded,
-                                    color: gold,
-                                    size: 32,
-                                  ),
-                                );
-                              }),
-                            ),
-                          ],
+                          ),
                         ),
-                        const SizedBox(height: 32),
-
-                        // SECTION: Кава та вода (Dynamic based on Type)
-                        _buildSectionHeader(
-                          _recipeType == 'filter'
-                              ? ref.t('coffee_and_water')
-                              : ref.t('espresso_parameters'),
-                        ),
-                        const SizedBox(height: 20),
-                        // SECTION: Method Params
-                        if (_recipeType == 'filter')
-                          _buildFilterParams(ref, pref)
-                        else
-                          _buildEspressoParams(ref, pref),
-
-                        const SizedBox(height: 32),
-
-                        // SECTION: Grinder Settings
-                        _buildSectionHeader(ref.t('grinder_settings')),
-                        const SizedBox(height: 20),
-                        _buildGrinderSection(ref, gold),
-                        const SizedBox(height: 32),
-
-                        // SECTION: Dynamic (Pour Schedule for Filter)
-                        if (_recipeType == 'filter') ...[
-                          _buildSectionHeader(ref.t('pour_schedule')),
-                          const SizedBox(height: 12),
-                          if (_recipeType != 'espresso') ...[
-                            _buildPourSchedule(ref, gold),
-                            const SizedBox(height: 24),
-                          ],
-                        ],
-
-                        // SECTION: Difficulty
-                        _buildSectionHeader(ref.t('difficulty')),
-                        const SizedBox(height: 16),
-                        _buildDifficultySelector(ref),
-                        const SizedBox(height: 32),
-
-                        // SECTION: Notes
-                        _buildSectionHeader(ref.t('notes_hint')),
-                        const SizedBox(height: 20),
-                        _buildTextField(
-                          controller: _notesController,
-                          label: ref.t('notes_hint'),
-                          hint: ref.t('notes_placeholder'),
-                          maxLines: 4,
-                        ),
-                        const SizedBox(height: 32),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                style: TextButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 16,
-                                  ),
-                                ),
-                                child: Text(
-                                  ref.t('cancel'),
-                                  style: GoogleFonts.outfit(
-                                    color: Colors.white38,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: _save,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: gold,
-                                  foregroundColor: Colors.black,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 16,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                                child: Text(
-                                  ref.t('save'),
-                                  style: GoogleFonts.outfit(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 40),
                       ],
                     ),
                   ),
-                ),
+
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // SECTION: Загальне
+                            _buildSectionHeader(ref.t('general')),
+                            const SizedBox(height: 20),
+                            _buildTextField(
+                              controller: _nameController,
+                              hint: ref.t('recipe_name'),
+                            ),
+                            const SizedBox(height: 20),
+                            _buildTextField(
+                              controller: _customMethodNameController,
+                              hint: 'Назва способу (напр. Hario Switch)',
+                            ),
+                            const SizedBox(height: 20),
+                            Row(
+                              children: [
+                                Text(
+                                  ref.t('rating_label'),
+                                  style: GoogleFonts.outfit(
+                                    color: Colors.white70,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Row(
+                                  children: List.generate(5, (index) {
+                                    return GestureDetector(
+                                      onTap: () =>
+                                          setState(() => _rating = index + 1),
+                                      child: Icon(
+                                        index < _rating
+                                            ? Icons.star_rounded
+                                            : Icons.star_border_rounded,
+                                        color: gold,
+                                        size: 32,
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 32),
+
+                            // SECTION: Кава та вода (Dynamic based on Type)
+                            _buildSectionHeader(
+                              _recipeType == 'filter'
+                                  ? ref.t('coffee_and_water')
+                                  : ref.t('espresso_parameters'),
+                            ),
+                            const SizedBox(height: 20),
+                            // SECTION: Method Params
+                            if (_recipeType == 'filter')
+                              _buildFilterParams(ref, pref)
+                            else
+                              _buildEspressoParams(ref, pref),
+
+                            const SizedBox(height: 32),
+
+                            // SECTION: Grinder Settings
+                            _buildSectionHeader(ref.t('grinder_settings')),
+                            const SizedBox(height: 20),
+                            _buildGrinderSection(ref, gold),
+                            const SizedBox(height: 32),
+
+                            // SECTION: Dynamic (Pour Schedule for Filter)
+                            if (_recipeType == 'filter') ...[
+                              _buildSectionHeader(ref.t('pour_schedule')),
+                              const SizedBox(height: 12),
+                              if (_recipeType != 'espresso') ...[
+                                _buildPourSchedule(ref, gold),
+                                const SizedBox(height: 24),
+                              ],
+                            ],
+
+                            // SECTION: Difficulty
+                            _buildSectionHeader(ref.t('difficulty')),
+                            const SizedBox(height: 16),
+                            _buildDifficultySelector(ref),
+                            const SizedBox(height: 32),
+
+                            // SECTION: Notes
+                            _buildSectionHeader(ref.t('notes_hint')),
+                            const SizedBox(height: 20),
+                            _buildTextField(
+                              controller: _notesController,
+                              label: ref.t('notes_hint'),
+                              hint: ref.t('notes_placeholder'),
+                              maxLines: 4,
+                            ),
+                            const SizedBox(height: 32),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    style: TextButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 16,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      ref.t('cancel'),
+                                      style: GoogleFonts.outfit(
+                                        color: Colors.white38,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: _save,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: gold,
+                                      foregroundColor: Colors.black,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 16,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      ref.t('save'),
+                                      style: GoogleFonts.outfit(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 40),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
-    ),
-  ),
-);
-}
+    );
+  }
 
   Widget _buildSectionHeader(String title) {
     return Row(

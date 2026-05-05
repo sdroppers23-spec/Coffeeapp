@@ -339,7 +339,6 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
   }
 }
 
-
 class _DetailHeader extends StatelessWidget {
   final String coffeeName;
   final String roasteryName;
@@ -391,16 +390,16 @@ class _DetailHeader extends StatelessWidget {
             decoration: BoxDecoration(
               image: hasImage
                   ? (effectiveImageUrl.startsWith('http')
-                      ? DecorationImage(
-                          image: CachedNetworkImageProvider(
-                            effectiveImageUrl,
-                          ),
-                          fit: BoxFit.cover,
-                        )
-                      : DecorationImage(
-                          image: FileImage(File(effectiveImageUrl)),
-                          fit: BoxFit.cover,
-                        ))
+                        ? DecorationImage(
+                            image: CachedNetworkImageProvider(
+                              effectiveImageUrl,
+                            ),
+                            fit: BoxFit.cover,
+                          )
+                        : DecorationImage(
+                            image: FileImage(File(effectiveImageUrl)),
+                            fit: BoxFit.cover,
+                          ))
                   : null,
               color: Colors.black12,
             ),

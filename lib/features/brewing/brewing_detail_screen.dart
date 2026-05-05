@@ -15,7 +15,6 @@ import 'brewing_guide_screen.dart';
 import '../navigation/navigation_providers.dart';
 import '../../core/utils/responsive_utils.dart';
 
-
 class BrewingDetailScreen extends ConsumerStatefulWidget {
   final BrewingRecipeDto recipe;
 
@@ -68,10 +67,9 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
     final recipesAsync = ref.watch(brewingRecipesProvider);
     final currentRecipe =
         recipesAsync.whenOrNull(
-          data:
-              (list) => list.where(
-                (r) => r.methodKey == widget.recipe.methodKey,
-              ).firstOrNull,
+          data: (list) => list
+              .where((r) => r.methodKey == widget.recipe.methodKey)
+              .firstOrNull,
         ) ??
         widget.recipe;
 
@@ -233,18 +231,15 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                           if (currentRecipe.description.length > 100 ||
                               (currentRecipe.contentHtml?.isNotEmpty ?? false))
                             GestureDetector(
-                              onTap: () => _showFullDescription(context, currentRecipe),
+                              onTap: () =>
+                                  _showFullDescription(context, currentRecipe),
                               child: Container(
                                 padding: const EdgeInsets.all(6),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withValues(
-                                    alpha: 0.05,
-                                  ),
+                                  color: Colors.white.withValues(alpha: 0.05),
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
-                                    color: Colors.white.withValues(
-                                      alpha: 0.1,
-                                    ),
+                                    color: Colors.white.withValues(alpha: 0.1),
                                   ),
                                 ),
                                 child: const Icon(
@@ -258,44 +253,42 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                       ),
                       const SizedBox(height: 8),
                       // Description or Content HTML
-                          if (currentRecipe.contentHtml?.isNotEmpty ?? false)
-                            Html(
-                              data: CoffeeTextProcessor.process(
-                                currentRecipe.contentHtml ?? '',
-                              ),
-                              style:
-                                  CoffeeTextProcessor.getHtmlStyles(
-                                    baseFontSize: 15,
-                                  )..addAll({
-                                    'html': Style(
-                                      margin: Margins.zero,
-                                      padding: HtmlPaddings.zero,
-                                    ),
-                                    'body': Style(
-                                      margin: Margins.zero,
-                                      padding: HtmlPaddings.zero,
-                                      fontSize: FontSize(15),
-                                      lineHeight: const LineHeight(1.6),
-                                      color: Colors.white.withValues(
-                                        alpha: 0.7,
-                                      ),
-                                      fontFamily: 'Outfit',
-                                      maxLines: 3,
-                                      textOverflow: TextOverflow.ellipsis,
-                                    ),
-                                  }),
-                            )
-                          else if (currentRecipe.description.isNotEmpty)
-                            Text(
-                              currentRecipe.description,
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.outfit(
-                                fontSize: 15,
-                                color: Colors.white.withValues(alpha: 0.7),
-                                height: 1.6,
-                              ),
-                            ),
+                      if (currentRecipe.contentHtml?.isNotEmpty ?? false)
+                        Html(
+                          data: CoffeeTextProcessor.process(
+                            currentRecipe.contentHtml ?? '',
+                          ),
+                          style:
+                              CoffeeTextProcessor.getHtmlStyles(
+                                baseFontSize: 15,
+                              )..addAll({
+                                'html': Style(
+                                  margin: Margins.zero,
+                                  padding: HtmlPaddings.zero,
+                                ),
+                                'body': Style(
+                                  margin: Margins.zero,
+                                  padding: HtmlPaddings.zero,
+                                  fontSize: FontSize(15),
+                                  lineHeight: const LineHeight(1.6),
+                                  color: Colors.white.withValues(alpha: 0.7),
+                                  fontFamily: 'Outfit',
+                                  maxLines: 3,
+                                  textOverflow: TextOverflow.ellipsis,
+                                ),
+                              }),
+                        )
+                      else if (currentRecipe.description.isNotEmpty)
+                        Text(
+                          currentRecipe.description,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.outfit(
+                            fontSize: 15,
+                            color: Colors.white.withValues(alpha: 0.7),
+                            height: 1.6,
+                          ),
+                        ),
                     ],
                   ),
                 ),

@@ -331,8 +331,8 @@ class AppDatabase extends _$AppDatabase {
       innerJoin(
         specialtyArticleTranslationsV2,
         specialtyArticleTranslationsV2.articleId.equalsExp(
-          specialtyArticlesV2.id,
-        ) &
+              specialtyArticlesV2.id,
+            ) &
             specialtyArticleTranslationsV2.languageCode.equals(lang),
       ),
     ])..orderBy([OrderingTerm.asc(specialtyArticlesV2.id)]);
@@ -527,19 +527,17 @@ class AppDatabase extends _$AppDatabase {
     });
   }
 
-  Stream<List<AlternativeBrewingDto>> watchAllAlternativeBrewing(
-    String lang,
-  ) {
+  Stream<List<AlternativeBrewingDto>> watchAllAlternativeBrewing(String lang) {
     final query =
         select(alternativeBrewing).join([
-          leftOuterJoin(
-            alternativeBrewingTranslations,
-            alternativeBrewingTranslations.recipeKey.equalsExp(
-                  alternativeBrewing.methodKey,
-                ) &
-                alternativeBrewingTranslations.languageCode.equals(lang),
-          ),
-        ])
+            leftOuterJoin(
+              alternativeBrewingTranslations,
+              alternativeBrewingTranslations.recipeKey.equalsExp(
+                    alternativeBrewing.methodKey,
+                  ) &
+                  alternativeBrewingTranslations.languageCode.equals(lang),
+            ),
+          ])
           ..where(
             alternativeBrewing.isHiden.equals(false) &
                 alternativeBrewing.isDeletedLocal.equals(false),
@@ -556,14 +554,14 @@ class AppDatabase extends _$AppDatabase {
   ) async {
     final query =
         select(alternativeBrewing).join([
-          leftOuterJoin(
-            alternativeBrewingTranslations,
-            alternativeBrewingTranslations.recipeKey.equalsExp(
-                  alternativeBrewing.methodKey,
-                ) &
-                alternativeBrewingTranslations.languageCode.equals(lang),
-          ),
-        ])
+            leftOuterJoin(
+              alternativeBrewingTranslations,
+              alternativeBrewingTranslations.recipeKey.equalsExp(
+                    alternativeBrewing.methodKey,
+                  ) &
+                  alternativeBrewingTranslations.languageCode.equals(lang),
+            ),
+          ])
           ..where(
             alternativeBrewing.isHiden.equals(false) &
                 alternativeBrewing.isDeletedLocal.equals(false),
@@ -1702,18 +1700,20 @@ class AppDatabase extends _$AppDatabase {
           );
 
       // Migrate User Roasters
-      final guestRoasters = await (select(userRoasters)
-            ..where((t) => t.userId.equals('guest') | t.userId.equals('local_user')))
-          .getSingleOrNull();
+      final guestRoasters =
+          await (select(userRoasters)..where(
+                (t) => t.userId.equals('guest') | t.userId.equals('local_user'),
+              ))
+              .getSingleOrNull();
 
       if (guestRoasters != null) {
-        // We move guest roasters to the new user. 
-        // If the new user already has a record (shouldn't happen on fresh sign-up), 
+        // We move guest roasters to the new user.
+        // If the new user already has a record (shouldn't happen on fresh sign-up),
         // we could merge, but for now, we'll just replace or ignore if exists.
         // Actually, let's merge if the new user already has data.
-        final existing = await (select(userRoasters)
-              ..where((t) => t.userId.equals(newUserId)))
-            .getSingleOrNull();
+        final existing = await (select(
+          userRoasters,
+        )..where((t) => t.userId.equals(newUserId))).getSingleOrNull();
 
         if (existing == null) {
           await into(userRoasters).insert(
@@ -1726,9 +1726,13 @@ class AppDatabase extends _$AppDatabase {
           );
         } else {
           // Merge logic: combine lists and remove duplicates by ID
-          final guestList = _parseList<Map<String, dynamic>>(guestRoasters.dataJson);
-          final existingList = _parseList<Map<String, dynamic>>(existing.dataJson);
-          
+          final guestList = _parseList<Map<String, dynamic>>(
+            guestRoasters.dataJson,
+          );
+          final existingList = _parseList<Map<String, dynamic>>(
+            existing.dataJson,
+          );
+
           final merged = [...existingList];
           for (final gr in guestList) {
             if (!merged.any((e) => e['id'] == gr['id'])) {
@@ -1736,7 +1740,9 @@ class AppDatabase extends _$AppDatabase {
             }
           }
 
-          await (update(userRoasters)..where((t) => t.userId.equals(newUserId))).write(
+          await (update(
+            userRoasters,
+          )..where((t) => t.userId.equals(newUserId))).write(
             UserRoastersCompanion(
               dataJson: Value(jsonEncode(merged)),
               isSynced: const Value(false),
@@ -1746,8 +1752,9 @@ class AppDatabase extends _$AppDatabase {
         }
 
         // Delete guest record
-        await (delete(userRoasters)
-              ..where((t) => t.userId.equals('guest') | t.userId.equals('local_user')))
+        await (delete(userRoasters)..where(
+              (t) => t.userId.equals('guest') | t.userId.equals('local_user'),
+            ))
             .go();
       }
     });
@@ -1830,6 +1837,5 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 }
-
 
 // Legacy extension removed. Logic moved to AppDatabase.getAllBrewingRecipes.

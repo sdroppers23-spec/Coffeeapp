@@ -124,7 +124,9 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
           return _tabController.index == 1
               ? Padding(
                   padding: EdgeInsets.only(
-                    bottom: isNavVisible ? navHeight + (context.isTablet ? 8 : 4) : 16,
+                    bottom: isNavVisible
+                        ? navHeight + (context.isTablet ? 8 : 4)
+                        : 16,
                   ),
                   child: FloatingActionButton.extended(
                     onPressed: () async {

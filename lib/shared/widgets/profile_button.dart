@@ -24,8 +24,9 @@ class ProfileButton extends ConsumerWidget {
     final locale = ref.watch(localeProvider);
 
     final String? metadataUrl = user?.userMetadata?['avatar_url'] as String?;
-    final String avatarUrl = (metadataUrl != null && metadataUrl.startsWith('http')) 
-        ? metadataUrl 
+    final String avatarUrl =
+        (metadataUrl != null && metadataUrl.startsWith('http'))
+        ? metadataUrl
         : 'https://api.dicebear.com/7.x/adventurer/png?seed=${user?.id ?? 'guest'}';
 
     final bool hasValidUrl = avatarUrl.startsWith('http');
@@ -108,8 +109,8 @@ class _ProfileSheet extends ConsumerWidget {
     final meta = user?.userMetadata;
     String avatarUrlFromMeta(Map<String, dynamic>? meta, String? userId) {
       final url = meta?['avatar_url'] as String?;
-      return (url != null && url.startsWith('http')) 
-          ? url 
+      return (url != null && url.startsWith('http'))
+          ? url
           : 'https://api.dicebear.com/7.x/adventurer/png?seed=${userId ?? 'guest'}';
     }
 

@@ -37,7 +37,8 @@ class UserRoastersNotifier extends Notifier<List<UserRoasterDto>> {
         }
         return [];
       },
-      loading: () => [], // Clear state while loading to prevent seeing previous user's data
+      loading: () =>
+          [], // Clear state while loading to prevent seeing previous user's data
       error: (_, _) => [],
     );
   }

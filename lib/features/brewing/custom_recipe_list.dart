@@ -435,16 +435,16 @@ class _GlobalCustomRecipeListState
             const SizedBox(height: 155),
 
             // Internal Header: Search + Action Bar
-                  DiscoveryActionBar(
-                    filterProvider: brewingFilterProvider,
-                    selectionProvider: brewingSelectedIdsProvider,
-                    showComparison: false,
-                    showViewModeToggle: false,
-                    onSelectAll: () => _selectAll(filtered),
-                    onCompareTap: () {},
-                    searchHint: ref.t('search_recipes'),
-                    isMatte: true,
-                  ),
+            DiscoveryActionBar(
+              filterProvider: brewingFilterProvider,
+              selectionProvider: brewingSelectedIdsProvider,
+              showComparison: false,
+              showViewModeToggle: false,
+              onSelectAll: () => _selectAll(filtered),
+              onCompareTap: () {},
+              searchHint: ref.t('search_recipes'),
+              isMatte: true,
+            ),
 
             // Main List Content
             Expanded(

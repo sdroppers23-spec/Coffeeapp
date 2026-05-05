@@ -65,11 +65,11 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
     final box = ctx.findRenderObject() as RenderBox?;
     if (box == null) return;
     final height = box.size.height;
-    
+
     final bottomPadding = MediaQuery.paddingOf(context).bottom;
     final bottomOffset = bottomPadding + (context.isTablet ? 16.0 : 12.0);
     final totalHeight = height + bottomOffset;
-    
+
     ref.read(navBarHeightProvider.notifier).update(totalHeight);
   }
 
@@ -169,7 +169,9 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
               Positioned(
                 left: 0,
                 right: 0,
-                bottom: MediaQuery.paddingOf(context).bottom + (context.isTablet ? 16 : 12),
+                bottom:
+                    MediaQuery.paddingOf(context).bottom +
+                    (context.isTablet ? 16 : 12),
                 child: AnimatedSlide(
                   duration: const Duration(milliseconds: 400),
                   curve: Curves.fastOutSlowIn,

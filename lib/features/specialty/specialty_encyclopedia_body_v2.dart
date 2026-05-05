@@ -82,7 +82,10 @@ class SpecialtyArticleCard extends ConsumerWidget {
                       ),
                     ),
                     Text(
-                      ref.t('read_time_short', args: {'time': readTime.toString()}),
+                      ref.t(
+                        'read_time_short',
+                        args: {'time': readTime.toString()},
+                      ),
                       style: GoogleFonts.poppins(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,

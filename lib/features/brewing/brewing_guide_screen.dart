@@ -9,9 +9,7 @@ import 'method_tile.dart';
 import '../../core/utils/responsive_utils.dart';
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
-final brewingRecipesProvider = StreamProvider<List<BrewingRecipeDto>>((
-  ref,
-) {
+final brewingRecipesProvider = StreamProvider<List<BrewingRecipeDto>>((ref) {
   final db = ref.watch(databaseProvider);
   final locale = ref.watch(localeProvider);
   return db

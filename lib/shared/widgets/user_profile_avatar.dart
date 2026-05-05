@@ -79,8 +79,13 @@ class UserProfileAvatar extends ConsumerWidget {
                           ? NetworkImage(avatarUrlFromMeta(meta, user?.id))
                           : null,
                       onBackgroundImageError: (_, _) {},
-                      child: !avatarUrlFromMeta(meta, user?.id).startsWith('http')
-                          ? const Icon(Icons.person, color: Colors.white54, size: 24)
+                      child:
+                          !avatarUrlFromMeta(meta, user?.id).startsWith('http')
+                          ? const Icon(
+                              Icons.person,
+                              color: Colors.white54,
+                              size: 24,
+                            )
                           : null,
                     ),
                     const SizedBox(width: 16),

@@ -10,7 +10,9 @@ import 'custom_recipe_list.dart';
 import '../../core/database/dtos.dart';
 import '../../core/utils/text_processor.dart';
 import '../../shared/widgets/modals/description_glass_modal.dart';
+import 'brewing_guide_screen.dart';
 import '../navigation/navigation_providers.dart';
+
 
 class BrewingDetailScreen extends ConsumerStatefulWidget {
   final BrewingRecipeDto recipe;
@@ -23,7 +25,7 @@ class BrewingDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
-  void _showFullDescription(BuildContext context) {
+  void _showFullDescription(BuildContext context, BrewingRecipeDto recipe) {
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
@@ -31,8 +33,8 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
       pageBuilder: (context, anim1, anim2) {
         return DescriptionGlassModal(
           title: ref.t('about_method'),
-          content: widget.recipe.description,
-          contentHtml: widget.recipe.contentHtml,
+          content: recipe.description,
+          contentHtml: recipe.contentHtml,
         );
       },
       transitionDuration: const Duration(milliseconds: 300),
@@ -61,6 +63,16 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final recipesAsync = ref.watch(brewingRecipesProvider);
+    final currentRecipe =
+        recipesAsync.whenOrNull(
+          data:
+              (list) => list.where(
+                (r) => r.methodKey == widget.recipe.methodKey,
+              ).firstOrNull,
+        ) ??
+        widget.recipe;
+
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0A),
       body: Container(
@@ -88,7 +100,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                   background: Stack(
                     fit: StackFit.expand,
                     children: [
-                      _buildHeroImage(widget.recipe.imageUrl),
+                      _buildHeroImage(currentRecipe.imageUrl),
                       const DecoratedBox(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
@@ -125,7 +137,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                                 ],
                               ),
                               child: Text(
-                                widget.recipe.name,
+                                currentRecipe.name,
                                 style: GoogleFonts.outfit(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w900,
@@ -182,7 +194,7 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
               SliverPersistentHeader(
                 pinned: true,
                 delegate: _StickyHeaderDelegate(
-                  recipe: widget.recipe,
+                  recipe: currentRecipe,
                   t: ref.t,
                 ),
               ),
@@ -211,10 +223,10 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                             ),
                           ),
                           const Spacer(),
-                          if (widget.recipe.description.length > 100 ||
-                              (widget.recipe.contentHtml?.isNotEmpty ?? false))
+                          if (currentRecipe.description.length > 100 ||
+                              (currentRecipe.contentHtml?.isNotEmpty ?? false))
                             GestureDetector(
-                              onTap: () => _showFullDescription(context),
+                              onTap: () => _showFullDescription(context, currentRecipe),
                               child: Container(
                                 padding: const EdgeInsets.all(6),
                                 decoration: BoxDecoration(
@@ -239,10 +251,10 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                       ),
                       const SizedBox(height: 8),
                       // Description or Content HTML
-                          if (widget.recipe.contentHtml?.isNotEmpty ?? false)
+                          if (currentRecipe.contentHtml?.isNotEmpty ?? false)
                             Html(
                               data: CoffeeTextProcessor.process(
-                                widget.recipe.contentHtml ?? '',
+                                currentRecipe.contentHtml ?? '',
                               ),
                               style:
                                   CoffeeTextProcessor.getHtmlStyles(
@@ -266,9 +278,9 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
                                     ),
                                   }),
                             )
-                          else if (widget.recipe.description.isNotEmpty)
+                          else if (currentRecipe.description.isNotEmpty)
                             Text(
-                              widget.recipe.description,
+                              currentRecipe.description,
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
                               style: GoogleFonts.outfit(

@@ -527,19 +527,43 @@ class AppDatabase extends _$AppDatabase {
     });
   }
 
+  Stream<List<AlternativeBrewingDto>> watchAllAlternativeBrewing(
+    String lang,
+  ) {
+    final query =
+        select(alternativeBrewing).join([
+          leftOuterJoin(
+            alternativeBrewingTranslations,
+            alternativeBrewingTranslations.recipeKey.equalsExp(
+                  alternativeBrewing.methodKey,
+                ) &
+                alternativeBrewingTranslations.languageCode.equals(lang),
+          ),
+        ])
+          ..where(
+            alternativeBrewing.isHiden.equals(false) &
+                alternativeBrewing.isDeletedLocal.equals(false),
+          )
+          ..orderBy([OrderingTerm.asc(alternativeBrewing.sortOrder)]);
+
+    return query.watch().map((rows) {
+      return rows.map((row) => _mapAlternativeBrewingRow(row)).toList();
+    });
+  }
+
   Future<List<AlternativeBrewingDto>> getAllAlternativeBrewing(
     String lang,
   ) async {
     final query =
         select(alternativeBrewing).join([
-            leftOuterJoin(
-              alternativeBrewingTranslations,
-              alternativeBrewingTranslations.recipeKey.equalsExp(
-                    alternativeBrewing.methodKey,
-                  ) &
-                  alternativeBrewingTranslations.languageCode.equals(lang),
-            ),
-          ])
+          leftOuterJoin(
+            alternativeBrewingTranslations,
+            alternativeBrewingTranslations.recipeKey.equalsExp(
+                  alternativeBrewing.methodKey,
+                ) &
+                alternativeBrewingTranslations.languageCode.equals(lang),
+          ),
+        ])
           ..where(
             alternativeBrewing.isHiden.equals(false) &
                 alternativeBrewing.isDeletedLocal.equals(false),
@@ -547,39 +571,42 @@ class AppDatabase extends _$AppDatabase {
           ..orderBy([OrderingTerm.asc(alternativeBrewing.sortOrder)]);
 
     final rows = await query.get();
-    return rows.map((row) {
-      final recipe = row.readTable(alternativeBrewing);
-      final translation = row.readTableOrNull(alternativeBrewingTranslations);
+    return rows.map((row) => _mapAlternativeBrewingRow(row)).toList();
+  }
 
-      return AlternativeBrewingDto(
-        id: recipe.id,
-        methodKey: recipe.methodKey,
-        name: recipe.nameUk?.isNotEmpty == true
-            ? recipe.nameUk!
-            : (translation?.name ?? 'Unknown'),
-        description: translation?.description ?? '',
-        contentHtml: translation?.contentHtml?.isNotEmpty == true
-            ? translation!.contentHtml!
-            : (recipe.contentHtml ?? ''),
-        imageUrl: recipe.imageUrl ?? '',
-        ratioGramsPerMl: recipe.ratioGramsPerMl,
-        tempC: recipe.tempC,
-        totalTimeSec: recipe.totalTimeSec,
-        difficulty: recipe.difficulty,
-        stepsJson: recipe.stepsJson,
-        flavorProfile: recipe.flavorProfile,
-        iconName: recipe.iconName,
-        category: recipe.category,
-        weight: recipe.weight,
-        coffeeGrams: recipe.coffeeGrams,
-        nameUk: recipe.nameUk,
-        sortOrder: recipe.sortOrder,
-        isHiden: recipe.isHiden,
-      );
-    }).toList();
+  AlternativeBrewingDto _mapAlternativeBrewingRow(TypedResult row) {
+    final recipe = row.readTable(alternativeBrewing);
+    final translation = row.readTableOrNull(alternativeBrewingTranslations);
+
+    return AlternativeBrewingDto(
+      id: recipe.id,
+      methodKey: recipe.methodKey,
+      name: translation?.name?.isNotEmpty == true
+          ? translation!.name!
+          : (recipe.nameUk ?? 'Unknown'),
+      description: translation?.description ?? '',
+      contentHtml: translation?.contentHtml?.isNotEmpty == true
+          ? translation!.contentHtml!
+          : (recipe.contentHtml ?? ''),
+      imageUrl: recipe.imageUrl ?? '',
+      ratioGramsPerMl: recipe.ratioGramsPerMl,
+      tempC: recipe.tempC,
+      totalTimeSec: recipe.totalTimeSec,
+      difficulty: recipe.difficulty,
+      stepsJson: recipe.stepsJson,
+      flavorProfile: recipe.flavorProfile,
+      iconName: recipe.iconName,
+      category: recipe.category,
+      weight: recipe.weight,
+      coffeeGrams: recipe.coffeeGrams,
+      nameUk: recipe.nameUk,
+      sortOrder: recipe.sortOrder,
+      isHiden: recipe.isHiden,
+    );
   }
 
   // ── Brands ───────────────────────────────────────────────────────────────────
+
   Future<List<LocalizedBrandDto>> getAllBrands(
     String userId, [
     String lang = 'uk',
@@ -1550,6 +1577,34 @@ class AppDatabase extends _$AppDatabase {
   }
 
   // ── Brewing (Static Wide Table) ───────────────────────────────────────────
+  Stream<List<BrewingRecipeDto>> watchAllBrewingRecipes(String lang) {
+    return watchAllAlternativeBrewing(lang).map((altRecipes) {
+      return altRecipes
+          .map(
+            (e) => BrewingRecipeDto(
+              id: e.id,
+              methodKey: e.methodKey,
+              name: e.name,
+              description: e.description,
+              contentHtml: e.contentHtml,
+              imageUrl: e.imageUrl,
+              ratioGramsPerMl: e.ratioGramsPerMl ?? 0.066,
+              tempC: e.tempC ?? 93.0,
+              totalTimeSec: e.totalTimeSec ?? 180,
+              difficulty: e.difficulty ?? 'Intermediate',
+              stepsJson: e.stepsJson ?? '[]',
+              flavorProfile: e.flavorProfile ?? 'Balanced',
+              iconName: e.iconName,
+              category: e.category,
+              coffeeGrams: e.coffeeGrams,
+              weight: e.weight,
+              sortOrder: e.sortOrder,
+            ),
+          )
+          .toList();
+    });
+  }
+
   /// Reads from V2 table (populated by SyncService V2). English-only for brewing methods.
   Future<List<BrewingRecipeDto>> getAllBrewingRecipes(String lang) async {
     final altRecipes = await getAllAlternativeBrewing(lang);

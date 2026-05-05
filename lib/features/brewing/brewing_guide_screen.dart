@@ -8,13 +8,14 @@ import '../../core/database/dtos.dart';
 import 'method_tile.dart';
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
-final brewingRecipesProvider = FutureProvider<List<BrewingRecipeDto>>((
+final brewingRecipesProvider = StreamProvider<List<BrewingRecipeDto>>((
   ref,
-) async {
+) {
   final db = ref.watch(databaseProvider);
   final locale = ref.watch(localeProvider);
-  final recipes = await db.getAllBrewingRecipes(locale);
-  return recipes.map((r) => r.copyWith(isGuide: true)).toList();
+  return db
+      .watchAllBrewingRecipes(locale)
+      .map((recipes) => recipes.map((r) => r.copyWith(isGuide: true)).toList());
 });
 
 // ─── Screen ───────────────────────────────────────────────────────────────────

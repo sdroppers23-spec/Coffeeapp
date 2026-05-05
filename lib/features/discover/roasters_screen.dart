@@ -469,7 +469,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                             alignment: Alignment.bottomRight,
                             child: Padding(
                               padding: const EdgeInsets.only(
-                                bottom: 150, // Lifted from 120
+                                bottom: 90, // Match Add Lot button level
                                 right: 16,
                               ),
                               child: _buildHalfWidthAddButton(),

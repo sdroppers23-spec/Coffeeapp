@@ -240,6 +240,7 @@ class _PremiumFarmerCard extends ConsumerWidget {
                     style: GoogleFonts.poppins(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
+                      fontStyle: FontStyle.italic,
                       color: gold,
                       letterSpacing: 0.5,
                     ),

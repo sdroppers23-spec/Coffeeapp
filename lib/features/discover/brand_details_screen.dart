@@ -287,9 +287,11 @@ class _BrandProductCard extends ConsumerWidget {
                   },
                   child: Text(
                     ref.t('details'),
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       color: Theme.of(context).colorScheme.primary,
                       fontSize: 12,
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),

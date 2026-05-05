@@ -876,7 +876,7 @@ class AppLocalizations {
       'limit_reached': 'Limit reached',
       'deselect_all': 'Deselect All',
       'toast_deleted': 'deleted',
-      'details': 'details',
+      'details': 'Details',
     },
     'uk': {
       'discover': 'Дослідити',
@@ -1581,7 +1581,7 @@ class AppLocalizations {
       'account_id': 'ID акаунту',
       'id_copied': 'ID скопійовано',
       'join_date': 'Дата приєднання',
-      'details': 'детальніше',
+      'details': 'Детальніше',
       'forgot_password': 'Забули пароль?',
       'edit_profile_dialog_title': 'Редагувати профіль',
       'display_name_label': 'Ваше ім\'я',

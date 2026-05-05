@@ -492,7 +492,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
               // ── Floating Action Bar (Selection Mode) ────────────────────────
               if (_isSelectionMode)
                 Positioned(
-                  bottom: effectiveNavHeight + (context.isTablet ? 12 : 2),
+                  bottom: effectiveNavHeight + (context.isTablet ? 12 : 8),
                   left: 16,
                   right: 16,
                   child: FadeTransition(
@@ -504,7 +504,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
               // ── Floating Add Button ─────────────────────────────────────────
               if (!_isSelectionMode && _tabController.index == 0)
                 Positioned(
-                  bottom: effectiveNavHeight + (context.isTablet ? 8 : -2),
+                  bottom: effectiveNavHeight + (context.isTablet ? 8 : 4),
                   right: 16,
                   child: FadeTransition(
                     opacity: const AlwaysStoppedAnimation(1.0),

@@ -339,7 +339,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
 
             // Floating Action Button OR Selection Bar
             Positioned(
-              bottom: effectiveNavHeight + (context.isTablet ? 8 : -2),
+              bottom: effectiveNavHeight + (context.isTablet ? 8 : 4),
               left: 16,
               right: 16,
               child: AnimatedSwitcher(

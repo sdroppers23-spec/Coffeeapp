@@ -7,6 +7,7 @@ import '../../features/navigation/navigation_providers.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/providers/settings_provider.dart';
 import 'glass_container.dart';
+import '../../core/l10n/app_localizations.dart';
 
 class UserProfileAvatar extends ConsumerWidget {
   final double radius;
@@ -109,7 +110,7 @@ class UserProfileAvatar extends ConsumerWidget {
                 _buildMenuItem(
                   context,
                   Icons.person_outline,
-                  'Редагувати профіль',
+                  ref.t('edit_profile'),
                   onTap: () {
                     context.pop();
                     context.push('/profile');
@@ -118,7 +119,7 @@ class UserProfileAvatar extends ConsumerWidget {
                 _buildMenuItem(
                   context,
                   Icons.logout,
-                  'Вийти',
+                  ref.t('sign_out'),
                   color: Colors.redAccent,
                   onTap: () async {
                     context.pop();

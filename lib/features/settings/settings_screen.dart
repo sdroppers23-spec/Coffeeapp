@@ -8,7 +8,6 @@ import '../../core/providers/settings_provider.dart';
 import '../../core/l10n/app_localizations.dart';
 import '../../core/providers/preferences_provider.dart';
 import '../../shared/widgets/premium_background.dart';
-import '../../shared/widgets/glass_container.dart';
 import '../../core/database/database_provider.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -20,7 +19,6 @@ class SettingsScreen extends ConsumerStatefulWidget {
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   bool _isLoading = false;
-  final GlobalKey<PopupMenuButtonState> _languageMenuKey = GlobalKey();
 
   @override
   void initState() {
@@ -85,7 +83,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final prefs = ref.watch(preferencesProvider);
 
     return Scaffold(
@@ -688,41 +685,5 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       endIndent: 16,
     );
   }
-
-  PopupMenuItem<String> _buildLanguageItem(
-    BuildContext context, {
-    required String code,
-    required String label,
-    required String flag,
-    required bool isSelected,
-  }) {
-    final theme = Theme.of(context);
-    return PopupMenuItem<String>(
-      value: code,
-      height: 44,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        children: [
-          Text(
-            '$flag  $label',
-            style: GoogleFonts.outfit(
-              fontSize: 14,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-              color: isSelected
-                  ? theme.colorScheme.onSurface
-                  : theme.colorScheme.onSurface.withValues(alpha: 0.8),
-            ),
-          ),
-          if (isSelected) ...[
-            const SizedBox(width: 12),
-            Icon(
-              Icons.check_rounded,
-              color: theme.colorScheme.primary,
-              size: 16,
-            ),
-          ],
-        ],
-      ),
-    );
   }
 }

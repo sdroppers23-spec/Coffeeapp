@@ -41,7 +41,7 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_handleTabChange);
-    
+
     // Initial check
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted && _tabController.index == 1) {
@@ -78,6 +78,7 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
 
     return Scaffold(
       backgroundColor: Colors.transparent,
+      extendBody: true,
       extendBodyBehindAppBar: true,
       appBar: PremiumAppBar(
         title: ref.t('alternative'),
@@ -123,9 +124,7 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
           return _tabController.index == 1
               ? Padding(
                   padding: EdgeInsets.only(
-                    bottom: isNavVisible
-                        ? navHeight + (context.isTablet ? 8 : 2)
-                        : 16,
+                    bottom: isNavVisible ? navHeight + (context.isTablet ? 8 : -2) : 16,
                   ),
                   child: FloatingActionButton.extended(
                     onPressed: () async {
@@ -165,13 +164,14 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
             ),
           ),
           Positioned.fill(
-            child: Container(
-              color: Colors.black.withValues(alpha: 0.6),
-            ),
+            child: Container(color: Colors.black.withValues(alpha: 0.6)),
           ),
           TabBarView(
             controller: _tabController,
-            children: const [_BrewingMethodsContent(), GlobalCustomRecipeList()],
+            children: const [
+              _BrewingMethodsContent(),
+              GlobalCustomRecipeList(),
+            ],
           ),
         ],
       ),
@@ -275,8 +275,7 @@ class _BrewingMethodsContent extends ConsumerWidget {
                           (c, i) => MethodTile(methodRecipes: allMethods[i]),
                           childCount: allMethods.length,
                         ),
-                        gridDelegate:
-                            SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: context.gridColumnCount,
                           mainAxisSpacing: 16,
                           crossAxisSpacing: 16,

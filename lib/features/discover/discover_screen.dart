@@ -104,8 +104,10 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
 
     return Scaffold(
       backgroundColor: Colors.transparent, // Sync with global background
+      extendBody: true,
       floatingActionButton: null,
       body: SafeArea(
+        bottom: false,
         child: Column(
           children: [
             // Header: Title, Badge, Avatar

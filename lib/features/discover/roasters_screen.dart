@@ -26,6 +26,7 @@ class RoastersScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       backgroundColor: Colors.transparent,
+      extendBody: true,
       body: RoastersBody(),
     );
   }
@@ -115,10 +116,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        ref.t(
-                          'delete_roaster_confirm',
-                          args: {'name': name},
-                        ),
+                        ref.t('delete_roaster_confirm', args: {'name': name}),
                         textAlign: TextAlign.center,
                         style: GoogleFonts.outfit(
                           color: Colors.white70,
@@ -235,9 +233,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
               )
             : null,
         title: Text(
-          _isSelectionMode
-              ? _getSelectionCountText()
-              : ref.t('tab_roasters'),
+          _isSelectionMode ? _getSelectionCountText() : ref.t('tab_roasters'),
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.bold,
             color: const Color(0xFFC8A96E),
@@ -345,7 +341,11 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                           ),
                           filled: false,
                           prefixIcon: const Padding(
-                            padding: EdgeInsets.only(left: 12, right: 8, top: 9),
+                            padding: EdgeInsets.only(
+                              left: 12,
+                              right: 8,
+                              top: 9,
+                            ),
                             child: Icon(
                               Icons.search_rounded,
                               color: Color(0xFFC8A96E),
@@ -360,130 +360,139 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                       ),
                     ),
                   ),
-              // ── Sub-tabs ────────────────────────────────────────────────────
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                child: Container(
-                  height: 44,
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.03),
-                    borderRadius: BorderRadius.circular(22),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.05),
+                  // ── Sub-tabs ────────────────────────────────────────────────────
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
                     ),
-                  ),
-                  child: TabBar(
-                    controller: _tabController,
-                    dividerColor: Colors.transparent,
-                    indicator: BoxDecoration(
-                      color: const Color(0xFFC8A96E),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    labelColor: Colors.black,
-                    unselectedLabelColor: Colors.white54,
-                    labelStyle: GoogleFonts.outfit(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    tabs: [
-                      Tab(text: ref.t('tab_all')),
-                      Tab(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.favorite_rounded, size: 14),
-                            const SizedBox(width: 4),
-                            Text(ref.t('tab_favorites')),
-                          ],
+                    child: Container(
+                      height: 44,
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.03),
+                        borderRadius: BorderRadius.circular(22),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.05),
                         ),
                       ),
-                      Tab(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.archive_outlined, size: 14),
-                            const SizedBox(width: 4),
-                            Text(ref.t('tab_archive')),
-                          ],
+                      child: TabBar(
+                        controller: _tabController,
+                        dividerColor: Colors.transparent,
+                        indicator: BoxDecoration(
+                          color: const Color(0xFFC8A96E),
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              // ── List ────────────────────────────────────────────────────────
-              Expanded(
-                child: Builder(
-                  builder: (context) {
-                    final filtered = roasters.where((b) {
-                      final matchesSearch =
-                          _searchQuery.isEmpty ||
-                          b.name.toLowerCase().contains(
-                            _searchQuery.toLowerCase(),
-                          ) ||
-                          (b.location?.toLowerCase().contains(
-                                _searchQuery.toLowerCase(),
-                              ) ??
-                              false);
-
-                      if (!matchesSearch) return false;
-
-                      if (_tabController.index == 0) return !b.isArchived;
-                      if (_tabController.index == 1) {
-                        return b.isFavorite && !b.isArchived;
-                      }
-                      if (_tabController.index == 2) return b.isArchived;
-                      return !b.isArchived;
-                    }).toList();
-
-                    // IMPROVEMENT: Sort by match relevance if searching
-                    if (_searchQuery.isNotEmpty) {
-                      final query = _searchQuery.toLowerCase();
-                      filtered.sort((a, b) {
-                        final aStarts = a.name.toLowerCase().startsWith(query);
-                        final bStarts = b.name.toLowerCase().startsWith(query);
-                        if (aStarts && !bStarts) return -1;
-                        if (!aStarts && bStarts) return 1;
-                        // Secondary sort by name
-                        return a.name.toLowerCase().compareTo(
-                          b.name.toLowerCase(),
-                        );
-                      });
-                    }
-
-                    return Stack(
-                      children: [
-                        if (filtered.isEmpty)
-                          _buildEmptyState()
-                        else
-                          ListView.builder(
-                            padding: EdgeInsets.fromLTRB(16, 8, 16, effectiveNavHeight + 80),
-                            itemCount: filtered.length,
-                            itemBuilder: (context, index) {
-                              final roaster = filtered[index];
-                              return _buildSwipeableRoasterCard(
-                                roaster,
-                                key: ValueKey(roaster.id),
-                              );
-                            },
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        labelColor: Colors.black,
+                        unselectedLabelColor: Colors.white54,
+                        labelStyle: GoogleFonts.outfit(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        tabs: [
+                          Tab(text: ref.t('tab_all')),
+                          Tab(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.favorite_rounded, size: 14),
+                                const SizedBox(width: 4),
+                                Text(ref.t('tab_favorites')),
+                              ],
+                            ),
                           ),
-                      ],
-                    );
-                  },
-                ),
+                          Tab(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.archive_outlined, size: 14),
+                                const SizedBox(width: 4),
+                                Text(ref.t('tab_archive')),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // ── List ────────────────────────────────────────────────────────
+                  Expanded(
+                    child: Builder(
+                      builder: (context) {
+                        final filtered = roasters.where((b) {
+                          final matchesSearch =
+                              _searchQuery.isEmpty ||
+                              b.name.toLowerCase().contains(
+                                _searchQuery.toLowerCase(),
+                              ) ||
+                              (b.location?.toLowerCase().contains(
+                                    _searchQuery.toLowerCase(),
+                                  ) ??
+                                  false);
+
+                          if (!matchesSearch) return false;
+
+                          if (_tabController.index == 0) return !b.isArchived;
+                          if (_tabController.index == 1) {
+                            return b.isFavorite && !b.isArchived;
+                          }
+                          if (_tabController.index == 2) return b.isArchived;
+                          return !b.isArchived;
+                        }).toList();
+
+                        // IMPROVEMENT: Sort by match relevance if searching
+                        if (_searchQuery.isNotEmpty) {
+                          final query = _searchQuery.toLowerCase();
+                          filtered.sort((a, b) {
+                            final aStarts = a.name.toLowerCase().startsWith(
+                              query,
+                            );
+                            final bStarts = b.name.toLowerCase().startsWith(
+                              query,
+                            );
+                            if (aStarts && !bStarts) return -1;
+                            if (!aStarts && bStarts) return 1;
+                            // Secondary sort by name
+                            return a.name.toLowerCase().compareTo(
+                              b.name.toLowerCase(),
+                            );
+                          });
+                        }
+
+                        return Stack(
+                          children: [
+                            if (filtered.isEmpty)
+                              _buildEmptyState()
+                            else
+                              ListView.builder(
+                                padding: EdgeInsets.fromLTRB(
+                                  16,
+                                  8,
+                                  16,
+                                  effectiveNavHeight + 80,
+                                ),
+                                itemCount: filtered.length,
+                                itemBuilder: (context, index) {
+                                  final roaster = filtered[index];
+                                  return _buildSwipeableRoasterCard(
+                                    roaster,
+                                    key: ValueKey(roaster.id),
+                                  );
+                                },
+                              ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
 
               // ── Floating Action Bar (Selection Mode) ────────────────────────
               if (_isSelectionMode)
                 Positioned(
-                  bottom: effectiveNavHeight + (context.isTablet ? 12 : 4),
+                  bottom: effectiveNavHeight + (context.isTablet ? 12 : 2),
                   left: 16,
                   right: 16,
                   child: FadeTransition(
@@ -495,7 +504,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
               // ── Floating Add Button ─────────────────────────────────────────
               if (!_isSelectionMode && _tabController.index == 0)
                 Positioned(
-                  bottom: effectiveNavHeight + (context.isTablet ? 8 : 2),
+                  bottom: effectiveNavHeight + (context.isTablet ? 8 : -2),
                   right: 16,
                   child: FadeTransition(
                     opacity: const AlwaysStoppedAnimation(1.0),
@@ -573,7 +582,10 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                 _clearSelection();
               }
             },
-            icon: const Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
+            icon: const Icon(
+              Icons.delete_outline_rounded,
+              color: Colors.redAccent,
+            ),
           ),
         ],
       ),
@@ -940,14 +952,14 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                 final isValid = rawUrl.isEmpty || UrlHelper.isValidUrl(rawUrl);
 
                 if (!isValid) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(ref.t('invalid_url_format')),
-                        backgroundColor: Colors.redAccent,
-                      ),
-                    );
-                    return;
-                  }
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(ref.t('invalid_url_format')),
+                      backgroundColor: Colors.redAccent,
+                    ),
+                  );
+                  return;
+                }
 
                 if (nameController.text.trim().isEmpty) {
                   return;

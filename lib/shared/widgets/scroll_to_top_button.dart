@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../features/navigation/navigation_providers.dart';
-import '../../core/utils/responsive_utils.dart';
 
 class ScrollToTopButton extends ConsumerStatefulWidget {
   final ScrollController scrollController;
@@ -59,14 +58,14 @@ class _ScrollToTopButtonState extends ConsumerState<ScrollToTopButton> {
     final effectiveNavHeight = isNavVisible ? navHeight : 0.0;
 
     // Position above the navigation bar or main FAB
-    // If main FAB is at effectiveNavHeight + 8 (tablet) / + 2 (mobile), and its height is 56, its top is at effectiveNavHeight + 64 / + 58.
-    // So we put this one at effectiveNavHeight + 84 (tablet) / + 78 (mobile).
-    final targetBottom = effectiveNavHeight + (context.isTablet ? 84.0 : 78.0);
+    // If main FAB is at effectiveNavHeight + 8, and its height is 56, its top is at effectiveNavHeight + 64.
+    // So we put this one at effectiveNavHeight + 72 (or higher).
+    final targetBottom = effectiveNavHeight + 84.0;
 
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
-      bottom: _isVisible ? targetBottom : -80.0, 
+      bottom: _isVisible ? targetBottom : -80.0,
       right: 24.0,
       child: AnimatedOpacity(
         duration: const Duration(milliseconds: 300),

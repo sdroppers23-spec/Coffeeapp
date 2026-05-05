@@ -283,27 +283,30 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
     final effectiveNavHeight = isNavVisible ? navHeight : 0.0;
 
     final userLots = lotsAsync.value ?? [];
-    final countries = userLots
-        .map((l) => l.originCountry ?? '')
-        .where((c) => c.isNotEmpty)
-        .toSet()
-        .toList()
-      ..sort();
+    final countries =
+        userLots
+            .map((l) => l.originCountry ?? '')
+            .where((c) => c.isNotEmpty)
+            .toSet()
+            .toList()
+          ..sort();
 
-    final flavors = userLots
-        .map((l) => l.flavorProfile ?? '')
-        .expand((f) => f.split(',').map((s) => s.trim()))
-        .where((f) => f.isNotEmpty)
-        .toSet()
-        .toList()
-      ..sort();
+    final flavors =
+        userLots
+            .map((l) => l.flavorProfile ?? '')
+            .expand((f) => f.split(',').map((s) => s.trim()))
+            .where((f) => f.isNotEmpty)
+            .toSet()
+            .toList()
+          ..sort();
 
-    final processes = userLots
-        .map((l) => l.process ?? '')
-        .where((p) => p.isNotEmpty)
-        .toSet()
-        .toList()
-      ..sort();
+    final processes =
+        userLots
+            .map((l) => l.process ?? '')
+            .where((p) => p.isNotEmpty)
+            .toSet()
+            .toList()
+          ..sort();
 
     return Center(
       child: ConstrainedBox(
@@ -328,13 +331,15 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
                   showSwipeModeToggle: true,
                 ),
                 const SizedBox(height: 8),
-                 Expanded(child: _buildListView(lotsAsync, filter, effectiveNavHeight)),
+                Expanded(
+                  child: _buildListView(lotsAsync, filter, effectiveNavHeight),
+                ),
               ],
             ),
 
             // Floating Action Button OR Selection Bar
-             Positioned(
-              bottom: effectiveNavHeight + (context.isTablet ? 8 : 2),
+            Positioned(
+              bottom: effectiveNavHeight + (context.isTablet ? 8 : -2),
               left: 16,
               right: 16,
               child: AnimatedSwitcher(
@@ -352,7 +357,10 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
                       ),
               ),
             ),
-            ScrollToTopButton(scrollController: _scrollController, threshold: 1000),
+            ScrollToTopButton(
+              scrollController: _scrollController,
+              threshold: 1000,
+            ),
           ],
         ),
       ),
@@ -811,9 +819,7 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
                                         ),
                                         const SizedBox(height: 20),
                                         Text(
-                                          ref.t(
-                                            'delete_confirm_batch_title',
-                                          ),
+                                          ref.t('delete_confirm_batch_title'),
                                           style: GoogleFonts.outfit(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,

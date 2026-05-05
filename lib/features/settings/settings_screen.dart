@@ -99,297 +99,302 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         centerTitle: false,
       ),
       body: PremiumBackground(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (ref.watch(isGuestProvider))
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 24),
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: Colors.orange.withValues(alpha: 0.3),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.info_outline_rounded,
-                          color: Colors.orange,
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            ref.t('guest_mode_notice'),
-                            style: GoogleFonts.outfit(
-                              fontSize: 13,
-                              color: Colors.orange.shade200,
-                            ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (ref.watch(isGuestProvider))
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 24),
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: Colors.orange.withValues(alpha: 0.3),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-              // МОВА
-              _buildSectionTitle(context, ref.t('language').toUpperCase()),
-              _buildCard(
-                context,
-                child: PopupMenuButton<String>(
-                  onSelected: (code) {
-                    ref.read(localeProvider.notifier).setLocale(code);
-                    setState(() {});
-                  },
-                  offset: const Offset(0, 50),
-                  color: theme.cardColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      value: 'en',
-                      child: Row(
-                        children: [
-                          const Text('🇺🇸 English'),
-                          if (ref.read(localeProvider) == 'en') ...[
-                            const Spacer(),
-                            Icon(
-                              Icons.check,
-                              color: theme.colorScheme.primary,
-                              size: 18,
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: 'uk',
-                      child: Row(
-                        children: [
-                          const Text('🇺🇦 Українська'),
-                          if (ref.read(localeProvider) == 'uk') ...[
-                            const Spacer(),
-                            Icon(
-                              Icons.check,
-                              color: theme.colorScheme.primary,
-                              size: 18,
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  ],
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.language_rounded,
-                          color: theme.colorScheme.primary,
-                          size: 22,
-                        ),
-                        const SizedBox(width: 16),
-                        Text(
-                          ref.t('language'),
-                          style: GoogleFonts.outfit(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const Spacer(),
-                        Text(
-                          ref.watch(localeProvider) == 'uk'
-                              ? ref.t('ukrainian')
-                              : ref.t('english'),
-                          style: GoogleFonts.outfit(
-                            fontSize: 14,
-                            color: Colors.white38,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        const Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color: Colors.white24,
-                          size: 14,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
-              // ВІБРАЦІЯ
-              _buildSectionTitle(context, ref.t('vibration')),
-              _buildCard(
-                context,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 8, 16),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Row(
                           children: [
-                            Text(
-                              ref.t('haptic_feedback'),
-                              style: GoogleFonts.outfit(
-                                color: theme.colorScheme.onSurface,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                              ),
+                            const Icon(
+                              Icons.info_outline_rounded,
+                              color: Colors.orange,
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              ref.t('haptic_desc'),
-                              style: GoogleFonts.outfit(
-                                color: theme.colorScheme.onSurface.withValues(
-                                  alpha: 0.5,
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                ref.t('guest_mode_notice'),
+                                style: GoogleFonts.outfit(
+                                  fontSize: 13,
+                                  color: Colors.orange.shade200,
                                 ),
-                                fontSize: 13,
-                                height: 1.2,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      Switch(
-                        value: ref.watch(settingsProvider),
-                        activeThumbColor: theme.colorScheme.secondary,
-                        activeTrackColor: theme.colorScheme.secondary
-                            .withValues(alpha: 0.2),
-                        inactiveThumbColor: Colors.grey[400],
-                        inactiveTrackColor: theme.colorScheme.onSurface
-                            .withValues(alpha: 0.1),
-                        onChanged: (val) {
-                          ref
-                              .read(settingsProvider.notifier)
-                              .toggleVibration(val);
-                        },
+                    ),
+                  // МОВА
+                  _buildSectionTitle(context, ref.t('language').toUpperCase()),
+                  _buildCard(
+                    context,
+                    child: PopupMenuButton<String>(
+                      onSelected: (code) {
+                        ref.read(localeProvider.notifier).setLocale(code);
+                        setState(() {});
+                      },
+                      offset: const Offset(0, 50),
+                      color: theme.cardColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              // ОДИНИЦІ ВИМІРУ
-              _buildSectionTitle(context, ref.t('units')),
-              _buildCard(
-                context,
-                child: Column(
-                  children: [
-                    _buildTogglePreference(
-                      context,
-                      icon: Icons.thermostat_rounded,
-                      title: ref.t('temperature'),
-                      value: prefs.tempUnit == TempUnit.fahrenheit,
-                      offLabel: '°C',
-                      onLabel: '°F',
-                      onChanged: (val) {
-                        ref
-                            .read(preferencesProvider.notifier)
-                            .setTempUnit(
-                              val ? TempUnit.fahrenheit : TempUnit.celsius,
-                            );
-                      },
-                    ),
-                    _buildDivider(theme),
-                    _buildTogglePreference(
-                      context,
-                      icon: Icons.straighten_rounded,
-                      title: ref.t('distance'),
-                      value: prefs.lengthUnit == LengthUnit.feet,
-                      offLabel: ref.t('meters_short'),
-                      onLabel: ref.t('feet_short'),
-                      onChanged: (val) {
-                        ref
-                            .read(preferencesProvider.notifier)
-                            .setLengthUnit(
-                              val ? LengthUnit.feet : LengthUnit.meters,
-                            );
-                      },
-                    ),
-                    _buildDivider(theme),
-                    _buildCurrencyPreference(context, ref, prefs),
-                  ],
-                ),
-              ),
-
-              // ЮРИДИЧНА ІНФОРМАЦІЯ
-              _buildSectionTitle(context, ref.t('legal')),
-              _buildCard(
-                context,
-                child: Column(
-                  children: [
-                    _buildListItem(
-                      context,
-                      icon: Icons.lock_outline_rounded,
-                      title: ref.t('privacy_policy'),
-                      onTap: () {},
-                    ),
-                    _buildDivider(theme),
-                    _buildListItem(
-                      context,
-                      icon: Icons.insert_drive_file_outlined,
-                      title: ref.t('terms_of_use'),
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 32),
-
-              // ПІДТРИМКА
-              _buildSectionTitle(context, ref.t('support')),
-              _buildCard(
-                context,
-                child: Column(
-                  children: [
-                    _buildListItem(
-                      context,
-                      icon: Icons.help_outline_rounded,
-                      title: ref.t('customer_support'),
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 48),
-
-              // Bottom button
-              Center(
-                child: GestureDetector(
-                  onTap: () {
-                    if (ref.read(isGuestProvider)) {
-                      ref.read(isGuestProvider.notifier).setGuest(false);
-                      context.go('/auth');
-                    } else {
-                      _signOut();
-                    }
-                  },
-                  child: _isLoading
-                      ? const CircularProgressIndicator()
-                      : Text(
-                          ref.watch(isGuestProvider)
-                              ? ref.t('log_in')
-                              : ref.t('sign_out_account'),
-                          style: GoogleFonts.poppins(
-                            color: ref.watch(isGuestProvider)
-                                ? theme.colorScheme.primary
-                                : const Color(0xFFE57373),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          value: 'en',
+                          child: Row(
+                            children: [
+                              const Text('🇺🇸 English'),
+                              if (ref.read(localeProvider) == 'en') ...[
+                                const Spacer(),
+                                Icon(
+                                  Icons.check,
+                                  color: theme.colorScheme.primary,
+                                  size: 18,
+                                ),
+                              ],
+                            ],
                           ),
                         ),
-                ),
+                        PopupMenuItem(
+                          value: 'uk',
+                          child: Row(
+                            children: [
+                              const Text('🇺🇦 Українська'),
+                              if (ref.read(localeProvider) == 'uk') ...[
+                                const Spacer(),
+                                Icon(
+                                  Icons.check,
+                                  color: theme.colorScheme.primary,
+                                  size: 18,
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ],
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.language_rounded,
+                              color: theme.colorScheme.primary,
+                              size: 22,
+                            ),
+                            const SizedBox(width: 16),
+                            Text(
+                              ref.t('language'),
+                              style: GoogleFonts.outfit(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              ref.watch(localeProvider) == 'uk'
+                                  ? ref.t('ukrainian')
+                                  : ref.t('english'),
+                              style: GoogleFonts.outfit(
+                                fontSize: 14,
+                                color: Colors.white38,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            const Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: Colors.white24,
+                              size: 14,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+    
+                  // ВІБРАЦІЯ
+                  _buildSectionTitle(context, ref.t('vibration')),
+                  _buildCard(
+                    context,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 16, 8, 16),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  ref.t('haptic_feedback'),
+                                  style: GoogleFonts.outfit(
+                                    color: theme.colorScheme.onSurface,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  ref.t('haptic_desc'),
+                                  style: GoogleFonts.outfit(
+                                    color: theme.colorScheme.onSurface.withValues(
+                                      alpha: 0.5,
+                                    ),
+                                    fontSize: 13,
+                                    height: 1.2,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Switch(
+                            value: ref.watch(settingsProvider),
+                            activeThumbColor: theme.colorScheme.secondary,
+                            activeTrackColor: theme.colorScheme.secondary
+                                .withValues(alpha: 0.2),
+                            inactiveThumbColor: Colors.grey[400],
+                            inactiveTrackColor: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.1),
+                            onChanged: (val) {
+                              ref
+                                  .read(settingsProvider.notifier)
+                                  .toggleVibration(val);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // ОДИНИЦІ ВИМІРУ
+                  _buildSectionTitle(context, ref.t('units')),
+                  _buildCard(
+                    context,
+                    child: Column(
+                      children: [
+                        _buildTogglePreference(
+                          context,
+                          icon: Icons.thermostat_rounded,
+                          title: ref.t('temperature'),
+                          value: prefs.tempUnit == TempUnit.fahrenheit,
+                          offLabel: '°C',
+                          onLabel: '°F',
+                          onChanged: (val) {
+                            ref
+                                .read(preferencesProvider.notifier)
+                                .setTempUnit(
+                                  val ? TempUnit.fahrenheit : TempUnit.celsius,
+                                );
+                          },
+                        ),
+                        _buildDivider(theme),
+                        _buildTogglePreference(
+                          context,
+                          icon: Icons.straighten_rounded,
+                          title: ref.t('distance'),
+                          value: prefs.lengthUnit == LengthUnit.feet,
+                          offLabel: ref.t('meters_short'),
+                          onLabel: ref.t('feet_short'),
+                          onChanged: (val) {
+                            ref
+                                .read(preferencesProvider.notifier)
+                                .setLengthUnit(
+                                  val ? LengthUnit.feet : LengthUnit.meters,
+                                );
+                          },
+                        ),
+                        _buildDivider(theme),
+                        _buildCurrencyPreference(context, ref, prefs),
+                      ],
+                    ),
+                  ),
+    
+                  // ЮРИДИЧНА ІНФОРМАЦІЯ
+                  _buildSectionTitle(context, ref.t('legal')),
+                  _buildCard(
+                    context,
+                    child: Column(
+                      children: [
+                        _buildListItem(
+                          context,
+                          icon: Icons.lock_outline_rounded,
+                          title: ref.t('privacy_policy'),
+                          onTap: () {},
+                        ),
+                        _buildDivider(theme),
+                        _buildListItem(
+                          context,
+                          icon: Icons.insert_drive_file_outlined,
+                          title: ref.t('terms_of_use'),
+                          onTap: () {},
+                        ),
+                      ],
+                    ),
+                  ),
+    
+                  const SizedBox(height: 32),
+    
+                  // ПІДТРИМКА
+                  _buildSectionTitle(context, ref.t('support')),
+                  _buildCard(
+                    context,
+                    child: Column(
+                      children: [
+                        _buildListItem(
+                          context,
+                          icon: Icons.help_outline_rounded,
+                          title: ref.t('customer_support'),
+                          onTap: () {},
+                        ),
+                      ],
+                    ),
+                  ),
+    
+                  const SizedBox(height: 48),
+    
+                  // Bottom button
+                  Center(
+                    child: GestureDetector(
+                      onTap: () {
+                        if (ref.read(isGuestProvider)) {
+                          ref.read(isGuestProvider.notifier).setGuest(false);
+                          context.go('/auth');
+                        } else {
+                          _signOut();
+                        }
+                      },
+                      child: _isLoading
+                          ? const CircularProgressIndicator()
+                          : Text(
+                              ref.watch(isGuestProvider)
+                                  ? ref.t('log_in')
+                                  : ref.t('sign_out_account'),
+                              style: GoogleFonts.poppins(
+                                color: ref.watch(isGuestProvider)
+                                    ? theme.colorScheme.primary
+                                    : const Color(0xFFE57373),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                    ),
+                  ),
+                  const SizedBox(height: 48),
+                ],
               ),
-              const SizedBox(height: 48),
-            ],
+            ),
           ),
         ),
       ),

@@ -10,6 +10,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import '../../core/l10n/app_localizations.dart';
+import '../../core/utils/responsive_utils.dart';
 import '../utils/sensory_utils.dart';
 import 'glass_container.dart';
 import 'sensory_radar_chart.dart';
@@ -202,53 +203,63 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                             }
                           : null,
                     ),
-                    TabBar(
-                      controller: _tabController,
-                      dividerColor: Colors.transparent,
-                      indicatorColor: theme.colorScheme.primary,
-                      labelColor: theme.colorScheme.primary,
-                      unselectedLabelColor: Colors.white24,
-                      tabAlignment: TabAlignment.start,
-                      isScrollable: true,
-                      labelStyle: GoogleFonts.outfit(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                        letterSpacing: 1.2,
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.isTablet ? 40 : 0,
                       ),
-                      tabs: [
-                        Tab(text: ref.t('tab_info')),
-                        Tab(text: ref.t('tab_sensory')),
-                        Tab(text: ref.t('tab_recipes')),
-                      ],
+                      child: TabBar(
+                        controller: _tabController,
+                        dividerColor: Colors.transparent,
+                        indicatorColor: theme.colorScheme.primary,
+                        labelColor: theme.colorScheme.primary,
+                        unselectedLabelColor: Colors.white24,
+                        tabAlignment: TabAlignment.start,
+                        isScrollable: true,
+                        labelStyle: GoogleFonts.outfit(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                          letterSpacing: 1.2,
+                        ),
+                        tabs: [
+                          Tab(text: ref.t('tab_info')),
+                          Tab(text: ref.t('tab_sensory')),
+                          Tab(text: ref.t('tab_recipes')),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 10),
                     Expanded(
-                      child: TabBarView(
-                        controller: _tabController,
-                        children: [
-                          _InfoTab(
-                            lot: liveLot ?? widget.lot,
-                            bean: liveBean ?? widget.entry,
+                      child: Center(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 800),
+                          child: TabBarView(
+                            controller: _tabController,
+                            children: [
+                              _InfoTab(
+                                lot: liveLot ?? widget.lot,
+                                bean: liveBean ?? widget.entry,
+                              ),
+                              _SensoryTab(
+                                points: mappedPoints,
+                                isUk: isUk,
+                                lotId:
+                                    liveLot?.id ??
+                                    widget.lot?.id ??
+                                    widget.entry?.lotNumber,
+                              ),
+                              _RecipesTab(
+                                lotId:
+                                    liveLot?.id ??
+                                    widget.lot?.id ??
+                                    widget.entry?.lotNumber ??
+                                    '',
+                                segment: (liveLot != null || widget.lot != null)
+                                    ? RecipeSegment.userLot
+                                    : RecipeSegment.encyclopedia,
+                              ),
+                            ],
                           ),
-                          _SensoryTab(
-                            points: mappedPoints,
-                            isUk: isUk,
-                            lotId:
-                                liveLot?.id ??
-                                widget.lot?.id ??
-                                widget.entry?.lotNumber,
-                          ),
-                          _RecipesTab(
-                            lotId:
-                                liveLot?.id ??
-                                widget.lot?.id ??
-                                widget.entry?.lotNumber ??
-                                '',
-                            segment: (liveLot != null || widget.lot != null)
-                                ? RecipeSegment.userLot
-                                : RecipeSegment.encyclopedia,
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ],
@@ -406,7 +417,7 @@ class _DetailHeader extends StatelessWidget {
         ),
         Positioned(
           top: 50,
-          left: 20,
+          left: context.isTablet ? 40 : 20,
           child: GestureDetector(
             onTap: onBack,
             child: Container(
@@ -428,7 +439,7 @@ class _DetailHeader extends StatelessWidget {
         if (onEdit != null)
           Positioned(
             top: 50,
-            right: 20,
+            right: context.isTablet ? 40 : 20,
             child: GestureDetector(
               onTap: onEdit,
               child: Container(
@@ -452,7 +463,9 @@ class _DetailHeader extends StatelessWidget {
         if (onToggleFavorite != null)
           Positioned(
             top: 50,
-            right: onEdit != null ? 70 : 20,
+            right: context.isTablet
+                ? (onEdit != null ? 90 : 40)
+                : (onEdit != null ? 70 : 20),
             child: GestureDetector(
               onTap: onToggleFavorite,
               child: Container(
@@ -479,31 +492,39 @@ class _DetailHeader extends StatelessWidget {
           ),
         Positioned(
           bottom: 20,
-          left: 20,
-          right: 20,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                roasteryName.toUpperCase(),
-                style: GoogleFonts.outfit(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.6),
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2,
+          left: 0,
+          right: 0,
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 800),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      roasteryName.toUpperCase(),
+                      style: GoogleFonts.outfit(
+                        color: theme.colorScheme.primary.withValues(alpha: 0.6),
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 2,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      coffeeName,
+                      style: GoogleFonts.cormorantGaramond(
+                        color: Colors.white,
+                        fontSize: 36,
+                        fontWeight: FontWeight.bold,
+                        height: 1.1,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 8),
-              Text(
-                coffeeName,
-                style: GoogleFonts.cormorantGaramond(
-                  color: Colors.white,
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                  height: 1.1, // Better spacing for multi-line
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ],

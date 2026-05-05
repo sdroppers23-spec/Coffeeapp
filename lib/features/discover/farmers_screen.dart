@@ -65,14 +65,19 @@ class _FarmersBodyState extends ConsumerState<FarmersBody>
           );
         }
 
-        return ListView.builder(
-          padding: const EdgeInsets.fromLTRB(16, 20, 16, 220),
-          physics: const BouncingScrollPhysics(),
-          itemCount: farmers.length,
-          itemBuilder: (context, index) {
-            final farmer = farmers[index];
-            return _PremiumFarmerCard(farmer: farmer);
-          },
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: ListView.builder(
+              padding: const EdgeInsets.fromLTRB(16, 20, 16, 220),
+              physics: const BouncingScrollPhysics(),
+              itemCount: farmers.length,
+              itemBuilder: (context, index) {
+                final farmer = farmers[index];
+                return _PremiumFarmerCard(farmer: farmer);
+              },
+            ),
+          ),
         );
       },
     );

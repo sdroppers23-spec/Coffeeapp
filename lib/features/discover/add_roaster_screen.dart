@@ -286,23 +286,28 @@ class _AddRoasterScreenState extends ConsumerState<AddRoasterScreen> {
           slivers: [
             _buildAppBar(),
             SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 24),
-                    _buildGeneralInfoSection(),
-                    const SizedBox(height: 32),
-                    _buildDescriptionSection(),
-                    const SizedBox(height: 32),
-                    _buildLogoSection(),
-                    const SizedBox(height: 40),
-                    _buildLotsSection(),
-                    const SizedBox(height: 48),
-                    _buildActionButtons(),
-                    SizedBox(height: navHeight + 40),
-                  ],
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 800),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 24),
+                        _buildGeneralInfoSection(),
+                        const SizedBox(height: 32),
+                        _buildDescriptionSection(),
+                        const SizedBox(height: 32),
+                        _buildLogoSection(),
+                        const SizedBox(height: 40),
+                        _buildLotsSection(),
+                        const SizedBox(height: 48),
+                        _buildActionButtons(),
+                        SizedBox(height: navHeight + 40),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),

@@ -11,6 +11,7 @@ import '../../core/database/dtos.dart';
 import '../../core/providers/preferences_provider.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/l10n/app_localizations.dart';
+import '../../core/utils/responsive_utils.dart';
 import '../../core/supabase/supabase_provider.dart';
 import '../services/toast_service.dart';
 import 'sync_indicator.dart';
@@ -521,20 +522,30 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
 
     return Dialog(
       backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.zero, // Make it full screen
-      child: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.black, // Pure Black (Top)
-              Color(0xFF121212), // Dark Surface (Bottom)
-            ],
+      insetPadding: context.isTablet
+          ? const EdgeInsets.symmetric(horizontal: 40, vertical: 24)
+          : EdgeInsets.zero,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: context.isTablet ? 700 : double.infinity,
+            maxHeight: context.isTablet ? 900 : double.infinity,
           ),
-        ),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(context.isTablet ? 24 : 0),
+              gradient: const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black,
+                  Color(0xFF121212),
+                ],
+              ),
+              border: context.isTablet
+                  ? Border.all(color: Colors.white10)
+                  : null,
+            ),
         child: SafeArea(
           child: Column(
             children: [
@@ -727,8 +738,10 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  ),
+);
+}
 
   Widget _buildSectionHeader(String title) {
     return Row(

@@ -291,67 +291,70 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
           ],
         ],
       ),
-      body: Stack(
-        children: [
-          Column(
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Stack(
             children: [
-              // ── Search Bar ──────────────────────────────────────────────────
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                child: Container(
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(
-                      color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
-                    ),
-                  ),
-                  child: TextField(
-                    controller: _searchController,
-                    onChanged: (v) => setState(() => _searchQuery = v),
-                    onTapOutside: (_) =>
-                        FocusManager.instance.primaryFocus?.unfocus(),
-                    onSubmitted: (_) =>
-                        FocusManager.instance.primaryFocus?.unfocus(),
-                    style: GoogleFonts.outfit(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
-                    textAlignVertical: TextAlignVertical.center,
-                    decoration: InputDecoration(
-                      hintText: ref.t('search_roasters'),
-                      hintStyle: GoogleFonts.outfit(
-                        color: Colors.white24,
-                        fontSize: 14,
-                      ),
-                      border: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      isDense: true,
-                      contentPadding: const EdgeInsets.only(
-                        left: 16,
-                        right: 16,
-                        top: 2,
-                        bottom: 0,
-                      ),
-                      filled: false,
-                      prefixIcon: const Padding(
-                        padding: EdgeInsets.only(left: 12, right: 8, top: 9),
-                        child: Icon(
-                          Icons.search_rounded,
-                          color: Color(0xFFC8A96E),
-                          size: 20,
+              Column(
+                children: [
+                  // ── Search Bar ──────────────────────────────────────────────────
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                    child: Container(
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFC8A96E).withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                          color: const Color(0xFFC8A96E).withValues(alpha: 0.2),
                         ),
                       ),
-                      prefixIconConstraints: const BoxConstraints(
-                        minWidth: 40,
-                        minHeight: 40,
+                      child: TextField(
+                        controller: _searchController,
+                        onChanged: (v) => setState(() => _searchQuery = v),
+                        onTapOutside: (_) =>
+                            FocusManager.instance.primaryFocus?.unfocus(),
+                        onSubmitted: (_) =>
+                            FocusManager.instance.primaryFocus?.unfocus(),
+                        style: GoogleFonts.outfit(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                        textAlignVertical: TextAlignVertical.center,
+                        decoration: InputDecoration(
+                          hintText: ref.t('search_roasters'),
+                          hintStyle: GoogleFonts.outfit(
+                            color: Colors.white24,
+                            fontSize: 14,
+                          ),
+                          border: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          isDense: true,
+                          contentPadding: const EdgeInsets.only(
+                            left: 16,
+                            right: 16,
+                            top: 2,
+                            bottom: 0,
+                          ),
+                          filled: false,
+                          prefixIcon: const Padding(
+                            padding: EdgeInsets.only(left: 12, right: 8, top: 9),
+                            child: Icon(
+                              Icons.search_rounded,
+                              color: Color(0xFFC8A96E),
+                              size: 20,
+                            ),
+                          ),
+                          prefixIconConstraints: const BoxConstraints(
+                            minWidth: 40,
+                            minHeight: 40,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
               // ── Sub-tabs ────────────────────────────────────────────────────
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -481,6 +484,102 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                 ),
               ),
             ],
+          ),
+
+              // ── Floating Action Bar (Selection Mode) ────────────────────────
+              if (_isSelectionMode)
+                Positioned(
+                  bottom: 90,
+                  left: 16,
+                  right: 16,
+                  child: FadeTransition(
+                    opacity: const AlwaysStoppedAnimation(1.0),
+                    child: _buildSelectionActionBar(),
+                  ),
+                ),
+
+              // ── Floating Add Button ─────────────────────────────────────────
+              if (!_isSelectionMode && _tabController.index == 0)
+                Positioned(
+                  bottom: 90,
+                  right: 16,
+                  child: FadeTransition(
+                    opacity: const AlwaysStoppedAnimation(1.0),
+                    child: _buildHalfWidthAddButton(),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSelectionActionBar() {
+    final count = _selectedIds.length;
+    const gold = Color(0xFFC8A96E);
+
+    return Container(
+      height: 64,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.circular(32),
+        border: Border.all(color: gold.withValues(alpha: 0.2)),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black54,
+            blurRadius: 20,
+            offset: Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          IconButton(
+            onPressed: _clearSelection,
+            icon: const Icon(Icons.close_rounded, color: Colors.white70),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            count.toString(),
+            style: GoogleFonts.outfit(
+              color: gold,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+          const Spacer(),
+          // Archive
+          IconButton(
+            onPressed: () async {
+              final notifier = ref.read(userRoastersProvider.notifier);
+              final isArchiving = _tabController.index != 2;
+              for (final id in _selectedIds) {
+                await notifier.toggleArchive(id, isArchiving);
+              }
+              _clearSelection();
+            },
+            icon: Icon(
+              _tabController.index == 2
+                  ? Icons.unarchive_outlined
+                  : Icons.archive_outlined,
+              color: gold,
+            ),
+          ),
+          // Delete
+          IconButton(
+            onPressed: () async {
+              final confirmed = await _confirmDeleteDialog(count.toString());
+              if (confirmed && mounted) {
+                final notifier = ref.read(userRoastersProvider.notifier);
+                for (final id in _selectedIds) {
+                  await notifier.deleteRoaster(id);
+                }
+                _clearSelection();
+              }
+            },
+            icon: const Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
           ),
         ],
       ),

@@ -12,6 +12,7 @@ import '../../core/providers/settings_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../core/utils/responsive_utils.dart';
 import 'navigation_providers.dart';
 
 class MainScaffold extends ConsumerStatefulWidget {
@@ -155,7 +156,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
               Positioned(
                 left: 0,
                 right: 0,
-                bottom: 50, // Raised from 45 to 50
+                bottom: context.isTablet ? 60 : 50, // Raised on tablets
                 child: AnimatedSlide(
                   duration: const Duration(milliseconds: 400),
                   curve: Curves.fastOutSlowIn,
@@ -172,7 +173,9 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                           // Main Capsule Bar
                           Flexible(
                             child: ConstrainedBox(
-                              constraints: const BoxConstraints(maxWidth: 330),
+                              constraints: BoxConstraints(
+                                maxWidth: context.isTablet ? 420 : 330,
+                              ),
                               child: GlassContainer(
                                 borderRadius: 40,
                                 padding: const EdgeInsets.symmetric(

@@ -17,6 +17,7 @@ import '../../widgets/discovery_action_bar.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../shared/services/toast_service.dart';
 import '../../../../shared/widgets/sync_indicator.dart';
+import '../../../../core/utils/responsive_utils.dart';
 
 class MyLotsContent extends ConsumerStatefulWidget {
   const MyLotsContent({super.key});
@@ -300,52 +301,57 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
         .toList()
       ..sort();
 
-    return Stack(
-      children: [
-        Column(
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 800),
+        child: Stack(
           children: [
-            DiscoveryActionBar(
-              filterProvider: myLotsFilterProvider,
-              selectionProvider: myLotsSelectedIdsProvider,
-              searchHint: ref.t('search_lots'),
-              onCompareTap: () {
-                ref.read(settingsProvider.notifier).triggerHaptic();
-                context.push('/compare', extra: ComparisonSource.myLots);
-              },
-              onSelectAll: () => _selectAll(userLots),
-              availableCountries: countries,
-              availableFlavors: flavors,
-              availableProcesses: processes,
-              showFavoritesButton: true,
-              showSwipeModeToggle: true,
+            Column(
+              children: [
+                DiscoveryActionBar(
+                  filterProvider: myLotsFilterProvider,
+                  selectionProvider: myLotsSelectedIdsProvider,
+                  searchHint: ref.t('search_lots'),
+                  onCompareTap: () {
+                    ref.read(settingsProvider.notifier).triggerHaptic();
+                    context.push('/compare', extra: ComparisonSource.myLots);
+                  },
+                  onSelectAll: () => _selectAll(userLots),
+                  availableCountries: countries,
+                  availableFlavors: flavors,
+                  availableProcesses: processes,
+                  showFavoritesButton: true,
+                  showSwipeModeToggle: true,
+                ),
+                const SizedBox(height: 8),
+                Expanded(child: _buildListView(lotsAsync, filter)),
+              ],
             ),
-            const SizedBox(height: 8),
-            Expanded(child: _buildListView(lotsAsync, filter)),
+
+            // Floating Action Button OR Selection Bar
+            Positioned(
+              bottom: 90,
+              left: 16,
+              right: 16,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: _isSelectionMode
+                    ? _buildSelectionBar(lotsAsync)
+                    : AnimatedScale(
+                        scale: _isUndoVisible ? 0.0 : 1.0,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOutBack,
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: _buildFloatingAddButton(),
+                        ),
+                      ),
+              ),
+            ),
+            ScrollToTopButton(scrollController: _scrollController, threshold: 1000),
           ],
         ),
-
-        // Floating Action Button OR Selection Bar
-        Positioned(
-          bottom: 90,
-          left: 16,
-          right: 16,
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            child: _isSelectionMode
-                ? _buildSelectionBar(lotsAsync)
-                : AnimatedScale(
-                    scale: _isUndoVisible ? 0.0 : 1.0,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOutBack,
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: _buildFloatingAddButton(),
-                    ),
-                  ),
-          ),
-        ),
-        ScrollToTopButton(scrollController: _scrollController, threshold: 1000),
-      ],
+      ),
     );
   }
 
@@ -404,8 +410,8 @@ class _MyLotsContentState extends ConsumerState<MyLotsContent>
           return GridView.builder(
             controller: _scrollController,
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 180),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: context.gridColumnCount,
               childAspectRatio: 0.68,
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,

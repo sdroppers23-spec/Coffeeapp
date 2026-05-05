@@ -11,6 +11,7 @@ import 'custom_recipe_list.dart';
 import 'method_tile.dart';
 import '../../shared/widgets/premium_app_bar.dart';
 import '../../core/database/dtos.dart';
+import '../../core/utils/responsive_utils.dart';
 
 class BrewingViewModeNotifier extends Notifier<bool> {
   @override
@@ -272,12 +273,12 @@ class _BrewingMethodsContent extends ConsumerWidget {
                           childCount: allMethods.length,
                         ),
                         gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 16,
-                              crossAxisSpacing: 16,
-                              childAspectRatio: 0.85,
-                            ),
+                            SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: context.gridColumnCount,
+                          mainAxisSpacing: 16,
+                          crossAxisSpacing: 16,
+                          childAspectRatio: 0.85,
+                        ),
                       ),
                     )
                   else

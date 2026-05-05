@@ -756,21 +756,26 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
                 onTap: () {
                   FocusScope.of(context).unfocus();
                 },
-                child: Column(
-                  children: [
-                    _buildHeader(),
-                    _buildTabBar(),
-                    Expanded(
-                      child: TabBarView(
-                        controller: _tabController,
-                        children: [
-                          _buildRoasteryTab(),
-                          _buildCoffeeTab(),
-                          _buildSensoryTab(),
-                        ],
-                      ),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 800),
+                    child: Column(
+                      children: [
+                        _buildHeader(),
+                        _buildTabBar(),
+                        Expanded(
+                          child: TabBarView(
+                            controller: _tabController,
+                            children: [
+                              _buildRoasteryTab(),
+                              _buildCoffeeTab(),
+                              _buildSensoryTab(),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),

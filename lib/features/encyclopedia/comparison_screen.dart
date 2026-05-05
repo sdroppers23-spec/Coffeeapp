@@ -105,124 +105,129 @@ class _ComparisonScreenState extends ConsumerState<ComparisonScreen> {
 
             return SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(16, 120, 16, 110),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // --- Selectors ---
-                  Row(
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 800),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Expanded(
-                        child: _CoffeeSelector(
-                          value: _coffeeA,
-                          items: coffees,
-                          onChanged: (val) {
-                            setState(() {
-                              _coffeeA = val;
-                              // Prevent self-comparison
-                              if (_coffeeA?.id == _coffeeB?.id) {
-                                _coffeeB = coffees.firstWhere(
-                                  (e) => e.id != _coffeeA?.id,
-                                  orElse: () => coffees.first,
-                                );
-                              }
-                            });
-                          },
-                          color: Colors.white.withValues(alpha: 0.1),
-                          borderColor: const Color(
-                            0xFFC8A96E,
-                          ).withValues(alpha: 0.5),
-                        ),
+                      // --- Selectors ---
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _CoffeeSelector(
+                              value: _coffeeA,
+                              items: coffees,
+                              onChanged: (val) {
+                                setState(() {
+                                  _coffeeA = val;
+                                  // Prevent self-comparison
+                                  if (_coffeeA?.id == _coffeeB?.id) {
+                                    _coffeeB = coffees.firstWhere(
+                                      (e) => e.id != _coffeeA?.id,
+                                      orElse: () => coffees.first,
+                                    );
+                                  }
+                                });
+                              },
+                              color: Colors.white.withValues(alpha: 0.1),
+                              borderColor: const Color(
+                                0xFFC8A96E,
+                              ).withValues(alpha: 0.5),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _CoffeeSelector(
+                              value: _coffeeB,
+                              items: coffees,
+                              onChanged: (val) {
+                                setState(() {
+                                  _coffeeB = val;
+                                  // Prevent self-comparison
+                                  if (_coffeeB?.id == _coffeeA?.id) {
+                                    _coffeeA = coffees.firstWhere(
+                                      (e) => e.id != _coffeeB?.id,
+                                      orElse: () => coffees.first,
+                                    );
+                                  }
+                                });
+                              },
+                              color: Colors.white.withValues(alpha: 0.1),
+                              borderColor: const Color(
+                                0xFFC8A96E,
+                              ).withValues(alpha: 0.5),
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _CoffeeSelector(
-                          value: _coffeeB,
-                          items: coffees,
-                          onChanged: (val) {
-                            setState(() {
-                              _coffeeB = val;
-                              // Prevent self-comparison
-                              if (_coffeeB?.id == _coffeeA?.id) {
-                                _coffeeA = coffees.firstWhere(
-                                  (e) => e.id != _coffeeB?.id,
-                                  orElse: () => coffees.first,
-                                );
-                              }
-                            });
-                          },
-                          color: Colors.white.withValues(alpha: 0.1),
-                          borderColor: const Color(
-                            0xFFC8A96E,
-                          ).withValues(alpha: 0.5),
+                      const SizedBox(height: 24),
+
+                      // --- Comparison Table ---
+                      if (_coffeeA != null && _coffeeB != null)
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.05),
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.1),
+                            ),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(24),
+                            child: Column(
+                              children: [
+                                _CompareRow(
+                                  ref.t('score_sca'),
+                                  _coffeeA!.score,
+                                  _coffeeB!.score,
+                                  highlightWinner: true,
+                                ),
+                                _CompareRow(
+                                  ref.t('origin'),
+                                  '${_coffeeA!.countryEmoji ?? ""} ${_coffeeA!.country}',
+                                  '${_coffeeB!.countryEmoji ?? ""} ${_coffeeB!.country}',
+                                ),
+                                _CompareRow(
+                                  ref.t('region'),
+                                  _coffeeA!.region,
+                                  _coffeeB!.region,
+                                ),
+                                _CompareRow(
+                                  ref.t('altitude'),
+                                  _coffeeA!.altitude,
+                                  _coffeeB!.altitude,
+                                ),
+                                _CompareRow(
+                                  ref.t('varieties'),
+                                  _coffeeA!.varieties,
+                                  _coffeeB!.varieties,
+                                  isTextHeavy: true,
+                                ),
+                                _CompareRow(
+                                  ref.t('process'),
+                                  _coffeeA!.process,
+                                  _coffeeB!.process,
+                                ),
+                                _CompareRow(
+                                  ref.t('harvest'),
+                                  _coffeeA!.harvest,
+                                  _coffeeB!.harvest,
+                                ),
+                                _CompareRow(
+                                  ref.t('flavor_notes'),
+                                  _coffeeA!.flavorNotes,
+                                  _coffeeB!.flavorNotes,
+                                  isTextHeavy: true,
+                                  isLast: true,
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
                     ],
                   ),
-                  const SizedBox(height: 24),
-
-                  // --- Comparison Table ---
-                  if (_coffeeA != null && _coffeeB != null)
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.05),
-                        borderRadius: BorderRadius.circular(24),
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.1),
-                        ),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(24),
-                        child: Column(
-                          children: [
-                            _CompareRow(
-                              ref.t('score_sca'),
-                              _coffeeA!.score,
-                              _coffeeB!.score,
-                              highlightWinner: true,
-                            ),
-                            _CompareRow(
-                              ref.t('origin'),
-                              '${_coffeeA!.countryEmoji ?? ""} ${_coffeeA!.country}',
-                              '${_coffeeB!.countryEmoji ?? ""} ${_coffeeB!.country}',
-                            ),
-                            _CompareRow(
-                              ref.t('region'),
-                              _coffeeA!.region,
-                              _coffeeB!.region,
-                            ),
-                            _CompareRow(
-                              ref.t('altitude'),
-                              _coffeeA!.altitude,
-                              _coffeeB!.altitude,
-                            ),
-                            _CompareRow(
-                              ref.t('varieties'),
-                              _coffeeA!.varieties,
-                              _coffeeB!.varieties,
-                              isTextHeavy: true,
-                            ),
-                            _CompareRow(
-                              ref.t('process'),
-                              _coffeeA!.process,
-                              _coffeeB!.process,
-                            ),
-                            _CompareRow(
-                              ref.t('harvest'),
-                              _coffeeA!.harvest,
-                              _coffeeB!.harvest,
-                            ),
-                            _CompareRow(
-                              ref.t('flavor_notes'),
-                              _coffeeA!.flavorNotes,
-                              _coffeeB!.flavorNotes,
-                              isTextHeavy: true,
-                              isLast: true,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                ],
+                ),
               ),
             );
           },

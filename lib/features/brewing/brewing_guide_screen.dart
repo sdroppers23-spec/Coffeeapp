@@ -6,6 +6,7 @@ import '../navigation/navigation_providers.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import 'method_tile.dart';
+import '../../core/utils/responsive_utils.dart';
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
 final brewingRecipesProvider = StreamProvider<List<BrewingRecipeDto>>((
@@ -95,8 +96,8 @@ class _BrewingGuideScreenState extends ConsumerState<BrewingGuideScreen> {
 
             return GridView.builder(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: context.gridColumnCount,
                 mainAxisSpacing: 16,
                 crossAxisSpacing: 16,
                 childAspectRatio: 0.85,

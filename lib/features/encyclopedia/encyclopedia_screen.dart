@@ -13,6 +13,7 @@ import '../../shared/widgets/premium_background.dart';
 import '../../shared/widgets/profile_button.dart';
 import '../../shared/widgets/scroll_to_top_button.dart';
 import '../../shared/services/toast_service.dart';
+import '../../core/utils/responsive_utils.dart';
 
 // ─── Body (Embedded Version) ──────────────────────────────────────────────────
 class EncyclopediaBody extends ConsumerStatefulWidget {
@@ -47,74 +48,79 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody>
     final originsAsync = ref.watch(encyclopediaDataProvider);
 
     return PremiumBackground(
-      child: Stack(
-        children: [
-          Column(
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Stack(
             children: [
-              // ── Premium Action Bar ─────────────────────────────────────────────
-              DiscoveryActionBar(
-                filterProvider: encyclopediaFilterProvider,
-                selectionProvider: encyclopediaSelectedIdsProvider,
-                searchHint: ref.t('search_coffee'),
-                onCompareTap: () {
-                  final selectedCount = ref
-                      .read(encyclopediaSelectedIdsProvider)
-                      .length;
-                  if (selectedCount == 0) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const ComparisonScreen(
-                          source: ComparisonSource.encyclopedia,
-                        ),
-                      ),
-                    );
-                  } else if (selectedCount == 1) {
-                    ToastService.showInfo(
-                      context,
-                      ref.t('toast_select_second_lot'),
-                    );
-                  } else {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const ComparisonScreen(
-                          source: ComparisonSource.encyclopedia,
-                        ),
-                      ),
-                    );
-                  }
-                },
-                availableCountries: ref.watch(
-                  availableEncyclopediaCountriesProvider,
-                ),
-                availableFlavors: ref.watch(
-                  availableEncyclopediaFlavorsProvider,
-                ),
-                availableProcesses: ref.watch(
-                  availableEncyclopediaProcessesProvider,
-                ),
-                showFavoritesButton: true,
-                showSwipeModeToggle: false,
-              ),
-
-              const SizedBox(height: 8),
-
-              // ── Content ─────────────────────────────────────────────────────────
-              Expanded(
-                child: Stack(
-                  children: [
-                    _buildList(originsAsync),
-                    ScrollToTopButton(
-                      scrollController: _scrollController,
-                      threshold: 400,
+              Column(
+                children: [
+                  // ── Premium Action Bar ─────────────────────────────────────────────
+                  DiscoveryActionBar(
+                    filterProvider: encyclopediaFilterProvider,
+                    selectionProvider: encyclopediaSelectedIdsProvider,
+                    searchHint: ref.t('search_coffee'),
+                    onCompareTap: () {
+                      final selectedCount = ref
+                          .read(encyclopediaSelectedIdsProvider)
+                          .length;
+                      if (selectedCount == 0) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ComparisonScreen(
+                              source: ComparisonSource.encyclopedia,
+                            ),
+                          ),
+                        );
+                      } else if (selectedCount == 1) {
+                        ToastService.showInfo(
+                          context,
+                          ref.t('toast_select_second_lot'),
+                        );
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ComparisonScreen(
+                              source: ComparisonSource.encyclopedia,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                    availableCountries: ref.watch(
+                      availableEncyclopediaCountriesProvider,
                     ),
-                  ],
-                ),
+                    availableFlavors: ref.watch(
+                      availableEncyclopediaFlavorsProvider,
+                    ),
+                    availableProcesses: ref.watch(
+                      availableEncyclopediaProcessesProvider,
+                    ),
+                    showFavoritesButton: true,
+                    showSwipeModeToggle: false,
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  // ── Content ─────────────────────────────────────────────────────────
+                  Expanded(
+                    child: Stack(
+                      children: [
+                        _buildList(originsAsync),
+                        ScrollToTopButton(
+                          scrollController: _scrollController,
+                          threshold: 400,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -173,8 +179,8 @@ class _EncyclopediaBodyState extends ConsumerState<EncyclopediaBody>
               top: 16,
               bottom: 220,
             ),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: context.gridColumnCount,
               mainAxisSpacing: 12,
               crossAxisSpacing: 12,
               childAspectRatio: 0.72,

@@ -1,0 +1,178 @@
+
+import re
+import os
+
+target_file = r'd:\Games\Coffeeapp\lib\core\l10n\flavor_descriptions.dart'
+
+translations = {
+    'wheel_note_pineapple': {
+        'en': "Explosive tropical sweetness and high acidity. Result of anaerobic or prolonged lactic fermentation. Common in experimental micro-lots.",
+        'uk': "Вибухова тропічна солодкість та висока кислотність. Результат анаеробної або тривалої молочнокислої ферментації. Поширено в експериментальних мікролотах.",
+        'de': "Explosive tropische Süße und hohe Säure. Ergebnis einer anaeroben oder längeren Milchsäurefermentation. Häufig in experimentellen Micro-Lots.",
+        'fr': "Douceur tropicale explosive et acidité élevée. Résultat d'une fermentation anaérobie ou lactique prolongée. Courant dans les micro-lots expérimentaux.",
+        'es': "Dulzura tropical explosiva y alta acidez. Resultado de una fermentación anaeróbica o láctica prolongada. Común en micro-lotes experimentales.",
+        'it': "Esplosiva dolcezza tropicale e alta acidità. Risultato di una fermentazione anaerobica o lattica prolungata. Comune nei micro-lotti sperimentali.",
+        'pt': "Doçura tropical explosiva e elevada acidez. Resultado de fermentação anaeróbica ou láctica prolongada. Comum em micro-lotes experimentais.",
+        'pl': "Wybuchowa tropikalna słodycz i wysoka kwasowość. Wynik fermentacji anaerobowej lub przedłużonej fermentacji mlekowej. Powszechna w eksperymentalnych mikropartiach.",
+        'nl': "Explosieve tropische zoetheid en hoge zuurgraad. Resultaat van anaerobe of langdurige melkzuurfermentatie. Veelvoorkomend in experimentele micro-lots.",
+        'sv': "Explosiv tropisk sötma och hög syra. Resultat av anaerobisk eller förlängd mjölksyrafermentering. Vanligt i experimentella mikrolotter.",
+        'tr': "Patlayıcı tropikal tatlılık ve yüksek asidite. Anaerobik veya uzun süreli laktik fermantasyonun sonucudur. Deneysel mikro lotlarda yaygındır.",
+        'ja': "爆発的な熱帯の甘みと高い酸味。アナエロビック（好気性）または長期の乳酸発酵の結果。実験的なマイクロロットによく見られる。",
+        'ko': "폭발적인 열대 과일의 단맛과 높은 산미입니다. 무산소 또는 장기 유산균 발효의 결과입니다. 실험적인 마이크로 로트에서 흔히 볼 수 있습니다.",
+        'zh': "爆发性的热带甜味和高酸度。厌氧或长时间乳酸发酵的结果。常见于实验性微批次咖啡中。",
+        'ar': "حلاوة استوائية متفجرة وحموضة عالية. نتيجة التخمير اللاهوائي أو حمض اللاكتيك المطول. شائعة في الميكرولوت التجريبية.",
+    },
+    'wheel_note_grape': {
+        'en': "Juicy sweetness ranging from green to dark purple grapes. Tartaric acid dominance. Characteristic of varieties like Castillo in Colombia.",
+        'uk': "Соковита солодкість, що варіюється від зеленого до темно-пурпурового винограду. Домінування винної кислоти. Характерно для таких сортів, як Кастільйо в Колумбії.",
+        'de': "Saftige Süße, die von grünen bis zu dunkelvioletten Trauben reicht. Weinsäure-Dominanz. Charakteristisch für Sorten wie Castillo in Kolumbien.",
+        'fr': "Douceur juteuse allant du raisin vert au raisin violet foncé. Dominance de l'acide tartrique. Caractéristique des variétés comme le Castillo en Colombie.",
+        'es': "Dulzura jugosa que va desde las uvas verdes hasta las moradas oscuras. Dominio del ácido tartárico. Característico de variedades como Castillo en Colombia.",
+        'it': "Dolcezza succosa che spazia dall'uva verde a quella viola scuro. Dominanza dell'acido tartarico. Caratteristico di varietà come Castillo in Colombia.",
+        'pt': "Doçura sumarenta que varia de uvas verdes a roxas escuras. Dominância do ácido tartárico. Característico de variedades como Castillo na Colômbia.",
+        'pl': "Soczysta słodycz, od winogron zielonych po ciemnofioletowe. Dominacja kwasu winowego. Charakterystyczne dla odmian takich jak Castillo w Kolumbii.",
+        'nl': "Sappige zoetheid variërend van groene tot donkerpaarse druiven. Overheersing van wijnsteenzuur. Kenmerkend voor variëteiten zoals Castillo in Colombia.",
+        'sv': "Saftig sötma som sträcker sig från gröna till mörklila druvor. Dominans av vinsyra. Karaktäristiskt för sorter som Castillo i Colombia.",
+        'tr': "Yeşilden koyu mor üzümlere kadar uzanan sulu tatlılık. Tartarik asit hakimiyeti. Kolombiya'daki Castillo gibi çeşitlerin özelliğidir.",
+        'ja': "マスカットからダークパープルのブドウまで、ジューシーな甘み。酒石酸が支配的。コロンビアのカスティージョなどの品種の特徴。",
+        'ko': "청포도에서 진보라색 포도에 이르는 과즙이 풍부한 단맛입니다. 주석산이 우세합니다. 콜롬비아의 카스티요와 같은 품종의 특징입니다.",
+        'zh': "多汁的甜味，范围从青葡萄到深紫色葡萄。酒石酸占主导。哥伦比亚Castillo等品种的特征。",
+        'ar': "حلاوة عصارية تتراوح من العنب الأخضر إلى الأرجواني الداكن. هيمنة حمض الطرطريك. من سمات أصناف مثل كاستيلو في كولومبيا.",
+    },
+    'wheel_note_apple': {
+        'en': "Clean, crisp sweetness linked to malic acid. Reminiscent of green or red apples depending on density. Found in many washed Ethiopian and Mexican coffees.",
+        'uk': "Чиста, хрустка солодкість, пов'язана з яблучною кислотою. Нагадує зелені або червоні яблука залежно від щільності. Зустрічається в багатьох митих ефіопських та мексиканських лотах.",
+        'de': "Saubere, knackige Süße, die mit Apfelsäure verbunden ist. Erinnert je nach Dichte an grüne oder rote Äpfel. In vielen gewaschenen äthiopischen und mexikanischen Kaffees zu finden.",
+        'fr': "Douceur propre et croquante liée à l'acide malique. Rappelle les pommes vertes ou rouges selon la densité. Présent dans de nombreux cafés éthiopiens et mexicains lavés.",
+        'es': "Dulzura limpia y crujiente vinculada al ácido málico. Recuerda a manzanas verdes o rojas dependiendo de la densidad. Se encuentra en muchos cafés lavados etíopes y mexicanos.",
+        'it': "Dolcezza pulita e croccante legata all'acido malico. Ricorda le mele verdi o rosse a seconda della densità. Si trova in molti caffè lavati etiopi e messicani.",
+        'pt': "Doçura limpa e crocante ligada ao ácido málico. Lembra maçãs verdes ou vermelhas dependendo da densidade. Encontrada em muitos cafés lavados etíopes e mexicanos.",
+        'pl': "Czysta, rześka słodycz związana z kwasem jabłkowym. Przypomina zielone lub czerwone jabłka, w zależności od gęstości. Spotykana w wielu mytych kawach etiopskich i meksykańskich.",
+        'nl': "Zuivere, knapperige zoetheid gekoppeld aan appelzuur. Doet denken aan groene of rode appels, afhankelijk van de dichtheid. Te vinden in veel gewassen Ethiopische en Mexicaanse koffies.",
+        'sv': "Ren, krispig sötma kopplad till äppelsyra. Påminner om gröna eller röda äpplen beroende på densitet. Finns i många tvättade etiopiska och mexikanska kaffebönor.",
+        'tr': "Malik asit ile bağlantılı temiz, gevrek tatlılık. Yoğunluğa bağlı olarak yeşil veya kırmızı elmaları andırır. Birçok yıkanmış Etiyopya ve Meksika kahvesinde bulunur.",
+        'ja': "リンゴ酸に関連するクリーンでクリスピーな甘み。密度によって青リンゴや赤リンゴを思わせる。多くのウォッシュドのエチオピアやメキシコのコーヒーに見られる。",
+        'ko': "사과산과 연관된 깔끔하고 아삭한 단맛입니다. 밀도에 따라 청사과나 빨간 사과를 연상시킵니다. 많은 워시드 에티오피아 및 멕시코 커피에서 발견됩니다.",
+        'zh': "干净、爽脆的甜味，与苹果酸有关。取决于密度，令人联想到青苹果或红苹果。出现在许多水洗埃塞俄比亚和墨西哥咖啡中。",
+        'ar': "حلاوة نظيفة ومنعشة مرتبطة بحمض الماليك. تذكرنا بالتفاح الأخضر أو الأحمر حسب الكثافة. توجد في العديد من أنواع القهوة المغسولة الإثيوبية والمكسيكية.",
+    },
+    'wheel_note_peach': {
+        'en': "Delicate, fuzzy sweetness with a smooth mouthfeel. Intermediate acidity. Hallmark of high-quality Ethiopian washed lots and some Salvadoran Pacamaras.",
+        'uk': "Ніжна, оксамитова солодкість з м'яким відчуттям у роті. Середня кислотність. Візитна картка високоякісних митих ефіопських лотів та деяких сальвадорських пакамар.",
+        'de': "Zarte, pelzige Süße mit einem weichen Mundgefühl. Mittlere Säure. Kennzeichen hochwertiger gewaschener äthiopischer Partien und einiger salvadorianischer Pacamaras.",
+        'fr': "Douceur délicate et veloutée avec une sensation en bouche onctueuse. Acidité intermédiaire. Marque de fabrique des lots éthiopiens lavés de haute qualité et de certains Pacamaras du Salvador.",
+        'es': "Dulzura delicada y aterciopelada con una sensación en boca suave. Acidez intermedia. Sello distintivo de lotes lavados etíopes de alta calidad y algunos Pacamaras salvadoreños.",
+        'it': "Dolcezza delicata e vellutata con una sensazione in bocca morbida. Acidità intermedia. Segno distintivo di lotti lavati etiopi di alta qualità e di alcuni Pacamara salvadoregni.",
+        'pt': "Doçura delicada e aveludada com uma sensação de boca suave. Acidez intermédia. Marca de lotes lavados etíopes de elevada qualidade e de alguns Pacamaras salvadorenhos.",
+        'pl': "Delikatna, aksamitna słodycz z gładkim odczuciem w ustach. Pośrednia kwasowość. Znak rozpoznawczy wysokiej jakości mytych kaw etiopskich i niektórych salwadorskich Pacamara.",
+        'nl': "Verfijnde, fluweelzachte zoetheid met een soepel mondgevoel. Gemiddelde zuurgraad. Kenmerk van hoogwaardige gewassen Ethiopische partijen en sommige Salvadoraanse Pacamara's.",
+        'sv': "Delikat, sammetslen sötma med en mjuk munkänsla. Medelhög syra. Kännetecknet för tvättade etiopiska partier av hög kvalitet och vissa salvadoranska Pacamaras.",
+        'tr': "Pürüzsüz bir ağız hissi ile hassas, tüylü tatlılık. Orta düzeyde asidite. Yüksek kaliteli yıkanmış Etiyopya lotlarının ve bazı El Salvador Pacamara'larının ayırt edici özelliğidir.",
+        'ja': "滑らかな口当たりを伴う、繊細でうぶ毛のような甘み。中程度の酸味。高品質なウォッシュドのエチオピア産ロットやエルサルバドルのパカマラ種の特徴。",
+        'ko': "부드러운 마우스필과 함께 섬세하고 보송보송한 단맛입니다. 중간 정도의 산미입니다. 고품질 워시드 에티오피아 로트와 일부 엘살바도르 파카마라의 특징입니다.",
+        'zh': "细腻、如桃毛般轻柔的甜味，口感顺滑。中等酸度。高质量水洗埃塞俄比亚批次和一些萨尔瓦多帕卡马拉品种的标志。",
+        'ar': "حلاوة رقيقة ومخملية مع ملمس فم ناعم. حموضة متوسطة. من سمات الدفعات الإثيوبية المغسولة عالية الجودة وبعض أصناف باكامارا السلفادورية.",
+    },
+    'wheel_note_pear': {
+        'en': "Soft, grainy sweetness with subtle acidity. Often associated with clean, elegant washed profiles. Typical of Mexican and Honduran Arabicas.",
+        'uk': "М'яка, злегка зерниста солодкість з тонкою кислотністю. Часто асоціюється з чистими, елегантними митими профілями. Типово для мексиканських та гондураських арабік.",
+        'de': "Weiche, körnige Süße mit subtiler Säure. Oft mit sauberen, eleganten gewaschenen Profilen verbunden. Typisch für mexikanische und honduranische Arabicas.",
+        'fr': "Douceur douce et granuleuse avec une acidité subtile. Souvent associé à des profils lavés propres et élégants. Typique des Arabicas mexicains et honduriens.",
+        'es': "Dulzura suave y granulada con sutil acidez. A menudo asociada con perfiles lavados limpios y elegantes. Típico de las arábicas mexicanas y hondureñas.",
+        'it': "Dolcezza morbida e granulosa con acidità sottile. Spesso associata a profili lavati puliti ed eleganti. Tipico delle Arabiche messicane e honduregne.",
+        'pt': "Doçura suave e granulada com acidez subtil. Frequentemente associada a perfis lavados limpos e elegantes. Típico de Arábicas mexicanas e hondurenhas.",
+        'pl': "Miękka, lekko ziarnista słodycz z subtelną kwasowością. Często kojarzona z czystymi, eleganckimi profilami mytymi. Typowe dla meksykańskich i honduraskich Arabik.",
+        'nl': "Zachte, korrelige zoetheid met subtiele zuurgraad. Vaak geassocieerd met zuivere, elegante gewassen profielen. Typisch voor Mexicaanse en Hondurese Arabica's.",
+        'sv': "Mjuk, kornig sötma med subtil syra. Förknippas ofta med rena, eleganta tvättade profiler. Typiskt för mexikansk och honduransk Arabica.",
+        'tr': "Hafif asiditeye sahip yumuşak, taneli tatlılık. Genellikle temiz, zarif yıkanmış profillerle ilişkilidir. Meksika ve Honduras Arabica'larının özelliğidir.",
+        'ja': "かすかな酸味を伴う、柔らかく粒子状の甘み。クリーンでエレガントなウォッシュドのプロファイルに関連することが多い。メキシコやホンジュラスのアラビカ種に典型的。",
+        'ko': "은은한 산미가 있는 부드럽고 알갱이가 느껴지는 듯한 단맛입니다. 종종 깔끔하고 우아한 워시드 프로필과 관련이 있습니다. 멕시코와 온두라스 아라비카의 전형적인 특징입니다.",
+        'zh': "柔和、带有颗粒感的甜味，酸度微妙。通常与干净、优雅的水洗剖面有关。墨西哥和洪都拉斯阿拉比卡咖啡的典型特征。",
+        'ar': "حلاوة ناعمة ومحببة مع حموضة خفيفة. ترتبط غالبًا بالملفات المغسولة النظيفة والأنيقة. نموذجية لأنواع أرابيكا المكسيكية والهندوراسية.",
+    },
+    'wheel_note_grapefruit': {
+        'en': "Zesty citrus note with a pleasant, tonic-like bitterness. Linked to high phosphorus soils. Common in high-acid Kenyan and Rwandan coffees.",
+        'uk': "Пікантна цитрусова нота з приємною гірчинкою, схожою на тонік. Пов'язана з ґрунтами з високим вмістом фосфору. Поширено в кенійській та руандійській каві з високою кислотністю.",
+        'de': "Spritzige Zitrusnote mit einer angenehmen, Tonic-ähnlichen Bitterkeit. Verbunden mit phosphorreichen Böden. Häufig in säurereichen kenianischen und ruandischen Kaffees.",
+        'fr': "Note d'agrumes piquante avec une amertume agréable, semblable à celle du tonic. Lié aux sols riches en phosphore. Courant dans les cafés kenyans et rwandais à forte acidité.",
+        'es': "Nota cítrica ácida con un amargor agradable, similar al de la tónica. Vinculado a suelos con alto contenido de fósforo. Común en cafés de Kenia y Ruanda con alta acidez.",
+        'it': "Nota citrica frizzante con una piacevole amarezza simile al tonico. Legata a terreni ricchi di fosforo. Comune nei caffè kenioti e rwandesi ad alta acidità.",
+        'pt': "Nota cítrica vibrante com um amargor agradável, semelhante a tónica. Ligada a solos com elevado teor de fósforo. Comum em cafés quenianos e ruandeses de elevada acidez.",
+        'pl': "Pikantna nuta cytrusowa z przyjemną goryczką przypominającą tonik. Związana z glebami o wysokiej zawartości fosforu. Powszechna w kawach kenijskich i rwandyjskich o wysokiej kwasowości.",
+        'nl': "Pittige citrusnoot met een aangename, tonic-achtige bitterheid. Gekoppeld aan fosforrijke bodems. Veelvoorkomend in Keniaanse en Rwandese koffies met een hoge zuurgraad.",
+        'sv': "Frisk citrusnot med en behaglig, tonic-liknande bitterhet. Kopplad till fosforrika jordar. Vanligt i kenyanskt och rwandiskt kaffe med hög syra.",
+        'tr': "Hoş, tonik benzeri bir acılığa sahip canlı narenciye notası. Yüksek fosforlu topraklarla bağlantılıdır. Yüksek asiditeli Kenya ve Ruanda kahvelerinde yaygındır.",
+        'ja': "トニックのような心地よい苦味を伴う、ピリッとした柑橘系のノート。リン含有量の高い土壌に関連している。酸味の強いケニアやルワンダのコーヒーに一般的。",
+        'ko': "토닉과 같은 기분 좋은 쌉쌀함이 가미된 톡 쏘는 시트러스 노트입니다. 인 함량이 높은 토양과 관련이 있습니다. 산미가 높은 케냐 및 루완다 커피에서 흔히 볼 수 있습니다.",
+        'zh': "强烈的柑橘味，带有愉悦的、类似奎宁水的苦味。与高磷土壤有关。常见于高酸度的肯尼亚和卢旺达咖啡中。",
+        'ar': "نكهة حمضية لاذعة مع مرارة محببة تشبه مياه التونيك. مرتبطة بالتربة الغنية بالفوسفور. شائعة في القهوة الكينية والرواندية عالية الحموضة.",
+    },
+    'wheel_note_orange': {
+        'en': "Sweet, balanced citrus note with soft acidity. Reminiscent of orange juice or zest. Characteristic of Colombian and Salvadoran Arabicas.",
+        'uk': "Солодка, збалансована цитрусова нота з м'якою кислотністю. Нагадує апельсиновий сік або цедру. Характерно для колумбійської та сальвадорської арабіки.",
+        'de': "Süße, ausgewogene Zitrusnote mit weicher Säure. Erinnert an Orangensaft oder -schale. Charakteristisch für kolumbianische und salvadorianische Arabicas.",
+        'fr': "Note d'agrumes sucrée et équilibrée avec une acidité douce. Rappelle le jus d'orange ou le zeste. Caractéristique des Arabicas colombiens et salvadoriens.",
+        'es': "Nota cítrica dulce y equilibrada con acidez suave. Recuerda al zumo o la cáscara de naranja. Característico de las arábicas colombianas y salvadoreñas.",
+        'it': "Nota citrica dolce e bilanciata con acidità morbida. Ricorda il succo o la scorza d'arancia. Caratteristico delle Arabiche colombiane e salvadoregne.",
+        'pt': "Nota cítrica doce e equilibrada com acidez suave. Lembra sumo de laranja ou raspas. Característico de Arábicas colombianas e salvadorenhas.",
+        'pl': "Słodka, zrównoważona nuta cytrusowa z łagodną kwasowością. Przypomina sok pomarańczowy lub skórkę. Charakterystyczne dla kolumbijskich i salwadorskich Arabik.",
+        'nl': "Zoete, uitgebalanceerde citrusnoot met zachte zuurgraad. Doet denken aan sinaasappelsap of -schil. Kenmerkend voor Colombiaanse en Salvadoraanse Arabica's.",
+        'sv': "Söt, balanserad citrusnot med mjuk syra. Påminner om apelsinjuice eller skal. Karaktäristiskt för colombiansk och salvadoransk Arabica.",
+        'tr': "Yumuşak asiditeye sahip tatlı, dengeli narenciye notası. Portakal suyu veya kabuğunu andırır. Kolombiya ve El Salvador Arabica'larının özelliğidir.",
+        'ja': "柔らかな酸味を伴う、甘くバランスの取れた柑橘系のノート。オレンジジュースやピールを思わせる。コロンビアやエルサルバドルのアラビカ種の特徴。",
+        'ko': "부드러운 산미가 있는 달콤하고 균형 잡힌 시트러스 노트입니다. 오렌지 주스나 껍질을 연상시킵니다. 콜롬비아와 엘살바도르 아라비카의 특징입니다.",
+        'zh': "甜美、平衡的柑橘味，带有柔和的酸度。令人联想到橙汁或橙皮。哥伦比亚和萨尔瓦多阿拉比卡咖啡的特征。",
+        'ar': "نكهة حمضية حلوة ومتوازنة مع حموضة ناعمة. تذكرنا بعصير البرتقال أو قشره. من سمات أنواع أرابيكا الكولومبية والسلفادورية.",
+    },
+    'wheel_note_lemon': {
+        'en': "Sharp, bright, and refreshing citric note. Typical of high-density beans grown in volcanic soil. Frequent in Guatemalan Huehuetenango.",
+        'uk': "Гостра, яскраві та освіжаюча лимонна нота. Типово для щільних зерен, вирощених на вулканічному ґрунті. Часто зустрічається у гватемальському Уеуетенанго.",
+        'de': "Scharfe, helle und erfrischende Zitrusnote. Typisch für Bohnen hoher Dichte, die auf vulkanischem Boden gewachsen sind. Häufig in guatemaltekischem Huehuetenango.",
+        'fr': "Note citrique vive, nette et rafraîchissante. Typique des grains à haute densité cultivés en sol volcanique. Fréquent dans le Huehuetenango guatémaltèque.",
+        'es': "Nota cítrica afilada, brillante y refrescante. Típica de granos de alta densidad cultivados en suelo volcánico. Frecuente en el Huehuetenango guatemalteco.",
+        'it': "Nota citrica acuta, brillante e rinfrescante. Tipico dei chicchi ad alta densità coltivati in terreni vulcanici. Frequente nel Huehuetenango guatemalteco.",
+        'pt': "Nota cítrica aguda, brilhante e refrescante. Típico de grãos de elevada densidade cultivados em solo vulcânico. Frequente em Huehuetenango guatemalteco.",
+        'pl': "Ostra, jasna i odświeżająca nuta cytrynowa. Typowa dla ziaren o wysokiej gęstości uprawianych na glebach wulkanicznych. Częsta w gwatemalskim Huehuetenango.",
+        'nl': "Scherpe, heldere en verfrissende citrusnoot. Typisch voor bonen met een hoge dichtheid die op vulkanische bodem zijn geteeld. Komt veel voor in Guatemalteekse Huehuetenango.",
+        'sv': "Skarp, ljusa och uppfriskande citrusnot. Typiskt för bönor med hög densitet som vuxit i vulkanisk jord. Vanligt i guatemalansk Huehuetenango.",
+        'tr': "Keskin, parlak ve ferahlatıcı narenciye notası. Volkanik toprakta yetişen yüksek yoğunluklu çekirdeklerin özelliğidir. Guatemala Huehuetenango kahvelerinde sık görülür.",
+        'ja': "鋭く明るい、爽やかな柑橘系のノート。火山性土壌で育った密度の高い豆に典型的。グアテマラのウエウエテナンゴでよく見られる。",
+        'ko': "날카롭고 밝으며 상쾌한 시트러스 노트입니다. 화산 토양에서 자란 고밀도 원두의 전형적인 특징입니다. 과테말라 우에우에테낭고에서 자주 발견됩니다.",
+        'zh': "尖锐、明亮且清新的柑橘味。典型的生长在火山土壤中的高密度咖啡豆。常出现在危地马拉薇薇特南果咖啡中。",
+        'ar': "نكهة حمضية حادة ومشرقة ومنعشة. نموذجية للحبوب عالية الكثافة المزروعة في تربة بركانية. تتكرر في منطقة هويهويتينانغو الغواتيمالية.",
+    },
+    'wheel_note_lime': {
+        'en': "The sharpest, most intense citrus acid. Provides a 'zingy' finish. Common in extremely high-altitude lots or specific varieties like Geisha.",
+        'uk': "Найгостріша, найбільш інтенсивна цитрусова кислота. Забезпечує «пікантний» післясмак. Поширено у надвисокогірних лотах або специфічних сортах, таких як Гейша.",
+        'de': "Die schärfste, intensivste Zitrusfrucht-Säure. Sorgt für einen 'spritzigen' Abgang. Häufig in extrem hochgelegenen Partien oder spezifischen Varietäten wie Geisha.",
+        'fr': "L'acidité d'agrumes la plus vive et la plus intense. Procure une finale « piquante ». Courant dans les lots d'altitude extrêmement élevée ou les variétés spécifiques comme le Geisha.",
+        'es': "La acidez cítrica más aguda e intensa. Proporciona un acabado 'vibrante'. Común en lotes de altitud extremadamente alta o variedades específicas como Geisha.",
+        'it': "L'acidità citrica più acuta e intensa. Fornisce un finale 'frizzante'. Comune nei lotti ad altitudini estremamente elevate o in varietà specifiche come il Geisha.",
+        'pt': "A acidez cítrica mais aguda e intensa. Proporciona um final 'vibrante'. Comum em lotes de altitudes extremamente elevadas ou variedades específicas como Geisha.",
+        'pl': "Najostrzejszy, najbardziej intensywny kwas cytrusowy. Zapewnia 'energetyczny' finisz. Powszechny w partiach z ekstremalnie dużych wysokości lub specyficznych odmianach, takich як Geisha.",
+        'nl': "De scherpste, meest intense citruszuurzuurgraad. Zorgt voor een 'pittige' afdronk. Veelvoorkomend in partijen van extreem grote hoogte of specifieke variëteiten zoals Geisha.",
+        'sv': "Den skarpaste, mest intensiva citrussyran. Ger en 'pirrig' eftersmak. Vanligt i partier från extremt hög höjd eller specifika varieteter som Geisha.",
+        'tr': "En keskin, en yoğun narenciye asididir. 'Zingy' bir bitiş sağlar. Aşırı yüksek rakımlı lotlarda veya Geisha gibi özel çeşitlerde yaygındır.",
+        'ja': "最も鋭く、最も強烈な柑橘系の酸。「ピリッとした」フィニッシュをもたらす。極めて標高の高いロットやゲイシャなどの特定の品種に一般的。",
+        'ko': "가장 날카롭고 강렬한 시트러스 산미입니다. '톡 쏘는' 여운을 제공합니다. 극도로 높은 고도의 로트나 게이샤와 같은 특정 품종에서 흔히 볼 수 있습니다.",
+        'zh': "最尖锐、最强烈的柑橘酸。提供“振奋”的收尾。常见于极高海拔的批次或瑰夏等特定品种中。",
+        'ar': "أكثر أحماض الحمضيات حدة وكثافة. توفر خاتمة 'حيوية'. شائعة في الدفعات المزروعة على ارتفاعات عالية جدًا أو أصناف معينة مثل غيشا.",
+    },
+}
+
+with open(target_file, 'r', encoding='utf-8') as f:
+    content = f.read()
+
+for key, langs in translations.items():
+    new_block = f"'{key}': {{\n"
+    for lang, text in langs.items():
+        safe_text = text.replace(chr(39), '\\' + chr(39))
+        new_block += f"        '{lang}': '{safe_text}',\n"
+    new_block += "      },"
+    pattern = rf"'{key}':\s*\{{.*?\}},"
+    content = re.sub(pattern, new_block, content, flags=re.DOTALL)
+
+with open(target_file, 'w', encoding='utf-8', newline='\n') as f:
+    f.write(content)
+
+print('Fruity notes batch 2 update complete.')

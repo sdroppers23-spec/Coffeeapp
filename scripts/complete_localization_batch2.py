@@ -1,0 +1,198 @@
+# -*- coding: utf-8 -*-
+import re
+import os
+
+FLAVOR_FILE = r'd:\Games\Coffeeapp\lib\core\l10n\flavor_descriptions.dart'
+
+BATCH2 = {
+    'wheel_note_raisin': {
+        'en': 'Concentrated sweetness with a slight vinegary tang.',
+        'uk': 'Концентрована солодкість з легким оцтовим присмаком.',
+        'de': 'Konzentrierte Süße mit einem leichten essigartigen Beigeschmack.',
+        'fr': 'Sucrosité concentrée avec une légère pointe vinaigrée.',
+        'es': 'Dulzor concentrado con un ligero toque avinagrado.',
+        'it': 'Dolcezza concentrata con una leggera nota acetosa.',
+        'pt': 'Doçura concentrada com um leve toque vinagrado.',
+        'pl': 'Skoncentrowana słodycz z lekką octową nutą.',
+        'nl': 'Geconcentreerde zoetheid met een lichte azijnachtige bijsmaak.',
+        'sv': 'Koncentrerad sötma med en lätt vinägrig touch.',
+        'tr': 'Hafif sirkemsi bir tatla konsantre tatlılık.',
+        'ja': 'わずかに酢のような酸味を伴う、濃縮された甘み。',
+        'ko': '약간의 식초 같은 산미를 동반한 농축된 단맛입니다.',
+        'zh': '带有微弱醋酸味的浓缩甜味。',
+        'ar': 'حلاوة مركزة مع نكهة خلية خفيفة.',
+    },
+    'wheel_note_prune': {
+        'en': 'Rich, dark fruit sweetness typical of heavy-bodied coffees.',
+        'uk': 'Насичена солодкість темних фруктів, типова для кави з щільним тілом.',
+        'de': 'Reichhaltige, dunkle Fruchtsüße, typisch für körperreiche Kaffees.',
+        'fr': 'Sucrosité riche de fruits noirs typique des cafés corsés.',
+        'es': 'Dulzor rico de frutas oscuras típico de cafés con cuerpo denso.',
+        'it': 'Ricca dolcezza di frutta scura tipica dei caffè corposi.',
+        'pt': 'Doçura rica de frutas escuras típica de cafés encorpados.',
+        'pl': 'Bogata słodycz ciemnych owoców typowa dla kaw o gęstym body.',
+        'nl': 'Rijke, donkere fruitzoetheid typisch voor volle koffies.',
+        'sv': 'Rik, mörk fruktsötma typisk för kaffe med fyllig kropp.',
+        'tr': 'Gövdeli kahvelerin tipik zengin, koyu meyve tatlılığı.',
+        'ja': 'ボディの強いコーヒーに典型的な、豊かでダークな果実の甘み。',
+        'ko': '바디감이 강한 커피에서 흔히 발견되는 풍부하고 어두운 과일의 단맛입니다.',
+        'zh': '醇厚度高的咖啡中典型的浓郁深色水果甜味。',
+        'ar': 'حلاوة فاكهة داكنة غنية نموذجية للقهوة ذات القوام الثقيل.',
+    },
+    'wheel_note_coconut': {
+        'en': 'Creamy, tropical sweetness. Hallmark of certain Indonesian lots.',
+        'uk': 'Вершкова тропічна солодкість. Ознака деяких індонезійських лотів.',
+        'de': 'Cremige, tropische Süße. Markenzeichen bestimmter indonesischer Chargen.',
+        'fr': 'Sucrosité crémeuse et tropicale. Marque de fabrique de certains lots indonésiens.',
+        'es': 'Dulzor cremoso y tropical. Característica de ciertos lotes indonesios.',
+        'it': 'Dolcezza cremosa e tropicale. Segno distintivo di alcuni lotti indonesiani.',
+        'pt': 'Doçura cremosa e tropical. Marca registrada de certos lotes indonésios.',
+        'pl': 'Kremowa, tropikalna słodycz. Charakterystyczna dla niektórych kaw z Indonezji.',
+        'nl': 'Romige, tropische zoetheid. Kenmerk van bepaalde Indonesische partijen.',
+        'sv': 'Krämig, tropisk sötma. Signum för vissa indonesiska partier.',
+        'tr': 'Kremsi, tropikal tatlılık. Belirli Endonezya kahvelerinin ayırt edici özelliğidir.',
+        'ja': 'クリーミーでトロピカルな甘み。特定のインドネシア産ロットに見られる特徴です。',
+        'ko': '크리미하고 열대적인 단맛입니다. 특정 인도네시아산 커피의 특징입니다.',
+        'zh': '奶香、热带甜味。某些印尼咖啡豆的标志性特征。',
+        'ar': 'حلاوة استوائية كريمية. علامة مميزة لبعض المحاصيل الإندونيسية.',
+    },
+    'wheel_note_cherry': {
+        'en': 'Sweet and slightly tart stone fruit note.',
+        'uk': 'Солодка і злегка терпка нота кісточкових фруктів.',
+        'de': 'Süße und leicht herbe Steinobstnote.',
+        'fr': 'Note de fruit à noyau sucrée et légèrement acidulée.',
+        'es': 'Nota de fruta de hueso dulce y ligeramente ácida.',
+        'it': 'Nota di drupacee dolce e leggermente aspra.',
+        'pt': 'Nota de fruta de caroço doce e levemente ácida.',
+        'pl': 'Słodka i lekko cierpka nuta owoców pestkowych.',
+        'nl': 'Zoete en licht zure steenvruchtnoot.',
+        'sv': 'Söt och lätt syrlig stenfruktston.',
+        'tr': 'Tatlı ve hafif mayhoş çekirdekli meyve notası.',
+        'ja': '甘く、わずかに酸味のある核果のノート。',
+        'ko': '달콤하고 약간 새콤한 핵과류의 노트입니다.',
+        'zh': '甜中带酸的核果风味。',
+        'ar': 'نوتة فاكهة ذات نواة حلوة ولاذعة قليلاً.',
+    },
+    'wheel_note_pomegranate': {
+        'en': 'Sharp, complex tartness with a ruby-like sweetness.',
+        'uk': 'Гостра комплексна терпкість з рубіновою солодкістю.',
+        'de': 'Scharfe, komplexe Säure mit einer rubinartigen Süße.',
+        'fr': 'Acidité vive et complexe avec une sucrosité rubis.',
+        'es': 'Acidez punzante y compleja con un dulzor similar al rubí.',
+        'it': 'Asprezza pungente e complessa con una dolcezza rubino.',
+        'pt': 'Acidez picante e complexa com uma doçura cor de rubi.',
+        'pl': 'Ostra, złożona cierpkość z rubinową słodyczą.',
+        'nl': 'Scherpe, complexe zuurgraad met een robijnachtige zoetheid.',
+        'sv': 'Skarp, komplex syrlighet med en rubinliknande sötma.',
+        'tr': 'Yakut benzeri bir tatlılıkla keskin, karmaşık mayhoşluk.',
+        'ja': 'ルビーのような甘みを伴う、鋭く複雑な酸味。',
+        'ko': '루비 같은 단맛과 함께 느껴지는 날카롭고 복잡한 산미입니다.',
+        'zh': '尖锐、复杂的酸味，带有宝石般的甜感。',
+        'ar': 'حموضة حادة ومعقدة مع حلاوة تشبه الياقوت.',
+    },
+    'wheel_note_pineapple': {
+        'en': 'Intense tropical sweetness and acidity.',
+        'uk': 'Інтенсивна тропічна солодкість і кислотність.',
+        'de': 'Intensive tropische Süße und Säure.',
+        'fr': 'Sucrosité et acidité tropicales intenses.',
+        'es': 'Dulzor y acidez tropicales intensos.',
+        'it': 'Intensa dolcezza e acidità tropicale.',
+        'pt': 'Doçura e acidez tropicais intensas.',
+        'pl': 'Intensywna tropikalna słodycz i kwasowość.',
+        'nl': 'Intense tropische zoetheid en aciditeit.',
+        'sv': 'Intensiv tropisk sötma och syrlighet.',
+        'tr': 'Yoğun tropikal tatlılık ve asidite.',
+        'ja': '強烈なトロピカルな甘みと酸味。',
+        'ko': '강렬한 열대적인 단맛과 산미입니다.',
+        'zh': '强烈的热带甜味和酸度Strip.',
+        'ar': 'حلاوة وحموضة استوائية مكثفة.',
+    },
+    'wheel_note_grape': {
+        'en': 'Juicy, wine-like fruitiness.',
+        'uk': 'Соковита, схожа на вино фруктовість.',
+        'de': 'Saftige, weinähnliche Fruchtigkeit.',
+        'fr': 'Fruité juteux et vineux.',
+        'es': 'Frutosidad jugosa y vinosa.',
+        'it': 'Fruttato succoso e vinoso.',
+        'pt': 'Frutado suculento e vinoso.',
+        'pl': 'Soczysta, winna owocowość.',
+        'nl': 'Sappige, wijnachtige fruitigheid.',
+        'sv': 'Saftig, vinliknande fruktighet.',
+        'tr': 'Sulu, şarapsı meyvemsilik.',
+        'ja': 'ジューシーでワインのような果実味。',
+        'ko': '과즙이 풍부한 와인 느낌의 과일 맛입니다.',
+        'zh': '多汁、类似葡萄酒的果香。',
+        'ar': 'فاكهية عصارية تشبه النبيذ.',
+    },
+    'wheel_note_apple': {
+        'en': 'Crisp acidity and clean sweetness.',
+        'uk': 'Хрустка кислотність і чиста солодкість.',
+        'de': 'Knackige Säure und saubere Süße.',
+        'fr': 'Acidité croquante et sucrosité propre.',
+        'es': 'Acidez crujiente y dulzor limpio.',
+        'it': 'Acidità croccante e dolcezza pulita.',
+        'pt': 'Acidez nítida e doçura limpa.',
+        'pl': 'Rześka kwasowość i czysta słodycz.',
+        'nl': 'Frisse aciditeit en schone zoetheid.',
+        'sv': 'Krispig syra och ren sötma.',
+        'tr': 'Gevrek asidite ve temiz tatlılık.',
+        'ja': 'キレのある酸味とクリーンな甘み。',
+        'ko': '아삭한 산미와 깔끔한 단맛입니다.',
+        'zh': '爽脆的酸度和干净的甜味。',
+        'ar': 'حموضة هشة وحلاوة نظيفة.',
+    },
+    'wheel_note_peach': {
+        'en': 'Soft, delicate stone fruit sweetness.',
+        'uk': 'М\'яка, ніжна солодкість кісточкових фруктів.',
+        'de': 'Weiche, zarte Steinobstsüße.',
+        'fr': 'Sucrosité de fruit à noyau douce et délicate.',
+        'es': 'Dulzor de fruta de hueso suave y delicado.',
+        'it': 'Dolcezza di drupacee morbida e delicata.',
+        'pt': 'Doçura de fruta de caroço suave e delicada.',
+        'pl': 'Miękka, delikatna słodycz owoców pestkowych.',
+        'nl': 'Zachte, delicate steenvruchtzoetheid.',
+        'sv': 'Mjuk, delikat stenfruktsötma.',
+        'tr': 'Yumuşak, narin çekirdekli meyve tatlılığı.',
+        'ja': '柔らかく繊細な核果の甘み。',
+        'ko': '부드럽고 섬세한 핵과류의 단맛입니다.',
+        'zh': '柔和、细腻的核果甜味。',
+        'ar': 'حلاوة فاكهة ذات نواة ناعمة ورقيقة.',
+    },
+    'wheel_note_pear': {
+        'en': 'Subtle, clean fruit sweetness with a slight grainy texture.',
+        'uk': 'Тонка чиста фруктова солодкість із легкою зернистою текстурою.',
+        'de': 'Subtile, saubere Fruchtsüße mit einer leicht körnigen Textur.',
+        'fr': 'Sucrosité fruitée subtile et propre avec une texture légèrement granuleuse.',
+        'es': 'Dulzor frutal sutil y limpio con una ligera textura granulada.',
+        'it': 'Sottile e pulita dolcezza fruttata con una leggera consistenza granulosa.',
+        'pt': 'Doçura frutada sutil e limpa com uma leve textura granulada.',
+        'pl': 'Subtelna, czysta owocowa słodycz o lekko ziarnistej teksturze.',
+        'nl': 'Subtiele, schone fruitzoetheid met een licht korrelige textuur.',
+        'sv': 'Subtil, ren fruktsötma med en lätt grynig textur.',
+        'tr': 'Hafif grenli dokusuyla ince, temiz meyve tatlılığı.',
+        'ja': 'わずかにザラつきのある質感、繊細でクリーンな果実の甘み。',
+        'ko': '약간의 거친 질감을 동반한 미묘하고 깔끔한 과일 단맛입니다.',
+        'zh': '细致、干净的水果甜味，带有轻微的沙质感。strip',
+        'ar': 'حلاوة فاكهة رقيقة ونظيفة مع ملمس محبب قليلاً.',
+    },
+}
+
+def update_file(data):
+    with open(FLAVOR_FILE, 'r', encoding='utf-8') as f:
+        content = f.read()
+    
+    for key, val in data.items():
+        pattern = re.compile(rf"'{key}':\s*\{{.*?\}}", re.DOTALL)
+        replacement = f"'{key}': {{\n"
+        for lang in sorted(val.keys()):
+            text = val[lang].replace("'", "\\'")
+            replacement += f"        '{lang}': '{text}',\n"
+        replacement += "      }"
+        content = pattern.sub(replacement, content)
+    
+    with open(FLAVOR_FILE, 'w', encoding='utf-8') as f:
+        f.write(content)
+    print(f"Updated {len(data)} keys.")
+
+if __name__ == '__main__':
+    update_file(BATCH2)

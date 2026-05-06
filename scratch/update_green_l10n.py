@@ -1,0 +1,178 @@
+
+import re
+import os
+
+target_file = r'd:\Games\Coffeeapp\lib\core\l10n\flavor_descriptions.dart'
+
+translations = {
+    'wheel_sub_green_vegetative': {
+        'en': "Herbal and grassy notes associated with fresh plant matter. Can reflect terroir or light roasting. Typical of under-developed high-density beans.",
+        'uk': "Трав'янисті та злакові ноти, пов'язані зі свіжою рослинною сировиною. Можуть відображати теруар або світле обсмажування. Типово для недостатньо розвинених зерен високої щільності.",
+        'de': "Kräuterartige und grasige Noten, die mit frischem Pflanzenmaterial assoziiert werden. Können Terroir oder helle Röstung widerspiegeln. Typisch für unterentwickelte Bohnen hoher Dichte.",
+        'fr': "Notes herbacées et herbeuses associées à des matières végétales fraîches. Peut refléter le terroir ou une torréfaction claire. Typique des grains à haute densité sous-développés.",
+        'es': "Notas herbales y herbáceas asociadas con materia vegetal fresca. Pueden reflejar el terroir o un tueste ligero. Típico de granos de alta densidad poco desarrollados.",
+        'it': "Note erbacee e di erba associate a materia vegetale fresca. Possono riflettere il terroir o una tostatura chiara. Tipico dei chicchi ad alta densità poco sviluppati.",
+        'pt': "Notas herbáceas e de erva associadas a matéria vegetal fresca. Podem refletir o terroir ou uma torrefação clara. Típico de grãos de elevada densidade subdesenvolvidos.",
+        'pl': "Ziołowe i trawiaste nuty kojarzone ze świeżą materią roślinną. Mogą odzwierciedlać terroir lub jasne palenie. Typowe dla niedostatecznie rozwiniętych ziaren o wysokiej gęstości.",
+        'nl': "Kruidige en grasachtige tonen geassocieerd met vers plantaardig materiaal. Kan terroir of lichte branding weerspiegelen. Typisch voor onderontwikkelde bonen met een hoge dichtheid.",
+        'sv': "Örtiga och gräsiga noter förknippade med färskt växtmaterial. Kan spegla terroir eller ljusrostning. Typiskt för underutvecklade bönor med hög densitet.",
+        'tr': "Taze bitki maddesiyle ilişkili otsu ve çimensi notalar. Teruarı veya hafif kavurmayı yansıtabilir. Az gelişmiş yüksek yoğunluklu çekirdeklerin özelliğidir.",
+        'ja': "新鮮な植物に関連するハーブや芝生のようなノート。テロワールや浅煎りを反映することがある。未発達の高密度の豆に典型的。",
+        'ko': "신선한 식물성 물질과 관련된 허브 및 풀 향 노트입니다. 테루아나 약배전을 반영할 수 있습니다. 덜 발달된 고밀도 원두의 전형적인 특징입니다.",
+        'zh': "与新鲜植物有关的草本和青草味。可能反映风土或浅度烘焙。典型的发育不足的高密度咖啡豆特征。",
+        'ar': "نكهات عشبية وعشبية مرتبطة بالمادة النباتية الطازجة. قد تعكس البيئة المحلية أو التحميص الخفيف. نموذجية للحبوب عالية الكثافة غير مكتملة النضج.",
+    },
+    'wheel_note_olive_oil': {
+        'en': "Unique, buttery and slightly vegetal mouthfeel. Reflects high concentration of specific lipids. Arises in certain Peruvian and Ecuadorian micro-lots.",
+        'uk': "Унікальне, маслянисте та злегка овочеве відчуття у роті. Відображає високу концентрацію специфічних ліпідів. Зустрічається в певних перуанських та еквадорських мікролотах.",
+        'de': "Einzigartiges, butteriges und leicht pflanzliches Mundgefühl. Spiegelt eine hohe Konzentration spezifischer Lipide wider. Tritt in bestimmten peruanischen und ecuadorianischen Micro-Lots auf.",
+        'fr': "Sensation en bouche unique, beurrée et légèrement végétale. Reflète une forte concentration de lipides spécifiques. Apparaît dans certains micro-lots péruviens et équatoriens.",
+        'es': "Sensación en boca única, mantecosa y ligeramente vegetal. Refleja una alta concentración de lípidos específicos. Surge en ciertos micro-lotes peruanos y ecuatorianos.",
+        'it': "Sensazione in bocca unica, burrosa e leggermente vegetale. Riflette l'alta concentrazione di lipidi specifici. Emerge in alcuni micro-lotti peruviani ed ecuadoriani.",
+        'pt': "Sensação de boca única, amanteigada e ligeiramente vegetal. Reflete uma elevada concentração de lípidos específicos. Surge em certos micro-lotes peruanos e equatorianos.",
+        'pl': "Wyjątkowe, maślane i lekko warzywne odczucie w ustach. Odzwierciedla wysokie stężenie specyficznych lipidów. Pojawia się w niektórych mikropartiach z Peru i Ekwadoru.",
+        'nl': "Uniek, boterachtig en licht plantaardig mondgevoel. Weerspiegelt een hoge concentratie van specifieke lipiden. Komt voor in bepaalde Peruaanse en Ecuadoriaanse micro-lots.",
+        'sv': "Unik, smörig och något vegetabilisk munkänsla. Speglar hög koncentration av specifika lipider. Uppstår i vissa peruanska och ecuadorianska mikrolotter.",
+        'tr': "Eşsiz, tereyağımsı ve hafif bitkisel ağız hissi. Spesifik lipidlerin yüksek konsantrasyonunu yansıtır. Belirli Peru ve Ekvador mikro lotlarında ortaya çıkar.",
+        'ja': "バターのようでわずかに植物的な、独特の口当たり。特定の脂質の高濃度を反映している。特定のペルー産やエクアドル産のマイクロロットで発生する。",
+        'ko': "버터 같고 약간 식물적인 독특한 마우스필입니다. 특정 지질의 높은 농도를 반영합니다. 일부 페루 및 에콰도르 마이크로 로트에서 나타납니다.",
+        'zh': "独特的、奶油感且略带植物味的口感。反映了特定脂质的高浓度。出现在某些秘鲁和厄瓜多尔微批次中。",
+        'ar': "ملمس فم فريد وزبدي ونباتي قليلاً. يعكس تركيزاً عالياً لدهون معينة. يظهر في دفعات ميكرولوت معينة من بيرو وإكوادور.",
+    },
+    'wheel_note_raw': {
+        'en': "Undeveloped, grassy note indicating short roast time or low moisture loss. Common in very fast light roasts.",
+        'uk': "Нерозвинена, трав'яниста нота, що вказує на короткий час обсмажування або низьку втрату вологи. Поширено у дуже швидких світлих обсмажуваннях.",
+        'de': "Unterentwickelte, grasige Note, die auf eine kurze Röstzeit oder geringen Feuchtigkeitsverlust hindeutet. Häufig bei sehr schnellen hellen Röstungen.",
+        'fr': "Note herbeuse non développée indiquant un temps de torréfaction court ou une faible perte d'humidité. Courant dans les torréfactions claires très rapides.",
+        'es': "Nota herbácea poco desarrollada que indica un tiempo de tueste corto o baja pérdida de humedad. Común en tuestes ligeros muy rápidos.",
+        'it': "Nota erbosa non sviluppata che indica un tempo di tostatura breve o una bassa perdita di umidità. Comune nelle tostature chiare molto veloci.",
+        'pt': "Nota de erva subdesenvolvida que indica um tempo de torrefação curto ou baixa perda de humidade. Comum em torras claras muito rápidas.",
+        'pl': "Nierozwinięta, trawiasta nuta wskazująca na krótki czas palenia lub niską utratę wilgoci. Częsta w bardzo szybkich jasnych paleniach.",
+        'nl': "Onontwikkelde, grasachtige noot die duidt op een korte brandtijd of laag vochtverlies. Veelvoorkomend bij zeer snelle lichte brandingen.",
+        'sv': "Underutvecklad, gräsig not som indikerar kort rostningstid eller låg fuktförlust. Vanligt vid mycket snabba ljusrostningar.",
+        'tr': "Kısa kavurma süresini veya düşük nem kaybını gösteren gelişmemiş, çimensi nota. Çok hızlı açık kavurmalarda yaygındır.",
+        'ja': "焙煎時間が短い、または水分減少が少ないことを示す、未発達な芝生のようなノート。非常に素早い浅煎りで一般的。",
+        'ko': "짧은 배전 시간이나 낮은 수분 손실을 나타내는 덜 발달된 풀 향 노트입니다. 매우 빠른 약배전에서 흔히 볼 수 있습니다.",
+        'zh': "发育不全的青草味，表示烘焙时间短或水分流失低。常见于极快速的浅度烘焙中。",
+        'ar': "نكهة عشبية غير مكتملة النضج تشير إلى وقت تحميص قصير أو فقدان منخفض للرطوبة. شائعة في التحميص الخفيف السريع جدًا.",
+    },
+    'wheel_note_under_ripe': {
+        'en': "Sharp, green acidity reminiscent of unripe fruit. Indicates non-uniform cherry harvesting. Present in some commercial-grade mixed lots.",
+        'uk': "Гостра, зелена кислотність, що нагадує незрілі фрукти. Вказує на неоднорідний збір ягід. Присутня в деяких змішаних лотах комерційного класу.",
+        'de': "Scharfe, grüne Säure, die an unreife Früchte erinnert. Deutet auf eine ungleichmäßige Kirschenernte hin. In einigen gemischten Partien kommerzieller Qualität vorhanden.",
+        'fr': "Acidité verte et vive rappelant les fruits non mûrs. Indique une récolte de cerises non uniforme. Présent dans certains lots mélangés de qualité commerciale.",
+        'es': "Acidez verde y afilada que recuerda a la fruta no madura. Indica una cosecha de cerezas no uniforme. Presente en algunos lotes mixtos de grado comercial.",
+        'it': "Acidità verde e pungente che ricorda la frutta acerba. Indica una raccolta delle ciliegie non uniforme. Presente in alcuni lotti miscelati di grado commerciale.",
+        'pt': "Acidez verde e aguda que lembra fruta não madura. Indica uma colheita de cerejas não uniforme. Presente em alguns lotes mistos de grau comercial.",
+        'pl': "Ostra, zielona kwasowość przypominająca niedojrzałe owoce. Wskazuje na niejednolite zbieranie owoców. Obecna w niektórych mieszanych partiach klasy komercyjnej.",
+        'nl': "Scherpe, groene zuurgraad die doet denken aan onrijp fruit. Duidt op ongelijkmatige oogst van bessen. Aanwezig in sommige gemengde partijen van commerciële kwaliteit.",
+        'sv': "Skarp, grön syra som påminner om omogen frukt. Indikerar ojämn skörd av bär. Finns i vissa blandade partier av kommersiell kvalitet.",
+        'tr': "Olgunlaşmamış meyveyi andıran keskin, yeşil asidite. Kiraz hasadının tekdüze olmadığını gösterir. Bazı ticari sınıf karışık lotlarda bulunur.",
+        'ja': "未熟な果実を思わせる、鋭く青い酸味。チェリーの収穫が不均一であることを示す。一部のコマーシャルグレードの混合ロットに含まれる。",
+        'ko': "익지 않은 과일을 연상시키는 날카로운 초록빛 산미입니다. 불균일한 체리 수확을 나타냅니다. 일부 상업용 등급의 혼합 로트에 존재합니다.",
+        'zh': "尖锐的青涩酸味，令人联想到未成熟的水果。表示咖啡樱桃采摘不均匀。存在于一些商业级的混合批次中。",
+        'ar': "حموضة خضراء حادة تذكرنا بالفاكهة غير الناضجة. تشير إلى حصاد غير منتظم لكرز القهوة. موجودة في بعض الدفعات المختلطة ذات الدرجة التجارية.",
+    },
+    'wheel_note_peapod': {
+        'en': "Savory, vegetal note reminiscent of fresh peas. Often reflects specific soil minerals or light roasting of high-density beans. Common in Rwandans.",
+        'uk': "Пряна, овочева нота, що нагадує свіжий горох. Часто відображає специфічні мінерали ґрунту або світле обсмажування щільних зерен. Поширено в руандійській каві.",
+        'de': "Herzhafte, pflanzliche Note, die an frische Erbsen erinnert. Spiegelt oft spezifische Bodenmineralien oder eine helle Röstung von Bohnen hoher Dichte wider. Häufig bei ruandischen Kaffees.",
+        'fr': "Note végétale savoureuse rappelant les pois frais. Reflète souvent des minéraux spécifiques du sol ou une torréfaction claire de grains à haute densité. Courant dans les cafés rwandais.",
+        'es': "Nota vegetal sabrosa que recuerda a los guisantes frescos. A menudo refleja minerales específicos del suelo o el tueste ligero de granos de alta densidad. Común en los cafés rwandeses.",
+        'it': "Nota vegetale saporita che ricorda i piselli freschi. Spesso riflette specifici minerali del terreno o una tostatura chiara di chicchi ad alta densità. Comune nei caffè rwandesi.",
+        'pt': "Nota vegetal saborosa que lembra ervilhas frescas. Frequentemente reflete minerais específicos do solo ou uma torrefação clara de grãos de elevada densidade. Comum em cafés ruandeses.",
+        'pl': "Wytrawna, warzywna nuta przypominająca świeży groszek. Często odzwierciedla specyficzne minerały glebowe lub jasne palenie ziaren o wysokiej gęstości. Powszechna в kawach rwandyjskich.",
+        'nl': "Hartige, plantaardige noot die doet denken aan verse erwten. Weerspiegelt vaak specifieke bodemmineralen of lichte branding van bonen met een hoge dichtheid. Veelvoorkomend in Rwandese koffies.",
+        'sv': "Matig, vegetabilisk not som påminner om färska ärtor. Speglar ofta specifika mineraler i jorden eller ljusrostning av bönor med hög densitet. Vanligt i kaffe från Rwanda.",
+        'tr': "Taze bezelyeyi andıran iştah açıcı, bitkisel nota. Genellikle spesifik toprak minerallerini veya yüksek yoğunluklu çekirdeklerin hafif kavrulmasını yansıtır. Ruanda kahvelerinde yaygındır.",
+        'ja': "新鮮なエンドウ豆を思わせる香ばしく植物的なノート。特定の土壌ミネラルや高密度の豆の浅煎りを反映していることが多い。ルワンダ産に一般的。",
+        'ko': "신선한 완두콩을 연상시키는 짭짤하고 식물적인 노트입니다. 종종 특정 토양 미네랄이나 고밀도 원두의 약배전을 반영합니다. 루완다 커피에서 흔히 볼 수 있습니다.",
+        'zh': "令人联想到新鲜豌豆的咸鲜植物味。通常反映了特定的土壤矿物质或高密度咖啡豆的浅度烘焙。常见于卢旺达咖啡中。",
+        'ar': "نكهة نباتية لذيذة تذكرنا بالبازلاء الطازجة. تعكس غالباً معادن معينة في التربة أو تحميصاً خفيفاً للحبوب عالية الكثافة. شائعة في القهوة الرواندية.",
+    },
+    'wheel_note_fresh': {
+        'en': "Vibrant, green and bright profile. Positive vegetal note indicating fresh-crop beans and light processing. Common in high-grown Peruvians.",
+        'uk': "Яскравий, зелений та чистий профіль. Позитивна овочева нота, що вказує на свіжий врожай та легку обробку. Поширено у високогірній перуанській каві.",
+        'de': "Lebendiges, grünes und helles Profil. Positive pflanzliche Note, die auf erntefrische Bohnen und leichte Aufbereitung hindeutet. Häufig bei peruanischen Kaffees aus großen Höhenlagen.",
+        'fr': "Profil vibrant, vert et éclatant. Note végétale positive indiquant des grains de récolte fraîche et un traitement léger. Courant dans les cafés péruviens de haute altitude.",
+        'es': "Perfil vibrante, verde y brillante. Nota vegetal positiva que indica granos de cosecha fresca y un procesamiento ligero. Común en los cafés peruanos de gran altitud.",
+        'it': "Profilo vivace, verde e brillante. Nota vegetale positiva che indica chicchi di raccolto fresco e lavorazione leggera. Comune nei caffè peruviani d'alta quota.",
+        'pt': "Perfil vibrante, verde e brilhante. Nota vegetal positiva que indica grãos de colheita fresca e um processamento ligeiro. Comum em cafés peruanos de elevada altitude.",
+        'pl': "Żywy, zielony i jasny profil. Pozytywna nuta warzywna wskazująca на ziarna z świeżych zbiorów i lekką obróbkę. Powszechna в wysokogórskich kawach peruwiańskich.",
+        'nl': "Levendig, groen en helder profiel. Positieve plantaardige noot die duidt op vers geoogste bonen en lichte verwerking. Veelvoorkomend in Peruaanse koffies van grote hoogte.",
+        'sv': "Livlig, grön och ljus profil. Positiv vegetabilisk not som indikerar färska bönor och lätt bearbetning. Vanligt i peruanskt kaffe från hög höjd.",
+        'tr': "Canlı, yeşil ve parlak profil. Taze mahsul çekirdekleri ve hafif işlemeyi gösteren pozitif bitkisel nota. Yüksek rakımlı Peru kahvelerinde yaygındır.",
+        'ja': "鮮やかで青く明るいプロファイル。新豆（フレッシュクロップ）と軽い精製を示すポジティブな植物的ノート。高地栽培のペルー産に一般的。",
+        'ko': "활기차고 초록빛이며 밝은 프로필입니다. 햇원두와 가벼운 가공을 나타내는 긍정적인 식물적 노트입니다. 고산지대 페루 커피에서 흔히 볼 수 있습니다.",
+        'zh': "鲜明、青绿且明亮的剖面。正向的植物味，表示当年新产季的咖啡豆和轻度处理。常见于高海拔秘鲁咖啡中。",
+        'ar': "ملف حيوي وأخضر ومشرق. نكهة نباتية إيجابية تشير إلى حبوب المحصول الطازج والمعالجة الخفيفة. شائعة في القهوة البيروفية المزروعة على ارتفاعات عالية.",
+    },
+    'wheel_note_vegetative': {
+        'en': "Broad herbal profile encompassing leaves and stems. Reflects high levels of specific pyrazines. Characteristic of Indonesian Mandheling.",
+        'uk': "Широкий трав'яний профіль, що охоплює листя та стебла. Відображає високий рівень специфічних піразинів. Характерно для індонезійського сорту Манделінг.",
+        'de': "Breites Kräuterprofil, das Blätter und Stängel umfasst. Spiegelt einen hohen Gehalt an spezifischen Pyrazinen wider. Charakteristisch für indonesischen Mandheling.",
+        'fr': "Profil herbacé large englobant feuilles et tiges. Reflète des niveaux élevés de pyrazines spécifiques. Caractéristique du Mandheling indonésien.",
+        'es': "Perfil herbal amplio que abarca hojas y tallos. Refleja altos niveles de pirazinas específicas. Característico del Mandheling indonesio.",
+        'it': "Ampio profilo erboristico che comprende foglie e steli. Riflette alti livelli di pirazine specifiche. Caratteristico del Mandheling indonesiano.",
+        'pt': "Perfil herbal amplo que abrange folhas e caules. Reflete elevados níveis de pirazinas específicas. Característico de Mandheling indonésio.",
+        'pl': "Szeroki profil ziołowy obejmujący liście i łodygi. Odzwierciedla wysokie poziomy specyficznych pirazyn. Charakterystyczne для indonezyjskiej odmiany Mandheling.",
+        'nl': "Breed kruidenprofiel dat bladeren en stengels omvat. Weerspiegelt een hoog gehalte aan specifieke pyrazines. Kenmerkend voor Indonesische Mandheling.",
+        'sv': "Bred örtprofil som omfattar blad och stjälkar. Speglar höga nivåer av specifika pyraziner. Karaktäristiskt för indonesisk Mandheling.",
+        'tr': "Yaprakları ve sapları kapsayan geniş otsu profil. Spesifik pirazinlerin yüksek seviyelerini yansıtır. Endonezya Mandheling kahvesinin özelliğidir.",
+        'ja': "葉や茎を含む幅広いハーブのプロファイル。特定のピラジンの高レベルを反映している。インドネシアのマンデリンの特徴。",
+        'ko': "잎과 줄기를 아우르는 폭넓은 허브 프로필입니다. 특정 피라진의 높은 수준을 반영합니다. 인도네시아 만델링의 특징입니다.",
+        'zh': "广泛的草本风味，包括叶子和茎。反映了特定吡嗪的高含量。印度尼西亚曼特宁咖啡的特征。",
+        'ar': "ملف عشبي واسع يشمل الأوراق والسيقان. يعكس مستويات عالية من بيرازينات معينة. من سمات قهوة مندهلينغ الإندونيسية.",
+    },
+    'wheel_note_hay_like': {
+        'en': "Dry, sweet grass and straw profile. Often indicates early signs of bean aging or specific terroir dryness. Frequent in processed Brazilian lots.",
+        'uk': "Профіль сухої, солодкої трави та соломи. Часто вказує на ранні ознаки старіння зерна або специфічну сухість теруару. Часто зустрічається в обробленій бразильській каві.",
+        'de': "Profil von trockenem, süßem Gras und Stroh. Deutet oft auf erste Anzeichen von Bohnenalterung oder spezifische Terroir-Trockenheit hin. Häufig bei aufbereiteten brasilianischen Partien.",
+        'fr': "Profil d'herbe sèche et sucrée et de paille. Indique souvent des signes précoces de vieillissement des grains ou une sécheresse spécifique au terroir. Fréquent dans les lots brésiliens traités.",
+        'es': "Perfil de hierba seca y dulce y paja. A menudo indica signos tempranos de envejecimiento del grano o sequedad específica del terroir. Frecuente en lotes brasileños procesados.",
+        'it': "Profilo di erba secca e dolce e paglia. Spesso indica i primi segni di invecchiamento del chicco o una specifica aridità del terroir. Frequente nei lotti brasiliani lavorati.",
+        'pt': "Perfil de erva seca e doce e palha. Frequentemente indica sinais precoces de envelhecimento do grão ou secura específica do terroir. Frequente em lotes brasileiros processados.",
+        'pl': "Profil suchej, słodkiej trawy i słomy. Często wskazuje на wczesne oznaki starzenia się ziarna lub specyficzną suchość terroir. Częsty в obrabianych kawach brazylijskich.",
+        'nl': "Profiel van droog, zoet gras en stro. Duidt vaak op vroege tekenen van veroudering van bonen of specifieke droogte van het terroir. Veelvoorkomend in verwerkte Braziliaanse partijen.",
+        'sv': "Profil av torrt, sött gräs och halm. Indikerar ofta tidiga tecken på att bönorna åldras eller specifik torrhet i terroir. Vanligt i bearbetade brasilianska partier.",
+        'tr': "Kuru, tatlı ot ve saman profili. Genellikle çekirdek yaşlanmasının erken belirtilerini veya spesifik teruar kuruluğunu gösterir. İşlenmiş Brezilya lotlarında sık görülür.",
+        'ja': "乾燥した甘い草やわらのプロファイル。豆の老化の初期兆候や、特定のテロワールの乾燥を示すことが多い。精製されたブラジル産ロットによく見られる。",
+        'ko': "마른 단맛이 나는 풀과 짚의 프로필입니다. 종종 원두 노화의 초기 징후나 특정 테루아의 건조함을 나타냅니다. 가공된 브라질 로트에서 자주 발견됩니다.",
+        'zh': "干燥、带甜味的青草和稻草味。通常表示咖啡豆老化的早期迹象或特定的风土干燥度。经常出现在处理过的巴西批次中。",
+        'ar': "ملف عشبي جاف وحلو يشبه القش. يشير غالبًا إلى علامات مبكرة لتعتيق الحبوب أو جفاف بيئي معين. يتكرر في الدفعات البرازيلية المعالجة.",
+    },
+    'wheel_note_herb_like': {
+        'en': "Savory herb notes like rosemary or thyme. Correlated with specific volcanic soil profiles. Hallmark of specialty lots from Timor and Bali.",
+        'uk': "Пряні трав'яні ноти, такі як розмарин або чебрець. Корелюють зі специфічними вулканічними ґрунтами. Візитна картка спешелті-лотів з Тімору та Балі.",
+        'de': "Herzhafte Kräuternoten wie Rosmarin oder Thymian. Korreliert mit spezifischen vulkanischen Bodenprofilen. Markenzeichen von Spezialitätenpartien aus Timor und Bali.",
+        'fr': "Notes d'herbes savoureuses comme le romarin ou le thym. Corréler avec des profils de sols volcaniques spécifiques. Marque de fabrique des lots de spécialité de Timor et Bali.",
+        'es': "Notas de hierbas sabrosas como romero o tomillo. Correlacionado con perfiles de suelo volcánico específicos. Sello distintivo de lotes de especialidad de Timor y Bali.",
+        'it': "Note di erbe aromatiche come rosmarino o timo. Correlato a specifici profili di suolo vulcanico. Segno distintivo dei lotti specialty di Timor e Bali.",
+        'pt': "Notas de ervas saborosas como alecrim ou tomilho. Correlacionadas com perfis de solo vulcânico específicos. Marca de lotes de especialidade de Timor e Bali.",
+        'pl': "Wytrawne nuty ziołowe, takie jak rozmaryn lub tymianek. Korelują ze specyficznymi profilami gleb wulkanicznych. Znak rozpoznawczy kaw specialty z Timoru i Bali.",
+        'nl': "Hartige kruidtonen zoals rozemarijn of tijm. Correspondeert met specifieke vulkanische bodemprofielen. Kenmerk van specialty partijen uit Timor en Bali.",
+        'sv': "Matiga örtnoter som rosmarin eller timjan. Korrelerar med specifika vulkaniska jordprofiler. Kännetecken för specialpartier från Timor och Bali.",
+        'tr': "Biberiye veya kekik gibi iştah açıcı bitki notaları. Belirli volkanik toprak profilleriyle ilişkilidir. Timor ve Bali'den gelen nitelikli lotların imzasıdır.",
+        'ja': "ローズマリーやタイムのような香ばしいハーブのノート。特定の火山性土壌のプロファイルと相関している。ティモールやバリのスペシャリティロットの特徴。",
+        'ko': "로즈마리나 타임과 같은 짭짤한 허브 노트입니다. 특정 화산 토양 프로필과 상관관계가 있습니다. 티모르와 발리의 스페셜티 로트의 특징입니다.",
+        'zh': "迷迭香或百里香等咸鲜草本味。与特定的火山土壤剖面有关。帝汶和巴厘岛精品批次的标志。",
+        'ar': "نكهات عشبية لذيذة مثل إكليل الجبل أو الزعتر. مرتبطة بملفات تربة بركانية معينة. سمة مميزة للدفعات المختلقة من تيمور وبالي.",
+    },
+}
+
+with open(target_file, 'r', encoding='utf-8') as f:
+    content = f.read()
+
+for key, langs in translations.items():
+    new_block = f"'{key}': {{\n"
+    for lang, text in langs.items():
+        safe_text = text.replace(chr(39), '\\' + chr(39))
+        new_block += f"        '{lang}': '{safe_text}',\n"
+    new_block += "      },"
+    pattern = rf"'{key}':\s*\{{.*?\}},"
+    content = re.sub(pattern, new_block, content, flags=re.DOTALL)
+
+with open(target_file, 'w', encoding='utf-8', newline='\n') as f:
+    f.write(content)
+
+print('Green/Vegetative update complete.')

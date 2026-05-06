@@ -1,0 +1,91 @@
+wheel_cat_floral|Delicate and aromatic notes reminiscent of blossoms. These flavors often come from high-altitude environments where slow maturation concentrates volatile aromatic compounds. Characteristic of Ethiopian heirlooms and Gesha varieties.
+wheel_cat_fruity|A wide range of sweet and tart notes from berries to stone fruits. These are typically associated with organic acids like citric and malic, often enhanced by natural or anaerobic processing. Common in African and Central American coffees.
+wheel_cat_sour_fermented|Complex notes that can range from pleasant tangy acids to intense fermented funk. These flavors result from metabolic processes during coffee processing (like prolonged fermentation). Often found in experimental processing lots from Colombia and Costa Rica.
+wheel_cat_green_veg|Herbal or vegetal notes that evoke fresh-cut grass or raw vegetables. These can indicate a lighter roast profile or specific varieties that retain "green" characteristics. Common in some Indonesian or under-roasted high-density beans.
+wheel_cat_roasted|Savory and deep notes resulting from the Maillard reaction and caramelization during roasting. These range from toasted bread to smoky accents. Typically associated with medium to dark roast profiles from Brazil or India.
+wheel_cat_spices|Warm, pungent, or sweet spice notes like pepper, clove, or cinnamon. These often emerge during the middle stages of roasting. Frequently found in Sumatran coffees or spicy varieties from Rwanda.
+wheel_cat_nutty_cocoa|Comforting notes of chocolate, nuts, and cocoa. These result from stable sugars and oils that develop early in the roast. The standard profile for many high-quality Arabicas from Brazil, Guatemala, and Vietnam.
+wheel_cat_sweet|The foundational sweetness in coffee, ranging from white sugar to complex molasses. It comes from the breakdown of carbohydrates during roasting. Present in almost all balanced, specialty coffees.
+wheel_cat_others|A category for unique or unconventional notes that don't fit elsewhere, often reflecting rare chemical artifacts of processing or storage.
+wheel_sub_berry|Vibrant and sweet-tart notes of small fruits. Derived from concentrated anthocyanins. Typical of Ethiopian natural coffees and Kenyan SL-varieties.
+wheel_sub_dried_fruit|Concentrated, jammy sweetness reminiscent of raisins or dates. Often the result of over-ripening or natural sun-drying. Common in Yemen Moka and processed lots from Brazil.
+wheel_sub_citrus|Zesty and acidic notes providing brightness and "sparkle". Linked to high citric acid content. Signature profile of high-grown Colombian and Honduran coffees.
+wheel_sub_other_fruit|Tropical or temperate fruit notes like apple, pear, or mango. Represents intermediate acidity levels. Characteristic of Costa Rican and Salvadoran coffees.
+wheel_sub_sour|Direct and sharp acidic notes. When balanced, it provides structure; when excessive, it indicates under-extraction or high organic acid concentration.
+wheel_sub_alcohol_fermented|Heady and winey notes resulting from anaerobic or yeast-assisted fermentation. Reminiscent of spirits or cider. Typical of modern experimental lots from Colombia.
+wheel_sub_cocoa|Deep, dark chocolate profiles. Emerges during prolonged development in the roast. Quintessential Brazil and Indian Monsoon Malabar notes.
+wheel_sub_nutty|Earthy and savory notes of roasted nuts. Comes from amino acids reacting with sugars. Found in Classic South American profiles.
+wheel_sub_sugar_brown|Rich caramel and syrup sweetness. The result of complex sugar browning. Universal in well-roasted medium profiles.
+wheel_sub_tea|Clean, structured mouthfeel with herbal undertones. Relates to specific polyphenols in high-altitude beans. Hallmarks of Yirgacheffe and high-grade Kenyan lots.
+wheel_sub_sweet_aromatics|Fragrant, comforting scents like vanilla or spice. Derived from late-stage Maillard reactions. Typical of high-quality Arabicas from Central America.
+wheel_sub_brown_spice|Warm, sweet spice notes that develop as sugars caramelize. Rich in phenolic compounds. Characteristic of Sumatran and Rwandan coffees.
+wheel_sub_cereal|Toasted grain and bread-like notes. Indicative of early roast stages or specific bean density. Common in many Brazilian and Indian lots.
+wheel_sub_burnt|Intense smoky or carbonized notes. Result of high-temperature pyrolysis during roasting. Hallmarks of dark roast profiles.
+wheel_sub_green_vegetative|Herbal and grassy notes associated with fresh plant matter. Can reflect terroir or light roasting. Typical of under-developed high-density beans.
+wheel_sub_chemical|Pungent or medicinal notes often resulting from processing defects or improper storage. Rare in specialty lots.
+wheel_sub_papery|Dry, woody or stale notes reminiscent of cardboard. Often indicates old-crop beans or moisture loss during storage.
+wheel_note_blackberry|Deep, dark berry sweetness with a slight tannic edge. Reminiscent of wild summer fruit. Characteristic of Kenyan coffees with high phosphorus soil.
+wheel_note_blueberry|A distinct "jammy" and sweet berry note. Often indicates a clean natural process. The hallmark of Ethiopian Yirgacheffe and Sidamo naturals.
+wheel_note_raspberry|Bright, tart berry note with floral undertones. High malic and citric acidity. Often found in high-altitude Rwandan and Burundian coffees.
+wheel_note_strawberry|Sweet, fragrant red fruit note. Often accompanied by creamy body. Result of slow fermentation in high-sugar cherries like Bourbon or SL28.
+wheel_note_raisin|Intense sun-dried sweetness with a slightly fermented edge. Reminiscent of concentrated grape sugars. Common in Yemeni and sun-dried Ethiopian lots.
+wheel_note_prune|Deep, dark dried fruit sweetness. Often indicates a more complex, heavy-bodied natural process. Typical of Brazilian pulp-naturals.
+wheel_note_coconut|Creamy, nutty sweetness with a tropical aromatic profile. Often emerges in anaerobic or yeast-processed honey lots. Signature of modern Costa Rican micro-lots.
+wheel_note_cherry|Classic stone fruit sweetness with systemic acidity. Relates to the coffee fruit itself. Found in many Central American washed coffees.
+wheel_note_pomegranate|Complex tartness with a dry, slight bitterness. High antioxidant and acid profile. Typical of bright Kenyan and high-end Ethiopian lots.
+wheel_note_pineapple|Explosive tropical sweetness and high acidity. Result of anaerobic or prolonged lactic fermentation. Common in experimental micro-lots.
+wheel_note_grape|Juicy sweetness ranging from green to dark purple grapes. Tartaric acid dominance. Characteristic of varieties like Castillo in Colombia.
+wheel_note_apple|Clean, crisp sweetness linked to malic acid. Reminiscent of green or red apples depending on density. Found in many washed Ethiopian and Mexican coffees.
+wheel_note_peach|Delicate, fuzzy sweetness with a smooth mouthfeel. Intermediate acidity. Hallmark of high-quality Ethiopian washed lots and some Salvadoran Pacamaras.
+wheel_note_pear|Soft, grainy sweetness with subtle acidity. Often associated with clean, elegant washed profiles. Typical of Mexican and Honduran Arabicas.
+wheel_note_grapefruit|Zesty citrus note with a pleasant, tonic-like bitterness. Linked to high phosphorus soils. Common in high-acid Kenyan and Rwandan coffees.
+wheel_note_orange|Sweet, balanced citrus note with soft acidity. Reminiscent of orange juice or zest. Characteristic of Colombian and Salvadoran Arabicas.
+wheel_note_lemon|Sharp, bright, and refreshing citric note. Typical of high-density beans grown in volcanic soil. Frequent in Guatemalan Huehuetenango.
+wheel_note_lime|The sharpest, most intense citrus acid. Provides a "zingy" finish. Common in extremely high-altitude lots or specific varieties like Geisha.
+wheel_note_black_tea|Tannic, structured mouthfeel with a savory-sweet edge. Reminiscent of high-quality Pekoe. Characteristic of Yirgacheffe and many Kenyan lots.
+wheel_note_green_tea|Fresh, herbal and slightly astringent profile. Indicates very light roasting or specific high-altitude varieties. Common in delicate washed Ethiopians.
+wheel_note_chamomile|Gentle, herbal and slightly honey-like sweetness. Indicates complex, low-acidity floral profiles. Often found in processed Nicaraguan coffees.
+wheel_note_rose|Soft, elegant floral sweetness. Associated with gentle roast profiles and high elevation. Found in delicate pink-bourbon varieties.
+wheel_note_jasmine|Intensely floral and perfume-like aroma. Linked to high concentrations of linalool. The definitive note of Panamanian and Ethiopian Geshas.
+wheel_note_vanilla|Sweet, creamy, and subtle aromatic note. Arises during the middle of the roasting process. Often found in high-grade washed Central American lots.
+wheel_note_vanilla_bean|Intense, woodsy and oily sweetness. Represents a more concentrated aromatic profile than simple vanilla. Found in unique Bourbon-variety micro-lots.
+wheel_note_molasses|Thick, dark sugary sweetness with an earthy undertone. Result of high degree of caramelization. Signature of many Brazilian and Sumatran coffees.
+wheel_note_maple_syrup|Clean, woody and persistent sweetness. Represents high-quality, stable carbohydrate breakdown in the roast. Frequent in high-grade Guatemalan lots.
+wheel_note_caramel|Rich, sugary browning note. Universal indicator of proper roast development. Present in sweet coffees from Guatemala to Brazil.
+wheel_note_honey|Viscous, floral sweetness. Linked to high mucilage content and specific processing. Hallmarks of Costa Rican "Honey" processed lots.
+wheel_note_peanuts|Earthy, slightly oily and savory nut sweetness. Characteristic of many South American coffees and specific roast styles. Common in classic Brazilian lots.
+wheel_note_hazelnut|Buttery, oily nut sweetness. Typical of medium roasts and stable varieties like Castillo or Caturra. Found throughout Latin America.
+wheel_note_almond|Sweet, slightly bitter nut note with a marzipan-like edge. Linked to specific amino acid profiles. Common in clean, washed Honduran and Salvadoran coffees.
+wheel_note_chocolate|Foundational cocoa sweetness. Result of browning reactions. Classic note for Brazilian, Indian, and Vietnamese high-quality robustas and arabicas.
+wheel_note_dark_chocolate|Intense, bitter-sweet cocoa richness. Marks high degree of development or specific terroir genetics. Constant in high-altitude Sumatran coffees.
+wheel_note_clove|Spicy, pungent note with a warm sensation. Result of specific phenolic compounds. Found in some Rwandan and Burundian coffees.
+wheel_note_cinnamon|Sweet, woody spice note. Common in medium-light roasts of dense coffees. Frequent in Yemeni and some Ethiopian coffees.
+wheel_note_nutmeg|Earthy and warm spice profile. Often complements chocolate and nutty sweetness. Characteristic of high-grade Indonesian Arabicas.
+wheel_note_anise|Cool, sweet and slightly medicinal spice note. Reminiscent of licorice. Found in some rare Yemeni and complex African lots.
+wheel_note_malt|Sweet, grain-like note reminiscent of beer or freshly baked bread. Indicator of specific sugar-amino-acid reactions. Common in traditional Brazilian coffees.
+wheel_note_grain|Basic, foundational toasted cereal note. Often reflects terroir or specific harvest conditions. Found in many Latin American Arabicas.
+wheel_note_smoky|Intense char and wood-smoke notes. Typical of dark-roast profiles where pyrolysis dominates. Quintessential for South Italian espresso styles.
+wheel_note_ashy|Dry, carbonaceous and mineral-like note. Indicates extreme roast exposure. Found in commercial-grade dark roasts.
+wheel_note_olive_oil|Unique, buttery and slightly vegetal mouthfeel. Reflects high concentration of specific lipids. Arises in certain Peruvian and Ecuadorian micro-lots.
+wheel_note_raw|Undeveloped, grassy note indicating short roast time or low moisture loss. Common in very fast light roasts.
+wheel_note_under_ripe|Sharp, green acidity reminiscent of unripe fruit. Indicates non-uniform cherry harvesting. Present in some commercial-grade mixed lots.
+wheel_note_peapod|Savory, vegetal note reminiscent of fresh peas. Often reflects specific soil minerals or light roasting of high-density beans. Common in Rwandans.
+wheel_note_fresh|Vibrant, green and bright profile. Positive vegetal note indicating fresh-crop beans and light processing. Common in high-grown Peruvians.
+wheel_note_vegetative|Broad herbal profile encompassing leaves and stems. Reflects high levels of specific pyrazines. Characteristic of Indonesian Mandheling.
+wheel_note_hay_like|Dry, sweet grass and straw profile. Often indicates early signs of bean aging or specific terroir dryness. Frequent in processed Brazilian lots.
+wheel_note_herb_like|Savory herb notes like rosemary or thyme. Correlated with specific volcanic soil profiles. Hallmark of specialty lots from Timor and Bali.
+wheel_note_sour_aromatics|Tangy and complex acidic scents. Essential for structure in high-grown coffees. Present in almost all high-attribute Central Americans.
+wheel_note_acetic_acid|Sharp, vinegar-like acidity. Normal at low levels; indicates over-fermentation if aggressive. Found in long-fermented "Funky" Colombian lots.
+wheel_note_butyric_acid|Heady and pungent acid profile reminiscent of Greek yogurt or cheese. Result of intensive metabolic processing. Signature of modern experimental ferments.
+wheel_note_isovaleric_acid|Strong, cheese-like or sweaty acid note. Characteristic of extremely long anaerobic fermentations. Often polarizing but sought after in modern competitions.
+wheel_note_citric_acid|Pure, refreshing and bright acidity. The primary acid in most specialty coffees. Quintessential Kenyan and Colombian profile.
+wheel_note_malic_acid|Crisp and structural acidity that provides body and sweetness. Common in heavy coffee varieties like Bourbon. Hallmarks of Burundian coffees.
+wheel_note_winey|Heady, fruity acidity reminiscent of red wine. Result of controlled fruit fermentation. Iconic for natural Ethiopians and Colombian anaerobic lots.
+wheel_note_whiskey|Complex, alcoholic and woody notes. Indicates intense, prolonged fermentation. Typical of experimental "Spirit-process" lots.
+wheel_note_over_ripe|Deep, slightly boozy sweetness of fruit just past its prime. Adds weight to natural processed lots. Common in Brazilian naturals.
+wheel_note_rubber|Dense, pungent note often associated with the genetics of Robusta. Can appear in some intense Brazilian clones. Rare in Arabica.
+wheel_note_petroleum|Sharp, industrial aromatic note. Usually indicates contamination or major storage faults. Unacceptable in specialty coffee.
+wheel_note_medicinal|Iodine or phenol-like scent. Often result of water-borne pathogens during processing. Indicator of poor quality control.
+wheel_note_stale|Flat, dull profile lacking aromatics. Direct indicator of oxidation and lack of freshness. Common in old warehouse stocks.
+wheel_note_musty|Damp and earthy fault associated with moisture damage. Result of fungal growth during drying. Defect associated with poor processing.
+wheel_note_dusty|Dry, mineral-like flatness. Often indicates improper cleaning of the lot or exposure to fine particulates. Found in lower-grade commercial lots.

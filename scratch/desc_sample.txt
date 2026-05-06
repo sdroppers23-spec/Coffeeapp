@@ -1,0 +1,26 @@
+
+class FlavorDescriptions {
+  static String getDescription(String key, String locale) {
+    final Map<String, Map<String, String>> descriptions = {
+      'wheel_cat_floral': {
+        'en': 'Delicate and aromatic notes reminiscent of blossoms. These flavors often come from high-altitude environments where slow maturation concentrates volatile aromatic compounds. Characteristic of Ethiopian heirlooms and Gesha varieties.',
+        'uk': 'Делікатні та ароматні ноти, що нагадують цвітіння. Ці смаки часто виникають завдяки високогірним умовам, де повільне дозрівання концентрує летючі ароматичні сполуки. Характерно для ефіопської спадщини та сортів Гейша.',
+        'de': 'Zarte und aromatische Noten, die an Blüten erinnern. Diese Aromen stammen oft aus Umgebungen in großer Höhe, wo die langsame Reifung flüchtige aromatische Verbindungen konzentriert.',
+        'fr': 'Notes délicates et aromatiques rappelant les fleurs. Ces saveurs proviennent souvent d\'environnements à haute altitude où la maturation lente concentre les composés aromatiques volatils.',
+        'es': 'Notas delicadas y aromáticas que recuerdan a las flores. Estos sabores suelen provenir de entornos de gran altitud donde la maduración lenta concentra los compuestos aromáticos volátiles.',
+        'it': 'Note delicate e aromatiche che ricordano i fiori. Questi sapori provengono spesso da ambienti ad alta quota dove la maturazione lenta concentra i composti aromatici volatili.',
+        'pt': 'Notas delicadas e aromáticas que lembram flores. Esses sabores geralmente vêm de ambientes de alta altitude, onde a maturação lenta concentra compostos aromáticos voláteis.',
+        'pl': 'Delikatne i aromatyczne nuty przypominające kwiaty. Smaki te często pochodzą z obszarów położonych na dużych wysokościach, gdzie powolne dojrzewanie koncentruje lotne związki aromatyczne.',
+        'nl': 'Verfijnde en aromatische tonen die doen denken aan bloesems. Deze smaken komen vaak uit omgevingen op grote hoogte waar langzame rijping vluchtige aromatische verbindingen concentreert.',
+        'sv': 'Delikata och aromatiska toner som påminner om blommor. Dessa smaker kommer ofta från miljöer på hög höjd där långsam mognad koncentrerar flyktiga aromatiska föreningar.',
+        'tr': 'Çiçekleri andıran narin ve aromatik notalar. Bu tatlar genellikle, yavaş olgunlaşmanın uçucu aromatik bileşikleri yoğunlaştırdığı yüksek rakımlı ortamlardan gelir.',
+        'ja': '花を思わせる繊細で芳醇なノート。これらのフレーバーは、ゆっくりとした成熟が揮発性芳香化合物を濃縮する高地環境から来ることが多いです。',
+        'ko': '꽃을 연상시키는 섬세하고 향긋한 노트. 이러한 풍미는 종종 느린 성숙이 휘발성 방향족 화합물을 농축하는 고산 지대 환경에서 나옵니다.',
+        'zh': '令人联想到花朵的细腻芳香。这些风味通常来自高海拔环境，在那里的缓慢成熟浓缩了挥发性芳香化合物。',
+        'ar': 'نوتات رقيقة وعطرية تذكرنا بالزهور. غالبًا ما تأتي هذه النكهات من بيئات مرتفعة حيث يركز النضج البطيء المركبات العطرية المتطايرة.',
+      },
+      // ... more to come
+    };
+    return descriptions[key]?[locale] ?? (locale == 'uk' ? 'Опис скоро з\'явиться...' : 'Description coming soon...');
+  }
+}

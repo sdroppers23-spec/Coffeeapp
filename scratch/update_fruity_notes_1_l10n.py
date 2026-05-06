@@ -1,0 +1,178 @@
+
+import re
+import os
+
+target_file = r'd:\Games\Coffeeapp\lib\core\l10n\flavor_descriptions.dart'
+
+translations = {
+    'wheel_note_blackberry': {
+        'en': "Deep, dark berry sweetness with a slight tannic edge. Reminiscent of wild summer fruit. Characteristic of Kenyan coffees with high phosphorus soil.",
+        'uk': "Глибока, темна ягідна солодкість з легким танінним відтінком. Нагадує дикі літні ягоди. Характерно для кенійської кави з ґрунтів з високим вмістом фосфору.",
+        'de': "Tiefe, dunkle Beerensüße mit einer leichten Tanninnote. Erinnert an wilde Sommerfrüchte. Charakteristisch für kenianische Kaffees von phosphorreichen Böden.",
+        'fr': "Douceur profonde de baies sombres avec une pointe tannique légère. Rappelle les fruits d'été sauvages. Caractéristique des cafés kenyans provenant de sols riches en phosphore.",
+        'es': "Dulzura profunda de bayas oscuras con un ligero toque tánico. Recuerda a las frutas silvestres de verano. Característico de los cafés kenianos de suelos con alto contenido de fósforo.",
+        'it': "Dolcezza profonda di frutti di bosco scuri con una leggera nota tannica. Ricorda i frutti estivi selvatici. Caratteristico dei caffè kenioti provenienti da terreni ricchi di fosforo.",
+        'pt': "Doçura profunda de bagas escuras com um ligeiro toque tânico. Lembra frutos silvestres de verão. Característico de cafés quenianos de solos com elevado teor de fósforo.",
+        'pl': "Głęboka, ciemna jagodowa słodycz z lekkim taninowym akcentem. Przypomina dzikie letnie owoce. Charakterystyczne dla kaw kenijskich z gleb o wysokiej zawartości fosforu.",
+        'nl': "Diepe, donkere bessenzoetheid met een licht tannine-achtig randje. Doet denken aan wilde zomerfruit. Kenmerkend voor Keniaanse koffies van fosforrijke bodems.",
+        'sv': "Djup, mörk bärsötma med en lätt sträv ton. Påminner om vilda sommarfrukter. Karaktäristiskt för kenyanskt kaffe från fosforrika jordar.",
+        'tr': "Hafif tanenli bir kenara sahip derin, koyu meyve tatlılığı. Yabani yaz meyvelerini andırır. Yüksek fosforlu topraklara sahip Kenya kahvelerinin özelliğidir.",
+        'ja': "わずかなタンニンを感じる、深みのあるダークベリーの甘み。野生の夏の果実を思わせる。リン含有量の高い土壌で育ったケニア産コーヒーの特徴。",
+        'ko': "약간의 떫은맛이 가미된 깊고 진한 베리류의 단맛입니다. 야생 여름 과일을 연상시킵니다. 인 함량이 높은 토양에서 자란 케냐 커피의 특징입니다.",
+        'zh': "浓郁的深色浆果甜味，带有轻微的单宁感。令人联想到野生的夏季水果。富含磷元素的土壤中生长的肯尼亚咖啡的特征。",
+        'ar': "حلاوة عميقة للوت الداكن مع لمسة تانينية خفيفة. تذكرنا بفواكه الصيف البرية. من سمات القهوة الكينية المزروعة في تربة غنية بالفوسفور.",
+    },
+    'wheel_note_raspberry': {
+        'en': "Bright, tart berry note with floral undertones. High malic and citric acidity. Often found in high-altitude Rwandan and Burundian coffees.",
+        'uk': "Яскрава, терпка ягідна нота з квітковими підтонами. Висока яблучна та лимонна кислотність. Часто зустрічається у високогірній каві з Руанди та Бурунді.",
+        'de': "Helle, herbe Beerennote mit blumigen Untertönen. Hohe Apfel- und Zitronensäure. Oft in Kaffees aus Ruanda und Burundi aus großen Höhenlagen zu finden.",
+        'fr': "Note de baie vive et acidulée avec des nuances florales. Acidité malique et citrique élevée. Souvent présent dans les cafés rwandais et burundais de haute altitude.",
+        'es': "Nota de baya brillante y ácida con matices florales. Alta acidez málica y cítrica. A menudo se encuentra en cafés de Ruanda y Burundi de gran altitud.",
+        'it': "Nota di bacca brillante e aspra con sfumature floreali. Alta acidità malica e citrica. Spesso presente nei caffè rwandesi e burundesi d'alta quota.",
+        'pt': "Nota de baga brilhante e ácida com subtons florais. Elevada acidez málica e cítrica. Frequentemente encontrado em cafés ruandeses e burundeses de elevada altitude.",
+        'pl': "Jasna, cierpka nuta jagodowa z kwiatowymi tonami. Wysoka kwasowość jabłkowa i cytrynowa. Często spotykana w kawach rwandyjskich i burundyjskich z dużych wysokości.",
+        'nl': "Heldere, wrange bessennoot met bloemige ondertonen. Hoge appel- en citroenzuurzuurgraad. Vaak te vinden in Rwandese en Burundese koffies van grote hoogte.",
+        'sv': "Ljus, sträv bärnot med blommiga undertoner. Hög äppel- och citronsyra. Finns ofta i kaffe från Rwanda och Burundi på hög höjd.",
+        'tr': "Çiçeksi alt tonlara sahip parlak, ekşi meyve notası. Yüksek malik ve sitrik asitlik. Genellikle yüksek rakımlı Ruanda ve Burundi kahvelerinde bulunur.",
+        'ja': "フローラルな含みを持つ、明るく酸味のあるベリーのノート。リンゴ酸とクエン酸の酸味が高い。高地のルワンダやブルンジのコーヒーによく見られる。",
+        'ko': "플로럴한 향이 감도는 밝고 톡 쏘는 베리 노트입니다. 사과산과 구연산의 산미가 높습니다. 고산지대 루완다와 부룬디 커피에서 자주 발견됩니다.",
+        'zh': "明亮、酸脆的浆果味，带有花香底蕴。苹果酸和柠檬酸含量高。常出现在高海拔的卢旺达和布隆迪咖啡中。",
+        'ar': "نكهة توت مشرقة ولاذعة مع إيحاءات زهرية. حموضة ماليك وستريك عالية. توجد غالبًا في القهوة الرواندية والبوروندية المزروعة على ارتفاعات عالية.",
+    },
+    'wheel_note_blueberry': {
+        'en': "A distinct 'jammy' and sweet berry note. Often indicates a clean natural process. The hallmark of Ethiopian Yirgacheffe and Sidamo naturals.",
+        'uk': "Виразна «джемова» та солодка ягідна нота. Часто вказує на чисту натуральну обробку. Візитна картка ефіопських натуральних лотів з Іргачефу та Сідамо.",
+        'de': "Eine ausgeprägte 'marmeladige' und süße Beerennote. Weist oft auf eine saubere natürliche Aufbereitung hin. Das Kennzeichen von äthiopischen Yirgacheffe- und Sidamo-Naturals.",
+        'fr': "Une note de baie sucrée et « confiturée » distincte. Indique souvent un processus naturel propre. La marque de fabrique des naturels éthiopiens Yirgacheffe et Sidamo.",
+        'es': "Una nota de baya dulce y 'amermelada' distintiva. A menudo indica un proceso natural limpio. El sello distintivo de los naturales etíopes Yirgacheffe y Sidamo.",
+        'it': "Una distinta nota di frutti di bosco dolce e 'marmellatosa'. Spesso indica un processo naturale pulito. Il segno distintivo dei naturali etiopi Yirgacheffe e Sidamo.",
+        'pt': "Uma nota distinta de baga doce e 'de compota'. Frequentemente indica um processo natural limpo. A marca dos naturais etíopes Yirgacheffe e Sidamo.",
+        'pl': "Wyraźna 'dżemowa' i słodka nuta jagodowa. Często wskazuje na czystą obróbkę naturalną. Znak rozpoznawczy etiopskich kaw naturalnych z regionów Yirgacheffe i Sidamo.",
+        'nl': "Een duidelijke 'jam-achtige' en zoete bessennoot. Wijst vaak op een zuivere natural verwerking. Het kenmerk van Ethiopische Yirgacheffe en Sidamo naturals.",
+        'sv': "En tydlig 'syltliknande' och söt bärnot. Indikerar ofta en ren naturlig process. Kännetecknet för etiopiska Yirgacheffe- och Sidamo-naturals.",
+        'tr': "Belirgin, 'reçelsi' ve tatlı bir meyve notası. Genellikle temiz bir doğal işlemeyi gösterir. Etiyopya Yirgacheffe ve Sidamo doğal kahvelerinin ayırt edici özelliğidir.",
+        'ja': "はっきりとした「ジャムのような」甘いベリーのノート。多くの場合、クリーンなナチュラル精製であることを示す。エチオピア・イルガチェフェやシダモのナチュラルの特徴。",
+        'ko': "뚜렷한 '잼 같은' 달콤한 베리 노트입니다. 종종 깔끔한 내추럴 가공 과정을 나타냅니다. 에티오피아 예가체프와 시다모 내추럴의 특징입니다.",
+        'zh': "独特的“果酱般”甜美浆果味。通常表示干净的日晒处理。埃塞俄比亚耶加雪菲和西达摩日晒咖啡的标志。",
+        'ar': "نكهة توت حلوة و'مربّية' مميزة. غالبًا ما تشير إلى معالجة طبيعية نظيفة. من سمات القهوة الإثيوبية الطبيعية من مناطق ييرغاشيفي وسيدامو.",
+    },
+    'wheel_note_strawberry': {
+        'en': "Sweet, fragrant red fruit note. Often accompanied by creamy body. Result of slow fermentation in high-sugar cherries like Bourbon or SL28.",
+        'uk': "Солодка, ароматна нота червоних ягід. Часто супроводжується кремовим тілом. Результат повільної ферментації ягід з високим вмістом цукру, таких як Бурбон або SL28.",
+        'de': "Süße, duftende rote Fruchnote. Oft begleitet von einem cremigen Körper. Ergebnis einer langsamen Fermentation in zuckerreichen Kirschen wie Bourbon oder SL28.",
+        'fr': "Note de fruit rouge sucrée et parfumée. Souvent accompagnée d'un corps crémeux. Résultat d'une fermentation lente dans des cerises riches en sucre comme le Bourbon ou le SL28.",
+        'es': "Nota de fruta roja dulce y fragante. A menudo acompañada de un cuerpo cremoso. Resultado de la fermentación lenta en cerezas con alto contenido de azúcar como Bourbon o SL28.",
+        'it': "Nota di frutti rossi dolce e profumata. Spesso accompagnata da un corpo cremoso. Risultato di una lenta fermentazione in ciliegie ad alto contenuto zuccherino come Bourbon o SL28.",
+        'pt': "Nota de fruta vermelha doce e fragrante. Frequentemente acompanhada por um corpo cremoso. Resultado de fermentação lenta em cerejas com elevado teor de açúcar como Bourbon ou SL28.",
+        'pl': "Słodka, aromatyczna nuta czerwonych owocів. Często towarzyszy jej kremowe body. Wynik powolnej fermentacji owoców o wysokiej zawartości cukru, takich jak odmiany Bourbon lub SL28.",
+        'nl': "Zoete, geurige rode vruchtennoot. Vaak vergezeld van een romige body. Resultaat van langzame fermentatie in suikerrijke bessen zoals Bourbon of SL28.",
+        'sv': "Söt, väldoftande röd fruktnot. Ofta åtföljd av en krämig fyllighet. Resultat av långsam fermentering i sockerrika bär som Bourbon eller SL28.",
+        'tr': "Tatlı, kokulu kırmızı meyve notası. Genellikle kremsi gövde eşlik eder. Bourbon veya SL28 gibi yüksek şekerli vişnelerde yavaş fermantasyonun sonucudur.",
+        'ja': "甘く芳醇な赤色の果実のノート。クリーミーなボディを伴うことが多い。ブルボンやSL28のような糖度の高いチェリーの低速発酵の結果。",
+        'ko': "달콤하고 향기로운 빨간 과일 노트입니다. 종종 크리미한 바디감이 동반됩니다. 버본이나 SL28과 같이 당도가 높은 체리의 느린 발효 결과입니다.",
+        'zh': "甜美、芬芳的红色水果味。通常伴有奶油般的醇厚感。波旁或SL28等高糖分咖啡樱桃缓慢发酵的结果。",
+        'ar': "نكهة فاكهة حمراء حلوة وعطرية. غالبًا ما يصاحبها قوام كريمي. نتيجة التخمير البطيء في كرز القهوة عالي السكر مثل أصناف بوربون أو SL28.",
+    },
+    'wheel_note_raisin': {
+        'en': "Intense sun-dried sweetness with a slightly fermented edge. Reminiscent of concentrated grape sugars. Common in Yemeni and sun-dried Ethiopian lots.",
+        'uk': "Інтенсивна висушена на сонці солодкість із легким ферментованим відтінком. Нагадує концентрований виноградний цукор. Зустрічається в єменських та ефіопських натуральних лотах.",
+        'de': "Intensive sonnengetrocknete Süße mit einer leicht fermentierten Note. Erinnert an konzentrierten Traubenzucker. Häufig in jemenitischen und sonnengetrockneten äthiopischen Partien.",
+        'fr': "Douceur intense séchée au soleil avec une pointe légèrement fermentée. Rappelle les sucres de raisin concentrés. Courant dans les lots yéménites et éthiopiens séchés au soleil.",
+        'es': "Dulzura intensa secada al sol con un toque ligeramente fermentado. Recuerda a los azúcares concentrados de uva. Común en los lotes yemeníes y etíopes secados al sol.",
+        'it': "Intensa dolcezza da essiccazione al sole con una nota leggermente fermentata. Ricorda gli zuccheri concentrati dell'uva. Comune nei lotti yemeniti ed etiopi essiccati al sole.",
+        'pt': "Doçura intensa de secagem ao sol com um toque ligeiramente fermentado. Lembra açúcares de uva concentrados. Comum em lotes iemenitas e etíopes secos ao sol.",
+        'pl': "Intensywna słodycz suszona na słońcu z lekko sfermentowanym akcentem. Przypomina skoncentrowane cukry gronowe. Powszechna w partiach jemeńskich i suszonych na słońcu etiopskich.",
+        'nl': "Intensieve zonnedroge zoetheid met een licht gefermenteerd randje. Doet denken aan geconcentreerde druivensuikers. Veelvoorkomend in Jemenitische en zonnedroge Ethiopische partijen.",
+        'sv': "Intensiv soltorkad sötma med en lätt fermenterad nyans. Påminner om koncentrerat druvsocker. Vanligt i jemenitiska och soltorkade etiopiska partier.",
+        'tr': "Hafif fermente bir kenara sahip yoğun güneşte kurutulmuş tatlılık. Konsantre üzüm şekerlerini andırır. Yemen ve güneşte kurutulmuş Etiyopya lotlarında yaygındır.",
+        'ja': "わずかに発酵感のある、強烈な天日乾燥の甘み。濃縮されたブドウ糖を思わせる。イエメン産や天日乾燥のエチオピア産ロットに一般的。",
+        'ko': "약간 발효된 느낌이 가미된 강렬한 천연 건조 단맛입니다. 농축된 포도당을 연상시킵니다. 예멘 및 천연 건조된 에티오피아 로트에서 흔히 볼 수 있습니다.",
+        'zh': "强烈的日晒甜味，带有轻微的发酵感。令人联想到浓缩的葡萄糖。常见于也门和日晒埃塞俄比亚批次中。",
+        'ar': "حلاوة مكثفة مجففة بالشمس مع لمسة تخمير خفيفة. تذكرنا بسكريات العنب المركزة. شائعة في الدفعات اليمنية والإثيوبية المجففة بالشمس.",
+    },
+    'wheel_note_prune': {
+        'en': "Deep, dark dried fruit sweetness. Often indicates a more complex, heavy-bodied natural process. Typical of Brazilian pulp-naturals.",
+        'uk': "Глибока, темна солодкість сухофруктів. Часто вказує на більш складну, повнотілу натуральну обробку. Типово для бразильських пульпованих натуральних лотів.",
+        'de': "Tiefe, dunkle Trockenfruchtsüße. Weist oft auf eine komplexere, vollmundige natürliche Aufbereitung hin. Typisch für brasilianische Pulp-Naturals.",
+        'fr': "Douceur profonde de fruits secs foncés. Indique souvent un processus naturel plus complexe et corsé. Typique des naturels pulpés brésiliens.",
+        'es': "Dulzura profunda de frutas secas oscuras. A menudo indica un proceso natural más complejo y con más cuerpo. Típico de los cafés naturales despulpados brasileños.",
+        'it': "Dolcezza profonda di frutta secca scura. Spesso indica un processo naturale più complesso e corposo. Tipico dei naturali polpati brasiliani.",
+        'pt': "Doçura profunda de frutos secos escuros. Frequentemente indica um processo natural mais complexo e encorpado. Típico de cafés brasileiros de processamento semi-lavado (pulp-natural).",
+        'pl': "Głęboka słodycz ciemnych suszonych owoców. Często wskazuje на bardziej złożoną, pełną obróbkę naturalną. Typowe dla brazylijskich kaw typu pulp-natural.",
+        'nl': "Diepe, donkere droogvruchtenzoetheid. Wijst vaak op een complexere, volle natural verwerking. Typisch voor Braziliaanse pulp-naturals.",
+        'sv': "Djup sötma från mörka torkade frukter. Indikerar ofta en mer komplex, fyllig naturlig process. Typiskt för brasilianska pulp-naturals.",
+        'tr': "Derin, koyu kuru meyve tatlılığı. Genellikle daha karmaşık, gövdeli bir doğal işlemeyi gösterir. Brezilya pulp-natural kahvelerinin özelliğidir.",
+        'ja': "深みのあるダークドライフルーツの甘み。より複雑で重厚なボディのナチュラル精製であることを示すことが多い。ブラジルのパルプドナチュラルに典型的。",
+        'ko': "깊고 진한 건과일의 단맛입니다. 종종 더 복합적이고 바디감이 무거운 내추럴 가공 과정을 나타냅니다. 브라질 펄프드 내추럴의 전형적인 특징입니다.",
+        'zh': "深色干果的浓郁甜味。通常表示更复杂、更醇厚的日晒处理。巴西半日晒处理咖啡的典型特征。",
+        'ar': "حلاوة عميقة للفواكه المجففة الداكنة. تشير غالبًا إلى معالجة طبيعية أكثر تعقيدًا وكثافة. نموذجية للقهوة البرازيلية المعالجة بطريقة التجفيف شبه الرطب.",
+    },
+    'wheel_note_coconut': {
+        'en': "Creamy, nutty sweetness with a tropical aromatic profile. Often emerges in anaerobic or yeast-processed honey lots. Signature of modern Costa Rican micro-lots.",
+        'uk': "Кремова, горіхова солодкість з тропічним ароматичним профілем. Часто проявляється в анаеробних лотах або хані-обробці з дріжджами. Візитна картка сучасних коста-риканських мікролотів.",
+        'de': "Cremige, nussige Süße mit einem tropischen Aromaprofil. Tritt oft in anaerob oder mit Hefe aufbereiteten Honey-Partien auf. Markenzeichen moderner costa-ricanischer Micro-Lots.",
+        'fr': "Douceur crémeuse et noisettée avec un profil aromatique tropical. Apparaît souvent dans les lots honey traités par anaérobie ou avec des levures. Signature des micro-lots modernes du Costa Rica.",
+        'es': "Dulzura cremosa y de nuez con un perfil aromático tropical. A menudo surge en lotes honey procesados de forma anaeróbica o con levadura. Firma de los micro-lotes modernos de Costa Rica.",
+        'it': "Dolcezza cremosa e di nocciola con un profilo aromatico tropicale. Emerge spesso in lotti honey lavorati in anaerobiosi o con lieviti. Firma dei moderni micro-lotti costaricani.",
+        'pt': "Doçura cremosa e de noz com um perfil aromático tropical. Frequentemente surge em lotes honey processados anaerobicamente ou com leveduras. Assinatura de micro-lotes modernos da Costa Rica.",
+        'pl': "Kremowa, orzechowa słodycz z tropikalnym profilem aromatycznym. Często pojawia się w partiach typu honey poddawanych obróbce anaerobowej lub drożdżowej. Znak rozpoznawczy nowoczesnych mikropartii z Kostaryki.",
+        'nl': "Romige, nootachtige zoetheid met een tropisch aromatisch profiel. Komt vaak naar voren in anaerobe of met gist verwerkte honey partijen. Kenmerk van moderne Costa Ricaanse micro-lots.",
+        'sv': "Krämig, nötig sötma med en tropisk aromprofil. Uppstår ofta i anaerobiska eller jästbearbetade honey-partier. Signum för moderna costaricanska mikrolotter.",
+        'tr': "Tropikal aromatik profile sahip kremsi, fındıksı tatlılık. Genellikle anaerobik veya maya ile işlenmiş honey lotlarında ortaya çıkar. Modern Kosta Rika mikro lotlarının imzasıdır.",
+        'ja': "トロピカルなアロマを持つ、クリーミーでナッツのような甘み。アナエロビック（好気性）や酵母精製のハニープロセスでよく見られる。現代的なコスタリカのマイクロロットの代表格。",
+        'ko': "열대 아로마 프로필과 크리미하고 고소한 단맛입니다. 무산소 또는 효모 가공된 허니 로트에서 종종 나타납니다. 현대적인 코스타리카 마이크로 로트의 특징입니다.",
+        'zh': "奶油般的坚果甜味，带有热带香气。常出现在厌氧或酵母处理的蜜处理批次中。现代哥斯达黎加微批次咖啡的签名气味。",
+        'ar': "حلاوة كريمية مكسراتية مع ملف عطري استوائي. تظهر غالبًا في دفعات العسل المعالجة لا هوائيًا أو بالخميرة. سمة مميزة للميكرولوت الكوستاريكي الحديث.",
+    },
+    'wheel_note_cherry': {
+        'en': "Classic stone fruit sweetness with systemic acidity. Relates to the coffee fruit itself. Found in many Central American washed coffees.",
+        'uk': "Класична солодкість кісточкових фруктів з системною кислотністю. Пов'язана з самим кавовим плодом. Зустрічається в багатьох центральноамериканських лотах митої обробки.",
+        'de': "Klassische Steinobstsüße mit systemischer Säure. Bezieht sich auf die Kaffeefrucht selbst. In vielen gewaschenen zentralamerikanischen Kaffees zu finden.",
+        'fr': "Douceur classique des fruits à noyau avec une acidité systémique. Se rapporte au fruit du café lui-même. Présent dans de nombreux cafés lavés d'Amérique centrale.",
+        'es': "Dulzura clásica de fruta de hueso con acidez sistémica. Se relaciona con la propia fruta del café. Se encuentra en muchos cafés lavados de América Central.",
+        'it': "Classica dolcezza dei frutti a nocciolo con acidità sistemica. Si riferisce al frutto del caffè stesso. Si trova in molti caffè lavati del Centro America.",
+        'pt': "Doçura clássica de fruta de caroço com acidez sistémica. Relaciona-se com o próprio fruto do café. Encontrada em muitos cafés lavados da América Central.",
+        'pl': "Klasyczna słodycz owoców pestkowych z systemową kwasowością. Odnosi się do samego owocu kawy. Spotykana w wielu kawach mytych z Ameryki Środkowej.",
+        'nl': "Klassieke steenvruchtenzoetheid met systemische zuurgraad. Heeft betrekking op de koffiebessen zelf. Te vinden in veel gewassen Midden-Amerikaanse koffies.",
+        'sv': "Klassisk stenfruktssötma med systemisk syra. Relaterar till själva kaffefrukten. Finns i många tvättade centralamerikanska kaffebönor.",
+        'tr': "Sistemik asiditeye sahip klasik çekirdekli meyve tatlılığı. Kahve meyvesinin kendisiyle ilgilidir. Birçok Orta Amerika yıkanmış kahvesinde bulunur.",
+        'ja': "系統的な酸味を伴う、古典的な核果（ストーンフルーツ）の甘み。コーヒーの果実そのものに関連している。多くの中米産ウォッシュドコーヒーに見られる。",
+        'ko': "계통적인 산미가 있는 클래식한 핵과류의 단맛입니다. 커피 열매 자체와 관련이 있습니다. 많은 중앙아메리카 워시드 커피에서 발견됩니다.",
+        'zh': "经典的核果甜味，带有系统性的酸度。与咖啡果实本身有关。出现在许多中美洲水洗咖啡中。",
+        'ar': "حلاوة الفواكه ذات النواة الكلاسيكية مع حموضة منتظمة. ترتبط بفاكهة القهوة نفسها. توجد في العديد من أنواع القهوة المغسولة من أمريكا الوسطى.",
+    },
+    'wheel_note_pomegranate': {
+        'en': "Complex tartness with a dry, slight bitterness. High antioxidant and acid profile. Typical of bright Kenyan and high-end Ethiopian lots.",
+        'uk': "Складна терпкість з сухою, легкою гірчинкою. Високий вміст антиоксидантів та кислотний профіль. Типово для яскравої кенійської та елітної ефіопської кави.",
+        'de': "Komplexe Herbe mit einer trockenen, leichten Bitterkeit. Hohes Antioxidantien- und Säureprofil. Typisch für helle kenianische und hochwertige äthiopische Partien.",
+        'fr': "Acidité complexe avec une amertume sèche et légère. Profil riche en antioxydants et en acides. Typique des lots kenyans vifs et éthiopiens haut de gamme.",
+        'es': "Acidez compleja con un amargor seco y ligero. Alto perfil de antioxidantes y ácidos. Típico de los brillantes lotes kenianos y etíopes de alta gama.",
+        'it': "Acidità complessa con un'amarezza secca e leggera. Alto profilo di antiossidanti e acidi. Tipico dei brillanti lotti kenioti ed etiopi di fascia alta.",
+        'pt': "Acidez complexa com um amargor seco e ligeiro. Elevado perfil de antioxidantes e ácidos. Típico de lotes quenianos brilhantes e etíopes de alta gama.",
+        'pl': "Złożona cierpkość z wytrawną, lekką goryczką. Wysoki profil przeciwutleniaczy i kwasów. Typowe dla jasnych kaw kenijskich i wysokiej klasy etiopskich.",
+        'nl': "Complex wrangheid met een droge, lichte bitterheid. Hoog gehalte aan antioxidanten en zuren. Typisch voor heldere Keniaanse en hoogwaardige Ethiopische partijen.",
+        'sv': "Komplex strävhet med en torr, lätt bitterhet. Hög profil av antioxidanter och syror. Typiskt för friska kenyanska och exklusiva etiopiska partier.",
+        'tr': "Kuru, hafif bir acılığa sahip karmaşık burukluk. Yüksek antioksidan ve asit profili. Parlak Kenya ve üst düzey Etiyopya lotlarının özelliğidir.",
+        'ja': "ドライでわずかな苦味を伴う、複雑な酸味。高い抗酸化作用と酸味のプロファイルを持つ。明るいケニア産や高級エチオピア産ロットに典型的。",
+        'ko': "건조하고 약간의 쌉쌀함이 가미된 복합적인 톡 쏘는 맛입니다. 항산화 성분과 산미가 높습니다. 밝은 케냐 로트와 고급 에티о피아 로트의 전형적인 특징입니다.",
+        'zh': "复杂的酸涩感，带有干燥、轻微的苦味。高抗氧化剂和酸度曲线。典型的明亮肯尼亚批次和高端埃塞俄比亚批次。",
+        'ar': "حموضة معقدة مع مرارة خفيفة وجافة. ملف غني بمضادات الأكسدة والأحماض. نموذجية للدفعات الكينية المشرقة والإثيوبية الراقية.",
+    },
+}
+
+with open(target_file, 'r', encoding='utf-8') as f:
+    content = f.read()
+
+for key, langs in translations.items():
+    new_block = f"'{key}': {{\n"
+    for lang, text in langs.items():
+        safe_text = text.replace(chr(39), '\\' + chr(39))
+        new_block += f"        '{lang}': '{safe_text}',\n"
+    new_block += "      },"
+    pattern = rf"'{key}':\s*\{{.*?\}},"
+    content = re.sub(pattern, new_block, content, flags=re.DOTALL)
+
+with open(target_file, 'w', encoding='utf-8', newline='\n') as f:
+    f.write(content)
+
+print('Fruity notes batch 1 update complete.')

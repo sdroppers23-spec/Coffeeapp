@@ -345,26 +345,37 @@ class _SubTabCapsule extends StatelessWidget {
           color: isSelected ? const Color(0xFFC8A96E) : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              label,
-              style: GoogleFonts.outfit(
-                fontSize: 14,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                color: isSelected ? Colors.black : Colors.white54,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    style: GoogleFonts.outfit(
+                      fontSize: 14,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.w500,
+                      color: isSelected ? Colors.black : Colors.white54,
+                    ),
+                  ),
+                ),
               ),
-            ),
-            if (icon != null) ...[
-              const SizedBox(width: 4),
-              Icon(
-                icon,
-                size: 14,
-                color: isSelected ? Colors.black : Colors.white38,
-              ),
+              if (icon != null) ...[
+                const SizedBox(width: 4),
+                Icon(
+                  icon,
+                  size: 14,
+                  color: isSelected ? Colors.black : Colors.white38,
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

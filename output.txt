@@ -1,0 +1,272 @@
+      'wheel_cat_floral': {
+        'uk':
+            "Делікатні та ароматні ноти, що нагадують цвітіння. Ці смаки часто виникають завдяки високогірним умовам, де повільне дозрівання концентрує летючі ароматичні сполуки. Характерно для ефіопської спадщини та сортів Гейша.",
+        'en':
+            "Delicate and aromatic notes reminiscent of blossoms. These flavors often arise from high-altitude conditions where slow maturation concentrates volatile aromatic compounds. Characteristic of Ethiopian heirlooms and Gesha varieties.",
+        'de':
+            "Zarte und aromatische Noten, die an Blüten erinnern. Diese Aromen entstehen oft durch Höhenlagen, in denen eine langsame Reifung flüchtige aromatische Verbindungen konzentriert. Charakteristisch für äthiopische Erbstücke und Gesha-Varietäten.",
+        'es':
+            "Notas delicadas y aromáticas que recuerdan a las flores. Estos sabores suelen surgir de condiciones de gran altitud donde la maduración lenta concentra compuestos aromáticos volátiles. Característico de las variedades tradicionales etíopes y Gesha.",
+        'fr':
+            "Notes délicates et aromatiques rappelant les fleurs. Ces saveurs proviennent souvent de conditions de haute altitude où la maturation lente concentre les composés aromatiques volatils. Caractéristique des variétés héritage éthiopiennes et Gesha.",
+        'it':
+            "Note delicate e aromatiche che ricordano i fiori. Questi sapori derivano spesso da condizioni di alta quota dove la lenta maturazione concentra i composti aromatici volatili. Caratteristico delle varietà heirloom etiopi e Gesha.",
+        'ja':
+            "開花を思わせる繊細で芳醇なノート。これらのフレーバーは、ゆっくりとした成熟によって揮発性芳香化合物が濃縮される高地条件から生じることが多いです。エチオピアの在来種やゲイシャ種に特徴的です。",
+        'pl':
+            "Delikatne i aromatyczne nuty przypominające kwiaty. Smaki te często wynikają z warunków wysokogórskich, w których powolne dojrzewanie koncentruje lotne związki aromatyczne. Charakterystyczne dla etiopskich odmian heirloom i Gesha.",
+        'pt':
+            "Notas delicadas e aromáticas que lembram flores. Esses sabores surgem frequentemente de condições de alta altitude, onde a maturação lenta concentra compostos aromáticos voláteis. Característico das variedades tradicionais etíopes e Gesha.",
+        'ro':
+            "Note delicate și aromatice care amintesc de flori. Aceste arome provin adesea din condiții de mare altitudine, unde maturarea lentă concentrează compușii aromatici volatili. Caracteristic varietăților heirloom etiopiene și Gesha.",
+        'tr':
+            "Çiçekleri anımsatan narin ve aromatik notalar. Bu tatlar genellikle, yavaş olgunlaşmanın uçucu aromatik bileşikleri yoğunlaştırdığı yüksek rakımlı koşullardan kaynaklanır. Etiyopya heirloom ve Gesha çeşitlerinin özelliğidir.",
+        'zh':
+            "令人联想到花朵的细腻芳香。这些风味通常源于高海拔条件，缓慢的成熟过程使挥发性芳香化合物更加浓缩。是埃塞俄比亚原生种和瑰夏品种的特征。",
+        'ar':
+            "نكهات رقيقة وعطرية تذكرنا بالأزهار. غالبًا ما تنشأ هذه النكهات من ظروف الارتفاعات العالية حيث يركز النضج البطيء المركبات العطرية المتطايرة. مميز للسلالات الإثيوبية وأصناف جيشا.",
+        'ko':
+            "꽃을 연상시키는 섬세하고 향긋한 노트. 이러한 풍미는 천천히 숙성되면서 휘발성 방향 성분이 농축되는 고산 지대 환경에서 주로 발생합니다. 에티오피아의 토종 품종과 게이샤 품종의 특징입니다.",
+        'nl':
+            "Verfijnde en aromatische tonen die doen denken aan bloesem. Deze smaken ontstaan vaak door omstandigheden op grote hoogte, waar langzame rijping vluchtige aromatische verbindingen concentreert. Kenmerkend voor Ethiopische erfstukken en Gesha-variëteiten.",
+        'sv':
+            "Delikata och aromatiska toner som påminner om blommor. Dessa smaker uppstår ofta från höghöjdsförhållanden där långsam mognad koncentrerar flyktiga aromatiska föreningar. Karaktäristiskt för etiopiska kulturarvsorter och Gesha-varieteter.",
+      },
+      'wheel_sub_floral': {
+        'uk':
+            "Виразні та чіткі квіткові аромати. Зазвичай це первинні аромати, що зустрічаються в дуже свіжій каві або каві світлого обсмажування. Характерно для високоякісних ефіопських та панамських лотів.",
+        'en':
+            "Distinct and clear floral aromas. Typically these are primary aromas found in very fresh coffee or light roasted coffee. Characteristic of high-quality Ethiopian and Panamanian lots.",
+        'de':
+            "Ausgeprägte und klare blumige Aromen. Normalerweise sind dies primäre Aromen, die in sehr frischem Kaffee oder hell geröstetem Kaffee vorkommen. Charakteristisch für hochwertige äthiopische und panamaische Partien.",
+        'es':
+            "Aromas florales claros y distintos. Normalmente estos son aromas primarios que se encuentran en cafés muy frescos o de tueste ligero. Característico de los lotes de alta calidad de Etiopía y Panamá.",
+        'fr':
+            "Arômes floraux distincts et clairs. Il s'agit généralement d'arômes primaires trouvés dans le café très frais ou le café à torréfaction légère. Caractéristique des lots éthiopiens et panaméens de haute qualité.",
+        'it':
+            "Aromi floreali distinti e chiari. Tipicamente questi sono aromi primari che si trovano in caffè molto fresco o caffè a tostatura chiara. Caratteristico dei lotti etiopi e panamensi di alta qualità.",
+        'ja':
+            "はっきりと明確なフローラルの香り。通常、これらは非常に新鮮なコーヒーや浅煎りのコーヒーに見られる一次アロマです。高品質なエチオピア産やパナマ産のロットに特徴的です。",
+        'pl':
+            "Wyraźne i jasne aromaty kwiatowe. Zazwyczaj są to aromaty pierwotne występujące w bardzo świeżej kawie lub kawie o jasnym paleniu. Charakterystyczne dla wysokiej jakości etiopskich i panamskich partii.",
+        'pt':
+            "Aromas florais distintos e claros. Normalmente estes são aromas primários encontrados em café muito fresco ou café de torra clara. Característico de lotes etíopes e panamenses de alta qualidade.",
+        'ro':
+            "Arome florale distincte și clare. De obicei, acestea sunt arome primare găsite în cafeaua foarte proaspătă sau în cafeaua prăjită light. Caracteristic loturilor etiopiene și panameze de înaltă calitate.",
+        'tr':
+            "Belirgin ve net çiçeksi aromalar. Genellikle bunlar çok taze kahvelerde veya hafif kavrulmuş kahvelerde bulunan birincil aromalardır. Yüksek kaliteli Etiyopya ve Panama lotlarının özelliğidir.",
+        'zh':
+            "独特而清晰的花香。通常这些是在非常新鲜的咖啡或浅烘焙咖啡中发现的主要香气。是高品质埃塞俄比亚和巴拿马批次的特征。",
+        'ar':
+            "روائح زهرية متميزة وواضحة. وعادة ما تكون هذه هي الروائح الأساسية الموجودة في القهوة الطازجة جداً أو القهوة المحمصة بشكل خفيف. مميزة للمحاصيل الإثيوبية والبنمانية عالية الجودة.",
+        'ko':
+            "뚜렷하고 선명한 꽃향기. 일반적으로 매우 신선한 커피나 약배전 커피에서 발견되는 1차 아로마입니다. 고품질 에티오피아 및 파나마 로트의 특징입니다.",
+        'nl':
+            "Duidelijke en heldere bloemige aroma's. Meestal zijn dit primaire aroma's die voorkomen in zeer verse koffie of licht gebrande koffie. Kenmerkend voor hoogwaardige Ethiopische en Panamese partijen.",
+        'sv':
+            "Tydliga och klara blommiga aromer. Vanligtvis är dessa primära aromer som finns i mycket färskt kaffe eller ljusrostat kaffe. Karaktäristiskt för etiopiska och panamanska partier av hög kvalitet.",
+      },
+      'wheel_sub_tea': {
+        'uk':
+            "Чисте, структуроване відчуття в роті з трав'яними підтонами. Пов'язано зі специфічними поліфенолами у високогірних зернах. Візитна картка Іргачефу та висококласних кенійських лотів.",
+        'en':
+            "Clean, structured mouthfeel with herbal undertones. Linked to specific polyphenols in high-altitude beans. Hallmarks of Yirgacheffe and high-grade Kenyan lots.",
+        'de':
+            "Sauberes, strukturiertes Mundgefühl mit kräuterigen Untertönen. Verbunden mit spezifischen Polyphenolen in Bohnen aus großen Höhen. Markenzeichen von Yirgacheffe und hochwertigen kenianischen Partien.",
+        'es':
+            "Sensación en boca limpia y estructurada con matices herbales. Vinculado a polifenoles específicos en granos de gran altitud. Sellos distintivos de Yirgacheffe y lotes kenianos de alta calidad.",
+        'fr':
+            "Sensation en bouche propre et structurée avec des nuances d'herbes. Lié à des polyphénols spécifiques dans les grains de haute altitude. Marque de fabrique du Yirgacheffe et des lots kenyans de haute qualité.",
+        'it':
+            "Sensazione in bocca pulita e strutturata con sfumature erbacee. Legato a specifici polifenoli nei chicchi d'alta quota. Marchi di fabbrica di Yirgacheffe e dei lotti kenioti di alta qualità.",
+        'ja':
+            "ハーブのニュアンスを伴う、クリーンで構造的な口当たり。高地の豆に含まれる特定のポリフェノールに関連しています。イルガチェフェや高級ケニアロットの特徴です。",
+        'pl':
+            "Czyste, strukturalne odczucie w ustach z ziołowymi tonami. Związane ze specyficznymi polifenolami w ziarnach z dużych wysokości. Znaki rozpoznawcze Yirgacheffe i wysokiej jakości partii kenijskich.",
+        'pt':
+            "Sensação na boca limpa e estruturada com nuances herbais. Ligado a polifenóis específicos em grãos de alta altitude. Marcas registradas de Yirgacheffe e lotes quenianos de alta qualidade.",
+        'ro':
+            "Senzație în gură curată, structurată, cu nuanțe ierboase. Legat de polifenoli specifici în boabele de mare altitudine. Semne distinctive pentru Yirgacheffe și loturile kenyene de înaltă calitate.",
+        'tr':
+            "Bitkisel alt tonlara sahip temiz, yapılandırılmış ağız hissi. Yüksek rakımlı çekirdeklerdeki belirli polifenollerle bağlantılıdır. Yirgacheffe ve yüksek kaliteli Kenya lotlarının ayırt edici özelliğidir.",
+        'zh':
+            "带有草本底蕴的清爽、有结构的口感。与高海拔豆类中的特定多酚有关。是耶加雪菲和高级肯尼亚批次的标志。",
+        'ar':
+            "قوام نظيف ومنظم مع لمحات عشبية. يرتبط بمركبات بوليفينول محددة في حبوب الارتفاعات العالية. علامة مميزة لمحاصيل ييرغاتشيفي الكينية عالية الجودة.",
+        'ko':
+            "허브 뉘앙스가 있는 깨끗하고 구조적인 바디감. 고지대 생두의 특정 폴리페놀과 관련이 있습니다. 예가체프와 고급 케냐 로트의 전형적인 특징입니다.",
+        'nl':
+            "Schoon, gestructureerd mondgevoel met kruidige ondertonen. Gekoppeld aan specifieke polyfenolen in bonen van grote hoogte. Kenmerken van Yirgacheffe en hoogwaardige Keniaanse partijen.",
+        'sv':
+            "Ren, strukturerad munkänsla med örtiga undertoner. Kopplat till specifika polyfenoler i bönor från hög höjd. Kännetecken för Yirgacheffe och kenyanska partier av hög kvalitet.",
+      },
+      'wheel_note_black_tea': {
+        'uk':
+            "Танінне, структуроване відчуття в роті з пікантно-солодким відтінком. Нагадує високоякісний чай Пеко. Характерно для регіону Іргачеф та багатьох кенійських лотів.",
+        'en':
+            "Tannic, structured mouthfeel with a savory-sweet edge. Reminiscent of high-quality Pekoe tea. Characteristic of the Yirgacheffe region and many Kenyan lots.",
+        'de':
+            "Gerbstoffreich, strukturiertes Mundgefühl mit einer würzig-süßen Note. Erinnert an hochwertigen Pekoe-Tee. Charakteristisch für die Region Yirgacheffe und viele kenianische Partien.",
+        'es':
+            "Sensación en boca tánica y estructurada con un toque dulce-sabroso. Recuerda al té Pekoe de alta calidad. Característico de la región de Yirgacheffe y de muchos lotes kenianos.",
+        'fr':
+            "Sensation en bouche tannique et structurée avec une pointe de saveur sucrée-salée. Rappelle le thé Pekoe de haute qualité. Caractéristique de la région de Yirgacheffe et de nombreux lots kenyans.",
+        'it':
+            "Sensazione in bocca tannica e strutturata con un tocco sapido-dolce. Ricorda il tè Pekoe di alta qualità. Caratteristico della regione di Yirgacheffe e di molti lotti kenioti.",
+        'ja':
+            "タンニンを感じる構造的な口当たりで、甘味とコクがあります。高品質なペコ茶を思わせます。イルガチェフェ地方や多くのケニアロットに特徴的です。",
+        'pl':
+            "Taninowe, strukturalne odczucie w ustach z wytrawno-słodką nutą. Przypomina wysokiej jakości herbatę Pekoe. Charakterystyczne dla regionu Yirgacheffe i wielu partii kenijskich.",
+        'pt':
+            "Sensação tânica e estruturada na boca com um toque agridoce. Lembra chá Pekoe de alta qualidade. Característico da região de Yirgacheffe e de muitos lotes quenianos.",
+        'ro':
+            "Senzație tanică, structurată în gură, cu o notă dulce-sărată. Amintește de ceaiul Pekoe de înaltă calitate. Caracteristic regiunii Yirgacheffe și multor loturi kenyene.",
+        'tr':
+            "Tanenli, yapılı ağız hissi ve iştah açıcı tatlı bir kenar. Yüksek kaliteli Pekoe çayını anımsatır. Yirgacheffe bölgesi ve birçok Kenya lotunun özelliğidir.",
+        'zh':
+            "具有单宁感、有结构的口感，带有甜咸兼备的风味。令人联想到高品质的橙黄白毫（Pekoe）茶。是耶加雪菲产区和许多肯尼亚批次的特征。",
+        'ar':
+            "قوام تانيني منظم مع لمحة حلوة ومالحة. يذكرنا بشاي بيكو عالي الجودة. مميز لمنطقة ييرغاتشيفي والعديد من المحاصيل الكينية.",
+        'ko':
+            "탄닌감이 있는 구조적인 바디감과 달콤하면서도 풍부한 맛. 고급 페코 홍차를 연상시킵니다. 예가체프 지역과 많은 케냐 로트의 특징입니다.",
+        'nl':
+            "Tanninerijk, gestructureerd mondgevoel met een hartig-zoete rand. Doet denken aan hoogwaardige Pekoe-thee. Kenmerkend voor de Yirgacheffe-regio en veel Keniaanse partijen.",
+        'sv':
+            "Tanninrik, strukturerad munkänsla med en smakrik-söt kant. Påminner om högkvalitativt Pekoe-te. Karaktäristiskt för Yirgacheffe-regionen och många kenyanska partier.",
+      },
+      'wheel_note_green_tea': {
+        'uk':
+            "Свіжий, трав'яний та злегка в'яжучий профіль. Вказує на дуже світле обсмажування або специфічні високогірні сорти. Зустрічається в делікатних митих ефіопських лотах.",
+        'en':
+            "Fresh, herbal, and slightly astringent profile. Indicates very light roasting or specific high-altitude varieties. Common in delicate washed Ethiopian coffees.",
+        'de':
+            "Frisches, kräuteriges und leicht herbes Profil. Deutet auf eine sehr helle Röstung oder spezifische Hochlandvarietäten hin. Häufig bei zarten gewaschenen äthiopischen Kaffees.",
+        'es':
+            "Perfil fresco, herbal y ligeramente astringente. Indica un tueste muy ligero o variedades específicas de gran altitud. Común en cafés etíopes lavados delicados.",
+        'fr':
+            "Profil frais, herbacé et légèrement astringent. Indique une torréfaction très légère ou des variétés spécifiques de haute altitude. Courant dans les cafés éthiopiens lavés délicats.",
+        'it':
+            "Profilo fresco, erbaceo e leggermente astringente. Indica una tostatura molto chiara o specifiche varietà d'alta quota. Comune nei delicati caffè etiopi lavati.",
+        'ja':
+            "新鮮でハーブのような、少し渋みのあるプロフィール。非常に浅い焙煎や特定の高地品種であることを示しています。繊細なウォッシュド・エチオピア・コーヒーによく見られます。",
+        'pl':
+            "Świeży, ziołowy i lekko cierpki profil. Wskazuje на bardzo jasne palenie lub specyficzne odmiany wysokogórskie. Powszechny w delikatnych mytych kawach etiopskich.",
+        'pt':
+            "Perfil fresco, herbal e levemente adstringente. Indica torra muito clara ou variedades específicas de alta altitude. Comum em cafés etíopes lavados delicados.",
+        'ro':
+            "Profil proaspăt, ierbos și ușor astringent. Indică o prăjire foarte ușoară sau varietăți specifice de mare altitudine. Comun în cafelele etiopiene spălate delicate.",
+        'tr':
+            "Taze, bitkisel ve hafif buruk bir profil. Çok hafif kavurmayı veya belirli yüksek rakımlı çeşitleri gösterir. Hassas yıkanmış Etiyopya kahvelerinde yaygındır.",
+        'zh':
+            "清新、草本且略带涩味的风味。表明烘焙度极浅或属于特定的高海拔品种。常见于细腻的水洗埃塞俄比亚咖啡中。",
+        'ar':
+            "نكهة طازجة وعشبية وقابضة قليلاً. تشير إلى تحميص خفيف جداً أو أصناف معينة من المرتفعات العالية. شائع في القهوة الإثيوبية المغسولة الرقيقة.",
+        'ko':
+            "신선하고 허브 느낌이 나며 약간의 수렴성이 있는 풍미. 매우 가벼운 로스팅이나 특정 고지대 품종임을 나타냅니다. 섬세한 워시드 에티오피아 커피에서 흔히 발견됩니다.",
+        'nl':
+            "Vers, kruidig en licht wrang profiel. Wijst op zeer lichte branding of specifieke variëteiten op grote hoogte. Veelvoorkomend in delicate gewassen Ethiopische koffies.",
+        'sv':
+            "Frisk, örtig och något sträv profil. Tyder på mycket ljus rostning eller specifika höghöjdsvarieteter. Vanligt i delikata våtprocessade etiopiska kaffesorter.",
+      },
+      'wheel_note_chamomile': {
+        'uk':
+            "Ніжна, трав'яна та злегка медова солодкість. Вказує на складні квіткові профілі з низькою кислотністю. Часто зустрічається в обробленій нікарагуанській каві.",
+        'en':
+            "Gentle, herbal and slightly honey-like sweetness. Indicates complex, low-acidity floral profiles. Often found in processed Nicaraguan coffees.",
+        'de':
+            "Sanfte, kräuterige und leicht honigartige Süße. Deutet auf komplexe, säurearme blumige Profile hin. Oft in aufbereiteten nicaraguanischen Kaffees zu finden.",
+        'es':
+            "Dulzura suave, herbal y ligeramente melosa. Indica perfiles florales complejos de baja acidez. A menudo se encuentra en cafés nicaragüenses procesados.",
+        'fr':
+            "Douceur délicate, herbacée et légèrement miellée. Indique des profils floraux complexes et peu acides. Souvent trouvé dans les cafés nicaraguayens traités.",
+        'it':
+            "Dolcezza delicata, erbacea e leggermente mielata. Indica profili floreali complessi a bassa acidità. Spesso presente nei caffè nicaraguensi lavorati.",
+        'ja':
+            "穏やかでハーブのような、少し蜂蜜のような甘さ。複雑で低酸味のフローラルプロフィールを示しています。加工されたニカラグア産コーヒーによく見られます。",
+        'pl':
+            "Łagodna, ziołowa i lekko miodowa słodycz. Wskazuje na złożone, niskokwasowe profile kwiatowe. Często spotykana w kawach nikaraguańskich.",
+        'pt':
+            "Doçura suave, herbal e levemente melada. Indica perfis florais complexos de baixa acidez. Frequentemente encontrado em cafés nicaraguenses processados.",
+        'ro':
+            "Dulceață blândă, ierboasă și ușor de miere. Indică profiluri florale complexe, cu aciditate scăzută. Adesea întâlnită în cafelele nicaraguene procesate.",
+        'tr':
+            "Nazik, bitkisel ve hafif balımsı tatlılık. Karmaşık, düşük asitli çiçeksi profilleri gösterir. Genellikle işlenmiş Nikaragua kahvelerinde bulunur.",
+        'zh':
+            "柔和、草本且略带蜂蜜般的甜味。表明复杂、低酸度的花香风味。常见于加工过的尼加拉瓜咖啡中。",
+        'ar':
+            "حلاوة لطيفة وعشبية تشبه العسل قليلاً. تشير إلى نكهات زهرية معقدة منخفضة الحموضة. توجد غالباً في القهوة النيكاراغوية المعالجة.",
+        'ko':
+            "부드럽고 허브 느낌이 나며 약간의 꿀 같은 단맛. 복합적이고 산도가 낮은 플로럴 프로필을 나타냅니다. 가공된 니카라과 커피에서 자주 발견됩니다.",
+        'nl':
+            "Zachte, kruidige en licht honingachtige zoetheid. Wijst op complexe, bloemige profielen met een lage zuurgraad. Vaak te vinden in verwerkte Nicaraguaanse koffies.",
+        'sv':
+            "Mjuk, örtig och något honungslik sötma. Tyder på komplexa blommiga profiler med låg syrahalt. Hittas ofta i processat nicaraguanskt kaffe.",
+      },
+      'wheel_note_rose': {
+        'uk':
+            "М'яка, елегантна квіткова солодкість. Асоціюється з м'якими профілями обсмаження та висотою. Зустрічається в делікатних сортах рожевого бурбону.",
+        'en':
+            "Soft, elegant floral sweetness. Associated with gentle roast profiles and high elevation. Found in delicate Pink Bourbon varieties.",
+        'de':
+            "Zarte, elegante blumige Süße. Verbunden mit sanften Röstprofilen und großen Höhenlagen. Zu finden in delikaten Pink Bourbon-Varietäten.",
+        'es':
+            "Dulzura floral suave y elegante. Asociada con perfiles de tueste suaves y gran altitud. Se encuentra en delicadas variedades Pink Bourbon.",
+        'fr':
+            "Douceur florale douce et élégante. Associée à des profils de torréfaction doux et à une altitude élevée. Trouvé dans les variétés délicates Pink Bourbon.",
+        'it':
+            "Dolcezza floreale morbida ed elegante. Associata a profili di tostatura delicati e alta quota. Presente nelle delicate varietà Pink Bourbon.",
+        'ja':
+            "柔らかく優雅なフローラルの甘さ。穏やかな焙煎プロフィールや高地に関連しています。繊細なピンクブルボン種に見られます。",
+        'pl':
+            "Miękka, elegancka kwiatowa słodycz. Związana z łagodnymi profilami palenia i dużymi wysokościami. Spotykana w delikatnych odmianach Pink Bourbon.",
+        'pt':
+            "Doçura floral suave e elegante. Associada a perfis de torra suaves e alta altitude. Encontrado em variedades delicadas de Pink Bourbon.",
+        'ro':
+            "Dulceață florală moale, elegantă. Asociată cu profiluri de prăjire blânde și altitudine mare. Găsită în varietăți delicate de Pink Bourbon.",
+        'tr':
+            "Yumuşak, zarif çiçeksi tatlılık. Nazik kavurma profilleri ve yüksek rakım ile ilişkilendirilir. Hassas Pink Bourbon çeşitlerinde bulunur.",
+        'zh':
+            "柔和、优雅的花香甜味。与温和的烘焙程度和高海拔有关。常见于细腻的粉红波旁（Pink Bourbon）品种中。",
+        'ar':
+            "حلاوة زهرية ناعمة وأنيقة. ترتبط بملفات تحميص لطيفة وارتفاعات عالية. توجد في أصناف البوربون الوردي الرقيقة.",
+        'ko':
+            "부드럽고 우아한 꽃의 단맛. 완만한 로스팅 프로필 및 고지대와 관련이 있습니다. 섬세한 핑크 버본 품종에서 발견됩니다.",
+        'nl':
+            "Zachte, elegante bloemige zoetheid. Geassocieerd met zachte brandingsprofielen en grote hoogte. Te vinden in delicate Pink Bourbon-variëteiten.",
+        'sv':
+            "Mjuk, elegant blommig sötma. Förknippas med mjuka rostningsprofiler och hög höjd. Hittas i delikata Pink Bourbon-varieteter.",
+      },
+      'wheel_note_jasmine': {
+        'uk':
+            "Інтенсивно квітковий аромат, подібний до парфумів. Пов'язаний з високою концентрацією ліналоолу. Визначальна нота панамських та ефіопських Гейш.",
+        'en':
+            "Intensely floral and perfume-like aroma. Linked to high concentrations of linalool. The definitive note of Panamanian and Ethiopian Geshas.",
+        'de':
+            "Intensiv blumiges und parfumartiges Aroma. Verbunden mit hohen Konzentrationen von Linalool. Die definitive Note von panamaischen und äthiopischen Geshas.",
+        'es':
+            "Aroma intensamente floral y parecido al perfume. Vinculado a altas concentraciones de linalool. La nota definitiva de los Geshas panameños y etíopes.",
+        'fr':
+            "Arôme intensément floral et semblable à un parfum. Lié à de fortes concentrations de linalol. La note définitive des Geshas panaméens et éthiopiens.",
+        'it':
+            "Aroma intensamente floreale e simile al profumo. Legato ad alte concentrazioni di linalolo. La nota definitiva dei Gesha panamensi ed etiopi.",
+        'ja':
+            "非常にフローラルで香水のような香り。高濃度のリナロールに関連しています。パナマ産やエチオピア産ゲイシャ種の決定的なノートです。",
+        'pl':
+            "Intensywnie kwiatowy i perfumowy aromat. Związany z wysokim stężeniem linalolu. Definitywna nuta panamskich i etiopskich odmian Gesha.",
+        'pt':
+            "Aroma intensamente floral e semelhante a perfume. Ligado a altas concentrações de linalol. A nota definitiva dos Geshas panamenses e etíopes.",
+        'ro':
+            "Aromă intens florală și asemănătoare cu parfumul. Legat de concentrații mari de linalol. Nota definitorie a varietăților Gesha panameze și etiopiene.",
+        'tr':
+            "Yoğun çiçeksi ve parfüm benzeri aroma. Yüksek linalool konsantrasyonlarıyla bağlantılıdır. Panama ve Etiyopya Gesha'larının kesin notasıdır.",
+        'zh':
+            "极其浓郁的花香和香水般的香气。与高浓度的芳樟醇有关。是巴拿马和埃塞俄比亚瑰夏的标志性风味。",
+        'ar':
+            "عطر زهري مكثف يشبه الرائحة العطرية. يرتبط بتركيزات عالية من اللينالول. النكهة الحاسمة لمحاصيل جيشا البنمانية والإثيوبية.",
+        'ko':
+            "강렬한 꽃향기와 향수 같은 아로마. 리날로올의 고농도 함유와 관련이 있습니다. 파나마 및 에티오피아 게이샤의 전형적인 노트입니다.",
+        'nl':
+            "Intens bloemig en parfumachtig aroma. Gekoppeld aan hoge concentraties linalool. De definitieve noot van Panamese en Ethiopische Gesha's.",
+        'sv':
+            "Intensivt blommig och parfymliknande arom. Kopplat till höga koncentrationer av linalool. Den definitiva tonen i panamanska och etiopiska Gesha-varieteter.",
+      },

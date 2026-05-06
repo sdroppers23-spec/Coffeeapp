@@ -61,8 +61,7 @@ class FlavorDescriptions {
             'はっきりと明確なフローラルの香り。通常、これらは非常に新鮮なコーヒーや浅煎りのコーヒーに見られる一次アロマです。高品質なエチオピア産やパナマ産のロットに特徴的です。',
         'ko':
             '뚜렷하고 선명한 꽃향기. 일반적으로 매우 신선한 커피나 약배전 커피에서 발견되는 1차 아로마입니다. 고품질 에티오피아 및 파나마 로트의 특징입니다.',
-        'zh':
-            '独特而清晰的花香。通常这些是在非常新鲜的咖啡或浅烘焙咖啡中发现的主要香气。是高品质埃塞俄比亚和巴拿马批次的特征。',
+        'zh': '独特而清晰的花香。通常这些是在非常新鲜的咖啡或浅烘焙咖啡中发现的主要香气。是高品质埃塞俄比亚和巴拿马批次的特征。',
         'ar':
             'روائح زهرية متميزة وواضحة. وعادة ما تكون هذه هي الروائح الأساسية الموجودة في القهوة الطازجة جداً أو القهوة المحمصة بشكل خفيف. مميزة للمحاصيل الإثيوبية والبنمانية عالية الجودة.',
       },
@@ -128,38 +127,62 @@ class FlavorDescriptions {
             'Savory and deep notes resulting from the Maillard reaction and caramelization during roasting. These range from toasted bread to smoky accents. Typically associated with medium to dark roast profiles from Brazil or India.',
         'uk':
             'Пікантні та глибокі ноти, що виникають внаслідок реакції Майяра та карамелізації під час обсмажування. Вони варіюються від підсмаженого хліба до димних акцентів. Зазвичай асоціюються з профілями середнього та темного обсмаження з Бразилії чи Індії.',
-        'de': 'Röstaromen von Getreide bis Tabak.',
-        'fr': 'Arômes de torréfaction, des céréales au tabac.',
-        'es': 'Aromas de tueste, desde cereales hasta tabaco.',
-        'it': 'Aromi di tostatura, dai cereali al tabacco.',
-        'pt': 'Aromas de torra, de cereais a tabaco.',
-        'pl': 'Aromaty palenia, od zbóż po tytoń.',
-        'nl': 'Brandaroma\'s van granen tot tabak.',
-        'sv': 'Rostade aromer från spannmål till tobak.',
-        'tr': 'Tahıldan tütüne kadar kavrulmuş aromalar.',
-        'ja': '穀物からタバコまでのロースト香。',
-        'ko': '곡물에서 담배에 이르는 로스트 향입니다.',
-        'zh': '从谷物到烟草的烘焙香气.',
-        'ar': 'نكهات محمصة من الحبوب إلى التبغ.',
+        'de':
+            'Herzhafte und tiefe Noten, die aus der Maillard-Reaktion und der Karamellisierung während der Röstung resultieren. Diese reichen von getoastetem Brot bis hin zu rauchigen Akzenten. Typischerweise assoziiert mit mittleren bis dunklen Röstprofilen aus Brasilien oder Indien.',
+        'fr':
+            'Notes savoureuses et profondes résultant de la réaction de Maillard et de la caramélisation pendant la torréfaction. Celles-ci vont du pain grillé aux accents fumés. Typiquement associées aux profils de torréfaction moyenne à foncée du Brésil ou de l\'Inde.',
+        'es':
+            'Notas sabrosas y profundas resultantes de la reacción de Maillard y la caramelización durante el tueste. Estas van desde pan tostado hasta acentos ahumados. Típicamente asociadas con perfiles de tueste medio a oscuro de Brasil o India.',
+        'it':
+            'Note sapide e profonde derivanti dalla reazione di Maillard e dalla caramellizzazione durante la tostatura. Queste variano dal pane tostato ad accenti fumosi. Tipicamente associate a profili di tostatura da media a scura del Brasile o dell\'India.',
+        'pt':
+            'Notas salgadas e profundas resultantes da reação de Maillard e caramelização durante a torra. Estas variam de pão torrado a acentos defumados. Tipicamente associadas a perfis de torra média a escura do Brasil ou da Índia.',
+        'pl':
+            'Pikantne i głębokie nuty wynikające z reakcji Maillarda i karmelizacji podczas palenia. Obejmują one zarówno przypieczony chleb, jak i dymne akcenty. Zazwyczaj kojarzone ze średnimi i ciemnymi profilami palenia z Brazylii lub Indii.',
+        'nl':
+            'Hartige en diepe tonen als gevolg van de Maillard-reactie en karamelisatie tijdens het branden. Deze variëren van geroosterd brood tot rokerige accenten. Meestal geassocieerd met medium tot donkere brandingsprofielen uit Brazilië of India.',
+        'sv':
+            'Fylliga och djupa noter som ett resultat av Maillard-reaktionen och karamellisering under rostningen. Dessa sträcker sig från rostat bröd till rökiga accenter. Vanligtvis förknippade med mellan- till mörkrostade profiler från Brasilien eller Indien.',
+        'tr':
+            'Kavurma sırasında Maillard reaksiyonu ve karamelizasyondan kaynaklanan lezzetli ve derin notalar. Bunlar kızarmış ekmekten isli vurgulara kadar uzanır. Tipik olarak Brezilya veya Hindistan\'dan gelen orta ila koyu kavurma profilleriyle ilişkilendirilir.',
+        'ja':
+            '焙煎中のメイラード反応とカラメル化によって生まれる、香ばしく深みのあるノート。トーストしたパンからスモーキーなアクセントまで多岐にわたります。通常、ブラジルやインドの中煎りから深煎りのプロフィールに関連しています。',
+        'ko':
+            '로스팅 과정 중 마이야르 반응과 카라멜화로 인해 발생하는 풍부하고 깊은 노트입니다. 구운 빵에서 스모키한 악센트까지 다양합니다. 주로 브라질이나 인도의 미디엄에서 다크 로스팅 프로필과 관련이 있습니다.',
+        'zh': '烘焙过程中美拉德反应和焦糖化产生的咸鲜而深沉的风味。范围从烤面包到烟熏调。通常与巴西或印度的中度至深度烘焙风格相关。',
+        'ar':
+            'نكهات عميقة ومالحة ناتجة عن تفاعل مايار والكرملة أثناء التحميص. تتراوح هذه النكهات من الخبز المحمص إلى لمحات مدخنة. ترتبط عادةً بملفات التحميص المتوسطة إلى الداكنة من البرازيل أو الهند.',
       },
       'wheel_cat_spices': {
         'en':
             'Warm, pungent, or sweet spice notes like pepper, clove, or cinnamon. These often emerge during the middle stages of roasting. Frequently found in Sumatran coffees or spicy varieties from Rwanda.',
         'uk':
             'Теплі, гострі або солодкі пряні ноти, такі як перець, гвоздика або кориця. Вони часто проявляються на середніх етапах обсмажування. Часто зустрічаються в суматранській каві або пряних сортах з Руанди.',
-        'de': 'Würzige Noten wie Pfeffer oder Zimt.',
-        'fr': 'Notes épicées comme le poivre ou la cannelle.',
-        'es': 'Notas especiadas como pimienta o canela.',
-        'it': 'Note speziate come pepe o cannella.',
-        'pt': 'Notas de especiarias como pimenta ou canela.',
-        'pl': 'Przyprawowe nuty, takie jak pieprz lub cynamon.',
-        'nl': 'Kruidige tonen zoals peper of kaneel.',
-        'sv': 'Kryddiga toner som peppar eller kanel.',
-        'tr': 'Biber veya tarçın gibi baharatlı notalar.',
-        'ja': '胡椒やシナモンのようなスパイスのノート。',
-        'ko': '후추나 시나몬 같은 스파이스 노트입니다.',
-        'zh': '胡椒或肉桂般的辛香。',
-        'ar': 'نكهات توابل مثل الفلفل أو القرفة.',
+        'de':
+            'Warme, scharfe oder süße Gewürznoten wie Pfeffer, Nelken oder Zimt. Diese entstehen oft in den mittleren Phasen der Röstung. Häufig in Sumatra-Kaffees oder würzigen Sorten aus Ruanda zu finden.',
+        'fr':
+            'Notes d\'épices chaudes, piquantes ou sucrées comme le poivre, le clou de girofle ou la cannelle. Celles-ci émergent souvent pendant les étapes moyennes de la torréfaction. Fréquemment trouvées dans les cafés de Sumatra ou les variétés épicées du Rwanda.',
+        'es':
+            'Notas de especias cálidas, picantes o dulces como pimienta, clavo o canela. Estas suelen surgir durante las etapas medias del tueste. Se encuentran frecuentemente en cafés de Sumatra o variedades especiadas de Ruanda.',
+        'it':
+            'Note di spezie calde, pungenti o dolci come pepe, chiodi di garofano o cannella. Queste emergono spesso durante le fasi intermedie della tostatura. Frequentemente presenti nei caffè di Sumatra o nelle varietà speziate del Ruanda.',
+        'pt':
+            'Notas de especiarias quentes, picantes ou doces, como pimenta, cravo ou canela. Estas surgem frequentemente durante as fases intermédias da torra. Frequentemente encontradas em cafés de Sumatra ou variedades picantes de Ruanda.',
+        'pl':
+            'Ciepłe, ostre lub słodkie nuty przyprawowe, takie jak pieprz, goździki lub cynamon. Często pojawiają się one na środkowych etapach palenia. Często spotykane w kawach z Sumatry lub przyprawowych odmianach z Rwandy.',
+        'nl':
+            'Warme, scherpe of zoete kruidige tonen zoals peper, kruidnagel of kaneel. Deze ontstaan vaak tijdens de middelste fasen van het branden. Veelvoorkomend in Sumatraanse koffiesoorten of kruidige variëteiten uit Rwanda.',
+        'sv':
+            'Varma, skarpa eller söta kryddnoter som peppar, kryddnejlika eller kanel. Dessa uppstår ofta under rostningens mellersta skeden. Vanligt förekommande i kaffe från Sumatra eller kryddiga sorter från Rwanda.',
+        'tr':
+            'Biber, karanfil veya tarçın gibi sıcak, keskin veya tatlı baharat notaları. Bunlar genellikle kavurmanın orta aşamalarında ortaya çıkar. Sıklıkla Sumatra kahvelerinde veya Ruanda\'dan gelen baharatlı çeşitlerde bulunur.',
+        'ja':
+            '胡椒、クローブ、シナモンのような、温かみのある、刺激的な、あるいは甘いスパイスのノート。これらは焙煎の中盤に現れることが多いです。スマトラ産のコーヒーや、ルワンダ産の甘辛い品種によく見られます。',
+        'ko':
+            '후추, 정향 또는 시나몬과 같은 따뜻하고 톡 쏘는 또는 달콤한 스파이스 노트입니다. 로스팅의 중간 단계에서 주로 나타납니다. 수마트라 커피나 루완다의 스파이시한 품종에서 자주 발견됩니다.',
+        'zh': '温暖、辛辣或甜美的香料味，如胡椒、丁香或肉桂。这些味道通常在烘焙的中期阶段出现。常见于苏门答腊咖啡或卢旺达的辛香品种。',
+        'ar':
+            'نكهات توابل دافئة أو لاذعة أو حلوة مثل الفلفل أو القرنفل أو القرفة. تظهر هذه النكهات غالباً خلال المراحل المتوسطة من التحميص. توجد بكثرة في قهوة سومطرة أو الأصناف المتبلة من رواندا.',
       },
       'wheel_cat_nutty_cocoa': {
         'en':
@@ -220,8 +243,7 @@ class FlavorDescriptions {
             '白砂糖から複雑な廃糖蜜まで、コーヒーの基礎となる甘み。焙煎中の炭水化物の分解に由来します。ほぼすべてのバランスの取れたスペシャリティコーヒーに含まれています。',
         'ko':
             '백설탕에서 복합적인 당밀에 이르는 커피의 기초적인 단맛입니다. 로스팅 중 탄수화물의 분해에서 비롯됩니다. 거의 모든 균형 잡힌 스페셜티 커피에 존재합니다.',
-        'zh':
-            '咖啡的基础甜感，范围从白糖到复杂的糖蜜。源于烘焙过程中碳水化合物的分解。几乎存在于所有平衡的精品咖啡中。',
+        'zh': '咖啡的基础甜感，范围从白糖到复杂的糖蜜。源于烘焙过程中碳水化合物的分解。几乎存在于所有平衡的精品咖啡中。',
         'ar':
             'الحلاوة الأساسية في القهوة، من السكر الأبيض إلى دبس السكر المعقد. تأتي من تكسر الكربوهيدرات أثناء التحميص. موجودة في جميع أنواع القهوة المختصة المتوازنة تقريباً.',
       },
@@ -445,8 +467,7 @@ class FlavorDescriptions {
             '深いダークチョコレートのプロフィール。焙煎中の長めのディベロップメント期間に現れます。ブラジルやインドのモンスーン・マラバールの典型的なノートです。',
         'ko':
             '깊고 진한 다크 초콜릿 프로필입니다. 로스팅 중 긴 디벨롭먼트 과정에서 나타납니다. 브라질과 인도 몬순 말라바르의 전형적인 노트입니다.',
-        'zh':
-            '深沉的黑巧克力风味。在烘焙过程中较长的发展阶段出现。是巴西和印度季风马拉巴咖啡豆的典型风味。',
+        'zh': '深沉的黑巧克力风味。在烘焙过程中较长的发展阶段出现。是巴西和印度季风马拉巴咖啡豆的典型风味。',
         'ar':
             'ملفات تعريف الشوكولاتة الداكنة العميقة. تظهر أثناء التطور الطويل في التحميص. نكهات جوهرية لمحاصيل البرازيل والمونسون مالابار الهندية.',
       },
@@ -477,8 +498,7 @@ class FlavorDescriptions {
             'ローストしたナッツの土っぽく香ばしいノート。アミノ酸が糖分と反応することで生まれます。南米のクラシックなプロフィールに見られます。',
         'ko':
             '구운 견과류의 흙내음과 고소한 노트입니다. 아미노산이 당분과 반응하여 생깁니다. 클래식한 남미 프로필에서 발견됩니다.',
-        'zh':
-            '烘焙坚果的泥土味和咸鲜感。源于氨基酸与糖的反应。常见于经典的南美风味中。',
+        'zh': '烘焙坚果的泥土味和咸鲜感。源于氨基酸与糖的反应。常见于经典的南美风味中。',
         'ar':
             'نكهات ترابية ومالحة للمكسرات المحمصة. تأتي من تفاعل الأحماض الأمينية مع السكريات. توجد في الملفات التعريفية الكلاسيكية لأمريكا الجنوبية.',
       },
@@ -505,12 +525,10 @@ class FlavorDescriptions {
             'Rik karamell- och sirapssötma. Resultatet av komplex sockerbryning. Universellt i välrostade mellanprofiler.',
         'tr':
             'Zengin karamel ve şurup tatlılığı. Karmaşık şeker esmerleşmesinin sonucudur. İyi kavrulmuş orta profillerde evrenseldir.',
-        'ja':
-            '豊かなキャラメルやシロップの甘み。複雑な糖の褐色化の結果です。適切に焙煎されたミディアムプロフィールの多くに見られます。',
+        'ja': '豊かなキャラメルやシロップの甘み。複雑な糖の褐色化の結果です。適切に焙煎されたミディアムプロフィールの多くに見られます。',
         'ko':
             '풍부한 카라멜과 시럽의 단맛입니다. 복합적인 당의 갈변 반응 결과입니다. 잘 로스팅된 미디엄 프로필에서 보편적으로 나타납니다.',
-        'zh':
-            '浓郁的焦糖和糖浆甜感。糖分复杂褐变反应的结果。在烘焙良好的中度风味中非常普遍。',
+        'zh': '浓郁的焦糖和糖浆甜感。糖分复杂褐变反应的结果。在烘焙良好的中度风味中非常普遍。',
         'ar':
             'حلاوة غنية بالكراميل والشراب. نتاج عملية تسمير السكريات المعقدة. شائعة في الملفات التعريفية المتوسطة المحمصة جيداً.',
       },
@@ -541,8 +559,7 @@ class FlavorDescriptions {
             'ハーブのニュアンスを伴う、クリーンで構造的な口当たり。高地の豆に含まれる特定のポリフェノールに関連しています。イルガチェフェや高級ケニアロットの特徴です。',
         'ko':
             '허브 뉘앙스가 있는 깨끗하고 구조적인 바디감. 고지대 생두의 특정 폴리페놀과 관련이 있습니다. 예가체프와 고급 케냐 로트의 전형적인 특징입니다.',
-        'zh':
-            '带有草本底蕴的清爽、有结构的口感。与高海拔豆类中的特定多酚有关。是耶加雪菲和高级肯尼亚批次的标志。',
+        'zh': '带有草本底蕴的清爽、有结构的口感。与高海拔豆类中的特定多酚有关。是耶加雪菲和高级肯尼亚批次的标志。',
         'ar':
             'قوام نظيف ومنظم مع لمحات عشبية. يرتبط بمركبات بوليفينول محددة في حبوب الارتفاعات العالية. علامة مميزة لمحاصيل ييرغاتشيفي الكينية عالية الجودة.',
       },
@@ -573,8 +590,7 @@ class FlavorDescriptions {
             'バニラやスパイスのような、香り高く心地よい香り。メイラード反応の後期段階で生成されます。中米産の高品質なアラビカ種の典型的な特徴です。',
         'ko':
             '바닐라나 스파이스 같은 향기롭고 편안한 향입니다. 마이야르 반응의 후기 단계에서 유래합니다. 중앙 아메리카의 고품질 아라비카에서 전형적으로 나타납니다.',
-        'zh':
-            '香气扑鼻、令人愉悦的味道，如香草或香料。源于美拉德反应的后期阶段。是中美洲高品质阿拉比卡咖啡豆的典型特征。',
+        'zh': '香气扑鼻、令人愉悦的味道，如香草或香料。源于美拉德反应的后期阶段。是中美洲高品质阿拉比卡咖啡豆的典型特征。',
         'ar':
             'روائح عطرية ومريحة مثل الفانيليا أو التوابل. مشتقة من مراحل متأخرة لتفاعلات مايار. نموذجية لمحاصيل أرابيكا عالية الجودة من أمريكا الوسطى.',
       },
@@ -605,8 +621,7 @@ class FlavorDescriptions {
             '糖分がカラメル化する際に生まれる、温かく甘いスパイスのノート。フェノール化合物が豊富です。スマトラ産やルワンダ産コーヒーの特徴です。',
         'ko':
             '설탕이 카라멜화되면서 발달하는 따뜻하고 달콤한 스파이스 노트입니다. 페놀 화합물이 풍부합니다. 수마트라와 르완다 커피의 특징입니다.',
-        'zh':
-            '随着糖分焦糖化而产生的温暖、甜美的香料味。富含酚类化合物。是苏门答腊和卢旺达咖啡的特征。',
+        'zh': '随着糖分焦糖化而产生的温暖、甜美的香料味。富含酚类化合物。是苏门答腊和卢旺达咖啡的特征。',
         'ar':
             'نوتات توابل دافئة وحلوة تتطور مع كراميلة السكريات. غنية بالمركبات الفينولية. مميزة لأنواع القهوة من سومطرة ورواندا.',
       },
@@ -626,7 +641,7 @@ class FlavorDescriptions {
         'pt':
             'Notas de cereais torrados e pão. Indica estágios iniciais de torra ou densidade específica do grão. Comum em muitos lotes brasileiros e indianos.',
         'pl':
-            'Nuty prażonego ziarna i chleba. Wskazują на wczesne etapy palenia lub specyficzną gęstość ziarna. Występują w wielu brazylijskich i indyjskich partiach kawy.',
+            'Nuty prażonego ziarna i chleba. Wskazują na wczesne etapy palenia lub specyficzną gęstość ziarna. Występują w wielu brazylijskich i indyjskich partiach kawy.',
         'nl':
             'Noten van geroosterd graan en brood. Indicatief voor vroege brandfases of specifieke boon-dichtheid. Veelvoorkomend in veel Braziliaanse en Indiase kavels.',
         'sv':
@@ -637,8 +652,7 @@ class FlavorDescriptions {
             'トーストした穀物やパンのようなノート。焙煎の初期段階や特定の豆の密度を示します。多くのブラジル産やインド産コーヒーに見られます。',
         'ko':
             '구운 곡물과 빵 같은 노트입니다. 초기 로스팅 단계나 특정 생두 밀도를 나타냅니다. 많은 브라질과 인도 커피에서 흔히 발견됩니다.',
-        'zh':
-            '烘烤谷物和面包般的香气。预示着烘焙早期阶段或特定的咖啡豆密度。在许多巴西和印度批次中很常见。',
+        'zh': '烘烤谷物和面包般的香气。预示着烘焙早期阶段或特定的咖啡豆密度。在许多巴西和印度批次中很常见。',
         'ar':
             'نوتات الحبوب المحمصة والخبز. تشير إلى مراحل التحميص المبكرة أو كثافة معينة للحبوب. شائعة في العديد من المحاصيل البرازيلية والهندية.',
       },
@@ -660,7 +674,7 @@ class FlavorDescriptions {
         'pl':
             'Intensywne, dymne i przypalone aromaty. Wynik głębokiego palenia lub przypalenia powierzchni ziarna. Charakterystyczne dla włoskich i francuskich profili palenia.',
         'nl':
-            'Intense, rokerige en verkoolde aroma\'s. Resultaat van diep branden oder verbranding van het boon-oppervlak. Kenmerkend voor Italiaanse en Franse brandingsprofielen.',
+            'Intense, rokerige en verkoolde aroma\'s. Resultaat van diep branden of verbranding van het boon-oppervlak. Kenmerkend voor Italiaanse en Franse brandingsprofielen.',
         'sv':
             'Intensiva, rökiga och brända aromer. Resultat av djup rostning eller bränning av bönans yta. Karaktäristiskt för italienska och franska rostningsprofiler.',
         'tr':
@@ -669,10 +683,9 @@ class FlavorDescriptions {
             '強烈で、スモーキー、そして焦げたようなアロマ。深煎りや豆の表面の焦げの結果です。イタリアンローストやフレンチローストの特徴です。',
         'ko':
             '강렬하고 스모키하며 탄 듯한 아로마입니다. 딥 로스팅이나 원두 표면이 그을린 결과입니다. 이탈리안 및 프렌치 로스팅 프로파일의 특징입니다.',
-        'zh':
-            '强烈、烟熏和烧焦的香气。是深度烘焙或豆表焦灼的结果。是意式和法式烘焙风格的特征。',
+        'zh': '强烈、烟熏和烧焦的香气。是深度烘焙或豆表焦灼的结果。是意式和法式烘焙风格的特征。',
         'ar':
-            'روائح مكثفة ومدخنة ومتفحمة. ناتجة عن التحميص العميق أو احتراق سطح الحبوب. مميزة لملفات التحميص الإيطالية والفرنسية.',
+            'روائح حادة أو اصطناعية أو طبية. قد تشير إلى عيوب في المعالجة أو تلوث خارجي. تعتبر عادةً سمة سلبية في القهوة المختصة.',
       },
       'wheel_sub_green_vegetative': {
         'en':
@@ -701,8 +714,7 @@ class FlavorDescriptions {
             '新鮮で、草のような、植物のようなノート。焙煎不足や特定のテロワールの特徴を示すことが多いです。中米の高地産コーヒーによく見られます。',
         'ko':
             '신선하고 풀 같으며 식물 같은 노트입니다. 종종 로스팅 부족이나 특정 테루아 특성을 나타냅니다. 일부 고지대 중앙아메리카 커피에서 흔히 발견됩니다.',
-        'zh':
-            '新鲜、青草和植物般的气息。通常预示着烘焙程度不足或特定的产地特征。在一些高海拔的中美洲批次中很常见。',
+        'zh': '新鲜、青草和植物般的气息。通常预示着烘焙程度不足或特定的产地特征。在一些高海拔的中美洲批次中很常见。',
         'ar':
             'نوتات طازجة وعشبية ونباتية. غالباً ما تشير إلى نقص تطوير التحميص أو سمات تربة معينة. شائعة في بعض المحاصيل المرتفعة من أمريكا الوسطى.',
       },
@@ -733,8 +745,7 @@ class FlavorDescriptions {
             '鋭く、人工的、または薬のようなアロマ。精製過程の欠陥や外部の汚染を示すことがあります。スペシャリティコーヒーでは通常、ネガティブな特徴とされます。',
         'ko':
             '날카롭고 인공적이거나 약품 같은 아로마입니다. 가공 결함이나 외부 오염을 나타낼 수 있습니다. 스페셜티 커피에서는 보통 결점으로 간주됩니다.',
-        'zh':
-            '尖锐、人造或药用气味。可能预示着加工缺陷或外部污染。在精品咖啡中通常被视为负面特征。',
+        'zh': '尖锐、人造或药用气味。可能预示着加工缺陷或外部污染。在精品咖啡中通常被视为负面特征。',
         'ar':
             'روائح حادة أو اصطناعية أو طبية. قد تشير إلى عيوب في المعالجة أو تلوث خارجي. تعتبر عادةً سمة سلبية في القهوة المختصة.',
       },
@@ -761,12 +772,9 @@ class FlavorDescriptions {
             'Torra noter som påminner om kartong eller gammalt trä. Ofta ett tecken på att det gröna kaffet har åldrats eller förlorat sin färskhet under lagring.',
         'tr':
             'Karton veya eski odunu andıran kuru notalar. Genellikle yeşil çekirdeğin yaşlanmasının veya depolama sırasında tazelik kaybının bir işaretidir.',
-        'ja':
-            '段ボールや古い木を思わせるドライなノート。生豆の経年劣化や保管中の鮮度喪失の兆候であることが多いです。',
-        'ko':
-            '판지나 오래된 나무를 연상시키는 건조한 노트입니다. 종종 생두의 노화나 보관 중 신선도 상실의 징후입니다.',
-        'zh':
-            '让人联想到纸板或老旧木材的干涩气息。通常是生豆老化或储存期间失去新鲜感的迹象。',
+        'ja': '段ボールや古い木を思わせるドライなノート。生豆の経年劣化や保管中の鮮度喪失の兆候であることが多いです。',
+        'ko': '판지나 오래된 나무를 연상시키는 건조한 노트입니다. 종종 생두의 노화나 보관 중 신선도 상실의 징후입니다.',
+        'zh': '让人联想到纸板或老旧木材的干涩气息。通常是生豆老化或储存期间失去新鲜感的迹象。',
         'ar':
             'نوتات جافة تشبه الورق المقوى أو الخشب القديم. غالباً ما تكون علامة على تقادم الحبوب الخضراء أو فقدان الطزاجة أثناء التخزين.',
       },
@@ -1407,8 +1415,7 @@ class FlavorDescriptions {
             '新鮮でハーブのような、少し渋みのあるプロフィール。非常に浅い焙煎や特定の高地品種であることを示しています。繊細なウォッシュド・エチオピア・コーヒーによく見られます。',
         'ko':
             '신선하고 허브 느낌이 나며 약간의 수렴성이 있는 풍미. 매우 가벼운 로스팅이나 특정 고지대 품종임을 나타냅니다. 섬세한 워시드 에티오피아 커피에서 흔히 발견됩니다.',
-        'zh':
-            '清新、草本且略带涩味的风味。表明烘焙度极浅或属于特定的高海拔品种。常见于细腻的水洗埃塞俄比亚咖啡中。',
+        'zh': '清新、草本且略带涩味的风味。表明烘焙度极浅或属于特定的高海拔品种。常见于细腻的水洗埃塞俄比亚咖啡中。',
         'ar':
             'نكهة طازجة وعشبية وقابضة قليلاً. تشير إلى تحميص خفيف جداً أو أصناف معينة من المرتفعات العالية. شائع في القهوة الإثيوبية المغسولة الرقيقة.',
       },
@@ -1439,8 +1446,7 @@ class FlavorDescriptions {
             '穏やかでハーブのような、少し蜂蜜のような甘さ。複雑で低酸味のフローラルプロフィールを示しています。加工されたニカラグア産コーヒーによく見られます。',
         'ko':
             '부드럽고 허브 느낌이 나며 약간의 꿀 같은 단맛. 복합적이고 산도가 낮은 플로럴 프로필을 나타냅니다. 가공된 니카라과 커피에서 자주 발견됩니다.',
-        'zh':
-            '柔和、草本且略带蜂蜜般的甜味。表明复杂、低酸度的花香风味。常见于加工过的尼加拉瓜咖啡中。',
+        'zh': '柔和、草本且略带蜂蜜般的甜味。表明复杂、低酸度的花香风味。常见于加工过的尼加拉瓜咖啡中。',
         'ar':
             'حلاوة لطيفة وعشبية تشبه العسل قليلاً. تشير إلى نكهات زهرية معقدة منخفضة الحموضة. توجد غالباً في القهوة النيكاراغوية المعالجة.',
       },
@@ -1467,12 +1473,10 @@ class FlavorDescriptions {
             'Mjuk, elegant blommig sötma. Förknippas med mjuka rostningsprofiler och hög höjd. Hittas i delikata Pink Bourbon-varieteter.',
         'tr':
             'Yumuşak, zarif çiçeksi tatlılık. Nazik kavurma profilleri ve yüksek rakım ile ilişkilendirilir. Hassas Pink Bourbon çeşitlerinde bulunur.',
-        'ja':
-            '柔らかく優雅なフローラルの甘さ。穏やかな焙煎プロフィールや高地に関連しています。繊細なピンクブルボン種に見られます。',
+        'ja': '柔らかく優雅なフローラルの甘さ。穏やかな焙煎プロフィールや高地に関連しています。繊細なピンクブルボン種に見られます。',
         'ko':
             '부드럽고 우아한 꽃의 단맛. 완만한 로스팅 프로필 및 고지대와 관련이 있습니다. 섬세한 핑크 버본 품종에서 발견됩니다.',
-        'zh':
-            '柔和、优雅的花香甜味。与温和的烘焙程度和高海拔有关。常见于细腻的粉红波旁（Pink Bourbon）品种中。',
+        'zh': '柔和、优雅的花香甜味。与温和的烘焙程度和高海拔有关。常见于细腻的粉红波旁（Pink Bourbon）品种中。',
         'ar':
             'حلاوة زهرية ناعمة وأنيقة. ترتبط بملفات تحميص لطيفة وارتفاعات عالية. توجد في أصناف البوربون الوردي الرقيقة.',
       },
@@ -1503,8 +1507,7 @@ class FlavorDescriptions {
             '非常にフローラルで香水のようなアロマ。高濃度のリナロールに関連しています。パナマ産およびエチオピア産ゲイシャ種の決定的なノートです。',
         'ko':
             '강렬한 꽃향기와 향수 같은 아로마. 고농도의 리날로올과 관련이 있습니다. 파나마 및 에티오피아 게이샤의 결정적인 노트입니다.',
-        'zh':
-            '浓郁的花香和如香水般的气息。与高浓度的芳樟醇有关。是巴拿马和埃塞俄比亚瑰夏咖啡的标志性风味。',
+        'zh': '浓郁的花香和如香水般的气息。与高浓度的芳樟醇有关。是巴拿马和埃塞俄比亚瑰夏咖啡的标志性风味。',
         'ar':
             'رائحة زهرية مكثفة تشبه العطر. مرتبطة بتركيزات عالية من اللينالول. النوتة المميزة لقهوة الغيشا البنمية والإثيوبية.',
       },
@@ -1531,12 +1534,10 @@ class FlavorDescriptions {
             'Söt, krämig och subtil aromatisk not. Uppstår i mitten av rostningsprocessen. Hittas ofta i tvättade höghöjdspartier från Centralamerika.',
         'tr':
             'Tatlı, kremsi ve hafif aromatik nota. Kavurma işleminin ortasında ortaya çıkar. Genellikle yüksek kaliteli yıkanmış Orta Amerika partilerinde bulunur.',
-        'ja':
-            '甘くクリーミーで、繊細なアロマのノート。焙煎工程の中盤に生じます。高品質な中米産のウォッシュドロットによく見られます。',
+        'ja': '甘くクリーミーで、繊細なアロマのノート。焙煎工程の中盤に生じます。高品質な中米産のウォッシュドロットによく見られます。',
         'ko':
             '달콤하고 크리미하며 미묘한 아로마 노트. 로스팅 과정 중간에 발생합니다. 고품질의 워시드 중앙아메리카 로트에서 자주 발견됩니다.',
-        'zh':
-            '甜美、柔滑且细腻的香气。产生于烘焙过程的中期。常见于优质的中美洲水洗咖啡中。',
+        'zh': '甜美、柔滑且细腻的香气。产生于烘焙过程的中期。常见于优质的中美洲水洗咖啡中。',
         'ar':
             'نوتة عطرية حلوة وكريمية ورقيقة. تظهر في منتصف عملية التحميص. توجد غالباً في دفعات القهوة المغسولة عالية الجودة من أمريكا الوسطى.',
       },
@@ -1567,8 +1568,7 @@ class FlavorDescriptions {
             '強烈でウッディ、かつオイルのような甘さ。単なるバニラよりも濃縮されたアロマプロファイルを特徴とします。独特なブルボン種のマイクロロットで見られます。',
         'ko':
             '강렬하고 나무 향이 나며 오일리한 달콤함. 단순한 바닐라보다 더 농축된 아로마 프로필을 나타냅니다. 독특한 버번 품종 마이크로 로트에서 발견됩니다.',
-        'zh':
-            '浓郁、木质且带有油脂感的甜美。代表了比普通香草更浓缩的香气特征。发现于独特的波旁品种微批次中。',
+        'zh': '浓郁、木质且带有油脂感的甜美。代表了比普通香草更浓缩的香气特征。发现于独特的波旁品种微批次中。',
         'ar':
             'حلاوة مكثفة وخشبية وزيتية. تمثل ملفاً عطرياً أكثر تركيزاً من الفانيليا العادية. توجد في ميكرو-لوتات فريدة من نوع Bourbon.',
       },
@@ -1599,8 +1599,7 @@ class FlavorDescriptions {
             'とろりとした、土のようなニュアンスを伴うダークな甘さ。高度なキャラメル化の結果です。多くのブラジル産やスマトラ産のコーヒーを象徴するノートです。',
         'ko':
             '흙 내음이 감도는 진하고 어두운 설탕의 달콤함. 높은 단계의 캐러멜화 결과입니다. 많은 브라질 및 수마트라 커피의 특징입니다.',
-        'zh':
-            '浓厚、深沉且带有泥土气息的糖分甜美。是高度焦糖化的结果。是许多巴西和苏门答腊咖啡的标志性特征。',
+        'zh': '浓厚、深沉且带有泥土气息的糖分甜美。是高度焦糖化的结果。是许多巴西和苏门答腊咖啡的标志性特征。',
         'ar':
             'حلاوة سكرية داكنة وكثيفة مع مسحة ترابية. ناتجة عن درجة عالية من الكرملة. سمة مميزة للعديد من أنواع القهوة البرازيلية والسومطرية.',
       },
@@ -1631,8 +1630,7 @@ class FlavorDescriptions {
             'クリーンでウッディ、かつ持続的な甘さ。焙煎中の高品質で安定した炭水化物の分解を象徴します。高品質なグアテマラ産のロットによく見られます。',
         'ko':
             '깔끔하고 나무 향이 나며 지속적인 달콤함. 로스팅 중 고품질의 안정적인 탄수화물 분해를 나타냅니다. 고품질 과테말라 로트에서 자주 발견됩니다.',
-        'zh':
-            '纯净、带有木质气息且持久的甜味。代表了烘焙过程中高质量、稳定的碳水化合物分解。在优质瓜地马拉咖啡中很常见。',
+        'zh': '纯净、带有木质气息且持久的甜味。代表了烘焙过程中高质量、稳定的碳水化合物分解。在优质瓜地马拉咖啡中很常见。',
         'ar':
             'حلاوة نظيفة وخشبية ومستمرة. تمثل تفككاً كربوهيدراتياً مستقراً وعالي الجودة أثناء التحميص. تتكرر في دفعات القهوة الغواتيمالية عالية الجودة.',
       },
@@ -1663,8 +1661,7 @@ class FlavorDescriptions {
             '豊かな、砂糖を焦がしたようなブラウンノート。焙煎が適切に進行したことを示す普遍的な指標です。グアテマラからブラジルまで、甘いコーヒーに見られます。',
         'ko':
             '풍부하고 설탕을 졸인 듯한 브라우닝 노트. 적절한 로스팅 진행의 보편적인 지표입니다. 과테말라에서 브라질까지 달콤한 커피에서 나타납니다.',
-        'zh':
-            '浓郁、糖分褐变的气息。是烘焙程度恰到好处的普遍指标。存在于从瓜地马拉到巴西的各类甜味咖啡中。',
+        'zh': '浓郁、糖分褐变的气息。是烘焙程度恰到好处的普遍指标。存在于从瓜地马拉到巴西的各类甜味咖啡中。',
         'ar':
             'نوتة تحميص غنية وسكرية. مؤشر عالمي لتطور التحميص السليم. متوفرة في أنواع القهوة الحلوة من غواتيمالا إلى البرازيل.',
       },
@@ -1695,8 +1692,7 @@ class FlavorDescriptions {
             '粘性のある、フローラルな甘さ。高いミュシレージ含有量と特定の精製方法に関連しています。コスタリカ産「ハニー」プロセスのロットの特徴です。',
         'ko':
             '점성이 있고 꽃향기가 나는 달콤함. 높은 점액질 함량과 특정 가공 방식과 관련이 있습니다. 코스타리카 "허니" 프로세싱 로트의 특징입니다.',
-        'zh':
-            '粘稠、花香般的甜美。与高果胶含量和特定的加工工艺有关。是哥斯大黎加“蜜处理”批次的标志。',
+        'zh': '粘稠、花香般的甜美。与高果胶含量和特定的加工工艺有关。是哥斯大黎加“蜜处理”批次的标志。',
         'ar':
             'حلاوة لزجة وزهرية. مرتبطة بمحتوى عالٍ من المادة اللزجة ومعالجة محددة. من سمات دفعات القهوة الكوستاريكية المعالجة بطريقة "Honey".',
       },
@@ -1727,8 +1723,7 @@ class FlavorDescriptions {
             '土のような、わずかにオイル感のある香ばしいナッツの甘さ。多くの南米産コーヒーや特定の焙煎スタイルの特徴です。伝統的なブラジル産のロットによく見られます。',
         'ko':
             '흙 내음이 나고 약간 오일리하며 풍미 있는 견과류의 달콤함. 많은 남미 커피와 특정 로스팅 스타일의 특징입니다. 클래식한 브라질 로트에서 흔히 볼 수 있습니다.',
-        'zh':
-            '带有泥土气息、微油且具有风味的坚果甜美。是许多南美咖啡和特定烘焙风格的特征。常见于经典的巴西批次中。',
+        'zh': '带有泥土气息、微油且具有风味的坚果甜美。是许多南美咖啡和特定烘焙风格的特征。常见于经典的巴西批次中。',
         'ar':
             'حلاوة مكسرات ترابية وزيتية قليلاً ولذيذة. مميزة للعديد من أنواع القهوة في أمريكا الجنوبية وأساليب تحميص معينة. شائعة في دفعات القهوة البرازيلية الكلاسيكية.',
       },
@@ -1791,8 +1786,7 @@ class FlavorDescriptions {
             '甘く、わずかに苦味のあるナッツのノートで、マジパンのようなニュアンスがあります。特定のアミノ酸プロファイルに関連しています。クリーンな水洗式のホンジュラス産やエルサルバドル産コーヒーによく見られます。',
         'ko':
             '달콤하고 약간 쌉쌀한 견과류 노트로 마지팬 같은 느낌이 있습니다. 특정 아미노산 프로필과 관련이 있습니다. 깔끔한 워시드 온두라스 및 엘살바도르 커피에서 흔히 볼 수 있습니다.',
-        'zh':
-            '甜美、微苦且带有类似杏仁糖气息的坚果味。与特定的氨基酸特征有关。在纯净的水洗洪都拉斯和萨尔瓦多咖啡中很常见。',
+        'zh': '甜美、微苦且带有类似杏仁糖气息的坚果味。与特定的氨基酸特征有关。在纯净的水洗洪都拉斯和萨尔瓦多咖啡中很常见。',
         'ar':
             'نوتة مكسرات حلوة ومرة قليلاً مع حافة تشبه المارزيبان. مرتبطة بملفات أحماض أمينية محددة. شائعة في أنواع القهوة المغسولة النظيفة من هندوراس والسلفادور.',
       },
@@ -1823,8 +1817,7 @@ class FlavorDescriptions {
             '基礎的なカカオの甘さ。褐変反応の結果です。ブラジル産、インド産、ベトナム産の高品質なロブスタ種およびアラビカ種に典型的なノートです。',
         'ko':
             '기초적인 카카오의 달콤함. 브라우닝 반응의 결과입니다. 브라질, 인도, 베트남의 고품질 로부스타 및 아라비카의 클래식한 노트입니다.',
-        'zh':
-            '基础的可可甜美。是褐变反应的结果。是巴西、印度和越南优质罗布斯塔及阿拉比卡咖啡的经典风味。',
+        'zh': '基础的可可甜美。是褐变反应的结果。是巴西、印度和越南优质罗布斯塔及阿拉比卡咖啡的经典风味。',
         'ar':
             'حلاوة الكاكاو الأساسية. ناتجة عن تفاعلات التحميص. نوتة كلاسيكية لأنواع القهوة عالية الجودة من الروبوستا والأرابيكا من البرازيل والهند وفيتنام.',
       },
@@ -1855,8 +1848,7 @@ class FlavorDescriptions {
             '強烈で、ほろ苦いカカオの深み。高度な焙煎の進行、または特定のテロワールによる遺伝的特徴を示します。高地のスマトラ産コーヒーに不変のノートです。',
         'ko':
             '강렬하고 달콤하면서도 쌉쌀한 카카오의 풍부함. 높은 단계의 로스팅 진행 또는 특정 테루아의 유전적 특성을 나타냅니다. 고지대 수마트라 커피에서 항상 발견됩니다.',
-        'zh':
-            '浓郁、苦中带甜的可可风味。标志着高度的烘焙程度或特定的产地基因。在苏门答腊高海拔咖啡中非常稳定。',
+        'zh': '浓郁、苦中带甜的可可风味。标志着高度的烘焙程度或特定的产地基因。在苏门答腊高海拔咖啡中非常稳定。',
         'ar':
             'غنى الكاكاو المكثف والمر والحلو. يشير إلى درجة عالية من التطور أو جينات معينة للتربة. ثابت في أنواع القهوة السومطرية المرتفعة.',
       },
@@ -1887,8 +1879,7 @@ class FlavorDescriptions {
             'スパイシーで刺激的、かつ温かみのあるノート。特定のフェノール化合物によるものです。ルワンダ産やブルンジ産の一部のコーヒーに見られます。',
         'ko':
             '따뜻한 느낌을 주는 톡 쏘는 스파이스 노트입니다. 특정 페놀 화합물의 결과입니다. 일부 르완다와 부룬디 커피에서 발견됩니다.',
-        'zh':
-            '具有温暖感的辛辣、刺鼻气息。是特定酚类化合物的结果。在一些卢旺达和布隆迪咖啡中可见。',
+        'zh': '具有温暖感的辛辣、刺鼻气息。是特定酚类化合物的结果。在一些卢旺达和布隆迪咖啡中可见。',
         'ar':
             'نوتة حريفة ولاذعة مع إحساس بالدفء. ناتجة عن مركبات فينولية معينة. توجد في بعض أنواع القهوة الرواندية والبوروندية.',
       },
@@ -1919,8 +1910,7 @@ class FlavorDescriptions {
             '甘く、ウッディなスパイスのノート。密度の高い豆の中浅煎りでよく見られます。イエメン産や一部のエチオピア産コーヒーに頻繁に現れます。',
         'ko':
             '달콤하고 우디한 스파이스 노트입니다. 밀도가 높은 생두의 미디엄-라이트 로스팅에서 흔히 발견됩니다. 예멘과 일부 에티오피아 커피에서자주 나타납니다.',
-        'zh':
-            '甜美的木质香料味。常见于高密度咖啡的中浅度烘焙。在也门和一些埃塞俄比亚咖啡中经常出现。',
+        'zh': '甜美的木质香料味。常见于高密度咖啡的中浅度烘焙。在也门和一些埃塞俄比亚咖啡中经常出现。',
         'ar':
             'نوتة توابل حلوة وخشبية. شائعة في التحميص المتوسط الفاتح للقهوة الكثيفة. تتكرر في أنواع القهوة اليمنية وبعض أنواع القهوة الإثيوبية.',
       },
@@ -1951,8 +1941,7 @@ class FlavorDescriptions {
             '土っぽく温かみのあるスパイスのプロフィール。チョコレートやナッツの甘さを補完することが多いです。高級なインドネシア産アラビカ種の特徴です。',
         'ko':
             '흙 내음이 나고 따뜻한 스파이스 프로파일입니다. 종종 초콜릿과 견과류의 달콤함을 보완합니다. 고급 인도네시아 아라비카의 특징입니다.',
-        'zh':
-            '泥土般温暖的香料风味。经常补充巧克力和坚果的甜味。是高品质印度尼西亚阿拉比卡咖啡的特征。',
+        'zh': '泥土般温暖的香料风味。经常补充巧克力和坚果的甜味。是高品质印度尼西亚阿拉比卡咖啡的特征。',
         'ar':
             'ملف توابل ترابي ودافئ. غالباً ما يكمل حلاوة الشوكولاتة والمكسرات. مميز لأنواع الأرابيكا الإندونيسية عالية الجودة.',
       },
@@ -1983,8 +1972,7 @@ class FlavorDescriptions {
             '清涼感があり甘く、わずかに薬のようなスパイスのノート。リコリス（甘草）を思わせます。希少なイエメン産や複雑なアフリカ産コーヒーに見られます。',
         'ko':
             '시원하고 달콤하며 약간의 약품 느낌이 있는 스파이스 노트입니다. 감초를 연상시킵니다. 일부 희귀한 예멘 및 복합적인 아프리카 커피에서 발견됩니다.',
-        'zh':
-            '清凉、甜美且略带药味的香料味。让人联想到甘草。在一些稀有的也门和复杂的非洲批次中可见。',
+        'zh': '清凉、甜美且略带药味的香料味。让人联想到甘草。在一些稀有的也门和复杂的非洲批次中可见。',
         'ar':
             'نوتة توابل باردة وحلوة وطبية قليلاً. تذكرنا بعرق السوس. توجد في بعض المحاصيل اليمنية النادرة والأفريقية المعقدة.',
       },
@@ -2015,8 +2003,7 @@ class FlavorDescriptions {
             'ビールや焼きたてのパンを思わせる、甘く穀物のようなノート。特定の糖とアミノ酸の反応（メイラード反応）の指標です。伝統的なブラジル産コーヒーによく見られます。',
         'ko':
             '맥주나 갓 구운 빵을 연상시키는 달콤한 곡물 노트입니다. 특정 당-아미노산 반응의 지표입니다. 전통적인 브라질 커피에서 흔히 발견됩니다.',
-        'zh':
-            '甜美的谷物气息，让人联想到啤酒或新鲜出炉的面包。是特定糖-氨基酸反应的指标。在传统的巴西咖啡中很常见。',
+        'zh': '甜美的谷物气息，让人联想到啤酒或新鲜出炉的面包。是特定糖-氨基酸反应的指标。在传统的巴西咖啡中很常见。',
         'ar':
             'نوتة حلوة وحبيبية تشبه البيرة أو الخبز الطازج. مؤشر على تفاعلات معينة بين السكر والأحماض الأمينية. شائعة في أنواع القهوة البرازيلية التقليدية.',
       },
@@ -2047,234 +2034,215 @@ class FlavorDescriptions {
             'トーストしたパンのような穀物のノート。初期の焙煎進行や密度の高い豆を示します。多くの高品質なコマーシャルグレードのコーヒーに見られます。',
         'ko':
             '구운 빵 같은 곡물 노트입니다. 초기 발달 단계나 고밀도 생두를 나타냅니다. 많은 고품질 커머셜 등급 커피에서 발견됩니다.',
-        'zh':
-            '烘烤的面包般谷物香气。标志着早期烘焙阶段或高密度咖啡豆。在许多高质量的商业等级咖啡中可见。',
+        'zh': '烘烤的面包般谷物香气。标志着早期烘焙阶段或高密度咖啡豆。在许多高质量的商业等级咖啡中可见。',
         'ar':
             'نوتة حبوب محمصة تشبه الخبز. تشير إلى مراحل التطوير المبكرة أو الحبوب عالية الكثافة. توجد في العديد من أنواع القهوة ذات الدرجة التجارية عالية الجودة.',
       },
       'wheel_note_smoky': {
         'en':
-            'Intense char and wood-smoke notes. Typical of dark-roast profiles where pyrolysis dominates. Quintessential for South Italian espresso styles.',
+            'Distinctive aroma of wood smoke or charcoal. Result of intense roasting or bean surface scorching. Classic in dark-roasted blends.',
         'uk':
             'Інтенсивні ноти вугілля та деревного диму. Типово для профілів темного обсмаження, де домінує піроліз. Квінтесенція стилів південноіталійського еспресо.',
         'de':
-            'Intense char and wood-smoke notes. Typical of dark-roast profiles where pyrolysis dominates. Quintessential for South Italian espresso styles.',
+            'Markantes Aroma von Holzrauch oder Holzkohle. Ergebnis intensiver Röstung oder Verbrennung der Bohnenoberfläche. Klassisch in dunklen Röstmischungen.',
         'fr':
-            'Intense char and wood-smoke notes. Typical of dark-roast profiles where pyrolysis dominates. Quintessential for South Italian espresso styles.',
+            'Arôme distinctif de fumée de bois ou de charbon de bois. Résultat d\'une torréfaction intense ou d\'un brûlage de la surface des grains. Classique dans les mélanges à torréfaction foncée.',
         'es':
-            'Intense char and wood-smoke notes. Typical of dark-roast profiles where pyrolysis dominates. Quintessential for South Italian espresso styles.',
+            'Aroma distintivo a humo de leña o carbón. Resultado de un tostado intenso o quemado superficial del grano. Clásico en mezclas de tostado oscuro.',
         'it':
-            'Intense char and wood-smoke notes. Typical of dark-roast profiles where pyrolysis dominates. Quintessential for South Italian espresso styles.',
+            'Aroma distintivo di fumo di legna o carbone. Risultato di una tostatura intensa o di una bruciatura superficiale del chicco. Classico nelle miscele a tostatura scura.',
         'pt':
-            'Intense char and wood-smoke notes. Typical of dark-roast profiles where pyrolysis dominates. Quintessential for South Italian espresso styles.',
+            'Aroma distinto de fumaça de madeira ou carvão. Resultado de torra intensa ou queima superficial do grão. Clássico em blends de torra escura.',
         'pl':
-            'Intense char and wood-smoke notes. Typical of dark-roast profiles where pyrolysis dominates. Quintessential for South Italian espresso styles.',
+            'Wyraźny aromat dymu drzewnego lub węgla drzewnego. Wynik intensywnego palenia lub przypalenia powierzchni ziarna. Klasyk w ciemno palonych mieszankach.',
         'nl':
-            'Intense char and wood-smoke notes. Typical of dark-roast profiles where pyrolysis dominates. Quintessential for South Italian espresso styles.',
+            'Kenmerkend aroma van houtrook of houtskool. Resultaat van intensief branden of verbranding van het boon-oppervlak. Klassiek in donkergebrande melanges.',
         'sv':
-            'Intense char and wood-smoke notes. Typical of dark-roast profiles where pyrolysis dominates. Quintessential for South Italian espresso styles.',
+            'Karaktäristisk arom av vedrök eller kol. Resultat av intensiv rostning eller bränning av bönans yta. Klassiskt i mörkrostade blandningar.',
         'tr':
-            'Intense char and wood-smoke notes. Typical of dark-roast profiles where pyrolysis dominates. Quintessential for South Italian espresso styles.',
-        'ja':
-            'Intense char and wood-smoke notes. Typical of dark-roast profiles where pyrolysis dominates. Quintessential for South Italian espresso styles.',
+            'Odun dumanı veya odun kömürünün kendine özgü aroması. Yoğun kavurma veya çekirdek yüzeyinin yanmasının sonucudur. Koyu kavrulmuş karışımlarda klasiktir.',
+        'ja': '木煙や炭の独特のアロマ。強火での焙煎や豆の表面の焦げの結果です。深煎りのブレンドでは定番の特徴です。',
         'ko':
-            'Intense char and wood-smoke notes. Typical of dark-roast profiles where pyrolysis dominates. Quintessential for South Italian espresso styles.',
-        'zh':
-            'Intense char and wood-smoke notes. Typical of dark-roast profiles where pyrolysis dominates. Quintessential for South Italian espresso styles.',
+            '장작 연기나 숯의 독특한 아로마입니다. 강한 로스팅이나 원두 표면이 그을린 결과입니다. 다크 로스팅 블렌드의 전형적인 특징입니다.',
+        'zh': '木质烟熏或木炭的独特香气。是剧烈烘焙或豆表焦灼的结果。是深焙混合豆中的经典风味。',
         'ar':
-            'Intense char and wood-smoke notes. Typical of dark-roast profiles where pyrolysis dominates. Quintessential for South Italian espresso styles.',
+            'رائحة مميزة لدخان الخشب أو الفحم. ناتجة عن التحميص المكثف أو احتراق سطح الحبوب. كلاسيكية في خلطات التحميص الداكنة.',
       },
       'wheel_note_ashy': {
         'en':
-            'Dry, carbonaceous and mineral-like note. Indicates extreme roast exposure. Found in commercial-grade dark roasts.',
+            'Dry, powdery scent of burnt wood or cold ash. Often indicates surface scorching during roast. Frequent in lower-quality dark roasts.',
         'uk':
             'Суха, вуглецева та мінеральна нота. Вказує на екстремальний вплив тепла під час обсмаження. Зустрічається в комерційних лотах темного обсмаження.',
         'de':
-            'Dry, carbonaceous and mineral-like note. Indicates extreme roast exposure. Found in commercial-grade dark roasts.',
+            'Trockener, pudriger Duft von verbranntem Holz oder kalter Asche. Weist oft auf Oberflächenverbrennungen während der Röstung hin.',
         'fr':
-            'Dry, carbonaceous and mineral-like note. Indicates extreme roast exposure. Found in commercial-grade dark roasts.',
+            'Odeur sèche et poudreuse de bois brûlé ou de cendre froide. Indique souvent un brûlage de surface pendant la torréfaction.',
         'es':
-            'Dry, carbonaceous and mineral-like note. Indicates extreme roast exposure. Found in commercial-grade dark roasts.',
+            'Olor seco y polvoriento a madera quemada o ceniza fría. A menudo indica quemado superficial durante el tostado.',
         'it':
-            'Dry, carbonaceous and mineral-like note. Indicates extreme roast exposure. Found in commercial-grade dark roasts.',
+            'Odore secco e polveroso di legno bruciato o cenere fredda. Spesso indica una bruciatura superficiale durante la tostatura.',
         'pt':
-            'Dry, carbonaceous and mineral-like note. Indicates extreme roast exposure. Found in commercial-grade dark roasts.',
+            'Cheiro seco e polveroso de madeira queimada ou cinza fria. Frequentemente indica queima superficial durante a torra.',
         'pl':
-            'Dry, carbonaceous and mineral-like note. Indicates extreme roast exposure. Found in commercial-grade dark roasts.',
+            'Suchy, pudrowy zapach spalonego drewna lub zimnego popiołu. Często wskazuje na przypalenie powierzchni podczas palenia.',
         'nl':
-            'Dry, carbonaceous and mineral-like note. Indicates extreme roast exposure. Found in commercial-grade dark roasts.',
+            'Droge, poederachtige geur van verbrand hout of koude as. Wijst vaak op oppervlakteverbranding tijdens het branden.',
         'sv':
-            'Dry, carbonaceous and mineral-like note. Indicates extreme roast exposure. Found in commercial-grade dark roasts.',
+            'Torr, pudrig doft av bränt trä oder kall aska. Tyder ofta på ytlig bränning under rostningen.',
         'tr':
-            'Dry, carbonaceous and mineral-like note. Indicates extreme roast exposure. Found in commercial-grade dark roasts.',
-        'ja':
-            'Dry, carbonaceous and mineral-like note. Indicates extreme roast exposure. Found in commercial-grade dark roasts.',
-        'ko':
-            'Dry, carbonaceous and mineral-like note. Indicates extreme roast exposure. Found in commercial-grade dark roasts.',
-        'zh':
-            'Dry, carbonaceous and mineral-like note. Indicates extreme roast exposure. Found in commercial-grade dark roasts.',
+            'Yanmış odun veya soğuk külün kuru, tozlu kokusu. Genellikle kavurma sırasında yüzeyin yanmasını gösterir.',
+        'ja': '焼けた木や冷えた灰のような、乾燥した粉っぽい香り。焙煎中の表面の焦げを示していることが多いです。',
+        'ko': '탄 나무나 찬 재의 건조하고 가루 같은 향입니다. 로스팅 중 표면이 그을렸음을 나타내는 경우가 많습니다.',
+        'zh': '烧焦的木头或冷灰的干燥粉末味。通常预示着烘焙过程中的表面焦灼。',
         'ar':
-            'Dry, carbonaceous and mineral-like note. Indicates extreme roast exposure. Found in commercial-grade dark roasts.',
+            'رائحة جافة وترابية للخشب المحترق أو الرماد البارد. غالباً ما تشير إلى احتراق السطح أثناء التحميص.',
       },
       'wheel_note_olive_oil': {
         'en':
-            'Unique, buttery and slightly vegetal mouthfeel. Reflects high concentration of specific lipids. Arises in certain Peruvian and Ecuadorian micro-lots.',
+            'Heavy, viscous and slightly fatty mouthfeel. Derived from concentrated lipid content. Signature of specific high-altitude Ethiopian lots.',
         'uk':
             'Унікальне, маслянисте та злегка рослинне відчуття в роті. Відображає високу концентрацію специфічних ліпідів. Проявляється в певних перуанських та еквадорських мікролотах.',
         'de':
-            'Unique, buttery and slightly vegetal mouthfeel. Reflects high concentration of specific lipids. Arises in certain Peruvian and Ecuadorian micro-lots.',
+            'Schweres, viskoses und leicht fettiges Mundgefühl. Abgeleitet von konzentriertem Lipidgehalt. Kennzeichen spezifischer äthiopischer Hochlandlots.',
         'fr':
-            'Unique, buttery and slightly vegetal mouthfeel. Reflects high concentration of specific lipids. Arises in certain Peruvian and Ecuadorian micro-lots.',
+            'Sensation en bouche lourde, visqueuse et légèrement grasse. Dérivé d\'une teneur concentrée en lipides. Signature de lots éthiopiens d\'altitude spécifiques.',
         'es':
-            'Unique, buttery and slightly vegetal mouthfeel. Reflects high concentration of specific lipids. Arises in certain Peruvian and Ecuadorian micro-lots.',
+            'Sensación en boca pesada, viscosa y ligeramente grasa. Derivada del contenido concentrado de lípidos. Firma de lotes etíopes específicos de gran altitud.',
         'it':
-            'Unique, buttery and slightly vegetal mouthfeel. Reflects high concentration of specific lipids. Arises in certain Peruvian and Ecuadorian micro-lots.',
+            'Sensazione in bocca pesante, viscosa e leggermente grassa. Deriva dal contenuto lipidico concentrato. Caratteristica di specifici lotti etiopi d\'alta quota.',
         'pt':
-            'Unique, buttery and slightly vegetal mouthfeel. Reflects high concentration of specific lipids. Arises in certain Peruvian and Ecuadorian micro-lots.',
+            'Sensação na boca pesada, viscosa e ligeiramente gordurosa. Derivada do conteúdo lipídico concentrado. Assinatura de lotes etíopes de alta altitude específicos.',
         'pl':
-            'Unique, buttery and slightly vegetal mouthfeel. Reflects high concentration of specific lipids. Arises in certain Peruvian and Ecuadorian micro-lots.',
+            'Ciężkie, lepkie i nieco tłuste odczucie w ustach. Pochodzi ze skoncentrowanej zawartości lipidów. Wizytówka specyficznych etiopskich partii kawy.',
         'nl':
-            'Unique, buttery and slightly vegetal mouthfeel. Reflects high concentration of specific lipids. Arises in certain Peruvian and Ecuadorian micro-lots.',
+            'Zwaar, stroperig en licht vet mondgevoel. Afgeleid van geconcentreerd lipidengehalte. Kenmerkend voor specifieke Ethiopische hoogland-kavels.',
         'sv':
-            'Unique, buttery and slightly vegetal mouthfeel. Reflects high concentration of specific lipids. Arises in certain Peruvian and Ecuadorian micro-lots.',
+            'Tung, viskös och något fettig munkänsla. Kommer från koncentrerat lipidinnehåll. Signatur för specifika etiopiska höghöjdspartier.',
         'tr':
-            'Unique, buttery and slightly vegetal mouthfeel. Reflects high concentration of specific lipids. Arises in certain Peruvian and Ecuadorian micro-lots.',
-        'ja':
-            'Unique, buttery and slightly vegetal mouthfeel. Reflects high concentration of specific lipids. Arises in certain Peruvian and Ecuadorian micro-lots.',
+            'Ağır, yapışkan ve hafif yağlı ağız hissi. Konsantre lipid içeriğinden türetilmiştir. Belirli yüksek rakımlı Etiyopya lotlarının imzasıdır.',
+        'ja': '重く、粘り気があり、わずかに脂っこい口当たり。濃縮された脂質含有量に由来します。特定のエチオピア高地産の豆の特徴です。',
         'ko':
-            'Unique, buttery and slightly vegetal mouthfeel. Reflects high concentration of specific lipids. Arises in certain Peruvian and Ecuadorian micro-lots.',
-        'zh':
-            'Unique, buttery and slightly vegetal mouthfeel. Reflects high concentration of specific lipids. Arises in certain Peruvian and Ecuadorian micro-lots.',
+            '무겁고 끈적하며 약간 기름진 마우스필입니다. 농축된 지질 함량에서 유래합니다. 특정 고산지대 에티오피아 커피의 특징입니다.',
+        'zh': '重厚、粘稠且略带油腻的口感。源于浓缩的脂质含量。是特定高海拔埃塞俄比亚批次的特征。',
         'ar':
-            'Unique, buttery and slightly vegetal mouthfeel. Reflects high concentration of specific lipids. Arises in certain Peruvian and Ecuadorian micro-lots.',
+            'قوام ثقيل ولزج ودهني قليلاً. مشتق من محتوى الدهون المركز. علامة مميزة لمحاصيل إثيوبية معينة عالية الارتفاع.',
       },
       'wheel_note_raw': {
         'en':
-            'Undeveloped, grassy note indicating short roast time or low moisture loss. Common in very fast light roasts.',
+            'Aggressive green and undeveloped bean flavors. Result of significantly under-roasted lots. Often accompanied by astringency.',
         'uk':
             'Недорозвинена, злакова нота, що вказує на короткий час обсмажування або низьку втрату вологи. Зустрічається у дуже швидких світлих профілях.',
         'de':
-            'Undeveloped, grassy note indicating short roast time or low moisture loss. Common in very fast light roasts.',
+            'Aggressive grüne und unentwickelte Bohnenaromen. Ergebnis deutlich zu kurz gerösteter Chargen. Oft begleitet von Adstringenz.',
         'fr':
-            'Undeveloped, grassy note indicating short roast time or low moisture loss. Common in very fast light roasts.',
+            'Arômes verts agressifs et grains non développés. Résultat de lots nettement sous-torréfiés. Souvent accompagné d\'astringence.',
         'es':
-            'Undeveloped, grassy note indicating short roast time or low moisture loss. Common in very fast light roasts.',
+            'Sabores verdes agresivos y de grano no desarrollado. Resultado de lotes significativamente poco tostados. A menudo acompañados de astringencia.',
         'it':
-            'Undeveloped, grassy note indicating short roast time or low moisture loss. Common in very fast light roasts.',
+            'Sapori verdi aggressivi e chicchi non sviluppati. Risultato di lotti significativamente sotto-tostati. Spesso accompagnati da astringenza.',
         'pt':
-            'Undeveloped, grassy note indicating short roast time or low moisture loss. Common in very fast light roasts.',
+            'Sabores verdes agressivos e grãos não desenvolvidos. Resultado de lotes significativamente sub-torrados. Frequentemente acompanhados de adstringência.',
         'pl':
-            'Undeveloped, grassy note indicating short roast time or low moisture loss. Common in very fast light roasts.',
+            'Agresywne zielone i nierozwinięte smaki ziarna. Wynik znacznie niedopalonych partii kawy. Często towarzyszy im cierpkość.',
         'nl':
-            'Undeveloped, grassy note indicating short roast time or low moisture loss. Common in very fast light roasts.',
+            'Agressieve groene en onontwikkelde boonaroma\'s. Resultaat van aanzienlijk te licht gebrande kavels. Vaak vergezeld van wrangheid.',
         'sv':
-            'Undeveloped, grassy note indicating short roast time or low moisture loss. Common in very fast light roasts.',
+            'Aggressiva gröna och outvecklade bönaromer. Resultat av betydligt underrostade partier. Åtföljs ofta av strävhet.',
         'tr':
-            'Undeveloped, grassy note indicating short roast time or low moisture loss. Common in very fast light roasts.',
-        'ja':
-            'Undeveloped, grassy note indicating short roast time or low moisture loss. Common in very fast light roasts.',
-        'ko':
-            'Undeveloped, grassy note indicating short roast time or low moisture loss. Common in very fast light roasts.',
-        'zh':
-            'Undeveloped, grassy note indicating short roast time or low moisture loss. Common in very fast light roasts.',
+            'Agresif yeşil ve gelişmemiş çekirdek tatları. Önemli ölçüde az kavrulmuş lotların sonucudur. Genellikle burukluk eşlik eder.',
+        'ja': '刺激的な緑っぽさと、未発達な豆のフレーバー。焙煎不足の豆によく見られます。多くの場合、渋みを伴います。',
+        'ko': '자극적인 풀향과 발현되지 않은 원두의 풍미입니다. 로스팅이 상당히 부족한 결과입니다. 종종 떫은 맛을 동반합니다.',
+        'zh': '强烈的青涩味和未完全烘焙成熟的豆味。是烘焙严重不足的结果。通常伴有涩感。',
         'ar':
-            'Undeveloped, grassy note indicating short roast time or low moisture loss. Common in very fast light roasts.',
+            'نكهات خضراء حادة وغير ناضجة للحبوب. ناتجة عن تحميص غير مكتمل بشكل كبير. غالباً ما يصاحبها طعم قابض.',
       },
       'wheel_note_under_ripe': {
         'en':
-            'Sharp, green acidity reminiscent of unripe fruit. Indicates non-uniform cherry harvesting. Present in some commercial-grade mixed lots.',
+            'Sharp, vegetal notes like raw seeds. Indicates harvest of immature coffee cherries. Indicator of inconsistent farming practices.',
         'uk':
             'Гостра, зелена кислотність, що нагадує недозрілі фрукти. Вказує на неоднорідний збір ягід. Присутня у деяких комерційних змішаних лотах.',
         'de':
-            'Sharp, green acidity reminiscent of unripe fruit. Indicates non-uniform cherry harvesting. Present in some commercial-grade mixed lots.',
+            'Scharfe, pflanzliche Noten wie rohe Samen. Weist auf die Ernte unreifer Kaffeekirschen hin. Indikator für inkonsistente Anbaupraktiken.',
         'fr':
-            'Sharp, green acidity reminiscent of unripe fruit. Indicates non-uniform cherry harvesting. Present in some commercial-grade mixed lots.',
+            'Notes végétales vives comme des graines crues. Indique la récolte de cerises de café immatures. Indicateur de pratiques agricoles incohérentes.',
         'es':
-            'Sharp, green acidity reminiscent of unripe fruit. Indicates non-uniform cherry harvesting. Present in some commercial-grade mixed lots.',
+            'Notas vegetales punzantes como semillas crudas. Indica la cosecha de cerezas de café inmaduras. Indicador de prácticas agrícolas inconsistentes.',
         'it':
-            'Sharp, green acidity reminiscent of unripe fruit. Indicates non-uniform cherry harvesting. Present in some commercial-grade mixed lots.',
+            'Note vegetali pungenti come semi crudi. Indica la raccolta di ciliegie di caffè immature. Indicatore di pratiche agricole incoerenti.',
         'pt':
-            'Sharp, green acidity reminiscent of unripe fruit. Indicates non-uniform cherry harvesting. Present in some commercial-grade mixed lots.',
+            'Notas vegetais pungentes como sementes cruas. Indica a colheita de cerejas de café imaturas. Indicador de práticas agrícolas inconsistentes.',
         'pl':
-            'Sharp, green acidity reminiscent of unripe fruit. Indicates non-uniform cherry harvesting. Present in some commercial-grade mixed lots.',
+            'Ostre, roślinne nuty przypominające surowe nasiona. Wskazują na zbiór niedojrzałych wisienek kawy. Indikator niespójnych praktyk rolniczych.',
         'nl':
-            'Sharp, green acidity reminiscent of unripe fruit. Indicates non-uniform cherry harvesting. Present in some commercial-grade mixed lots.',
+            'Scherpe, plantaardige tonen zoals rauwe zaden. Wijst op de oogst van onrijpe koffiebessen. Indicatie voor inconsistente landbouwpraktijken.',
         'sv':
-            'Sharp, green acidity reminiscent of unripe fruit. Indicates non-uniform cherry harvesting. Present in some commercial-grade mixed lots.',
+            'Skarpa, vegetabiliska noter som råa frön. Tyder på skörd av omogna kaffebär. Indikator på inkonsekventa jordbruksmetoder.',
         'tr':
-            'Sharp, green acidity reminiscent of unripe fruit. Indicates non-uniform cherry harvesting. Present in some commercial-grade mixed lots.',
-        'ja':
-            'Sharp, green acidity reminiscent of unripe fruit. Indicates non-uniform cherry harvesting. Present in some commercial-grade mixed lots.',
+            'Çiğ tohumlar gibi keskin, bitkisel notalar. Olgunlaşmamış kahve meyvelerinin toplandığını gösterir. Tutarsız tarım uygulamalarının bir göstergesidir.',
+        'ja': '生の種子のような、鋭い植物系のノート。未熟なコーヒーチェリーの収穫を示しています。一貫性のない栽培方法の指標です。',
         'ko':
-            'Sharp, green acidity reminiscent of unripe fruit. Indicates non-uniform cherry harvesting. Present in some commercial-grade mixed lots.',
-        'zh':
-            'Sharp, green acidity reminiscent of unripe fruit. Indicates non-uniform cherry harvesting. Present in some commercial-grade mixed lots.',
+            '생 씨앗 같은 자극적인 식물성 노트입니다. 덜 익은 커피 체리를 수확했음을 나타냅니다. 일관되지 않은 농업 관행의 지표입니다.',
+        'zh': '尖锐的、像生种子般的植物味。预示着采摘了未成熟的咖啡樱桃。是不规范农事操作的指标。',
         'ar':
-            'Sharp, green acidity reminiscent of unripe fruit. Indicates non-uniform cherry harvesting. Present in some commercial-grade mixed lots.',
+            'نوتات نباتية حادة مثل البذور الخام. تشير إلى حصاد كرز القهوة غير الناضج. مؤشر على ممارسات زراعية غير متسقة.',
       },
       'wheel_note_peapod': {
         'en':
-            'Savory, vegetal note reminiscent of fresh peas. Often reflects specific soil minerals or light roasting of high-density beans. Common in Rwandans.',
+            'Starch-like, green bean aroma. Associated with specific chemical compounds in underdeveloped roasts. Found in quick-dried lots.',
         'uk':
             'Пікантна, рослинна нота, що нагадує свіжий горох. Часто відображає специфічні мінерали ґрунту або світле обсмаження щільних зерен. Зустрічається в Руанді.',
         'de':
-            'Savory, vegetal note reminiscent of fresh peas. Often reflects specific soil minerals or light roasting of high-density beans. Common in Rwandans.',
+            'Stärkeähnliches, grünes Bohnenaroma. Verbunden mit spezifischen chemischen Verbindungen in unterentwickelten Röstungen.',
         'fr':
-            'Savory, vegetal note reminiscent of fresh peas. Often reflects specific soil minerals or light roasting of high-density beans. Common in Rwandans.',
+            'Arôme de haricot vert, proche de l\'amidon. Associé à des composés chimiques spécifiques dans les torréfactions sous-développées.',
         'es':
-            'Savory, vegetal note reminiscent of fresh peas. Often reflects specific soil minerals or light roasting of high-density beans. Common in Rwandans.',
+            'Aroma a judía verde, similar al almidón. Asociado con compuestos químicos específicos en tostados poco desarrollados.',
         'it':
-            'Savory, vegetal note reminiscent of fresh peas. Often reflects specific soil minerals or light roasting of high-density beans. Common in Rwandans.',
+            'Aroma di fagiolino, simile all\'amido. Associato a specifici composti chimici nelle tostature poco sviluppate.',
         'pt':
-            'Savory, vegetal note reminiscent of fresh peas. Often reflects specific soil minerals or light roasting of high-density beans. Common in Rwandans.',
+            'Aroma de vagem, semelhante ao amido. Associado a compostos químicos específicos em torras subdesenvolvidas.',
         'pl':
-            'Savory, vegetal note reminiscent of fresh peas. Often reflects specific soil minerals or light roasting of high-density beans. Common in Rwandans.',
+            'Skrobiowy aromat zielonej fasoli. Związany ze specyficznymi związkami chemicznymi в niedostatecznie rozwiniętych paleniach.',
         'nl':
-            'Savory, vegetal note reminiscent of fresh peas. Often reflects specific soil minerals or light roasting of high-density beans. Common in Rwandans.',
+            'Zetmeelachtig, sperzieboonaroma. Geassocieerd met specifieke chemische verbindingen in onvoldoende ontwikkelde brandingen.',
         'sv':
-            'Savory, vegetal note reminiscent of fresh peas. Often reflects specific soil minerals or light roasting of high-density beans. Common in Rwandans.',
+            'Stärkelseliknande doft av gröna bönor. Förknippas med specifika kemiska föreningar i outvecklade rostningar.',
         'tr':
-            'Savory, vegetal note reminiscent of fresh peas. Often reflects specific soil minerals or light roasting of high-density beans. Common in Rwandans.',
-        'ja':
-            'Savory, vegetal note reminiscent of fresh peas. Often reflects specific soil minerals or light roasting of high-density beans. Common in Rwandans.',
-        'ko':
-            'Savory, vegetal note reminiscent of fresh peas. Often reflects specific soil minerals or light roasting of high-density beans. Common in Rwandans.',
-        'zh':
-            'Savory, vegetal note reminiscent of fresh peas. Often reflects specific soil minerals or light roasting of high-density beans. Common in Rwandans.',
+            'Nişasta benzeri, taze fasulye aroması. Az gelişmiş kavurmalardaki özel kimyasal bileşiklerle ilişkilidir.',
+        'ja': 'デンプンのような、青豆のアロマ。焙煎不足の豆に含まれる特定の化学物質に関連しています。',
+        'ko': '전분 같은 풋콩의 아로마입니다. 충분히 로스팅되지 않은 원두의 특정 화학 화합물과 관련이 있습니다.',
+        'zh': '像淀粉般的青豆香气。与烘焙不足中的特定化学成分有关。',
         'ar':
-            'Savory, vegetal note reminiscent of fresh peas. Often reflects specific soil minerals or light roasting of high-density beans. Common in Rwandans.',
+            'رائحة الفاصوليا الخضراء التي تشبه النشا. مرتبطة بمركبات كيميائية معينة في التحميص غير المكتمل.',
       },
       'wheel_note_fresh': {
         'en':
-            'Vibrant, green and bright profile. Positive vegetal note indicating fresh-crop beans and light processing. Common in high-grown Peruvians.',
+            'Bright, lively and slightly grassy notes. Characteristic of newly harvested and processed lots. Hallmark of seasonal freshness.',
         'uk':
             'Яскравий, зелений та чистий профіль. Позитивна рослинна нота, що вказує на свіжий врожай та світлу обробку. Зустрічається у високогірній каві з Перу.',
         'de':
-            'Vibrant, green and bright profile. Positive vegetal note indicating fresh-crop beans and light processing. Common in high-grown Peruvians.',
+            'Helle, lebendige und leicht grasige Noten. Charakteristisch für frisch geerntete und verarbeitete Partien.',
         'fr':
-            'Vibrant, green and bright profile. Positive vegetal note indicating fresh-crop beans and light processing. Common in high-grown Peruvians.',
+            'Notes vives, animées et légèrement herbacées. Caractéristique des lots fraîchement récoltés et traités.',
         'es':
-            'Vibrant, green and bright profile. Positive vegetal note indicating fresh-crop beans and light processing. Common in high-grown Peruvians.',
+            'Notas brillantes, vivas y ligeramente herbáceas. Característico de lotes recién cosechados y procesados.',
         'it':
-            'Vibrant, green and bright profile. Positive vegetal note indicating fresh-crop beans and light processing. Common in high-grown Peruvians.',
+            'Note brillanti, vivaci e leggermente erbacee. Caratteristico dei lotti appena raccolti e lavorati.',
         'pt':
-            'Vibrant, green and bright profile. Positive vegetal note indicating fresh-crop beans and light processing. Common in high-grown Peruvians.',
+            'Notas brilhantes, vivas e ligeiramente herbáceas. Caratterístico de lotes recém-colhidos e processados.',
         'pl':
-            'Vibrant, green and bright profile. Positive vegetal note indicating fresh-crop beans and light processing. Common in high-grown Peruvians.',
+            'Wyraźne, żywe i nieco trawiaste nuty. Charakterystyczne для świeżo zebranych i przetworzonych partii kawy.',
         'nl':
-            'Vibrant, green and bright profile. Positive vegetal note indicating fresh-crop beans and light processing. Common in high-grown Peruvians.',
+            'Heldere, levendige en licht grasachtige tonen. Kenmerkend voor pas geoogste en verwerkte kavels.',
         'sv':
-            'Vibrant, green and bright profile. Positive vegetal note indicating fresh-crop beans and light processing. Common in high-grown Peruvians.',
+            'Ljusa, livliga och något gräsiga noter. Karaktäristiskt för nyskördade och bearbetade partier.',
         'tr':
-            'Vibrant, green and bright profile. Positive vegetal note indicating fresh-crop beans and light processing. Common in high-grown Peruvians.',
-        'ja':
-            'Vibrant, green and bright profile. Positive vegetal note indicating fresh-crop beans and light processing. Common in high-grown Peruvians.',
-        'ko':
-            'Vibrant, green and bright profile. Positive vegetal note indicating fresh-crop beans and light processing. Common in high-grown Peruvians.',
-        'zh':
-            'Vibrant, green and bright profile. Positive vegetal note indicating fresh-crop beans and light processing. Common in high-grown Peruvians.',
+            'Parlak, canlı ve hafif otsu notalar. Yeni hasat edilmiş ve işlenmiş lotların özelliğidir.',
+        'ja': '明るく、生き生きとした、わずかに草のようなノート。収穫・精製したての豆の特徴です。',
+        'ko': '밝고 활기차며 약간의 풀향이 나는 노트입니다. 갓 수확하고 가공한 커피의 특징입니다.',
+        'zh': '明亮、活泼且略带青草气息的风味。是新近收获和处理批次的特征。',
         'ar':
-            'Vibrant, green and bright profile. Positive vegetal note indicating fresh-crop beans and light processing. Common in high-grown Peruvians.',
+            'نوتات ساطعة وحيوية وعشبية قليلاً. مميزة للمحاصيل التي تم حصادها ومعالجتها حديثاً.',
       },
       'wheel_note_vegetative': {
         'en':
@@ -2282,31 +2250,28 @@ class FlavorDescriptions {
         'uk':
             'Широкий трав\'яний профіль, що охоплює листя та стебла. Відображає високий рівень специфічних піразинів. Характерно для індонезійського сорту Манделінг.',
         'de':
-            'Broad herbal profile encompassing leaves and stems. Reflects high levels of specific pyrazines. Characteristic of Indonesian Mandheling.',
+            'Breites Kräuterprofil, das Blätter und Stängel umfasst. Spiegelt hohe Werte spezifischer Pyrazine wider.',
         'fr':
-            'Broad herbal profile encompassing leaves and stems. Reflects high levels of specific pyrazines. Characteristic of Indonesian Mandheling.',
+            'Profil herbacé large englobant les feuilles et les tiges. Reflète des niveaux élevés de pyrazines spécifiques.',
         'es':
-            'Broad herbal profile encompassing leaves and stems. Reflects high levels of specific pyrazines. Characteristic of Indonesian Mandheling.',
+            'Perfil herbal amplio que abarca hojas y tallos. Refleja altos niveles de pirazinas específicas.',
         'it':
-            'Broad herbal profile encompassing leaves and stems. Reflects high levels of specific pyrazines. Characteristic of Indonesian Mandheling.',
+            'Ampio profilo erbaceo che comprende foglie e steli. Riflette alti livelli di pirazine specifiche.',
         'pt':
-            'Broad herbal profile encompassing leaves and stems. Reflects high levels of specific pyrazines. Characteristic of Indonesian Mandheling.',
+            'Amplo perfil herbáceo que abrange folhas e caules. Reflete altos níveis de pirazinas específicas.',
         'pl':
-            'Broad herbal profile encompassing leaves and stems. Reflects high levels of specific pyrazines. Characteristic of Indonesian Mandheling.',
+            'Szeroki profil ziołowy obejmujący liście i łodygi. Odzwierciedla wysoki poziom specyficznych pirazyn.',
         'nl':
-            'Broad herbal profile encompassing leaves and stems. Reflects high levels of specific pyrazines. Characteristic of Indonesian Mandheling.',
+            'Breed kruidenprofiel met bladeren en stengels. Weerspiegelt hoge gehalten aan specifieke pyrazinen.',
         'sv':
-            'Broad herbal profile encompassing leaves and stems. Reflects high levels of specific pyrazines. Characteristic of Indonesian Mandheling.',
+            'Bred örtprofil som omfattar blad och stjälkar. Speglar höga nivåer av specifika pyraziner.',
         'tr':
-            'Broad herbal profile encompassing leaves and stems. Reflects high levels of specific pyrazines. Characteristic of Indonesian Mandheling.',
-        'ja':
-            'Broad herbal profile encompassing leaves and stems. Reflects high levels of specific pyrazines. Characteristic of Indonesian Mandheling.',
-        'ko':
-            'Broad herbal profile encompassing leaves and stems. Reflects high levels of specific pyrazines. Characteristic of Indonesian Mandheling.',
-        'zh':
-            'Broad herbal profile encompassing leaves and stems. Reflects high levels of specific pyrazines. Characteristic of Indonesian Mandheling.',
+            'Yaprakları ve gövdeleri kapsayan geniş otsu profil. Özel pirazinlerin yüksek seviyelerini yansıtır.',
+        'ja': '葉や茎を含む幅広いハーブのプロファイル。特定のピラジンの高含有量を反映しています。',
+        'ko': '잎과 줄기를 아우르는 광범위한 허브 프로파일입니다. 특정 피라진의 높은 함량을 반영합니다.',
+        'zh': '包含叶片和茎部的广泛草本风味。反映了高含量的特定吡嗪。',
         'ar':
-            'Broad herbal profile encompassing leaves and stems. Reflects high levels of specific pyrazines. Characteristic of Indonesian Mandheling.',
+            'ملف عشبي واسع يشمل الأوراق والسيقان. يعكس مستويات عالية من بيرازينات معينة.',
       },
       'wheel_note_hay_like': {
         'en':
@@ -2314,31 +2279,29 @@ class FlavorDescriptions {
         'uk':
             'Профіль сухої, солодкої трави та соломи. Часто вказує на перші ознаки старіння зерен або специфічну сухість терруару. Часто зустрічається в обробленій Бразилії.',
         'de':
-            'Dry, sweet grass and straw profile. Often indicates early signs of bean aging or specific terroir dryness. Frequent in processed Brazilian lots.',
+            'Trockener, süßer Gras- und Strohgeschmack. Weist oft auf erste Anzeichen von Bohnenalterung oder spezifische Terroir-Trockenheit hin.',
         'fr':
-            'Dry, sweet grass and straw profile. Often indicates early signs of bean aging or specific terroir dryness. Frequent in processed Brazilian lots.',
+            'Profil d\'herbe sèche et sucrée et de paille. Indique souvent les premiers signes de vieillissement des grains ou une sécheresse spécifique du terroir.',
         'es':
-            'Dry, sweet grass and straw profile. Often indicates early signs of bean aging or specific terroir dryness. Frequent in processed Brazilian lots.',
+            'Perfil de hierba seca y dulce y paja. A menudo indica signos tempranos de envejecimiento del grano o sequedad específica del terroir.',
         'it':
-            'Dry, sweet grass and straw profile. Often indicates early signs of bean aging or specific terroir dryness. Frequent in processed Brazilian lots.',
+            'Profilo di erba secca e dolce e paglia. Spesso indica i primi segni di invecchiamento del chicco o una specifica aridità del terroir.',
         'pt':
-            'Dry, sweet grass and straw profile. Often indicates early signs of bean aging or specific terroir dryness. Frequent in processed Brazilian lots.',
+            'Perfil de grama seca e doce e palha. Frequentemente indica sinais iniciais de envelhecimento do grão ou secura específica do terroir.',
         'pl':
-            'Dry, sweet grass and straw profile. Often indicates early signs of bean aging or specific terroir dryness. Frequent in processed Brazilian lots.',
+            'Profil suchej, słodkiej trawy i słomy. Często wskazuje na wczesne oznaki starzenia się ziaren lub specyficzną suchość terroir.',
         'nl':
-            'Dry, sweet grass and straw profile. Often indicates early signs of bean aging or specific terroir dryness. Frequent in processed Brazilian lots.',
+            'Droog, zoet gras- en stroprofiel. Wijst vaak op vroege tekenen van boonveroudering of specifieke terroir-droogte.',
         'sv':
-            'Dry, sweet grass and straw profile. Often indicates early signs of bean aging or specific terroir dryness. Frequent in processed Brazilian lots.',
+            'Profil av torrt, sött gräs och halm. Tyder ofta på tidiga tecken på bönåldring eller specifik terroir-torrhet.',
         'tr':
-            'Dry, sweet grass and straw profile. Often indicates early signs of bean aging or specific terroir dryness. Frequent in processed Brazilian lots.',
-        'ja':
-            'Dry, sweet grass and straw profile. Often indicates early signs of bean aging or specific terroir dryness. Frequent in processed Brazilian lots.',
+            'Kuru, tatlı ot ve saman profili. Genellikle çekirdek yaşlanmasının erken belirtilerini veya özel teruar kuruluğunu gösterir.',
+        'ja': '乾燥した、甘い草やわらのようなプロファイル。豆の老化の兆候や、特定の産地の乾燥を示していることが多いです。',
         'ko':
-            'Dry, sweet grass and straw profile. Often indicates early signs of bean aging or specific terroir dryness. Frequent in processed Brazilian lots.',
-        'zh':
-            'Dry, sweet grass and straw profile. Often indicates early signs of bean aging or specific terroir dryness. Frequent in processed Brazilian lots.',
+            '건조하고 달콤한 풀과 짚의 프로파일입니다. 원두의 노화 초기 징후나 특정 테루아의 건조함을 나타내는 경우가 많습니다.',
+        'zh': '干燥、甜草和稻草的风味。通常预示着咖啡豆陈化的早期迹象或特定的地域干燥度.',
         'ar':
-            'Dry, sweet grass and straw profile. Often indicates early signs of bean aging or specific terroir dryness. Frequent in processed Brazilian lots.',
+            'نكهة العشب الجاف والحلو والقش. غالباً ما تشير إلى علامات مبكرة لتقادم الحبوب أو جفاف تربة معين.',
       },
       'wheel_note_herb_like': {
         'en':
@@ -2346,31 +2309,28 @@ class FlavorDescriptions {
         'uk':
             'Ноти пряних трав, таких як розмарин або чебрець. Корелює зі специфічними вулканічними ґрунтами. Візитна картка спешелті-лотів з Тімору та Балі.',
         'de':
-            'Savory herb notes like rosemary or thyme. Correlated with specific volcanic soil profiles. Hallmark of specialty lots from Timor and Bali.',
+            'Herzhafte Kräuternoten wie Rosmarin oder Thymian. Korreliert mit spezifischen vulkanischen Bodenprofilen.',
         'fr':
-            'Savory herb notes like rosemary or thyme. Correlated with specific volcanic soil profiles. Hallmark of specialty lots from Timor and Bali.',
+            'Notes d\'herbes savoureuses comme le romarin ou le thym. Corrélé à des profils de sols volcaniques spécifiques.',
         'es':
-            'Savory herb notes like rosemary or thyme. Correlated with specific volcanic soil profiles. Hallmark of specialty lots from Timor and Bali.',
+            'Notas de hierbas sabrosas como el romero o el tomillo. Correlacionado con perfiles específicos de suelo volcánico.',
         'it':
-            'Savory herb notes like rosemary or thyme. Correlated with specific volcanic soil profiles. Hallmark of specialty lots from Timor and Bali.',
+            'Note di erbe aromatiche come rosmarino o timo. Correlato a specifici profili di suolo vulcanico.',
         'pt':
-            'Savory herb notes like rosemary or thyme. Correlated with specific volcanic soil profiles. Hallmark of specialty lots from Timor and Bali.',
+            'Notas de ervas salgadas como alecrim ou tomilho. Correlacionado com perfis específicos de solo vulcânico.',
         'pl':
-            'Savory herb notes like rosemary or thyme. Correlated with specific volcanic soil profiles. Hallmark of specialty lots from Timor and Bali.',
+            'Wytrawne nuty ziół, takich jak rozmaryn lub tymianek. Skorelowane ze specyficznymi wulkanicznymi profilami glebowymi.',
         'nl':
-            'Savory herb notes like rosemary or thyme. Correlated with specific volcanic soil profiles. Hallmark of specialty lots from Timor and Bali.',
+            'Hartige kruidentonen zoals rozemarijn of tijm. Gecorreleerd met specifieke vulkanische bodemprofielen.',
         'sv':
-            'Savory herb notes like rosemary or thyme. Correlated with specific volcanic soil profiles. Hallmark of specialty lots from Timor and Bali.',
+            'Smakrika örtnoter som rosmarin eller timjan. Korrelerat med specifika vulkaniska jordprofiler.',
         'tr':
-            'Savory herb notes like rosemary or thyme. Correlated with specific volcanic soil profiles. Hallmark of specialty lots from Timor and Bali.',
-        'ja':
-            'Savory herb notes like rosemary or thyme. Correlated with specific volcanic soil profiles. Hallmark of specialty lots from Timor and Bali.',
-        'ko':
-            'Savory herb notes like rosemary or thyme. Correlated with specific volcanic soil profiles. Hallmark of specialty lots from Timor and Bali.',
-        'zh':
-            'Savory herb notes like rosemary or thyme. Correlated with specific volcanic soil profiles. Hallmark of specialty lots from Timor and Bali.',
+            'Biberiye veya kekik gibi iştah açıcı otsu notalar. Özel volkanik toprak profilleri ile ilişkilidir.',
+        'ja': 'ローズマリーやタイムのような風味豊かなハーブのノート。特定の火山性土壌と相関しています。',
+        'ko': '로즈마리나 타임 같은 짭짤한 허브 노트입니다. 특정 화산 토양 프로파일과 상관관계가 있습니다.',
+        'zh': '咸鲜的香草味，如迷延香或百里香。与特定的火山土壤成分有关。',
         'ar':
-            'Savory herb notes like rosemary or thyme. Correlated with specific volcanic soil profiles. Hallmark of specialty lots from Timor and Bali.',
+            'نوتات عشبية مالحة مثل إكليل الجبل أو الزعتر. مرتبطة بملفات تربة بركانية معينة.',
       },
       'wheel_note_sour_aromatics': {
         'en':
@@ -2378,31 +2338,28 @@ class FlavorDescriptions {
         'uk':
             'Гострі та складні кислі запахи. Важливі для структури високогірної кави. Присутні майже у всіх високопродуктивних лотах з Центральної Америки.',
         'de':
-            'Tangy and complex acidic scents. Essential for structure in high-grown coffees. Present in almost all high-attribute Central Americans.',
+            'Spritzige und komplexe säuerliche Düfte. Essentiell für die Struktur in Hochlandkaffees.',
         'fr':
-            'Tangy and complex acidic scents. Essential for structure in high-grown coffees. Present in almost all high-attribute Central Americans.',
+            'Parfums acidulés et complexes. Essentiel pour la structure des cafés d\'altitude.',
         'es':
-            'Tangy and complex acidic scents. Essential for structure in high-grown coffees. Present in almost all high-attribute Central Americans.',
+            'Aromas ácidos intensos y complejos. Esencial para la estructura en cafés de altura.',
         'it':
-            'Tangy and complex acidic scents. Essential for structure in high-grown coffees. Present in almost all high-attribute Central Americans.',
+            'Profumi acidi pungenti e complessi. Essenziale per la struttura nei caffè d\'alta quota.',
         'pt':
-            'Tangy and complex acidic scents. Essential for structure in high-grown coffees. Present in almost all high-attribute Central Americans.',
+            'Aromas ácidos intensos e complexos. Essencial para a estrutura em cafés de altitude.',
         'pl':
-            'Tangy and complex acidic scents. Essential for structure in high-grown coffees. Present in almost all high-attribute Central Americans.',
+            'Cierpkie i złożone kwaśne zapachy. Niezbędne dla struktury kaw wysokogórskich.',
         'nl':
-            'Tangy and complex acidic scents. Essential for structure in high-grown coffees. Present in almost all high-attribute Central Americans.',
+            'Pittige en complexe zure geuren. Essentieel voor de structuur in hooggelegen koffiesoorten.',
         'sv':
-            'Tangy and complex acidic scents. Essential for structure in high-grown coffees. Present in almost all high-attribute Central Americans.',
+            'Syrliga och komplexa dofter. Viktigt för strukturen i höghöjdskaffe.',
         'tr':
-            'Tangy and complex acidic scents. Essential for structure in high-grown coffees. Present in almost all high-attribute Central Americans.',
-        'ja':
-            'Tangy and complex acidic scents. Essential for structure in high-grown coffees. Present in almost all high-attribute Central Americans.',
-        'ko':
-            'Tangy and complex acidic scents. Essential for structure in high-grown coffees. Present in almost all high-attribute Central Americans.',
-        'zh':
-            'Tangy and complex acidic scents. Essential for structure in high-grown coffees. Present in almost all high-attribute Central Americans.',
+            'Keskin ve karmaşık asidik kokular. Yüksek rakımlı kahvelerde yapı için gereklidir.',
+        'ja': '酸味のある、複雑で刺激的な香り。高地産のコーヒーの構造には不可欠な要素です。',
+        'ko': '톡 쏘고 복합적인 산미의 향입니다. 고산지대 커피의 구조감에 필수적입니다.',
+        'zh': '强烈且复杂的酸香。对于高海拔咖啡的结构至关重要。',
         'ar':
-            'Tangy and complex acidic scents. Essential for structure in high-grown coffees. Present in almost all high-attribute Central Americans.',
+            'روائح حامضية نفاذة ومعقدة. أساسية لقوام القهوة المزروعة على ارتفاعات عالية.',
       },
       'wheel_note_acetic_acid': {
         'en':
@@ -2410,31 +2367,28 @@ class FlavorDescriptions {
         'uk':
             'Гостра, схожа на оцет кислотність. Нормальна при низьких рівнях; вказує на надмірну ферментацію, якщо агресивна. Зустрічається у "Funky" колумбійських лотах тривалої ферментації.',
         'de':
-            'Sharp, vinegar-like acidity. Normal at low levels; indicates over-fermentation if aggressive. Found in long-fermented "Funky" Colombian lots.',
+            'Scharfe, essigartige Säure. Bei niedrigen Werten normal; weist auf Überfermentation hin, wenn sie aggressiv ist.',
         'fr':
-            'Sharp, vinegar-like acidity. Normal at low levels; indicates over-fermentation if aggressive. Found in long-fermented "Funky" Colombian lots.',
+            'Acidité vive, proche du vinaigre. Normale à faible dose ; indique une sur-fermentation si elle est agressive.',
         'es':
-            'Sharp, vinegar-like acidity. Normal at low levels; indicates over-fermentation if aggressive. Found in long-fermented "Funky" Colombian lots.',
+            'Acidez punzante, similar al vinagre. Normal a niveles bajos; indica sobrefermentación si es agresiva.',
         'it':
-            'Sharp, vinegar-like acidity. Normal at low levels; indicates over-fermentation if aggressive. Found in long-fermented "Funky" Colombian lots.',
+            'Acidità pungente, simile all\'aceto. Normale a bassi livelli; indica sovrafermentazione se aggressiva.',
         'pt':
-            'Sharp, vinegar-like acidity. Normal at low levels; indicates over-fermentation if aggressive. Found in long-fermented "Funky" Colombian lots.',
+            'Acidez pungente, semelhante ao vinagre. Normal em níveis baixos; indica superfermentação se agressiva.',
         'pl':
-            'Sharp, vinegar-like acidity. Normal at low levels; indicates over-fermentation if aggressive. Found in long-fermented "Funky" Colombian lots.',
+            'Ostra, octowa kwasowość. Normalna na niskich poziomach; wskazuje na nadmierną fermentację, jeśli jest agresywna.',
         'nl':
-            'Sharp, vinegar-like acidity. Normal at low levels; indicates over-fermentation if aggressive. Found in long-fermented "Funky" Colombian lots.',
+            'Scherpe, azijnachtige zuurgraad. Normaal op lage niveaus; wijst op overfermentatie als het agressief is.',
         'sv':
-            'Sharp, vinegar-like acidity. Normal at low levels; indicates over-fermentation if aggressive. Found in long-fermented "Funky" Colombian lots.',
+            'Skarp, vinägerliknande syra. Normal vid låga nivåer; tyder på överfermentering om den är aggressiv.',
         'tr':
-            'Sharp, vinegar-like acidity. Normal at low levels; indicates over-fermentation if aggressive. Found in long-fermented "Funky" Colombian lots.',
-        'ja':
-            'Sharp, vinegar-like acidity. Normal at low levels; indicates over-fermentation if aggressive. Found in long-fermented "Funky" Colombian lots.',
-        'ko':
-            'Sharp, vinegar-like acidity. Normal at low levels; indicates over-fermentation if aggressive. Found in long-fermented "Funky" Colombian lots.',
-        'zh':
-            'Sharp, vinegar-like acidity. Normal at low levels; indicates over-fermentation if aggressive. Found in long-fermented "Funky" Colombian lots.',
+            'Keskin, sirke benzeri asidite. Düşük seviyelerde normaldir; agresif ise aşırı fermantasyonu gösterir.',
+        'ja': 'ツンとする、酢のような酸味。少量なら正常ですが、強い場合は過発酵を示しています。',
+        'ko': '시큼한 식초 같은 산미입니다. 낮은 농도에서는 정상이지만, 강할 경우 과발효를 나타냅니다.',
+        'zh': '尖锐、像醋般的酸度。低含量时正常；如果非常强烈则预示着发酵过度。',
         'ar':
-            'Sharp, vinegar-like acidity. Normal at low levels; indicates over-fermentation if aggressive. Found in long-fermented "Funky" Colombian lots.',
+            'حموضة حادة تشبه الخل. طبيعية بمستويات منخفضة؛ تشير إلى فرط التخمر إذا كانت حادة.',
       },
       'wheel_note_butyric_acid': {
         'en':
@@ -2442,31 +2396,27 @@ class FlavorDescriptions {
         'uk':
             'П\'янкий та гострий кислотний профіль, що нагадує грецький йогурт або сир. Результат інтенсивної метаболічної обробки. Знакова нота для сучасних експериментальних ферментацій.',
         'de':
-            'Heady and pungent acid profile reminiscent of Greek yogurt or cheese. Result of intensive metabolic processing. Signature of modern experimental ferments.',
+            'Berauschendes und stechendes Säureprofil, das an griechischen Joghurt oder Käse erinnert.',
         'fr':
-            'Heady and pungent acid profile reminiscent of Greek yogurt or cheese. Result of intensive metabolic processing. Signature of modern experimental ferments.',
+            'Profil acide entêtant et piquant rappelant le yaourt grec ou le fromage.',
         'es':
-            'Heady and pungent acid profile reminiscent of Greek yogurt or cheese. Result of intensive metabolic processing. Signature of modern experimental ferments.',
+            'Perfil ácido intenso y penetrante que recuerda al yogur griego o al queso.',
         'it':
-            'Heady and pungent acid profile reminiscent of Greek yogurt or cheese. Result of intensive metabolic processing. Signature of modern experimental ferments.',
+            'Profilo acido inebriante e pungente che ricorda lo yogurt greco o il formaggio.',
         'pt':
-            'Heady and pungent acid profile reminiscent of Greek yogurt or cheese. Result of intensive metabolic processing. Signature of modern experimental ferments.',
+            'Perfil ácido inebriante e pungente que lembra iogurte grego ou queijo.',
         'pl':
-            'Heady and pungent acid profile reminiscent of Greek yogurt or cheese. Result of intensive metabolic processing. Signature of modern experimental ferments.',
+            'Uderzający i ostry profil kwasowy przypominający grecki jogurt lub ser.',
         'nl':
-            'Heady and pungent acid profile reminiscent of Greek yogurt or cheese. Result of intensive metabolic processing. Signature of modern experimental ferments.',
+            'Bedwelmend en doordringend zuurprofiel dat doet denken aan Griekse yoghurt of kaas.',
         'sv':
-            'Heady and pungent acid profile reminiscent of Greek yogurt or cheese. Result of intensive metabolic processing. Signature of modern experimental ferments.',
+            'Berusande och stickande syraprofil som påminner om grekisk yoghurt eller ost.',
         'tr':
-            'Heady and pungent acid profile reminiscent of Greek yogurt or cheese. Result of intensive metabolic processing. Signature of modern experimental ferments.',
-        'ja':
-            'Heady and pungent acid profile reminiscent of Greek yogurt or cheese. Result of intensive metabolic processing. Signature of modern experimental ferments.',
-        'ko':
-            'Heady and pungent acid profile reminiscent of Greek yogurt or cheese. Result of intensive metabolic processing. Signature of modern experimental ferments.',
-        'zh':
-            'Heady and pungent acid profile reminiscent of Greek yogurt or cheese. Result of intensive metabolic processing. Signature of modern experimental ferments.',
-        'ar':
-            'Heady and pungent acid profile reminiscent of Greek yogurt or cheese. Result of intensive metabolic processing. Signature of modern experimental ferments.',
+            'Yunan yoğurdu veya peyniri andıran baş döndürücü ve keskin asit profili.',
+        'ja': 'ギリシャヨーグルトやチーズを思わせる、刺激的でツンとした酸味のプロファイル。',
+        'ko': '그릭 요거트나 치즈를 연상시키는 자극적이고 톡 쏘는 산미 프로파일입니다.',
+        'zh': '令人眩晕且刺激的酸感，让人联想起希腊酸奶或奶酪。',
+        'ar': 'ملف حامضي قوي ونفاذ يشبه الزبادي اليوناني أو الجبن.',
       },
       'wheel_note_isovaleric_acid': {
         'en':
@@ -2474,31 +2424,28 @@ class FlavorDescriptions {
         'uk':
             'Сильна, схожа на сир або піт кислотна нота. Характерно для надзвичайно тривалих анаеробних ферментацій. Часто викликає суперечки, але цінується на сучасних чемпіонатах.',
         'de':
-            'Strong, cheese-like or sweaty acid note. Characteristic of extremely long anaerobic fermentations. Often polarizing but sought after in modern competitions.',
+            'Starke, käseartige oder schweißige Säurenote. Charakteristisch für extrem lange anaerobe Fermentationen.',
         'fr':
-            'Strong, cheese-like or sweaty acid note. Characteristic of extremely long anaerobic fermentations. Often polarizing but sought after in modern competitions.',
+            'Note acide forte, proche du fromage ou de la transpiration. Caractéristique des fermentations anaérobies extrêmement longues.',
         'es':
-            'Strong, cheese-like or sweaty acid note. Characteristic of extremely long anaerobic fermentations. Often polarizing but sought after in modern competitions.',
+            'Nota ácida fuerte, similar al queso o al sudor. Característico de fermentaciones anaeróbicas extremadamente largas.',
         'it':
-            'Strong, cheese-like or sweaty acid note. Characteristic of extremely long anaerobic fermentations. Often polarizing but sought after in modern competitions.',
+            'Nota acida forte, simile al formaggio o al sudore. Caratteristico di fermentazioni anaerobiche estremamente lunghe.',
         'pt':
-            'Strong, cheese-like or sweaty acid note. Characteristic of extremely long anaerobic fermentations. Often polarizing but sought after in modern competitions.',
+            'Nota ácida forte, semelhante a queijo ou suor. Característica de fermentações anaeróbicas extremamente longas.',
         'pl':
-            'Strong, cheese-like or sweaty acid note. Characteristic of extremely long anaerobic fermentations. Often polarizing but sought after in modern competitions.',
+            'Silna, serowa lub potna nuta kwasowa. Charakterystyczna dla niezwykle długich fermentacji beztlenowych.',
         'nl':
-            'Strong, cheese-like or sweaty acid note. Characteristic of extremely long anaerobic fermentations. Often polarizing but sought after in modern competitions.',
+            'Sterke, kaasachtige of zweeterige zuurnoot. Kenmerkend voor extreem lange anaerobe fermentaties.',
         'sv':
-            'Strong, cheese-like or sweaty acid note. Characteristic of extremely long anaerobic fermentations. Often polarizing but sought after in modern competitions.',
+            'Stark, ostliknande eller svettig syranot. Karaktäristiskt för extremt långa anaeroba fermenteringar.',
         'tr':
-            'Strong, cheese-like or sweaty acid note. Characteristic of extremely long anaerobic fermentations. Often polarizing but sought after in modern competitions.',
-        'ja':
-            'Strong, cheese-like or sweaty acid note. Characteristic of extremely long anaerobic fermentations. Often polarizing but sought after in modern competitions.',
-        'ko':
-            'Strong, cheese-like or sweaty acid note. Characteristic of extremely long anaerobic fermentations. Often polarizing but sought after in modern competitions.',
-        'zh':
-            'Strong, cheese-like or sweaty acid note. Characteristic of extremely long anaerobic fermentations. Often polarizing but sought after in modern competitions.',
+            'Güçlü, peynirimsi veya terli asit notası. Son derece uzun anaerobik fermantasyonların özelliğidir.',
+        'ja': 'チーズや汗のような強い酸味。非常に長い嫌気性発酵（アナエロビック）の特徴です。',
+        'ko': '강한 치즈 향이나 땀 냄새 같은 산미입니다. 매우 긴 무산소 발효의 특징입니다.',
+        'zh': '强烈的奶酪味或汗臭酸味。是极长时间厌氧发酵的特征。',
         'ar':
-            'Strong, cheese-like or sweaty acid note. Characteristic of extremely long anaerobic fermentations. Often polarizing but sought after in modern competitions.',
+            'نوتة حامضية قوية تشبه الجبن أو العرق. مميزة للتخمر اللاهوائي الطويل جداً.',
       },
       'wheel_note_citric_acid': {
         'en':
@@ -2506,31 +2453,28 @@ class FlavorDescriptions {
         'uk':
             'Чиста, освіжаюча та яскрава кислотність. Основна кислота в більшості спешелті-кави. Квінтесенція профілю Кенії та Колумбії.',
         'de':
-            'Pure, refreshing and bright acidity. The primary acid in most specialty coffees. Quintessential Kenyan and Colombian profile.',
+            'Reine, erfrischende und helle Säure. Die primäre Säure in den meisten Spezialitätenkaffees.',
         'fr':
-            'Pure, refreshing and bright acidity. The primary acid in most specialty coffees. Quintessential Kenyan and Colombian profile.',
+            'Acidité pure, rafraîchissante et vive. L\'acide principal dans la plupart des cafés de spécialité.',
         'es':
-            'Pure, refreshing and bright acidity. The primary acid in most specialty coffees. Quintessential Kenyan and Colombian profile.',
+            'Acidez pura, refrescante y brillante. El ácido principal en la mayoría de los cafés de especialidad.',
         'it':
-            'Pure, refreshing and bright acidity. The primary acid in most specialty coffees. Quintessential Kenyan and Colombian profile.',
+            'Acidità pura, rinfrescante e brillante. L\'acido primario nella maggior parte dei caffè specialty.',
         'pt':
-            'Pure, refreshing and bright acidity. The primary acid in most specialty coffees. Quintessential Kenyan and Colombian profile.',
+            'Acidez pura, refrescante e brilhante. O ácido primário na maioria dos cafés de especialidade.',
         'pl':
-            'Pure, refreshing and bright acidity. The primary acid in most specialty coffees. Quintessential Kenyan and Colombian profile.',
+            'Czysta, odświeżająca i jasna kwasowość. Główny kwas w większości kaw specialty.',
         'nl':
-            'Pure, refreshing and bright acidity. The primary acid in most specialty coffees. Quintessential Kenyan and Colombian profile.',
+            'Pure, verfrissende en heldere zuurgraad. Het belangrijkste zuur in de meeste specialty koffies.',
         'sv':
-            'Pure, refreshing and bright acidity. The primary acid in most specialty coffees. Quintessential Kenyan and Colombian profile.',
+            'Ren, uppfriskande och ljus syra. Den främsta syran i de flesta specialkaffen.',
         'tr':
-            'Pure, refreshing and bright acidity. The primary acid in most specialty coffees. Quintessential Kenyan and Colombian profile.',
-        'ja':
-            'Pure, refreshing and bright acidity. The primary acid in most specialty coffees. Quintessential Kenyan and Colombian profile.',
-        'ko':
-            'Pure, refreshing and bright acidity. The primary acid in most specialty coffees. Quintessential Kenyan and Colombian profile.',
-        'zh':
-            'Pure, refreshing and bright acidity. The primary acid in most specialty coffees. Quintessential Kenyan and Colombian profile.',
+            'Saf, ferahlatıcı ve parlak asidite. Çoğu nitelikli kahvedeki birincil asittir.',
+        'ja': '純粋で爽やか、そして明るい酸味。ほとんどのスペシャルティコーヒーに含まれる主要な酸です。',
+        'ko': '순수하고 상쾌하며 밝은 산미입니다. 대부분의 스페셜티 커피에서 발견되는 주요 산미입니다.',
+        'zh': '纯净、清爽且明亮的酸度。是大多数精品咖啡中的主要酸类。',
         'ar':
-            'Pure, refreshing and bright acidity. The primary acid in most specialty coffees. Quintessential Kenyan and Colombian profile.',
+            'حموضة نقية ومنعشة وساطعة. الحمض الأساسي في معظم أنواع القهوة المختصة.',
       },
       'wheel_note_malic_acid': {
         'en':
@@ -2538,31 +2482,28 @@ class FlavorDescriptions {
         'uk':
             'Хрустка та структурна кислотність, що забезпечує тіло та солодкість. Поширена у важких сортах кави, таких як Бурбон. Візитна картка кави з Бурунді.',
         'de':
-            'Crisp and structural acidity that provides body and sweetness. Common in heavy coffee varieties like Bourbon. Hallmarks of Burundian coffees.',
+            'Knackige und strukturelle Säure, die Körper und Süße verleiht. Häufig bei schweren Kaffeesorten wie Bourbon.',
         'fr':
-            'Crisp and structural acidity that provides body and sweetness. Common in heavy coffee varieties like Bourbon. Hallmarks of Burundian coffees.',
+            'Acidité croquante et structurelle qui apporte corps et douceur. Commune dans les variétés de café lourdes comme le Bourbon.',
         'es':
-            'Crisp and structural acidity that provides body and sweetness. Common in heavy coffee varieties like Bourbon. Hallmarks of Burundian coffees.',
+            'Acidez crujiente y estructural que aporta cuerpo y dulzor. Común en variedades de café pesadas como Bourbon.',
         'it':
-            'Crisp and structural acidity that provides body and sweetness. Common in heavy coffee varieties like Bourbon. Hallmarks of Burundian coffees.',
+            'Acidità croccante e strutturale che conferisce corpo e dolcezza. Comune nelle varietà di caffè pesanti come il Bourbon.',
         'pt':
-            'Crisp and structural acidity that provides body and sweetness. Common in heavy coffee varieties like Bourbon. Hallmarks of Burundian coffees.',
+            'Acidez crocante e estrutural que proporciona corpo e doçura. Comum em variedades de café pesadas como Bourbon.',
         'pl':
-            'Crisp and structural acidity that provides body and sweetness. Common in heavy coffee varieties like Bourbon. Hallmarks of Burundian coffees.',
+            'Chrupka i strukturalna kwasowość, która zapewnia body i słodycz. Powszechna w ciężkich odmianach kawy, takich як Bourbon.',
         'nl':
-            'Crisp and structural acidity that provides body and sweetness. Common in heavy coffee varieties like Bourbon. Hallmarks of Burundian coffees.',
+            'Frisse en structurele zuurgraad die body en zoetheid geeft. Veelvoorkomend in zware koffiesoorten zoals Bourbon.',
         'sv':
-            'Crisp and structural acidity that provides body and sweetness. Common in heavy coffee varieties like Bourbon. Hallmarks of Burundian coffees.',
+            'Frisk och strukturell syra som ger fyllighet och sötma. Vanligt i tunga kaffesorter som Bourbon.',
         'tr':
-            'Crisp and structural acidity that provides body and sweetness. Common in heavy coffee varieties like Bourbon. Hallmarks of Burundian coffees.',
-        'ja':
-            'Crisp and structural acidity that provides body and sweetness. Common in heavy coffee varieties like Bourbon. Hallmarks of Burundian coffees.',
-        'ko':
-            'Crisp and structural acidity that provides body and sweetness. Common in heavy coffee varieties like Bourbon. Hallmarks of Burundian coffees.',
-        'zh':
-            'Crisp and structural acidity that provides body and sweetness. Common in heavy coffee varieties like Bourbon. Hallmarks of Burundian coffees.',
+            'Gövde ve tatlılık sağlayan gevrek ve yapısal asidite. Bourbon gibi ağır kahve çeşitlerinde yaygındır.',
+        'ja': 'ボディと甘みを与える、歯切れの良い構造的な酸味。ブルボンのような重厚な品種に多く見られます。',
+        'ko': '바디감과 단맛을 제공하는 아삭하고 구조적인 산미입니다. 버번과 같은 무거운 커피 품종에서 흔합니다.',
+        'zh': '爽脆且有结构感的酸度，能提供醇厚度和甜感。在波旁等重厚品种中很常见。',
         'ar':
-            'Crisp and structural acidity that provides body and sweetness. Common in heavy coffee varieties like Bourbon. Hallmarks of Burundian coffees.',
+            'حموضة مقرمشة وهيكلية توفر القوام والحلاوة. شائعة في أصناف القهوة الثقيلة مثل بوربون.',
       },
       'wheel_note_winey': {
         'en':
@@ -2570,31 +2511,27 @@ class FlavorDescriptions {
         'uk':
             'П\'янка, фруктова кислотність, що нагадує червоне вино. Результат контрольованої ферментації плодів. Знакова для натуральної Ефіопії та колумбійських анаеробних лотів.',
         'de':
-            'Heady, fruity acidity reminiscent of red wine. Result of controlled fruit fermentation. Iconic for natural Ethiopians and Colombian anaerobic lots.',
+            'Berauschende, fruchtige Säure, die an Rotwein erinnert. Ergebnis einer kontrollierten Fruchtfermentation.',
         'fr':
-            'Heady, fruity acidity reminiscent of red wine. Result of controlled fruit fermentation. Iconic for natural Ethiopians and Colombian anaerobic lots.',
+            'Acidité fruitée et entêtante rappelant le vin rouge. Résultat d\'une fermentation contrôlée des fruits.',
         'es':
-            'Heady, fruity acidity reminiscent of red wine. Result of controlled fruit fermentation. Iconic for natural Ethiopians and Colombian anaerobic lots.',
+            'Acidez frutal e intensa que recuerda al vino tinto. Resultado de la fermentación controlada de la fruta.',
         'it':
-            'Heady, fruity acidity reminiscent of red wine. Result of controlled fruit fermentation. Iconic for natural Ethiopians and Colombian anaerobic lots.',
+            'Acidità fruttata e inebriante che ricorda il vino rosso. Risultato di una fermentazione controllata della frutta.',
         'pt':
-            'Heady, fruity acidity reminiscent of red wine. Result of controlled fruit fermentation. Iconic for natural Ethiopians and Colombian anaerobic lots.',
+            'Acidez frutada e inebriante que lembra vinho tinto. Resultado da fermentação controlada da fruta.',
         'pl':
-            'Heady, fruity acidity reminiscent of red wine. Result of controlled fruit fermentation. Iconic for natural Ethiopians and Colombian anaerobic lots.',
+            'Uderzająca, owocowa kwasowość przypominająca czerwone wino. Wynik kontrolowanej fermentacji owoców.',
         'nl':
-            'Heady, fruity acidity reminiscent of red wine. Result of controlled fruit fermentation. Iconic for natural Ethiopians and Colombian anaerobic lots.',
+            'Bedwelmende, fruitige zuurgraad die doet denken aan rode wijn. Resultaat van gecontroleerde fruitfermentatie.',
         'sv':
-            'Heady, fruity acidity reminiscent of red wine. Result of controlled fruit fermentation. Iconic for natural Ethiopians and Colombian anaerobic lots.',
+            'Berusande, fruktig syra som påminner om rött vin. Resultat av kontrollerad fruktfermentering.',
         'tr':
-            'Heady, fruity acidity reminiscent of red wine. Result of controlled fruit fermentation. Iconic for natural Ethiopians and Colombian anaerobic lots.',
-        'ja':
-            'Heady, fruity acidity reminiscent of red wine. Result of controlled fruit fermentation. Iconic for natural Ethiopians and Colombian anaerobic lots.',
-        'ko':
-            'Heady, fruity acidity reminiscent of red wine. Result of controlled fruit fermentation. Iconic for natural Ethiopians and Colombian anaerobic lots.',
-        'zh':
-            'Heady, fruity acidity reminiscent of red wine. Result of controlled fruit fermentation. Iconic for natural Ethiopians and Colombian anaerobic lots.',
-        'ar':
-            'Heady, fruity acidity reminiscent of red wine. Result of controlled fruit fermentation. Iconic for natural Ethiopians and Colombian anaerobic lots.',
+            'Kırmızı şarabı andıran baş döndürücü, meyvemsi asidite. Kontrollü meyve fermantasyonunun sonucudur.',
+        'ja': '赤ワインを思わせる、芳醇でフルーティーな酸味。管理された果実発酵の結果です。',
+        'ko': '레드 와인을 연상시키는 풍부하고 과일 같은 산미입니다. 잘 조절된 과일 발효의 결과입니다.',
+        'zh': '让人联想起红酒的醇厚果酸。是经过人工控制的果实发酵结果。',
+        'ar': 'حموضة فاكهية قوية تشبه النبيذ الأحمر. ناتجة عن تخمر فاكهة محكم.',
       },
       'wheel_note_whiskey': {
         'en':
@@ -2602,31 +2539,27 @@ class FlavorDescriptions {
         'uk':
             'Комплексні, алкогольні та деревні ноти. Вказує на інтенсивну, тривалу ферментацію. Типово для експериментальних лотів "Spirit-process".',
         'de':
-            'Complex, alcoholic and woody notes. Indicates intense, prolonged fermentation. Typical of experimental "Spirit-process" lots.',
+            'Komplexe, alkoholische und holzige Noten. Weist auf intensive, längere Fermentation hin.',
         'fr':
-            'Complex, alcoholic and woody notes. Indicates intense, prolonged fermentation. Typical of experimental "Spirit-process" lots.',
+            'Notes complexes, alcoolisées et boisées. Indique une fermentation intense et prolongée.',
         'es':
-            'Complex, alcoholic and woody notes. Indicates intense, prolonged fermentation. Typical of experimental "Spirit-process" lots.',
+            'Notas complexes, alcohólicas y amaderadas. Indica una fermentación intensa y prolongada.',
         'it':
-            'Complex, alcoholic and woody notes. Indicates intense, prolonged fermentation. Typical of experimental "Spirit-process" lots.',
+            'Note complesse, alcoliche e legnose. Indica una fermentazione intensa e prolungata.',
         'pt':
-            'Complex, alcoholic and woody notes. Indicates intense, prolonged fermentation. Typical of experimental "Spirit-process" lots.',
+            'Notas complexas, alcoólicas e amadeiradas. Indica fermentação intensa e prolongada.',
         'pl':
-            'Complex, alcoholic and woody notes. Indicates intense, prolonged fermentation. Typical of experimental "Spirit-process" lots.',
+            'Złożone, alkoholowe i drzewne nuty. Wskazują na intensywną, przedłużoną fermentację.',
         'nl':
-            'Complex, alcoholic and woody notes. Indicates intense, prolonged fermentation. Typical of experimental "Spirit-process" lots.',
+            'Complex, alcoholisch en houtachtig. Wijst op intensieve, langdurige fermentatie.',
         'sv':
-            'Complex, alcoholic and woody notes. Indicates intense, prolonged fermentation. Typical of experimental "Spirit-process" lots.',
+            'Komplexa, alkoholhaltiga och träiga noter. Tyder på intensiv, långvarig fermentering.',
         'tr':
-            'Complex, alcoholic and woody notes. Indicates intense, prolonged fermentation. Typical of experimental "Spirit-process" lots.',
-        'ja':
-            'Complex, alcoholic and woody notes. Indicates intense, prolonged fermentation. Typical of experimental "Spirit-process" lots.',
-        'ko':
-            'Complex, alcoholic and woody notes. Indicates intense, prolonged fermentation. Typical of experimental "Spirit-process" lots.',
-        'zh':
-            'Complex, alcoholic and woody notes. Indicates intense, prolonged fermentation. Typical of experimental "Spirit-process" lots.',
-        'ar':
-            'Complex, alcoholic and woody notes. Indicates intense, prolonged fermentation. Typical of experimental "Spirit-process" lots.',
+            'Karmaşık, alkollü ve odunsu notalar. Yoğun, uzun süreli fermantasyonu gösterir.',
+        'ja': '複雑でアルコール感のある、ウッディなノート。強烈で長期間の発酵を示しています。',
+        'ko': '복합적이고 알코올 느낌이 나는 우디한 노트입니다. 강렬하고 장기간의 발효를 나타냅니다.',
+        'zh': '复杂、酒精味和木质风味。预示着剧烈且长时间的发酵。',
+        'ar': 'نوتات معقدة وكحولية وخشبية. تشير إلى تخمر مكثف وطويل.',
       },
       'wheel_note_over_ripe': {
         'en':
@@ -2634,31 +2567,27 @@ class FlavorDescriptions {
         'uk':
             'Глибока, злегка хмільна солодкість фруктів, що щойно минули пік стиглості. Додає ваги лотам натуральної обробки. Поширено в бразильських натуральних лотах.',
         'de':
-            'Deep, slightly boozy sweetness of fruit just past its prime. Adds weight to natural processed lots. Common in Brazilian naturals.',
+            'Tiefe, leicht alkoholische Süße von Früchten, die ihren Höhepunkt überschritten haben.',
         'fr':
-            'Deep, slightly boozy sweetness of fruit just past its prime. Adds weight to natural processed lots. Common in Brazilian naturals.',
+            'Douceur profonde, légèrement alcoolisée, de fruits juste après leur apogée.',
         'es':
-            'Deep, slightly boozy sweetness of fruit just past its prime. Adds weight to natural processed lots. Common in Brazilian naturals.',
+            'Dulzura profunda, ligeramente alcohólica, de fruta que acaba de pasar su mejor momento.',
         'it':
-            'Deep, slightly boozy sweetness of fruit just past its prime. Adds weight to natural processed lots. Common in Brazilian naturals.',
+            'Dolcezza profonda, leggermente alcolica, di frutta appena passata il momento migliore.',
         'pt':
-            'Deep, slightly boozy sweetness of fruit just past its prime. Adds weight to natural processed lots. Common in Brazilian naturals.',
+            'Doçura profunda, ligeiramente alcoólica, de fruta que acabou de passar do seu auge.',
         'pl':
-            'Deep, slightly boozy sweetness of fruit just past its prime. Adds weight to natural processed lots. Common in Brazilian naturals.',
+            'Głęboka, nieco alkoholowa słodycz owoców, które właśnie minęły szczyt dojrzałości.',
         'nl':
-            'Deep, slightly boozy sweetness of fruit just past its prime. Adds weight to natural processed lots. Common in Brazilian naturals.',
+            'Diepe, licht alcoholische zoetheid van fruit dat net over zijn hoogtepunt heen is.',
         'sv':
-            'Deep, slightly boozy sweetness of fruit just past its prime. Adds weight to natural processed lots. Common in Brazilian naturals.',
+            'Djup, något alkoholhaltig sötma från frukt som precis passerat sin höjdpunkt.',
         'tr':
-            'Deep, slightly boozy sweetness of fruit just past its prime. Adds weight to natural processed lots. Common in Brazilian naturals.',
-        'ja':
-            'Deep, slightly boozy sweetness of fruit just past its prime. Adds weight to natural processed lots. Common in Brazilian naturals.',
-        'ko':
-            'Deep, slightly boozy sweetness of fruit just past its prime. Adds weight to natural processed lots. Common in Brazilian naturals.',
-        'zh':
-            'Deep, slightly boozy sweetness of fruit just past its prime. Adds weight to natural processed lots. Common in Brazilian naturals.',
-        'ar':
-            'Deep, slightly boozy sweetness of fruit just past its prime. Adds weight to natural processed lots. Common in Brazilian naturals.',
+            'Zirvesini henüz geçmiş meyvelerin derin, hafif içkimsi tatlılığı.',
+        'ja': '全盛期を過ぎたばかり의 果実の、深く、わずかに酒のような甘み。',
+        'ko': '절정기를 막 지난 과일의 깊고 약간 술 같은 단맛입니다.',
+        'zh': '过熟果实那种深厚且略带酒味的甜感。',
+        'ar': 'حلاوة عميقة وفاكهية قليلاً لثمار تجاوزت ذروة نضجها.',
       },
       'wheel_note_rubber': {
         'en':
@@ -2666,31 +2595,25 @@ class FlavorDescriptions {
         'uk':
             'Щільна, гостра нота, що часто асоціюється з генетикою робусти. Може з\'являтися у деяких інтенсивних бразильських клонах. Рідко зустрічається в арабіці.',
         'de':
-            'Dense, pungent note often associated with the genetics of Robusta. Can appear in some intense Brazilian clones. Rare in Arabica.',
+            'Dichte, stechende Note, die oft mit der Genetik von Robusta in Verbindung gebracht wird.',
         'fr':
-            'Dense, pungent note often associated with the genetics of Robusta. Can appear in some intense Brazilian clones. Rare in Arabica.',
+            'Note dense et piquante souvent associée à la génétique du Robusta.',
         'es':
-            'Dense, pungent note often associated with the genetics of Robusta. Can appear in some intense Brazilian clones. Rare in Arabica.',
+            'Nota densa y penetrante a menudo asociada con la genética de Robusta.',
         'it':
-            'Dense, pungent note often associated with the genetics of Robusta. Can appear in some intense Brazilian clones. Rare in Arabica.',
+            'Nota densa e pungente spesso associata alla genetica della Robusta.',
         'pt':
-            'Dense, pungent note often associated with the genetics of Robusta. Can appear in some intense Brazilian clones. Rare in Arabica.',
-        'pl':
-            'Dense, pungent note often associated with the genetics of Robusta. Can appear in some intense Brazilian clones. Rare in Arabica.',
+            'Nota densa e pungente frequentemente associada à genética do Robusta.',
+        'pl': 'Gęsta, ostra nuta często kojarzona z genetyką Robusty.',
         'nl':
-            'Dense, pungent note often associated with the genetics of Robusta. Can appear in some intense Brazilian clones. Rare in Arabica.',
-        'sv':
-            'Dense, pungent note often associated with the genetics of Robusta. Can appear in some intense Brazilian clones. Rare in Arabica.',
+            'Dichte, doordringende noot die vaak wordt geassocieerd met de genetica van Robusta.',
+        'sv': 'Tät, stickande not som ofta förknippas med Robustas genetik.',
         'tr':
-            'Dense, pungent note often associated with the genetics of Robusta. Can appear in some intense Brazilian clones. Rare in Arabica.',
-        'ja':
-            'Dense, pungent note often associated with the genetics of Robusta. Can appear in some intense Brazilian clones. Rare in Arabica.',
-        'ko':
-            'Dense, pungent note often associated with the genetics of Robusta. Can appear in some intense Brazilian clones. Rare in Arabica.',
-        'zh':
-            'Dense, pungent note often associated with the genetics of Robusta. Can appear in some intense Brazilian clones. Rare in Arabica.',
-        'ar':
-            'Dense, pungent note often associated with the genetics of Robusta. Can appear in some intense Brazilian clones. Rare in Arabica.',
+            'Genellikle Robusta genetiği ile ilişkilendirilen yoğun, keskin nota.',
+        'ja': 'ロブスタ種の遺伝学に関連することが多い、密度が高く刺激的なノート。',
+        'ko': '종종 로부스타 품종의 유전적 특성과 관련된 밀도 높고 자극적인 노트입니다.',
+        'zh': '通常与罗布斯塔基因相关的浓烈刺激味。',
+        'ar': 'نوتة كثيفة ونفاذة ترتبط غالباً بجينات روبوستا.',
       },
       'wheel_note_petroleum': {
         'en':
@@ -2698,31 +2621,28 @@ class FlavorDescriptions {
         'uk':
             'Гостра, технічна ароматна нота. Зазвичай вказує на забруднення або серйозні помилки зберігання. Неприпустимо для спешелті-кави.',
         'de':
-            'Sharp, industrial aromatic note. Usually indicates contamination or major storage faults. Unacceptable in specialty coffee.',
+            'Scharfe, industrielle aromatische Note. Weist normalerweise auf Verunreinigungen oder schwere Lagerfehler hin.',
         'fr':
-            'Sharp, industrial aromatic note. Usually indicates contamination or major storage faults. Unacceptable in specialty coffee.',
+            'Note aromatique industrielle et vive. Indique généralement une contamination ou des défauts de stockage majeurs.',
         'es':
-            'Sharp, industrial aromatic note. Usually indicates contamination or major storage faults. Unacceptable in specialty coffee.',
+            'Nota aromática industrial punzante. Por lo general, indica contaminación o fallas importantes de almacenamiento.',
         'it':
-            'Sharp, industrial aromatic note. Usually indicates contamination or major storage faults. Unacceptable in specialty coffee.',
+            'Nota aromatica industriale pungente. Di solito indica contaminazione o gravi difetti di conservazione.',
         'pt':
-            'Sharp, industrial aromatic note. Usually indicates contamination or major storage faults. Unacceptable in specialty coffee.',
+            'Nota aromática industrial pungente. Geralmente indica contaminação ou grandes falhas de armazenamento.',
         'pl':
-            'Sharp, industrial aromatic note. Usually indicates contamination or major storage faults. Unacceptable in specialty coffee.',
+            'Ostra, przemysłowa nuta aromatyczna. Zazwyczaj wskazuje na zanieczyszczenie lub poważne błędy w przechowywaniu.',
         'nl':
-            'Sharp, industrial aromatic note. Usually indicates contamination or major storage faults. Unacceptable in specialty coffee.',
+            'Scherpe, industriële aromatische noot. Wijst meestal op besmetting of grote opslagfouten.',
         'sv':
-            'Sharp, industrial aromatic note. Usually indicates contamination or major storage faults. Unacceptable in specialty coffee.',
+            'Skarp, industriell aromatisk not. Tyder vanligtvis på kontaminering eller stora lagringsfel.',
         'tr':
-            'Sharp, industrial aromatic note. Usually indicates contamination or major storage faults. Unacceptable in specialty coffee.',
-        'ja':
-            'Sharp, industrial aromatic note. Usually indicates contamination or major storage faults. Unacceptable in specialty coffee.',
-        'ko':
-            'Sharp, industrial aromatic note. Usually indicates contamination or major storage faults. Unacceptable in specialty coffee.',
-        'zh':
-            'Sharp, industrial aromatic note. Usually indicates contamination or major storage faults. Unacceptable in specialty coffee.',
+            'Keskin, endüstriyel aromatik nota. Genellikle kirlenmeyi veya büyük depolama hatalarını gösterir.',
+        'ja': 'ツンとする、工業的なアロマ。通常、汚染や重大な保管上の欠陥を示しています。',
+        'ko': '자극적인 산업용 아로마 노트입니다. 보통 오염이나 중대한 저장 결함을 나타냅니다.',
+        'zh': '尖锐的工业化学风味。通常预示着污染或严重的储存缺陷。',
         'ar':
-            'Sharp, industrial aromatic note. Usually indicates contamination or major storage faults. Unacceptable in specialty coffee.',
+            'نوتة عطرية صناعية حادة. تشير عادة إلى التلوث أو عيوب كبيرة في التخزين.',
       },
       'wheel_note_medicinal': {
         'en':
@@ -2730,31 +2650,28 @@ class FlavorDescriptions {
         'uk':
             'Запах йоду або фенолу. Часто є результатом дії патогенів у воді під час обробки. Індикатор низького контролю якості.',
         'de':
-            'Iodine or phenol-like scent. Often result of water-borne pathogens during processing. Indicator of poor quality control.',
+            'Jod- oder phenolähnlicher Geruch. Oft das Ergebnis von wasserbürtigen Pathogenen während der Verarbeitung.',
         'fr':
-            'Iodine or phenol-like scent. Often result of water-borne pathogens during processing. Indicator of poor quality control.',
+            'Odeur d\'iode ou de phénol. Souvent le résultat de pathogènes d\'origine hydrique pendant le traitement.',
         'es':
-            'Iodine or phenol-like scent. Often result of water-borne pathogens during processing. Indicator of poor quality control.',
+            'Olor a yodo o fenol. A menudo resultado de patógenos transmitidos por el agua durante el procesamiento.',
         'it':
-            'Iodine or phenol-like scent. Often result of water-borne pathogens during processing. Indicator of poor quality control.',
+            'Odore di iodio o fenolo. Spesso risultato di agenti patogeni trasmessi dall\'acqua durante la lavorazione.',
         'pt':
-            'Iodine or phenol-like scent. Often result of water-borne pathogens during processing. Indicator of poor quality control.',
+            'Cheiro de iodo ou fenol. Frequentemente resultado de patógenos transmitidos pela água durante o processamento.',
         'pl':
-            'Iodine or phenol-like scent. Often result of water-borne pathogens during processing. Indicator of poor quality control.',
+            'Zapach jodu lub fenolu. Często wynik patogenów przenoszonych przez wodę podczas przetwarzania.',
         'nl':
-            'Iodine or phenol-like scent. Often result of water-borne pathogens during processing. Indicator of poor quality control.',
+            'Jodium- of fenolachtige geur. Vaak het resultaat van via water overgedragen pathogenen tijdens de verwerking.',
         'sv':
-            'Iodine or phenol-like scent. Often result of water-borne pathogens during processing. Indicator of poor quality control.',
+            'Doft av jod eller fenol. Ofta ett resultat av vattenburna patogener under bearbetningen.',
         'tr':
-            'Iodine or phenol-like scent. Often result of water-borne pathogens during processing. Indicator of poor quality control.',
-        'ja':
-            'Iodine or phenol-like scent. Often result of water-borne pathogens during processing. Indicator of poor quality control.',
-        'ko':
-            'Iodine or phenol-like scent. Often result of water-borne pathogens during processing. Indicator of poor quality control.',
-        'zh':
-            'Iodine or phenol-like scent. Often result of water-borne pathogens during processing. Indicator of poor quality control.',
+            'İyot veya fenol benzeri koku. Genellikle işleme sırasında suyla taşınan patojenlerin sonucudur.',
+        'ja': 'ヨウ素やフェノールのような香り。多くの場合、精製中の水由来の病原菌の結果です。',
+        'ko': '요오드나 페놀 같은 향입니다. 가공 과정 중 수인성 병원균으로 인해 발생하는 경우가 많습니다.',
+        'zh': '碘或苯酚般的味道。通常是处理过程中水载病原体的结果。',
         'ar':
-            'Iodine or phenol-like scent. Often result of water-borne pathogens during processing. Indicator of poor quality control.',
+            'رائحة تشبه اليود أو الفينول. ناتجة غالباً عن مسببات الأمراض المنقولة بالماء أثناء المعالجة.',
       },
       'wheel_note_stale': {
         'en':
@@ -2762,31 +2679,28 @@ class FlavorDescriptions {
         'uk':
             'Плоский, тьмяний профіль без ароматики. Прямий індикатор окислення та відсутності свіжості. Часто зустрічається на старих складських залишках.',
         'de':
-            'Flat, dull profile lacking aromatics. Direct indicator of oxidation and lack of freshness. Common in old warehouse stocks.',
+            'Flaches, stumpfes Profil ohne Aromen. Direkter Indikator für Oxidation und mangelnde Frische.',
         'fr':
-            'Flat, dull profile lacking aromatics. Direct indicator of oxidation and lack of freshness. Common in old warehouse stocks.',
+            'Profil plat et terne manquant d\'aromatiques. Indicateur direct d\'oxydation et de manque de fraîcheur.',
         'es':
-            'Flat, dull profile lacking aromatics. Direct indicator of oxidation and lack of freshness. Common in old warehouse stocks.',
+            'Perfil plano y apagado que carece de aromas. Indicador directo de oxidación y falta de frescura.',
         'it':
-            'Flat, dull profile lacking aromatics. Direct indicator of oxidation and lack of freshness. Common in old warehouse stocks.',
+            'Profilo piatto e spento privo di aromi. Indicatore diretto di ossidazione e mancanza di freschezza.',
         'pt':
-            'Flat, dull profile lacking aromatics. Direct indicator of oxidation and lack of freshness. Common in old warehouse stocks.',
+            'Perfil plano e opaco sem aromáticos. Indicador direto de oxidação e falta de frescor.',
         'pl':
-            'Flat, dull profile lacking aromatics. Direct indicator of oxidation and lack of freshness. Common in old warehouse stocks.',
+            'Płaski, matowy profil pozbawiony aromatów. Bezpośredni wskaźnik utlenienia i braku świeżości.',
         'nl':
-            'Flat, dull profile lacking aromatics. Direct indicator of oxidation and lack of freshness. Common in old warehouse stocks.',
+            'Vlak, dof profiel zonder aromaten. Directe indicatie van oxidatie en gebrek aan versheid.',
         'sv':
-            'Flat, dull profile lacking aromatics. Direct indicator of oxidation and lack of freshness. Common in old warehouse stocks.',
+            'Platt, matt profil som saknar aromer. Direkt indikator på oxidering och brist på färskhet.',
         'tr':
-            'Flat, dull profile lacking aromatics. Direct indicator of oxidation and lack of freshness. Common in old warehouse stocks.',
-        'ja':
-            'Flat, dull profile lacking aromatics. Direct indicator of oxidation and lack of freshness. Common in old warehouse stocks.',
-        'ko':
-            'Flat, dull profile lacking aromatics. Direct indicator of oxidation and lack of freshness. Common in old warehouse stocks.',
-        'zh':
-            'Flat, dull profile lacking aromatics. Direct indicator of oxidation and lack of freshness. Common in old warehouse stocks.',
+            'Aromatikten yoksun, düz, donuk profil. Oksidasyonun ve tazelik eksikliğinin doğrudan göstergesidir.',
+        'ja': 'アロマに欠ける、平坦で退屈なプロファイル。酸化と鮮度の欠如を直接示しています。',
+        'ko': '아로마가 부족하고 밋밋하며 둔탁한 프로파일입니다. 산화와 신선도 부족을 직접적으로 나타냅니다.',
+        'zh': '平淡、沉闷且缺乏香气的特征。是氧化和不新鲜的直接指标。',
         'ar':
-            'Flat, dull profile lacking aromatics. Direct indicator of oxidation and lack of freshness. Common in old warehouse stocks.',
+            'ملف نكهة مسطح وباهت يفتقر إلى الروائح العطرية. مؤشر مباشر على الأكسدة ونقص الطزاجة.',
       },
       'wheel_note_musty': {
         'en':
@@ -2794,31 +2708,28 @@ class FlavorDescriptions {
         'uk':
             'Вологий та землистий дефект, пов\'язаний пошкодженням вологою. Результат росту грибків під час сушіння. Дефект, пов\'язаний з поганою обробкою.',
         'de':
-            'Damp and earthy fault associated with moisture damage. Result of fungal growth during drying. Defect associated with poor processing.',
+            'Feuchter und erdiger Fehler im Zusammenhang mit Feuchtigkeitsschäden. Ergebnis von Pilzwachstum während der Trocknung.',
         'fr':
-            'Damp and earthy fault associated with moisture damage. Result of fungal growth during drying. Defect associated with poor processing.',
+            'Défaut humide et terreux associé aux dommages causés par l\'humidité. Résultat d\'une croissance fongique pendant le séchage.',
         'es':
-            'Damp and earthy fault associated with moisture damage. Result of fungal growth during drying. Defect associated with poor processing.',
+            'Falla húmeda y terrosa asociada con daños por humedad. Resultado del crecimiento de hongos durante el secado.',
         'it':
-            'Damp and earthy fault associated with moisture damage. Result of fungal growth during drying. Defect associated with poor processing.',
+            'Difetto umido e terroso associato a danni da umidità. Risultato della crescita fungina durante l\'essiccazione.',
         'pt':
-            'Damp and earthy fault associated with moisture damage. Result of fungal growth during drying. Defect associated with poor processing.',
+            'Defeito úmido e terroso associado a danos por umidade. Resultado do crescimento de fungos durante a secagem.',
         'pl':
-            'Damp and earthy fault associated with moisture damage. Result of fungal growth during drying. Defect associated with poor processing.',
+            'Wilgotna i ziemista wada związana z uszkodzeniem przez wilgoć. Wynik wzrostu grzybów podczas suszenia.',
         'nl':
-            'Damp and earthy fault associated with moisture damage. Result of fungal growth during drying. Defect associated with poor processing.',
+            'Vochtige en aardse fout geassocieerd met vochtschade. Resultaat van schimmelgroei tijdens het drogen.',
         'sv':
-            'Damp and earthy fault associated with moisture damage. Result of fungal growth during drying. Defect associated with poor processing.',
+            'Fuktigt och jordigt fel förknippat med fuktskador. Resultat av mögeltillväxt under torkningen.',
         'tr':
-            'Damp and earthy fault associated with moisture damage. Result of fungal growth during drying. Defect associated with poor processing.',
-        'ja':
-            'Damp and earthy fault associated with moisture damage. Result of fungal growth during drying. Defect associated with poor processing.',
-        'ko':
-            'Damp and earthy fault associated with moisture damage. Result of fungal growth during drying. Defect associated with poor processing.',
-        'zh':
-            'Damp and earthy fault associated with moisture damage. Result of fungal growth during drying. Defect associated with poor processing.',
+            'Nem hasarıyla ilişkili nemli ve topraksı kusur. Kurutma sırasında mantar büyümesinin sonucudur.',
+        'ja': '湿気によるダメージに関連する、湿った土のような欠陥。乾燥中のカビの繁殖の結果です.',
+        'ko': '습기 피해와 관련된 눅눅하고 흙 같은 결함입니다. 건조 과정 중 곰팡이 번식의 결과입니다.',
+        'zh': '与受潮有关的潮湿和泥土缺陷。是干燥过程中霉菌生长的结果。',
         'ar':
-            'Damp and earthy fault associated with moisture damage. Result of fungal growth during drying. Defect associated with poor processing.',
+            'عيب رطب وترابي يرتبط بالتلف الناتج عن الرطوبة. ناتج عن نمو الفطريات أثناء التجفيف.',
       },
       'wheel_note_dusty': {
         'en':
@@ -2826,31 +2737,28 @@ class FlavorDescriptions {
         'uk':
             'Суха, мінеральна плоскість. Часто вказує на неналежне очищення лоту або вплив дрібних часток. Зустрічається у комерційних лотах нижчого сорту.',
         'de':
-            'Dry, mineral-like flatness. Often indicates improper cleaning of the lot or exposure to fine particulates. Found in lower-grade commercial lots.',
+            'Trockene, mineralartige Flachheit. Weist oft auf unsachgemäße Reinigung der Partie oder Belastung durch feine Partikel hin.',
         'fr':
-            'Dry, mineral-like flatness. Often indicates improper cleaning of the lot or exposure to fine particulates. Found in lower-grade commercial lots.',
+            'Platitude sèche, de type minéral. Indique souvent un nettoyage inapproprié du lot ou une exposition à de fines particules.',
         'es':
-            'Dry, mineral-like flatness. Often indicates improper cleaning of the lot or exposure to fine particulates. Found in lower-grade commercial lots.',
+            'Plantez seca, de tipo mineral. A menudo indica una limpieza inadecuada del lote o exposición a partículas finas.',
         'it':
-            'Dry, mineral-like flatness. Often indicates improper cleaning of the lot or exposure to fine particulates. Found in lower-grade commercial lots.',
+            'Piattezza secca, di tipo minerale. Spesso indica una pulizia impropria del lotto o l\'esposizione a particolato fine.',
         'pt':
-            'Dry, mineral-like flatness. Often indicates improper cleaning of the lot or exposure to fine particulates. Found in lower-grade commercial lots.',
+            'Planicidade seca, tipo mineral. Frequentemente indica limpeza inadequada do lote ou exposição a partículas finas.',
         'pl':
-            'Dry, mineral-like flatness. Often indicates improper cleaning of the lot or exposure to fine particulates. Found in lower-grade commercial lots.',
+            'Sucha, mineralna płaskość. Często wskazuje na niewłaściwe czyszczenie partii lub narażenie na drobne cząstki.',
         'nl':
-            'Dry, mineral-like flatness. Often indicates improper cleaning of the lot or exposure to fine particulates. Found in lower-grade commercial lots.',
+            'Droge, mineraalachtige vlakheid. Wijst vaak op onjuiste reiniging van de kavel of blootstelling aan fijne deeltjes.',
         'sv':
-            'Dry, mineral-like flatness. Often indicates improper cleaning of the lot or exposure to fine particulates. Found in lower-grade commercial lots.',
+            'Torr, mineralliknande platthet. Tyder ofta på felaktig rengöring av partiet eller exponering för fina partiklar.',
         'tr':
-            'Dry, mineral-like flatness. Often indicates improper cleaning of the lot or exposure to fine particulates. Found in lower-grade commercial lots.',
-        'ja':
-            'Dry, mineral-like flatness. Often indicates improper cleaning of the lot or exposure to fine particulates. Found in lower-grade commercial lots.',
-        'ko':
-            'Dry, mineral-like flatness. Often indicates improper cleaning of the lot or exposure to fine particulates. Found in lower-grade commercial lots.',
-        'zh':
-            'Dry, mineral-like flatness. Often indicates improper cleaning of the lot or exposure to fine particulates. Found in lower-grade commercial lots.',
+            'Kuru, mineral benzeri düzlük. Genellikle lotun uygunsuz temizlendiğini veya ince partiküllere maruz kaldığını gösterir.',
+        'ja': '乾燥した、ミネラルのような平坦さ。ロットの洗浄不備や微粒子の付着を示していることが多いです。',
+        'ko': '건조하고 미네랄 같은 밋밋함입니다. 종종 로트의 부적절한 세척이나 미세 입자 노출을 나타냅니다.',
+        'zh': '干燥、像矿物质般的平淡感。通常预示着批次清洁不当或暴露在细微颗粒中。',
         'ar':
-            'Dry, mineral-like flatness. Often indicates improper cleaning of the lot or exposure to fine particulates. Found in lower-grade commercial lots.',
+            'نكهة مسطحة جافة تشبه المعادن. غالباً ما تشير إلى تنظيف غير لائق للمحصول أو التعرض لجزيئات دقيقة.',
       },
     };
 

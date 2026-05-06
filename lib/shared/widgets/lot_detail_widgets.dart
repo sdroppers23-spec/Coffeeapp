@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../core/l10n/app_localizations.dart';
 
 class LotBadge extends StatelessWidget {
   final String label;
@@ -93,7 +94,7 @@ class LotCompactStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final displayValue = (value.trim().isEmpty) ? 'N/A' : value;
+    final displayValue = (value.trim().isEmpty) ? context.t('not_available') : value;
 
     return GestureDetector(
       onTap: onTap,

@@ -165,65 +165,65 @@ class AppLocalizationsEs extends AppLocalizations {
   String get process_honey => 'Honey';
 
   @override
-  String get process_wet_hulled => 'Wet Hulled';
+  String get process_wet_hulled => 'Descascarado húmedo';
 
   @override
   String get process_anaerobic => 'Anaeróbico';
 
   @override
-  String get process_carbonic => 'Carbonic Maceration';
+  String get process_carbonic => 'Maceración carbónica';
 
   @override
-  String get process_lactic => 'Lactic Fermentation';
+  String get process_lactic => 'Fermentación láctica';
 
   @override
-  String get process_thermal => 'Thermal Shock';
+  String get process_thermal => 'Choque térmico';
 
   @override
-  String get process_yeast => 'Yeast Inoculation';
+  String get process_yeast => 'Inoculación de levaduras';
 
   @override
-  String get process_koji => 'Koji Fermentation';
+  String get process_koji => 'Fermentación Koji';
 
   @override
   String get process_natural_desc =>
-      '### Etapa 1: Clasificación\nSolo se seleccionan cerezas maduras y se extienden en camas africanas o patios.\n### Etapa 2: Secado\nLa fruta entera se seca durante 2–4 semanas, permitiendo que los azúcares se concentren dentro del grano.\n### Etapa 3: Descascarillado\nLa cáscara seca se elimina solo después de alcanzar 11–12% de humedad.';
+      '### Etapa 1: Clasificación\nSolo se seleccionan cerezas maduras y se extienden en camas africanas o patios.\n### Etapa 2: Secado\nLa fruta entera se seca durante 2–4 semanas, permitiendo que los azúcares se concentren dentro del grano.\n### Etapa 3: Descascarillado\nLa cáscara seca se elimina solo después de alcanzar 11–12% de humedad. Produce tazas dulces con baja acidez.';
 
   @override
   String get process_washed_desc =>
-      '### Etapa 1: Despulpado\nLa piel y la pulpa se eliminan mecánicamente. El mucílago pegajoso permanece en el pergamino.\n### Etapa 2: Fermentación\nLos granos se remojan en tanques de agua durante 12–48 horas donde las bacterias descomponen el mucílago.\n### Etapa 3: Lavado y secado\nLos granos se lavan con agua limpia y se secan en patios o camas durante 1–2 semanas.';
+      '### Etapa 1: Despulpado\nLa piel y la pulpa se eliminan mecánicamente. El mucílago pegajoso permanece en el pergamino.\n### Etapa 2: Fermentación\nLos granos se remojan en tanques de agua durante 12–48 horas donde las bacterias descomponen el mucílago.\n### Etapa 3: Lavado y secado\nLos granos se lavan con agua limpia y se secan en patios. Produce un sabor muy limpio con acidez brillante.';
 
   @override
   String get process_honey_desc =>
-      '### Hybrid Method\nThe skin is removed, but part of the sticky mucilage stays on the bean during drying.\n### Categories\nDepending on how much mucilage remains, it ranges from White to Black Honey. Produces very sweet, syrupy and buttery cups.';
+      '### Método híbrido\nSe retira la piel, pero parte del mucílago pegajoso permanece en el grano durante el secado.\n### Categorías\nSegún la cantidad de mucílago restante, va de White a Black Honey. Produce tazas muy dulces, almibaradas y mantecosas.';
 
   @override
   String get process_wet_hulled_desc =>
-      '### Traditional Indonesian Method (Giling Basah)\nThe skin is removed at very high moisture content (30-40%).\n### Result\nThe bean dries without its protective parchment. This creates a unique profile: low acidity, heavy earthy body, and notes of spice or chocolate.';
+      '### Método indonesio tradicional (Giling Basah)\nLa piel se elimina a un contenido de humedad muy alto (30–40%).\n### Resultado\nEl grano se seca sin su pergamino protector. Esto crea un perfil único: baja acidez, cuerpo terroso pesado y notas de especias o chocolate.';
 
   @override
   String get process_anaerobic_desc =>
-      '### Etapa 1: Sellado\nLas cerezas se colocan en tanques herméticos de los que se extrae el oxígeno.\n### Etapa 2: Fermentación controlada\nLas bacterias del ácido láctico prosperan durante 48–120 horas creando perfiles de sabor complejos.';
+      '### Etapa 1: Sellado\nLas cerezas o granos despulpados se colocan en tanques herméticos donde el oxígeno es reemplazado por CO2 o simplemente eliminado.\n### Etapa 2: Fermentación\nDura 48–120 horas. Esto estimula microbios específicos que crean perfiles de sabor tropicales complejos.';
 
   @override
   String get process_carbonic_desc =>
-      '### Wine-making Technique\nWhole cherries are loaded into sealed containers which are then filled with CO2 gas.\n### Result\nCarbon dioxide slows down sugar breakdown. The resulting flavor is very clean, structured, and often has distinct winey notes.';
+      '### Técnica vinícola\nLas cerezas enteras se cargan en contenedores sellados que luego se llenan con gas CO2.\n### Resultado\nEl dióxido de carbono ralentiza la degradación del azúcar. El sabor resultante es muy limpio, estructurado y a menudo tiene notas vinosas distintivas.';
 
   @override
   String get process_lactic_desc =>
-      '### Lactic Fermentation\nA focus on the development of lactic acid bacteria (Lactobacillus).\n### Result\nCreates high concentrations of lactic acid. In the cup, this results in an incredibly silky, creamy body with notes of yogurt or dairy.';
+      '### Fermentación láctica\nEnfocada en el desarrollo de bacterias del ácido láctico (Lactobacillus).\n### Resultado\nCrea altas concentraciones de ácido láctico. En taza, esto resulta en un cuerpo increíblemente sedoso y cremoso con notas de yogur o lácteos.';
 
   @override
   String get process_thermal_desc =>
-      '### Etapa 1: Choque caliente\nLos granos se lavan con agua a 40°C para abrir poros y absorber productos de fermentación.\n### Etapa 2: Choque frío\nEnjuagados inmediatamente con agua a 12°C para \'fijar\' los sabores intensos dentro del grano.';
+      '### Etapa 1: Choque caliente\nLos granos se enjuagan con agua a 40°C para abrir poros y absorber compuestos de fermentación.\n### Etapa 2: Choque frío\nEnjuagados inmediatamente con agua a 12°C para \'fijar\' los sabores intensos. Perfil extremadamente vibrante e intenso.';
 
   @override
   String get process_yeast_desc =>
-      '### Controlled Fermentation\nSpecific yeast strains (wine or specially developed coffee yeast) are added to the fermentation tank.\n### Result\nFull control over the process. Yeast highlights precise floral or berry aromas, leading to a much cleaner and more predictable flavor.';
+      '### Fermentación controlada\nSouches específicas de levadura (de vino o levadura de café especialmente desarrollada) se añaden al tanque de fermentación.\n### Resultado\nControl total del proceso. La levadura realza aromas florales o de bayas precisos, dando lugar a un sabor mucho más limpio y predecible.';
 
   @override
   String get process_koji_desc =>
-      '### Japanese Technology\nUses Aspergillus oryzae (Koji) mold, commonly used in sake and soy sauce production.\n### Result\nKoji breaks down complex carbohydrates and proteins that normal yeast cannot. Results in extreme sweetness, depth, and a subtle umami finish.';
+      '### Tecnología japonesa\nUsa el moho Aspergillus oryzae (Koji), comúnmente utilizado en la producción de sake y salsa de soja.\n### Resultado\nEl Koji descompone carbohidratos y proteínas complejos que la levadura normal no puede procesar. Resulta en dulzura extrema, profundidad y un sutil final umami.';
 
   @override
   String get shop_coffee => 'COMPRAR ESTE CAFÉ';
@@ -375,13 +375,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get tab_wheel => 'Rueda de sabores';
 
   @override
-  String get tab_steps => 'Steps';
+  String get tab_steps => 'Pasos';
 
   @override
-  String get tab_custom => 'My Versions';
+  String get tab_custom => 'Mis versiones';
 
   @override
-  String get tab_recommended => 'Recommended';
+  String get tab_recommended => 'Recomendados';
 
   @override
   String get tap_wheel_to_explore => 'Toca los segmentos para explorar sabores';
@@ -593,7 +593,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get off => 'DES';
 
   @override
-  String get calibrate => 'Calibrar';
+  String get calibrate => 'Restablecer posición';
 
   @override
   String get search_placeholder => 'Buscar variedades y regiones...';
@@ -609,216 +609,216 @@ class AppLocalizationsEs extends AppLocalizations {
   String get legal => 'Legal';
 
   @override
-  String get privacy_policy => 'Privacy Policy';
+  String get privacy_policy => 'Política de privacidad';
 
   @override
-  String get terms_of_use => 'Terms of Use';
+  String get terms_of_use => 'Términos de uso';
 
   @override
-  String get support => 'Support';
+  String get support => 'Soporte';
 
   @override
-  String get contact_us => 'Contact Us';
+  String get contact_us => 'Contacto';
 
   @override
-  String get rate_app => 'Rate App';
+  String get rate_app => 'Valorar la app';
 
   @override
-  String get logout => 'Log Out';
+  String get logout => 'Cerrar sesión';
 
   @override
-  String get vibration => 'Vibration';
+  String get vibration => 'Vibración';
 
   @override
-  String get enable_vibration => 'Haptic Feedback';
+  String get enable_vibration => 'Vibración háptica';
 
   @override
-  String get haptic_desc => 'Gentle vibration on tap and long press';
+  String get haptic_desc => 'Vibración suave al tocar y mantener pulsado';
 
   @override
-  String get my_lots => 'My Lots';
+  String get my_lots => 'Mis lotes';
 
   @override
-  String get add_recipe => 'Add Recipe';
+  String get add_recipe => 'Añadir receta';
 
   @override
-  String get recipe_limit_reached => 'Maximum 10 recipes per lot reached';
+  String get recipe_limit_reached => 'Máximo de 10 recetas por lote alcanzado';
 
   @override
-  String get selection_mode => 'Selection Mode';
+  String get selection_mode => 'Modo de selección';
 
   @override
-  String get delete_selected => 'Delete Selected';
+  String get delete_selected => 'Eliminar selección';
 
   @override
-  String get save => 'Save';
+  String get save => 'Guardar';
 
   @override
-  String get discard_changes_title => 'Discard Changes?';
+  String get discard_changes_title => '¿Descartar cambios?';
 
   @override
   String get discard_changes_msg =>
-      'You have unsaved changes. Are you sure you want to discard them?';
+      'Tienes cambios sin guardar. ¿Estás seguro de que quieres descartarlos?';
 
   @override
-  String get discard => 'Discard';
+  String get discard => 'Descartar';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'Cancelar';
 
   @override
-  String get edit_lot => 'Edit Lot';
+  String get edit_lot => 'Editar lote';
 
   @override
-  String get add_lot => 'Add Lot';
+  String get add_lot => 'Añadir lote';
 
   @override
-  String get select_roaster => 'Select Roaster';
+  String get select_roaster => 'Seleccionar tostador';
 
   @override
-  String get section_roaster => 'Roaster';
+  String get section_roaster => 'Tostador';
 
   @override
-  String get name_field => 'Name';
+  String get name_field => 'Nombre';
 
   @override
-  String get coffee_name_field => 'Coffee Name';
+  String get coffee_name_field => 'Nombre del café';
 
   @override
-  String get roaster_name_field => 'Roaster Name';
+  String get roaster_name_field => 'Nombre del tostador';
 
   @override
-  String get country_label => 'Country';
+  String get country_label => 'País';
 
   @override
-  String get city_label => 'City';
+  String get city_label => 'Ciudad';
 
   @override
-  String get section_coffee_lot => 'Coffee Lot';
+  String get section_coffee_lot => 'Lote de café';
 
   @override
-  String get farmer_field => 'Farmer';
+  String get farmer_field => 'Agricultor';
 
   @override
-  String get wash_station_field => 'Wash Station';
+  String get wash_station_field => 'Estación de lavado';
 
   @override
-  String get lot_number_field => 'Lot Number';
+  String get lot_number_field => 'Número de lote';
 
   @override
-  String get sca_score_field => 'SCA Score';
+  String get sca_score_field => 'Puntuación SCA';
 
   @override
-  String get sca_score_helper => 'Score between 80 and 100';
+  String get sca_score_helper => 'Puntuación entre 80 y 100';
 
   @override
-  String get weight_field => 'Weight';
+  String get weight_field => 'Peso';
 
   @override
-  String get section_origin => 'Origin';
+  String get section_origin => 'Origen';
 
   @override
-  String get country_field => 'Country';
+  String get country_field => 'País';
 
   @override
-  String get region_field => 'Region';
+  String get region_field => 'Región';
 
   @override
-  String get altitude_field => 'Altitude';
+  String get altitude_field => 'Altitud';
 
   @override
-  String get varietals_field => 'Varietals';
+  String get varietals_field => 'Variedades';
 
   @override
-  String get section_processing => 'Processing';
+  String get section_processing => 'Procesado';
 
   @override
-  String get section_flavor_notes => 'Flavor Notes';
+  String get section_flavor_notes => 'Notas de sabor';
 
   @override
-  String get flavor_notes_field => 'Flavor Profile';
+  String get flavor_notes_field => 'Perfil de sabor';
 
   @override
-  String get section_pricing => 'Pricing';
+  String get section_pricing => 'Precios';
 
   @override
-  String get retail_250g => 'Retail 250g';
+  String get retail_250g => 'Minorista 250g';
 
   @override
-  String get retail_1kg => 'Retail 1kg';
+  String get retail_1kg => 'Minorista 1kg';
 
   @override
-  String get wholesale_250g => 'Wholesale 250g';
+  String get wholesale_250g => 'Mayorista 250g';
 
   @override
-  String get wholesale_1kg => 'Wholesale 1kg';
+  String get wholesale_1kg => 'Mayorista 1kg';
 
   @override
-  String get save_lot => 'Save Lot';
+  String get save_lot => 'Guardar lote';
 
   @override
-  String get save_lot_confirmation_title => 'Save Lot?';
+  String get save_lot_confirmation_title => '¿Guardar lote?';
 
   @override
   String get save_lot_confirmation_desc =>
-      'Are you sure you want to save this coffee lot?';
+      '¿Estás seguro de que quieres guardar este lote de café?';
 
   @override
-  String get keep_editing => 'Keep Editing';
+  String get keep_editing => 'Seguir editando';
 
   @override
-  String get roaster_city => 'Roaster City';
+  String get roaster_city => 'Ciudad del tostador';
 
   @override
-  String get section_photo => 'Photo';
+  String get section_photo => 'Foto';
 
   @override
-  String get add_photo_label => 'ADD PHOTO';
+  String get add_photo_label => 'AÑADIR FOTO';
 
   @override
-  String get section_roast_date => 'Dates';
+  String get section_roast_date => 'Fechas';
 
   @override
-  String get roast_date_field => 'Roast Date';
+  String get roast_date_field => 'Fecha de tueste';
 
   @override
-  String get opened_at_field => 'Opened At';
+  String get opened_at_field => 'Abierto el';
 
   @override
-  String get not_opened => 'Not Opened Yet';
+  String get not_opened => 'Aún no abierto';
 
   @override
-  String get section_bag_state => 'Bag State';
+  String get section_bag_state => 'Estado del saco';
 
   @override
-  String get bag_closed => 'CLOSED';
+  String get bag_closed => 'CERRADO';
 
   @override
-  String get bag_opened => 'OPENED';
+  String get bag_opened => 'ABIERTO';
 
   @override
-  String get section_grind_type => 'Grind Type';
+  String get section_grind_type => 'Tipo de molienda';
 
   @override
-  String get whole_bean => 'Whole Bean';
+  String get whole_bean => 'Grano entero';
 
   @override
-  String get ground_coffee => 'Ground';
+  String get ground_coffee => 'Molido';
 
   @override
-  String get section_roast => 'Roast';
+  String get section_roast => 'Tueste';
 
   @override
-  String get roast_level_field => 'Roast Level';
+  String get roast_level_field => 'Nivel de tueste';
 
   @override
-  String get roast_medium_light => 'MEDIUM LIGHT';
+  String get roast_medium_light => 'MEDIO CLARO';
 
   @override
-  String get roast_medium_dark => 'MEDIUM DARK';
+  String get roast_medium_dark => 'MEDIO OSCURO';
 
   @override
-  String get roast_filter => 'FILTER';
+  String get roast_filter => 'FILTRO';
 
   @override
   String get roast_omni => 'OMNI';
@@ -827,13 +827,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get roast_espresso => 'ESPRESSO';
 
   @override
-  String get custom_method_label => 'Custom Name';
+  String get custom_method_label => 'Nombre personalizado';
 
   @override
-  String get enter_name_placeholder => 'Enter name...';
+  String get enter_name_placeholder => 'Escribe un nombre...';
 
   @override
-  String get decaf_sugar_cane => 'Sugar Cane';
+  String get decaf_sugar_cane => 'Caña de azúcar';
 
   @override
   String get decaf_swiss_water => 'Swiss Water';
@@ -842,23 +842,23 @@ class AppLocalizationsEs extends AppLocalizations {
   String get decaf_co2 => 'CO2';
 
   @override
-  String get decaf_mountain_water => 'Mountain Water';
+  String get decaf_mountain_water => 'Agua de montaña';
 
   @override
-  String get decaf_other => 'Other';
+  String get decaf_other => 'Otro';
 
   @override
-  String get sensory_profile_1_5 => 'Sensory Profile (1-5)';
+  String get sensory_profile_1_5 => 'Perfil sensorial (1-5)';
 
   @override
-  String get visualize_profile => 'Visualize Profile';
+  String get visualize_profile => 'Visualizar perfil';
 
   @override
-  String get lock_sensory => 'LOCK';
+  String get lock_sensory => 'BLOQUEAR';
 
   @override
-  String get unlock_sensory => 'UNLOCK';
+  String get unlock_sensory => 'DESBLOQUEAR';
 
   @override
-  String get location_field => 'Location';
+  String get location_field => 'Ubicación';
 }

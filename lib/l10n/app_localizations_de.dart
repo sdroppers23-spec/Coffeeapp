@@ -165,65 +165,65 @@ class AppLocalizationsDe extends AppLocalizations {
   String get process_honey => 'Honey';
 
   @override
-  String get process_wet_hulled => 'Wet Hulled';
+  String get process_wet_hulled => 'Nass-Enthülsung';
 
   @override
   String get process_anaerobic => 'Anaerob';
 
   @override
-  String get process_carbonic => 'Carbonic Maceration';
+  String get process_carbonic => 'Kohlensäure-Mazeration';
 
   @override
-  String get process_lactic => 'Lactic Fermentation';
+  String get process_lactic => 'Milchsäure-Fermentation';
 
   @override
-  String get process_thermal => 'Thermal Shock';
+  String get process_thermal => 'Thermischer Schock';
 
   @override
-  String get process_yeast => 'Yeast Inoculation';
+  String get process_yeast => 'Hefe-Impfung';
 
   @override
-  String get process_koji => 'Koji Fermentation';
+  String get process_koji => 'Koji-Fermentation';
 
   @override
   String get process_natural_desc =>
-      '### Stufe 1: Sortierung\nNur reife Kirschen werden ausgewählt und auf afrikanischen Betten oder Patios ausgelegt.\n### Stufe 2: Trocknung\nDie ganze Frucht trocknet 2–4 Wochen, damit sich die Zucker in der Bohne konzentrieren.\n### Stufe 3: Enthülsung\nDie getrocknete \'rosinenähnliche\' Schale wird erst nach Erreichen von 11–12% Feuchte entfernt.';
+      '### Stufe 1: Sortierung\nNur reife Kirschen werden ausgewählt und auf afrikanischen Betten oder Patios ausgelegt.\n### Stufe 2: Trocknung\nDie ganze Frucht trocknet 2–4 Wochen, damit sich die Zucker in der Bohne konzentrieren.\n### Stufe 3: Enthülsung\nDie getrocknete Schale wird erst nach Erreichen von 11–12% Feuchte entfernt. Ergibt süße Tassen mit niedriger Säure.';
 
   @override
   String get process_washed_desc =>
-      '### Stufe 1: Entpulpen\nDie Schale und das Fruchtfleisch werden mechanisch entfernt. Der klebrige Schleim bleibt auf dem Pergament.\n### Stufe 2: Fermentation\nBohnen werden 12–48 Stunden in Wassertanks eingeweicht, wo Bakterien den Schleim abbauen.\n### Stufe 3: Waschen & Trocknen\nBohnen werden mit sauberem Wasser gewaschen und 1–2 Wochen auf Patios oder Betten getrocknet.';
+      '### Stufe 1: Entpulpen\nDie Schale und das Fruchtfleisch werden mechanisch entfernt. Der klebrige Schleim bleibt auf dem Pergament.\n### Stufe 2: Fermentation\nBohnen werden 12–48 Stunden in Wassertanks eingeweicht, wo Bakterien den Schleim abbauen.\n### Stufe 3: Waschen & Trocknen\nBohnen werden mit sauberem Wasser gewaschen und auf Patios getrocknet. Ergibt sehr sauberen Geschmack mit heller Säure.';
 
   @override
   String get process_honey_desc =>
-      '### Hybrid Method\nThe skin is removed, but part of the sticky mucilage stays on the bean during drying.\n### Categories\nDepending on how much mucilage remains, it ranges from White to Black Honey. Produces very sweet, syrupy and buttery cups.';
+      '### Hybrid-Methode\nDie Schale wird entfernt, aber ein Teil des klebrigen Schleims bleibt während der Trocknung an der Bohne.\n### Kategorien\nJe nach verbliebenem Schleim reicht es von White bis Black Honey. Ergibt sehr süße, sirupartige und butterige Tassen.';
 
   @override
   String get process_wet_hulled_desc =>
-      '### Traditional Indonesian Method (Giling Basah)\nThe skin is removed at very high moisture content (30-40%).\n### Result\nThe bean dries without its protective parchment. This creates a unique profile: low acidity, heavy earthy body, and notes of spice or chocolate.';
+      '### Traditionelle indonesische Methode (Giling Basah)\nDie Schale wird bei sehr hohem Feuchtigkeitsgehalt (30–40%) entfernt.\n### Ergebnis\nDie Bohne trocknet ohne ihr schützendes Pergament. Dies erzeugt ein einzigartiges Profil: niedrige Säure, schwerer erdiger Körper und Noten von Gewürzen oder Schokolade.';
 
   @override
   String get process_anaerobic_desc =>
-      '### Stufe 1: Versiegeln\nKirschen werden in luftdichte Tanks gelegt, aus denen Sauerstoff entfernt wird.\n### Stufe 2: Kontrollierte Fermentation\nMilchsäurebakterien gedeihen 48–120 Stunden und erzeugen komplexe, einzigartige Geschmacksprofile.';
+      '### Stufe 1: Versiegeln\nKirschen oder enthülste Bohnen werden in luftdichte Tanks gelegt, aus denen Sauerstoff entfernt wird.\n### Stufe 2: Fermentation\nDauert 48–120 Stunden. Dies stimuliert spezifische Mikroben, die komplexe \'funky\' tropische Geschmacksprofile erzeugen.';
 
   @override
   String get process_carbonic_desc =>
-      '### Wine-making Technique\nWhole cherries are loaded into sealed containers which are then filled with CO2 gas.\n### Result\nCarbon dioxide slows down sugar breakdown. The resulting flavor is very clean, structured, and often has distinct winey notes.';
+      '### Weinherstellungstechnik\nGanze Kirschen werden in versiegelten Behältern geladen, die dann mit CO2-Gas gefüllt werden.\n### Ergebnis\nKohlendioxid verlangsamt den Zuckerabbau. Das resultierende Aroma ist sehr sauber, strukturiert und hat oft ausgeprägte weinige Noten.';
 
   @override
   String get process_lactic_desc =>
-      '### Lactic Fermentation\nA focus on the development of lactic acid bacteria (Lactobacillus).\n### Result\nCreates high concentrations of lactic acid. In the cup, this results in an incredibly silky, creamy body with notes of yogurt or dairy.';
+      '### Milchsäure-Fermentation\nFokus auf die Entwicklung von Milchsäurebakterien (Lactobacillus).\n### Ergebnis\nErzeugt hohe Konzentrationen an Milchsäure. In der Tasse ergibt dies einen unglaublich seidigen, cremigen Körper mit Noten von Joghurt oder Milchprodukten.';
 
   @override
   String get process_thermal_desc =>
-      '### Stufe 1: Heißer Schock\nBohnen werden mit 40°C heißem Wasser gewaschen, um Poren zu öffnen und Fermentationsprodukte aufzunehmen.\n### Stufe 2: Kalter Schock\nSofort mit 12°C kaltem Wasser gespült, um die intensiven Aromen in der Bohne zu \'fixieren\'.';
+      '### Stufe 1: Heißer Schock\nBohnen werden mit 40°C heißem Wasser gespült, um Poren zu öffnen und Fermentationsprodukte aufzunehmen.\n### Stufe 2: Kalter Schock\nSofort mit 12°C kaltem Wasser gespült, um intensive Aromen in der Bohne zu fixieren. Extrem lebhaftes und intensives Profil.';
 
   @override
   String get process_yeast_desc =>
-      '### Controlled Fermentation\nSpecific yeast strains (wine or specially developed coffee yeast) are added to the fermentation tank.\n### Result\nFull control over the process. Yeast highlights precise floral or berry aromas, leading to a much cleaner and more predictable flavor.';
+      '### Kontrollierte Fermentation\nSpezifische Hefestämme (Wein- oder speziell entwickelte Kaffeehefe) werden dem Fermentationstank zugegeben.\n### Ergebnis\nVolle Kontrolle über den Prozess. Hefe hebt präzise florale oder Beerenarormen hervor, was zu einem viel saubereren und vorhersehbareren Geschmack führt.';
 
   @override
   String get process_koji_desc =>
-      '### Japanese Technology\nUses Aspergillus oryzae (Koji) mold, commonly used in sake and soy sauce production.\n### Result\nKoji breaks down complex carbohydrates and proteins that normal yeast cannot. Results in extreme sweetness, depth, and a subtle umami finish.';
+      '### Japanische Technologie\nVerwendet Aspergillus oryzae (Koji) Schimmel, der üblicherweise bei der Herstellung von Sake und Sojasoße eingesetzt wird.\n### Ergebnis\nKoji zersetzt komplexe Kohlenhydrate und Proteine, die normale Hefe nicht abbauen kann. Ergibt extreme Süße, Tiefe und einen subtilen Umami-Abschluss.';
 
   @override
   String get shop_coffee => 'DIESEN KAFFEE KAUFEN';
@@ -375,13 +375,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tab_wheel => 'Geschmacksrad';
 
   @override
-  String get tab_steps => 'Steps';
+  String get tab_steps => 'Schritte';
 
   @override
-  String get tab_custom => 'My Versions';
+  String get tab_custom => 'Meine Versionen';
 
   @override
-  String get tab_recommended => 'Recommended';
+  String get tab_recommended => 'Empfohlen';
 
   @override
   String get tap_wheel_to_explore =>
@@ -461,7 +461,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get desc_east_africa =>
-      'Der Geburtsort des Kaffees. Gekennzeichnet durch helle Säure, blumige Teennoten und intensive Beerensüße.';
+      'Der Geburtsort des Kaffees. Gekennzeichnet durch helle Säure, blumige Teenoten und intensive Beerensüße.';
 
   @override
   String get desc_central_america =>
@@ -594,7 +594,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get off => 'AUS';
 
   @override
-  String get calibrate => 'Kalibrieren';
+  String get calibrate => 'Position zurücksetzen';
 
   @override
   String get search_placeholder => 'Sorten & Regionen suchen...';
@@ -607,216 +607,216 @@ class AppLocalizationsDe extends AppLocalizations {
   String get encyclopedia_title => 'Kaffeelexikon';
 
   @override
-  String get legal => 'Legal';
+  String get legal => 'Rechtliches';
 
   @override
-  String get privacy_policy => 'Privacy Policy';
+  String get privacy_policy => 'Datenschutzrichtlinie';
 
   @override
-  String get terms_of_use => 'Terms of Use';
+  String get terms_of_use => 'Nutzungsbedingungen';
 
   @override
   String get support => 'Support';
 
   @override
-  String get contact_us => 'Contact Us';
+  String get contact_us => 'Kontakt';
 
   @override
-  String get rate_app => 'Rate App';
+  String get rate_app => 'App bewerten';
 
   @override
-  String get logout => 'Log Out';
+  String get logout => 'Abmelden';
 
   @override
   String get vibration => 'Vibration';
 
   @override
-  String get enable_vibration => 'Haptic Feedback';
+  String get enable_vibration => 'Haptisches Feedback';
 
   @override
-  String get haptic_desc => 'Gentle vibration on tap and long press';
+  String get haptic_desc => 'Sanfte Vibration beim Tippen und langen Drücken';
 
   @override
-  String get my_lots => 'My Lots';
+  String get my_lots => 'Meine Lots';
 
   @override
-  String get add_recipe => 'Add Recipe';
+  String get add_recipe => 'Rezept hinzufügen';
 
   @override
-  String get recipe_limit_reached => 'Maximum 10 recipes per lot reached';
+  String get recipe_limit_reached => 'Maximal 10 Rezepte pro Lot erreicht';
 
   @override
-  String get selection_mode => 'Selection Mode';
+  String get selection_mode => 'Auswahlmodus';
 
   @override
-  String get delete_selected => 'Delete Selected';
+  String get delete_selected => 'Ausgewählte löschen';
 
   @override
-  String get save => 'Save';
+  String get save => 'Speichern';
 
   @override
-  String get discard_changes_title => 'Discard Changes?';
+  String get discard_changes_title => 'Änderungen verwerfen?';
 
   @override
   String get discard_changes_msg =>
-      'You have unsaved changes. Are you sure you want to discard them?';
+      'Sie haben ungespeicherte Änderungen. Möchten Sie diese wirklich verwerfen?';
 
   @override
-  String get discard => 'Discard';
+  String get discard => 'Verwerfen';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'Abbrechen';
 
   @override
-  String get edit_lot => 'Edit Lot';
+  String get edit_lot => 'Lot bearbeiten';
 
   @override
-  String get add_lot => 'Add Lot';
+  String get add_lot => 'Lot hinzufügen';
 
   @override
-  String get select_roaster => 'Select Roaster';
+  String get select_roaster => 'Röster auswählen';
 
   @override
-  String get section_roaster => 'Roaster';
+  String get section_roaster => 'Röster';
 
   @override
   String get name_field => 'Name';
 
   @override
-  String get coffee_name_field => 'Coffee Name';
+  String get coffee_name_field => 'Kaffeename';
 
   @override
-  String get roaster_name_field => 'Roaster Name';
+  String get roaster_name_field => 'Röstername';
 
   @override
-  String get country_label => 'Country';
+  String get country_label => 'Land';
 
   @override
-  String get city_label => 'City';
+  String get city_label => 'Stadt';
 
   @override
-  String get section_coffee_lot => 'Coffee Lot';
+  String get section_coffee_lot => 'Kaffee-Lot';
 
   @override
-  String get farmer_field => 'Farmer';
+  String get farmer_field => 'Bauer';
 
   @override
-  String get wash_station_field => 'Wash Station';
+  String get wash_station_field => 'Waschstation';
 
   @override
-  String get lot_number_field => 'Lot Number';
+  String get lot_number_field => 'Lotnummer';
 
   @override
-  String get sca_score_field => 'SCA Score';
+  String get sca_score_field => 'SCA-Punktzahl';
 
   @override
-  String get sca_score_helper => 'Score between 80 and 100';
+  String get sca_score_helper => 'Punktzahl zwischen 80 und 100';
 
   @override
-  String get weight_field => 'Weight';
+  String get weight_field => 'Gewicht';
 
   @override
-  String get section_origin => 'Origin';
+  String get section_origin => 'Herkunft';
 
   @override
-  String get country_field => 'Country';
+  String get country_field => 'Land';
 
   @override
   String get region_field => 'Region';
 
   @override
-  String get altitude_field => 'Altitude';
+  String get altitude_field => 'Höhe';
 
   @override
-  String get varietals_field => 'Varietals';
+  String get varietals_field => 'Varietäten';
 
   @override
-  String get section_processing => 'Processing';
+  String get section_processing => 'Verarbeitung';
 
   @override
-  String get section_flavor_notes => 'Flavor Notes';
+  String get section_flavor_notes => 'Aromennotizen';
 
   @override
-  String get flavor_notes_field => 'Flavor Profile';
+  String get flavor_notes_field => 'Aromenprofil';
 
   @override
-  String get section_pricing => 'Pricing';
+  String get section_pricing => 'Preisgestaltung';
 
   @override
-  String get retail_250g => 'Retail 250g';
+  String get retail_250g => 'Einzelhandel 250g';
 
   @override
-  String get retail_1kg => 'Retail 1kg';
+  String get retail_1kg => 'Einzelhandel 1kg';
 
   @override
-  String get wholesale_250g => 'Wholesale 250g';
+  String get wholesale_250g => 'Großhandel 250g';
 
   @override
-  String get wholesale_1kg => 'Wholesale 1kg';
+  String get wholesale_1kg => 'Großhandel 1kg';
 
   @override
-  String get save_lot => 'Save Lot';
+  String get save_lot => 'Lot speichern';
 
   @override
-  String get save_lot_confirmation_title => 'Save Lot?';
+  String get save_lot_confirmation_title => 'Lot speichern?';
 
   @override
   String get save_lot_confirmation_desc =>
-      'Are you sure you want to save this coffee lot?';
+      'Möchten Sie dieses Kaffee-Lot wirklich speichern?';
 
   @override
-  String get keep_editing => 'Keep Editing';
+  String get keep_editing => 'Weiter bearbeiten';
 
   @override
-  String get roaster_city => 'Roaster City';
+  String get roaster_city => 'Stadt des Rösters';
 
   @override
-  String get section_photo => 'Photo';
+  String get section_photo => 'Foto';
 
   @override
-  String get add_photo_label => 'ADD PHOTO';
+  String get add_photo_label => 'FOTO HINZUFÜGEN';
 
   @override
-  String get section_roast_date => 'Dates';
+  String get section_roast_date => 'Daten';
 
   @override
-  String get roast_date_field => 'Roast Date';
+  String get roast_date_field => 'Röstdatum';
 
   @override
-  String get opened_at_field => 'Opened At';
+  String get opened_at_field => 'Geöffnet am';
 
   @override
-  String get not_opened => 'Not Opened Yet';
+  String get not_opened => 'Noch nicht geöffnet';
 
   @override
-  String get section_bag_state => 'Bag State';
+  String get section_bag_state => 'Beutelzustand';
 
   @override
-  String get bag_closed => 'CLOSED';
+  String get bag_closed => 'GESCHLOSSEN';
 
   @override
-  String get bag_opened => 'OPENED';
+  String get bag_opened => 'GEÖFFNET';
 
   @override
-  String get section_grind_type => 'Grind Type';
+  String get section_grind_type => 'Mahltyp';
 
   @override
-  String get whole_bean => 'Whole Bean';
+  String get whole_bean => 'Ganze Bohne';
 
   @override
-  String get ground_coffee => 'Ground';
+  String get ground_coffee => 'Gemahlen';
 
   @override
-  String get section_roast => 'Roast';
+  String get section_roast => 'Röstung';
 
   @override
-  String get roast_level_field => 'Roast Level';
+  String get roast_level_field => 'Röstgrad';
 
   @override
-  String get roast_medium_light => 'MEDIUM LIGHT';
+  String get roast_medium_light => 'MITTELHELL';
 
   @override
-  String get roast_medium_dark => 'MEDIUM DARK';
+  String get roast_medium_dark => 'MITTELDUNKEL';
 
   @override
   String get roast_filter => 'FILTER';
@@ -828,13 +828,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get roast_espresso => 'ESPRESSO';
 
   @override
-  String get custom_method_label => 'Custom Name';
+  String get custom_method_label => 'Benutzerdefinierter Name';
 
   @override
-  String get enter_name_placeholder => 'Enter name...';
+  String get enter_name_placeholder => 'Namen eingeben...';
 
   @override
-  String get decaf_sugar_cane => 'Sugar Cane';
+  String get decaf_sugar_cane => 'Zuckerrohr';
 
   @override
   String get decaf_swiss_water => 'Swiss Water';
@@ -843,23 +843,23 @@ class AppLocalizationsDe extends AppLocalizations {
   String get decaf_co2 => 'CO2';
 
   @override
-  String get decaf_mountain_water => 'Mountain Water';
+  String get decaf_mountain_water => 'Bergwasser';
 
   @override
-  String get decaf_other => 'Other';
+  String get decaf_other => 'Andere';
 
   @override
-  String get sensory_profile_1_5 => 'Sensory Profile (1-5)';
+  String get sensory_profile_1_5 => 'Sensorisches Profil (1-5)';
 
   @override
-  String get visualize_profile => 'Visualize Profile';
+  String get visualize_profile => 'Profil visualisieren';
 
   @override
-  String get lock_sensory => 'LOCK';
+  String get lock_sensory => 'SPERREN';
 
   @override
-  String get unlock_sensory => 'UNLOCK';
+  String get unlock_sensory => 'ENTSPERREN';
 
   @override
-  String get location_field => 'Location';
+  String get location_field => 'Standort';
 }

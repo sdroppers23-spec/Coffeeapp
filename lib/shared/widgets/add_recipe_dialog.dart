@@ -605,7 +605,7 @@ class _AddRecipeDialogState extends ConsumerState<AddRecipeDialog> {
                             const SizedBox(height: 20),
                             _buildTextField(
                               controller: _customMethodNameController,
-                              hint: 'Назва способу (напр. Hario Switch)',
+                              hint: ref.t('method_name_placeholder'),
                             ),
                             const SizedBox(height: 20),
                             Row(

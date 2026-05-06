@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../core/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vibration/vibration.dart';
 import 'package:go_router/go_router.dart';
@@ -9,7 +10,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
-import '../../core/l10n/app_localizations.dart';
 import '../../core/utils/responsive_utils.dart';
 import '../utils/sensory_utils.dart';
 import 'glass_container.dart';
@@ -650,7 +650,7 @@ class _InfoTab extends ConsumerWidget {
                   Expanded(
                     child: LotCompactStat(
                       label: ref.t('variety'),
-                      value: lot?.varieties ?? bean?.varieties ?? 'N/A',
+                      value: lot?.varieties ?? bean?.varieties ?? ref.t('not_available'),
                     ),
                   ),
                   Container(width: 1, height: 30, color: Colors.white10),
@@ -661,7 +661,7 @@ class _InfoTab extends ConsumerWidget {
                           lot?.altitude ??
                           (bean?.altitudeMin != null
                               ? '${bean!.altitudeMin}-${bean!.altitudeMax}m'
-                              : 'N/A'),
+                              : ref.t('not_available')),
                     ),
                   ),
                 ],
@@ -672,7 +672,7 @@ class _InfoTab extends ConsumerWidget {
                   Expanded(
                     child: LotCompactStat(
                       label: ref.t('process'),
-                      value: lot?.process ?? bean?.processMethod ?? 'N/A',
+                      value: lot?.process ?? bean?.processMethod ?? ref.t('not_available'),
                       onTap: () {
                         final processName =
                             (lot?.process ?? bean?.processMethod ?? '')
@@ -695,8 +695,8 @@ class _InfoTab extends ConsumerWidget {
                   Container(width: 1, height: 30, color: Colors.white10),
                   Expanded(
                     child: LotCompactStat(
-                      label: 'SCA SCORE',
-                      value: lot?.scaScore ?? bean?.scaScore ?? 'N/A',
+                      label: ref.t('sca_score'),
+                      value: lot?.scaScore ?? bean?.scaScore ?? ref.t('not_available'),
                     ),
                   ),
                 ],
@@ -766,7 +766,7 @@ class _InfoTab extends ConsumerWidget {
                     : null,
               ),
               _InfoRow(
-                label: 'SCA SCORE',
+                label: ref.t('sca_score'),
                 value: lot?.scaScore ?? bean?.scaScore,
               ),
             ],
@@ -1096,7 +1096,7 @@ class _InfoRow extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  (v == null || v.isEmpty) ? 'N/A' : v,
+                  (v == null || v.isEmpty) ? context.t('not_available') : v,
                   style: GoogleFonts.outfit(
                     color: Colors.white,
                     fontSize: 13,

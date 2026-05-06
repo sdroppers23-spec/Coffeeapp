@@ -37,13 +37,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   final List<Map<String, String>> _languages = [
-    {'code': 'en', 'name': 'English', 'flag': '🇺🇸'},
+    {'code': 'en', 'name': 'English',    'flag': '🇺🇸'},
     {'code': 'uk', 'name': 'Українська', 'flag': '🇺🇦'},
-    {'code': 'de', 'name': 'Deutsch', 'flag': '🇩🇪'},
-    {'code': 'fr', 'name': 'Français', 'flag': '🇫🇷'},
-    {'code': 'es', 'name': 'Español', 'flag': '🇪🇸'},
-    {'code': 'it', 'name': 'Italiano', 'flag': '🇮🇹'},
-    {'code': 'pt', 'name': 'Português', 'flag': '🇵🇹'},
+    {'code': 'de', 'name': 'Deutsch',    'flag': '🇩🇪'},
+    {'code': 'fr', 'name': 'Français',   'flag': '🇫🇷'},
+    {'code': 'es', 'name': 'Español',    'flag': '🇪🇸'},
+    {'code': 'it', 'name': 'Italiano',   'flag': '🇮🇹'},
+    {'code': 'pt', 'name': 'Português',  'flag': '🇵🇹'},
+    {'code': 'pl', 'name': 'Polski',     'flag': '🇵🇱'},
+    {'code': 'nl', 'name': 'Nederlands', 'flag': '🇳🇱'},
+    {'code': 'sv', 'name': 'Svenska',    'flag': '🇸🇪'},
+    {'code': 'tr', 'name': 'Türkçe',    'flag': '🇹🇷'},
+    {'code': 'ja', 'name': '日本語',      'flag': '🇯🇵'},
+    {'code': 'ko', 'name': '한국어',      'flag': '🇰🇷'},
+    {'code': 'zh', 'name': '中文',        'flag': '🇨🇳'},
+    {'code': 'ar', 'name': 'العربية',    'flag': '🇸🇦'},
   ];
 
   Future<void> _signOut() async {

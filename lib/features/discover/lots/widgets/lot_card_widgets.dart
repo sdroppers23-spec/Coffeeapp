@@ -14,6 +14,7 @@ import 'package:vibration/vibration.dart';
 import '../../../../shared/widgets/glass_swipe_wrapper.dart';
 import '../../../../shared/widgets/lot_detail_widgets.dart';
 import '../../../../core/providers/preferences_provider.dart';
+import '../../../../shared/utils/entity_localization.dart';
 
 class MyLotGridCard extends ConsumerWidget {
   final CoffeeLotDto lot;
@@ -195,7 +196,7 @@ class MyLotGridCard extends ConsumerWidget {
                 const SizedBox(height: 12),
                 // Coffee Name
                 Text(
-                  lot.coffeeName ?? 'Unnamed',
+                  lot.coffeeName ?? ref.t('unnamed_label'),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.outfit(
@@ -208,7 +209,7 @@ class MyLotGridCard extends ConsumerWidget {
                 const SizedBox(height: 4),
                 // Roastery Name
                 Text(
-                  (lot.roasteryName ?? 'Personal').toUpperCase(),
+                  (lot.roasteryName ?? ref.t('personal_roastery_label')).toUpperCase(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.outfit(
@@ -260,7 +261,7 @@ class MyLotGridCard extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
-                    '${lot.originCountry} • ${lot.process}',
+                    '${lot.originCountry} • ${lot.process?.localizeProcess(ref) ?? ''}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.outfit(
@@ -383,7 +384,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.lot.coffeeName ?? 'Unnamed',
+                        widget.lot.coffeeName ?? ref.t('unnamed_label'),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.outfit(
@@ -578,7 +579,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard>
                                 widget.lot.roastLevel!.isNotEmpty)
                               _TagChip(
                                 icon: Icons.local_fire_department_rounded,
-                                text: widget.lot.roastLevel!.toUpperCase(),
+                                text: widget.lot.roastLevel!.localizeRoast(ref).toUpperCase(),
                                 theme: theme,
                                 color: theme.colorScheme.primary.withValues(
                                   alpha: 0.2,
@@ -595,7 +596,7 @@ class _MyLotListCardState extends ConsumerState<MyLotListCard>
                                 widget.lot.process!.isNotEmpty)
                               _TagChip(
                                 icon: Icons.water_drop_outlined,
-                                text: widget.lot.process,
+                                text: widget.lot.process?.localizeProcess(ref) ?? '',
                                 theme: theme,
                               ),
                           ],
@@ -948,7 +949,7 @@ class _LotPropertyGrid extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pref = ref.watch(preferencesProvider);
 
-    String altitudeText = 'N/A';
+    String altitudeText = ref.t('not_available');
     if (lot.altitude != null && lot.altitude!.isNotEmpty) {
       final m = double.tryParse(lot.altitude!);
       if (m != null) {
@@ -982,7 +983,7 @@ class _LotPropertyGrid extends ConsumerWidget {
         const SizedBox(height: 12),
         _buildGrid([
           _InfoItem(label: ref.t('varieties'), value: lot.varieties),
-          _InfoItem(label: ref.t('process'), value: lot.process),
+          _InfoItem(label: ref.t('process'), value: lot.process?.localizeProcess(ref)),
           _InfoItem(
             label: ref.t('decaf'),
             value: lot.isDecaf ? ref.t('yes') : ref.t('no'),
@@ -996,7 +997,7 @@ class _LotPropertyGrid extends ConsumerWidget {
         _buildSectionHeader(ref.t('roast_purchase_section')),
         const SizedBox(height: 12),
         _buildGrid([
-          _InfoItem(label: ref.t('roast_level_label'), value: lot.roastLevel),
+          _InfoItem(label: ref.t('roast_level_label'), value: lot.roastLevel?.localizeRoast(ref)),
           _InfoItem(
             label: ref.t('roast_date_label'),
             value: lot.roastDate?.toString().split(' ')[0],
@@ -1070,14 +1071,14 @@ class _LotPropertyGrid extends ConsumerWidget {
   }
 }
 
-class _InfoItem extends StatelessWidget {
+ class _InfoItem extends ConsumerWidget {
   final String label;
   final String? value;
 
   const _InfoItem({required this.label, this.value});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1091,7 +1092,7 @@ class _InfoItem extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          (value == null || value!.isEmpty) ? 'N/A' : value!,
+          (value == null || value!.isEmpty) ? ref.t('not_available') : value!,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: GoogleFonts.outfit(

@@ -21,6 +21,25 @@ class FlavorDescriptions {
         'zh': '茉莉或玫瑰般的芬芳。',
         'ar': 'روائح زهرية مثل الياسمين أو الورد.',
       },
+      'wheel_sub_floral': {
+        'en':
+            'Distinct and clear floral aromas. These are typically primary aromas found in very fresh or lightly roasted coffees. Characteristic of high-quality Ethiopian and Panamanian lots.',
+        'uk':
+            'Виразні та чіткі квіткові аромати. Зазвичай це первинні аромати, що зустрічаються в дуже свіжій каві або каві світлого обсмажування. Характерно для високоякісних ефіопських та панамських лотів.',
+        'de': 'Ausgeprägte und klare blumige Aromen.',
+        'fr': 'Arômes floraux distincts et clairs.',
+        'es': 'Aromas florales distintos y claros.',
+        'it': 'Aromi floreali distinti e chiari.',
+        'pt': 'Aromas florais distintos e claros.',
+        'pl': 'Wyraźne i jasne aromaty kwiatowe.',
+        'nl': 'Duidelijke en heldere bloemige aroma\'s.',
+        'sv': 'Tydliga och klara blommiga aromer.',
+        'tr': 'Belirgin ve net çiçeksi aromalar.',
+        'ja': 'はっきりとした明確なフローラルな香り。',
+        'ko': '뚜렷하고 선명한 꽃향기입니다.',
+        'zh': '独特而清晰的花香。',
+        'ar': 'روائح زهرية متميزة وواضحة.',
+      },
       'wheel_cat_fruity': {
         'en':
             'A wide range of sweet and tart notes from berries to stone fruits. These are typically associated with organic acids like citric and malic, often enhanced by natural or anaerobic processing. Common in African and Central American coffees.',
@@ -1738,6 +1757,7 @@ class FlavorDescriptions {
     };
 
     return descriptions[key]?[locale] ??
+        descriptions[key]?['en'] ??
         (locale == 'uk'
             ? 'Опис скоро з\'явиться...'
             : 'Description coming soon...');

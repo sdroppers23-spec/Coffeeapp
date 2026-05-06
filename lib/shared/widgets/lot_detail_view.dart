@@ -11,6 +11,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/database/dtos.dart';
 import '../../core/utils/responsive_utils.dart';
+import '../utils/entity_localization.dart';
 import '../utils/sensory_utils.dart';
 import 'glass_container.dart';
 import 'sensory_radar_chart.dart';
@@ -108,9 +109,9 @@ class _LotDetailViewState extends ConsumerState<LotDetailView>
                 liveBean?.varieties ??
                 widget.lot?.coffeeName ??
                 widget.entry?.fullDisplayName ??
-                'Unnamed';
+                ref.t('unnamed_label');
             final String roasteryName =
-                liveLot?.roasteryName ?? 'Specialty Roaster';
+                liveLot?.roasteryName ?? ref.t('specialty_roaster_label');
 
             // Priority: Live Lot Image -> Live Bean Image -> Entry Image -> Flag Fallback
             final String? imageUrl =
@@ -672,7 +673,7 @@ class _InfoTab extends ConsumerWidget {
                   Expanded(
                     child: LotCompactStat(
                       label: ref.t('process'),
-                      value: lot?.process ?? bean?.processMethod ?? ref.t('not_available'),
+                      value: (lot?.process ?? bean?.processMethod)?.localizeProcess(ref) ?? ref.t('not_available'),
                       onTap: () {
                         final processName =
                             (lot?.process ?? bean?.processMethod ?? '')
@@ -744,7 +745,7 @@ class _InfoTab extends ConsumerWidget {
               ),
               _InfoRow(
                 label: ref.t('process'),
-                value: lot?.process ?? bean?.processMethod,
+                value: (lot?.process ?? bean?.processMethod)?.localizeProcess(ref),
                 onTap: (lot?.process ?? bean?.processMethod) != null
                     ? () => _showProcessInfoSheet(
                         context,
@@ -785,7 +786,7 @@ class _InfoTab extends ConsumerWidget {
                 label: ref.t('roast_country'),
                 value: lot?.roasteryCountry,
               ),
-              _InfoRow(label: ref.t('roast_level'), value: lot?.roastLevel),
+              _InfoRow(label: ref.t('roast_level'), value: lot?.roastLevel?.localizeRoast(ref)),
               _InfoRow(
                 label: ref.t('roast_date'),
                 value: lot?.roastDate?.toString().split(' ')[0],

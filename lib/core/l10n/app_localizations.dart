@@ -102,7 +102,7 @@ class AppLocalizations {
     return value;
   }
 
-  static const Map<String, Map<String, String>> _translations = {
+      static const Map<String, Map<String, String>> _translations = {
     'en': {
       'discover': 'Discover',
       'no_lots_linked': 'No lots linked',
@@ -886,6 +886,21 @@ class AppLocalizations {
       'deselect_all': 'Deselect All',
       'toast_deleted': 'deleted',
       'details': 'Details',
+      'process_label': 'Processing',
+      'origin_label': 'Origin',
+      'grinder_comandante': 'Comandante',
+      'grinder_timemore': 'Timemore',
+      'grinder_fellow': 'Fellow',
+      'grinder_1zpresso': '1Zpresso',
+      'grinder_baratza': 'Baratza',
+      'grinder_wilfa': 'Wilfa',
+      'grinder_mahlkonig': 'Mahlkönig',
+      'grinder_mazzer': 'Mazzer',
+      'grinder_ek43': 'EK43',
+      'grinder_fellow_ode': 'Fellow Ode',
+      'personal_roastery_label': 'Personal',
+      'specialty_roaster_label': 'Specialty Roaster',
+      'unnamed_label': 'Unnamed',
     },
     'uk': {
       'discover': 'Дослідити',
@@ -1142,7 +1157,6 @@ class AppLocalizations {
       'sensory_honey_desc': 'Липкий та збалансований',
       'add_lot': 'Новий лот',
       'edit_lot': 'Редагування',
-
       'wheel_cat_floral': 'Квіткові',
       'wheel_cat_fruity': 'Фруктовї',
       'wheel_cat_sour_fermented': 'Кислі/Ферментовані',
@@ -1234,7 +1248,6 @@ class AppLocalizations {
       'wheel_note_stale': 'Залежалий',
       'wheel_note_musty': 'Пліснявий',
       'wheel_note_dusty': 'Пильний',
-
       'no_recipes_for_lot': 'Рецептів для цього лоту поки немає.',
       'process_detail': 'Деталі обробки',
       'process_washed_label': 'Мита',
@@ -1271,12 +1284,10 @@ class AppLocalizations {
       'coffee_and_water': 'Кава та вода',
       'retail': 'Роздріб',
       'wholesale': 'Опт',
-
       'total_water': 'Загальна кількість води',
       'pour_schedule': 'Графік вливань',
       'number_of_pours': 'Кількість вливань',
       'notes_hint': 'Примітки',
-
       'roastery_name': 'Назва обсмажки',
       'coffee_name': 'Назва кави',
       'variety': 'Різновид',
@@ -1384,7 +1395,6 @@ class AppLocalizations {
       'desc_note_chocolate':
           'Глибокі, гірко-солодкі ноти від молочного до темного шоколаду.',
       'desc_note_hazelnut': "М'яка масляниста солодкість горіха.",
-
       'process_natural_character': 'Солодкість, ягідність, тіло',
       'process_washed_character': 'Чистота, кислотність, елегантність',
       'process_honey_character': 'Баланс, сиропність, солодкість',
@@ -1395,7 +1405,6 @@ class AppLocalizations {
       'process_yeast_character': 'Вишуканість, ароматність, контроль',
       'process_koji_character': 'Умамі, глибока солодкість, глибина',
       'process_wet_hulled_character': 'Землистість, спеції, щільне тіло',
-
       'process_natural_desc':
           '### Етап 1: Сортування\nЦілі ягоди розкладають на африканських ліжках.\n### Етап 2: Сушка у ягоді\nТриває 2-4 тижні. Ягода засихає, віддаючи всі цукри зерну всередині.\n### Етап 3: Халлінг\nСуха оболонка знімається лише після повної сушки. Дає солодку чашку з низькою кислотністю.',
       'process_washed_desc':
@@ -1416,7 +1425,6 @@ class AppLocalizations {
           '### Японська технологія\nВикористання благородної плісняви Aspergillus oryzae (Коджі).\n### Результат\nКоджі розщеплює складні вуглеводи та білки. Дає надзвичайну солодкість, глибину та легкий умамі-присмак.',
       'process_wet_hulled_desc':
           '### Традиційний метод Індонезії (Giling Basah)\nШкірку знімають при дуже високій вологості (30-40%).\n### Результат\nЗерно сушиться без оболонки. Це створює унікальний профіль: низька кислотність, щільне тіло, ноти спецій та шоколаду.',
-
       'process_natural_extended':
           'Найпростіший і найдавніший метод. Кава сушиться цілими ягодами на сонці. Під час сушіння цукри з м’якоті переходять у зерно. Це дає каві високу солодкість, щільне тіло та виражені ноти фруктів, ягід або навіть вина.',
       'process_washed_extended':
@@ -1451,8 +1459,6 @@ class AppLocalizations {
           'Землисті та пікантні ноти, які часто зустрічаються в індонезійській або деякій бразильській каві.',
       'desc_note_forest': 'Смолисті, деревні та ноти вологого ґрунту.',
       'desc_note_tobacco': 'Сухі, димні та злегка солодкі трав\'яні ноти.',
-
-      // Toasts
       'toast_added_to_favorites': 'Додано до обраного',
       'toast_removed_from_favorites': 'Видалено з обраного',
       'toast_recipe_deleted': 'Рецепт видалено',
@@ -1465,11 +1471,9 @@ class AppLocalizations {
       'toast_lot_added': 'Лот додано',
       'toast_photo_saved_locally': 'Фото збережено локально',
       'error_saving_photo': 'Помилка збереження фото',
-
       'save_lot_confirmation_title': 'Зберегти зміни?',
       'save_lot_confirmation_desc':
           'Бажаєте зберегти всі зміни цього кавового лоту?',
-
       'toast_lot_restored': 'Лот відновлено',
       'toast_lots_deleted': 'Лоти видалено',
       'toast_lots_archived': 'Лоти архівовано',
@@ -1486,7 +1490,6 @@ class AppLocalizations {
       'delete_confirm_batch_message':
           'Ви впевнені, що хочете видалити {count} вибраних лотів?',
       'toast_select_second_lot': 'Оберіть другий лот для порівняння',
-
       'delete': 'Видалити',
       'cancel': 'Скасувати',
       'undo': 'Скасувати',
@@ -1674,6 +1677,21 @@ class AppLocalizations {
       'limit_reached': 'Ліміт досягнуто',
       'deselect_all': 'Зняти вибір',
       'toast_deleted': 'видалено',
+      'process_label': 'Метод обробки',
+      'origin_label': 'Походження',
+      'grinder_comandante': 'Comandante',
+      'grinder_timemore': 'Timemore',
+      'grinder_fellow': 'Fellow',
+      'grinder_1zpresso': '1Zpresso',
+      'grinder_baratza': 'Baratza',
+      'grinder_wilfa': 'Wilfa',
+      'grinder_mahlkonig': 'Mahlkönig',
+      'grinder_mazzer': 'Mazzer',
+      'grinder_ek43': 'EK43',
+      'grinder_fellow_ode': 'Fellow Ode',
+      'personal_roastery_label': 'Власна обсмажка',
+      'specialty_roaster_label': 'Спешелті обсмажчик',
+      'unnamed_label': 'Без назви',
     },
     'de': {
       'discover': 'Entdecken',
@@ -2444,6 +2462,21 @@ class AppLocalizations {
       'deselect_all': 'Auswahl aufheben',
       'toast_deleted': 'gelöscht',
       'details': 'Details',
+      'process_label': 'Verarbeitung',
+      'origin_label': 'Herkunft',
+      'grinder_comandante': 'Comandante',
+      'grinder_timemore': 'Timemore',
+      'grinder_fellow': 'Fellow',
+      'grinder_1zpresso': '1Zpresso',
+      'grinder_baratza': 'Baratza',
+      'grinder_wilfa': 'Wilfa',
+      'grinder_mahlkonig': 'Mahlkönig',
+      'grinder_mazzer': 'Mazzer',
+      'grinder_ek43': 'EK43',
+      'grinder_fellow_ode': 'Fellow Ode',
+      'personal_roastery_label': 'Eigene Röstung',
+      'specialty_roaster_label': 'Specialty Röster',
+      'unnamed_label': 'Unbenannt',
     },
     'fr': {
       'discover': 'Découvrir',
@@ -3209,6 +3242,21 @@ class AppLocalizations {
       'deselect_all': 'Tout désélectionner',
       'toast_deleted': 'supprimé',
       'details': 'Détails',
+      'process_label': 'Traitement',
+      'origin_label': 'Origine',
+      'grinder_comandante': 'Comandante',
+      'grinder_timemore': 'Timemore',
+      'grinder_fellow': 'Fellow',
+      'grinder_1zpresso': '1Zpresso',
+      'grinder_baratza': 'Baratza',
+      'grinder_wilfa': 'Wilfa',
+      'grinder_mahlkonig': 'Mahlkönig',
+      'grinder_mazzer': 'Mazzer',
+      'grinder_ek43': 'EK43',
+      'grinder_fellow_ode': 'Fellow Ode',
+      'personal_roastery_label': 'Torréfaction personnelle',
+      'specialty_roaster_label': 'Torréfacteur de spécialité',
+      'unnamed_label': 'Sans nom',
     },
     'es': {
       'discover': 'Descubrir',
@@ -3972,6 +4020,21 @@ class AppLocalizations {
       'deselect_all': 'Deseleccionar todo',
       'toast_deleted': 'eliminado',
       'details': 'Detalles',
+      'process_label': 'Proceso',
+      'origin_label': 'Origen',
+      'grinder_comandante': 'Comandante',
+      'grinder_timemore': 'Timemore',
+      'grinder_fellow': 'Fellow',
+      'grinder_1zpresso': '1Zpresso',
+      'grinder_baratza': 'Baratza',
+      'grinder_wilfa': 'Wilfa',
+      'grinder_mahlkonig': 'Mahlkönig',
+      'grinder_mazzer': 'Mazzer',
+      'grinder_ek43': 'EK43',
+      'grinder_fellow_ode': 'Fellow Ode',
+      'personal_roastery_label': 'Tueste personal',
+      'specialty_roaster_label': 'Tostador de especialidad',
+      'unnamed_label': 'Sin nombre',
     },
 'it': {
       'discover': 'Scopri',
@@ -4755,6 +4818,9 @@ class AppLocalizations {
       'deselect_all': 'Deseleziona tutto',
       'toast_deleted': 'eliminato',
       'details': 'Dettagli',
+      'altitude': 'Altitudine',
+      'yes': 'Sì',
+      'no': 'No',
     },
 'pt': {
       'discover': 'Descobrir',
@@ -5538,6 +5604,9 @@ class AppLocalizations {
       'deselect_all': 'Desmarcar Tudo',
       'toast_deleted': 'excluído',
       'details': 'Detalhes',
+      'altitude': 'Altitude',
+      'yes': 'Sim',
+      'no': 'Não',
     },
 'pl': {
       'discover': 'Odkrywaj',
@@ -6321,6 +6390,9 @@ class AppLocalizations {
       'deselect_all': 'Odznacz wszystko',
       'toast_deleted': 'usunięto',
       'details': 'Szczegóły',
+      'altitude': 'Wysokość',
+      'yes': 'Tak',
+      'no': 'Nie',
     },
 'nl': {
       'discover': 'Ontdekken',
@@ -7104,6 +7176,9 @@ class AppLocalizations {
       'deselect_all': 'Alles Deselecteren',
       'toast_deleted': 'verwijderd',
       'details': 'Details',
+      'altitude': 'Hoogte',
+      'yes': 'Ja',
+      'no': 'Nee',
     },
 'sv': {
       'discover': 'Upptäck',
@@ -7887,6 +7962,9 @@ class AppLocalizations {
       'deselect_all': 'Avmarkera alla',
       'toast_deleted': 'borttagen',
       'details': 'Detaljer',
+      'altitude': 'Höjd',
+      'yes': 'Ja',
+      'no': 'Nej',
     },
 'tr': {
       'discover': 'Keşfet',
@@ -8670,6 +8748,9 @@ class AppLocalizations {
       'deselect_all': 'Tüm Seçimleri Kaldır',
       'toast_deleted': 'silindi',
       'details': 'Detaylar',
+      'altitude': 'Rakım',
+      'yes': 'Evet',
+      'no': 'Hayır',
     },
 'ja': {
       'discover': '見つける',
@@ -9453,6 +9534,9 @@ class AppLocalizations {
       'deselect_all': '選択を解除',
       'toast_deleted': '削除しました',
       'details': '詳細',
+      'altitude': '標高',
+      'yes': 'はい',
+      'no': 'いいえ',
     },
 'ko': {
       'discover': '찾아보기',
@@ -10212,6 +10296,9 @@ class AppLocalizations {
       'deselect_all': '선택 해제',
       'toast_deleted': '삭제되었습니다',
       'details': '상세 정보',
+      'altitude': '고도',
+      'yes': '예',
+      'no': '아니오',
     },
 'zh': {
       'discover': '探索',
@@ -10962,6 +11049,9 @@ class AppLocalizations {
       'deselect_all': '取消全选',
       'toast_deleted': '已删除',
       'details': '详情',
+      'altitude': '海拔',
+      'yes': '是',
+      'no': '否',
     },
 'ar': {
       'discover': 'اكتشاف',
@@ -11731,7 +11821,12 @@ class AppLocalizations {
       'deselect_all': 'إلغاء تحديد الكل',
       'toast_deleted': 'تم الحذف',
       'details': 'تفاصيل',
+      'altitude': 'الارتفاع',
+      'yes': 'نعم',
+      'no': 'لا',
     },
-  };
+  
+
+    };
 
 }

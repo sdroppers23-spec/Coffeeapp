@@ -116,15 +116,28 @@ extension _RecipeGrinderSection on _AddRecipeDialogState {
               borderSide: BorderSide.none,
             ),
           ),
-          items:
-              ['Comandante', 'EK43', 'Fellow Ode', 'Wilfa', 'Timemore', 'Other']
-                  .map(
-                    (e) => DropdownMenuItem(
-                      value: e,
-                      child: Text(e == 'Other' ? ref.t('other') : e),
-                    ),
-                  )
-                  .toList(),
+          items: [
+            'Comandante',
+            'EK43',
+            'Fellow Ode',
+            'Wilfa',
+            'Timemore',
+            'Other'
+          ].map((e) {
+            String label;
+            if (e == 'Other') {
+              label = ref.t('other');
+            } else {
+              // Map to localization key
+              final key = 'grinder_${e.toLowerCase().replaceAll(' ', '_')}';
+              final translated = ref.t(key);
+              label = translated != key ? translated : e;
+            }
+            return DropdownMenuItem(
+              value: e,
+              child: Text(label),
+            );
+          }).toList(),
           onChanged: (val) => _updateState(() {
             _grinderNameController.text = val!;
             _isOtherGrinder = val == 'Other';

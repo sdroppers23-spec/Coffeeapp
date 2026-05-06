@@ -409,13 +409,9 @@ class EncyclopediaLotListCard extends ConsumerWidget {
                     const SizedBox(height: 12),
                     Row(
                       children: [
-                        Flexible(
-                          child: _TraitBadge(text: entry.processMethod),
-                        ),
+                        Flexible(child: _TraitBadge(text: entry.processMethod)),
                         const SizedBox(width: 6),
-                        Flexible(
-                          child: _TraitBadge(text: entry.roastLevel),
-                        ),
+                        Flexible(child: _TraitBadge(text: entry.roastLevel)),
                       ],
                     ),
                   ],

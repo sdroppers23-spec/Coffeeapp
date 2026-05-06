@@ -96,225 +96,230 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
             ),
           ),
           child: SafeArea(
-          top: false,
-          child: NestedScrollView(
-            headerSliverBuilder: (context, innerBoxIsScrolled) => [
-              SliverAppBar(
-                expandedHeight: expandedHeight,
-                pinned: true,
-                stretch: true,
-                backgroundColor: Colors.black,
-                flexibleSpace: FlexibleSpaceBar(
-                  stretchModes: const [
-                    StretchMode.zoomBackground,
-                    StretchMode.blurBackground,
-                  ],
-                  background: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      _buildHeroImage(currentRecipe.imageUrl),
-                      const DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [Colors.transparent, Colors.black87],
+            top: false,
+            child: NestedScrollView(
+              headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                SliverAppBar(
+                  expandedHeight: expandedHeight,
+                  pinned: true,
+                  stretch: true,
+                  backgroundColor: Colors.black,
+                  flexibleSpace: FlexibleSpaceBar(
+                    stretchModes: const [
+                      StretchMode.zoomBackground,
+                      StretchMode.blurBackground,
+                    ],
+                    background: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        _buildHeroImage(currentRecipe.imageUrl),
+                        const DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [Colors.transparent, Colors.black87],
+                            ),
                           ),
                         ),
-                      ),
-                      Positioned(
-                        bottom: 25,
-                        left: context.isTablet ? 40 : 20,
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 800),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Golden Tablet Header
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 14,
-                                  vertical: 6,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFC8A96E),
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: const Color(
-                                        0xFFC8A96E,
-                                      ).withValues(alpha: 0.3),
-                                      blurRadius: 12,
-                                      offset: const Offset(0, 4),
+                        Positioned(
+                          bottom: 25,
+                          left: context.isTablet ? 40 : 20,
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 800),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Golden Tablet Header
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 14,
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFC8A96E),
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: const Color(
+                                          0xFFC8A96E,
+                                        ).withValues(alpha: 0.3),
+                                        blurRadius: 12,
+                                        offset: const Offset(0, 4),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Text(
+                                    currentRecipe.name,
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w900,
+                                      color: Colors.black,
+                                      letterSpacing: 0.8,
                                     ),
-                                  ],
-                                ),
-                                child: Text(
-                                  currentRecipe.name,
-                                  style: GoogleFonts.outfit(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w900,
-                                    color: Colors.black,
-                                    letterSpacing: 0.8,
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                leading: IconButton(
-                  icon: const CircleAvatar(
-                    backgroundColor: Colors.black26,
-                    child: Icon(
-                      Icons.arrow_back_ios_new,
-                      color: Colors.white,
-                      size: 18,
+                      ],
                     ),
                   ),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-                actions: [
-                  IconButton(
+                  leading: IconButton(
                     icon: const CircleAvatar(
                       backgroundColor: Colors.black26,
-                      child: Icon(Icons.add_rounded, color: Colors.white),
+                      child: Icon(
+                        Icons.arrow_back_ios_new,
+                        color: Colors.white,
+                        size: 18,
+                      ),
                     ),
-                    onPressed: () async {
-                      final result = await showDialog<bool>(
-                        context: context,
-                        builder: (context) => AddRecipeDialog(
-                          lotId: '',
-                          initialMethod: widget.recipe.methodKey,
-                          recipeSegment: RecipeSegment.alternative,
-                        ),
-                      );
-                      if (result == true) {
-                        ref.invalidate(
-                          alternativeRecipesForMethodProvider(
-                            widget.recipe.methodKey,
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  actions: [
+                    IconButton(
+                      icon: const CircleAvatar(
+                        backgroundColor: Colors.black26,
+                        child: Icon(Icons.add_rounded, color: Colors.white),
+                      ),
+                      onPressed: () async {
+                        final result = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AddRecipeDialog(
+                            lotId: '',
+                            initialMethod: widget.recipe.methodKey,
+                            recipeSegment: RecipeSegment.alternative,
                           ),
                         );
-                        ref.invalidate(globalCustomRecipesProvider);
-                      }
-                    },
-                  ),
-                  const SizedBox(width: 8),
-                ],
-              ),
-              SliverPersistentHeader(
-                pinned: true,
-                delegate: _StickyHeaderDelegate(
-                  recipe: currentRecipe,
-                  t: ref.t,
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // About Method Header
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.info_outline_rounded,
-                            color: Color(0xFFC8A96E),
-                            size: 18,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            ref.t('about_method').toUpperCase(),
-                            style: GoogleFonts.outfit(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w900,
-                              color: const Color(0xFFC8A96E),
-                              letterSpacing: 1.2,
+                        if (result == true) {
+                          ref.invalidate(
+                            alternativeRecipesForMethodProvider(
+                              widget.recipe.methodKey,
                             ),
-                          ),
-                          const Spacer(),
-                          if (currentRecipe.description.length > 100 ||
-                              (currentRecipe.contentHtml?.isNotEmpty ?? false))
-                            GestureDetector(
-                              onTap: () =>
-                                  _showFullDescription(context, currentRecipe),
-                              child: Container(
-                                padding: const EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.05),
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: Colors.white.withValues(alpha: 0.1),
-                                  ),
-                                ),
-                                child: const Icon(
-                                  Icons.open_in_full_rounded,
-                                  color: Color(0xFFC8A96E),
-                                  size: 14,
-                                ),
+                          );
+                          ref.invalidate(globalCustomRecipesProvider);
+                        }
+                      },
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                ),
+                SliverPersistentHeader(
+                  pinned: true,
+                  delegate: _StickyHeaderDelegate(
+                    recipe: currentRecipe,
+                    t: ref.t,
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // About Method Header
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.info_outline_rounded,
+                              color: Color(0xFFC8A96E),
+                              size: 18,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              ref.t('about_method').toUpperCase(),
+                              style: GoogleFonts.outfit(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w900,
+                                color: const Color(0xFFC8A96E),
+                                letterSpacing: 1.2,
                               ),
                             ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      // Description or Content HTML
-                      if (currentRecipe.contentHtml?.isNotEmpty ?? false)
-                        Html(
-                          data: CoffeeTextProcessor.process(
-                            currentRecipe.contentHtml ?? '',
-                          ),
-                          style:
-                              CoffeeTextProcessor.getHtmlStyles(
-                                baseFontSize: 15,
-                              )..addAll({
-                                'html': Style(
-                                  margin: Margins.zero,
-                                  padding: HtmlPaddings.zero,
+                            const Spacer(),
+                            if (currentRecipe.description.length > 100 ||
+                                (currentRecipe.contentHtml?.isNotEmpty ??
+                                    false))
+                              GestureDetector(
+                                onTap: () => _showFullDescription(
+                                  context,
+                                  currentRecipe,
                                 ),
-                                'body': Style(
-                                  margin: Margins.zero,
-                                  padding: HtmlPaddings.zero,
-                                  fontSize: FontSize(15),
-                                  lineHeight: const LineHeight(1.6),
-                                  color: Colors.white.withValues(alpha: 0.7),
-                                  fontFamily: 'Outfit',
-                                  maxLines: 3,
-                                  textOverflow: TextOverflow.ellipsis,
+                                child: Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withValues(alpha: 0.05),
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                    ),
+                                  ),
+                                  child: const Icon(
+                                    Icons.open_in_full_rounded,
+                                    color: Color(0xFFC8A96E),
+                                    size: 14,
+                                  ),
                                 ),
-                              }),
-                        )
-                      else if (currentRecipe.description.isNotEmpty)
-                        Text(
-                          currentRecipe.description,
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.outfit(
-                            fontSize: 15,
-                            color: Colors.white.withValues(alpha: 0.7),
-                            height: 1.6,
-                          ),
+                              ),
+                          ],
                         ),
-                    ],
+                        const SizedBox(height: 8),
+                        // Description or Content HTML
+                        if (currentRecipe.contentHtml?.isNotEmpty ?? false)
+                          Html(
+                            data: CoffeeTextProcessor.process(
+                              currentRecipe.contentHtml ?? '',
+                            ),
+                            style:
+                                CoffeeTextProcessor.getHtmlStyles(
+                                  baseFontSize: 15,
+                                )..addAll({
+                                  'html': Style(
+                                    margin: Margins.zero,
+                                    padding: HtmlPaddings.zero,
+                                  ),
+                                  'body': Style(
+                                    margin: Margins.zero,
+                                    padding: HtmlPaddings.zero,
+                                    fontSize: FontSize(15),
+                                    lineHeight: const LineHeight(1.6),
+                                    color: Colors.white.withValues(alpha: 0.7),
+                                    fontFamily: 'Outfit',
+                                    maxLines: 3,
+                                    textOverflow: TextOverflow.ellipsis,
+                                  ),
+                                }),
+                          )
+                        else if (currentRecipe.description.isNotEmpty)
+                          Text(
+                            currentRecipe.description,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.outfit(
+                              fontSize: 15,
+                              color: Colors.white.withValues(alpha: 0.7),
+                              height: 1.6,
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-            body: Transform.translate(
-              offset: const Offset(0, -25),
-              child: CustomRecipeListTab(
-                methodKey: widget.recipe.methodKey,
-                showFab: false,
+              ],
+              body: Transform.translate(
+                offset: const Offset(0, -25),
+                child: CustomRecipeListTab(
+                  methodKey: widget.recipe.methodKey,
+                  showFab: false,
+                ),
               ),
             ),
           ),
         ),
       ),
-      )
-    );
+    );
   }
 
   Widget _buildHeroImage(String url) {

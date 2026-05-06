@@ -14,7 +14,6 @@ import '../../core/database/dtos.dart';
 import '../../core/utils/responsive_utils.dart';
 import 'package:go_router/go_router.dart';
 
-
 class BrewingViewModeNotifier extends Notifier<bool> {
   @override
   bool build() => true; // true = grid, false = list
@@ -92,104 +91,105 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
         backgroundColor: Colors.transparent,
         extendBody: true,
         extendBodyBehindAppBar: true,
-      appBar: PremiumAppBar(
-        title: ref.t('alternative'),
-        actions: [
-          ListenableBuilder(
-            listenable: _tabController,
-            builder: (context, _) {
-              if (_tabController.index != 0) return const SizedBox.shrink();
-              return IconButton(
-                icon: Icon(
-                  ref.watch(brewingViewModeProvider)
-                      ? Icons.view_list_rounded
-                      : Icons.grid_view_rounded,
-                  color: accentColor,
-                ),
-                onPressed: () =>
-                    ref.read(brewingViewModeProvider.notifier).toggle(),
-              );
-            },
+        appBar: PremiumAppBar(
+          title: ref.t('alternative'),
+          actions: [
+            ListenableBuilder(
+              listenable: _tabController,
+              builder: (context, _) {
+                if (_tabController.index != 0) return const SizedBox.shrink();
+                return IconButton(
+                  icon: Icon(
+                    ref.watch(brewingViewModeProvider)
+                        ? Icons.view_list_rounded
+                        : Icons.grid_view_rounded,
+                    color: accentColor,
+                  ),
+                  onPressed: () =>
+                      ref.read(brewingViewModeProvider.notifier).toggle(),
+                );
+              },
+            ),
+            const ProfileButton(),
+          ],
+          bottom: TabBar(
+            controller: _tabController,
+            isScrollable: false,
+            dividerColor: Colors.transparent,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            indicator: BoxDecoration(
+              borderRadius: BorderRadius.circular(24),
+              color: accentColor,
+            ),
+            tabs: [
+              Tab(text: ref.t('brewing_methods')),
+              Tab(text: ref.t('my_recipes')),
+            ],
           ),
-          const ProfileButton(),
-        ],
-        bottom: TabBar(
-          controller: _tabController,
-          isScrollable: false,
-          dividerColor: Colors.transparent,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          indicator: BoxDecoration(
-            borderRadius: BorderRadius.circular(24),
-            color: accentColor,
-          ),
-          tabs: [
-            Tab(text: ref.t('brewing_methods')),
-            Tab(text: ref.t('my_recipes')),
+        ),
+        floatingActionButton: ListenableBuilder(
+          listenable: _tabController,
+          builder: (context, _) {
+            final isNavVisible = ref.watch(navBarVisibleProvider);
+            final navHeight = ref.watch(navBarHeightProvider);
+            return _tabController.index == 1
+                ? Padding(
+                    padding: EdgeInsets.only(
+                      bottom: isNavVisible
+                          ? navHeight + (context.isTablet ? 8 : 4)
+                          : 16,
+                    ),
+                    child: FloatingActionButton.extended(
+                      onPressed: () async {
+                        final result = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => const AddRecipeDialog(
+                            recipeSegment: RecipeSegment.alternative,
+                          ),
+                        );
+                        if (result == true) {
+                          ref.invalidate(alternativeRecipesProvider);
+                          ref.invalidate(globalCustomRecipesProvider);
+                        }
+                      },
+                      icon: const Icon(Icons.add_rounded),
+                      label: Text(
+                        ref.t('add_recipe'),
+                        style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+                      ),
+                      backgroundColor: const Color(0xFFC8A96E),
+                      foregroundColor: Colors.black,
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                  )
+                : const SizedBox.shrink();
+          },
+        ),
+        body: Stack(
+          children: [
+            Positioned.fill(
+              child: Image.asset(
+                'assets/images/Alternative wall.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+            Positioned.fill(
+              child: Container(color: Colors.black.withValues(alpha: 0.6)),
+            ),
+            TabBarView(
+              controller: _tabController,
+              children: const [
+                _BrewingMethodsContent(),
+                GlobalCustomRecipeList(),
+              ],
+            ),
           ],
         ),
       ),
-      floatingActionButton: ListenableBuilder(
-        listenable: _tabController,
-        builder: (context, _) {
-          final isNavVisible = ref.watch(navBarVisibleProvider);
-          final navHeight = ref.watch(navBarHeightProvider);
-          return _tabController.index == 1
-              ? Padding(
-                  padding: EdgeInsets.only(
-                    bottom: isNavVisible
-                        ? navHeight + (context.isTablet ? 8 : 4)
-                        : 16,
-                  ),
-                  child: FloatingActionButton.extended(
-                    onPressed: () async {
-                      final result = await showDialog<bool>(
-                        context: context,
-                        builder: (context) => const AddRecipeDialog(
-                          recipeSegment: RecipeSegment.alternative,
-                        ),
-                      );
-                      if (result == true) {
-                        ref.invalidate(alternativeRecipesProvider);
-                        ref.invalidate(globalCustomRecipesProvider);
-                      }
-                    },
-                    icon: const Icon(Icons.add_rounded),
-                    label: Text(
-                      ref.t('add_recipe'),
-                      style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
-                    ),
-                    backgroundColor: const Color(0xFFC8A96E),
-                    foregroundColor: Colors.black,
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                )
-              : const SizedBox.shrink();
-        },
-      ),
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/Alternative wall.png',
-              fit: BoxFit.cover,
-            ),
-          ),
-          Positioned.fill(
-            child: Container(color: Colors.black.withValues(alpha: 0.6)),
-          ),
-          TabBarView(
-            controller: _tabController,
-            children: const [
-              _BrewingMethodsContent(),
-              GlobalCustomRecipeList(),
-            ],
-          ),
-        ],
-      ),
-    ),);
+    );
   }
 }
 

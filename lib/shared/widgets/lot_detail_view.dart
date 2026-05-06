@@ -651,7 +651,10 @@ class _InfoTab extends ConsumerWidget {
                   Expanded(
                     child: LotCompactStat(
                       label: ref.t('variety'),
-                      value: lot?.varieties ?? bean?.varieties ?? ref.t('not_available'),
+                      value:
+                          lot?.varieties ??
+                          bean?.varieties ??
+                          ref.t('not_available'),
                     ),
                   ),
                   Container(width: 1, height: 30, color: Colors.white10),
@@ -673,7 +676,10 @@ class _InfoTab extends ConsumerWidget {
                   Expanded(
                     child: LotCompactStat(
                       label: ref.t('process'),
-                      value: (lot?.process ?? bean?.processMethod)?.localizeProcess(ref) ?? ref.t('not_available'),
+                      value:
+                          (lot?.process ?? bean?.processMethod)
+                              ?.localizeProcess(ref) ??
+                          ref.t('not_available'),
                       onTap: () {
                         final processName =
                             (lot?.process ?? bean?.processMethod ?? '')
@@ -697,7 +703,10 @@ class _InfoTab extends ConsumerWidget {
                   Expanded(
                     child: LotCompactStat(
                       label: ref.t('sca_score'),
-                      value: lot?.scaScore ?? bean?.scaScore ?? ref.t('not_available'),
+                      value:
+                          lot?.scaScore ??
+                          bean?.scaScore ??
+                          ref.t('not_available'),
                     ),
                   ),
                 ],
@@ -745,7 +754,9 @@ class _InfoTab extends ConsumerWidget {
               ),
               _InfoRow(
                 label: ref.t('process'),
-                value: (lot?.process ?? bean?.processMethod)?.localizeProcess(ref),
+                value: (lot?.process ?? bean?.processMethod)?.localizeProcess(
+                  ref,
+                ),
                 onTap: (lot?.process ?? bean?.processMethod) != null
                     ? () => _showProcessInfoSheet(
                         context,
@@ -786,7 +797,10 @@ class _InfoTab extends ConsumerWidget {
                 label: ref.t('roast_country'),
                 value: lot?.roasteryCountry,
               ),
-              _InfoRow(label: ref.t('roast_level'), value: lot?.roastLevel?.localizeRoast(ref)),
+              _InfoRow(
+                label: ref.t('roast_level'),
+                value: lot?.roastLevel?.localizeRoast(ref),
+              ),
               _InfoRow(
                 label: ref.t('roast_date'),
                 value: lot?.roastDate?.toString().split(' ')[0],

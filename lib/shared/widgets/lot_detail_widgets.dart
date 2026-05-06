@@ -94,7 +94,9 @@ class LotCompactStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final displayValue = (value.trim().isEmpty) ? context.t('not_available') : value;
+    final displayValue = (value.trim().isEmpty)
+        ? context.t('not_available')
+        : value;
 
     return GestureDetector(
       onTap: onTap,

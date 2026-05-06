@@ -14,7 +14,6 @@ import '../specialty/specialty_screen.dart';
 import '../../shared/widgets/sync_indicator.dart';
 import 'package:go_router/go_router.dart';
 
-
 class DiscoverScreen extends ConsumerStatefulWidget {
   const DiscoverScreen({super.key});
 
@@ -110,7 +109,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
         if (didPop) return;
         final order = ref.read(discoveryTabOrderProvider);
         final currentIndex = order.indexWhere((t) => t.name == _selectedTabId);
-        
+
         if (currentIndex > 0) {
           final prevTabId = order[currentIndex - 1].name;
           ref.read(navBarVisibleProvider.notifier).show();
@@ -125,134 +124,140 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
       child: Scaffold(
         backgroundColor: Colors.transparent, // Sync with global background
         extendBody: true,
-      floatingActionButton: null,
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            // Header: Title, Badge, Avatar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            ref.t('discover'),
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22,
-                              color: const Color(0xFFC8A96E),
+        floatingActionButton: null,
+        body: SafeArea(
+          bottom: false,
+          child: Column(
+            children: [
+              // Header: Title, Badge, Avatar
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              ref.t('discover'),
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22,
+                                color: const Color(0xFFC8A96E),
+                              ),
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        const Flexible(child: SyncIndicator()),
-                      ],
+                          const SizedBox(width: 12),
+                          const Flexible(child: SyncIndicator()),
+                        ],
+                      ),
                     ),
-                  ),
-                  const UserProfileAvatar(radius: 17),
-                ],
+                    const UserProfileAvatar(radius: 17),
+                  ],
+                ),
               ),
-            ),
 
-            // Reorderable Capsule Tabs
-            SizedBox(
-              height: 54,
-              child: Theme(
-                data: Theme.of(
-                  context,
-                ).copyWith(canvasColor: Colors.transparent),
-                child: ReorderableListView.builder(
-                  scrollController: _reorderController,
+              // Reorderable Capsule Tabs
+              SizedBox(
+                height: 54,
+                child: Theme(
+                  data: Theme.of(
+                    context,
+                  ).copyWith(canvasColor: Colors.transparent),
+                  child: ReorderableListView.builder(
+                    scrollController: _reorderController,
+                    physics: const BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    buildDefaultDragHandles: false,
+                    proxyDecorator: (child, index, animation) {
+                      return Material(color: Colors.transparent, child: child);
+                    },
+                    itemCount: tabOrder.length,
+                    onReorderStart: (_) =>
+                        ref.read(settingsProvider.notifier).triggerVibrate(),
+                    onReorder: _onReorder,
+                    itemBuilder: (context, index) {
+                      final type = tabOrder[index];
+                      final tabId = type.name;
+                      final isSelected = _selectedTabId == tabId;
+
+                      // Assign or reuse key
+                      final tabKey = _tabKeys.putIfAbsent(
+                        tabId,
+                        () => GlobalKey(),
+                      );
+
+                      return ReorderableDelayedDragStartListener(
+                        key: ValueKey(tabId),
+                        index: index,
+                        child: Container(
+                          key: tabKey,
+                          child: _CapsuleTab(
+                            label: _getTabLabel(type),
+                            isSelected: isSelected,
+                            onTap: () {
+                              ref
+                                  .read(settingsProvider.notifier)
+                                  .triggerHaptic();
+                              ref
+                                  .read(navBarVisibleProvider.notifier)
+                                  .show(); // FORCE SHOW NAVBAR
+                              setState(() {
+                                _selectedTabId = tabId;
+                              });
+                              if (_pageController.hasClients) {
+                                _pageController.animateToPage(
+                                  index,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              // Content Area
+              Expanded(
+                child: PageView.builder(
+                  controller: _pageController,
                   physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  buildDefaultDragHandles: false,
-                  proxyDecorator: (child, index, animation) {
-                    return Material(color: Colors.transparent, child: child);
+                  onPageChanged: (index) {
+                    if (index >= 0 && index < tabOrder.length) {
+                      final newTabId = tabOrder[index].name;
+                      if (_selectedTabId != newTabId) {
+                        ref
+                            .read(navBarVisibleProvider.notifier)
+                            .show(); // FORCE SHOW NAVBAR
+                        setState(() {
+                          _selectedTabId = newTabId;
+                        });
+                        _scrollToActiveTab(newTabId);
+                      }
+                    }
                   },
                   itemCount: tabOrder.length,
-                  onReorderStart: (_) =>
-                      ref.read(settingsProvider.notifier).triggerVibrate(),
-                  onReorder: _onReorder,
                   itemBuilder: (context, index) {
-                    final type = tabOrder[index];
-                    final tabId = type.name;
-                    final isSelected = _selectedTabId == tabId;
-
-                    // Assign or reuse key
-                    final tabKey = _tabKeys.putIfAbsent(
-                      tabId,
-                      () => GlobalKey(),
-                    );
-
-                    return ReorderableDelayedDragStartListener(
-                      key: ValueKey(tabId),
-                      index: index,
-                      child: Container(
-                        key: tabKey,
-                        child: _CapsuleTab(
-                          label: _getTabLabel(type),
-                          isSelected: isSelected,
-                          onTap: () {
-                            ref.read(settingsProvider.notifier).triggerHaptic();
-                            ref
-                                .read(navBarVisibleProvider.notifier)
-                                .show(); // FORCE SHOW NAVBAR
-                            setState(() {
-                              _selectedTabId = tabId;
-                            });
-                            if (_pageController.hasClients) {
-                              _pageController.animateToPage(
-                                index,
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeInOut,
-                              );
-                            }
-                          },
-                        ),
-                      ),
-                    );
+                    return _buildTabContent(tabOrder[index].name);
                   },
                 ),
               ),
-            ),
-
-            const SizedBox(height: 12),
-
-            // Content Area
-            Expanded(
-              child: PageView.builder(
-                controller: _pageController,
-                physics: const BouncingScrollPhysics(),
-                onPageChanged: (index) {
-                  if (index >= 0 && index < tabOrder.length) {
-                    final newTabId = tabOrder[index].name;
-                    if (_selectedTabId != newTabId) {
-                      ref
-                          .read(navBarVisibleProvider.notifier)
-                          .show(); // FORCE SHOW NAVBAR
-                      setState(() {
-                        _selectedTabId = newTabId;
-                      });
-                      _scrollToActiveTab(newTabId);
-                    }
-                  }
-                },
-                itemCount: tabOrder.length,
-                itemBuilder: (context, index) {
-                  return _buildTabContent(tabOrder[index].name);
-                },
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),);
+    );
   }
 
   Widget _buildTabContent(String tabId) {

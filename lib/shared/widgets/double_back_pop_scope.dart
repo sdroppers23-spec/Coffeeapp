@@ -53,7 +53,8 @@ class _DoubleBackPopScopeState extends ConsumerState<DoubleBackPopScope> {
 
         // 2. Double-tap exit logic for the first tab
         final now = DateTime.now();
-        final isFirstPressOrExpired = _lastBackPressTime == null ||
+        final isFirstPressOrExpired =
+            _lastBackPressTime == null ||
             now.difference(_lastBackPressTime!) > const Duration(seconds: 2);
 
         if (isFirstPressOrExpired) {

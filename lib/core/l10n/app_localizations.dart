@@ -102,7 +102,7 @@ class AppLocalizations {
     return value;
   }
 
-      static const Map<String, Map<String, String>> _translations = {
+  static const Map<String, Map<String, String>> _translations = {
     'en': {
       'discover': 'Discover',
       'no_lots_linked': 'No lots linked',
@@ -1737,7 +1737,8 @@ class AppLocalizations {
       'empty_roasters_desc':
           'Fügen Sie Ihren ersten Röster hinzu, um Lots zu verfolgen.',
       'empty_favorites_title': 'Keine Favoriten',
-      'empty_favorites_desc': 'Markieren Sie Röster als Favoriten, um sie hier zu sehen.',
+      'empty_favorites_desc':
+          'Markieren Sie Röster als Favoriten, um sie hier zu sehen.',
       'empty_archive_title': 'Archiv ist leer',
       'empty_archive_desc': 'Archivierte Röster erscheinen hier.',
       'empty_lots_title': 'Hier ist es leer',
@@ -1789,7 +1790,8 @@ class AppLocalizations {
       'create_account': 'Konto erstellen',
       'already_have_account': 'Haben Sie bereits ein Konto? Anmelden',
       'profile_guest_title': 'Authentifizierung erforderlich',
-      'profile_guest_message': 'Anmelden, um Ihr Profil zu erstellen oder zu bearbeiten',
+      'profile_guest_message':
+          'Anmelden, um Ihr Profil zu erstellen oder zu bearbeiten',
       'go_to_auth': 'Zur Anmeldeseite',
       'redirecting': 'Weiterleitung...',
       'ground': 'Gemahlen',
@@ -1945,7 +1947,8 @@ class AppLocalizations {
       'sweetness': 'Süße',
       'body': 'Körper',
       'aftertaste': 'Nachgeschmack',
-      'auth_greeting': 'Willkommen! Bitte melden Sie sich an oder registrieren Sie sich.',
+      'auth_greeting':
+          'Willkommen! Bitte melden Sie sich an oder registrieren Sie sich.',
       'diagram': 'Diagramm',
       'wheel_cat_floral': 'Blumig',
       'wheel_cat_fruity': 'Fruchtig',
@@ -2217,7 +2220,8 @@ class AppLocalizations {
       'desc_spicy':
           'Würzige Noten können wärmend (Zimt) oder scharf (schwarzer Pfeffer) sein.',
       'desc_note_cinnamon': 'Süßes, holziges und wärmendes Gewürzaroma.',
-      'desc_note_pepper': 'Scharfe, beißende Gewürznote, die Komplexität verleihen kann.',
+      'desc_note_pepper':
+          'Scharfe, beißende Gewürznote, die Komplexität verleihen kann.',
       'flavor_earthy': 'Erdig / Grün',
       'note_forest': 'Wald / Kiefer',
       'note_tobacco': 'Tabak',
@@ -2245,11 +2249,13 @@ class AppLocalizations {
       'toast_lots_archived': 'Lots archiviert',
       'toast_lots_restored': 'Lots wiederhergestellt',
       'delete_confirm_title': 'Lot löschen?',
-      'delete_confirm_message': 'Sind Sie sicher, dass Sie dieses Lot löschen möchten?',
+      'delete_confirm_message':
+          'Sind Sie sicher, dass Sie dieses Lot löschen möchten?',
       'delete_confirm_batch_title': 'Lots löschen?',
       'delete_confirm_batch_message':
           'Sind Sie sicher, dass Sie {count} ausgewählte Lots löschen möchten?',
-      'toast_select_second_lot': 'Wählen Sie ein zweites Lot zum Vergleichen aus',
+      'toast_select_second_lot':
+          'Wählen Sie ein zweites Lot zum Vergleichen aus',
       'vibration': 'Vibration',
       'haptic_feedback': 'Haptisches Feedback',
       'haptic_desc': 'Leichte Vibration beim Tippen und Halten',
@@ -2381,7 +2387,8 @@ class AppLocalizations {
       'password_reset': 'Passwort zurücksetzen',
       'password_reset_instruction':
           'Wir senden eine E-Mail mit Anweisungen zum Ändern Ihres Passworts an Ihre E-Mail-Adresse.',
-      'instruction_email_sent': 'Anweisungs-E-Mail wurde an Ihre Adresse gesendet',
+      'instruction_email_sent':
+          'Anweisungs-E-Mail wurde an Ihre Adresse gesendet',
       'account_id': 'Konto-ID',
       'id_copied': 'ID kopiert',
       'join_date': 'Beitrittsdatum',
@@ -2398,7 +2405,8 @@ class AppLocalizations {
       'new_password_label': 'Neues Passwort',
       'confirm_password_label': 'Passwort bestätigen',
       'password_empty_error': 'Bitte geben Sie ein Passwort ein',
-      'password_too_short_error': 'Passwort muss mindestens 8 Zeichen lang sein',
+      'password_too_short_error':
+          'Passwort muss mindestens 8 Zeichen lang sein',
       'password_too_long_error': 'Passwort darf höchstens 40 Zeichen lang sein',
       'passwords_not_match_error': 'Passwörter stimmen nicht überein',
       'password_changed_success': 'Passwort erfolgreich geändert!',
@@ -2433,7 +2441,8 @@ class AppLocalizations {
       'guest_mode_notice':
           'Sie befinden sich im Gastmodus. Cloud-Sync-Funktionen sind eingeschränkt.',
       'auth_required_title': 'Authentifizierung erforderlich',
-      'auth_required_desc': 'Um dieses Lot Ihrem Profil hinzuzufügen, melden Sie sich bitte an.',
+      'auth_required_desc':
+          'Um dieses Lot Ihrem Profil hinzuzufügen, melden Sie sich bitte an.',
       'error_image_too_large': 'Bild ist zu groß (max. 5MB)',
       'decaf': 'Decaf',
       'process_co2': 'CO2 Decaf',
@@ -2519,9 +2528,11 @@ class AppLocalizations {
       'tab_favorites': 'Favoris',
       'tab_archive': 'Archive',
       'empty_roasters_title': 'Aucun Torréfacteur',
-      'empty_roasters_desc': 'Ajoutez votre premier torréfacteur pour commencer.',
+      'empty_roasters_desc':
+          'Ajoutez votre premier torréfacteur pour commencer.',
       'empty_favorites_title': 'Aucun Favori',
-      'empty_favorites_desc': 'Marquez des torréfacteurs comme favoris pour les voir ici.',
+      'empty_favorites_desc':
+          'Marquez des torréfacteurs comme favoris pour les voir ici.',
       'empty_archive_title': 'L\'archive est Vide',
       'empty_archive_desc': 'Les torréfacteurs archivés apparaîtront ici.',
       'empty_lots_title': "C'est vide ici",
@@ -2573,7 +2584,8 @@ class AppLocalizations {
       'create_account': 'Créer un Compte',
       'already_have_account': 'Déjà un compte ? Connexion',
       'profile_guest_title': 'Authentification Requise',
-      'profile_guest_message': 'Connectez-vous pour créer ou éditer votre profil',
+      'profile_guest_message':
+          'Connectez-vous pour créer ou éditer votre profil',
       'go_to_auth': 'Aller à la page de connexion',
       'redirecting': 'Redirection...',
       'ground': 'Moulu',
@@ -3000,14 +3012,16 @@ class AppLocalizations {
       'note_pepper': 'Poivre',
       'desc_spicy': 'Les notes épicées peuvent être chaleureuses ou piquantes.',
       'desc_note_cinnamon': 'Arôme d\'épice doux, boisé et chaleureux.',
-      'desc_note_pepper': 'Note d\'épice vive qui peut ajouter de la complexité.',
+      'desc_note_pepper':
+          'Note d\'épice vive qui peut ajouter de la complexité.',
       'flavor_earthy': 'Terreux / Vert',
       'note_forest': 'Forêt / Pin',
       'note_tobacco': 'Tabac',
       'desc_earthy':
           'Notes terreuses souvent trouvées dans les cafés indonésiens ou brésiliens.',
       'desc_note_forest': 'Notes résineuses, boisées et de terre humide.',
-      'desc_note_tobacco': 'Notes herbacées sèches, fumées et légèrement sucrées.',
+      'desc_note_tobacco':
+          'Notes herbacées sèches, fumées et légèrement sucrées.',
       'toast_added_to_favorites': 'Ajouté aux favoris',
       'toast_removed_from_favorites': 'Retiré des favoris',
       'toast_recipe_deleted': 'Recette supprimée',
@@ -3301,12 +3315,12 @@ class AppLocalizations {
       'empty_roasters_title': 'Sin Tostadores',
       'empty_roasters_desc': 'Añade tu primer tostador para empezar.',
       'empty_favorites_title': 'Sin Favoritos',
-      'empty_favorites_desc': 'Marca tostadores como favoritos para verlos aquí.',
+      'empty_favorites_desc':
+          'Marca tostadores como favoritos para verlos aquí.',
       'empty_archive_title': 'El archivo está vacío',
       'empty_archive_desc': 'Los tostadores archivados aparecerán aquí.',
       'empty_lots_title': 'Está vacío aquí',
-      'empty_lots_desc':
-          'Añade tu primer lote de café para empezar tu viaje.',
+      'empty_lots_desc': 'Añade tu primer lote de café para empezar tu viaje.',
       'add_roaster_title': 'Añadir Tostador',
       'add_roaster': 'Añadir Tostador',
       'add_roaster_uppercase': 'AÑADIR TOSTADOR',
@@ -3784,8 +3798,7 @@ class AppLocalizations {
       'flavor_earthy': 'Terroso / Verde',
       'note_forest': 'Bosque / Pino',
       'note_tobacco': 'Tabaco',
-      'desc_earthy':
-          'Notas terrosas comunes en cafés indonesios o brasileños.',
+      'desc_earthy': 'Notas terrosas comunes en cafés indonesios o brasileños.',
       'desc_note_forest': 'Notas resinosas, amaderadas y de tierra húmeda.',
       'desc_note_tobacco': 'Notas herbales secas, ahumadas y algo dulces.',
       'toast_added_to_favorites': 'Añadido a favoritos',
@@ -4036,7 +4049,7 @@ class AppLocalizations {
       'specialty_roaster_label': 'Tostador de especialidad',
       'unnamed_label': 'Sin nombre',
     },
-'it': {
+    'it': {
       'discover': 'Scopri',
       'no_lots_linked': 'Nessun lotto collegato',
       'education': 'Istruzione',
@@ -4077,9 +4090,11 @@ class AppLocalizations {
       'tab_favorites': 'Preferiti',
       'tab_archive': 'Archivio',
       'empty_roasters_title': 'Nessuna torrefazione',
-      'empty_roasters_desc': 'Aggiungi la tua prima torrefazione per iniziare a tracciare i lotti.',
+      'empty_roasters_desc':
+          'Aggiungi la tua prima torrefazione per iniziare a tracciare i lotti.',
       'empty_favorites_title': 'Nessun preferito',
-      'empty_favorites_desc': 'Segna le torrefazioni come preferite per vederle qui.',
+      'empty_favorites_desc':
+          'Segna le torrefazioni come preferite per vederle qui.',
       'empty_archive_title': 'L\'archivio è vuoto',
       'empty_archive_desc': 'Le torrefazioni archiviate appariranno qui.',
       'empty_lots_title': 'È vuoto qui',
@@ -4567,14 +4582,16 @@ class AppLocalizations {
       'desc_spicy':
           'Le note speziate possono essere calde (cannella) o pungenti (pepe nero).',
       'desc_note_cinnamon': 'Aroma di spezia dolce, legnoso і caldo.',
-      'desc_note_pepper': 'Nota di spezia acuta і pungente che può aggiungere complessità.',
+      'desc_note_pepper':
+          'Nota di spezia acuta і pungente che può aggiungere complessità.',
       'flavor_earthy': 'Terroso / Verde',
       'note_forest': 'Foresta / Pino',
       'note_tobacco': 'Tabacco',
       'desc_earthy':
           'Note terrose і sapide spesso riscontrabili nei caffè indonesiani o in alcuni brasiliani.',
       'desc_note_forest': 'Note resinose, legnose і di terra umida.',
-      'desc_note_tobacco': 'Note erbacee secche, affumicate і leggermente dolci.',
+      'desc_note_tobacco':
+          'Note erbacee secche, affumicate і leggermente dolci.',
 
       'toast_added_to_favorites': 'Aggiunto ai preferiti',
       'toast_removed_from_favorites': 'Rimosso dai preferiti',
@@ -4755,7 +4772,8 @@ class AppLocalizations {
       'confirm_password_label': 'Conferma Password',
       'password_empty_error': 'Per favore inserisci una password',
       'password_too_short_error': 'La password deve avere almeno 8 caratteri',
-      'password_too_long_error': 'La password deve avere al massimo 40 caratteri',
+      'password_too_long_error':
+          'La password deve avere al massimo 40 caratteri',
       'passwords_not_match_error': 'Le password non corrispondono',
       'password_changed_success': 'Password cambiata con successo!',
       'image_uploaded': 'Immagine caricata con successo!',
@@ -4789,7 +4807,8 @@ class AppLocalizations {
       'guest_mode_notice':
           'Sei in modalità ospite. Le funzioni di sincronizzazione cloud sono limitate.',
       'auth_required_title': 'Autenticazione Richiesta',
-      'auth_required_desc': 'Per aggiungere questo lotto al tuo profilo, esegui l\'accesso.',
+      'auth_required_desc':
+          'Per aggiungere questo lotto al tuo profilo, esegui l\'accesso.',
       'error_image_too_large': 'L\'immagine è troppo grande (max. 5MB)',
       'decaf': 'Decaffeinato',
       'process_co2': 'Decaffeinato CO2',
@@ -4822,7 +4841,7 @@ class AppLocalizations {
       'yes': 'Sì',
       'no': 'No',
     },
-'pt': {
+    'pt': {
       'discover': 'Descobrir',
       'no_lots_linked': 'Nenhum lote vinculado',
       'education': 'Educação',
@@ -4863,9 +4882,11 @@ class AppLocalizations {
       'tab_favorites': 'Favoritos',
       'tab_archive': 'Arquivo',
       'empty_roasters_title': 'Sem Torrefações',
-      'empty_roasters_desc': 'Adicione sua primeira torrefação para começar a rastrear lotes.',
+      'empty_roasters_desc':
+          'Adicione sua primeira torrefação para começar a rastrear lotes.',
       'empty_favorites_title': 'Sem Favoritos',
-      'empty_favorites_desc': 'Marque torrefações como favoritas para vê-las aqui.',
+      'empty_favorites_desc':
+          'Marque torrefações como favoritas para vê-las aqui.',
       'empty_archive_title': 'O arquivo está vazio',
       'empty_archive_desc': 'Torrefações arquivadas aparecerão aqui.',
       'empty_lots_title': 'Está vazio aqui',
@@ -5353,7 +5374,8 @@ class AppLocalizations {
       'desc_spicy':
           'Notas de especiarias podem ser quentes (canela) ou pungentes (pimenta preta).',
       'desc_note_cinnamon': 'Aroma de especiaria doce, amadeirado e quente.',
-      'desc_note_pepper': 'Nota de especiaria nítida e pungente que pode adicionar complexidade.',
+      'desc_note_pepper':
+          'Nota de especiaria nítida e pungente que pode adicionar complexidade.',
       'flavor_earthy': 'Terroso / Verde',
       'note_forest': 'Floresta / Pinheiro',
       'note_tobacco': 'Tabaco',
@@ -5575,7 +5597,8 @@ class AppLocalizations {
       'guest_mode_notice':
           'Você está no modo convidado. Recursos de nuvem estão restritos.',
       'auth_required_title': 'Autenticação Necessária',
-      'auth_required_desc': 'Para adicionar este lote ao seu perfil, faça login.',
+      'auth_required_desc':
+          'Para adicionar este lote ao seu perfil, faça login.',
       'error_image_too_large': 'Imagem muito grande (máx. 5MB)',
       'decaf': 'Descafeinado',
       'process_co2': 'Descafeinado CO2',
@@ -5608,7 +5631,7 @@ class AppLocalizations {
       'yes': 'Sim',
       'no': 'Não',
     },
-'pl': {
+    'pl': {
       'discover': 'Odkrywaj',
       'no_lots_linked': 'Brak powiązanych partii',
       'education': 'Edukacja',
@@ -5649,9 +5672,11 @@ class AppLocalizations {
       'tab_favorites': 'Ulubione',
       'tab_archive': 'Archiwum',
       'empty_roasters_title': 'Brak palarni',
-      'empty_roasters_desc': 'Dodaj swoją pierwszą palarnię, aby zacząć śledzić partie kawy.',
+      'empty_roasters_desc':
+          'Dodaj swoją pierwszą palarnię, aby zacząć śledzić partie kawy.',
       'empty_favorites_title': 'Brak ulubionych',
-      'empty_favorites_desc': 'Oznacz palarnie jako ulubione, aby zobaczyć je tutaj.',
+      'empty_favorites_desc':
+          'Oznacz palarnie jako ulubione, aby zobaczyć je tutaj.',
       'empty_archive_title': 'Archiwum jest puste',
       'empty_archive_desc': 'Zarchiwizowane palarnie pojawią się tutaj.',
       'empty_lots_title': 'Tu jest pusto',
@@ -6139,7 +6164,8 @@ class AppLocalizations {
       'desc_spicy':
           'Korzenne nuty mogą być rozgrzewające (cynamon) lub ostre (czarny pieprz).',
       'desc_note_cinnamon': 'Słodki, drzewny i rozgrzewający aromat przypraw.',
-      'desc_note_pepper': 'Ostra, przenikliwa nuta przypraw, która może dodać złożoności.',
+      'desc_note_pepper':
+          'Ostra, przenikliwa nuta przypraw, która może dodać złożoności.',
       'flavor_earthy': 'Ziemiste / Zielone',
       'note_forest': 'Las / Sosna',
       'note_tobacco': 'Tytoń',
@@ -6394,7 +6420,7 @@ class AppLocalizations {
       'yes': 'Tak',
       'no': 'Nie',
     },
-'nl': {
+    'nl': {
       'discover': 'Ontdekken',
       'no_lots_linked': 'Geen gekoppelde kavels',
       'education': 'Educatie',
@@ -6437,7 +6463,8 @@ class AppLocalizations {
       'empty_roasters_title': 'Geen Branders',
       'empty_roasters_desc': 'Voeg je eerste brander toe om kavels te volgen.',
       'empty_favorites_title': 'Geen Favorieten',
-      'empty_favorites_desc': 'Markeer branders als favoriet om ze hier te zien.',
+      'empty_favorites_desc':
+          'Markeer branders als favoriet om ze hier te zien.',
       'empty_archive_title': 'Archief is Leeg',
       'empty_archive_desc': 'Gearchiveerde branders verschijnen hier.',
       'empty_lots_title': 'Het is hier leeg',
@@ -6489,7 +6516,8 @@ class AppLocalizations {
       'create_account': 'Account Aanmaken',
       'already_have_account': 'Heb je al een account? Log in',
       'profile_guest_title': 'Authenticatie Vereist',
-      'profile_guest_message': 'Log in om je profiel aan te maken of te bewerken',
+      'profile_guest_message':
+          'Log in om je profiel aan te maken of te bewerken',
       'go_to_auth': 'Ga naar Login Pagina',
       'redirecting': 'Doorsturen...',
       'ground': 'Gemalen',
@@ -6925,7 +6953,8 @@ class AppLocalizations {
       'desc_spicy':
           'Kruidige tonen kunnen verwarmend (kaneel) of scherp (zwarte peper) zijn.',
       'desc_note_cinnamon': 'Zoet, houtachtig en verwarmend specerij-aroma.',
-      'desc_note_pepper': 'Scherpe, doordringende specerijnoot die complexiteit kan toevoegen.',
+      'desc_note_pepper':
+          'Scherpe, doordringende specerijnoot die complexiteit kan toevoegen.',
       'flavor_earthy': 'Aards / Groen',
       'note_forest': 'Bos / Den',
       'note_tobacco': 'Tabak',
@@ -6957,7 +6986,8 @@ class AppLocalizations {
       'toast_lots_restored': 'Kavels hersteld',
 
       'delete_confirm_title': 'Kavel verwijderen?',
-      'delete_confirm_message': 'Weet je zeker dat je deze kavel wilt verwijderen?',
+      'delete_confirm_message':
+          'Weet je zeker dat je deze kavel wilt verwijderen?',
       'delete_confirm_batch_title': 'Kavels verwijderen?',
       'delete_confirm_batch_message':
           'Weet je zeker dat je {count} geselecteerde kavels wilt verwijderen?',
@@ -7147,7 +7177,8 @@ class AppLocalizations {
       'guest_mode_notice':
           'Je bent in gastmodus. Cloud synchronisatiefuncties zijn beperkt.',
       'auth_required_title': 'Authenticatie Vereist',
-      'auth_required_desc': 'Log in om deze kavel aan je profiel toe te voegen.',
+      'auth_required_desc':
+          'Log in om deze kavel aan je profiel toe te voegen.',
       'error_image_too_large': 'Afbeelding is te groot (max. 5MB)',
       'decaf': 'Decaf',
       'process_co2': 'CO2 Decaf',
@@ -7180,7 +7211,7 @@ class AppLocalizations {
       'yes': 'Ja',
       'no': 'Nee',
     },
-'sv': {
+    'sv': {
       'discover': 'Upptäck',
       'no_lots_linked': 'Inga länkade partier',
       'education': 'Utbildning',
@@ -7221,9 +7252,11 @@ class AppLocalizations {
       'tab_favorites': 'Favoriter',
       'tab_archive': 'Arkiv',
       'empty_roasters_title': 'Inga rosterier',
-      'empty_roasters_desc': 'Lägg till ditt första rosteri för att börja spåra partier.',
+      'empty_roasters_desc':
+          'Lägg till ditt första rosteri för att börja spåra partier.',
       'empty_favorites_title': 'Inga favoriter',
-      'empty_favorites_desc': 'Markera rosterier som favoriter för att se dem här.',
+      'empty_favorites_desc':
+          'Markera rosterier som favoriter för att se dem här.',
       'empty_archive_title': 'Arkivet är tomt',
       'empty_archive_desc': 'Arkiverade rosterier visas här.',
       'empty_lots_title': 'Det är tomt här',
@@ -7275,7 +7308,8 @@ class AppLocalizations {
       'create_account': 'Skapa konto',
       'already_have_account': 'Har du redan ett konto? Logga in',
       'profile_guest_title': 'Inloggning krävs',
-      'profile_guest_message': 'Logga in för att skapa eller redigera din profil',
+      'profile_guest_message':
+          'Logga in för att skapa eller redigera din profil',
       'go_to_auth': 'Gå till inloggning',
       'redirecting': 'Omdirigerar...',
       'ground': 'Malet',
@@ -7635,8 +7669,7 @@ class AppLocalizations {
           'Sötma i kaffe kan yttra sig som sockerhaltiga, honungsaktiga eller krämiga toner.',
       'desc_note_caramel':
           'Rik, bränd sockersötma som ofta förstärks av rostningsprocessen.',
-      'desc_note_honey':
-          'Mjuk, naturlig sötma med en lätt syrupig munkänsla.',
+      'desc_note_honey': 'Mjuk, naturlig sötma med en lätt syrupig munkänsla.',
       'desc_note_vanilla': 'Söt, krämig och aromatisk kryddnot.',
       'flavor_nutty': 'Nötig / Kakao',
       'note_chocolate': 'Choklad',
@@ -7711,7 +7744,8 @@ class AppLocalizations {
       'desc_spicy':
           'Kryddiga noter kan vara värmande (kanel) eller skarpa (svartpeppar).',
       'desc_note_cinnamon': 'Söt, träig och värmande kryddarom.',
-      'desc_note_pepper': 'Skarp, genomträngande kryddnot som kan ge komplexitet.',
+      'desc_note_pepper':
+          'Skarp, genomträngande kryddnot som kan ge komplexitet.',
       'flavor_earthy': 'Jordig / Grön',
       'note_forest': 'Skog / Tall',
       'note_tobacco': 'Tobak',
@@ -7743,7 +7777,8 @@ class AppLocalizations {
       'toast_lots_restored': 'Partier återställda',
 
       'delete_confirm_title': 'Ta bort parti?',
-      'delete_confirm_message': 'Är du säker på att du vill ta bort detta parti?',
+      'delete_confirm_message':
+          'Är du säker på att du vill ta bort detta parti?',
       'delete_confirm_batch_title': 'Ta bort partier?',
       'delete_confirm_batch_message':
           'Är du säker på att du vill ta bort {count} markerade partier?',
@@ -7930,10 +7965,10 @@ class AppLocalizations {
       'opened_at_label': 'Öppnad den',
       'lot_id_label': 'Parti-ID',
       'continue_as_guest': 'Fortsätt som gäst',
-      'guest_mode_notice':
-          'Du är i gästläge. Molnsynkronisering är begränsad.',
+      'guest_mode_notice': 'Du är i gästläge. Molnsynkronisering är begränsad.',
       'auth_required_title': 'Inloggning krävs',
-      'auth_required_desc': 'Logga in för att lägga till detta parti i din profil.',
+      'auth_required_desc':
+          'Logga in för att lägga till detta parti i din profil.',
       'error_image_too_large': 'Bilden är för stor (max 5MB)',
       'decaf': 'Decaf',
       'process_co2': 'CO2 Decaf',
@@ -7966,7 +8001,7 @@ class AppLocalizations {
       'yes': 'Ja',
       'no': 'Nej',
     },
-'tr': {
+    'tr': {
       'discover': 'Keşfet',
       'no_lots_linked': 'Bağlantılı parti yok',
       'education': 'Eğitim',
@@ -8007,9 +8042,11 @@ class AppLocalizations {
       'tab_favorites': 'Favoriler',
       'tab_archive': 'Arşiv',
       'empty_roasters_title': 'Kavurucu Yok',
-      'empty_roasters_desc': 'Partileri takip etmeye başlamak için ilk kavurucunuzu ekleyin.',
+      'empty_roasters_desc':
+          'Partileri takip etmeye başlamak için ilk kavurucunuzu ekleyin.',
       'empty_favorites_title': 'Favori Yok',
-      'empty_favorites_desc': 'Burada görmek için kavurucuları favori olarak işaretleyin.',
+      'empty_favorites_desc':
+          'Burada görmek için kavurucuları favori olarak işaretleyin.',
       'empty_archive_title': 'Arşiv Boş',
       'empty_archive_desc': 'Arşivlenen kavurucular burada görünecektir.',
       'empty_lots_title': 'Burası boş',
@@ -8039,7 +8076,8 @@ class AppLocalizations {
       'toast_roaster_archived': 'Kavurucu arşivlendi',
       'toast_roaster_restored': 'Kavurucu geri yüklendi',
       'delete_roaster_title': 'Kavurucuyu Sil',
-      'delete_roaster_confirm': '{name} kavurucusunu silmek istediğinizden emin misiniz?',
+      'delete_roaster_confirm':
+          '{name} kavurucusunu silmek istediğinizden emin misiniz?',
       'cancel_uppercase': 'İptal',
       'delete_uppercase': 'Sil',
       'selection_roasters_1': '{count} kavurucu seçildi',
@@ -8061,7 +8099,8 @@ class AppLocalizations {
       'create_account': 'Hesap Oluştur',
       'already_have_account': 'Zaten bir hesabınız var mı? Giriş yapın',
       'profile_guest_title': 'Kimlik Doğrulama Gerekli',
-      'profile_guest_message': 'Profilinizi oluşturmak veya düzenlemek için giriş yapın',
+      'profile_guest_message':
+          'Profilinizi oluşturmak veya düzenlemek için giriş yapın',
       'go_to_auth': 'Giriş Sayfasına Git',
       'redirecting': 'Yönlendiriliyor...',
       'ground': 'Öğütülmüş',
@@ -8497,7 +8536,8 @@ class AppLocalizations {
       'desc_spicy':
           'Baharatlı notalar ısıtıcı (tarçın) veya keskin (karabiber) olabilir.',
       'desc_note_cinnamon': 'Tatlı, odunsu ve ısıtıcı baharat aroması.',
-      'desc_note_pepper': 'Karmaşıklık katabilen keskin, delici baharat notası.',
+      'desc_note_pepper':
+          'Karmaşıklık katabilen keskin, delici baharat notası.',
       'flavor_earthy': 'Topraksı / Yeşil',
       'note_forest': 'Orman / Çam',
       'note_tobacco': 'Tütün',
@@ -8529,7 +8569,8 @@ class AppLocalizations {
       'toast_lots_restored': 'Partiler geri yüklendi',
 
       'delete_confirm_title': 'Parti silinsin mi?',
-      'delete_confirm_message': 'Bu partiyi silmek istediğinizden emin misiniz?',
+      'delete_confirm_message':
+          'Bu partiyi silmek istediğinizden emin misiniz?',
       'delete_confirm_batch_title': 'Partiler silinsin mi?',
       'delete_confirm_batch_message':
           'Seçilen {count} partiyi silmek istediğinizden emin misiniz?',
@@ -8743,7 +8784,8 @@ class AppLocalizations {
       'location_field': 'Konum',
       'coffee_name_field': 'Kahve Adı',
       'choose_brewing_type': 'Yöntem Seçin',
-      'recipe_limit_reached': 'Reçete limitine ulaşıldı (her tür için maks. 10)',
+      'recipe_limit_reached':
+          'Reçete limitine ulaşıldı (her tür için maks. 10)',
       'limit_reached': 'Limite ulaşıldı',
       'deselect_all': 'Tüm Seçimleri Kaldır',
       'toast_deleted': 'silindi',
@@ -8752,18 +8794,16 @@ class AppLocalizations {
       'yes': 'Evet',
       'no': 'Hayır',
     },
-'ja': {
+    'ja': {
       'discover': '見つける',
       'no_lots_linked': 'リンクされたロットはありません',
       'education': 'エデュケーション',
       'specialty_articles': 'スペシャリティ記事',
       'origin_guides': '産地ガイド',
-      'no_lots_linked_desc':
-          'リストのコーヒーロットをこのロースターに関連付けると、ここに表示されます。',
+      'no_lots_linked_desc': 'リストのコーヒーロットをこのロースターに関連付けると、ここに表示されます。',
       'link_lot_title': 'ロットをリンク',
       'unlink_lot_confirm_title': 'リンクを解除',
-      'unlink_lot_confirm_desc_template':
-          '本当に「{name}」のリンクを解除しますか？',
+      'unlink_lot_confirm_desc_template': '本当に「{name}」のリンクを解除しますか？',
       'unknown': '不明',
       'not_available': '該当なし',
       'method_name_placeholder': 'メソッド名（例：Hario Switch）',
@@ -8799,8 +8839,7 @@ class AppLocalizations {
       'empty_archive_title': 'アーカイブは空です',
       'empty_archive_desc': 'アーカイブされたロースターがここに表示されます。',
       'empty_lots_title': '空っぽです',
-      'empty_lots_desc':
-          '最初のコーヒーロットを追加して、スペシャリティコーヒーの旅を始めましょう。',
+      'empty_lots_desc': '最初のコーヒーロットを追加して、スペシャリティコーヒーの旅を始めましょう。',
       'add_roaster_title': 'ロースターを追加',
       'add_roaster': 'ロースターを追加',
       'add_roaster_uppercase': 'ロースターを追加',
@@ -9184,39 +9223,28 @@ class AppLocalizations {
       'note_stone_fruit': 'ストーンフルーツ',
       'desc_fruity':
           'コーヒーのフルーティーなノートは、産地や精製方法に由来し、鮮やかなベリーからトロピカルフルーツまで多岐にわたります。',
-      'desc_note_berry':
-          'イチゴ、ラズベリー、ブルーベリーを思わせる、明るく甘酸っぱいノート。',
-      'desc_note_citrus':
-          'レモン、オレンジ、グレープフルーツのような、爽やかで心地よい酸味を加えるノート。',
-      'desc_note_stone_fruit':
-          '桃、プラム、アプリコットのような、甘く果肉感のあるフルーツのノート。',
+      'desc_note_berry': 'イチゴ、ラズベリー、ブルーベリーを思わせる、明るく甘酸っぱいノート。',
+      'desc_note_citrus': 'レモン、オレンジ、グレープフルーツのような、爽やかで心地よい酸味を加えるノート。',
+      'desc_note_stone_fruit': '桃、プラム、アプリコットのような、甘く果肉感のあるフルーツのノート。',
       'flavor_floral': 'フローラル',
       'note_jasmine': 'ジャスミン',
       'note_tea': 'ティー',
-      'desc_floral':
-          'フローラルなアロマは、エチオピアやパナマなどの高地産コーヒーによく見られます。',
-      'desc_note_jasmine':
-          '高品質なゲイシャコーヒーの特徴である、際立った甘い花の香り。',
-      'desc_note_tea':
-          '紅茶や緑茶を思わせる、軽やかでクリーンな、ハーブのようなノート。',
+      'desc_floral': 'フローラルなアロマは、エチオピアやパナマなどの高地産コーヒーによく見られます。',
+      'desc_note_jasmine': '高品質なゲイシャコーヒーの特徴である、際立った甘い花の香り。',
+      'desc_note_tea': '紅茶や緑茶を思わせる、軽やかでクリーンな、ハーブのようなノート。',
       'flavor_sweet': 'スイート',
       'note_caramel': 'キャラメル',
       'note_honey': '蜂蜜',
       'note_vanilla': 'バニラ',
-      'desc_sweet':
-          'コーヒーの甘さは、砂糖、蜂蜜、あるいはクリーミーなノートとして感じられます。',
-      'desc_note_caramel':
-          '焙煎によって引き出される、リッチな焦がし砂糖のような甘さ。',
-      'desc_note_honey':
-          '軽いシロップのような口当たりを伴う、穏やかで自然な甘さ。',
+      'desc_sweet': 'コーヒーの甘さは、砂糖、蜂蜜、あるいはクリーミーなノートとして感じられます。',
+      'desc_note_caramel': '焙煎によって引き出される、リッチな焦がし砂糖のような甘さ。',
+      'desc_note_honey': '軽いシロップのような口当たりを伴う、穏やかで自然な甘さ。',
       'desc_note_vanilla': '甘くクリーミーで芳醇なスパイスのノート。',
       'flavor_nutty': 'ナッティ / ココア',
       'note_chocolate': 'チョコ',
       'note_hazelnut': 'ヘーゼルナッツ',
-      'desc_nutty':
-          'ローストしたナッツや様々な形のチョコレートを含む、クラシックなコーヒーのノート。',
-      'desc_note_chocolate':
-          'ミルクからダークまで、深みのある甘苦いノート。',
+      'desc_nutty': 'ローストしたナッツや様々な形のチョコレートを含む、クラシックなコーヒーのノート。',
+      'desc_note_chocolate': 'ミルクからダークまで、深みのある甘苦いノート。',
       'desc_note_hazelnut': '滑らかでオイル感のある、甘いナッツの風味。',
 
       'process_carbonic': 'カルボニック・マセレーション',
@@ -9269,26 +9297,21 @@ class AppLocalizations {
           '二酸化炭素環境での発酵。温度とpHを精密に制御し、構造的でワイニーな質感を作り出します。',
       'process_thermal_extended':
           '温度ショックを利用した革新。フレーバー成分を内部に閉じ込め、爆発的で鮮やか、かつ忘れられない味わいを作ります。',
-      'process_lactic_extended':
-          '乳酸菌に焦点を当てた長時間の嫌気性発酵。リッチでクリーミーな口当たりを生み出します。',
-      'process_yeast_extended':
-          '厳選された酵母の添加。予測可能で高品質な結果と、特定のアロマの強化を実現します。',
-      'process_koji_extended':
-          '日本の発酵科学をコーヒーに応用。酵素の働きで隠れた甘みと深みを引き出します。',
+      'process_lactic_extended': '乳酸菌に焦点を当てた長時間の嫌気性発酵。リッチでクリーミーな口当たりを生み出します。',
+      'process_yeast_extended': '厳選された酵母の添加。予測可能で高品質な結果と、特定のアロマの強化を実現します。',
+      'process_koji_extended': '日本の発酵科学をコーヒーに応用。酵素の働きで隠れた甘みと深みを引き出します。',
       'process_wet_hulled_extended':
           'インドネシア独自の製法。素早い処理により、独特のアーシー（土のような）、チョコ感、低酸味のプロフィールを作ります。',
       'flavor_spicy': 'スパイシー',
       'note_cinnamon': 'シナモン',
       'note_pepper': '胡椒',
-      'desc_spicy':
-          'スパイシーなノートは、温かみのあるもの（シナモン）から鋭いもの（黒胡椒）まであります。',
+      'desc_spicy': 'スパイシーなノートは、温かみのあるもの（シナモン）から鋭いもの（黒胡椒）まであります。',
       'desc_note_cinnamon': '甘く、ウッディで温かみのあるスパイスの香り。',
       'desc_note_pepper': '複雑さを加えることができる、鋭く突き抜けるようなスパイス。',
       'flavor_earthy': 'アーシー / グリーン',
       'note_forest': 'フォレスト / パイン',
       'note_tobacco': 'タバコ',
-      'desc_earthy':
-          'インドネシア産や一部のブラジル産コーヒーによく見られる、土のような、滋味深いノート。',
+      'desc_earthy': 'インドネシア産や一部のブラジル産コーヒーによく見られる、土のような、滋味深いノート。',
       'desc_note_forest': '樹脂のような、ウッディなノートと、湿った土の香り。',
       'desc_note_tobacco': 'ドライでスモーキー、そしてわずかに甘いハーブのようなノート。',
 
@@ -9306,8 +9329,7 @@ class AppLocalizations {
       'error_saving_photo': '写真の保存中にエラーが発生しました',
 
       'save_lot_confirmation_title': '変更を保存しますか？',
-      'save_lot_confirmation_desc':
-          'このコーヒーロットへのすべての変更を保存しますか？',
+      'save_lot_confirmation_desc': 'このコーヒーロットへのすべての変更を保存しますか？',
 
       'toast_lot_restored': 'ロットを復元しました',
       'toast_lots_deleted': 'ロットを削除しました',
@@ -9317,8 +9339,7 @@ class AppLocalizations {
       'delete_confirm_title': 'ロットを削除しますか？',
       'delete_confirm_message': '本当にこのロットを削除しますか？',
       'delete_confirm_batch_title': 'ロットを削除しますか？',
-      'delete_confirm_batch_message':
-          '選択した {count} 件のロットを本当に削除しますか？',
+      'delete_confirm_batch_message': '選択した {count} 件のロットを本当に削除しますか？',
       'toast_select_second_lot': '比較する2つ目のロットを選択してください',
 
       'vibration': 'バイブレーション',
@@ -9378,8 +9399,7 @@ class AppLocalizations {
       'search_coffee': 'コーヒーを検索...',
       'edit_roaster_title': 'ロースターを編集',
       'delete_roaster_confirm_title': '削除の確認',
-      'delete_roaster_confirm_msg':
-          'ロースター「{name}」を本当に削除しますか？',
+      'delete_roaster_confirm_msg': 'ロースター「{name}」を本当に削除しますか？',
       'lots_by_roaster_title': 'このロースターのロット',
       'roast_light_medium': 'ライト - ミディアム',
 
@@ -9451,8 +9471,7 @@ class AppLocalizations {
       'no_farmers_found': '農園が見つかりません。同期中...',
       'error_loading_lots': 'ロット読み込みエラー：{error}',
       'password_reset': 'パスワードリセット',
-      'password_reset_instruction':
-          'パスワード再設定の案内をメールで送信します。',
+      'password_reset_instruction': 'パスワード再設定の案内をメールで送信します。',
       'instruction_email_sent': '案内メールを送信しました',
       'account_id': 'アカウントID',
       'id_copied': 'IDをコピーしました',
@@ -9502,8 +9521,7 @@ class AppLocalizations {
       'opened_at_label': '開封日',
       'lot_id_label': 'ロットID',
       'continue_as_guest': 'ゲストとして続行',
-      'guest_mode_notice':
-          'ゲストモードです。クラウド同期機能は制限されます。',
+      'guest_mode_notice': 'ゲストモードです。クラウド同期機能は制限されます。',
       'auth_required_title': '認証が必要です',
       'auth_required_desc': 'このロットをプロフィールに追加するにはログインが必要です。',
       'error_image_too_large': '画像サイズが大きすぎます (最大 5MB)',
@@ -9522,8 +9540,7 @@ class AppLocalizations {
       'keep_editing': '編集を続ける',
       'discard': '破棄',
       'discard_changes_title': '変更を破棄しますか？',
-      'discard_changes_msg':
-          '保存されていない変更があります。本当に終了しますか？',
+      'discard_changes_msg': '保存されていない変更があります。本当に終了しますか？',
       'roaster_name_field': 'ロースター名',
       'roaster_city': '市区町村',
       'location_field': '場所',
@@ -9538,18 +9555,16 @@ class AppLocalizations {
       'yes': 'はい',
       'no': 'いいえ',
     },
-'ko': {
+    'ko': {
       'discover': '찾아보기',
       'no_lots_linked': '연결된 로트 없음',
       'education': '에듀케이션',
       'specialty_articles': '스페셜티 아티클',
       'origin_guides': '산지 가이드',
-      'no_lots_linked_desc':
-          '리스트의 커피 로트를 이 로스터와 연결하면 여기에 표시됩니다.',
+      'no_lots_linked_desc': '리스트의 커피 로트를 이 로스터와 연결하면 여기에 표시됩니다.',
       'link_lot_title': '로트 연결',
       'unlink_lot_confirm_title': '연결 해제',
-            'unlink_lot_confirm_desc_template':
-          '정말로 "{name}"의 연결을 해제하시겠습니까?',
+      'unlink_lot_confirm_desc_template': '정말로 "{name}"의 연결을 해제하시겠습니까?',
       'unknown': '알 수 없음',
       'not_available': '해당 없음',
       'method_name_placeholder': '추출법 이름 (예: Hario Switch)',
@@ -10042,8 +10057,10 @@ class AppLocalizations {
           '이산화탄소 환경에서의 발효. 온도와 pH를 정밀하게 조절하여 구조적이고 와인 같은 질감을 만들어냅니다.',
       'process_thermal_extended':
           '온도 쇼크를 이용한 혁신. 플레이버 성분을 내부에 가두어 폭발적이고 선명하며 잊을 수 없는 맛을 만듭니다.',
-      'process_lactic_extended': '유산균에 초점을 맞춘 긴 시간의 혐기성 발효. 풍부하고 크리미한 입안의 질감을 만들어냅니다.',
-      'process_yeast_extended': '엄선된 효모 첨가. 예측 가능하고 고품질의 결과와 특정 아로마의 강화를 실현합니다.',
+      'process_lactic_extended':
+          '유산균에 초점을 맞춘 긴 시간의 혐기성 발효. 풍부하고 크리미한 입안의 질감을 만들어냅니다.',
+      'process_yeast_extended':
+          '엄선된 효모 첨가. 예측 가능하고 고품질의 결과와 특정 아로마의 강화를 실현합니다.',
       'process_koji_extended': '일본의 발효 과학을 커피에 응용. 효소의 작용으로 숨겨진 단맛과 깊이를 끌어냅니다.',
       'process_wet_hulled_extended':
           '인도네시아 고유의 방식. 빠른 처리 과정을 통해 독특한 어시(Earthy), 초콜릿, 낮은 산미의 프로필을 만듭니다.',
@@ -10300,7 +10317,7 @@ class AppLocalizations {
       'yes': '예',
       'no': '아니오',
     },
-'zh': {
+    'zh': {
       'discover': '探索',
       'no_lots_linked': '未关联批次',
       'education': '咖啡百科',
@@ -11053,7 +11070,7 @@ class AppLocalizations {
       'yes': '是',
       'no': '否',
     },
-'ar': {
+    'ar': {
       'discover': 'اكتشاف',
       'no_lots_linked': 'لا توجد دفعات مرتبطة',
       'education': 'ثقافة القهوة',
@@ -11063,8 +11080,7 @@ class AppLocalizations {
           'عند ربط دفعات القهوة من قائمتك بهذا المحمص، ستظهر هنا.',
       'link_lot_title': 'ربط الدفعة',
       'unlink_lot_confirm_title': 'إلغاء الربط',
-            'unlink_lot_confirm_desc_template':
-          'هل أنت متأكد من إلغاء ربط "{name}"؟',
+      'unlink_lot_confirm_desc_template': 'هل أنت متأكد من إلغاء ربط "{name}"؟',
       'unknown': 'مجهول',
       'not_available': 'غير متوفر',
       'method_name_placeholder': 'اسم الطريقة (مثلاً Hario Switch)',
@@ -11498,7 +11514,8 @@ class AppLocalizations {
       'note_caramel': 'كراميل',
       'note_honey': 'عسل',
       'note_vanilla': 'فانيليا',
-      'desc_sweet': 'يمكن أن تظهر الحلاوة في القهوة على شكل سكر أو عسل أو قوام كريمي.',
+      'desc_sweet':
+          'يمكن أن تظهر الحلاوة في القهوة على شكل سكر أو عسل أو قوام كريمي.',
       'desc_note_caramel': 'حلاوة غنية مثل السكر المحروق تظهر نتيجة الحمص.',
       'desc_note_honey': 'حلاوة طبيعية لطيفة مع قوام يشبه الشراب الخفيف.',
       'desc_note_vanilla': 'نكهة توابل حلوة وكريمية وعطرية.',
@@ -11572,7 +11589,8 @@ class AppLocalizations {
       'flavor_spicy': 'توابل',
       'note_cinnamon': 'قرفة',
       'note_pepper': 'فلفل',
-      'desc_spicy': 'إيحاءات التوابل تتراوح من الدافئة (قرفة) إلى الحادة (فلفل أسود).',
+      'desc_spicy':
+          'إيحاءات التوابل تتراوح من الدافئة (قرفة) إلى الحادة (فلفل أسود).',
       'desc_note_cinnamon': 'رائحة توابل حلوة وخشبية ودافئة.',
       'desc_note_pepper': 'توابل حادة ونافذة يمكن أن تضيف تعقيداً للنكهة.',
       'flavor_earthy': 'ترابي / أخضر',
@@ -11597,7 +11615,8 @@ class AppLocalizations {
       'error_saving_photo': 'خطأ في حفظ الصورة',
 
       'save_lot_confirmation_title': 'حفظ التغييرات؟',
-      'save_lot_confirmation_desc': 'هل تريد حفظ جميع التغييرات على هذه الدفعة؟',
+      'save_lot_confirmation_desc':
+          'هل تريد حفظ جميع التغييرات على هذه الدفعة؟',
 
       'toast_lot_restored': 'تم استعادة الدفعة',
       'toast_lots_deleted': 'تم حذف الدفعات',
@@ -11825,8 +11844,5 @@ class AppLocalizations {
       'yes': 'نعم',
       'no': 'لا',
     },
-  
-
-    };
-
+  };
 }

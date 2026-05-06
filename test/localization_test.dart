@@ -39,7 +39,7 @@ void main() {
       expect(loc.translate('discover'), 'اكتشف');
       expect(loc.translate('settings'), 'الإعدادات');
     });
-    
+
     test('Check missing key returns key name', () {
       final loc = AppLocalizations(const Locale('en'));
       expect(loc.translate('non_existent_key'), 'non_existent_key');

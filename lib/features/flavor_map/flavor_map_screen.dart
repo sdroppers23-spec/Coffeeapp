@@ -64,277 +64,286 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
     return DoubleBackPopScope(
       isFirstTab: true,
       child: Scaffold(
-      backgroundColor: Colors.transparent,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Top Bar: Matches Discover Screen Style
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          ref.t('specialty').toUpperCase(),
-                          style: GoogleFonts.poppins(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFFC8A96E),
-                            letterSpacing: 1.5,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        const SyncIndicator(),
-                      ],
-                    ),
-                  ),
-                  const UserProfileAvatar(radius: 17),
-                ],
-              ),
-            ),
-
-            // Internal Tab Bar Segmented Control: Matches Screenshot
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: const Color(0xFF121212), // Dark matte
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: _TabOption(
-                      icon: Icons.radar,
-                      label: ref.t('tab_profile'),
-                      isSelected: _selectedTab == 0,
-                      onTap: () => _setTab(0),
-                    ),
-                  ),
-                  Expanded(
-                    child: _TabOption(
-                      icon: Icons.public,
-                      label: ref.t('tab_sphere'),
-                      isSelected: _selectedTab == 1,
-                      onTap: () => _setTab(1),
-                    ),
-                  ),
-                  Expanded(
-                    child: _TabOption(
-                      icon: Icons.pie_chart_outline,
-                      label: ref.t('tab_wheel'),
-                      isSelected: _selectedTab == 2,
-                      onTap: () => _setTab(2),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 2),
-
-            // Content Area
-            Expanded(
-              child: Stack(
-                children: [
-                  IndexedStack(
-                    index: _selectedTab,
-                    children: [
-                      // Tab 0: Profile - Matching Screenshot
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: Container(
-                            height: 390,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF121212),
-                              borderRadius: BorderRadius.circular(40),
-                              border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.05),
-                              ),
-                            ),
-                            child: Column(
-                              children: [
-                                const SizedBox(height: 32),
-                                Text(
-                                  ref.t('sensory_profile'),
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: const Color(0xFFC8A96E),
-                                    letterSpacing: 1.5,
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-
-                                // Process Selection chips - All 10 methods
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      _buildMethodChip('natural'),
-                                      const SizedBox(width: 8),
-                                      _buildMethodChip('washed'),
-                                      const SizedBox(width: 8),
-                                      _buildMethodChip('honey'),
-                                      const SizedBox(width: 8),
-                                      _buildMethodChip('anaerobic'),
-                                      const SizedBox(width: 8),
-                                      _buildMethodChip('carbonic'),
-                                      const SizedBox(width: 8),
-                                      _buildMethodChip('thermal'),
-                                      const SizedBox(width: 8),
-                                      _buildMethodChip('lactic'),
-                                      const SizedBox(width: 8),
-                                      _buildMethodChip('yeast'),
-                                      const SizedBox(width: 8),
-                                      _buildMethodChip('koji'),
-                                      const SizedBox(width: 8),
-                                      _buildMethodChip('wet_hulled'),
-                                    ],
-                                  ),
-                                ),
-
-                                const SizedBox(height: 10),
-                                Expanded(
-                                  child: (() {
-                                    final method =
-                                        ProcessingMethodsRepository.getById(
-                                          _selectedMethodId,
-                                        );
-                                    return SensoryRadarChart(
-                                      interactive: true,
-                                      isLocked: true, // Educational locking
-                                      staticValues:
-                                          method?.sensoryPreset ?? values,
-                                      height: 280,
-                                    );
-                                  })(),
-                                ),
-                                const SizedBox(height: 3),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      // Tab 1: Sphere
-                      Stack(
-                        fit: StackFit.expand,
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+          child: Column(
+            children: [
+              // Top Bar: Matches Discover Screen Style
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 8,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          const TerroirGlobe(),
-                          ClipRRect(
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-                              child: Container(
-                                color: Colors.black.withValues(alpha: 0.4),
-                                child: Center(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 24,
-                                          vertical: 12,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: const Color(
-                                              0xFFC8A96E,
-                                            ).withValues(alpha: 0.5),
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            16,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          ref.t('coming_soon'),
-                                          style: GoogleFonts.outfit(
-                                            fontSize: 28,
-                                            fontWeight: FontWeight.w900,
-                                            color: const Color(0xFFC8A96E),
-                                            letterSpacing: 6,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 16),
-                                      Text(
-                                        ref.t('terroir_globe_desc'),
-                                        style: GoogleFonts.outfit(
-                                          fontSize: 16,
-                                          color: Colors.white70,
-                                          letterSpacing: 2,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
+                          Text(
+                            ref.t('specialty').toUpperCase(),
+                            style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFFC8A96E),
+                              letterSpacing: 1.5,
                             ),
                           ),
+                          const SizedBox(width: 8),
+                          const SyncIndicator(),
                         ],
                       ),
+                    ),
+                    const UserProfileAvatar(radius: 17),
+                  ],
+                ),
+              ),
 
-                      // Tab 2: Flavor Wheel
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          bottom: 90,
-                        ), // Lift above nav bar
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 2),
-                            Text(
-                              ref.t('tab_wheel').toUpperCase(),
-                              style: GoogleFonts.outfit(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: const Color(0xFFC8A96E),
-                                letterSpacing: 1.5,
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Expanded(
-                              child: ScaFlavorWheel(
-                                key: ValueKey(_selectedTab),
-                                onSelect: _onFlavorSelect,
-                              ),
-                            ),
-                            const SizedBox(height: 0),
-                          ],
-                        ),
-                      ),
-                    ],
+              // Internal Tab Bar Segmented Control: Matches Screenshot
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF121212), // Dark matte
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.05),
                   ),
-
-                  if (_selectedFlavorKey != null && _selectedTab == 2)
-                    Positioned(
-                      key: const Key('flavorCard'),
-                      left: 16,
-                      right: 16,
-                      bottom: 140, // Above bottom nav
-                      child: _FlavorInfoCard(
-                        flavorKey: _selectedFlavorKey!,
-                        color: _selectedFlavorColor!,
-                        relatedItems: _selectedFlavorItems!,
-                        onClose: () =>
-                            setState(() => _selectedFlavorKey = null),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _TabOption(
+                        icon: Icons.radar,
+                        label: ref.t('tab_profile'),
+                        isSelected: _selectedTab == 0,
+                        onTap: () => _setTab(0),
                       ),
                     ),
-                ],
+                    Expanded(
+                      child: _TabOption(
+                        icon: Icons.public,
+                        label: ref.t('tab_sphere'),
+                        isSelected: _selectedTab == 1,
+                        onTap: () => _setTab(1),
+                      ),
+                    ),
+                    Expanded(
+                      child: _TabOption(
+                        icon: Icons.pie_chart_outline,
+                        label: ref.t('tab_wheel'),
+                        isSelected: _selectedTab == 2,
+                        onTap: () => _setTab(2),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+
+              const SizedBox(height: 2),
+
+              // Content Area
+              Expanded(
+                child: Stack(
+                  children: [
+                    IndexedStack(
+                      index: _selectedTab,
+                      children: [
+                        // Tab 0: Profile - Matching Screenshot
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            child: Container(
+                              height: 390,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF121212),
+                                borderRadius: BorderRadius.circular(40),
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.05),
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 32),
+                                  Text(
+                                    ref.t('sensory_profile'),
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: const Color(0xFFC8A96E),
+                                      letterSpacing: 1.5,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+
+                                  // Process Selection chips - All 10 methods
+                                  SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        _buildMethodChip('natural'),
+                                        const SizedBox(width: 8),
+                                        _buildMethodChip('washed'),
+                                        const SizedBox(width: 8),
+                                        _buildMethodChip('honey'),
+                                        const SizedBox(width: 8),
+                                        _buildMethodChip('anaerobic'),
+                                        const SizedBox(width: 8),
+                                        _buildMethodChip('carbonic'),
+                                        const SizedBox(width: 8),
+                                        _buildMethodChip('thermal'),
+                                        const SizedBox(width: 8),
+                                        _buildMethodChip('lactic'),
+                                        const SizedBox(width: 8),
+                                        _buildMethodChip('yeast'),
+                                        const SizedBox(width: 8),
+                                        _buildMethodChip('koji'),
+                                        const SizedBox(width: 8),
+                                        _buildMethodChip('wet_hulled'),
+                                      ],
+                                    ),
+                                  ),
+
+                                  const SizedBox(height: 10),
+                                  Expanded(
+                                    child: (() {
+                                      final method =
+                                          ProcessingMethodsRepository.getById(
+                                            _selectedMethodId,
+                                          );
+                                      return SensoryRadarChart(
+                                        interactive: true,
+                                        isLocked: true, // Educational locking
+                                        staticValues:
+                                            method?.sensoryPreset ?? values,
+                                        height: 280,
+                                      );
+                                    })(),
+                                  ),
+                                  const SizedBox(height: 3),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // Tab 1: Sphere
+                        Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            const TerroirGlobe(),
+                            ClipRRect(
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(
+                                  sigmaX: 12,
+                                  sigmaY: 12,
+                                ),
+                                child: Container(
+                                  color: Colors.black.withValues(alpha: 0.4),
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 24,
+                                            vertical: 12,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: const Color(
+                                                0xFFC8A96E,
+                                              ).withValues(alpha: 0.5),
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              16,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            ref.t('coming_soon'),
+                                            style: GoogleFonts.outfit(
+                                              fontSize: 28,
+                                              fontWeight: FontWeight.w900,
+                                              color: const Color(0xFFC8A96E),
+                                              letterSpacing: 6,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 16),
+                                        Text(
+                                          ref.t('terroir_globe_desc'),
+                                          style: GoogleFonts.outfit(
+                                            fontSize: 16,
+                                            color: Colors.white70,
+                                            letterSpacing: 2,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        // Tab 2: Flavor Wheel
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: 90,
+                          ), // Lift above nav bar
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 2),
+                              Text(
+                                ref.t('tab_wheel').toUpperCase(),
+                                style: GoogleFonts.outfit(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xFFC8A96E),
+                                  letterSpacing: 1.5,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Expanded(
+                                child: ScaFlavorWheel(
+                                  key: ValueKey(_selectedTab),
+                                  onSelect: _onFlavorSelect,
+                                ),
+                              ),
+                              const SizedBox(height: 0),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    if (_selectedFlavorKey != null && _selectedTab == 2)
+                      Positioned(
+                        key: const Key('flavorCard'),
+                        left: 16,
+                        right: 16,
+                        bottom: 140, // Above bottom nav
+                        child: _FlavorInfoCard(
+                          flavorKey: _selectedFlavorKey!,
+                          color: _selectedFlavorColor!,
+                          relatedItems: _selectedFlavorItems!,
+                          onClose: () =>
+                              setState(() => _selectedFlavorKey = null),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ),);
+    );
   }
 
   Widget _buildMethodChip(String id) {

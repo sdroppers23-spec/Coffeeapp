@@ -24,7 +24,7 @@ class ScaFlavorWheelL10n {
   ];
 
   static const Map<String, Map<String, String>> _byLocale = {
-        'en': {
+    'en': {
       'wheel_cat_fruity': 'Fruity',
       'wheel_cat_floral': 'Floral',
       'wheel_cat_sweet': 'Sweet',
@@ -1531,7 +1531,7 @@ class ScaFlavorWheelL10n {
     },
   };
 
-static String translate(String locale, String key) {
+  static String translate(String locale, String key) {
     final lang = supportedLocales.contains(locale) ? locale : 'en';
     final map = _byLocale[lang];
     if (map != null) {

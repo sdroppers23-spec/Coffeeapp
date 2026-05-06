@@ -8,6 +8,7 @@ import '../../shared/widgets/pressable_scale.dart';
 import '../../core/providers/settings_provider.dart';
 import '../../core/utils/responsive_utils.dart';
 import 'navigation_providers.dart';
+
 class MainScaffold extends ConsumerStatefulWidget {
   final StatefulNavigationShell navigationShell;
 
@@ -99,138 +100,138 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
 
     return PremiumBackground(
       child: Scaffold(
-          backgroundColor: Colors.transparent,
-          extendBody: true,
-          body: Stack(
-            children: [
-              // Main Content
-              Positioned.fill(
-                child: AnimatedBranchContainer(
-                  currentIndex: widget.navigationShell.currentIndex,
-                  child: widget.navigationShell,
-                ),
+        backgroundColor: Colors.transparent,
+        extendBody: true,
+        body: Stack(
+          children: [
+            // Main Content
+            Positioned.fill(
+              child: AnimatedBranchContainer(
+                currentIndex: widget.navigationShell.currentIndex,
+                child: widget.navigationShell,
               ),
+            ),
 
-              // Floating Navigation Bar Area
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom:
-                    MediaQuery.paddingOf(context).bottom +
-                    (context.isTablet ? 16 : 12),
-                child: AnimatedSlide(
-                  duration: const Duration(milliseconds: 400),
-                  curve: Curves.fastOutSlowIn,
-                  offset: navVisible ? Offset.zero : const Offset(0, 1.5),
-                  child: AnimatedOpacity(
-                    duration: const Duration(milliseconds: 300),
-                    opacity: navVisible ? 1.0 : 0.0,
-                    child: Padding(
-                      key: _navBarKey,
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // Main Capsule Bar
-                          Flexible(
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints(
-                                maxWidth: context.isTablet ? 420 : 330,
-                              ),
-                              child: GlassContainer(
-                                borderRadius: 40,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 1,
-                                  horizontal: 6,
-                                ),
-                                backgroundGradient: null,
-                                borderColor: isDark
-                                    ? Colors.white.withValues(alpha: 0.25)
-                                    : theme.colorScheme.primary.withValues(
-                                        alpha: 0.2,
-                                      ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      child: _NavBarItem(
-                                        icon: Icons.track_changes_rounded,
-                                        label: ref.t('nav_specialty'),
-                                        isSelected:
-                                            widget.navigationShell.currentIndex ==
-                                            0,
-                                        onTap: () => _onTap(0),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: _NavBarItem(
-                                        icon: Icons.explore_outlined,
-                                        label: ref.t('nav_discovery'),
-                                        isSelected:
-                                            widget.navigationShell.currentIndex ==
-                                            1,
-                                        onTap: () => _onTap(1),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: _NavBarItem(
-                                        icon: Icons.local_cafe_outlined,
-                                        label: ref.t('nav_alternative'),
-                                        isSelected:
-                                            widget.navigationShell.currentIndex ==
-                                            2,
-                                        onTap: () => _onTap(2),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+            // Floating Navigation Bar Area
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom:
+                  MediaQuery.paddingOf(context).bottom +
+                  (context.isTablet ? 16 : 12),
+              child: AnimatedSlide(
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.fastOutSlowIn,
+                offset: navVisible ? Offset.zero : const Offset(0, 1.5),
+                child: AnimatedOpacity(
+                  duration: const Duration(milliseconds: 300),
+                  opacity: navVisible ? 1.0 : 0.0,
+                  child: Padding(
+                    key: _navBarKey,
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Main Capsule Bar
+                        Flexible(
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxWidth: context.isTablet ? 420 : 330,
                             ),
-                          ),
-
-                          const SizedBox(width: 12),
-
-                          PressableScale(
-                            onTap: () async {
-                              ref
-                                  .read(settingsProvider.notifier)
-                                  .triggerSelectionVibrate();
-                              await context.push('/settings');
-                              if (context.mounted) {
-                                ref.read(navBarVisibleProvider.notifier).show();
-                              }
-                            },
                             child: GlassContainer(
-                              width: 52,
-                              height: 52,
-                              borderRadius: 26,
+                              borderRadius: 40,
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 1,
+                                horizontal: 6,
+                              ),
                               backgroundGradient: null,
                               borderColor: isDark
                                   ? Colors.white.withValues(alpha: 0.25)
                                   : theme.colorScheme.primary.withValues(
                                       alpha: 0.2,
                                     ),
-                              child: Center(
-                                child: Icon(
-                                  Icons.settings_rounded,
-                                  color: isDark
-                                      ? Colors.white
-                                      : theme.colorScheme.primary,
-                                  size: 24,
-                                ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: _NavBarItem(
+                                      icon: Icons.track_changes_rounded,
+                                      label: ref.t('nav_specialty'),
+                                      isSelected:
+                                          widget.navigationShell.currentIndex ==
+                                          0,
+                                      onTap: () => _onTap(0),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: _NavBarItem(
+                                      icon: Icons.explore_outlined,
+                                      label: ref.t('nav_discovery'),
+                                      isSelected:
+                                          widget.navigationShell.currentIndex ==
+                                          1,
+                                      onTap: () => _onTap(1),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: _NavBarItem(
+                                      icon: Icons.local_cafe_outlined,
+                                      label: ref.t('nav_alternative'),
+                                      isSelected:
+                                          widget.navigationShell.currentIndex ==
+                                          2,
+                                      onTap: () => _onTap(2),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+
+                        const SizedBox(width: 12),
+
+                        PressableScale(
+                          onTap: () async {
+                            ref
+                                .read(settingsProvider.notifier)
+                                .triggerSelectionVibrate();
+                            await context.push('/settings');
+                            if (context.mounted) {
+                              ref.read(navBarVisibleProvider.notifier).show();
+                            }
+                          },
+                          child: GlassContainer(
+                            width: 52,
+                            height: 52,
+                            borderRadius: 26,
+                            backgroundGradient: null,
+                            borderColor: isDark
+                                ? Colors.white.withValues(alpha: 0.25)
+                                : theme.colorScheme.primary.withValues(
+                                    alpha: 0.2,
+                                  ),
+                            child: Center(
+                              child: Icon(
+                                Icons.settings_rounded,
+                                color: isDark
+                                    ? Colors.white
+                                    : theme.colorScheme.primary,
+                                size: 24,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
+      ),
+    );
   }
 }
 
@@ -400,4 +401,3 @@ class AnimatedBranchContainer extends StatelessWidget {
     );
   }
 }
-

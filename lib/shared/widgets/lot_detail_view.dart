@@ -817,7 +817,7 @@ class _InfoTab extends ConsumerWidget {
                           : '${lot!.weight}g')
                     : null,
               ),
-              _InfoRow(label: 'ID Лоту', value: lot?.lotNumber),
+              _InfoRow(label: ref.t('lot_number'), value: lot?.lotNumber),
             ],
           ),
         ),

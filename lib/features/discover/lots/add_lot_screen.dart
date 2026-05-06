@@ -186,7 +186,6 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       if (mounted) ref.read(navBarVisibleProvider.notifier).hide();
     });
     _tabController = TabController(length: 3, vsync: this);
-    _tabController.addListener(() => setState(() {}));
 
     _userRoasterId = widget.initialLot?.userRoasterId;
 
@@ -1143,9 +1142,8 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
     margin: const EdgeInsets.only(bottom: 16),
     borderRadius: 27,
     opacity: 0.12,
-    blur: 10,
-    enableBlur: true,
-    enableRepaintBoundary: true,
+    blur: 0,
+    enableRepaintBoundary: false,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: children,
@@ -1440,12 +1438,12 @@ class _AddLotScreenState extends ConsumerState<AddLotScreen>
       onTap: onTap,
       child: GlassContainer(
         borderRadius: 50,
-        blur: active ? 12 : 0,
+        blur: 0,
         opacity: active ? 0.15 : 0.03,
         borderColor: active
             ? const Color(0xFFC8A96E).withValues(alpha: 0.6)
             : Colors.white.withValues(alpha: 0.05),
-        enableRepaintBoundary: true,
+        enableRepaintBoundary: false,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 14),
           alignment: Alignment.center,

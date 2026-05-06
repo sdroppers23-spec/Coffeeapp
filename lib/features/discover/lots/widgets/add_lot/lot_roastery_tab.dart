@@ -5,6 +5,7 @@ extension _RoasteryTabSection on _AddLotScreenState {
     final pref = ref.watch(preferencesProvider);
     final currencySymbol = _getCurrencySymbol(pref.currency);
     return ListView(
+      cacheExtent: 1500,
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
       children: [
         _sectionLabel(ref.t('section_roaster')),

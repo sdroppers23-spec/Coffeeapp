@@ -379,6 +379,7 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                       child: TabBar(
                         controller: _tabController,
                         dividerColor: Colors.transparent,
+                        labelPadding: EdgeInsets.zero,
                         indicator: BoxDecoration(
                           color: const Color(0xFFC8A96E),
                           borderRadius: BorderRadius.circular(20),
@@ -395,20 +396,32 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                           Tab(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 const Icon(Icons.favorite_rounded, size: 14),
                                 const SizedBox(width: 4),
-                                Text(ref.t('tab_favorites')),
+                                Flexible(
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(ref.t('tab_favorites')),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
                           Tab(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 const Icon(Icons.archive_outlined, size: 14),
                                 const SizedBox(width: 4),
-                                Text(ref.t('tab_archive')),
+                                Flexible(
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(ref.t('tab_archive')),
+                                  ),
+                                ),
                               ],
                             ),
                           ),

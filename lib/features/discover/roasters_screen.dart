@@ -398,14 +398,14 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                               mainAxisAlignment: MainAxisAlignment.center,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(Icons.favorite_rounded, size: 14),
-                                const SizedBox(width: 4),
                                 Flexible(
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Text(ref.t('tab_favorites')),
                                   ),
                                 ),
+                                const SizedBox(width: 4),
+                                const Icon(Icons.favorite_rounded, size: 14),
                               ],
                             ),
                           ),
@@ -414,14 +414,14 @@ class _RoastersBodyState extends ConsumerState<RoastersBody>
                               mainAxisAlignment: MainAxisAlignment.center,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(Icons.archive_outlined, size: 14),
-                                const SizedBox(width: 4),
                                 Flexible(
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Text(ref.t('tab_archive')),
                                   ),
                                 ),
+                                const SizedBox(width: 4),
+                                const Icon(Icons.archive_outlined, size: 14),
                               ],
                             ),
                           ),

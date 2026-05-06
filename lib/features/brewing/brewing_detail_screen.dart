@@ -76,17 +76,26 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
     final screenWidth = MediaQuery.sizeOf(context).width;
     final double expandedHeight = math.min(screenWidth * 1.0, 950.0);
 
-    return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0A),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.black, Color(0xFF0A0A0A)],
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        ref.read(navBarVisibleProvider.notifier).show();
+        if (Navigator.of(context).canPop()) {
+          Navigator.of(context).pop();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFF0A0A0A),
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Colors.black, Color(0xFF0A0A0A)],
+            ),
           ),
-        ),
-        child: SafeArea(
+          child: SafeArea(
           top: false,
           child: NestedScrollView(
             headerSliverBuilder: (context, innerBoxIsScrolled) => [
@@ -304,7 +313,8 @@ class _BrewingDetailScreenState extends ConsumerState<BrewingDetailScreen> {
           ),
         ),
       ),
-    );
+      )
+    );
   }
 
   Widget _buildHeroImage(String url) {

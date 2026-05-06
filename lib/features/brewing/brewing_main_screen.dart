@@ -12,6 +12,8 @@ import 'method_tile.dart';
 import '../../shared/widgets/premium_app_bar.dart';
 import '../../core/database/dtos.dart';
 import '../../core/utils/responsive_utils.dart';
+import 'package:go_router/go_router.dart';
+
 
 class BrewingViewModeNotifier extends Notifier<bool> {
   @override
@@ -76,10 +78,20 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
     final theme = Theme.of(context);
     final accentColor = theme.colorScheme.secondary;
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      extendBody: true,
-      extendBodyBehindAppBar: true,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if (_tabController.index == 1) {
+          _tabController.animateTo(0);
+        } else {
+          StatefulNavigationShell.of(context).goBranch(0);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        extendBody: true,
+        extendBodyBehindAppBar: true,
       appBar: PremiumAppBar(
         title: ref.t('alternative'),
         actions: [
@@ -177,7 +189,7 @@ class _BrewingMainScreenState extends ConsumerState<BrewingMainScreen>
           ),
         ],
       ),
-    );
+    ),);
   }
 }
 

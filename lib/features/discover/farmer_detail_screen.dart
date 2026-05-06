@@ -58,7 +58,9 @@ class _FarmerDetailScreenState extends ConsumerState<FarmerDetailScreen> {
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
         ref.read(navBarVisibleProvider.notifier).show();
-        Navigator.of(context).pop();
+        if (Navigator.of(context).canPop()) {
+          Navigator.of(context).pop();
+        }
       },
       child: Scaffold(
         backgroundColor: bg,

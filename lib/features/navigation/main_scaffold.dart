@@ -1,20 +1,13 @@
-import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/l10n/app_localizations.dart';
-// import '../../l10n/app_localizations.dart' show AppLocalizations; // Removed unused import
 import '../../shared/widgets/glass_container.dart';
 import '../../shared/widgets/premium_background.dart';
 import '../../shared/widgets/pressable_scale.dart';
 import '../../core/providers/settings_provider.dart';
-import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import '../../core/utils/responsive_utils.dart';
 import 'navigation_providers.dart';
-
 class MainScaffold extends ConsumerStatefulWidget {
   final StatefulNavigationShell navigationShell;
 
@@ -26,7 +19,6 @@ class MainScaffold extends ConsumerStatefulWidget {
 
 class _MainScaffoldState extends ConsumerState<MainScaffold> {
   final GlobalKey _navBarKey = GlobalKey();
-  DateTime? _lastBackPressTime;
 
   @override
   void initState() {
@@ -105,54 +97,8 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
     final isKeyboardVisible = viewInsets.bottom > 0;
     final navVisible = ref.watch(navBarVisibleProvider) && !isKeyboardVisible;
 
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (bool didPop, Object? result) async {
-        if (didPop) return;
-
-        // 1. Prioritize internal navigator pop
-        if (context.canPop()) {
-          context.pop();
-          // Force visibility immediately and after a short delay to account for animations
-          ref.read(navBarVisibleProvider.notifier).show();
-          Future.delayed(const Duration(milliseconds: 100), () {
-            if (mounted) ref.read(navBarVisibleProvider.notifier).show();
-          });
-          Future.delayed(const Duration(milliseconds: 400), () {
-            if (mounted) ref.read(navBarVisibleProvider.notifier).show();
-          });
-          return;
-        }
-
-        // 2. If not on Discovery tab (index 0), switch to it instead of exiting
-        if (widget.navigationShell.currentIndex != 0) {
-          _onTap(0);
-          return;
-        }
-
-        // 3. Double-tap exit logic
-        final now = DateTime.now();
-        final isFirstPressOrExpired =
-            _lastBackPressTime == null ||
-            now.difference(_lastBackPressTime!) > const Duration(seconds: 2);
-
-        if (isFirstPressOrExpired) {
-          _lastBackPressTime = now;
-          if (!kIsWeb && !Platform.isWindows) {
-            await HapticFeedback.lightImpact();
-          }
-          if (context.mounted) _showFrostedExitToast(context);
-          return;
-        }
-
-        // 4. Final Exit
-        if (!kIsWeb && !Platform.isWindows) {
-          await HapticFeedback.mediumImpact();
-        }
-        await SystemNavigator.pop();
-      },
-      child: PremiumBackground(
-        child: Scaffold(
+    return PremiumBackground(
+      child: Scaffold(
           backgroundColor: Colors.transparent,
           extendBody: true,
           body: Stack(
@@ -280,22 +226,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  void _showFrostedExitToast(BuildContext context) {
-    final overlay = Overlay.of(context);
-    late OverlayEntry entry;
-
-    entry = OverlayEntry(
-      builder: (context) => _FrostedCapsuleToast(
-        message: ref.t('exit_confirm'),
-        onFinished: () => entry.remove(),
-      ),
-    );
-
-    overlay.insert(entry);
+      );
   }
 }
 
@@ -463,91 +394,3 @@ class AnimatedBranchContainer extends StatelessWidget {
   }
 }
 
-class _FrostedCapsuleToast extends StatefulWidget {
-  final String message;
-  final VoidCallback onFinished;
-
-  const _FrostedCapsuleToast({required this.message, required this.onFinished});
-
-  @override
-  State<_FrostedCapsuleToast> createState() => _FrostedCapsuleToastState();
-}
-
-class _FrostedCapsuleToastState extends State<_FrostedCapsuleToast>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _fade;
-  late Animation<double> _scale;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-    );
-
-    _fade = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
-    _scale = Tween<double>(
-      begin: 0.8,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
-
-    _controller.forward();
-
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        _controller.reverse().then((_) => widget.onFinished());
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
-    return Positioned(
-      bottom: 110 + bottomPadding,
-      left: 0,
-      right: 0,
-      child: Center(
-        child: FadeTransition(
-          opacity: _fade,
-          child: ScaleTransition(
-            scale: _scale,
-            child: Material(
-              color: Colors.transparent,
-              child: GlassContainer(
-                borderRadius: 30,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
-                ),
-                backgroundGradient: LinearGradient(
-                  colors: [
-                    Colors.white.withValues(alpha: 0.15),
-                    Colors.white.withValues(alpha: 0.05),
-                  ],
-                ),
-                borderColor: Colors.white.withValues(alpha: 0.2),
-                child: Text(
-                  widget.message,
-                  style: GoogleFonts.outfit(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}

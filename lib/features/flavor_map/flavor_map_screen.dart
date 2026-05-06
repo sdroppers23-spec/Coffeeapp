@@ -13,6 +13,7 @@ import '../../core/l10n/flavor_descriptions.dart';
 import '../navigation/navigation_providers.dart';
 import '../../shared/widgets/sensory_radar_chart.dart';
 import '../../shared/models/processing_methods_repository.dart';
+import '../../shared/widgets/double_back_pop_scope.dart';
 
 // Duplicates removed, using shared versions from sensory_radar_chart.dart
 
@@ -60,7 +61,9 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
   @override
   Widget build(BuildContext context) {
     final values = ref.watch(flavorValuesProvider);
-    return Scaffold(
+    return DoubleBackPopScope(
+      isFirstTab: true,
+      child: Scaffold(
       backgroundColor: Colors.transparent,
       body: SafeArea(
         child: Column(
@@ -331,7 +334,7 @@ class _FlavorMapScreenState extends ConsumerState<FlavorMapScreen> {
           ],
         ),
       ),
-    );
+    ),);
   }
 
   Widget _buildMethodChip(String id) {

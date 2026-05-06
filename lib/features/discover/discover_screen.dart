@@ -12,6 +12,8 @@ import './roasters_screen.dart';
 import '../navigation/navigation_providers.dart';
 import '../specialty/specialty_screen.dart';
 import '../../shared/widgets/sync_indicator.dart';
+import 'package:go_router/go_router.dart';
+
 
 class DiscoverScreen extends ConsumerStatefulWidget {
   const DiscoverScreen({super.key});
@@ -102,9 +104,27 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
       _selectedTabId = tabOrder.first.name;
     }
 
-    return Scaffold(
-      backgroundColor: Colors.transparent, // Sync with global background
-      extendBody: true,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        final order = ref.read(discoveryTabOrderProvider);
+        final currentIndex = order.indexWhere((t) => t.name == _selectedTabId);
+        
+        if (currentIndex > 0) {
+          final prevTabId = order[currentIndex - 1].name;
+          ref.read(navBarVisibleProvider.notifier).show();
+          setState(() {
+            _selectedTabId = prevTabId;
+          });
+          _scrollToActiveTab(prevTabId);
+        } else {
+          StatefulNavigationShell.of(context).goBranch(0);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.transparent, // Sync with global background
+        extendBody: true,
       floatingActionButton: null,
       body: SafeArea(
         bottom: false,
@@ -232,7 +252,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
           ],
         ),
       ),
-    );
+    ),);
   }
 
   Widget _buildTabContent(String tabId) {

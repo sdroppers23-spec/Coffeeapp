@@ -409,9 +409,13 @@ class EncyclopediaLotListCard extends ConsumerWidget {
                     const SizedBox(height: 12),
                     Row(
                       children: [
-                        _TraitBadge(text: entry.processMethod),
+                        Flexible(
+                          child: _TraitBadge(text: entry.processMethod),
+                        ),
                         const SizedBox(width: 6),
-                        _TraitBadge(text: entry.roastLevel),
+                        Flexible(
+                          child: _TraitBadge(text: entry.roastLevel),
+                        ),
                       ],
                     ),
                   ],
@@ -495,6 +499,8 @@ class _TraitBadge extends StatelessWidget {
       ),
       child: Text(
         text.toUpperCase(),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: GoogleFonts.outfit(
           fontSize: 8,
           color: const Color(0xFFC8A96E).withValues(alpha: 0.6),

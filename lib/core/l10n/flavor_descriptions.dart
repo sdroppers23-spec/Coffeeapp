@@ -166,38 +166,64 @@ class FlavorDescriptions {
             'Comforting notes of chocolate, nuts, and cocoa. These result from stable sugars and oils that develop early in the roast. The standard profile for many high-quality Arabicas from Brazil, Guatemala, and Vietnam.',
         'uk':
             'Приємні ноти шоколаду, горіхів та какао. Вони виникають завдяки стабільним цукрам та оліям, що розвиваються на початку обсмаження. Звичайний профіль для багатьох високоякісних арабік з Бразилії, Гватемали та В\'єтнаму.',
-        'de': 'Noten von Schokolade und Nüssen.',
-        'fr': 'Notes de chocolat et de noisettes.',
-        'es': 'Notas de chocolate y frutos secos.',
-        'it': 'Note di cioccolato e frutta a guscio.',
-        'pt': 'Notas de chocolate e nozes.',
-        'pl': 'Nuty czekolady i orzechów.',
-        'nl': 'Tonen van chocolade en noten.',
-        'sv': 'Toner av choklad och nötter.',
-        'tr': 'Çikolata ve fındık notaları.',
-        'ja': 'チョコレートやナッツのノート。',
-        'ko': '초콜릿과 견과류의 노트입니다.',
-        'zh': '巧克力和坚果的味道。',
-        'ar': 'نكهات الشوكولاتة والمكسرات.',
+        'de':
+            'Angenehme Noten von Schokolade, Nüssen und Kakao. Diese entstehen durch stabile Zucker und Öle, die sich zu Beginn der Röstung entwickeln. Ein typisches Profil für viele hochwertige Arabicas aus Brasilien, Guatemala und Vietnam.',
+        'fr':
+            'Notes réconfortantes de chocolat, de noix et de cacao. Celles-ci résultent de sucres et d\'huiles stables qui se développent tôt dans la torréfaction. Le profil standard pour de nombreux Arabicas de haute qualité du Brésil, du Guatemala et du Vietnam.',
+        'es':
+            'Notas reconfortantes de chocolate, frutos secos y cacao. Estas resultan de azúcares y aceites estables que se desarrollan temprano en el tueste. El perfil estándar para muchos Arábicas de alta calidad de Brasil, Guatemala y Vietnam.',
+        'it':
+            'Note confortevoli di cioccolato, frutta a guscio e cacao. Derivano da zuccheri e oli stabili che si sviluppano all\'inizio della tostatura. Il profilo standard per molti Arabica di alta qualità provenienti da Brasile, Guatemala e Vietnam.',
+        'pt':
+            'Notas reconfortantes de chocolate, nozes e cacau. Estas resultam de açúcares e óleos estáveis que se desenvolvem cedo na torra. O perfil padrão para muitos Arábicas de alta qualidade do Brasil, Guatemala e Vietnã.',
+        'pl':
+            'Przyjemne nuty czekolady, orzechów i kakao. Powstają one dzięki stabilnym cukrom i olejom, które rozwijają się na początku palenia. Typowy profil dla wielu wysokiej jakości arabik z Brazylii, Gwatemali i Wietnamu.',
+        'nl':
+            'Comfortabele tonen van chocolade, noten en cacao. Deze zijn het resultaat van stabiele suikers en oliën die zich vroeg in de branding ontwikkelen. Het standaardprofiel voor veel hoogwaardige Arabica\'s uit Brazilië, Guatemala en Vietnam.',
+        'sv':
+            'Behagliga toner av choklad, nötter och kakao. Dessa beror på stabila sockerarter och oljor som utvecklas tidigt i rostningen. Standardprofilen för många högkvalitativa arabicabönor från Brasilien, Guatemala och Vietnam.',
+        'tr':
+            'Çikolata, fındık ve kakaonun rahatlatıcı notaları. Bunlar, kavurmanın erken aşamalarında gelişen kararlı şekerler ve yağlardan kaynaklanır. Brezilya, Guatemala ve Vietnam\'dan gelen birçok yüksek kaliteli Arabica için standart profildir.',
+        'ja':
+            'チョコレート、ナッツ、ココアの心地よいノート。これらは焙煎の初期段階で発達する安定した糖分とオイルに由来します。ブラジル、グアテマラ、ベトナム産の多くの高品質アラビカ種の標準的なプロフィールです。',
+        'ko':
+            '초콜릿, 견과류, 코코아의 편안한 노트입니다. 이는 로스팅 초기 단계에서 발달하는 안정적인 당분과 오일에서 비롯됩니다. 브라질, 과테말라, 베트남산 고품질 아라비카의 표준적인 프로필입니다.',
+        'zh':
+            '巧克力、坚果和可可的舒适香气。这些源于烘焙初期形成的稳定糖分和油脂。是巴西、危地马拉和越南等许多高品质阿拉比卡咖啡豆的标准风味。',
+        'ar':
+            'نكهات مريحة من الشوكولاتة والمكسرات والكاكاو. تنتج هذه عن السكريات والزيوت المستقرة التي تتطور في وقت مبكر من التحميص. الملف التعريفي القياسي للعديد من أنواع أرابيكا عالية الجودة من البرازيل وغواتيمالا وفيتنام.',
       },
       'wheel_cat_sweet': {
         'en':
             'The foundational sweetness in coffee, ranging from white sugar to complex molasses. It comes from the breakdown of carbohydrates during roasting. Present in almost all balanced, specialty coffees.',
         'uk':
             'Основна солодкість кави, від білого цукру до складних патокових відтінків. Вона походить від розпаду вуглеводів під час обсмажування. Присутня майже у всій збалансованій спешелті-каві.',
-        'de': 'Süße Aromen von Zucker bis Karamell.',
-        'fr': 'Arômes sucrés allant du sucre au caramel.',
-        'es': 'Aromas dulces que van desde el azúcar hasta el caramelo.',
-        'it': 'Aromi dolci che vanno dallo zucchero al caramello.',
-        'pt': 'Aromas doces que variam do açúcar ao caramelo.',
-        'pl': 'Słodkie aromaty od cukru po karmel.',
-        'nl': 'Zoete aroma\'s variërend van suiker tot karamel.',
-        'sv': 'Söta aromer från socker till karamell.',
-        'tr': 'Şekerden karamele kadar tatlı aromalar.',
-        'ja': '砂糖からキャラメルまでの甘いアロマ。',
-        'ko': '설탕에서 카라멜에 이르는 달콤한 향입니다.',
-        'zh': '从糖到焦糖的甜味香气。',
-        'ar': 'نكهات حلوة تتراوح من السكر إلى الكراميل.',
+        'de':
+            'Die grundlegende Süße im Kaffee, die von weißem Zucker bis zu komplexer Melasse reicht. Sie entsteht durch den Abbau von Kohlenhydraten während der Röstung. In fast allen ausgewogenen Specialty Coffees enthalten.',
+        'fr':
+            'La sucrosité fondamentale du café, allant du sucre blanc à la mélasse complexe. Elle provient de la dégradation des glucides pendant la torréfaction. Présente dans presque tous les cafés de spécialité équilibrés.',
+        'es':
+            'El dulzor fundamental en el café, que va desde el azúcar blanco hasta la melaza compleja. Proviene de la descomposición de los carbohidratos durante el tueste. Presente en casi todos los cafés de especialidad equilibrados.',
+        'it':
+            'La dolcezza fondamentale nel caffè, che va dallo zucchero bianco alla melassa complessa. Deriva dalla scomposizione dei carboidrati durante la tostatura. Presente in quasi tutti i caffè specialty bilanciati.',
+        'pt':
+            'A doçura fundamental no café, variando de açúcar branco a melaço complexo. Vem da quebra de carboidratos durante a torra. Presente em quase todos os cafés de especialidade equilibrados.',
+        'pl':
+            'Podstawowa słodycz w kawie, od białego cukru po złożone odcienie melasy. Pochodzi z rozpadu węglowodanów podczas palenia. Obecna w prawie wszystkich zbalansowanych kawach specialty.',
+        'nl':
+            'De fundamentele zoetheid in koffie, variërend van witte suiker tot complexe melasse. Het komt voort uit de afbraak van koolhydraten tijdens het branden. Aanwezig in bijna alle gebalanceerde specialty koffies.',
+        'sv':
+            'Den grundläggande sötman i kaffe, från vitt socker till komplex melass. Den kommer från nedbrytningen av kolhydrater under rostningen. Finns i nästan allt balanserat specialkaffe.',
+        'tr':
+            'Kahvedeki temel tatlılık, beyaz şekerden karmaşık pekmezlere kadar uzanır. Kavurma sırasında karbonhidratların parçalanmasından kaynaklanır. Neredeyse tüm dengeli, nitelikli kahvelerde bulunur.',
+        'ja':
+            '白砂糖から複雑な廃糖蜜まで、コーヒーの基礎となる甘み。焙煎中の炭水化物の分解に由来します。ほぼすべてのバランスの取れたスペシャリティコーヒーに含まれています。',
+        'ko':
+            '백설탕에서 복합적인 당밀에 이르는 커피의 기초적인 단맛입니다. 로스팅 중 탄수화물의 분해에서 비롯됩니다. 거의 모든 균형 잡힌 스페셜티 커피에 존재합니다.',
+        'zh':
+            '咖啡的基础甜感，范围从白糖到复杂的糖蜜。源于烘焙过程中碳水化合物的分解。几乎存在于所有平衡的精品咖啡中。',
+        'ar':
+            'الحلاوة الأساسية في القهوة، من السكر الأبيض إلى دبس السكر المعقد. تأتي من تكسر الكربوهيدرات أثناء التحميص. موجودة في جميع أنواع القهوة المختصة المتوازنة تقريباً.',
       },
       'wheel_cat_others': {
         'en':
@@ -397,44 +423,64 @@ class FlavorDescriptions {
             'Deep, dark chocolate profiles. Emerges during prolonged development in the roast. Quintessential Brazil and Indian Monsoon Malabar notes.',
         'uk':
             'Глибокі профілі темного шоколаду. З\'являються під час тривалого розвитку при обсмажуванні. Квінтесенція нот Бразилії та індійського Monsoon Malabar.',
-        'de': 'Reiche Schokoladen- und Kakaoaromen.',
-        'fr': 'Riches arômes de chocolat et de cacao.',
-        'es': 'Ricos aromas de chocolate y cacao.',
-        'it': 'Ricchi aromi di cioccolato e cacao.',
-        'pt': 'Ricos aromas de chocolate e cacau.',
+        'de':
+            'Tiefe, dunkle Schokoladenprofile. Entstehen bei längerer Entwicklung während der Röstung. Wesentliche Noten für Brasilien und indischen Monsoon Malabar.',
+        'fr':
+            'Profils profonds de chocolat noir. Émerge pendant un développement prolongé lors de la torréfaction. Notes quintessencielles du Brésil et du Monsoon Malabar indien.',
+        'es':
+            'Perfiles profundos de chocolate negro. Surgen durante un desarrollo prolongado en el tueste. Notas esenciales de Brasil y el Monsoon Malabar de la India.',
+        'it':
+            'Profili profondi di cioccolato fondente. Emergono durante uno sviluppo prolungato nella tostatura. Note essenziali per il Brasile e il Monsoon Malabar indiano.',
+        'pt':
+            'Perfis profundos de chocolate amargo. Surgem durante um desenvolvimento prolongado na torra. Notas essenciais do Brasil e do Monsoon Malabar indiano.',
         'pl':
-            'Deep, dark chocolate profiles. Emerges during prolonged development in the roast. Quintessential Brazil and Indian Monsoon Malabar notes.',
-        'nl': 'Rijke chocolade- en cacao-aroma\'s.',
-        'sv': 'Richa choklad- och kakaoaromer.',
-        'tr': 'Zengin çikolata ve kakao aromaları.',
+            'Głębokie profile ciemnej czekolady. Pojawiają się podczas dłuższego rozwoju w procesie palenia. Kwintesencja nut brazylijskich i indyjskiego Monsoon Malabar.',
+        'nl':
+            'Diepe, donkere chocoladeprofielen. Ontstaan bij een langdurige ontwikkeling tijdens het branden. Essentiële tonen voor Brazilië en Indiase Monsoon Malabar.',
+        'sv':
+            'Djupa profiler av mörk choklad. Uppstår vid långvarig utveckling under rostningen. Typiska noter för Brasilien och indisk Monsoon Malabar.',
+        'tr':
+            'Derin, bitter çikolata profilleri. Kavurma sırasında uzun süreli gelişimle ortaya çıkar. Brezilya ve Hindistan Monsoon Malabar\'ın temel notalarıdır.',
         'ja':
-            'Deep, dark chocolate profiles. Emerges during prolonged development in the roast. Quintessential Brazil and Indian Monsoon Malabar notes.',
-        'ko': '풍부한 초콜릿과 코코아 향입니다.',
+            '深いダークチョコレートのプロフィール。焙煎中の長めのディベロップメント期間に現れます。ブラジルやインドのモンスーン・マラバールの典型的なノートです。',
+        'ko':
+            '깊고 진한 다크 초콜릿 프로필입니다. 로스팅 중 긴 디벨롭먼트 과정에서 나타납니다. 브라질과 인도 몬순 말라바르의 전형적인 노트입니다.',
         'zh':
-            'Deep, dark chocolate profiles. Emerges during prolonged development in the roast. Quintessential Brazil and Indian Monsoon Malabar notes.',
-        'ar': 'نكهات شوكولاتة وكاكاو غنية.',
+            '深沉的黑巧克力风味。在烘焙过程中较长的发展阶段出现。是巴西和印度季风马拉巴咖啡豆的典型风味。',
+        'ar':
+            'ملفات تعريف الشوكولاتة الداكنة العميقة. تظهر أثناء التطور الطويل في التحميص. نكهات جوهرية لمحاصيل البرازيل والمونسون مالابار الهندية.',
       },
       'wheel_sub_nutty': {
         'en':
             'Earthy and savory notes of roasted nuts. Comes from amino acids reacting with sugars. Found in Classic South American profiles.',
         'uk':
             'Землисті та пікантні ноти смажених горіхів. Походять від реакції амінокислот із цукрами. Зустрічаються в класичних південноамериканських профілях.',
-        'de': 'Aromen von gerösteten Nüssen.',
-        'fr': 'Arômes de fruits secs torréfiés.',
-        'es': 'Aromas de frutos secos tostados.',
-        'it': 'Aromi di frutta a guscio tostata.',
-        'pt': 'Aromas de nozes torradas.',
+        'de':
+            'Erdige und herzhafte Noten von gerösteten Nüssen. Entstehen durch die Reaktion von Aminosäuren mit Zucker. In klassischen südamerikanischen Profilen zu finden.',
+        'fr':
+            'Notes terreuses et savoureuses de fruits à coque grillés. Provient de la réaction des acides aminés avec les sucres. Présent dans les profils classiques d\'Amérique du Sud.',
+        'es':
+            'Notas terrosas y sabrosas de frutos secos tostados. Provienen de la reacción de los aminoácidos con los azúcares. Se encuentran en los perfiles clásicos de América del Sur.',
+        'it':
+            'Note terrose e sapide di frutta a guscio tostata. Derivano dalla reazione degli amminoacidi con gli zuccheri. Si trovano nei classici profili sudamericani.',
+        'pt':
+            'Notas terrosas e salgadas de nozes torradas. Provém da reação de aminoácidos com açúcares. Encontrado em perfis clássicos da América do Sul.',
         'pl':
-            'Earthy and savory notes of roasted nuts. Comes from amino acids reacting with sugars. Found in Classic South American profiles.',
-        'nl': 'Aroma\'s van geroosterde noten.',
-        'sv': 'Aromer av rostade nötter.',
-        'tr': 'Kavrulmuş fındık aromaları.',
+            'Ziemiste i pikantne nuty prażonych orzechów. Pochodzą z reakcji aminokwasów z cukrami. Spotykane w klasycznych profilach południowoamerykańskich.',
+        'nl':
+            'Aardse en hartige tonen van geroosterde noten. Voortkomend uit de reactie van aminozuren met suikers. Te vinden in klassieke Zuid-Amerikaanse profielen.',
+        'sv':
+            'Jordiga och fylliga toner av rostade nötter. Kommer från aminosyror som reagerar med socker. Finns i klassiska sydamerikanska profiler.',
+        'tr':
+            'Kavrulmuş fındıkların topraksı ve lezzetli notaları. Amino asitlerin şekerlerle reaksiyona girmesinden kaynaklanır. Klasik Güney Amerika profillerinde bulunur.',
         'ja':
-            'Earthy and savory notes of roasted nuts. Comes from amino acids reacting with sugars. Found in Classic South American profiles.',
-        'ko': '구운 견과류의 향입니다.',
+            'ローストしたナッツの土っぽく香ばしいノート。アミノ酸が糖分と反応することで生まれます。南米のクラシックなプロフィールに見られます。',
+        'ko':
+            '구운 견과류의 흙내음과 고소한 노트입니다. 아미노산이 당분과 반응하여 생깁니다. 클래식한 남미 프로필에서 발견됩니다.',
         'zh':
-            'Earthy and savory notes of roasted nuts. Comes from amino acids reacting with sugars. Found in Classic South American profiles.',
-        'ar': 'نكهات مكسرات محمصة.',
+            '烘焙坚果的泥土味和咸鲜感。源于氨基酸与糖的反应。常见于经典的南美风味中。',
+        'ar':
+            'نكهات ترابية ومالحة للمكسرات المحمصة. تأتي من تفاعل الأحماض الأمينية مع السكريات. توجد في الملفات التعريفية الكلاسيكية لأمريكا الجنوبية.',
       },
       'wheel_sub_sugar_brown': {
         'en':
@@ -442,31 +488,31 @@ class FlavorDescriptions {
         'uk':
             'Багата карамельна та сиропна солодкість. Результат складного карамелізації цукрів. Універсальна нота для добре обсмажених середніх профілів.',
         'de':
-            'Rich caramel and syrup sweetness. The result of complex sugar browning. Universal in well-roasted medium profiles.',
+            'Reiche Karamell- und Sirupsüße. Das Ergebnis komplexer Zuckerbräunung. Universell in gut gerösteten mittleren Profilen.',
         'fr':
-            'Rich caramel and syrup sweetness. The result of complex sugar browning. Universal in well-roasted medium profiles.',
+            'Douceur riche de caramel et de sirop. Le résultat d\'un brunissement complexe des sucres. Universel dans les profils moyens bien torréfiés.',
         'es':
-            'Rich caramel and syrup sweetness. The result of complex sugar browning. Universal in well-roasted medium profiles.',
+            'Rico dulzor de caramelo y sirope. El resultado del pardeamiento complejo de los azúcares. Universal en perfiles medios bien tostados.',
         'it':
-            'Rich caramel and syrup sweetness. The result of complex sugar browning. Universal in well-roasted medium profiles.',
+            'Ricca dolcezza di caramello e sciroppo. Il risultato della complessa caramellizzazione degli zuccheri. Universale nei profili medi ben tostati.',
         'pt':
-            'Rich caramel and syrup sweetness. The result of complex sugar browning. Universal in well-roasted medium profiles.',
+            'Rica doçura de caramelo e xarope. O resultado do escurecimento complexo dos açúcares. Universal em perfis médios bem torrados.',
         'pl':
-            'Rich caramel and syrup sweetness. The result of complex sugar browning. Universal in well-roasted medium profiles.',
+            'Bogata karmelowa i syropowa słodycz. Wynik złożonej karmelizacji cukrów. Uniwersalna nuta dla dobrze wypalonych średnich profili.',
         'nl':
-            'Rich caramel and syrup sweetness. The result of complex sugar browning. Universal in well-roasted medium profiles.',
+            'Rijke karamel- en siroopzoetheid. Het resultaat van complexe suikerbruining. Universeel in goed gebrande medium profielen.',
         'sv':
-            'Rich caramel and syrup sweetness. The result of complex sugar browning. Universal in well-roasted medium profiles.',
+            'Rik karamell- och sirapssötma. Resultatet av komplex sockerbryning. Universellt i välrostade mellanprofiler.',
         'tr':
-            'Rich caramel and syrup sweetness. The result of complex sugar browning. Universal in well-roasted medium profiles.',
+            'Zengin karamel ve şurup tatlılığı. Karmaşık şeker esmerleşmesinin sonucudur. İyi kavrulmuş orta profillerde evrenseldir.',
         'ja':
-            'Rich caramel and syrup sweetness. The result of complex sugar browning. Universal in well-roasted medium profiles.',
+            '豊かなキャラメルやシロップの甘み。複雑な糖の褐色化の結果です。適切に焙煎されたミディアムプロフィールの多くに見られます。',
         'ko':
-            'Rich caramel and syrup sweetness. The result of complex sugar browning. Universal in well-roasted medium profiles.',
+            '풍부한 카라멜과 시럽의 단맛입니다. 복합적인 당의 갈변 반응 결과입니다. 잘 로스팅된 미디엄 프로필에서 보편적으로 나타납니다.',
         'zh':
-            'Rich caramel and syrup sweetness. The result of complex sugar browning. Universal in well-roasted medium profiles.',
+            '浓郁的焦糖和糖浆甜感。糖分复杂褐变反应的结果。在烘焙良好的中度风味中非常普遍。',
         'ar':
-            'Rich caramel and syrup sweetness. The result of complex sugar browning. Universal in well-roasted medium profiles.',
+            'حلاوة غنية بالكراميل والشراب. نتاج عملية تسمير السكريات المعقدة. شائعة في الملفات التعريفية المتوسطة المحمصة جيداً.',
       },
       'wheel_sub_tea': {
         'en':
@@ -506,31 +552,31 @@ class FlavorDescriptions {
         'uk':
             'Ароматні, затишні запахи, такі як ваніль або спеції. Походять від реакцій Майяра на пізніх стадіях. Типово для високоякісної арабіки з Центральної Америки.',
         'de':
-            'Fragrant, comforting scents like vanilla or spice. Derived from late-stage Maillard reactions. Typical of high-quality Arabicas from Central America.',
+            'Duftende, beruhigende Düfte wie Vanille oder Gewürze. Entstehen durch späte Maillard-Reaktionen. Typisch für hochwertige Arabicas aus Zentralamerika.',
         'fr':
-            'Fragrant, comforting scents like vanilla or spice. Derived from late-stage Maillard reactions. Typical of high-quality Arabicas from Central America.',
+            'Parfums parfumés et réconfortants comme la vanille ou les épices. Dérivé des réactions de Maillard à un stade avancé. Typique des Arabicas de haute qualité d\'Amérique centrale.',
         'es':
-            'Fragrant, comforting scents like vanilla or spice. Derived from late-stage Maillard reactions. Typical of high-quality Arabicas from Central America.',
+            'Aromas fragantes y reconfortantes como la vainilla o las especias. Derivados de las reacciones de Maillard en etapa tardía. Típicos de los Arábicas de alta calidad de América Central.',
         'it':
-            'Fragrant, comforting scents like vanilla or spice. Derived from late-stage Maillard reactions. Typical of high-quality Arabicas from Central America.',
+            'Profumi fragranti e confortevoli come la vaniglia o le spezie. Derivano dalle reazioni di Maillard in fase avanzata. Tipici degli Arabica di alta qualità del Centro America.',
         'pt':
-            'Fragrant, comforting scents like vanilla or spice. Derived from late-stage Maillard reactions. Typical of high-quality Arabicas from Central America.',
+            'Aromas perfumados e reconfortantes, como baunilha ou especiarias. Derivados de reações de Maillard em estágio avançado. Típicos de Arábicas de alta qualidade da América Central.',
         'pl':
-            'Fragrant, comforting scents like vanilla or spice. Derived from late-stage Maillard reactions. Typical of high-quality Arabicas from Central America.',
+            'Aromatyczne, przytulne zapachy, takie jak wanilia lub przyprawy. Pochodzą z reakcji Maillarda na późnych etapach. Typowe dla wysokiej jakości arabik z Ameryki Środkowej.',
         'nl':
-            'Fragrant, comforting scents like vanilla or spice. Derived from late-stage Maillard reactions. Typical of high-quality Arabicas from Central America.',
+            'Geurige, rustgevende geuren zoals vanille of specerijen. Afgeleid van Maillard-reacties in een laat stadium. Typisch voor hoogwaardige Arabica\'s uit Centraal-Amerika.',
         'sv':
-            'Fragrant, comforting scents like vanilla or spice. Derived from late-stage Maillard reactions. Typical of high-quality Arabicas from Central America.',
+            'Väldoftande, behagliga dofter som vanilj eller kryddor. Kommer från Maillard-reaktioner i sent skede. Typiskt för arabicabönor av hög kvalitet från Centralamerika.',
         'tr':
-            'Fragrant, comforting scents like vanilla or spice. Derived from late-stage Maillard reactions. Typical of high-quality Arabicas from Central America.',
+            'Vanilya veya baharat gibi hoş kokulu, rahatlatıcı kokular. Geç aşama Maillard reaksiyonlarından türetilir. Orta Amerika\'dan gelen yüksek kaliteli Arabica\'lar için tipiktir.',
         'ja':
-            'Fragrant, comforting scents like vanilla or spice. Derived from late-stage Maillard reactions. Typical of high-quality Arabicas from Central America.',
+            'バニラやスパイスのような、香り高く心地よい香り。メイラード反応の後期段階で生成されます。中米産の高品質なアラビカ種の典型的な特徴です。',
         'ko':
-            'Fragrant, comforting scents like vanilla or spice. Derived from late-stage Maillard reactions. Typical of high-quality Arabicas from Central America.',
+            '바닐라나 스파이스 같은 향기롭고 편안한 향입니다. 마이야르 반응의 후기 단계에서 유래합니다. 중앙 아메리카의 고품질 아라비카에서 전형적으로 나타납니다.',
         'zh':
-            'Fragrant, comforting scents like vanilla or spice. Derived from late-stage Maillard reactions. Typical of high-quality Arabicas from Central America.',
+            '香气扑鼻、令人愉悦的味道，如香草或香料。源于美拉德反应的后期阶段。是中美洲高品质阿拉比卡咖啡豆的典型特征。',
         'ar':
-            'Fragrant, comforting scents like vanilla or spice. Derived from late-stage Maillard reactions. Typical of high-quality Arabicas from Central America.',
+            'روائح عطرية ومريحة مثل الفانيليا أو التوابل. مشتقة من مراحل متأخرة لتفاعلات مايار. نموذجية لمحاصيل أرابيكا عالية الجودة من أمريكا الوسطى.',
       },
       'wheel_sub_brown_spice': {
         'en':
@@ -1436,31 +1482,31 @@ class FlavorDescriptions {
         'uk':
             'Інтенсивно квітковий аромат, подібний до парфумів. Пов\'язаний з високою концентрацією ліналоолу. Визначальна нота панамських та ефіопських Гейш.',
         'de':
-            'Intensely floral and perfume-like aroma. Linked to high concentrations of linalool. The definitive note of Panamanian and Ethiopian Geshas.',
+            'Intensiv blumiges und parfümartiges Aroma. Verbunden mit hohen Linalool-Konzentrationen. Die definitive Note von panamaischen und äthiopischen Geshas.',
         'fr':
-            'Intensely floral and perfume-like aroma. Linked to high concentrations of linalool. The definitive note of Panamanian and Ethiopian Geshas.',
+            'Arôme intensément floral et semblable à un parfum. Lié à des concentrations élevées de linalol. La note emblématique des Geshas du Panama et d\'Éthiopie.',
         'es':
-            'Intensely floral and perfume-like aroma. Linked to high concentrations of linalool. The definitive note of Panamanian and Ethiopian Geshas.',
+            'Aroma intensamente floral y perfumado. Vinculado a altas concentraciones de linalool. La nota definitiva de los Geshas panameños y etíopes.',
         'it':
-            'Intensely floral and perfume-like aroma. Linked to high concentrations of linalool. The definitive note of Panamanian and Ethiopian Geshas.',
+            'Aroma intensamente floreale e simile a un profumo. Legato ad alte concentrazioni di linalolo. La nota definitiva dei Gesha panamensi ed etiopi.',
         'pt':
-            'Intensely floral and perfume-like aroma. Linked to high concentrations of linalool. The definitive note of Panamanian and Ethiopian Geshas.',
+            'Aroma intensamente floral e perfumado. Ligado a altas concentrações de linalol. A nota definitiva dos Geshas panamenhos e etíopes.',
         'pl':
-            'Intensely floral and perfume-like aroma. Linked to high concentrations of linalool. The definitive note of Panamanian and Ethiopian Geshas.',
+            'Intensywnie kwiatowy i perfumowy aromat. Związany z wysokim stężeniem linalolu. Definitywna nuta panamskich i etiopskich kaw odmiany Gesha.',
         'nl':
-            'Intensely floral and perfume-like aroma. Linked to high concentrations of linalool. The definitive note of Panamanian and Ethiopian Geshas.',
+            'Intens bloemig en parfumachtig aroma. Gekoppeld aan hoge concentraties linalool. De definitieve noot van Panamese en Ethiopische Gesha\'s.',
         'sv':
-            'Intensely floral and perfume-like aroma. Linked to high concentrations of linalool. The definitive note of Panamanian and Ethiopian Geshas.',
+            'Intensivt blommig och parfymliknande arom. Kopplad till höga koncentrationer av linalool. Den definitiva karaktären i panamansk och etiopisk Gesha.',
         'tr':
-            'Intensely floral and perfume-like aroma. Linked to high concentrations of linalool. The definitive note of Panamanian and Ethiopian Geshas.',
+            'Yoğun çiçeksi ve parfüm benzeri aroma. Yüksek linalool konsantrasyonuyla bağlantılıdır. Panama ve Etiyopya Gesha\'larının belirleyici notasıdır.',
         'ja':
-            'Intensely floral and perfume-like aroma. Linked to high concentrations of linalool. The definitive note of Panamanian and Ethiopian Geshas.',
+            '非常にフローラルで香水のようなアロマ。高濃度のリナロールに関連しています。パナマ産およびエチオピア産ゲイシャ種の決定的なノートです。',
         'ko':
-            'Intensely floral and perfume-like aroma. Linked to high concentrations of linalool. The definitive note of Panamanian and Ethiopian Geshas.',
+            '강렬한 꽃향기와 향수 같은 아로마. 고농도의 리날로올과 관련이 있습니다. 파나마 및 에티오피아 게이샤의 결정적인 노트입니다.',
         'zh':
-            'Intensely floral and perfume-like aroma. Linked to high concentrations of linalool. The definitive note of Panamanian and Ethiopian Geshas.',
+            '浓郁的花香和如香水般的气息。与高浓度的芳樟醇有关。是巴拿马和埃塞俄比亚瑰夏咖啡的标志性风味。',
         'ar':
-            'Intensely floral and perfume-like aroma. Linked to high concentrations of linalool. The definitive note of Panamanian and Ethiopian Geshas.',
+            'رائحة زهرية مكثفة تشبه العطر. مرتبطة بتركيزات عالية من اللينالول. النوتة المميزة لقهوة الغيشا البنمية والإثيوبية.',
       },
       'wheel_note_vanilla': {
         'en':
@@ -1468,31 +1514,31 @@ class FlavorDescriptions {
         'uk':
             'Солодка, кремова та тонка ароматна нота. Виникає в середині процесу обсмажування. Часто зустрічається у висококласних митих центральноамериканських лотах.',
         'de':
-            'Sweet, creamy, and subtle aromatic note. Arises during the middle of the roasting process. Often found in high-grade washed Central American lots.',
+            'Süße, cremige und subtile aromatische Note. Entsteht in der Mitte des Röstprozesses. Häufig in hochwertigen gewaschenen zentralamerikanischen Lots zu finden.',
         'fr':
-            'Sweet, creamy, and subtle aromatic note. Arises during the middle of the roasting process. Often found in high-grade washed Central American lots.',
+            'Note aromatique sucrée, crémeuse et subtile. Apparaît au milieu du processus de torréfaction. Souvent présente dans les lots lavés de haute qualité d\'Amérique centrale.',
         'es':
-            'Sweet, creamy, and subtle aromatic note. Arises during the middle of the roasting process. Often found in high-grade washed Central American lots.',
+            'Nota aromática dulce, cremosa y sutil. Surge a mitad del proceso de tueste. A menudo se encuentra en lotes lavados de alta calidad de América Central.',
         'it':
-            'Sweet, creamy, and subtle aromatic note. Arises during the middle of the roasting process. Often found in high-grade washed Central American lots.',
+            'Nota aromatica dolce, cremosa e sottile. Emerge a metà del processo di tostatura. Spesso presente nei lotti lavati di alta qualità dell\'America Centrale.',
         'pt':
-            'Sweet, creamy, and subtle aromatic note. Arises during the middle of the roasting process. Often found in high-grade washed Central American lots.',
+            'Nota aromática doce, cremosa e sutil. Surge no meio do processo de torra. Frequentemente encontrada em lotes lavados de alta qualidade da América Central.',
         'pl':
-            'Sweet, creamy, and subtle aromatic note. Arises during the middle of the roasting process. Often found in high-grade washed Central American lots.',
+            'Słodka, kremowa i subtelna nuta aromatyczna. Pojawia się w połowie procesu palenia. Często spotykana w wysokiej klasy mytych partiach z Ameryki Środkowej.',
         'nl':
-            'Sweet, creamy, and subtle aromatic note. Arises during the middle of the roasting process. Often found in high-grade washed Central American lots.',
+            'Zoete, romige en subtiele aromatische noot. Ontstaat halverwege het brandproces. Vaak te vinden in hoogwaardige gewassen Centraal-Amerikaanse kavels.',
         'sv':
-            'Sweet, creamy, and subtle aromatic note. Arises during the middle of the roasting process. Often found in high-grade washed Central American lots.',
+            'Söt, krämig och subtil aromatisk not. Uppstår i mitten av rostningsprocessen. Hittas ofta i tvättade höghöjdspartier från Centralamerika.',
         'tr':
-            'Sweet, creamy, and subtle aromatic note. Arises during the middle of the roasting process. Often found in high-grade washed Central American lots.',
+            'Tatlı, kremsi ve hafif aromatik nota. Kavurma işleminin ortasında ortaya çıkar. Genellikle yüksek kaliteli yıkanmış Orta Amerika partilerinde bulunur.',
         'ja':
-            'Sweet, creamy, and subtle aromatic note. Arises during the middle of the roasting process. Often found in high-grade washed Central American lots.',
+            '甘くクリーミーで、繊細なアロマのノート。焙煎工程の中盤に生じます。高品質な中米産のウォッシュドロットによく見られます。',
         'ko':
-            'Sweet, creamy, and subtle aromatic note. Arises during the middle of the roasting process. Often found in high-grade washed Central American lots.',
+            '달콤하고 크리미하며 미묘한 아로마 노트. 로스팅 과정 중간에 발생합니다. 고품질의 워시드 중앙아메리카 로트에서 자주 발견됩니다.',
         'zh':
-            'Sweet, creamy, and subtle aromatic note. Arises during the middle of the roasting process. Often found in high-grade washed Central American lots.',
+            '甜美、柔滑且细腻的香气。产生于烘焙过程的中期。常见于优质的中美洲水洗咖啡中。',
         'ar':
-            'Sweet, creamy, and subtle aromatic note. Arises during the middle of the roasting process. Often found in high-grade washed Central American lots.',
+            'نوتة عطرية حلوة وكريمية ورقيقة. تظهر في منتصف عملية التحميص. توجد غالباً في دفعات القهوة المغسولة عالية الجودة من أمريكا الوسطى.',
       },
       'wheel_note_vanilla_bean': {
         'en':
@@ -1500,31 +1546,31 @@ class FlavorDescriptions {
         'uk':
             'Інтенсивна, деревна та масляниста солодкість. Представляє більш концентрований ароматний профіль, ніж просто ваніль. Зустрічається в унікальних мікролотах сорту Бурбон.',
         'de':
-            'Intense, woodsy and oily sweetness. Represents a more concentrated aromatic profile than simple vanilla. Found in unique Bourbon-variety micro-lots.',
+            'Intensive, waldige und ölige Süße. Stellt ein konzentrierteres aromatisches Profil als einfache Vanille dar. In einzigartigen Bourbon-Varietät-Mikrolots zu finden.',
         'fr':
-            'Intense, woodsy and oily sweetness. Represents a more concentrated aromatic profile than simple vanilla. Found in unique Bourbon-variety micro-lots.',
+            'Douceur intense, boisée et huileuse. Représente un profil aromatique plus concentré que la simple vanille. Présente dans des micro-lots uniques de variété Bourbon.',
         'es':
-            'Intense, woodsy and oily sweetness. Represents a more concentrated aromatic profile than simple vanilla. Found in unique Bourbon-variety micro-lots.',
+            'Dulzura intensa, amaderada y aceitosa. Representa un perfil aromático más concentrado que la vainilla simple. Se encuentra en microlotes únicos de la variedad Bourbon.',
         'it':
-            'Intense, woodsy and oily sweetness. Represents a more concentrated aromatic profile than simple vanilla. Found in unique Bourbon-variety micro-lots.',
+            'Dolcezza intensa, legnosa e oleosa. Rappresenta un profilo aromatico più concentrato rispetto alla semplice vaniglia. Si trova in micro-lotti unici della varietà Bourbon.',
         'pt':
-            'Intense, woodsy and oily sweetness. Represents a more concentrated aromatic profile than simple vanilla. Found in unique Bourbon-variety micro-lots.',
+            'Doçura intensa, amadeirada e oleosa. Representa um perfil aromático mais concentrado do que a baunilha simples. Encontrada em microlotes únicos da variedade Bourbon.',
         'pl':
-            'Intense, woodsy and oily sweetness. Represents a more concentrated aromatic profile than simple vanilla. Found in unique Bourbon-variety micro-lots.',
+            'Intensywna, drzewna i oleista słodycz. Reprezentuje bardziej skoncentrowany profil aromatyczny niż zwykła wanilia. Spotykana w unikalnych mikropartiach odmiany Bourbon.',
         'nl':
-            'Intense, woodsy and oily sweetness. Represents a more concentrated aromatic profile than simple vanilla. Found in unique Bourbon-variety micro-lots.',
+            'Intense, houtachtige en olieachtige zoetheid. Vertegenwoordigt een geconcentreerder aromatisch profiel dan gewone vanille. Te vinden in unieke Bourbon-variëteit microlots.',
         'sv':
-            'Intense, woodsy and oily sweetness. Represents a more concentrated aromatic profile than simple vanilla. Found in unique Bourbon-variety micro-lots.',
+            'Intensiv, träig och oljig sötma. Representerar en mer koncentrerad aromatisk profil än vanlig vanilj. Finns i unika mikrolotter av Bourbon-varieteten.',
         'tr':
-            'Intense, woodsy and oily sweetness. Represents a more concentrated aromatic profile than simple vanilla. Found in unique Bourbon-variety micro-lots.',
+            'Yoğun, odunsu ve yağlı tatlılık. Basit vanilyadan daha konsantre bir aromatik profili temsil eder. Benzersiz Bourbon çeşidi mikro lotlarda bulunur.',
         'ja':
-            'Intense, woodsy and oily sweetness. Represents a more concentrated aromatic profile than simple vanilla. Found in unique Bourbon-variety micro-lots.',
+            '強烈でウッディ、かつオイルのような甘さ。単なるバニラよりも濃縮されたアロマプロファイルを特徴とします。独特なブルボン種のマイクロロットで見られます。',
         'ko':
-            'Intense, woodsy and oily sweetness. Represents a more concentrated aromatic profile than simple vanilla. Found in unique Bourbon-variety micro-lots.',
+            '강렬하고 나무 향이 나며 오일리한 달콤함. 단순한 바닐라보다 더 농축된 아로마 프로필을 나타냅니다. 독특한 버번 품종 마이크로 로트에서 발견됩니다.',
         'zh':
-            'Intense, woodsy and oily sweetness. Represents a more concentrated aromatic profile than simple vanilla. Found in unique Bourbon-variety micro-lots.',
+            '浓郁、木质且带有油脂感的甜美。代表了比普通香草更浓缩的香气特征。发现于独特的波旁品种微批次中。',
         'ar':
-            'Intense, woodsy and oily sweetness. Represents a more concentrated aromatic profile than simple vanilla. Found in unique Bourbon-variety micro-lots.',
+            'حلاوة مكثفة وخشبية وزيتية. تمثل ملفاً عطرياً أكثر تركيزاً من الفانيليا العادية. توجد في ميكرو-لوتات فريدة من نوع Bourbon.',
       },
       'wheel_note_molasses': {
         'en':
@@ -1532,31 +1578,31 @@ class FlavorDescriptions {
         'uk':
             'Густа, темна цукрова солодкість з землистим підтоном. Результат глибокої карамелізації. Характерна нота для багатьох бразильських та суматранських кав.',
         'de':
-            'Thick, dark sugary sweetness with an earthy undertone. Result of high degree of caramelization. Signature of many Brazilian and Sumatran coffees.',
+            'Dickflüssige, dunkle zuckrige Süße mit erdigem Unterton. Ergebnis einer starken Karamellisierung. Signatur vieler brasilianischer und sumatranischer Kaffees.',
         'fr':
-            'Thick, dark sugary sweetness with an earthy undertone. Result of high degree of caramelization. Signature of many Brazilian and Sumatran coffees.',
+            'Douceur sucrée épaisse et sombre avec une note terreuse. Résultat d\'un degré élevé de caramélisation. Signature de nombreux cafés du Brésil et de Sumatra.',
         'es':
-            'Thick, dark sugary sweetness with an earthy undertone. Result of high degree of caramelization. Signature of many Brazilian and Sumatran coffees.',
+            'Dulzura azucarada espesa y oscura con un trasfondo terroso. Resultado de un alto grado de caramelización. Firma de muchos cafés brasileños y de Sumatra.',
         'it':
-            'Thick, dark sugary sweetness with an earthy undertone. Result of high degree of caramelization. Signature of many Brazilian and Sumatran coffees.',
+            'Dolcezza zuccherina densa e scura con un sottofondo terroso. Risultato di un alto grado di caramellizzazione. Firma di molti caffè brasiliani e di Sumatra.',
         'pt':
-            'Thick, dark sugary sweetness with an earthy undertone. Result of high degree of caramelization. Signature of many Brazilian and Sumatran coffees.',
+            'Doçura açucarada espessa e escura com um subtom terroso. Resultado de um alto grau de caramelização. Assinatura de muitos cafés brasileiros e de Sumatra.',
         'pl':
-            'Thick, dark sugary sweetness with an earthy undertone. Result of high degree of caramelization. Signature of many Brazilian and Sumatran coffees.',
+            'Gęsta, ciemna cukrowa słodycz z ziemistym posmakiem. Wynik głębokiej karmelizacji. Charakterystyczna nuta dla wielu kaw brazylijskich i sumatrzańskich.',
         'nl':
-            'Thick, dark sugary sweetness with an earthy undertone. Result of high degree of caramelization. Signature of many Brazilian and Sumatran coffees.',
+            'Dikke, donkere suikerachtige zoetheid met een aardse ondertoon. Resultaat van een hoge graad van karamelisering. Kenmerkend voor veel Braziliaanse en Sumatraanse koffiesoorten.',
         'sv':
-            'Thick, dark sugary sweetness with an earthy undertone. Result of high degree of caramelization. Signature of many Brazilian and Sumatran coffees.',
+            'Tjock, mörk sockerhaltig sötma med en jordig underton. Resultatet av en hög grad av karamellisering. Signatur för många brasilianska och sumatranska kaffesorter.',
         'tr':
-            'Thick, dark sugary sweetness with an earthy undertone. Result of high degree of caramelization. Signature of many Brazilian and Sumatran coffees.',
+            'Topraksı alt tonlara sahip koyu, yoğun şekerli tatlılık. Yüksek derecede karamelizasyonun sonucudur. Birçok Brezilya ve Sumatra kahvesinin imzasıdır.',
         'ja':
-            'Thick, dark sugary sweetness with an earthy undertone. Result of high degree of caramelization. Signature of many Brazilian and Sumatran coffees.',
+            'とろりとした、土のようなニュアンスを伴うダークな甘さ。高度なキャラメル化の結果です。多くのブラジル産やスマトラ産のコーヒーを象徴するノートです。',
         'ko':
-            'Thick, dark sugary sweetness with an earthy undertone. Result of high degree of caramelization. Signature of many Brazilian and Sumatran coffees.',
+            '흙 내음이 감도는 진하고 어두운 설탕의 달콤함. 높은 단계의 캐러멜화 결과입니다. 많은 브라질 및 수마트라 커피의 특징입니다.',
         'zh':
-            'Thick, dark sugary sweetness with an earthy undertone. Result of high degree of caramelization. Signature of many Brazilian and Sumatran coffees.',
+            '浓厚、深沉且带有泥土气息的糖分甜美。是高度焦糖化的结果。是许多巴西和苏门答腊咖啡的标志性特征。',
         'ar':
-            'Thick, dark sugary sweetness with an earthy undertone. Result of high degree of caramelization. Signature of many Brazilian and Sumatran coffees.',
+            'حلاوة سكرية داكنة وكثيفة مع مسحة ترابية. ناتجة عن درجة عالية من الكرملة. سمة مميزة للعديد من أنواع القهوة البرازيلية والسومطرية.',
       },
       'wheel_note_maple_syrup': {
         'en':
@@ -1564,31 +1610,31 @@ class FlavorDescriptions {
         'uk':
             'Чиста, деревна та стійка солодкість. Представляє високоякісний, стабільний розпад вуглеводів під час обсмаження. Часто зустрічається у висококласних гватемальських лотах.',
         'de':
-            'Clean, woody and persistent sweetness. Represents high-quality, stable carbohydrate breakdown in the roast. Frequent in high-grade Guatemalan lots.',
+            'Klare, holzige und anhaltende Süße. Steht für einen hochwertigen, stabilen Kohlenhydratabbau bei der Röstung. Häufig in hochwertigen guatemaltekischen Lots zu finden.',
         'fr':
-            'Clean, woody and persistent sweetness. Represents high-quality, stable carbohydrate breakdown in the roast. Frequent in high-grade Guatemalan lots.',
+            'Douceur propre, boisée et persistante. Représente une décomposition stable et de haute qualité des glucides lors de la torréfaction. Fréquente dans les lots guatémaltèques de haute qualité.',
         'es':
-            'Clean, woody and persistent sweetness. Represents high-quality, stable carbohydrate breakdown in the roast. Frequent in high-grade Guatemalan lots.',
+            'Dulzura limpia, amaderada y persistente. Representa una degradación estable y de alta calidad de los carbohidratos durante el tueste. Frecuente en lotes guatemaltecos de alta calidad.',
         'it':
-            'Clean, woody and persistent sweetness. Represents high-quality, stable carbohydrate breakdown in the roast. Frequent in high-grade Guatemalan lots.',
+            'Dolcezza pulita, legnosa e persistente. Rappresenta una scomposizione stabile e di alta qualità dei carboidrati durante la tostatura. Frequente nei lotti guatemaltechi di alta qualità.',
         'pt':
-            'Clean, woody and persistent sweetness. Represents high-quality, stable carbohydrate breakdown in the roast. Frequent in high-grade Guatemalan lots.',
+            'Doçura limpa, amadeirada e persistente. Representa uma quebra estável e de alta qualidade de carboidratos durante a torra. Frequente em lotes guatemaltecos de alta qualidade.',
         'pl':
-            'Clean, woody and persistent sweetness. Represents high-quality, stable carbohydrate breakdown in the roast. Frequent in high-grade Guatemalan lots.',
+            'Czysta, drzewna i trwała słodycz. Reprezentuje wysokiej jakości, stabilny rozpad węglowodanów podczas palenia. Często spotykana w wysokiej klasy partiach z Gwatemali.',
         'nl':
-            'Clean, woody and persistent sweetness. Represents high-quality, stable carbohydrate breakdown in the roast. Frequent in high-grade Guatemalan lots.',
+            'Schone, houtachtige en aanhoudende zoetheid. Vertegenwoordigt hoogwaardige, stabiele koolhydraatafbraak in de branding. Komt vaak voor in hoogwaardige Guatemalteekse kavels.',
         'sv':
-            'Clean, woody and persistent sweetness. Represents high-quality, stable carbohydrate breakdown in the roast. Frequent in high-grade Guatemalan lots.',
+            'Ren, träig och ihållande sötma. Representerar en högkvalitativ, stabil kolhydratnedbrytning vid rostningen. Vanlig i högkvalitativa guatemalanska partier.',
         'tr':
-            'Clean, woody and persistent sweetness. Represents high-quality, stable carbohydrate breakdown in the roast. Frequent in high-grade Guatemalan lots.',
+            'Temiz, odunsu ve kalıcı tatlılık. Kavurma sırasında yüksek kaliteli, kararlı karbonhidrat parçalanmasını temsil eder. Yüksek kaliteli Guatemala partilerinde sık görülür.',
         'ja':
-            'Clean, woody and persistent sweetness. Represents high-quality, stable carbohydrate breakdown in the roast. Frequent in high-grade Guatemalan lots.',
+            'クリーンでウッディ、かつ持続的な甘さ。焙煎中の高品質で安定した炭水化物の分解を象徴します。高品質なグアテマラ産のロットによく見られます。',
         'ko':
-            'Clean, woody and persistent sweetness. Represents high-quality, stable carbohydrate breakdown in the roast. Frequent in high-grade Guatemalan lots.',
+            '깔끔하고 나무 향이 나며 지속적인 달콤함. 로스팅 중 고품질의 안정적인 탄수화물 분해를 나타냅니다. 고품질 과테말라 로트에서 자주 발견됩니다.',
         'zh':
-            'Clean, woody and persistent sweetness. Represents high-quality, stable carbohydrate breakdown in the roast. Frequent in high-grade Guatemalan lots.',
+            '纯净、带有木质气息且持久的甜味。代表了烘焙过程中高质量、稳定的碳水化合物分解。在优质瓜地马拉咖啡中很常见。',
         'ar':
-            'Clean, woody and persistent sweetness. Represents high-quality, stable carbohydrate breakdown in the roast. Frequent in high-grade Guatemalan lots.',
+            'حلاوة نظيفة وخشبية ومستمرة. تمثل تفككاً كربوهيدراتياً مستقراً وعالي الجودة أثناء التحميص. تتكرر في دفعات القهوة الغواتيمالية عالية الجودة.',
       },
       'wheel_note_caramel': {
         'en':
@@ -1596,31 +1642,31 @@ class FlavorDescriptions {
         'uk':
             'Багата, цукрова нота карамелізації. Універсальний індикатор правильного розвитку обсмаження. Присутня в солодкій каві від Гватемали до Бразилії.',
         'de':
-            'Rich, sugary browning note. Universal indicator of proper roast development. Present in sweet coffees from Guatemala to Brazil.',
+            'Reichhaltige, zuckrige Bräunungsnote. Universeller Indikator für eine ordnungsgemäße Röstentwicklung. In süßen Kaffees von Guatemala bis Brasilien vorhanden.',
         'fr':
-            'Rich, sugary browning note. Universal indicator of proper roast development. Present in sweet coffees from Guatemala to Brazil.',
+            'Note de brunissement riche et sucrée. Indicateur universel d\'un bon développement de la torréfaction. Présente dans les cafés doux, du Guatemala au Brésil.',
         'es':
-            'Rich, sugary browning note. Universal indicator of proper roast development. Present in sweet coffees from Guatemala to Brazil.',
+            'Rica nota de tostado azucarado. Indicador universal de un desarrollo adecuado del tueste. Presente en cafés dulces desde Guatemala hasta Brasil.',
         'it':
-            'Rich, sugary browning note. Universal indicator of proper roast development. Present in sweet coffees from Guatemala to Brazil.',
+            'Ricca nota di doratura zuccherina. Indicatore universale di un corretto sviluppo della tostatura. Presente nei caffè dolci dal Guatemala al Brasile.',
         'pt':
-            'Rich, sugary browning note. Universal indicator of proper roast development. Present in sweet coffees from Guatemala to Brazil.',
+            'Rica nota de tostagem açucarada. Indicador universal de um desenvolvimento adequado da torra. Presente em cafés doces da Guatemala ao Brasil.',
         'pl':
-            'Rich, sugary browning note. Universal indicator of proper roast development. Present in sweet coffees from Guatemala to Brazil.',
+            'Bogata, cukrowa nuta brązowienia. Uniwersalny wskaźnik prawidłowego stopnia wypalenia. Obecna w słodkich kawach od Gwatemali po Brazylię.',
         'nl':
-            'Rich, sugary browning note. Universal indicator of proper roast development. Present in sweet coffees from Guatemala to Brazil.',
+            'Rijke, suikerachtige bruiningsnoot. Universele indicator van een juiste branding. Aanwezig in zoete koffiesoorten van Guatemala tot Brazilië.',
         'sv':
-            'Rich, sugary browning note. Universal indicator of proper roast development. Present in sweet coffees from Guatemala to Brazil.',
+            'Rik, sötaktig rostningsnot. Universell indikator på korrekt rostningsutveckling. Finns i söta kaffesorter från Guatemala till Brasilien.',
         'tr':
-            'Rich, sugary browning note. Universal indicator of proper roast development. Present in sweet coffees from Guatemala to Brazil.',
+            'Zengin, şekerli kavrulma notası. Uygun kavurma gelişiminin evrensel göstergesidir. Guatemala\'dan Brezilya\'ya kadar tatlı kahvelerde bulunur.',
         'ja':
-            'Rich, sugary browning note. Universal indicator of proper roast development. Present in sweet coffees from Guatemala to Brazil.',
+            '豊かな、砂糖を焦がしたようなブラウンノート。焙煎が適切に進行したことを示す普遍的な指標です。グアテマラからブラジルまで、甘いコーヒーに見られます。',
         'ko':
-            'Rich, sugary browning note. Universal indicator of proper roast development. Present in sweet coffees from Guatemala to Brazil.',
+            '풍부하고 설탕을 졸인 듯한 브라우닝 노트. 적절한 로스팅 진행의 보편적인 지표입니다. 과테말라에서 브라질까지 달콤한 커피에서 나타납니다.',
         'zh':
-            'Rich, sugary browning note. Universal indicator of proper roast development. Present in sweet coffees from Guatemala to Brazil.',
+            '浓郁、糖分褐变的气息。是烘焙程度恰到好处的普遍指标。存在于从瓜地马拉到巴西的各类甜味咖啡中。',
         'ar':
-            'Rich, sugary browning note. Universal indicator of proper roast development. Present in sweet coffees from Guatemala to Brazil.',
+            'نوتة تحميص غنية وسكرية. مؤشر عالمي لتطور التحميص السليم. متوفرة في أنواع القهوة الحلوة من غواتيمالا إلى البرازيل.',
       },
       'wheel_note_honey': {
         'en':
@@ -1628,31 +1674,31 @@ class FlavorDescriptions {
         'uk':
             'Густа, квіткова солодкість. Пов\'язана з високим вмістом клейковини та специфічною обробкою. Візитна картка кави з Коста-Ріки обробки "Honey".',
         'de':
-            'Viscous, floral sweetness. Linked to high mucilage content and specific processing. Hallmarks of Costa Rican "Honey" processed lots.',
+            'Viskose, blumige Süße. Verbunden mit hohem Schleimgehalt und spezifischer Verarbeitung. Markenzeichen der costa-ricanischen "Honey"-verarbeiteten Lots.',
         'fr':
-            'Viscous, floral sweetness. Linked to high mucilage content and specific processing. Hallmarks of Costa Rican "Honey" processed lots.',
+            'Douceur visqueuse et florale. Liée à une teneur élevée en mucilage et à un traitement spécifique. Caractéristique des lots du Costa Rica traités selon la méthode "Honey".',
         'es':
-            'Viscous, floral sweetness. Linked to high mucilage content and specific processing. Hallmarks of Costa Rican "Honey" processed lots.',
+            'Dulzura viscosa y floral. Vinculada a un alto contenido de mucílago y un procesamiento específico. Sello distintivo de los lotes de Costa Rica procesados como "Honey".',
         'it':
-            'Viscous, floral sweetness. Linked to high mucilage content and specific processing. Hallmarks of Costa Rican "Honey" processed lots.',
+            'Dolcezza viscosa e floreale. Legata all\'alto contenuto di mucillagine e a una lavorazione specifica. Marchio di fabbrica dei lotti costaricani lavorati con il metodo "Honey".',
         'pt':
-            'Viscous, floral sweetness. Linked to high mucilage content and specific processing. Hallmarks of Costa Rican "Honey" processed lots.',
+            'Doçura viscosa e floral. Ligada ao alto teor de mucilagem e processamento específico. Marca registrada dos lotes da Costa Rica processados como "Honey".',
         'pl':
-            'Viscous, floral sweetness. Linked to high mucilage content and specific processing. Hallmarks of Costa Rican "Honey" processed lots.',
+            'Lepka, kwiatowa słodycz. Związana z wysoką zawartością śluzu i specyficzną obróbką. Wizytówka kaw z Kostaryki z obróbki typu "Honey".',
         'nl':
-            'Viscous, floral sweetness. Linked to high mucilage content and specific processing. Hallmarks of Costa Rican "Honey" processed lots.',
+            'Stroperige, bloemige zoetheid. Gekoppeld aan een hoog slijmstofgehalte en specifieke verwerking. Kenmerkend voor Costa Ricaanse "Honey" verwerkte kavels.',
         'sv':
-            'Viscous, floral sweetness. Linked to high mucilage content and specific processing. Hallmarks of Costa Rican "Honey" processed lots.',
+            'Viskös, blommig sötma. Kopplad till hög slemhalt och specifik processning. Kännetecknande för costaricanska "Honey"-processade partier.',
         'tr':
-            'Viscous, floral sweetness. Linked to high mucilage content and specific processing. Hallmarks of Costa Rican "Honey" processed lots.',
+            'Kıvamlı, çiçeksi tatlılık. Yüksek müsilaj içeriği ve özel işleme yöntemiyle bağlantılıdır. Kosta Rika "Honey" (bal) işlemli partilerin alametifarikasıdır.',
         'ja':
-            'Viscous, floral sweetness. Linked to high mucilage content and specific processing. Hallmarks of Costa Rican "Honey" processed lots.',
+            '粘性のある、フローラルな甘さ。高いミュシレージ含有量と特定の精製方法に関連しています。コスタリカ産「ハニー」プロセスのロットの特徴です。',
         'ko':
-            'Viscous, floral sweetness. Linked to high mucilage content and specific processing. Hallmarks of Costa Rican "Honey" processed lots.',
+            '점성이 있고 꽃향기가 나는 달콤함. 높은 점액질 함량과 특정 가공 방식과 관련이 있습니다. 코스타리카 "허니" 프로세싱 로트의 특징입니다.',
         'zh':
-            'Viscous, floral sweetness. Linked to high mucilage content and specific processing. Hallmarks of Costa Rican "Honey" processed lots.',
+            '粘稠、花香般的甜美。与高果胶含量和特定的加工工艺有关。是哥斯大黎加“蜜处理”批次的标志。',
         'ar':
-            'Viscous, floral sweetness. Linked to high mucilage content and specific processing. Hallmarks of Costa Rican "Honey" processed lots.',
+            'حلاوة لزجة وزهرية. مرتبطة بمحتوى عالٍ من المادة اللزجة ومعالجة محددة. من سمات دفعات القهوة الكوستاريكية المعالجة بطريقة "Honey".',
       },
       'wheel_note_peanuts': {
         'en':
@@ -1660,31 +1706,31 @@ class FlavorDescriptions {
         'uk':
             'Землиста, злегка масляниста та пікантна горіхова солодкість. Характерно для багатьох південноамериканських кав та специфічних стилів обсмаження. Зустрічається у класичній Бразилії.',
         'de':
-            'Earthy, slightly oily and savory nut sweetness. Characteristic of many South American coffees and specific roast styles. Common in classic Brazilian lots.',
+            'Erdige, leicht ölige und herzhafte Nuss-Süße. Charakteristisch für viele südamerikanische Kaffees und spezifische Röststile. Häufig in klassischen brasilianischen Lots.',
         'fr':
-            'Earthy, slightly oily and savory nut sweetness. Characteristic of many South American coffees and specific roast styles. Common in classic Brazilian lots.',
+            'Douceur de noix terreuse, légèrement huileuse et savoureuse. Caractéristique de nombreux cafés d\'Amérique du Sud et de styles de torréfaction spécifiques. Courante dans les lots brésiliens classiques.',
         'es':
-            'Earthy, slightly oily and savory nut sweetness. Characteristic of many South American coffees and specific roast styles. Common in classic Brazilian lots.',
+            'Dulzura de nuez terrosa, ligeramente aceitosa y sabrosa. Característica de muchos cafés sudamericanos y estilos de tueste específicos. Común en los lotes brasileños clásicos.',
         'it':
-            'Earthy, slightly oily and savory nut sweetness. Characteristic of many South American coffees and specific roast styles. Common in classic Brazilian lots.',
+            'Dolcezza di frutta a guscio terrosa, leggermente oleosa e sapida. Caratteristica di molti caffè sudamericani e di specifici stili di tostatura. Comune nei classici lotti brasiliani.',
         'pt':
-            'Earthy, slightly oily and savory nut sweetness. Characteristic of many South American coffees and specific roast styles. Common in classic Brazilian lots.',
+            'Doçura de nozes terrosa, ligeiramente oleosa e saborosa. Característica de muitos cafés sul-americanos e estilos de torra específicos. Comum em lotes brasileiros clássicos.',
         'pl':
-            'Earthy, slightly oily and savory nut sweetness. Characteristic of many South American coffees and specific roast styles. Common in classic Brazilian lots.',
+            'Ziemista, nieco oleista i wytrawna orzechowa słodycz. Charakterystyczna dla wielu kaw z Ameryki Południowej i specyficznych stylów palenia. Powszechna w klasycznych partiach z Brazylii.',
         'nl':
-            'Earthy, slightly oily and savory nut sweetness. Characteristic of many South American coffees and specific roast styles. Common in classic Brazilian lots.',
+            'Aardse, licht olieachtige en hartige nootzoetheid. Kenmerkend voor veel Zuid-Amerikaanse koffiesoorten en specifieke brandstijlen. Veelvoorkomend in klassieke Braziliaanse kavels.',
         'sv':
-            'Earthy, slightly oily and savory nut sweetness. Characteristic of many South American coffees and specific roast styles. Common in classic Brazilian lots.',
+            'Jordig, något oljig och smakrik nötsötma. Karaktäristisk för många sydamerikanska kaffesorter och specifika rostningsstilar. Vanlig i klassiska brasilianska partier.',
         'tr':
-            'Earthy, slightly oily and savory nut sweetness. Characteristic of many South American coffees and specific roast styles. Common in classic Brazilian lots.',
+            'Topraksı, hafif yağlı ve iştah açıcı fındıksı tatlılık. Birçok Güney Amerika kahvesinin ve özel kavurma stillerinin özelliğidir. Klasik Brezilya partilerinde yaygındır.',
         'ja':
-            'Earthy, slightly oily and savory nut sweetness. Characteristic of many South American coffees and specific roast styles. Common in classic Brazilian lots.',
+            '土のような、わずかにオイル感のある香ばしいナッツの甘さ。多くの南米産コーヒーや特定の焙煎スタイルの特徴です。伝統的なブラジル産のロットによく見られます。',
         'ko':
-            'Earthy, slightly oily and savory nut sweetness. Characteristic of many South American coffees and specific roast styles. Common in classic Brazilian lots.',
+            '흙 내음이 나고 약간 오일리하며 풍미 있는 견과류의 달콤함. 많은 남미 커피와 특정 로스팅 스타일의 특징입니다. 클래식한 브라질 로트에서 흔히 볼 수 있습니다.',
         'zh':
-            'Earthy, slightly oily and savory nut sweetness. Characteristic of many South American coffees and specific roast styles. Common in classic Brazilian lots.',
+            '带有泥土气息、微油且具有风味的坚果甜美。是许多南美咖啡和特定烘焙风格的特征。常见于经典的巴西批次中。',
         'ar':
-            'Earthy, slightly oily and savory nut sweetness. Characteristic of many South American coffees and specific roast styles. Common in classic Brazilian lots.',
+            'حلاوة مكسرات ترابية وزيتية قليلاً ولذيذة. مميزة للعديد من أنواع القهوة في أمريكا الجنوبية وأساليب تحميص معينة. شائعة في دفعات القهوة البرازيلية الكلاسيكية.',
       },
       'wheel_note_hazelnut': {
         'en':
@@ -1692,31 +1738,31 @@ class FlavorDescriptions {
         'uk':
             'Масляниста, горіхова солодкість. Типово для середнього обсмаження та стабільних сортів, таких як Кастільйо або Катурра. Зустрічається по всій Латинській Америці.',
         'de':
-            'Buttery, oily nut sweetness. Typical of medium roasts and stable varieties like Castillo or Caturra. Found throughout Latin America.',
+            'Buttrige, ölige Nuss-Süße. Typisch für mittlere Röstungen und stabile Varietäten wie Castillo oder Caturra. In ganz Lateinamerika zu finden.',
         'fr':
-            'Buttery, oily nut sweetness. Typical of medium roasts and stable varieties like Castillo or Caturra. Found throughout Latin America.',
+            'Douceur de noix beurrée et huileuse. Typique des torréfactions moyennes et des variétés stables comme le Castillo ou la Caturra. Présente dans toute l\'Amérique latine.',
         'es':
-            'Buttery, oily nut sweetness. Typical of medium roasts and stable varieties like Castillo or Caturra. Found throughout Latin America.',
+            'Dulzura de nuez mantecosa y aceitosa. Típica de tuestes medios y variedades estables como Castillo o Caturra. Se encuentra en toda América Latina.',
         'it':
-            'Buttery, oily nut sweetness. Typical of medium roasts and stable varieties like Castillo or Caturra. Found throughout Latin America.',
+            'Dolcezza di frutta a guscio burrosa e oleosa. Tipica delle tostature medie e di varietà stabili come Castillo o Caturra. Si trova in tutta l\'America Latina.',
         'pt':
-            'Buttery, oily nut sweetness. Typical of medium roasts and stable varieties like Castillo or Caturra. Found throughout Latin America.',
+            'Doçura de nozes amanteigada e oleosa. Típica de torras médias e variedades estáveis como Castillo ou Caturra. Encontrada em toda a América Latina.',
         'pl':
-            'Buttery, oily nut sweetness. Typical of medium roasts and stable varieties like Castillo or Caturra. Found throughout Latin America.',
+            'Maślana, oleista orzechowa słodycz. Typowa dla średniego stopnia palenia i stabilnych odmian, takich jak Castillo czy Caturra. Spotykana w całej Ameryce Łacińskiej.',
         'nl':
-            'Buttery, oily nut sweetness. Typical of medium roasts and stable varieties like Castillo or Caturra. Found throughout Latin America.',
+            'Boterachtige, olieachtige nootzoetheid. Typisch voor medium brandingen en stabiele variëteiten zoals Castillo of Caturra. Te vinden in heel Latijns-Amerika.',
         'sv':
-            'Buttery, oily nut sweetness. Typical of medium roasts and stable varieties like Castillo or Caturra. Found throughout Latin America.',
+            'Smörig, oljig nötsötma. Typisk för mellanrost och stabila varieteter som Castillo eller Caturra. Finns i hela Latinamerika.',
         'tr':
-            'Buttery, oily nut sweetness. Typical of medium roasts and stable varieties like Castillo or Caturra. Found throughout Latin America.',
+            'Tereyağımsı, yağlı fındık tatlılığı. Orta kavurmalar ve Castillo veya Caturra gibi istikrarlı çeşitler için tipiktir. Latin Amerika genelinde bulunur.',
         'ja':
-            'Buttery, oily nut sweetness. Typical of medium roasts and stable varieties like Castillo or Caturra. Found throughout Latin America.',
+            'バターのように濃厚でオイル感のあるナッツの甘さ。中煎りや、カスティージョ、カトゥーラといった安定した品種に典型的です。中南米全域で見られます。',
         'ko':
-            'Buttery, oily nut sweetness. Typical of medium roasts and stable varieties like Castillo or Caturra. Found throughout Latin America.',
+            '버터 향이 나고 오일리한 견과류의 달콤함. 미디엄 로스팅과 카스티요나 카투라 같은 안정적인 품종의 전형적인 특징입니다. 라틴 아메리카 전역에서 발견됩니다.',
         'zh':
-            'Buttery, oily nut sweetness. Typical of medium roasts and stable varieties like Castillo or Caturra. Found throughout Latin America.',
+            '如黄油般丝滑、多油的坚果甜美。是中度烘焙和卡斯蒂略（Castillo）或卡杜拉（Caturra）等稳定品种的典型特征。遍布拉丁美洲。',
         'ar':
-            'Buttery, oily nut sweetness. Typical of medium roasts and stable varieties like Castillo or Caturra. Found throughout Latin America.',
+            'حلاوة مكسرات زبدية وزيتية. نموذجية للتحميص المتوسط والأصناف المستقرة مثل Castillo أو Caturra. توجد في جميع أنحاء أمريكا اللاتينية.',
       },
       'wheel_note_almond': {
         'en':
@@ -1724,31 +1770,31 @@ class FlavorDescriptions {
         'uk':
             'Солодка, злегка гіркувата горіхова нота з відтінком марципану. Пов\'язана зі специфічними амінокислотними профілями. Зустрічається у чистих, митих лотах з Гондурасу та Сальвадору.',
         'de':
-            'Sweet, slightly bitter nut note with a marzipan-like edge. Linked to specific amino acid profiles. Common in clean, washed Honduran and Salvadoran coffees.',
+            'Süße, leicht bittere Nussnote mit einer marzipanähnlichen Note. Verbunden mit spezifischen Aminosäureprofilen. Häufig bei sauberen, gewaschenen honduranischen und salvadorianischen Kaffees.',
         'fr':
-            'Sweet, slightly bitter nut note with a marzipan-like edge. Linked to specific amino acid profiles. Common in clean, washed Honduran and Salvadoran coffees.',
+            'Note de noix sucrée et légèrement amère avec un côté massepain. Liée à des profils d\'acides aminés spécifiques. Courante dans les cafés lavés propres du Honduras et du Salvador.',
         'es':
-            'Sweet, slightly bitter nut note with a marzipan-like edge. Linked to specific amino acid profiles. Common in clean, washed Honduran and Salvadoran coffees.',
+            'Nota de nuez dulce, ligeramente amarga con un toque parecido al mazapán. Vinculada a perfiles de aminoácidos específicos. Común en cafés lavados limpios de Honduras y El Salvador.',
         'it':
-            'Sweet, slightly bitter nut note with a marzipan-like edge. Linked to specific amino acid profiles. Common in clean, washed Honduran and Salvadoran coffees.',
+            'Nota di frutta a guscio dolce, leggermente amara con una punta simile al marzapane. Legata a specifici profili di amminoacidi. Comune nei caffè lavati puliti dell\'Honduras e di El Salvador.',
         'pt':
-            'Sweet, slightly bitter nut note with a marzipan-like edge. Linked to specific amino acid profiles. Common in clean, washed Honduran and Salvadoran coffees.',
+            'Nota de nozes doce, ligeiramente amarga com um toque de maçapão. Ligada a perfis de aminoácidos específicos. Comum em cafés lavados limpos de Honduras e El Salvador.',
         'pl':
-            'Sweet, slightly bitter nut note with a marzipan-like edge. Linked to specific amino acid profiles. Common in clean, washed Honduran and Salvadoran coffees.',
+            'Słodka, lekko gorzkawa nuta orzechowa z posmakiem marcepanu. Związana ze specyficznymi profilami aminokwasowymi. Powszechna w czystych, mytych kawach z Hondurasu i Salwadoru.',
         'nl':
-            'Sweet, slightly bitter nut note with a marzipan-like edge. Linked to specific amino acid profiles. Common in clean, washed Honduran and Salvadoran coffees.',
+            'Zoete, licht bittere nootachtige noot met een marsepeinachtig randje. Gekoppeld aan specifieke aminozuurprofielen. Komt vaak voor in schone, gewassen Hondurese en Salvadoraanse koffiesoorten.',
         'sv':
-            'Sweet, slightly bitter nut note with a marzipan-like edge. Linked to specific amino acid profiles. Common in clean, washed Honduran and Salvadoran coffees.',
+            'Söt, något bitter nötsmak med en marsipanliknande karaktär. Kopplad till specifika aminosyraprofiler. Vanlig i rena, tvättade kaffesorter från Honduras och El Salvador.',
         'tr':
-            'Sweet, slightly bitter nut note with a marzipan-like edge. Linked to specific amino acid profiles. Common in clean, washed Honduran and Salvadoran coffees.',
+            'Tatlı, hafif acımtırak, badem ezmesi benzeri bir uca sahip fındık notası. Özel amino asit profilleriyle bağlantılıdır. Temiz, yıkanmış Honduras ve El Salvador kahvelerinde yaygındır.',
         'ja':
-            'Sweet, slightly bitter nut note with a marzipan-like edge. Linked to specific amino acid profiles. Common in clean, washed Honduran and Salvadoran coffees.',
+            '甘く、わずかに苦味のあるナッツのノートで、マジパンのようなニュアンスがあります。特定のアミノ酸プロファイルに関連しています。クリーンな水洗式のホンジュラス産やエルサルバドル産コーヒーによく見られます。',
         'ko':
-            'Sweet, slightly bitter nut note with a marzipan-like edge. Linked to specific amino acid profiles. Common in clean, washed Honduran and Salvadoran coffees.',
+            '달콤하고 약간 쌉쌀한 견과류 노트로 마지팬 같은 느낌이 있습니다. 특정 아미노산 프로필과 관련이 있습니다. 깔끔한 워시드 온두라스 및 엘살바도르 커피에서 흔히 볼 수 있습니다.',
         'zh':
-            'Sweet, slightly bitter nut note with a marzipan-like edge. Linked to specific amino acid profiles. Common in clean, washed Honduran and Salvadoran coffees.',
+            '甜美、微苦且带有类似杏仁糖气息的坚果味。与特定的氨基酸特征有关。在纯净的水洗洪都拉斯和萨尔瓦多咖啡中很常见。',
         'ar':
-            'Sweet, slightly bitter nut note with a marzipan-like edge. Linked to specific amino acid profiles. Common in clean, washed Honduran and Salvadoran coffees.',
+            'نوتة مكسرات حلوة ومرة قليلاً مع حافة تشبه المارزيبان. مرتبطة بملفات أحماض أمينية محددة. شائعة في أنواع القهوة المغسولة النظيفة من هندوراس والسلفادور.',
       },
       'wheel_note_chocolate': {
         'en':
@@ -1756,31 +1802,31 @@ class FlavorDescriptions {
         'uk':
             'Основна какао-солодкість. Результат реакцій карамелізації. Класична нота для бразильської, індійської та в\'єтнамської високоякісної робусти та арабіки.',
         'de':
-            'Foundational cocoa sweetness. Result of browning reactions. Classic note for Brazilian, Indian, and Vietnamese high-quality robustas and arabicas.',
+            'Grundlegende Kakao-Süße. Ergebnis von Bräunungsreaktionen. Klassische Note für hochwertige brasilianische, indische und vietnamesische Robustas und Arabicas.',
         'fr':
-            'Foundational cocoa sweetness. Result of browning reactions. Classic note for Brazilian, Indian, and Vietnamese high-quality robustas and arabicas.',
+            'Douceur de cacao fondamentale. Résultat des réactions de brunissement. Note classique pour les robustas et arabicas de haute qualité du Brésil, de l\'Inde et du Vietnam.',
         'es':
-            'Foundational cocoa sweetness. Result of browning reactions. Classic note for Brazilian, Indian, and Vietnamese high-quality robustas and arabicas.',
+            'Dulzura de cacao fundamental. Resultado de las reacciones de tostado. Nota clásica para robustas y arábicas de alta calidad de Brasil, India y Vietnam.',
         'it':
-            'Foundational cocoa sweetness. Result of browning reactions. Classic note for Brazilian, Indian, and Vietnamese high-quality robustas and arabicas.',
+            'Dolcezza fondamentale del cacao. Risultato delle reazioni di doratura. Nota classica per i robusta e gli arabica di alta qualità brasiliani, indiani e vietnamiti.',
         'pt':
-            'Foundational cocoa sweetness. Result of browning reactions. Classic note for Brazilian, Indian, and Vietnamese high-quality robustas and arabicas.',
+            'Doçura de cacau fundamental. Resultado de reações de tostagem. Nota clássica para robustas e arábicas de alta qualidade do Brasil, Índia e Vietnã.',
         'pl':
-            'Foundational cocoa sweetness. Result of browning reactions. Classic note for Brazilian, Indian, and Vietnamese high-quality robustas and arabicas.',
+            'Podstawowa słodycz kakao. Wynik reakcji brązowienia. Klasyczna nuta dla wysokiej jakości kaw gatunku robusta i arabika z Brazylii, Indii i Wietnamu.',
         'nl':
-            'Foundational cocoa sweetness. Result of browning reactions. Classic note for Brazilian, Indian, and Vietnamese high-quality robustas and arabicas.',
+            'Fundamentele cacao-zoetheid. Resultaat van bruiningsreacties. Klassieke noot voor Braziliaanse, Indiase en Vietnamese hoogwaardige robusta\'s en arabica\'s.',
         'sv':
-            'Foundational cocoa sweetness. Result of browning reactions. Classic note for Brazilian, Indian, and Vietnamese high-quality robustas and arabicas.',
+            'Grundläggande kakaosötma. Resultatet av rostningsreaktioner. Klassisk not för högkvalitativa robusta- och arabikasorter från Brasilien, Indien och Vietnam.',
         'tr':
-            'Foundational cocoa sweetness. Result of browning reactions. Classic note for Brazilian, Indian, and Vietnamese high-quality robustas and arabicas.',
+            'Temel kakao tatlılığı. Kavurma tepkimelerinin sonucudur. Brezilya, Hindistan ve Vietnam\'ın yüksek kaliteli robusta ve arabica kahveleri için klasik bir notadır.',
         'ja':
-            'Foundational cocoa sweetness. Result of browning reactions. Classic note for Brazilian, Indian, and Vietnamese high-quality robustas and arabicas.',
+            '基礎的なカカオの甘さ。褐変反応の結果です。ブラジル産、インド産、ベトナム産の高品質なロブスタ種およびアラビカ種に典型的なノートです。',
         'ko':
-            'Foundational cocoa sweetness. Result of browning reactions. Classic note for Brazilian, Indian, and Vietnamese high-quality robustas and arabicas.',
+            '기초적인 카카오의 달콤함. 브라우닝 반응의 결과입니다. 브라질, 인도, 베트남의 고품질 로부스타 및 아라비카의 클래식한 노트입니다.',
         'zh':
-            'Foundational cocoa sweetness. Result of browning reactions. Classic note for Brazilian, Indian, and Vietnamese high-quality robustas and arabicas.',
+            '基础的可可甜美。是褐变反应的结果。是巴西、印度和越南优质罗布斯塔及阿拉比卡咖啡的经典风味。',
         'ar':
-            'Foundational cocoa sweetness. Result of browning reactions. Classic note for Brazilian, Indian, and Vietnamese high-quality robustas and arabicas.',
+            'حلاوة الكاكاو الأساسية. ناتجة عن تفاعلات التحميص. نوتة كلاسيكية لأنواع القهوة عالية الجودة من الروبوستا والأرابيكا من البرازيل والهند وفيتنام.',
       },
       'wheel_note_dark_chocolate': {
         'en':
@@ -1788,31 +1834,31 @@ class FlavorDescriptions {
         'uk':
             'Інтенсивна, гірко-солодка насиченість какао. Вказує на високий ступінь розвитку або специфічну генетику терруару. Постійна нота у високогірній суматранській каві.',
         'de':
-            'Intense, bitter-sweet cocoa richness. Marks high degree of development or specific terroir genetics. Constant in high-altitude Sumatran coffees.',
+            'Intensive, bittersüße Kakao-Fülle. Zeichen für einen hohen Entwicklungsgrad oder spezifische Terroir-Genetik. Beständig in sumatranischen Hochlandkaffees.',
         'fr':
-            'Intense, bitter-sweet cocoa richness. Marks high degree of development or specific terroir genetics. Constant in high-altitude Sumatran coffees.',
+            'Richesse intense de cacao doux-amer. Marque un degré de développement élevé ou une génétique de terroir spécifique. Constante dans les cafés de haute altitude de Sumatra.',
         'es':
-            'Intense, bitter-sweet cocoa richness. Marks high degree of development or specific terroir genetics. Constant in high-altitude Sumatran coffees.',
+            'Intensa riqueza de cacao agridulce. Indica un alto grado de desarrollo o genética específica del terroir. Constante en los cafés de Sumatra de gran altura.',
         'it':
-            'Intense, bitter-sweet cocoa richness. Marks high degree of development or specific terroir genetics. Constant in high-altitude Sumatran coffees.',
+            'Intensa ricchezza di cacao agrodolce. Indica un alto grado di sviluppo o una genetica specifica del terroir. Costante nei caffè di Sumatra ad alta quota.',
         'pt':
-            'Intense, bitter-sweet cocoa richness. Marks high degree of development or specific terroir genetics. Constant in high-altitude Sumatran coffees.',
+            'Intensa riqueza de cacau agridoce. Indica um alto grau de desenvolvimento ou genética específica do terroir. Constante nos cafés de Sumatra de alta altitude.',
         'pl':
-            'Intense, bitter-sweet cocoa richness. Marks high degree of development or specific terroir genetics. Constant in high-altitude Sumatran coffees.',
+            'Intensywna, gorzko-słodka głębia kakao. Świadczy o wysokim stopniu wypalenia lub specyficznej genetyce terroir. Stała nuta w wysokogórskich kawach z Sumatry.',
         'nl':
-            'Intense, bitter-sweet cocoa richness. Marks high degree of development or specific terroir genetics. Constant in high-altitude Sumatran coffees.',
+            'Intense, bitterzoete cacao-rijkdom. Kenmerkt een hoge graad van ontwikkeling of specifieke terroir-genetica. Constant in Sumatraanse koffiesoorten op grote hoogte.',
         'sv':
-            'Intense, bitter-sweet cocoa richness. Marks high degree of development or specific terroir genetics. Constant in high-altitude Sumatran coffees.',
+            'Intensiv, bittersöt kakaofyllighet. Tyder på en hög grad av rostningsutveckling eller specifik terroir-genetik. Ständigt närvarande i sumatranskt höghöjdskaffe.',
         'tr':
-            'Intense, bitter-sweet cocoa richness. Marks high degree of development or specific terroir genetics. Constant in high-altitude Sumatran coffees.',
+            'Yoğun, acı-tatlı kakao zenginliği. Yüksek derecede gelişimi veya özel teruar genetiğini simgeler. Yüksek rakımlı Sumatra kahvelerinde sabittir.',
         'ja':
-            'Intense, bitter-sweet cocoa richness. Marks high degree of development or specific terroir genetics. Constant in high-altitude Sumatran coffees.',
+            '強烈で、ほろ苦いカカオの深み。高度な焙煎の進行、または特定のテロワールによる遺伝的特徴を示します。高地のスマトラ産コーヒーに不変のノートです。',
         'ko':
-            'Intense, bitter-sweet cocoa richness. Marks high degree of development or specific terroir genetics. Constant in high-altitude Sumatran coffees.',
+            '강렬하고 달콤하면서도 쌉쌀한 카카오의 풍부함. 높은 단계의 로스팅 진행 또는 특정 테루아의 유전적 특성을 나타냅니다. 고지대 수마트라 커피에서 항상 발견됩니다.',
         'zh':
-            'Intense, bitter-sweet cocoa richness. Marks high degree of development or specific terroir genetics. Constant in high-altitude Sumatran coffees.',
+            '浓郁、苦中带甜的可可风味。标志着高度的烘焙程度或特定的产地基因。在苏门答腊高海拔咖啡中非常稳定。',
         'ar':
-            'Intense, bitter-sweet cocoa richness. Marks high degree of development or specific terroir genetics. Constant in high-altitude Sumatran coffees.',
+            'غنى الكاكاو المكثف والمر والحلو. يشير إلى درجة عالية من التطور أو جينات معينة للتربة. ثابت في أنواع القهوة السومطرية المرتفعة.',
       },
       'wheel_note_clove': {
         'en':

@@ -152,31 +152,35 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    _NavBarItem(
-                                      icon: Icons.track_changes_rounded,
-                                      label: ref.t('nav_specialty'),
-                                      isSelected:
-                                          widget.navigationShell.currentIndex ==
-                                          0,
-                                      onTap: () => _onTap(0),
+                                    Expanded(
+                                      child: _NavBarItem(
+                                        icon: Icons.track_changes_rounded,
+                                        label: ref.t('nav_specialty'),
+                                        isSelected:
+                                            widget.navigationShell.currentIndex ==
+                                            0,
+                                        onTap: () => _onTap(0),
+                                      ),
                                     ),
-                                    const SizedBox(width: 24),
-                                    _NavBarItem(
-                                      icon: Icons.explore_outlined,
-                                      label: ref.t('nav_discovery'),
-                                      isSelected:
-                                          widget.navigationShell.currentIndex ==
-                                          1,
-                                      onTap: () => _onTap(1),
+                                    Expanded(
+                                      child: _NavBarItem(
+                                        icon: Icons.explore_outlined,
+                                        label: ref.t('nav_discovery'),
+                                        isSelected:
+                                            widget.navigationShell.currentIndex ==
+                                            1,
+                                        onTap: () => _onTap(1),
+                                      ),
                                     ),
-                                    const SizedBox(width: 24),
-                                    _NavBarItem(
-                                      icon: Icons.local_cafe_outlined,
-                                      label: ref.t('nav_alternative'),
-                                      isSelected:
-                                          widget.navigationShell.currentIndex ==
-                                          2,
-                                      onTap: () => _onTap(2),
+                                    Expanded(
+                                      child: _NavBarItem(
+                                        icon: Icons.local_cafe_outlined,
+                                        label: ref.t('nav_alternative'),
+                                        isSelected:
+                                            widget.navigationShell.currentIndex ==
+                                            2,
+                                        onTap: () => _onTap(2),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -337,6 +341,9 @@ class _NavBarItemState extends ConsumerState<_NavBarItem>
           const SizedBox(height: 2),
           Text(
             widget.label,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: 10,
               color: widget.isSelected ? activeColor : inactiveColor,
